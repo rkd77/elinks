@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.5pre0.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2023-11-18 17:11+0100\n"
+"POT-Creation-Date: 2023-12-02 09:04+0100\n"
 "PO-Revision-Date: 2003-01-03 03:41+0100\n"
 "Last-Translator: Dmitry Pinchukov <dpinch@mail.ru>\n"
 "Language-Team: Ukrainian <translation-team-uk@lists.sourceforge.net>\n"
@@ -35,11 +35,11 @@ msgstr ""
 #: src/bfu/hierbox.c:442 src/bfu/inpfield.c:257 src/bfu/msgbox.c:173
 #: src/bfu/msgbox.c:194 src/config/dialogs.c:57 src/config/dialogs.c:365
 #: src/cookies/dialogs.c:423 src/cookies/dialogs.c:521 src/dialogs/edit.c:98
-#: src/dialogs/info.cpp:140 src/dialogs/options.c:255 src/dialogs/options.c:336
+#: src/dialogs/info.c:142 src/dialogs/options.c:255 src/dialogs/options.c:336
 #: src/mime/dialogs.c:132 src/protocol/auth/dialogs.c:159
-#: src/protocol/protocol.cpp:257 src/scripting/lua/core.c:429
+#: src/protocol/protocol.c:261 src/scripting/lua/core.c:429
 #: src/scripting/lua/core.c:510 src/scripting/python/dialogs.c:91
-#: src/session/session.cpp:975 src/viewer/text/search.c:1971
+#: src/session/session.c:975 src/viewer/text/search.c:1971
 #, fuzzy
 msgid "~OK"
 msgstr "Угу"
@@ -142,9 +142,8 @@ msgstr "Видалити закладинку"
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:771 src/bfu/hierbox.c:783 src/bfu/hierbox.c:831
 #: src/bfu/hierbox.c:893 src/config/dialogs.c:824 src/dialogs/menu.c:132
-#: src/formhist/formhist.c:434 src/mime/dialogs.c:70
-#: src/session/session.cpp:340 src/session/task.c:295 src/terminal/tab.c:219
-#: src/terminal/tab.c:263
+#: src/formhist/formhist.c:434 src/mime/dialogs.c:70 src/session/session.c:340
+#: src/session/task.c:295 src/terminal/tab.c:219 src/terminal/tab.c:263
 #, fuzzy
 msgid "~Yes"
 msgstr "Так"
@@ -152,9 +151,8 @@ msgstr "Так"
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:772 src/bfu/hierbox.c:784 src/bfu/hierbox.c:832
 #: src/bfu/hierbox.c:894 src/config/dialogs.c:825 src/dialogs/menu.c:133
-#: src/formhist/formhist.c:435 src/mime/dialogs.c:71
-#: src/session/session.cpp:341 src/session/task.c:296 src/terminal/tab.c:220
-#: src/terminal/tab.c:264
+#: src/formhist/formhist.c:435 src/mime/dialogs.c:71 src/session/session.c:341
+#: src/session/task.c:296 src/terminal/tab.c:220 src/terminal/tab.c:264
 #, fuzzy
 msgid "~No"
 msgstr "Ні"
@@ -198,13 +196,13 @@ msgstr "Неправильний рядок"
 msgid "Empty string not allowed"
 msgstr "Порожні рядки неприпустимі"
 
-#. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.cpp:do_type_query, src/session/download.cpp:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
+#. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.c:do_type_query, src/session/download.c:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
 #: src/bfu/inpfield.c:257 src/config/dialogs.c:366 src/cookies/dialogs.c:424
 #: src/cookies/dialogs.c:522 src/dialogs/edit.c:102 src/dialogs/edit.c:105
 #: src/dialogs/options.c:258 src/dialogs/options.c:337 src/mime/dialogs.c:133
 #: src/protocol/auth/dialogs.c:160 src/protocol/bittorrent/dialogs.c:826
 #: src/scripting/lua/core.c:430 src/scripting/lua/core.c:511
-#: src/session/download.cpp:936 src/session/download.cpp:1840
+#: src/session/download.c:973 src/session/download.c:1877
 #: src/viewer/text/search.c:1972
 #, fuzzy
 msgid "~Cancel"
@@ -221,7 +219,7 @@ msgstr ""
 
 #: src/bfu/leds.c:82 src/bfu/leds.c:102 src/bfu/leds.c:115
 #: src/config/options.inc:1450 src/config/options.inc:1457
-#: src/ecmascript/ecmascript.cpp:70 src/globhist/globhist.c:62
+#: src/ecmascript/ecmascript.cpp:71 src/globhist/globhist.c:62
 #: src/mime/backend/dgi.c:61 src/mime/backend/mailcap.c:93
 #: src/mime/backend/mimetypes.c:52 src/network/ssl/ssl.c:203
 #: src/network/ssl/ssl.c:366
@@ -524,8 +522,8 @@ msgid "~Delete"
 msgstr "Стерти"
 
 #. accelerator_context(menu_keys, src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/globhist/dialogs.c:globhist_buttons)
-#: src/bookmarks/dialogs.c:620 src/config/dialogs.c:932
-#: src/dialogs/info.cpp:141 src/globhist/dialogs.c:235
+#: src/bookmarks/dialogs.c:620 src/config/dialogs.c:932 src/dialogs/info.c:143
+#: src/globhist/dialogs.c:235
 #, fuzzy
 msgid "~Toggle display"
 msgstr "Перемикнути відображення"
@@ -2082,8 +2080,8 @@ msgid "Description"
 msgstr "Опис"
 
 #: src/config/dialogs.c:291 src/protocol/bittorrent/dialogs.c:606
-#: src/protocol/protocol.cpp:251 src/session/session.cpp:324
-#: src/session/session.cpp:337 src/session/session.cpp:1172
+#: src/protocol/protocol.c:255 src/session/session.c:324
+#: src/session/session.c:337 src/session/session.c:1172
 #: src/viewer/text/textarea.c:629
 msgid "Error"
 msgstr "Помилка"
@@ -2118,10 +2116,10 @@ msgstr "Додати опцію"
 msgid "Cannot add an option here."
 msgstr "Тут неможливо додати опцію."
 
-#. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.cpp:do_type_query, terminal_options)
+#. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
 #: src/config/dialogs.c:505 src/config/dialogs.c:934 src/cookies/dialogs.c:546
 #: src/dialogs/options.c:257 src/formhist/dialogs.c:214
-#: src/protocol/bittorrent/dialogs.c:813 src/session/download.cpp:1824
+#: src/protocol/bittorrent/dialogs.c:813 src/session/download.c:1861
 #, fuzzy
 msgid "Sa~ve"
 msgstr "Зберегти"
@@ -2319,7 +2317,7 @@ msgid ""
 msgstr ""
 
 #. Keep options in alphabetical order.
-#: src/config/options.inc:74 src/dialogs/info.cpp:186
+#: src/config/options.inc:74 src/dialogs/info.c:188
 msgid "Connections"
 msgstr "З'єднання"
 
@@ -3207,7 +3205,7 @@ msgid ""
 "A value of -1 disables automatic revalidation."
 msgstr ""
 
-#: src/config/options.inc:613 src/dialogs/info.cpp:205
+#: src/config/options.inc:613 src/dialogs/info.c:207
 msgid "Memory cache"
 msgstr "Кеш в пам'яті"
 
@@ -4175,7 +4173,7 @@ msgstr "Текстова область"
 msgid "Dialog text colors."
 msgstr ""
 
-#: src/config/options.inc:1294 src/viewer/text/form.cpp:1936
+#: src/config/options.inc:1294 src/viewer/text/form.c:1940
 msgid "Checkbox"
 msgstr "Прапорець"
 
@@ -4227,7 +4225,7 @@ msgstr ""
 msgid "Selected button shortcut"
 msgstr "Поле вибору"
 
-#: src/config/options.inc:1322 src/viewer/text/form.cpp:1940
+#: src/config/options.inc:1322 src/viewer/text/form.c:1944
 msgid "Text field"
 msgstr "Текстове поле"
 
@@ -5164,7 +5162,7 @@ msgid "No header info."
 msgstr ""
 
 #: src/dialogs/download.c:263 src/dialogs/menu.c:602
-#: src/protocol/bittorrent/dialogs.c:234 src/session/download.cpp:586
+#: src/protocol/bittorrent/dialogs.c:234 src/session/download.c:623
 msgid "Download"
 msgstr "Завантаження"
 
@@ -5258,19 +5256,19 @@ msgstr "Завантижити зображення"
 msgid "Exmode"
 msgstr ""
 
-#: src/dialogs/info.cpp:47
+#: src/dialogs/info.c:49
 msgid "About"
 msgstr "Про програму"
 
-#: src/dialogs/info.cpp:137
+#: src/dialogs/info.c:139
 msgid "Keys"
 msgstr "Kлавіші"
 
-#: src/dialogs/info.cpp:148
+#: src/dialogs/info.c:150
 msgid "Copying"
 msgstr "Ліцензія"
 
-#: src/dialogs/info.cpp:149
+#: src/dialogs/info.c:151
 #, fuzzy, c-format
 msgid ""
 "ELinks %s\n"
@@ -5287,93 +5285,93 @@ msgstr ""
 "забезпечення\" (FSF); версії 2 Ліцензії, або (за вашим бажанням) більш "
 "пізньої версії"
 
-#: src/dialogs/info.cpp:175 src/dialogs/info.cpp:317
+#: src/dialogs/info.c:177 src/dialogs/info.c:319
 msgid "Resources"
 msgstr "Ресурси"
 
-#: src/dialogs/info.cpp:179
+#: src/dialogs/info.c:181
 #, fuzzy, c-format
 msgid "%ld handle"
 msgid_plural "%ld handles"
 msgstr[0] "хендлів"
 msgstr[1] "хендлів"
 
-#: src/dialogs/info.cpp:183
+#: src/dialogs/info.c:185
 #, fuzzy, c-format
 msgid "%ld timer"
 msgid_plural "%ld timers"
 msgstr[0] "таймерів"
 msgstr[1] "таймерів"
 
-#: src/dialogs/info.cpp:190
+#: src/dialogs/info.c:192
 #, fuzzy, c-format
 msgid "%ld connection"
 msgid_plural "%ld connections"
 msgstr[0] "з'єднань"
 msgstr[1] "з'єднань"
 
-#: src/dialogs/info.cpp:194
+#: src/dialogs/info.c:196
 #, fuzzy, c-format
 msgid "%ld connecting"
 msgid_plural "%ld connecting"
 msgstr[0] "створюються"
 msgstr[1] "створюються"
 
-#: src/dialogs/info.cpp:198
+#: src/dialogs/info.c:200
 #, fuzzy, c-format
 msgid "%ld transferring"
 msgid_plural "%ld transferring"
 msgstr[0] "передач"
 msgstr[1] "передач"
 
-#: src/dialogs/info.cpp:202
+#: src/dialogs/info.c:204
 #, fuzzy, c-format
 msgid "%ld keepalive"
 msgid_plural "%ld keepalive"
 msgstr[0] "збереження зв'язку"
 msgstr[1] "збереження зв'язку"
 
-#: src/dialogs/info.cpp:210 src/dialogs/info.cpp:299
+#: src/dialogs/info.c:212 src/dialogs/info.c:301
 #, fuzzy, c-format
 msgid "%ld byte"
 msgid_plural "%ld bytes"
 msgstr[0] "таймерів"
 msgstr[1] "таймерів"
 
-#: src/dialogs/info.cpp:214
+#: src/dialogs/info.c:216
 #, fuzzy, c-format
 msgid "%ld file"
 msgid_plural "%ld files"
 msgstr[0] "файлів"
 msgstr[1] "файлів"
 
-#: src/dialogs/info.cpp:218 src/dialogs/info.cpp:233
+#: src/dialogs/info.c:220 src/dialogs/info.c:235
 #, c-format
 msgid "%ld in use"
 msgid_plural "%ld in use"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/dialogs/info.cpp:222
+#: src/dialogs/info.c:224
 #, fuzzy, c-format
 msgid "%ld loading"
 msgid_plural "%ld loading"
 msgstr[0] "Завантаження"
 msgstr[1] "Завантаження"
 
-#: src/dialogs/info.cpp:225
+#: src/dialogs/info.c:227
 #, fuzzy
 msgid "Document cache"
 msgstr "документів"
 
-#: src/dialogs/info.cpp:229
+#: src/dialogs/info.c:231
 #, fuzzy, c-format
 msgid "%ld formatted"
 msgid_plural "%ld formatted"
 msgstr[0] "Посилання файлу (upload)"
 msgstr[1] "Посилання файлу (upload)"
 
-#: src/dialogs/info.cpp:237
+#: src/dialogs/info.c:239
 #, fuzzy, c-format
 msgid "%ld refreshing"
 msgid_plural "%ld refreshing"
@@ -5381,58 +5379,58 @@ msgstr[0] "передач"
 msgstr[1] "передач"
 
 #. name:
-#: src/dialogs/info.cpp:241 src/ecmascript/ecmascript.cpp:66
-#: src/ecmascript/ecmascript.cpp:876
+#: src/dialogs/info.c:243 src/ecmascript/ecmascript.cpp:67
+#: src/ecmascript/ecmascript.cpp:707
 #, fuzzy
 msgid "ECMAScript"
 msgstr "Опис"
 
-#: src/dialogs/info.cpp:245
+#: src/dialogs/info.c:247
 #, c-format
 msgid "%ld interpreter"
 msgid_plural "%ld interpreters"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/dialogs/info.cpp:249
+#: src/dialogs/info.c:251
 #, fuzzy
 msgid "Interlinking"
 msgstr "Введіть номер посилання"
 
-#: src/dialogs/info.cpp:252
+#: src/dialogs/info.c:254
 #, fuzzy
 msgid "master terminal"
 msgstr "Змінити розміри терминалу"
 
-#: src/dialogs/info.cpp:254
+#: src/dialogs/info.c:256
 #, fuzzy
 msgid "slave terminal"
 msgstr "Змінити розміри терминалу"
 
-#: src/dialogs/info.cpp:258
+#: src/dialogs/info.c:260
 #, fuzzy, c-format
 msgid "%ld terminal"
 msgid_plural "%ld terminals"
 msgstr[0] "Термінал BeOS"
 msgstr[1] "Термінал BeOS"
 
-#: src/dialogs/info.cpp:262
+#: src/dialogs/info.c:264
 #, fuzzy, c-format
 msgid "%ld session"
 msgid_plural "%ld sessions"
 msgstr[0] "Зберегти параметри"
 msgstr[1] "Зберегти параметри"
 
-#: src/dialogs/info.cpp:265
+#: src/dialogs/info.c:267
 msgid "Number of temporary files"
 msgstr ""
 
-#: src/dialogs/info.cpp:295
+#: src/dialogs/info.c:297
 #, fuzzy
 msgid "Memory allocated"
 msgstr "Кеш в пам'яті"
 
-#: src/dialogs/info.cpp:303
+#: src/dialogs/info.c:305
 #, c-format
 msgid "%ld byte overhead"
 msgid_plural "%ld bytes overhead"
@@ -6128,92 +6126,86 @@ msgid ""
 "html"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:68
+#: src/ecmascript/ecmascript-c.cpp:53
+msgid "Ecmascript enabled"
+msgstr ""
+
+#: src/ecmascript/ecmascript-c.cpp:55
+msgid "Ecmascript disabled"
+msgstr ""
+
+#: src/ecmascript/ecmascript.cpp:69
 #, fuzzy
 msgid "ECMAScript options."
 msgstr "Параметри термiналу"
 
-#: src/ecmascript/ecmascript.cpp:72
+#: src/ecmascript/ecmascript.cpp:73
 msgid "Whether to run those scripts inside of documents."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:74
+#: src/ecmascript/ecmascript.cpp:75
 #, fuzzy
 msgid "Console log"
 msgstr "Консоль Lua"
 
-#: src/ecmascript/ecmascript.cpp:76
+#: src/ecmascript/ecmascript.cpp:77
 msgid "When enabled logs will be appended to ~/.config/elinks/console.log."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:78
+#: src/ecmascript/ecmascript.cpp:79
 msgid "Script error reporting"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:80
+#: src/ecmascript/ecmascript.cpp:81
 msgid "Open a message box when a script reports an error."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:82
+#: src/ecmascript/ecmascript.cpp:83
 msgid "Ignore <noscript> content"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:84
+#: src/ecmascript/ecmascript.cpp:85
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag when ECMAScript is "
 "enabled."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:87
+#: src/ecmascript/ecmascript.cpp:88
 #, fuzzy
 msgid "Maximum execution time"
 msgstr "Створення з'єднання"
 
-#: src/ecmascript/ecmascript.cpp:89
+#: src/ecmascript/ecmascript.cpp:90
 msgid "Maximum execution time in seconds for a script."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:91
+#: src/ecmascript/ecmascript.cpp:92
 msgid "Pop-up window blocking"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:93
+#: src/ecmascript/ecmascript.cpp:94
 msgid "Whether to disallow scripts to open new windows or tabs."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:95
+#: src/ecmascript/ecmascript.cpp:96
 msgid "Allow XHR requests to local files"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:97
+#: src/ecmascript/ecmascript.cpp:98
 msgid "Whether to allow XHR requests to local files."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:171
-msgid "Ecmascript enabled"
-msgstr ""
-
-#: src/ecmascript/ecmascript.cpp:173
-msgid "Ecmascript disabled"
-msgstr ""
-
-#: src/ecmascript/ecmascript.cpp:571
+#: src/ecmascript/ecmascript.cpp:402
 msgid "JavaScript Emergency"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:573
+#: src/ecmascript/ecmascript.cpp:404
 #, c-format
 msgid ""
 "A script embedded in the current document was running\n"
 "for more than %d seconds. This probably means there is\n"
 "a bug in the script and it could have halted the whole\n"
 "ELinks, so the script execution was interrupted."
-msgstr ""
-
-#: src/ecmascript/libdom/mujs/window.c:272
-#: src/ecmascript/libdom/quickjs/window.c:553
-#: src/ecmascript/libdom/spidermonkey/window.cpp:426
-msgid "JavaScript Alert"
 msgstr ""
 
 #: src/ecmascript/mujs.cpp:259 src/ecmascript/quickjs.cpp:288
@@ -6229,6 +6221,11 @@ msgstr ""
 #. name:
 #: src/ecmascript/mujs.cpp:445
 msgid "mujs"
+msgstr ""
+
+#: src/ecmascript/mujs/window.c:272 src/ecmascript/quickjs/window.c:553
+#: src/ecmascript/spidermonkey/window.cpp:426
+msgid "JavaScript Alert"
 msgstr ""
 
 #. name:
@@ -8023,7 +8020,7 @@ msgstr "Файл"
 msgid "Comment"
 msgstr "документів"
 
-#: src/protocol/bittorrent/dialogs.c:235 src/session/download.cpp:587
+#: src/protocol/bittorrent/dialogs.c:235 src/session/download.c:624
 #, fuzzy, c-format
 msgid ""
 "Download complete:\n"
@@ -8191,7 +8188,7 @@ msgid_plural "%u unavailable"
 msgstr[0] "Сервіс FTP недоступний"
 msgstr[1] "Сервіс FTP недоступний"
 
-#: src/protocol/bittorrent/dialogs.c:590 src/session/session.cpp:314
+#: src/protocol/bittorrent/dialogs.c:590 src/session/session.c:314
 #, fuzzy, c-format
 msgid "Unable to retrieve %s"
 msgstr "Не можу записати до файлу конфігурації %s: %s"
@@ -8206,7 +8203,7 @@ msgstr ""
 msgid "Information about the torrent"
 msgstr "Показати інформацію про поточну сторінку"
 
-#: src/protocol/bittorrent/dialogs.c:788 src/session/download.cpp:1725
+#: src/protocol/bittorrent/dialogs.c:788 src/session/download.c:1762
 msgid "What to do?"
 msgstr "Що робити?"
 
@@ -8216,14 +8213,14 @@ msgstr "Що робити?"
 msgid "Down~load"
 msgstr "Завантаження"
 
-#. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.cpp:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:816 src/session/download.cpp:1830
+#. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
+#: src/protocol/bittorrent/dialogs.c:816 src/session/download.c:1867
 #, fuzzy
 msgid "~Display"
 msgstr "Показати"
 
-#. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.cpp:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:820 src/session/download.cpp:1834
+#. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
+#: src/protocol/bittorrent/dialogs.c:820 src/session/download.c:1871
 msgid "Show ~header"
 msgstr ""
 
@@ -8699,32 +8696,32 @@ msgid ""
 "dialog."
 msgstr ""
 
-#: src/protocol/protocol.cpp:253
+#: src/protocol/protocol.c:257
 #, fuzzy, c-format
 msgid "This version of ELinks does not contain %s protocol support"
 msgstr "Ця версія ELinks не підтримує SSL/TSL"
 
-#: src/protocol/protocol.cpp:284
+#: src/protocol/protocol.c:288
 msgid "Protocols"
 msgstr ""
 
-#: src/protocol/protocol.cpp:286
+#: src/protocol/protocol.c:290
 msgid "Protocol specific options."
 msgstr ""
 
-#: src/protocol/protocol.cpp:288
+#: src/protocol/protocol.c:292
 msgid "Default protocol prefix"
 msgstr ""
 
-#: src/protocol/protocol.cpp:290
+#: src/protocol/protocol.c:294
 msgid "Default protocol prefix when none protocol was entered."
 msgstr ""
 
-#: src/protocol/protocol.cpp:292
+#: src/protocol/protocol.c:296
 msgid "No-proxy domains"
 msgstr ""
 
-#: src/protocol/protocol.cpp:294
+#: src/protocol/protocol.c:298
 msgid ""
 "Comma separated list of domains for which the proxy (HTTP/FTP) should be "
 "disabled. Optionally, a port can be specified for some domains as well. If "
@@ -8732,7 +8729,7 @@ msgid ""
 msgstr ""
 
 #. name:
-#: src/protocol/protocol.cpp:349
+#: src/protocol/protocol.c:353
 msgid "Protocol"
 msgstr ""
 
@@ -8959,19 +8956,19 @@ msgstr ""
 msgid "Spidermonkey ECMAScript"
 msgstr "Опис"
 
-#: src/session/download.cpp:280 src/session/download.cpp:523
-#: src/session/download.cpp:892 src/session/download.cpp:997
+#: src/session/download.c:317 src/session/download.c:560
+#: src/session/download.c:929 src/session/download.c:1034
 msgid "Download error"
 msgstr "Помилка завантаження"
 
-#: src/session/download.cpp:281 src/session/download.cpp:998
+#: src/session/download.c:318 src/session/download.c:1035
 #, fuzzy, c-format
 msgid ""
 "Could not create file '%s':\n"
 "%s"
 msgstr "Не можу писати у файл"
 
-#: src/session/download.cpp:524
+#: src/session/download.c:561
 #, fuzzy, c-format
 msgid ""
 "Error downloading %s:\n"
@@ -8979,17 +8976,17 @@ msgid ""
 "%s"
 msgstr "Помилка завантаження"
 
-#: src/session/download.cpp:893
+#: src/session/download.c:930
 #, c-format
 msgid "'%s' is a directory."
 msgstr ""
 
-#: src/session/download.cpp:922
+#: src/session/download.c:959
 #, fuzzy
 msgid "File exists"
 msgstr "Розширення файлів"
 
-#: src/session/download.cpp:923
+#: src/session/download.c:960
 #, c-format
 msgid ""
 "This file already exists:\n"
@@ -8999,58 +8996,58 @@ msgid ""
 "%s"
 msgstr ""
 
-#. accelerator_context(src/session/download.cpp:lookup_unique_name)
-#: src/session/download.cpp:930
+#. accelerator_context(src/session/download.c:lookup_unique_name)
+#: src/session/download.c:967
 msgid "Sa~ve under the alternative name"
 msgstr ""
 
-#. accelerator_context(src/session/download.cpp:lookup_unique_name)
-#: src/session/download.cpp:931
+#. accelerator_context(src/session/download.c:lookup_unique_name)
+#: src/session/download.c:968
 msgid "~Overwrite the original file"
 msgstr ""
 
-#. accelerator_context(src/session/download.cpp:lookup_unique_name)
-#: src/session/download.cpp:933
+#. accelerator_context(src/session/download.c:lookup_unique_name)
+#: src/session/download.c:970
 #, fuzzy
 msgid "~Resume download of the original file"
 msgstr "Спробувати відновити завантаження поточного посилання"
 
-#: src/session/download.cpp:1728
+#: src/session/download.c:1765
 msgid "Unknown type"
 msgstr "Невідомий тип"
 
-#: src/session/download.cpp:1753
+#: src/session/download.c:1790
 #, c-format
 msgid "What would you like to do with the file '%s' (type: %s%s%s)?"
 msgstr ""
 
-#: src/session/download.cpp:1756
+#: src/session/download.c:1793
 #, c-format
 msgid "What would you like to do with the file (type: %s%s%s)?"
 msgstr ""
 
-#: src/session/download.cpp:1785
+#: src/session/download.c:1822
 #, c-format
 msgid "Program ('%f' will be replaced by the filename, '%u' by the uri)"
 msgstr ""
 
-#: src/session/download.cpp:1790
+#: src/session/download.c:1827
 #, fuzzy
 msgid "Block the terminal"
 msgstr "Термінал BeOS"
 
-#: src/session/download.cpp:1796
+#: src/session/download.c:1833
 #, c-format
 msgid "The file will be opened with the program '%s'."
 msgstr ""
 
-#. accelerator_context(src/session/download.cpp:do_type_query)
-#: src/session/download.cpp:1817
+#. accelerator_context(src/session/download.c:do_type_query)
+#: src/session/download.c:1854
 #, fuzzy
 msgid "~Open"
 msgstr "Відкрити"
 
-#: src/session/session.cpp:332
+#: src/session/session.c:332
 #, fuzzy
 msgid "Retry without verification?"
 msgstr "Вийти без підтвердження"
@@ -9059,12 +9056,12 @@ msgstr "Вийти без підтвердження"
 #. * and formatting it with "%u" is safe,
 #. * because fc_maxlength is smaller than
 #. * file.length, which is an int.
-#: src/session/session.cpp:923 src/session/session.cpp:942
-#: src/session/task.c:292 src/viewer/text/textarea.c:685
+#: src/session/session.c:923 src/session/session.c:942 src/session/task.c:292
+#: src/viewer/text/textarea.c:685
 msgid "Warning"
 msgstr "Попередження"
 
-#: src/session/session.cpp:924
+#: src/session/session.c:924
 msgid ""
 "You have an empty string in protocol.http.user_agent - this was a default "
 "value in the past, substituted by default ELinks User-Agent string. However, "
@@ -9075,7 +9072,7 @@ msgid ""
 "will be used. Apologies for any inconvience caused."
 msgstr ""
 
-#: src/session/session.cpp:943
+#: src/session/session.c:943
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
 "configuration saving algorithms of ELinks were changed from the last time "
@@ -9088,12 +9085,12 @@ msgid ""
 "caused."
 msgstr ""
 
-#: src/session/session.cpp:968
+#: src/session/session.c:968
 msgid "Welcome"
 msgstr "Вітаємо"
 
 #. accelerator_context(setup_first_session)
-#: src/session/session.cpp:969
+#: src/session/session.c:969
 msgid ""
 "Welcome to ELinks!\n"
 "\n"
@@ -9103,7 +9100,7 @@ msgid ""
 "So if you did not copy it yet from ~/.elinks, do it now and start again."
 msgstr ""
 
-#: src/session/session.cpp:1184
+#: src/session/session.c:1184
 msgid "Incorrect search uri"
 msgstr ""
 
@@ -9251,213 +9248,213 @@ msgstr "Без рамок"
 msgid "The requested fragment \"%s\" doesn't exist."
 msgstr ""
 
-#: src/viewer/text/form.cpp:1127
+#: src/viewer/text/form.c:1131
 msgid "Error while posting form"
 msgstr "Помилка відправлення форми"
 
-#: src/viewer/text/form.cpp:1128
+#: src/viewer/text/form.c:1132
 #, fuzzy, c-format
 msgid "Could not load file %s: %s"
 msgstr "Не можу отримати файл"
 
-#: src/viewer/text/form.cpp:1921
+#: src/viewer/text/form.c:1925
 #, fuzzy
 msgid "Reset form"
 msgstr "Очистити форму"
 
-#: src/viewer/text/form.cpp:1923
+#: src/viewer/text/form.c:1927
 msgid "Harmless button"
 msgstr ""
 
-#: src/viewer/text/form.cpp:1931
+#: src/viewer/text/form.c:1935
 msgid "Submit form to"
 msgstr "Передати форму за адресою"
 
-#: src/viewer/text/form.cpp:1932
+#: src/viewer/text/form.c:1936
 msgid "Post form to"
 msgstr "Відправити форму за адресою"
 
-#: src/viewer/text/form.cpp:1934
+#: src/viewer/text/form.c:1938
 msgid "Radio button"
 msgstr "Радіокнопка"
 
-#: src/viewer/text/form.cpp:1938
+#: src/viewer/text/form.c:1942
 msgid "Select field"
 msgstr "Поле вибору"
 
-#: src/viewer/text/form.cpp:1942
+#: src/viewer/text/form.c:1946
 msgid "Text area"
 msgstr "Текстова область"
 
-#: src/viewer/text/form.cpp:1944
+#: src/viewer/text/form.c:1948
 msgid "File upload"
 msgstr "Посилання файлу (upload)"
 
-#: src/viewer/text/form.cpp:1946
+#: src/viewer/text/form.c:1950
 msgid "Password field"
 msgstr "Введіть пароль"
 
-#: src/viewer/text/form.cpp:1986
+#: src/viewer/text/form.c:1990
 msgid "name"
 msgstr "ім'я"
 
-#: src/viewer/text/form.cpp:1998
+#: src/viewer/text/form.c:2002
 msgid "value"
 msgstr "значення"
 
-#: src/viewer/text/form.cpp:2011
+#: src/viewer/text/form.c:2015
 msgid "read only"
 msgstr ""
 
-#: src/viewer/text/form.cpp:2022
+#: src/viewer/text/form.c:2026
 #, c-format
 msgid "press %s to navigate"
 msgstr ""
 
-#: src/viewer/text/form.cpp:2024
+#: src/viewer/text/form.c:2028
 #, c-format
 msgid "press %s to edit"
 msgstr ""
 
-#: src/viewer/text/form.cpp:2061
+#: src/viewer/text/form.c:2065
 #, fuzzy, c-format
 msgid "press %s to submit to %s"
 msgstr "передати за адресою"
 
-#: src/viewer/text/form.cpp:2063
+#: src/viewer/text/form.c:2067
 #, fuzzy, c-format
 msgid "press %s to post to %s"
 msgstr "передати за адресою"
 
-#: src/viewer/text/form.cpp:2166
+#: src/viewer/text/form.c:2170
 msgid "Useless button"
 msgstr ""
 
-#: src/viewer/text/form.cpp:2168
+#: src/viewer/text/form.c:2172
 #, fuzzy
 msgid "Submit button"
 msgstr "Передати форму за адресою"
 
 #. accelerator_context(link_menu.map)
-#: src/viewer/text/link.cpp:1463
+#: src/viewer/text/link.c:1413
 msgid "Display ~usemap"
 msgstr "Відобразити мапу"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1468
+#: src/viewer/text/link.c:1418
 msgid "~Follow link"
 msgstr "Йти за посиланням"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1470
+#: src/viewer/text/link.c:1420
 msgid "Follow link and r~eload"
 msgstr "Йти за посиланням та перезавантажити"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1472
+#: src/viewer/text/link.c:1422
 #, fuzzy
 msgid "~Link info"
 msgstr "Посилання"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1476
+#: src/viewer/text/link.c:1426
 msgid "Open in new ~window"
 msgstr "Відкрити в новому вікні"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1478
+#: src/viewer/text/link.c:1428
 #, fuzzy
 msgid "Open in new ~tab"
 msgstr "Відкрити в новому вікні"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1480
+#: src/viewer/text/link.c:1430
 #, fuzzy
 msgid "Open in new tab in ~background"
 msgstr "На тлі"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1485
+#: src/viewer/text/link.c:1435
 msgid "~Download link"
 msgstr "Завантажити за посиланням"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1488
+#: src/viewer/text/link.c:1438
 msgid "~Add link to bookmarks"
 msgstr "Додати посилання до закладок"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1492
+#: src/viewer/text/link.c:1442
 msgid "Pass link URI to e~xternal command"
 msgstr ""
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.cpp:1503 src/viewer/text/link.cpp:1543
+#: src/viewer/text/link.c:1453 src/viewer/text/link.c:1493
 msgid "~Reset form"
 msgstr "Очистити форму"
 
 #. accelerator_context(link_menu.textarea)
-#: src/viewer/text/link.cpp:1518
+#: src/viewer/text/link.c:1468
 msgid "Open in ~external editor"
 msgstr ""
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1526
+#: src/viewer/text/link.c:1476
 msgid "~Submit form"
 msgstr "Відіслати форму"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1527
+#: src/viewer/text/link.c:1477
 msgid "Submit form and rel~oad"
 msgstr "Відіслати форму та перезавантажити"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1531
+#: src/viewer/text/link.c:1481
 msgid "Submit form and open in new ~window"
 msgstr "Відіслати форму та відкрити в новому вікні"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1533
+#: src/viewer/text/link.c:1483
 #, fuzzy
 msgid "Submit form and open in new ~tab"
 msgstr "Відіслати форму та відкрити в новому вікні"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1536
+#: src/viewer/text/link.c:1486
 #, fuzzy
 msgid "Submit form and open in new tab in ~background"
 msgstr "Відіслати форму та відкрити в новому вікні"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1541
+#: src/viewer/text/link.c:1491
 msgid "Submit form and ~download"
 msgstr "Відіслати форму та завантижити"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.cpp:1548
+#: src/viewer/text/link.c:1498
 #, fuzzy
 msgid "Form f~ields"
 msgstr "Поле"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.cpp:1555
+#: src/viewer/text/link.c:1505
 msgid "V~iew image"
 msgstr "Подивитись зображення"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.cpp:1557
+#: src/viewer/text/link.c:1507
 msgid "Download ima~ge"
 msgstr "Завантижити зображення"
 
-#: src/viewer/text/link.cpp:1566
+#: src/viewer/text/link.c:1516
 msgid "No link selected"
 msgstr "Немає вибраних посилань"
 
-#: src/viewer/text/link.cpp:1638
+#: src/viewer/text/link.c:1588
 msgid "Image"
 msgstr "Зображення"
 
-#: src/viewer/text/link.cpp:1643
+#: src/viewer/text/link.c:1593
 msgid "Usemap"
 msgstr "Мапа посилань"
 
@@ -9552,19 +9549,19 @@ msgid ""
 "entered from this file: %s"
 msgstr ""
 
-#: src/viewer/text/view.cpp:1245 src/viewer/text/view.cpp:1298
+#: src/viewer/text/view.c:1233 src/viewer/text/view.c:1286
 msgid "Go to link"
 msgstr "Йти за посиланням"
 
-#: src/viewer/text/view.cpp:1245 src/viewer/text/view.cpp:1298
+#: src/viewer/text/view.c:1233 src/viewer/text/view.c:1286
 msgid "Enter link number"
 msgstr "Введіть номер посилання"
 
-#: src/viewer/text/view.cpp:1924
+#: src/viewer/text/view.c:1906
 msgid "Save error"
 msgstr "Помилка збереження"
 
-#: src/viewer/text/view.cpp:1925
+#: src/viewer/text/view.c:1907
 msgid "Error writing to file"
 msgstr "Помилка запису до файлу"
 

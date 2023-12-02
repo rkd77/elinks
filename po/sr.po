@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.10.6.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2023-11-18 17:11+0100\n"
+"POT-Creation-Date: 2023-12-02 09:04+0100\n"
 "PO-Revision-Date: 2023-10-01 23:57+0200\n"
 "Last-Translator: Strahinya Radich (Страхиња Радић) <contact@strahinja.org>\n"
 "Language-Team: Serbian <sr@li.org>\n"
@@ -37,11 +37,11 @@ msgstr "Притисните размак да бисте проширили о�
 #: src/bfu/hierbox.c:442 src/bfu/inpfield.c:257 src/bfu/msgbox.c:173
 #: src/bfu/msgbox.c:194 src/config/dialogs.c:57 src/config/dialogs.c:365
 #: src/cookies/dialogs.c:423 src/cookies/dialogs.c:521 src/dialogs/edit.c:98
-#: src/dialogs/info.cpp:140 src/dialogs/options.c:255 src/dialogs/options.c:336
+#: src/dialogs/info.c:142 src/dialogs/options.c:255 src/dialogs/options.c:336
 #: src/mime/dialogs.c:132 src/protocol/auth/dialogs.c:159
-#: src/protocol/protocol.cpp:257 src/scripting/lua/core.c:429
+#: src/protocol/protocol.c:261 src/scripting/lua/core.c:429
 #: src/scripting/lua/core.c:510 src/scripting/python/dialogs.c:91
-#: src/session/session.cpp:975 src/viewer/text/search.c:1971
+#: src/session/session.c:975 src/viewer/text/search.c:1971
 msgid "~OK"
 msgstr "~У реду"
 
@@ -124,18 +124,16 @@ msgstr "Грешка при брисању"
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:771 src/bfu/hierbox.c:783 src/bfu/hierbox.c:831
 #: src/bfu/hierbox.c:893 src/config/dialogs.c:824 src/dialogs/menu.c:132
-#: src/formhist/formhist.c:434 src/mime/dialogs.c:70
-#: src/session/session.cpp:340 src/session/task.c:295 src/terminal/tab.c:219
-#: src/terminal/tab.c:263
+#: src/formhist/formhist.c:434 src/mime/dialogs.c:70 src/session/session.c:340
+#: src/session/task.c:295 src/terminal/tab.c:219 src/terminal/tab.c:263
 msgid "~Yes"
 msgstr "~Да"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:772 src/bfu/hierbox.c:784 src/bfu/hierbox.c:832
 #: src/bfu/hierbox.c:894 src/config/dialogs.c:825 src/dialogs/menu.c:133
-#: src/formhist/formhist.c:435 src/mime/dialogs.c:71
-#: src/session/session.cpp:341 src/session/task.c:296 src/terminal/tab.c:220
-#: src/terminal/tab.c:264
+#: src/formhist/formhist.c:435 src/mime/dialogs.c:71 src/session/session.c:341
+#: src/session/task.c:296 src/terminal/tab.c:220 src/terminal/tab.c:264
 msgid "~No"
 msgstr "~Не"
 
@@ -178,13 +176,13 @@ msgstr "Лоша ниска"
 msgid "Empty string not allowed"
 msgstr "Празна ниска није дозвољена"
 
-#. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.cpp:do_type_query, src/session/download.cpp:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
+#. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.c:do_type_query, src/session/download.c:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
 #: src/bfu/inpfield.c:257 src/config/dialogs.c:366 src/cookies/dialogs.c:424
 #: src/cookies/dialogs.c:522 src/dialogs/edit.c:102 src/dialogs/edit.c:105
 #: src/dialogs/options.c:258 src/dialogs/options.c:337 src/mime/dialogs.c:133
 #: src/protocol/auth/dialogs.c:160 src/protocol/bittorrent/dialogs.c:826
 #: src/scripting/lua/core.c:430 src/scripting/lua/core.c:511
-#: src/session/download.cpp:936 src/session/download.cpp:1840
+#: src/session/download.c:973 src/session/download.c:1877
 #: src/viewer/text/search.c:1972
 msgid "~Cancel"
 msgstr "~Поништи"
@@ -199,7 +197,7 @@ msgstr "Дигитални сат у статусној линији."
 
 #: src/bfu/leds.c:82 src/bfu/leds.c:102 src/bfu/leds.c:115
 #: src/config/options.inc:1450 src/config/options.inc:1457
-#: src/ecmascript/ecmascript.cpp:70 src/globhist/globhist.c:62
+#: src/ecmascript/ecmascript.cpp:71 src/globhist/globhist.c:62
 #: src/mime/backend/dgi.c:61 src/mime/backend/mailcap.c:93
 #: src/mime/backend/mimetypes.c:52 src/network/ssl/ssl.c:203
 #: src/network/ssl/ssl.c:366
@@ -518,8 +516,8 @@ msgid "~Delete"
 msgstr "~Обриши"
 
 #. accelerator_context(menu_keys, src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/globhist/dialogs.c:globhist_buttons)
-#: src/bookmarks/dialogs.c:620 src/config/dialogs.c:932
-#: src/dialogs/info.cpp:141 src/globhist/dialogs.c:235
+#: src/bookmarks/dialogs.c:620 src/config/dialogs.c:932 src/dialogs/info.c:143
+#: src/globhist/dialogs.c:235
 msgid "~Toggle display"
 msgstr "~Смени приказ"
 
@@ -2082,8 +2080,8 @@ msgid "Description"
 msgstr "Опис"
 
 #: src/config/dialogs.c:291 src/protocol/bittorrent/dialogs.c:606
-#: src/protocol/protocol.cpp:251 src/session/session.cpp:324
-#: src/session/session.cpp:337 src/session/session.cpp:1172
+#: src/protocol/protocol.c:255 src/session/session.c:324
+#: src/session/session.c:337 src/session/session.c:1172
 #: src/viewer/text/textarea.c:629
 msgid "Error"
 msgstr "Грешка"
@@ -2120,10 +2118,10 @@ msgstr "Додавање опције"
 msgid "Cannot add an option here."
 msgstr "Овде се не може додати опција."
 
-#. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.cpp:do_type_query, terminal_options)
+#. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
 #: src/config/dialogs.c:505 src/config/dialogs.c:934 src/cookies/dialogs.c:546
 #: src/dialogs/options.c:257 src/formhist/dialogs.c:214
-#: src/protocol/bittorrent/dialogs.c:813 src/session/download.cpp:1824
+#: src/protocol/bittorrent/dialogs.c:813 src/session/download.c:1861
 msgid "Sa~ve"
 msgstr "Сачува~ј"
 
@@ -2350,7 +2348,7 @@ msgstr ""
 "опција и чување у датотеку са подешавањима."
 
 #. Keep options in alphabetical order.
-#: src/config/options.inc:74 src/dialogs/info.cpp:186
+#: src/config/options.inc:74 src/dialogs/info.c:188
 msgid "Connections"
 msgstr "Повезивања"
 
@@ -3398,7 +3396,7 @@ msgstr ""
 "најсвежије валидације на серверу, провериће се да ли постоји свежија верзија "
 "документа на серверу."
 
-#: src/config/options.inc:613 src/dialogs/info.cpp:205
+#: src/config/options.inc:613 src/dialogs/info.c:207
 msgid "Memory cache"
 msgstr "Меморијски кеш"
 
@@ -4468,7 +4466,7 @@ msgstr "Текст"
 msgid "Dialog text colors."
 msgstr "Боје текста у дијалогу."
 
-#: src/config/options.inc:1294 src/viewer/text/form.cpp:1936
+#: src/config/options.inc:1294 src/viewer/text/form.c:1940
 msgid "Checkbox"
 msgstr "Кућица"
 
@@ -4516,7 +4514,7 @@ msgstr "Пречица дугмета"
 msgid "Selected button shortcut"
 msgstr "Пречица изабраног дугмета"
 
-#: src/config/options.inc:1322 src/viewer/text/form.cpp:1940
+#: src/config/options.inc:1322 src/viewer/text/form.c:1944
 msgid "Text field"
 msgstr "Текстуално поље"
 
@@ -5460,7 +5458,7 @@ msgid "No header info."
 msgstr "Нема података о заглављу."
 
 #: src/dialogs/download.c:263 src/dialogs/menu.c:602
-#: src/protocol/bittorrent/dialogs.c:234 src/session/download.cpp:586
+#: src/protocol/bittorrent/dialogs.c:234 src/session/download.c:623
 msgid "Download"
 msgstr "Преузимање"
 
@@ -5540,19 +5538,19 @@ msgstr "Управљач преузимања"
 msgid "Exmode"
 msgstr "Ex-режим"
 
-#: src/dialogs/info.cpp:47
+#: src/dialogs/info.c:49
 msgid "About"
 msgstr "О програму"
 
-#: src/dialogs/info.cpp:137
+#: src/dialogs/info.c:139
 msgid "Keys"
 msgstr "Тастери"
 
-#: src/dialogs/info.cpp:148
+#: src/dialogs/info.c:150
 msgid "Copying"
 msgstr "Умножавање"
 
-#: src/dialogs/info.cpp:149
+#: src/dialogs/info.c:151
 #, c-format
 msgid ""
 "ELinks %s\n"
@@ -5573,11 +5571,11 @@ msgstr ""
 "одредбана ГНУ-ове опште јавне лиценце коју је објавила Задужбина за слободни "
 "софтвер, и то искључиво верзије 2 те лиценце."
 
-#: src/dialogs/info.cpp:175 src/dialogs/info.cpp:317
+#: src/dialogs/info.c:177 src/dialogs/info.c:319
 msgid "Resources"
 msgstr "Ресурси"
 
-#: src/dialogs/info.cpp:179
+#: src/dialogs/info.c:181
 #, c-format
 msgid "%ld handle"
 msgid_plural "%ld handles"
@@ -5585,7 +5583,7 @@ msgstr[0] "%ld ручка"
 msgstr[1] "%ld ручке"
 msgstr[2] "%ld ручки"
 
-#: src/dialogs/info.cpp:183
+#: src/dialogs/info.c:185
 #, c-format
 msgid "%ld timer"
 msgid_plural "%ld timers"
@@ -5593,7 +5591,7 @@ msgstr[0] "%ld тајмер"
 msgstr[1] "%ld тајмера"
 msgstr[2] "%ld тајмера"
 
-#: src/dialogs/info.cpp:190
+#: src/dialogs/info.c:192
 #, c-format
 msgid "%ld connection"
 msgid_plural "%ld connections"
@@ -5601,7 +5599,7 @@ msgstr[0] "%ld повезивање"
 msgstr[1] "%ld повезивања"
 msgstr[2] "%ld повезивања"
 
-#: src/dialogs/info.cpp:194
+#: src/dialogs/info.c:196
 #, c-format
 msgid "%ld connecting"
 msgid_plural "%ld connecting"
@@ -5609,7 +5607,7 @@ msgstr[0] "%ld се повезује"
 msgstr[1] "%ld се повезују"
 msgstr[2] "%ld се повезује"
 
-#: src/dialogs/info.cpp:198
+#: src/dialogs/info.c:200
 #, c-format
 msgid "%ld transferring"
 msgid_plural "%ld transferring"
@@ -5617,7 +5615,7 @@ msgstr[0] "%ld преноси"
 msgstr[1] "%ld преносе"
 msgstr[2] "%ld преносе"
 
-#: src/dialogs/info.cpp:202
+#: src/dialogs/info.c:204
 #, c-format
 msgid "%ld keepalive"
 msgid_plural "%ld keepalive"
@@ -5625,7 +5623,7 @@ msgstr[0] "%ld стално"
 msgstr[1] "%ld стална"
 msgstr[2] "%ld стална"
 
-#: src/dialogs/info.cpp:210 src/dialogs/info.cpp:299
+#: src/dialogs/info.c:212 src/dialogs/info.c:301
 #, c-format
 msgid "%ld byte"
 msgid_plural "%ld bytes"
@@ -5633,7 +5631,7 @@ msgstr[0] "%ld бајт"
 msgstr[1] "%ld бајта"
 msgstr[2] "%ld бајтова"
 
-#: src/dialogs/info.cpp:214
+#: src/dialogs/info.c:216
 #, c-format
 msgid "%ld file"
 msgid_plural "%ld files"
@@ -5641,7 +5639,7 @@ msgstr[0] "%ld датотека"
 msgstr[1] "%ld датотеке"
 msgstr[2] "%ld датотека"
 
-#: src/dialogs/info.cpp:218 src/dialogs/info.cpp:233
+#: src/dialogs/info.c:220 src/dialogs/info.c:235
 #, c-format
 msgid "%ld in use"
 msgid_plural "%ld in use"
@@ -5649,7 +5647,7 @@ msgstr[0] "%ld се користи"
 msgstr[1] "%ld се користе"
 msgstr[2] "%ld се користи"
 
-#: src/dialogs/info.cpp:222
+#: src/dialogs/info.c:224
 #, c-format
 msgid "%ld loading"
 msgid_plural "%ld loading"
@@ -5657,11 +5655,11 @@ msgstr[0] "%ld се учитава"
 msgstr[1] "%ld се учитавају"
 msgstr[2] "%ld се учитава"
 
-#: src/dialogs/info.cpp:225
+#: src/dialogs/info.c:227
 msgid "Document cache"
 msgstr "Кеш докумената"
 
-#: src/dialogs/info.cpp:229
+#: src/dialogs/info.c:231
 #, c-format
 msgid "%ld formatted"
 msgid_plural "%ld formatted"
@@ -5669,7 +5667,7 @@ msgstr[0] "%ld форматиран"
 msgstr[1] "%ld форматирана"
 msgstr[2] "%ld форматирано"
 
-#: src/dialogs/info.cpp:237
+#: src/dialogs/info.c:239
 #, c-format
 msgid "%ld refreshing"
 msgid_plural "%ld refreshing"
@@ -5678,12 +5676,12 @@ msgstr[1] "%ld се освежавају"
 msgstr[2] "%ld се освежава"
 
 #. name:
-#: src/dialogs/info.cpp:241 src/ecmascript/ecmascript.cpp:66
-#: src/ecmascript/ecmascript.cpp:876
+#: src/dialogs/info.c:243 src/ecmascript/ecmascript.cpp:67
+#: src/ecmascript/ecmascript.cpp:707
 msgid "ECMAScript"
 msgstr "ECMAScript"
 
-#: src/dialogs/info.cpp:245
+#: src/dialogs/info.c:247
 #, c-format
 msgid "%ld interpreter"
 msgid_plural "%ld interpreters"
@@ -5691,19 +5689,19 @@ msgstr[0] "%ld интерпретер"
 msgstr[1] "%ld интерпретера"
 msgstr[2] "%ld интерпретера"
 
-#: src/dialogs/info.cpp:249
+#: src/dialogs/info.c:251
 msgid "Interlinking"
 msgstr "Међусобно повезивање"
 
-#: src/dialogs/info.cpp:252
+#: src/dialogs/info.c:254
 msgid "master terminal"
 msgstr "главни терминал"
 
-#: src/dialogs/info.cpp:254
+#: src/dialogs/info.c:256
 msgid "slave terminal"
 msgstr "споредни терминал"
 
-#: src/dialogs/info.cpp:258
+#: src/dialogs/info.c:260
 #, c-format
 msgid "%ld terminal"
 msgid_plural "%ld terminals"
@@ -5711,7 +5709,7 @@ msgstr[0] "%ld терминал"
 msgstr[1] "%ld терминала"
 msgstr[2] "%ld терминала"
 
-#: src/dialogs/info.cpp:262
+#: src/dialogs/info.c:264
 #, c-format
 msgid "%ld session"
 msgid_plural "%ld sessions"
@@ -5719,15 +5717,15 @@ msgstr[0] "%ld сесија"
 msgstr[1] "%ld сесије"
 msgstr[2] "%ld сесија"
 
-#: src/dialogs/info.cpp:265
+#: src/dialogs/info.c:267
 msgid "Number of temporary files"
 msgstr "Број привремених датотека"
 
-#: src/dialogs/info.cpp:295
+#: src/dialogs/info.c:297
 msgid "Memory allocated"
 msgstr "Алоцирано меморије"
 
-#: src/dialogs/info.cpp:303
+#: src/dialogs/info.c:305
 #, c-format
 msgid "%ld byte overhead"
 msgid_plural "%ld bytes overhead"
@@ -6407,37 +6405,45 @@ msgstr ""
 "ASCII знакови. Видети CSS2 секцију 7: http://www.w3.org/TR/1998/REC-"
 "CSS2-19980512/media.html"
 
-#: src/ecmascript/ecmascript.cpp:68
+#: src/ecmascript/ecmascript-c.cpp:53
+msgid "Ecmascript enabled"
+msgstr "Ecmascript активиран"
+
+#: src/ecmascript/ecmascript-c.cpp:55
+msgid "Ecmascript disabled"
+msgstr "Ecmascript деактивиран"
+
+#: src/ecmascript/ecmascript.cpp:69
 msgid "ECMAScript options."
 msgstr "Опције ECMAScript-а."
 
-#: src/ecmascript/ecmascript.cpp:72
+#: src/ecmascript/ecmascript.cpp:73
 msgid "Whether to run those scripts inside of documents."
 msgstr "Да ли да се покрећу ти скриптови унутар докумената."
 
-#: src/ecmascript/ecmascript.cpp:74
+#: src/ecmascript/ecmascript.cpp:75
 msgid "Console log"
 msgstr "Дневник конзоле"
 
-#: src/ecmascript/ecmascript.cpp:76
+#: src/ecmascript/ecmascript.cpp:77
 msgid "When enabled logs will be appended to ~/.config/elinks/console.log."
 msgstr ""
 "Када је активирано, сви дневници ће бити дописани у ~/.config/elinks/console."
 "log."
 
-#: src/ecmascript/ecmascript.cpp:78
+#: src/ecmascript/ecmascript.cpp:79
 msgid "Script error reporting"
 msgstr "Пријављивање грешака у скриптовима"
 
-#: src/ecmascript/ecmascript.cpp:80
+#: src/ecmascript/ecmascript.cpp:81
 msgid "Open a message box when a script reports an error."
 msgstr "Отварање дијалога када скрипт пријави грешку."
 
-#: src/ecmascript/ecmascript.cpp:82
+#: src/ecmascript/ecmascript.cpp:83
 msgid "Ignore <noscript> content"
 msgstr "Игнорисање <noscript> садржаја"
 
-#: src/ecmascript/ecmascript.cpp:84
+#: src/ecmascript/ecmascript.cpp:85
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag when ECMAScript is "
 "enabled."
@@ -6445,43 +6451,35 @@ msgstr ""
 "Да ли ће се игнорисати садржај окружен <noscript> ознакама када је омогућен "
 "ECMAScript."
 
-#: src/ecmascript/ecmascript.cpp:87
+#: src/ecmascript/ecmascript.cpp:88
 msgid "Maximum execution time"
 msgstr "Максимално дозвољено време извршавања"
 
-#: src/ecmascript/ecmascript.cpp:89
+#: src/ecmascript/ecmascript.cpp:90
 msgid "Maximum execution time in seconds for a script."
 msgstr "Максимално дозвољено време извршавања скрипта."
 
-#: src/ecmascript/ecmascript.cpp:91
+#: src/ecmascript/ecmascript.cpp:92
 msgid "Pop-up window blocking"
 msgstr "Блокирање искачућих прозора"
 
-#: src/ecmascript/ecmascript.cpp:93
+#: src/ecmascript/ecmascript.cpp:94
 msgid "Whether to disallow scripts to open new windows or tabs."
 msgstr "Да ли да се скриптовима забрани отварање нових прозора или језичака."
 
-#: src/ecmascript/ecmascript.cpp:95
+#: src/ecmascript/ecmascript.cpp:96
 msgid "Allow XHR requests to local files"
 msgstr "Дозволити XHR захтеве ка локалним датотекама"
 
-#: src/ecmascript/ecmascript.cpp:97
+#: src/ecmascript/ecmascript.cpp:98
 msgid "Whether to allow XHR requests to local files."
 msgstr "Да ли ће се дозволити XHR захтеви ка локалним датотекама."
 
-#: src/ecmascript/ecmascript.cpp:171
-msgid "Ecmascript enabled"
-msgstr "Ecmascript активиран"
-
-#: src/ecmascript/ecmascript.cpp:173
-msgid "Ecmascript disabled"
-msgstr "Ecmascript деактивиран"
-
-#: src/ecmascript/ecmascript.cpp:571
+#: src/ecmascript/ecmascript.cpp:402
 msgid "JavaScript Emergency"
 msgstr "Узбуна JavaScript-а"
 
-#: src/ecmascript/ecmascript.cpp:573
+#: src/ecmascript/ecmascript.cpp:404
 #, c-format
 msgid ""
 "A script embedded in the current document was running\n"
@@ -6493,12 +6491,6 @@ msgstr ""
 "%d секунди. То вероватно значи да у скрипту постоји\n"
 "грешка и да би могао да заустави цео ELinks, па је зато\n"
 "извршавање скрипта прекинуто."
-
-#: src/ecmascript/libdom/mujs/window.c:272
-#: src/ecmascript/libdom/quickjs/window.c:553
-#: src/ecmascript/libdom/spidermonkey/window.cpp:426
-msgid "JavaScript Alert"
-msgstr "Упозорење JavaScript-а"
 
 #: src/ecmascript/mujs.cpp:259 src/ecmascript/quickjs.cpp:288
 #: src/ecmascript/spidermonkey.cpp:113
@@ -6514,6 +6506,11 @@ msgstr "Грешка JavaScript-а"
 #: src/ecmascript/mujs.cpp:445
 msgid "mujs"
 msgstr "mujs"
+
+#: src/ecmascript/mujs/window.c:272 src/ecmascript/quickjs/window.c:553
+#: src/ecmascript/spidermonkey/window.cpp:426
+msgid "JavaScript Alert"
+msgstr "Упозорење JavaScript-а"
 
 #. name:
 #: src/ecmascript/quickjs.cpp:416
@@ -8364,7 +8361,7 @@ msgstr "Датотеке"
 msgid "Comment"
 msgstr "Коментар"
 
-#: src/protocol/bittorrent/dialogs.c:235 src/session/download.cpp:587
+#: src/protocol/bittorrent/dialogs.c:235 src/session/download.c:624
 #, c-format
 msgid ""
 "Download complete:\n"
@@ -8534,7 +8531,7 @@ msgstr[0] "%u недоступан"
 msgstr[1] "%u недоступна"
 msgstr[2] "%u недоступно"
 
-#: src/protocol/bittorrent/dialogs.c:590 src/session/session.cpp:314
+#: src/protocol/bittorrent/dialogs.c:590 src/session/session.c:314
 #, c-format
 msgid "Unable to retrieve %s"
 msgstr "Не може се добавити %s"
@@ -8548,7 +8545,7 @@ msgstr "Шта бисте желели да урадите са датотеко
 msgid "Information about the torrent"
 msgstr "Подаци о торенту"
 
-#: src/protocol/bittorrent/dialogs.c:788 src/session/download.cpp:1725
+#: src/protocol/bittorrent/dialogs.c:788 src/session/download.c:1762
 msgid "What to do?"
 msgstr "Шта да се ради?"
 
@@ -8557,13 +8554,13 @@ msgstr "Шта да се ради?"
 msgid "Down~load"
 msgstr "~Преузми"
 
-#. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.cpp:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:816 src/session/download.cpp:1830
+#. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
+#: src/protocol/bittorrent/dialogs.c:816 src/session/download.c:1867
 msgid "~Display"
 msgstr "П~рикажи"
 
-#. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.cpp:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:820 src/session/download.cpp:1834
+#. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
+#: src/protocol/bittorrent/dialogs.c:820 src/session/download.c:1871
 msgid "Show ~header"
 msgstr "Прикажи ~заглавље"
 
@@ -9109,32 +9106,32 @@ msgstr ""
 "запетама. Нпр. „Subject“ и „From“. Све ставке заглавља се могу погледати у "
 "дијалогу „Подаци о заглављу“."
 
-#: src/protocol/protocol.cpp:253
+#: src/protocol/protocol.c:257
 #, c-format
 msgid "This version of ELinks does not contain %s protocol support"
 msgstr "Ова верзија ЕЛинкса не садржи подршку за протокол %s"
 
-#: src/protocol/protocol.cpp:284
+#: src/protocol/protocol.c:288
 msgid "Protocols"
 msgstr "Протоколи"
 
-#: src/protocol/protocol.cpp:286
+#: src/protocol/protocol.c:290
 msgid "Protocol specific options."
 msgstr "Опције у вези са протоколима."
 
-#: src/protocol/protocol.cpp:288
+#: src/protocol/protocol.c:292
 msgid "Default protocol prefix"
 msgstr "Подразумевани протоколски префикс"
 
-#: src/protocol/protocol.cpp:290
+#: src/protocol/protocol.c:294
 msgid "Default protocol prefix when none protocol was entered."
 msgstr "Подразумевани протоколски префикс ако се не зада протокол."
 
-#: src/protocol/protocol.cpp:292
+#: src/protocol/protocol.c:296
 msgid "No-proxy domains"
 msgstr "Домени без проксија"
 
-#: src/protocol/protocol.cpp:294
+#: src/protocol/protocol.c:298
 msgid ""
 "Comma separated list of domains for which the proxy (HTTP/FTP) should be "
 "disabled. Optionally, a port can be specified for some domains as well. If "
@@ -9145,7 +9142,7 @@ msgstr ""
 "је ово празно, биће проверавана и променљива окружења NO_PROXY."
 
 #. name:
-#: src/protocol/protocol.cpp:349
+#: src/protocol/protocol.c:353
 msgid "Protocol"
 msgstr "Протокол"
 
@@ -9412,12 +9409,12 @@ msgstr "Упозорење корисничког скрипта"
 msgid "Spidermonkey ECMAScript"
 msgstr "Spidermonkey ECMAScript"
 
-#: src/session/download.cpp:280 src/session/download.cpp:523
-#: src/session/download.cpp:892 src/session/download.cpp:997
+#: src/session/download.c:317 src/session/download.c:560
+#: src/session/download.c:929 src/session/download.c:1034
 msgid "Download error"
 msgstr "Грешка при преузимању"
 
-#: src/session/download.cpp:281 src/session/download.cpp:998
+#: src/session/download.c:318 src/session/download.c:1035
 #, c-format
 msgid ""
 "Could not create file '%s':\n"
@@ -9426,7 +9423,7 @@ msgstr ""
 "Не може се креирати датотека „%s“:\n"
 "%s"
 
-#: src/session/download.cpp:524
+#: src/session/download.c:561
 #, c-format
 msgid ""
 "Error downloading %s:\n"
@@ -9437,16 +9434,16 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/session/download.cpp:893
+#: src/session/download.c:930
 #, c-format
 msgid "'%s' is a directory."
 msgstr "„%s“ је директоријум."
 
-#: src/session/download.cpp:922
+#: src/session/download.c:959
 msgid "File exists"
 msgstr "Датотека већ постоји"
 
-#: src/session/download.cpp:923
+#: src/session/download.c:960
 #, c-format
 msgid ""
 "This file already exists:\n"
@@ -9461,55 +9458,55 @@ msgstr ""
 "Алтернативни назив је:\n"
 "%s"
 
-#. accelerator_context(src/session/download.cpp:lookup_unique_name)
-#: src/session/download.cpp:930
+#. accelerator_context(src/session/download.c:lookup_unique_name)
+#: src/session/download.c:967
 msgid "Sa~ve under the alternative name"
 msgstr "Сачувај под а~лтернативним називом"
 
-#. accelerator_context(src/session/download.cpp:lookup_unique_name)
-#: src/session/download.cpp:931
+#. accelerator_context(src/session/download.c:lookup_unique_name)
+#: src/session/download.c:968
 msgid "~Overwrite the original file"
 msgstr "Препи~ши преко првобитне датотеке"
 
-#. accelerator_context(src/session/download.cpp:lookup_unique_name)
-#: src/session/download.cpp:933
+#. accelerator_context(src/session/download.c:lookup_unique_name)
+#: src/session/download.c:970
 msgid "~Resume download of the original file"
 msgstr "Настави преузи~мање оригиналне датотеке"
 
-#: src/session/download.cpp:1728
+#: src/session/download.c:1765
 msgid "Unknown type"
 msgstr "Непозната врста"
 
-#: src/session/download.cpp:1753
+#: src/session/download.c:1790
 #, c-format
 msgid "What would you like to do with the file '%s' (type: %s%s%s)?"
 msgstr "Шта желите да урадите са датотеком „%s“ (врсте %s%s%s)?"
 
-#: src/session/download.cpp:1756
+#: src/session/download.c:1793
 #, c-format
 msgid "What would you like to do with the file (type: %s%s%s)?"
 msgstr "Шта желите да урадите са датотеком (врсте %s%s%s)?"
 
-#: src/session/download.cpp:1785
+#: src/session/download.c:1822
 #, c-format
 msgid "Program ('%f' will be replaced by the filename, '%u' by the uri)"
 msgstr "Програм („%f“ ће бити замењено називом датотеке, „%u“ УРЛ-ом)"
 
-#: src/session/download.cpp:1790
+#: src/session/download.c:1827
 msgid "Block the terminal"
 msgstr "Блокирање терминала"
 
-#: src/session/download.cpp:1796
+#: src/session/download.c:1833
 #, c-format
 msgid "The file will be opened with the program '%s'."
 msgstr "Датотека ће бити отворена програмом „%s“."
 
-#. accelerator_context(src/session/download.cpp:do_type_query)
-#: src/session/download.cpp:1817
+#. accelerator_context(src/session/download.c:do_type_query)
+#: src/session/download.c:1854
 msgid "~Open"
 msgstr "~Отвори"
 
-#: src/session/session.cpp:332
+#: src/session/session.c:332
 msgid "Retry without verification?"
 msgstr "Поновни покушај без верификације?"
 
@@ -9517,12 +9514,12 @@ msgstr "Поновни покушај без верификације?"
 #. * and formatting it with "%u" is safe,
 #. * because fc_maxlength is smaller than
 #. * file.length, which is an int.
-#: src/session/session.cpp:923 src/session/session.cpp:942
-#: src/session/task.c:292 src/viewer/text/textarea.c:685
+#: src/session/session.c:923 src/session/session.c:942 src/session/task.c:292
+#: src/viewer/text/textarea.c:685
 msgid "Warning"
 msgstr "Упозорење"
 
-#: src/session/session.cpp:924
+#: src/session/session.c:924
 msgid ""
 "You have an empty string in protocol.http.user_agent - this was a default "
 "value in the past, substituted by default ELinks User-Agent string. However, "
@@ -9541,7 +9538,7 @@ msgstr ""
 "последње), па ће бити коришћена само подразумевана поставка. Извињавамо се "
 "због евентуалних непријатности које су овим проузроковане."
 
-#: src/session/session.cpp:943
+#: src/session/session.c:943
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
 "configuration saving algorithms of ELinks were changed from the last time "
@@ -9563,12 +9560,12 @@ msgstr ""
 "3, како бисте добили „исправно“ понашање. Извињавамо се због евентуалних "
 "непријатности које су овим проузроковане."
 
-#: src/session/session.cpp:968
+#: src/session/session.c:968
 msgid "Welcome"
 msgstr "Добродошли"
 
 #. accelerator_context(setup_first_session)
-#: src/session/session.cpp:969
+#: src/session/session.c:969
 msgid ""
 "Welcome to ELinks!\n"
 "\n"
@@ -9585,7 +9582,7 @@ msgstr ""
 "Уколико их још нисте ископирали из ~/.elinks, учините то сада и поново "
 "покрените програм."
 
-#: src/session/session.cpp:1184
+#: src/session/session.c:1184
 msgid "Incorrect search uri"
 msgstr "Неисправан УРИ за претрагу"
 
@@ -9730,205 +9727,205 @@ msgstr "Део не постоји"
 msgid "The requested fragment \"%s\" doesn't exist."
 msgstr "Тражени део „%s“ не постоји."
 
-#: src/viewer/text/form.cpp:1127
+#: src/viewer/text/form.c:1131
 msgid "Error while posting form"
 msgstr "Грешка приликом слања обрасца"
 
-#: src/viewer/text/form.cpp:1128
+#: src/viewer/text/form.c:1132
 #, c-format
 msgid "Could not load file %s: %s"
 msgstr "Неуспешно учитавање датотеке %s: %s"
 
-#: src/viewer/text/form.cpp:1921
+#: src/viewer/text/form.c:1925
 msgid "Reset form"
 msgstr "Поновно постављање обрасца"
 
-#: src/viewer/text/form.cpp:1923
+#: src/viewer/text/form.c:1927
 msgid "Harmless button"
 msgstr "Безопасно дугме"
 
-#: src/viewer/text/form.cpp:1931
+#: src/viewer/text/form.c:1935
 msgid "Submit form to"
 msgstr "Предаја обрасца на"
 
-#: src/viewer/text/form.cpp:1932
+#: src/viewer/text/form.c:1936
 msgid "Post form to"
 msgstr "Слање обрасца на"
 
-#: src/viewer/text/form.cpp:1934
+#: src/viewer/text/form.c:1938
 msgid "Radio button"
 msgstr "Радио дугме"
 
-#: src/viewer/text/form.cpp:1938
+#: src/viewer/text/form.c:1942
 msgid "Select field"
 msgstr "Поље за избор"
 
-#: src/viewer/text/form.cpp:1942
+#: src/viewer/text/form.c:1946
 msgid "Text area"
 msgstr "Текстуална област"
 
-#: src/viewer/text/form.cpp:1944
+#: src/viewer/text/form.c:1948
 msgid "File upload"
 msgstr "Слање датотеке"
 
-#: src/viewer/text/form.cpp:1946
+#: src/viewer/text/form.c:1950
 msgid "Password field"
 msgstr "Поље за лозинку"
 
-#: src/viewer/text/form.cpp:1986
+#: src/viewer/text/form.c:1990
 msgid "name"
 msgstr "назив"
 
-#: src/viewer/text/form.cpp:1998
+#: src/viewer/text/form.c:2002
 msgid "value"
 msgstr "вредност"
 
-#: src/viewer/text/form.cpp:2011
+#: src/viewer/text/form.c:2015
 msgid "read only"
 msgstr "само за читање"
 
-#: src/viewer/text/form.cpp:2022
+#: src/viewer/text/form.c:2026
 #, c-format
 msgid "press %s to navigate"
 msgstr "притисните %s за кретање"
 
-#: src/viewer/text/form.cpp:2024
+#: src/viewer/text/form.c:2028
 #, c-format
 msgid "press %s to edit"
 msgstr "притисните %s за уређивање"
 
-#: src/viewer/text/form.cpp:2061
+#: src/viewer/text/form.c:2065
 #, c-format
 msgid "press %s to submit to %s"
 msgstr "притисните %s да предате на %s"
 
-#: src/viewer/text/form.cpp:2063
+#: src/viewer/text/form.c:2067
 #, c-format
 msgid "press %s to post to %s"
 msgstr "притисните %s да пошаљете на %s"
 
-#: src/viewer/text/form.cpp:2166
+#: src/viewer/text/form.c:2170
 msgid "Useless button"
 msgstr "Бескорисно дугме"
 
-#: src/viewer/text/form.cpp:2168
+#: src/viewer/text/form.c:2172
 msgid "Submit button"
 msgstr "Дугме за предају обрасца"
 
 #. accelerator_context(link_menu.map)
-#: src/viewer/text/link.cpp:1463
+#: src/viewer/text/link.c:1413
 msgid "Display ~usemap"
 msgstr "Прикажи ~мапу"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1468
+#: src/viewer/text/link.c:1418
 msgid "~Follow link"
 msgstr "~Прати везу"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1470
+#: src/viewer/text/link.c:1420
 msgid "Follow link and r~eload"
 msgstr "Прати в~езу и поново учитај"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1472
+#: src/viewer/text/link.c:1422
 msgid "~Link info"
 msgstr "~Информације о вези"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1476
+#: src/viewer/text/link.c:1426
 msgid "Open in new ~window"
 msgstr "Отвори у новом п~розору"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1478
+#: src/viewer/text/link.c:1428
 msgid "Open in new ~tab"
 msgstr "Отвори у новом ~језичку"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1480
+#: src/viewer/text/link.c:1430
 msgid "Open in new tab in ~background"
 msgstr "Отвори у новом позадинском је~зичку"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1485
+#: src/viewer/text/link.c:1435
 msgid "~Download link"
 msgstr "Пре~узми везу"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1488
+#: src/viewer/text/link.c:1438
 msgid "~Add link to bookmarks"
 msgstr "~Додај везу у обележиваче"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1492
+#: src/viewer/text/link.c:1442
 msgid "Pass link URI to e~xternal command"
 msgstr "Проследи УРИ ~везе спољашњој наредби"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.cpp:1503 src/viewer/text/link.cpp:1543
+#: src/viewer/text/link.c:1453 src/viewer/text/link.c:1493
 msgid "~Reset form"
 msgstr "Поново пос~тави образац"
 
 #. accelerator_context(link_menu.textarea)
-#: src/viewer/text/link.cpp:1518
+#: src/viewer/text/link.c:1468
 msgid "Open in ~external editor"
 msgstr "Отвори у ~спољашњем уређивачу"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1526
+#: src/viewer/text/link.c:1476
 msgid "~Submit form"
 msgstr "~Предај образац"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1527
+#: src/viewer/text/link.c:1477
 msgid "Submit form and rel~oad"
 msgstr "Предај образац и поново ~учитај"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1531
+#: src/viewer/text/link.c:1481
 msgid "Submit form and open in new ~window"
 msgstr "Предај образац и отвори у новом п~розору"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1533
+#: src/viewer/text/link.c:1483
 msgid "Submit form and open in new ~tab"
 msgstr "Предај образац и отвори у новом ј~езичку"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1536
+#: src/viewer/text/link.c:1486
 msgid "Submit form and open in new tab in ~background"
 msgstr "Предај образац и отвори у новом п~озадинском језичку"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1541
+#: src/viewer/text/link.c:1491
 msgid "Submit form and ~download"
 msgstr "Предај образац и преу~зми"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.cpp:1548
+#: src/viewer/text/link.c:1498
 msgid "Form f~ields"
 msgstr "Поља ~обрасца"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.cpp:1555
+#: src/viewer/text/link.c:1505
 msgid "V~iew image"
 msgstr "Погледај с~лику"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.cpp:1557
+#: src/viewer/text/link.c:1507
 msgid "Download ima~ge"
 msgstr "Преузми ~слику"
 
-#: src/viewer/text/link.cpp:1566
+#: src/viewer/text/link.c:1516
 msgid "No link selected"
 msgstr "Нема изабраних веза"
 
-#: src/viewer/text/link.cpp:1638
+#: src/viewer/text/link.c:1588
 msgid "Image"
 msgstr "Слика"
 
-#: src/viewer/text/link.cpp:1643
+#: src/viewer/text/link.c:1593
 msgid "Usemap"
 msgstr "Мапа"
 
@@ -10025,19 +10022,19 @@ msgstr ""
 "Ваш унос је скраћен, али још можете опоравити текст који сте унели из "
 "следеће датотеке: %s"
 
-#: src/viewer/text/view.cpp:1245 src/viewer/text/view.cpp:1298
+#: src/viewer/text/view.c:1233 src/viewer/text/view.c:1286
 msgid "Go to link"
 msgstr "Иди на везу"
 
-#: src/viewer/text/view.cpp:1245 src/viewer/text/view.cpp:1298
+#: src/viewer/text/view.c:1233 src/viewer/text/view.c:1286
 msgid "Enter link number"
 msgstr "Унесите број везе"
 
-#: src/viewer/text/view.cpp:1924
+#: src/viewer/text/view.c:1906
 msgid "Save error"
 msgstr "Грешка приликом чувања"
 
-#: src/viewer/text/view.cpp:1925
+#: src/viewer/text/view.c:1907
 msgid "Error writing to file"
 msgstr "Грешка приликом уписа у датотеку"
 

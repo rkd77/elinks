@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.9.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2023-11-18 17:11+0100\n"
+"POT-Creation-Date: 2023-12-02 09:04+0100\n"
 "PO-Revision-Date: 2005-06-14 20:52+0200\n"
 "Last-Translator: Jens Seidel <jensseidel@users.sf.net>\n"
 "Language-Team: German <de@li.org>\n"
@@ -39,11 +39,11 @@ msgstr "Drücken Sie die Leertaste um diesen Ordner aufzuklappen."
 #: src/bfu/hierbox.c:442 src/bfu/inpfield.c:257 src/bfu/msgbox.c:173
 #: src/bfu/msgbox.c:194 src/config/dialogs.c:57 src/config/dialogs.c:365
 #: src/cookies/dialogs.c:423 src/cookies/dialogs.c:521 src/dialogs/edit.c:98
-#: src/dialogs/info.cpp:140 src/dialogs/options.c:255 src/dialogs/options.c:336
+#: src/dialogs/info.c:142 src/dialogs/options.c:255 src/dialogs/options.c:336
 #: src/mime/dialogs.c:132 src/protocol/auth/dialogs.c:159
-#: src/protocol/protocol.cpp:257 src/scripting/lua/core.c:429
+#: src/protocol/protocol.c:261 src/scripting/lua/core.c:429
 #: src/scripting/lua/core.c:510 src/scripting/python/dialogs.c:91
-#: src/session/session.cpp:975 src/viewer/text/search.c:1971
+#: src/session/session.c:975 src/viewer/text/search.c:1971
 #, fuzzy
 msgid "~OK"
 msgstr "OK"
@@ -127,9 +127,8 @@ msgstr "Fehler beim Löschen"
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:771 src/bfu/hierbox.c:783 src/bfu/hierbox.c:831
 #: src/bfu/hierbox.c:893 src/config/dialogs.c:824 src/dialogs/menu.c:132
-#: src/formhist/formhist.c:434 src/mime/dialogs.c:70
-#: src/session/session.cpp:340 src/session/task.c:295 src/terminal/tab.c:219
-#: src/terminal/tab.c:263
+#: src/formhist/formhist.c:434 src/mime/dialogs.c:70 src/session/session.c:340
+#: src/session/task.c:295 src/terminal/tab.c:219 src/terminal/tab.c:263
 #, fuzzy
 msgid "~Yes"
 msgstr "Ja"
@@ -137,9 +136,8 @@ msgstr "Ja"
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:772 src/bfu/hierbox.c:784 src/bfu/hierbox.c:832
 #: src/bfu/hierbox.c:894 src/config/dialogs.c:825 src/dialogs/menu.c:133
-#: src/formhist/formhist.c:435 src/mime/dialogs.c:71
-#: src/session/session.cpp:341 src/session/task.c:296 src/terminal/tab.c:220
-#: src/terminal/tab.c:264
+#: src/formhist/formhist.c:435 src/mime/dialogs.c:71 src/session/session.c:341
+#: src/session/task.c:296 src/terminal/tab.c:220 src/terminal/tab.c:264
 #, fuzzy
 msgid "~No"
 msgstr "Nein"
@@ -183,13 +181,13 @@ msgstr "Unzulässige Zeichenfolge"
 msgid "Empty string not allowed"
 msgstr "Zeichenfolge darf nicht leer sein"
 
-#. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.cpp:do_type_query, src/session/download.cpp:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
+#. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.c:do_type_query, src/session/download.c:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
 #: src/bfu/inpfield.c:257 src/config/dialogs.c:366 src/cookies/dialogs.c:424
 #: src/cookies/dialogs.c:522 src/dialogs/edit.c:102 src/dialogs/edit.c:105
 #: src/dialogs/options.c:258 src/dialogs/options.c:337 src/mime/dialogs.c:133
 #: src/protocol/auth/dialogs.c:160 src/protocol/bittorrent/dialogs.c:826
 #: src/scripting/lua/core.c:430 src/scripting/lua/core.c:511
-#: src/session/download.cpp:936 src/session/download.cpp:1840
+#: src/session/download.c:973 src/session/download.c:1877
 #: src/viewer/text/search.c:1972
 #, fuzzy
 msgid "~Cancel"
@@ -205,7 +203,7 @@ msgstr "Digitale Uhrzeit in der Statuszeile."
 
 #: src/bfu/leds.c:82 src/bfu/leds.c:102 src/bfu/leds.c:115
 #: src/config/options.inc:1450 src/config/options.inc:1457
-#: src/ecmascript/ecmascript.cpp:70 src/globhist/globhist.c:62
+#: src/ecmascript/ecmascript.cpp:71 src/globhist/globhist.c:62
 #: src/mime/backend/dgi.c:61 src/mime/backend/mailcap.c:93
 #: src/mime/backend/mimetypes.c:52 src/network/ssl/ssl.c:203
 #: src/network/ssl/ssl.c:366
@@ -508,8 +506,8 @@ msgid "~Delete"
 msgstr "Löschen"
 
 #. accelerator_context(menu_keys, src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/globhist/dialogs.c:globhist_buttons)
-#: src/bookmarks/dialogs.c:620 src/config/dialogs.c:932
-#: src/dialogs/info.cpp:141 src/globhist/dialogs.c:235
+#: src/bookmarks/dialogs.c:620 src/config/dialogs.c:932 src/dialogs/info.c:143
+#: src/globhist/dialogs.c:235
 #, fuzzy
 msgid "~Toggle display"
 msgstr "Anzeige umschalten"
@@ -2131,8 +2129,8 @@ msgid "Description"
 msgstr "Beschreibung"
 
 #: src/config/dialogs.c:291 src/protocol/bittorrent/dialogs.c:606
-#: src/protocol/protocol.cpp:251 src/session/session.cpp:324
-#: src/session/session.cpp:337 src/session/session.cpp:1172
+#: src/protocol/protocol.c:255 src/session/session.c:324
+#: src/session/session.c:337 src/session/session.c:1172
 #: src/viewer/text/textarea.c:629
 msgid "Error"
 msgstr "Fehler"
@@ -2168,10 +2166,10 @@ msgstr "Option hinzufügen"
 msgid "Cannot add an option here."
 msgstr "Hier kann keine Option hinzugefügt werden."
 
-#. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.cpp:do_type_query, terminal_options)
+#. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
 #: src/config/dialogs.c:505 src/config/dialogs.c:934 src/cookies/dialogs.c:546
 #: src/dialogs/options.c:257 src/formhist/dialogs.c:214
-#: src/protocol/bittorrent/dialogs.c:813 src/session/download.cpp:1824
+#: src/protocol/bittorrent/dialogs.c:813 src/session/download.c:1861
 #, fuzzy
 msgid "Sa~ve"
 msgstr "Speichern"
@@ -2403,7 +2401,7 @@ msgstr ""
 "im Optionsmanager und speicher diese in die Konfigurations-Datei."
 
 #. Keep options in alphabetical order.
-#: src/config/options.inc:74 src/dialogs/info.cpp:186
+#: src/config/options.inc:74 src/dialogs/info.c:188
 msgid "Connections"
 msgstr "Verbindungen"
 
@@ -3396,7 +3394,7 @@ msgid ""
 "A value of -1 disables automatic revalidation."
 msgstr ""
 
-#: src/config/options.inc:613 src/dialogs/info.cpp:205
+#: src/config/options.inc:613 src/dialogs/info.c:207
 msgid "Memory cache"
 msgstr "RAM-Cache"
 
@@ -4459,7 +4457,7 @@ msgstr "Text"
 msgid "Dialog text colors."
 msgstr "Farben des Textes in Dialogen."
 
-#: src/config/options.inc:1294 src/viewer/text/form.cpp:1936
+#: src/config/options.inc:1294 src/viewer/text/form.c:1940
 msgid "Checkbox"
 msgstr "Checkbox"
 
@@ -4510,7 +4508,7 @@ msgstr ""
 msgid "Selected button shortcut"
 msgstr "Ausgewählte Schaltfläche"
 
-#: src/config/options.inc:1322 src/viewer/text/form.cpp:1940
+#: src/config/options.inc:1322 src/viewer/text/form.c:1944
 msgid "Text field"
 msgstr "Textfeld"
 
@@ -5496,7 +5494,7 @@ msgid "No header info."
 msgstr "Keine Header-Informationen"
 
 #: src/dialogs/download.c:263 src/dialogs/menu.c:602
-#: src/protocol/bittorrent/dialogs.c:234 src/session/download.cpp:586
+#: src/protocol/bittorrent/dialogs.c:234 src/session/download.c:623
 msgid "Download"
 msgstr "Download"
 
@@ -5580,19 +5578,19 @@ msgstr "Downloadverwaltung"
 msgid "Exmode"
 msgstr ""
 
-#: src/dialogs/info.cpp:47
+#: src/dialogs/info.c:49
 msgid "About"
 msgstr "Info"
 
-#: src/dialogs/info.cpp:137
+#: src/dialogs/info.c:139
 msgid "Keys"
 msgstr "Tastaturbelegung"
 
-#: src/dialogs/info.cpp:148
+#: src/dialogs/info.c:150
 msgid "Copying"
 msgstr "Urheberrechtshinweis"
 
-#: src/dialogs/info.cpp:149
+#: src/dialogs/info.c:151
 #, fuzzy, c-format
 msgid ""
 "ELinks %s\n"
@@ -5612,93 +5610,93 @@ msgstr ""
 "verändern unter den Bedingungen der GNU General Public License, wie von der "
 "Free Software Foundation veröffentlicht, speziell Version 2 der Lizenz."
 
-#: src/dialogs/info.cpp:175 src/dialogs/info.cpp:317
+#: src/dialogs/info.c:177 src/dialogs/info.c:319
 msgid "Resources"
 msgstr "Ressourcen"
 
-#: src/dialogs/info.cpp:179
+#: src/dialogs/info.c:181
 #, c-format
 msgid "%ld handle"
 msgid_plural "%ld handles"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/dialogs/info.cpp:183
+#: src/dialogs/info.c:185
 #, fuzzy, c-format
 msgid "%ld timer"
 msgid_plural "%ld timers"
 msgstr[0] "vergangene Zeit"
 msgstr[1] "vergangene Zeit"
 
-#: src/dialogs/info.cpp:190
+#: src/dialogs/info.c:192
 #, fuzzy, c-format
 msgid "%ld connection"
 msgid_plural "%ld connections"
 msgstr[0] "Verbindung abbrechen"
 msgstr[1] "Verbindung abbrechen"
 
-#: src/dialogs/info.cpp:194
+#: src/dialogs/info.c:196
 #, fuzzy, c-format
 msgid "%ld connecting"
 msgid_plural "%ld connecting"
 msgstr[0] "Verbindung abbrechen"
 msgstr[1] "Verbindung abbrechen"
 
-#: src/dialogs/info.cpp:198
+#: src/dialogs/info.c:200
 #, fuzzy, c-format
 msgid "%ld transferring"
 msgid_plural "%ld transferring"
 msgstr[0] "Übertragung"
 msgstr[1] "Übertragung"
 
-#: src/dialogs/info.cpp:202
+#: src/dialogs/info.c:204
 #, c-format
 msgid "%ld keepalive"
 msgid_plural "%ld keepalive"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/dialogs/info.cpp:210 src/dialogs/info.cpp:299
+#: src/dialogs/info.c:212 src/dialogs/info.c:301
 #, fuzzy, c-format
 msgid "%ld byte"
 msgid_plural "%ld bytes"
 msgstr[0] "vergangene Zeit"
 msgstr[1] "vergangene Zeit"
 
-#: src/dialogs/info.cpp:214
+#: src/dialogs/info.c:216
 #, fuzzy, c-format
 msgid "%ld file"
 msgid_plural "%ld files"
 msgstr[0] "Lokale Datei"
 msgstr[1] "Lokale Datei"
 
-#: src/dialogs/info.cpp:218 src/dialogs/info.cpp:233
+#: src/dialogs/info.c:220 src/dialogs/info.c:235
 #, c-format
 msgid "%ld in use"
 msgid_plural "%ld in use"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/dialogs/info.cpp:222
+#: src/dialogs/info.c:224
 #, fuzzy, c-format
 msgid "%ld loading"
 msgid_plural "%ld loading"
 msgstr[0] "Download"
 msgstr[1] "Download"
 
-#: src/dialogs/info.cpp:225
+#: src/dialogs/info.c:227
 #, fuzzy
 msgid "Document cache"
 msgstr "Dokument(e)"
 
-#: src/dialogs/info.cpp:229
+#: src/dialogs/info.c:231
 #, fuzzy, c-format
 msgid "%ld formatted"
 msgid_plural "%ld formatted"
 msgstr[0] "Datei-Format"
 msgstr[1] "Datei-Format"
 
-#: src/dialogs/info.cpp:237
+#: src/dialogs/info.c:239
 #, fuzzy, c-format
 msgid "%ld refreshing"
 msgid_plural "%ld refreshing"
@@ -5706,58 +5704,58 @@ msgstr[0] "Übertragung"
 msgstr[1] "Übertragung"
 
 #. name:
-#: src/dialogs/info.cpp:241 src/ecmascript/ecmascript.cpp:66
-#: src/ecmascript/ecmascript.cpp:876
+#: src/dialogs/info.c:243 src/ecmascript/ecmascript.cpp:67
+#: src/ecmascript/ecmascript.cpp:707
 #, fuzzy
 msgid "ECMAScript"
 msgstr "Skripte"
 
-#: src/dialogs/info.cpp:245
+#: src/dialogs/info.c:247
 #, c-format
 msgid "%ld interpreter"
 msgid_plural "%ld interpreters"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/dialogs/info.cpp:249
+#: src/dialogs/info.c:251
 #, fuzzy
 msgid "Interlinking"
 msgstr "Linknummer eingeben"
 
-#: src/dialogs/info.cpp:252
+#: src/dialogs/info.c:254
 #, fuzzy
 msgid "master terminal"
 msgstr "Terminalgröße ändern"
 
-#: src/dialogs/info.cpp:254
+#: src/dialogs/info.c:256
 #, fuzzy
 msgid "slave terminal"
 msgstr "Terminalgröße ändern"
 
-#: src/dialogs/info.cpp:258
+#: src/dialogs/info.c:260
 #, fuzzy, c-format
 msgid "%ld terminal"
 msgid_plural "%ld terminals"
 msgstr[0] "~BeOS-Terminal"
 msgstr[1] "~BeOS-Terminal"
 
-#: src/dialogs/info.cpp:262
+#: src/dialogs/info.c:264
 #, fuzzy, c-format
 msgid "%ld session"
 msgid_plural "%ld sessions"
 msgstr[0] "Gespeicherte Sitzung"
 msgstr[1] "Gespeicherte Sitzung"
 
-#: src/dialogs/info.cpp:265
+#: src/dialogs/info.c:267
 msgid "Number of temporary files"
 msgstr ""
 
-#: src/dialogs/info.cpp:295
+#: src/dialogs/info.c:297
 #, fuzzy
 msgid "Memory allocated"
 msgstr "RAM-Cache"
 
-#: src/dialogs/info.cpp:303
+#: src/dialogs/info.c:305
 #, c-format
 msgid "%ld byte overhead"
 msgid_plural "%ld bytes overhead"
@@ -6431,93 +6429,87 @@ msgid ""
 "html"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:68
+#: src/ecmascript/ecmascript-c.cpp:53
+msgid "Ecmascript enabled"
+msgstr ""
+
+#: src/ecmascript/ecmascript-c.cpp:55
+msgid "Ecmascript disabled"
+msgstr ""
+
+#: src/ecmascript/ecmascript.cpp:69
 #, fuzzy
 msgid "ECMAScript options."
 msgstr "Einstellungen für das Rollen(Scrolling)"
 
-#: src/ecmascript/ecmascript.cpp:72
+#: src/ecmascript/ecmascript.cpp:73
 msgid "Whether to run those scripts inside of documents."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:74
+#: src/ecmascript/ecmascript.cpp:75
 #, fuzzy
 msgid "Console log"
 msgstr "Lua-Konsole"
 
-#: src/ecmascript/ecmascript.cpp:76
+#: src/ecmascript/ecmascript.cpp:77
 msgid "When enabled logs will be appended to ~/.config/elinks/console.log."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:78
+#: src/ecmascript/ecmascript.cpp:79
 msgid "Script error reporting"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:80
+#: src/ecmascript/ecmascript.cpp:81
 msgid "Open a message box when a script reports an error."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:82
+#: src/ecmascript/ecmascript.cpp:83
 msgid "Ignore <noscript> content"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:84
+#: src/ecmascript/ecmascript.cpp:85
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag when ECMAScript is "
 "enabled."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:87
+#: src/ecmascript/ecmascript.cpp:88
 #, fuzzy
 msgid "Maximum execution time"
 msgstr "Maximale Anzahl von Verbindungen"
 
-#: src/ecmascript/ecmascript.cpp:89
+#: src/ecmascript/ecmascript.cpp:90
 msgid "Maximum execution time in seconds for a script."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:91
+#: src/ecmascript/ecmascript.cpp:92
 msgid "Pop-up window blocking"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:93
+#: src/ecmascript/ecmascript.cpp:94
 msgid "Whether to disallow scripts to open new windows or tabs."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:95
+#: src/ecmascript/ecmascript.cpp:96
 #, fuzzy
 msgid "Allow XHR requests to local files"
 msgstr "Lesen von speziellen Dateien erlauben"
 
-#: src/ecmascript/ecmascript.cpp:97
+#: src/ecmascript/ecmascript.cpp:98
 msgid "Whether to allow XHR requests to local files."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:171
-msgid "Ecmascript enabled"
-msgstr ""
-
-#: src/ecmascript/ecmascript.cpp:173
-msgid "Ecmascript disabled"
-msgstr ""
-
-#: src/ecmascript/ecmascript.cpp:571
+#: src/ecmascript/ecmascript.cpp:402
 msgid "JavaScript Emergency"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:573
+#: src/ecmascript/ecmascript.cpp:404
 #, c-format
 msgid ""
 "A script embedded in the current document was running\n"
 "for more than %d seconds. This probably means there is\n"
 "a bug in the script and it could have halted the whole\n"
 "ELinks, so the script execution was interrupted."
-msgstr ""
-
-#: src/ecmascript/libdom/mujs/window.c:272
-#: src/ecmascript/libdom/quickjs/window.c:553
-#: src/ecmascript/libdom/spidermonkey/window.cpp:426
-msgid "JavaScript Alert"
 msgstr ""
 
 #: src/ecmascript/mujs.cpp:259 src/ecmascript/quickjs.cpp:288
@@ -6533,6 +6525,11 @@ msgstr ""
 #. name:
 #: src/ecmascript/mujs.cpp:445
 msgid "mujs"
+msgstr ""
+
+#: src/ecmascript/mujs/window.c:272 src/ecmascript/quickjs/window.c:553
+#: src/ecmascript/spidermonkey/window.cpp:426
+msgid "JavaScript Alert"
 msgstr ""
 
 #. name:
@@ -8400,7 +8397,7 @@ msgstr "Datei"
 msgid "Comment"
 msgstr "Kommentare"
 
-#: src/protocol/bittorrent/dialogs.c:235 src/session/download.cpp:587
+#: src/protocol/bittorrent/dialogs.c:235 src/session/download.c:624
 #, c-format
 msgid ""
 "Download complete:\n"
@@ -8571,7 +8568,7 @@ msgid_plural "%u unavailable"
 msgstr[0] "FTP-Dienst nicht verfügbar"
 msgstr[1] "FTP-Dienst nicht verfügbar"
 
-#: src/protocol/bittorrent/dialogs.c:590 src/session/session.cpp:314
+#: src/protocol/bittorrent/dialogs.c:590 src/session/session.c:314
 #, fuzzy, c-format
 msgid "Unable to retrieve %s"
 msgstr ""
@@ -8588,7 +8585,7 @@ msgstr "Soll die Datei '%s' (Typ: %s) angezeigt werden?"
 msgid "Information about the torrent"
 msgstr "Zeige Informationen zur aktuellen Seite"
 
-#: src/protocol/bittorrent/dialogs.c:788 src/session/download.cpp:1725
+#: src/protocol/bittorrent/dialogs.c:788 src/session/download.c:1762
 msgid "What to do?"
 msgstr "Treffen Sie Ihre Wahl."
 
@@ -8598,14 +8595,14 @@ msgstr "Treffen Sie Ihre Wahl."
 msgid "Down~load"
 msgstr "Download"
 
-#. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.cpp:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:816 src/session/download.cpp:1830
+#. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
+#: src/protocol/bittorrent/dialogs.c:816 src/session/download.c:1867
 #, fuzzy
 msgid "~Display"
 msgstr "Anzeigen"
 
-#. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.cpp:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:820 src/session/download.cpp:1834
+#. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
+#: src/protocol/bittorrent/dialogs.c:820 src/session/download.c:1871
 #, fuzzy
 msgid "Show ~header"
 msgstr "Vorlagen zeigen"
@@ -9163,33 +9160,33 @@ msgstr ""
 "die angezeigt werden sollen. Z.B. 'Subject' und 'From'.\n"
 "Alle Header-Einträge können im Header-Info-Dialog angesehen werden."
 
-#: src/protocol/protocol.cpp:253
+#: src/protocol/protocol.c:257
 #, fuzzy, c-format
 msgid "This version of ELinks does not contain %s protocol support"
 msgstr "SMB wird von dieser Elinks-Version nicht unterstützt."
 
-#: src/protocol/protocol.cpp:284
+#: src/protocol/protocol.c:288
 msgid "Protocols"
 msgstr "Protokolle"
 
-#: src/protocol/protocol.cpp:286
+#: src/protocol/protocol.c:290
 msgid "Protocol specific options."
 msgstr "Protokoll-spezifische Optionen."
 
-#: src/protocol/protocol.cpp:288
+#: src/protocol/protocol.c:292
 #, fuzzy
 msgid "Default protocol prefix"
 msgstr "Grundeinstellung der Farben"
 
-#: src/protocol/protocol.cpp:290
+#: src/protocol/protocol.c:294
 msgid "Default protocol prefix when none protocol was entered."
 msgstr ""
 
-#: src/protocol/protocol.cpp:292
+#: src/protocol/protocol.c:296
 msgid "No-proxy domains"
 msgstr "Domains ohne Proxy"
 
-#: src/protocol/protocol.cpp:294
+#: src/protocol/protocol.c:298
 #, fuzzy
 msgid ""
 "Comma separated list of domains for which the proxy (HTTP/FTP) should be "
@@ -9202,7 +9199,7 @@ msgstr ""
 "Liste leer, so wird auch die Umgebungsvariable NO_PROXY überprüft."
 
 #. name:
-#: src/protocol/protocol.cpp:349
+#: src/protocol/protocol.c:353
 msgid "Protocol"
 msgstr "Protokoll"
 
@@ -9469,12 +9466,12 @@ msgstr ""
 msgid "Spidermonkey ECMAScript"
 msgstr "Skripte"
 
-#: src/session/download.cpp:280 src/session/download.cpp:523
-#: src/session/download.cpp:892 src/session/download.cpp:997
+#: src/session/download.c:317 src/session/download.c:560
+#: src/session/download.c:929 src/session/download.c:1034
 msgid "Download error"
 msgstr "Downloadfehler"
 
-#: src/session/download.cpp:281 src/session/download.cpp:998
+#: src/session/download.c:318 src/session/download.c:1035
 #, c-format
 msgid ""
 "Could not create file '%s':\n"
@@ -9483,7 +9480,7 @@ msgstr ""
 "Konnte die Datei '%s' nicht anlegen:\n"
 "%s"
 
-#: src/session/download.cpp:524
+#: src/session/download.c:561
 #, c-format
 msgid ""
 "Error downloading %s:\n"
@@ -9494,16 +9491,16 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/session/download.cpp:893
+#: src/session/download.c:930
 #, c-format
 msgid "'%s' is a directory."
 msgstr "'%s' ist ein Verzeichnis"
 
-#: src/session/download.cpp:922
+#: src/session/download.c:959
 msgid "File exists"
 msgstr "Datei existiert"
 
-#: src/session/download.cpp:923
+#: src/session/download.c:960
 #, c-format
 msgid ""
 "This file already exists:\n"
@@ -9518,60 +9515,60 @@ msgstr ""
 "Der alternative Dateiname ist:\n"
 "%s"
 
-#. accelerator_context(src/session/download.cpp:lookup_unique_name)
-#: src/session/download.cpp:930
+#. accelerator_context(src/session/download.c:lookup_unique_name)
+#: src/session/download.c:967
 #, fuzzy
 msgid "Sa~ve under the alternative name"
 msgstr "Speicher mit dem alternativen Namen"
 
-#. accelerator_context(src/session/download.cpp:lookup_unique_name)
-#: src/session/download.cpp:931
+#. accelerator_context(src/session/download.c:lookup_unique_name)
+#: src/session/download.c:968
 #, fuzzy
 msgid "~Overwrite the original file"
 msgstr "Überschreibe die Originaldatei"
 
-#. accelerator_context(src/session/download.cpp:lookup_unique_name)
-#: src/session/download.cpp:933
+#. accelerator_context(src/session/download.c:lookup_unique_name)
+#: src/session/download.c:970
 #, fuzzy
 msgid "~Resume download of the original file"
 msgstr "Nehme Download der Originaldatei wieder auf"
 
-#: src/session/download.cpp:1728
+#: src/session/download.c:1765
 msgid "Unknown type"
 msgstr "Unbekannter Typ"
 
-#: src/session/download.cpp:1753
+#: src/session/download.c:1790
 #, fuzzy, c-format
 msgid "What would you like to do with the file '%s' (type: %s%s%s)?"
 msgstr "Soll die Datei '%s' (Typ: %s) angezeigt werden?"
 
-#: src/session/download.cpp:1756
+#: src/session/download.c:1793
 #, fuzzy, c-format
 msgid "What would you like to do with the file (type: %s%s%s)?"
 msgstr "Soll die Datei '%s' (Typ: %s) angezeigt werden?"
 
-#: src/session/download.cpp:1785
+#: src/session/download.c:1822
 #, c-format
 msgid "Program ('%f' will be replaced by the filename, '%u' by the uri)"
 msgstr ""
 
-#: src/session/download.cpp:1790
+#: src/session/download.c:1827
 #, fuzzy
 msgid "Block the terminal"
 msgstr "Bildschirm blockieren"
 
-#: src/session/download.cpp:1796
+#: src/session/download.c:1833
 #, c-format
 msgid "The file will be opened with the program '%s'."
 msgstr ""
 
-#. accelerator_context(src/session/download.cpp:do_type_query)
-#: src/session/download.cpp:1817
+#. accelerator_context(src/session/download.c:do_type_query)
+#: src/session/download.c:1854
 #, fuzzy
 msgid "~Open"
 msgstr "Öffnen"
 
-#: src/session/session.cpp:332
+#: src/session/session.c:332
 #, fuzzy
 msgid "Retry without verification?"
 msgstr "Beende ohne weitere Bestätigung"
@@ -9580,12 +9577,12 @@ msgstr "Beende ohne weitere Bestätigung"
 #. * and formatting it with "%u" is safe,
 #. * because fc_maxlength is smaller than
 #. * file.length, which is an int.
-#: src/session/session.cpp:923 src/session/session.cpp:942
-#: src/session/task.c:292 src/viewer/text/textarea.c:685
+#: src/session/session.c:923 src/session/session.c:942 src/session/task.c:292
+#: src/viewer/text/textarea.c:685
 msgid "Warning"
 msgstr "Warnung"
 
-#: src/session/session.cpp:924
+#: src/session/session.c:924
 #, fuzzy
 msgid ""
 "You have an empty string in protocol.http.user_agent - this was a default "
@@ -9606,7 +9603,7 @@ msgstr ""
 "Voreinstellung benutzt wird. Entschuldigung für jegliche verursachten "
 "Unannehmlichkeiten."
 
-#: src/session/session.cpp:943
+#: src/session/session.c:943
 #, fuzzy
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
@@ -9629,12 +9626,12 @@ msgstr ""
 "\"richtige\" Verhalten zu erreichen. Entschuldigung für jegliche "
 "verursachten Unannehmlichkeiten."
 
-#: src/session/session.cpp:968
+#: src/session/session.c:968
 msgid "Welcome"
 msgstr "Willkommen"
 
 #. accelerator_context(setup_first_session)
-#: src/session/session.cpp:969
+#: src/session/session.c:969
 msgid ""
 "Welcome to ELinks!\n"
 "\n"
@@ -9644,7 +9641,7 @@ msgid ""
 "So if you did not copy it yet from ~/.elinks, do it now and start again."
 msgstr ""
 
-#: src/session/session.cpp:1184
+#: src/session/session.c:1184
 msgid "Incorrect search uri"
 msgstr ""
 
@@ -9786,210 +9783,210 @@ msgstr "Fehlendes Fragment"
 msgid "The requested fragment \"%s\" doesn't exist."
 msgstr "Das angeforderte Fragment \\\"#%s\\\" existiert nicht."
 
-#: src/viewer/text/form.cpp:1127
+#: src/viewer/text/form.c:1131
 msgid "Error while posting form"
 msgstr "Fehler beim Senden des Formular"
 
-#: src/viewer/text/form.cpp:1128
+#: src/viewer/text/form.c:1132
 #, fuzzy, c-format
 msgid "Could not load file %s: %s"
 msgstr "Datei %s konnte nicht übertragen werden: %s"
 
-#: src/viewer/text/form.cpp:1921
+#: src/viewer/text/form.c:1925
 msgid "Reset form"
 msgstr "Formular zurücksetzen"
 
-#: src/viewer/text/form.cpp:1923
+#: src/viewer/text/form.c:1927
 #, fuzzy
 msgid "Harmless button"
 msgstr "Ausgewählte Schaltfläche"
 
-#: src/viewer/text/form.cpp:1931
+#: src/viewer/text/form.c:1935
 msgid "Submit form to"
 msgstr "Formular senden an"
 
-#: src/viewer/text/form.cpp:1932
+#: src/viewer/text/form.c:1936
 msgid "Post form to"
 msgstr "Formular senden an"
 
-#: src/viewer/text/form.cpp:1934
+#: src/viewer/text/form.c:1938
 msgid "Radio button"
 msgstr "Radiobutton"
 
-#: src/viewer/text/form.cpp:1938
+#: src/viewer/text/form.c:1942
 msgid "Select field"
 msgstr "Auswahlfeld"
 
-#: src/viewer/text/form.cpp:1942
+#: src/viewer/text/form.c:1946
 msgid "Text area"
 msgstr "Textbereich"
 
-#: src/viewer/text/form.cpp:1944
+#: src/viewer/text/form.c:1948
 msgid "File upload"
 msgstr "Datei heraufladen"
 
-#: src/viewer/text/form.cpp:1946
+#: src/viewer/text/form.c:1950
 msgid "Password field"
 msgstr "Passwortfeld"
 
-#: src/viewer/text/form.cpp:1986
+#: src/viewer/text/form.c:1990
 msgid "name"
 msgstr "Name"
 
-#: src/viewer/text/form.cpp:1998
+#: src/viewer/text/form.c:2002
 msgid "value"
 msgstr "Wert"
 
-#: src/viewer/text/form.cpp:2011
+#: src/viewer/text/form.c:2015
 msgid "read only"
 msgstr "Nur Lesen"
 
-#: src/viewer/text/form.cpp:2022
+#: src/viewer/text/form.c:2026
 #, c-format
 msgid "press %s to navigate"
 msgstr "Drücken Sie %s, um zu navigieren"
 
-#: src/viewer/text/form.cpp:2024
+#: src/viewer/text/form.c:2028
 #, c-format
 msgid "press %s to edit"
 msgstr "Drücken Sie %s, um zu editieren"
 
-#: src/viewer/text/form.cpp:2061
+#: src/viewer/text/form.c:2065
 #, fuzzy, c-format
 msgid "press %s to submit to %s"
 msgstr "Drücken Sie %s, um das Formular abzuschicken (Methode GET)"
 
-#: src/viewer/text/form.cpp:2063
+#: src/viewer/text/form.c:2067
 #, fuzzy, c-format
 msgid "press %s to post to %s"
 msgstr "Drücken Sie %s, um das Formular abzuschicken (Methode POST)"
 
-#: src/viewer/text/form.cpp:2166
+#: src/viewer/text/form.c:2170
 #, fuzzy
 msgid "Useless button"
 msgstr "Ausgewählte Schaltfläche"
 
-#: src/viewer/text/form.cpp:2168
+#: src/viewer/text/form.c:2172
 #, fuzzy
 msgid "Submit button"
 msgstr "Formular senden an"
 
 #. accelerator_context(link_menu.map)
-#: src/viewer/text/link.cpp:1463
+#: src/viewer/text/link.c:1413
 msgid "Display ~usemap"
 msgstr "~Usemap anzeigen"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1468
+#: src/viewer/text/link.c:1418
 msgid "~Follow link"
 msgstr "~Link folgen"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1470
+#: src/viewer/text/link.c:1420
 msgid "Follow link and r~eload"
 msgstr "Link ~folgen und neu laden"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1472
+#: src/viewer/text/link.c:1422
 #, fuzzy
 msgid "~Link info"
 msgstr "~Link"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1476
+#: src/viewer/text/link.c:1426
 msgid "Open in new ~window"
 msgstr "~In neuem Fenster öffnen"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1478
+#: src/viewer/text/link.c:1428
 msgid "Open in new ~tab"
 msgstr "In neuer Ansich~t öffnen"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1480
+#: src/viewer/text/link.c:1430
 msgid "Open in new tab in ~background"
 msgstr "In neuer Ansicht im ~Hintergrund öffnen"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1485
+#: src/viewer/text/link.c:1435
 msgid "~Download link"
 msgstr "Link ~herunterladen"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1488
+#: src/viewer/text/link.c:1438
 msgid "~Add link to bookmarks"
 msgstr "Link zu Lese~zeichen hinzufügen"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1492
+#: src/viewer/text/link.c:1442
 msgid "Pass link URI to e~xternal command"
 msgstr "Delegiere Link-URI an e~xternes Programm"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.cpp:1503 src/viewer/text/link.cpp:1543
+#: src/viewer/text/link.c:1453 src/viewer/text/link.c:1493
 msgid "~Reset form"
 msgstr "Formula~r löschen"
 
 #. accelerator_context(link_menu.textarea)
-#: src/viewer/text/link.cpp:1518
+#: src/viewer/text/link.c:1468
 msgid "Open in ~external editor"
 msgstr "In externen Editor öffnen"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1526
+#: src/viewer/text/link.c:1476
 msgid "~Submit form"
 msgstr "Formular ~senden"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1527
+#: src/viewer/text/link.c:1477
 msgid "Submit form and rel~oad"
 msgstr "Formular senden und neu laden"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1531
+#: src/viewer/text/link.c:1481
 msgid "Submit form and open in new ~window"
 msgstr "Formular senden und in neuem Fenster öffnen"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1533
+#: src/viewer/text/link.c:1483
 msgid "Submit form and open in new ~tab"
 msgstr "Formular senden und in neuer Ansich~t öffnen"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1536
+#: src/viewer/text/link.c:1486
 msgid "Submit form and open in new tab in ~background"
 msgstr "Formular senden und in neuer Ansicht im ~Hintergrund öffnen"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1541
+#: src/viewer/text/link.c:1491
 msgid "Submit form and ~download"
 msgstr "Formular sen~den und herunterladen"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.cpp:1548
+#: src/viewer/text/link.c:1498
 #, fuzzy
 msgid "Form f~ields"
 msgstr "Passwortfeld"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.cpp:1555
+#: src/viewer/text/link.c:1505
 msgid "V~iew image"
 msgstr "B~ild anzeigen"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.cpp:1557
+#: src/viewer/text/link.c:1507
 msgid "Download ima~ge"
 msgstr "Bild herunterladen"
 
-#: src/viewer/text/link.cpp:1566
+#: src/viewer/text/link.c:1516
 msgid "No link selected"
 msgstr "Kein Link ausgewählt"
 
-#: src/viewer/text/link.cpp:1638
+#: src/viewer/text/link.c:1588
 msgid "Image"
 msgstr "Bild"
 
-#: src/viewer/text/link.cpp:1643
+#: src/viewer/text/link.c:1593
 msgid "Usemap"
 msgstr "Usemap"
 
@@ -10083,19 +10080,19 @@ msgid ""
 "entered from this file: %s"
 msgstr ""
 
-#: src/viewer/text/view.cpp:1245 src/viewer/text/view.cpp:1298
+#: src/viewer/text/view.c:1233 src/viewer/text/view.c:1286
 msgid "Go to link"
 msgstr "Link öffnen"
 
-#: src/viewer/text/view.cpp:1245 src/viewer/text/view.cpp:1298
+#: src/viewer/text/view.c:1233 src/viewer/text/view.c:1286
 msgid "Enter link number"
 msgstr "Linknummer eingeben"
 
-#: src/viewer/text/view.cpp:1924
+#: src/viewer/text/view.c:1906
 msgid "Save error"
 msgstr "Fehler beim Speichern"
 
-#: src/viewer/text/view.cpp:1925
+#: src/viewer/text/view.c:1907
 msgid "Error writing to file"
 msgstr "Fehler beim Schreiben in Datei"
 
