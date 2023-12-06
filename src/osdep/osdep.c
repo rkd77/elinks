@@ -220,7 +220,7 @@ get_terminal_size(int fd, int *x, int *y, int *cw, int *ch)
 {
 	struct winsize ws;
 
-	if (ioctl(1, TIOCGWINSZ, &ws) != -1) {
+	if (ioctl(fd, TIOCGWINSZ, &ws) != -1) {
 		*x = ws.ws_col;
 		*y = ws.ws_row;
 
