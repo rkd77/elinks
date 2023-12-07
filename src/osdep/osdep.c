@@ -224,8 +224,13 @@ get_terminal_size(int fd, int *x, int *y, int *cw, int *ch)
 		*x = ws.ws_col;
 		*y = ws.ws_row;
 
-		*cw = ws.ws_xpixel / ws.ws_col;
-		*ch = ws.ws_ypixel / ws.ws_row;
+		if (ws.ws_col && ws.ws_row && ws.ws_xpixel && ws.ws_ypixel) {
+			*cw = ws.ws_xpixel / ws.ws_col;
+			*ch = ws.ws_ypixel / ws.ws_row;
+		} else {
+			*cw = 8;
+			*ch = 16;
+		}
 	} else {
 		*x = 0;
 		*y = 0;
