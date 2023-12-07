@@ -52,6 +52,9 @@
 
 #include <curl/curl.h>
 
+#undef max
+#undef min
+
 #include <algorithm>
 #include <map>
 
