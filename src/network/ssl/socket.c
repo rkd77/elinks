@@ -5,8 +5,8 @@
 #endif
 
 #ifdef CONFIG_OPENSSL
-#include <openssl/ssl.h>
 #include <openssl/x509v3.h>
+#include <openssl/ssl.h>
 #define USE_OPENSSL
 #elif defined(CONFIG_NSS_COMPAT_OSSL)
 #include <nss_compat_ossl/nss_compat_ossl.h>
