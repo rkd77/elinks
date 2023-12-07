@@ -9,7 +9,7 @@ FROM fedora:38
 
 # prepare system
 RUN dnf -y update && dnf -y install bash wget \
-  rsync vim screen git make automake meson unzip cmake patch upx gcc
+  rsync vim screen git make automake meson unzip cmake patch upx gcc p7zip
 
 RUN cd /root; wget http://ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-12.2.0/djcross-gcc-12.2.0-1ap.x86_64.rpm ; \
 wget http://ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-12.2.0/djcross-gcc-c++-12.2.0-1ap.x86_64.rpm ; \
@@ -32,8 +32,8 @@ ADD build_libidn2.sh /home/elinks/
 RUN runuser -u elinks bash /home/elinks/build_libidn2.sh
 
 # openssl
-ADD build_openssl.sh /home/elinks/
-RUN runuser -u elinks bash /home/elinks/build_openssl.sh
+##ADD build_openssl.sh /home/elinks/
+##RUN runuser -u elinks bash /home/elinks/build_openssl.sh
 
 # brotli
 ADD cc.py /usr/local/bin/cc.py
@@ -73,8 +73,8 @@ ADD build_libdom.sh /home/elinks/
 RUN runuser -u elinks bash /home/elinks/build_libdom.sh
 
 # libcurl
-ADD build_curl.sh /home/elinks/
-RUN runuser -u elinks bash /home/elinks/build_curl.sh
+##ADD build_curl.sh /home/elinks/
+##RUN runuser -u elinks bash /home/elinks/build_curl.sh
 
 # mujs
 ADD mujs.diff /home/elinks/
