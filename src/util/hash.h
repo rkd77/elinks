@@ -16,7 +16,7 @@ typedef hash_value_T (* hash_func_T)(const char *key, unsigned int keylen, hash_
 struct hash_item {
 	LIST_HEAD_EL(struct hash_item);
 
-	const char *key;
+	char *key;
 	unsigned int keylen;
 	void *value;
 };

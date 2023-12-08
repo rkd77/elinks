@@ -92,7 +92,7 @@ add_hash_item(struct hash *hash, const char *key, unsigned int keylen,
 
 	hashval = hash->func(key, keylen, HASH_MAGIC) & hash_mask(hash->width);
 
-	item->key = key;
+	item->key = (char *)key;
 	item->keylen = keylen;
 	item->value = value;
 
