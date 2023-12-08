@@ -35,7 +35,7 @@ save_offset_in_map(void *m, void *node, int offset)
 		char *key = memacpy((const char *)&node, sizeof(node));
 
 		if (key) {
-			add_hash_item(mapa, key, sizeof(node), (void *)offset);
+			add_hash_item(mapa, key, sizeof(node), (void *)(intptr_t)offset);
 		}
 	}
 }
@@ -118,5 +118,5 @@ find_offset(void *m, void *node)
 		return -1;
 	}
 
-	return (int)(item->value);
+	return (int)(intptr_t)(item->value);
 }
