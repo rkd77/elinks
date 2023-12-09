@@ -917,3 +917,37 @@ win32_strerror(int err)
 
 	return buf;
 }
+
+int
+win32_send(int sockfd, const void *buf, unsigned len, int flags)
+{
+	int rc;
+
+	if (sockfd >= SOCK_SHIFT) {
+		sockfd -= SOCK_SHIFT;
+	}
+	rc = send(sockfd, buf, len, flags);
+
+	if (rc != len) {
+		errno = WSAGetLastError();
+	}
+
+	return rc;
+}
+
+int
+win32_recv(int sockfd, void *buf, unsigned len, int flags)
+{
+	int rc;
+
+	if (sockfd >= SOCK_SHIFT) {
+		sockfd -= SOCK_SHIFT;
+	}
+	rc = recv(sockfd, buf, len, flags);
+
+	if (rc < 0) {
+		errno = WSAGetLastError();
+	}
+
+	return rc;
+}
