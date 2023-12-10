@@ -5,6 +5,15 @@ You can see the complete list of recent changes, bugfixes and new features
 in the https://github.com/rkd77/felinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
+ELinks 0.17.0rc2
+----------------
+
+Released on 2023-12-10
+
+* Avoid division by zero. Refs #276
+* Fix for FSP under Windows
+
+
 ELinks 0.17.0rc1
 ----------------
 
@@ -23,7 +32,7 @@ Released on 2023-12-02
   set protocol.http.use_curl = 1 for http/https
 * ui.sessions.postpone_unlink option. Delete temporary files at exit instead of immediately after
   closing viewer #257
-* redefined isspace to #249
+* redefined isspace #249
 * Serbian translation update
 * compilation fixes
 
