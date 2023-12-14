@@ -357,6 +357,7 @@ source_success:
 	/* Fill in the information about the available tables.  */
 	switch (W(domain->must_swap, data->revision)) {
 		case 0:
+		case 1:
 			domain->nstrings = W(domain->must_swap, data->nstrings);
 			domain->orig_tab = (struct string_desc *)
 				((char *) data +
