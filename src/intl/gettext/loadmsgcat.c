@@ -216,8 +216,15 @@ _nl_free_domain_conv(struct loaded_domain *domain)
 static struct string *
 add_filename_to_string(struct string *str, struct loaded_l10nfile *domain_file)
 {
-	char *slash = strrchr(program.path, '/');
-	size_t dirnamelen = (slash ? slash - program.path + 1 : 0);
+	char *sep;
+	size_t dirnamelen;
+
+	for (sep = program.path + strlen((const char *)program.path); sep > program.path; sep--) {
+		if (dir_sep(sep[0])) {
+			break;
+		}
+	}
+	dirnamelen = (sep ? sep - program.path + 1 : 0);
 
 	/* Check if elinks is being run from the source tree. */
 	if (dirnamelen < 4
