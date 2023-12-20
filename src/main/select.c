@@ -1215,7 +1215,8 @@ select_loop(void (*init)(void))
 
 
 	while (!program.terminate) {
-		struct timeval *timeout = NULL;
+		struct timeval timeout = { 0, 0 };
+		struct timeval *timeout_ptr = NULL;
 		int n, i, has_timer;
 		timeval_T t;
 
@@ -1254,14 +1255,15 @@ select_loop(void (*init)(void))
 		}
 #endif
 
-#if 0
 		if (has_timer) {
 			/* Be sure timeout is not negative. */
 			timeval_limit_to_zero_or_one(&t);
-			timeout = (struct timeval *) &t;
+			timeout.tv_sec = t.sec;
+			timeout.tv_usec = t.usec;
+			timeout_ptr = &timeout;
 		}
-#endif
-		n = loop_select(w_max, &x_read, &x_write, &x_error, timeout);
+
+		n = loop_select(w_max, &x_read, &x_write, &x_error, timeout_ptr);
 		if (n < 0) {
 			/* The following calls (especially gettext)
 			 * might change errno.  */
