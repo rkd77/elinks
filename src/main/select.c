@@ -1253,12 +1253,14 @@ select_loop(void (*init)(void))
 			fflush(stdout);
 		}
 #endif
+
+#if 0
 		if (has_timer) {
 			/* Be sure timeout is not negative. */
 			timeval_limit_to_zero_or_one(&t);
 			timeout = (struct timeval *) &t;
 		}
-
+#endif
 		n = loop_select(w_max, &x_read, &x_write, &x_error, timeout);
 		if (n < 0) {
 			/* The following calls (especially gettext)
