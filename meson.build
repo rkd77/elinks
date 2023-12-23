@@ -1033,4 +1033,7 @@ if conf_data.get('CONFIG_NLS')
 endif
 subdir('src')
 subdir('contrib')
-subdir('doc')
+
+if get_option('doc')
+    subdir('doc')
+endif
