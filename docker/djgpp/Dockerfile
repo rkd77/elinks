@@ -82,19 +82,19 @@ ADD build_mujs.sh /home/elinks/
 RUN runuser -u elinks bash /home/elinks/build_mujs.sh
 
 # dosemu
-RUN dnf install -y 'dnf-command(copr)'
-RUN dnf copr -y enable stsp/dosemu2
-RUN dnf install -y dosemu2
+## RUN dnf install -y 'dnf-command(copr)'
+## RUN dnf copr -y enable stsp/dosemu2
+## RUN dnf install -y dosemu2
 
 # get elinks source
 RUN runuser -u elinks git clone https://github.com/rkd77/elinks /home/elinks/elinks
 
 # additional perl packages
-RUN dnf install -y perl-autouse
+## RUN dnf install -y perl-autouse
 
 # dosemu libs
-RUN echo /usr/lib64/fdpp > /etc/ld.so.conf.d/dosemu.conf
-RUN ldconfig
+## RUN echo /usr/lib64/fdpp > /etc/ld.so.conf.d/dosemu.conf
+## RUN ldconfig
 
 # nojs
 ADD mes_djgpp.sh /home/elinks/elinks/
