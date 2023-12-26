@@ -87,6 +87,13 @@ do {							\
 #endif
 
 #if defined(CONFIG_LIBEVENT) && defined(CONFIG_LIBCURL)
+
+#ifdef CONFIG_OS_WIN32
+#define SOCK_SHIFT 1024
+#else
+#define SOCK_SHIFT 0
+#endif
+
 /* Information associated with a specific easy handle */
 typedef struct _ConnInfo
 {
@@ -232,7 +239,7 @@ setsock(SockInfo *f, curl_socket_t s, CURL *e, int act, GlobalInfo *g)
 	if (event_initialized(&f->ev)) {
 		event_del(&f->ev);
 	}
-	event_assign(&f->ev, g->evbase, f->sockfd, kind, event_cb, g);
+	event_assign(&f->ev, g->evbase, f->sockfd + SOCK_SHIFT, kind, event_cb, g);
 	event_add(&f->ev, NULL);
 }
 
