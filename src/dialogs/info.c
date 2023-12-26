@@ -281,6 +281,9 @@ get_resource_info(struct terminal *term, void *data)
 #ifdef CONFIG_LIBCURL
 	add_format_to_string(&info, "\nCurl: calls: %ld active: %ld, size: %ld", get_curl_total_allocs(), get_curl_active(), get_curl_size());
 #endif
+#ifdef CONFIG_LIBEVENT
+	add_format_to_string(&info, "\nLibevent: calls: %ld active: %ld, size: %ld", get_libevent_total_allocs(), get_libevent_active(), get_libevent_size());
+#endif
 #ifdef CONFIG_LIBSIXEL
 	add_format_to_string(&info, "\nSixel: calls: %ld active: %ld, size: %ld", get_sixel_total_allocs(), get_sixel_active(), get_sixel_size());
 #endif

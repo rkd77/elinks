@@ -877,6 +877,10 @@ enable_libevent(void)
 		return;
 #endif
 
+#if !defined(EVENT__DISABLE_MM_REPLACEMENT) && defined(CONFIG_DEBUG)
+	event_set_mem_functions(el_libevent_malloc, el_libevent_realloc, el_libevent_free);
+#endif
+
 #if defined(HAVE_EVENT_CONFIG_SET_FLAG)
 	{
 		struct event_config *cfg;
@@ -903,6 +907,7 @@ enable_libevent(void)
 #else
 	event_init();
 #endif
+
 	event_enabled = 1;
 
 	for (i = 0; i < w_max; i++)

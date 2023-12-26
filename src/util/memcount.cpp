@@ -281,6 +281,109 @@ get_curl_active(void)
 }
 #endif
 
+#ifdef CONFIG_LIBEVENT
+
+static std::map<void *, uint64_t> el_libevent_allocs;
+static uint64_t el_libevent_total_allocs;
+static uint64_t el_libevent_size;
+
+/* call custom malloc() */
+void *
+el_libevent_malloc(
+    size_t              /* in */ size)          /* allocation size */
+{
+	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+	pthread_mutex_lock(&mutex);
+
+	void *res = mem_alloc(size);
+
+	if (res) {
+		el_libevent_allocs[res] = size;
+		el_libevent_total_allocs++;
+		el_libevent_size += size;
+	}
+	pthread_mutex_unlock(&mutex);
+
+	return res;
+}
+
+/* call custom realloc() */
+void *
+el_libevent_realloc(
+    void                /* in */ *p,          /* existing buffer to be re-allocated */
+    size_t              /* in */ n)          /* re-allocation size */
+{
+	if (!p) {
+		return el_libevent_malloc(n);
+	}
+	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+	pthread_mutex_lock(&mutex);
+
+	auto el = el_libevent_allocs.find(p);
+	size_t size = 0;
+	bool todelete = false;
+
+	if (el == el_libevent_allocs.end()) {
+		fprintf(stderr, "libevent %p not found\n", p);
+	} else {
+		size = el->second;
+		todelete = true;
+	}
+	void *ret = mem_realloc(p, n);
+
+	if (todelete) {
+		el_libevent_allocs.erase(el);
+	}
+	if (ret) {
+		el_libevent_allocs[ret] = n;
+		el_libevent_total_allocs++;
+		el_libevent_size += n - size;
+	}
+	pthread_mutex_unlock(&mutex);
+
+	return ret;
+}
+
+/* call custom free() */
+void
+el_libevent_free(
+    void                /* in */ *p)         /* existing buffer to be freed */
+{
+	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+	pthread_mutex_lock(&mutex);
+
+	auto el = el_libevent_allocs.find(p);
+
+	if (el == el_libevent_allocs.end()) {
+		fprintf(stderr, "libevent %p not found\n", p);
+		pthread_mutex_unlock(&mutex);
+		return;
+	}
+	el_libevent_size -= el->second;
+	el_libevent_allocs.erase(el);
+	mem_free(p);
+	pthread_mutex_unlock(&mutex);
+}
+
+uint64_t
+get_libevent_total_allocs(void)
+{
+	return el_libevent_total_allocs;
+}
+
+uint64_t
+get_libevent_size(void)
+{
+	return el_libevent_size;
+}
+
+uint64_t
+get_libevent_active(void)
+{
+	return el_libevent_allocs.size();
+}
+#endif
+
 
 #ifdef CONFIG_LIBSIXEL
 
@@ -394,6 +497,7 @@ get_sixel_active(void)
 	return el_sixel_allocs.size();
 }
 #endif
+
 
 #ifdef CONFIG_MUJS
 static std::map<void *, uint64_t> el_mujs_allocs;
