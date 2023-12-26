@@ -327,8 +327,8 @@ if compiler.has_header('idn2.h')
     conf_data.set('HAVE_IDN2_H', 1)
 endif
 
-if compiler.has_header('event.h')
-    conf_data.set('HAVE_EVENT_H', 1)
+if compiler.has_header('event2/event.h')
+    conf_data.set('HAVE_EVENT2_EVENT_H', 1)
 endif
 
 if compiler.has_header('alloca.h')
@@ -382,8 +382,8 @@ if conf_data.get('CONFIG_LIBEV')
     deps += eventdeps
     conf_data.set('CONFIG_LIBEVENT', false)
 elif conf_data.get('CONFIG_LIBEVENT')
-    eh = '#include <event.h>'
-    eventdeps = dependency('libevent', static: st)
+    eh = '#include <event2/event.h>'
+    eventdeps = dependency('libevent', static: st, version: '>=2.0.0')
     deps += eventdeps
     conf_data.set('HAVE_LIBEVENT', true)
 else

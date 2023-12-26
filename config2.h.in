@@ -373,8 +373,8 @@
 /* Define to 1 if you have the `event_get_version' function. */
 #mesondefine HAVE_EVENT_GET_VERSION
 
-/* Define to 1 if you have the <event.h> header file. */
-#mesondefine HAVE_EVENT_H
+/* Define to 1 if you have the <event2/event.h> header file. */
+#mesondefine HAVE_EVENT2_EVENT_H
 
 /* Define to 1 if you have the `event_reinit' function. */
 #mesondefine HAVE_EVENT_REINIT

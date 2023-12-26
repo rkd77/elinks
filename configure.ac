@@ -1499,8 +1499,8 @@ AC_ARG_WITH(libevent, [  --with-libevent         compile with libevent. Note tha
 CONFIG_LIBEVENT=no
 cf_have_libevent=no
 if test "$enable_libevent" = yes -a "$cf_have_libev" = no; then
-	AC_CHECK_HEADERS(event.h ev-event.h)
-	if test "$ac_cv_header_event_h" = yes; then
+	AC_CHECK_HEADERS(event2/event.h ev-event.h)
+	if test "$ac_cv_header_event2_event_h" = yes; then
 		AC_CHECK_LIB(event, event_loop)
 		if test "$ac_cv_lib_event_event_loop" = yes; then
 			cf_have_libevent=yes
