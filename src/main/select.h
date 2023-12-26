@@ -35,7 +35,6 @@ typedef struct _GlobalInfo
 {
 	timer_id_T tim;
 	struct event_base *evbase;
-	struct event fifo_event;
 	struct event timer_event;
 	CURLM *multi;
 	int still_running;
@@ -56,7 +55,6 @@ typedef struct _GlobalInfo
 {
 	timer_id_T tim;
 	struct ev_loop *loop;
-	struct ev_io fifo_event;
 	struct ev_timer timer_event;
 	CURLM *multi;
 	int still_running;
