@@ -20,6 +20,7 @@ meson setup ~/buildjs --cross-file cross/linux-mingw64.txt \
 -Dcss=true \
 -Dcombining=false \
 -Ddgi=true \
+-Ddoc=false \
 -Dexmode=true \
 -Dfastmem=true \
 -Dfsp=false \

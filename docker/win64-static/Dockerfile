@@ -22,7 +22,7 @@ RUN apt-get install -y apt-src && \
 RUN apt-get install -y gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
 
 # install wine
-RUN apt-get install -y wine
+## RUN apt-get install -y wine
 
 # create user
 RUN useradd -m elinks -s /bin/bash

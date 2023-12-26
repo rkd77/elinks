@@ -15,10 +15,10 @@ RUN apt-get update && apt-get -y install bash \
 RUN apt-get install -y gcc-mingw-w64-i686 g++-mingw-w64-i686
 
 # install wine
-RUN dpkg --add-architecture i386
-RUN apt-get update
+## RUN dpkg --add-architecture i386
+## RUN apt-get update
 
-RUN apt-get install -y wine wine32:i386
+## RUN apt-get install -y wine wine32:i386
 
 # create user
 RUN useradd -m elinks -s /bin/bash
