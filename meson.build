@@ -597,7 +597,10 @@ if not compiler.links('''#include <stdint.h>
 endif
 
 if conf_data.get('CONFIG_QUICKJS')
-    quickjsdeps = compiler.find_library('quickjs/libquickjs', static: true, dirs: [get_option('prefix')+'/lib','/usr/local/lib'])
+    quickjsdeps = compiler.find_library('quickjs', static: st, required: false)
+    if not quickjsdeps.found()
+        quickjsdeps = compiler.find_library('quickjs/libquickjs', static: true, dirs: [get_option('prefix')+'/lib','/usr/local/lib'])
+    endif
     deps += quickjsdeps
     deps += dep_atomic
 endif
