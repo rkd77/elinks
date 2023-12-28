@@ -77,9 +77,7 @@ clear_uri_tempfiles(void)
 	}
 
 	foreach_hash_item (item, *uri_tempfiles, i) {
-		if (item->value) {
-			mem_free_set(&item->value, NULL);
-		}
+		mem_free_set(&item->value, NULL);
 		mem_free_set(&item->key, NULL);
 	}
 	free_hash(&uri_tempfiles);
