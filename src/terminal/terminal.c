@@ -67,6 +67,7 @@ clean_temporary_files(void)
 	foreach_hash_item (item, *temporary_files, i) {
 		if (item->key) {
 			unlink(item->key);
+			mem_free_set(&item->key, NULL);
 		}
 	}
 	free_hash(&temporary_files);
