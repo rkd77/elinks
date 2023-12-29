@@ -58,8 +58,6 @@
 #include <algorithm>
 #include <map>
 
-std::map<struct timer *, bool> map_timer;
-
 /* TODO: We should have some kind of ACL for the scripts - i.e. ability to
  * disallow the scripts to open new windows (or so that the windows are always
  * directed to tabs, this particular option would be a tristate), disallow
@@ -623,6 +621,7 @@ init_ecmascript_module(struct module *module)
 #else
 	curl_global_init(CURL_GLOBAL_DEFAULT);
 #endif
+	init_map_timer();
 }
 
 static void
@@ -634,6 +633,7 @@ done_ecmascript_module(struct module *module)
 	mem_free_if(console_log_filename);
 	mem_free_if(console_error_filename);
 	mem_free_if(local_storage_filename);
+	done_map_timer();
 }
 
 static struct module *ecmascript_modules[] = {
