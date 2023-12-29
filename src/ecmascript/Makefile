@@ -14,7 +14,7 @@ OBJS-$(CONFIG_ECMASCRIPT_SMJS)		+= ecmascript.obj ecmascript-c.obj localstorage-
 
 OBJS-$(CONFIG_MUJS)		+= ecmascript.obj ecmascript-c.obj localstorage-db.o mujs.o timer.o
 
-OBJS-$(CONFIG_QUICKJS)		+= ecmascript.obj ecmascript-c.obj localstorage-db.o quickjs.obj timer.o
+OBJS-$(CONFIG_QUICKJS)		+= ecmascript.obj ecmascript-c.obj localstorage-db.o quickjs.o timer.o
 
 ifeq ($(CONFIG_ECMASCRIPT_SMJS), yes)
 CONFIG_ANY_SPIDERMONKEY = yes

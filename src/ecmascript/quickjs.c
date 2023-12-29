@@ -155,7 +155,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	interpreter->rt = JS_NewRuntime();
 #endif
 	if (!interpreter->rt) {
-		return nullptr;
+		return NULL;
 	}
 
 	JS_SetMemoryLimit(interpreter->rt, 64 * 1024 * 1024);
@@ -165,7 +165,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 
 	if (!ctx) {
 		JS_FreeRuntime(interpreter->rt);
-		return nullptr;
+		return NULL;
 	}
 
 	interpreter->backend_data = ctx;
@@ -207,7 +207,7 @@ quickjs_put_interpreter(struct ecmascript_interpreter *interpreter)
 
 	JS_FreeContext(ctx);
 	JS_FreeRuntime(interpreter->rt);
-	interpreter->backend_data = nullptr;
+	interpreter->backend_data = NULL;
 }
 
 static void
@@ -332,7 +332,7 @@ quickjs_call_function(struct ecmascript_interpreter *interpreter,
 	JSValue global_object = JS_GetGlobalObject(ctx);
 	REF_JS(global_object);
 
-	JSValue r = JS_Call(ctx, fun, global_object, 0, nullptr);
+	JSValue r = JS_Call(ctx, fun, global_object, 0, NULL);
 	JS_FreeValue(ctx, global_object);
 
 	done_heartbeat(interpreter->heartbeat);
@@ -354,12 +354,12 @@ quickjs_eval_stringback(struct ecmascript_interpreter *interpreter,
 //	}
 	ctx = (JSContext *)interpreter->backend_data;
 	interpreter->heartbeat = add_heartbeat(interpreter);
-	interpreter->ret = nullptr;
+	interpreter->ret = NULL;
 	JSValue r = JS_Eval(ctx, code->source, code->length, "", 0);
 	done_heartbeat(interpreter->heartbeat);
 
 	if (JS_IsNull(r)) {
-		return nullptr;
+		return NULL;
 	}
 
 	if (JS_IsException(r)) {
@@ -372,7 +372,7 @@ quickjs_eval_stringback(struct ecmascript_interpreter *interpreter,
 	str = JS_ToCStringLen(ctx, &len, r);
 
 	if (!str) {
-		return nullptr;
+		return NULL;
 	}
 	string = stracpy(str);
 	JS_FreeCString(ctx, str);
@@ -392,7 +392,7 @@ quickjs_eval_boolback(struct ecmascript_interpreter *interpreter,
 //	}
 	ctx = (JSContext *)interpreter->backend_data;
 	interpreter->heartbeat = add_heartbeat(interpreter);
-	interpreter->ret = nullptr;
+	interpreter->ret = NULL;
 	JSValue r = JS_Eval(ctx, code->source, code->length, "", 0);
 	done_heartbeat(interpreter->heartbeat);
 
