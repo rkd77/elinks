@@ -12,7 +12,7 @@ SUBDIRS-$(CONFIG_ECMASCRIPT_SMJS)	+= spidermonkey
 
 OBJS-$(CONFIG_ECMASCRIPT_SMJS)		+= ecmascript.obj ecmascript-c.obj localstorage-db.o spidermonkey.obj timer.o
 
-OBJS-$(CONFIG_MUJS)		+= ecmascript.obj ecmascript-c.obj localstorage-db.o mujs.obj timer.o
+OBJS-$(CONFIG_MUJS)		+= ecmascript.obj ecmascript-c.obj localstorage-db.o mujs.o timer.o
 
 OBJS-$(CONFIG_QUICKJS)		+= ecmascript.obj ecmascript-c.obj localstorage-db.o quickjs.obj timer.o
 

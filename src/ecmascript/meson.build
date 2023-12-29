@@ -17,7 +17,7 @@ if CONFIG_ANY_SPIDERMONKEY
 endif
 
 if conf_data.get('CONFIG_MUJS')
-	srcs += files('ecmascript.cpp', 'ecmascript-c.cpp', 'localstorage-db.c', 'mujs.cpp', 'timer.c')
+	srcs += files('ecmascript.cpp', 'ecmascript-c.cpp', 'localstorage-db.c', 'mujs.c', 'timer.c')
 	subdir('mujs')
 endif
 
