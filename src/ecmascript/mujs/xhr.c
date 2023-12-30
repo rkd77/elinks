@@ -134,9 +134,6 @@ mjs_xhr_finalizer(js_State *J, void *data)
 		mem_free_if(xhr->statusText);
 		mem_free_if(xhr->upload);
 
-		attr_clear_map_str(xhr->responseHeaders);
-		attr_clear_map_str(xhr->requestHeaders);
-
 		if (xhr->onabort) js_unref(J, xhr->onabort);
 		if (xhr->onerror) js_unref(J, xhr->onerror);
 		if (xhr->onload) js_unref(J, xhr->onload);
@@ -477,8 +474,12 @@ mjs_xhr_open(js_State *J)
 	// TODO terminate fetch
 	xhr->isSend = false;
 	xhr->isUpload = false;
-	attr_clear_map(xhr->requestHeaders);
-	attr_clear_map(xhr->responseHeaders);
+
+	delete_map_str(xhr->requestHeaders);
+	delete_map_str(xhr->responseHeaders);
+	xhr->requestHeaders = attr_create_new_requestHeaders_map();
+	xhr->responseHeaders = attr_create_new_responseHeaders_map();
+
 	mem_free_set(&xhr->response, NULL);
 	mem_free_set(&xhr->responseText, NULL);
 	xhr->responseLength = 0;

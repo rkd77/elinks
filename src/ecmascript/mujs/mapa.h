@@ -34,8 +34,6 @@ void *attr_find_in_map(void *m, void *node);
 
 void attr_erase_from_map(void *m, void *node);
 
-void attr_clear_map(void *m);
-void attr_clear_map_str(void *m);
 void delete_map_str(void *m);
 void attr_delete_map(void *m);
 
