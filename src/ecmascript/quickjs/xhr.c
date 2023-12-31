@@ -322,9 +322,6 @@ xhr_finalizer(JSRuntime *rt, JSValue val)
 		mem_free_if(x->responseURL);
 		mem_free_if(x->status_text);
 
-		attr_clear_map_str(x->responseHeaders);
-		attr_clear_map_str(x->requestHeaders);
-
 		struct xhr_listener *l;
 
 		foreach(l, x->listeners) {
@@ -1119,8 +1116,10 @@ xhr_open(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 		x->uri = get_uri(url2, URI_DIR_LOCATION | URI_PATH | URI_USER | URI_PASSWORD);
 		mem_free(url2);
 
-		attr_clear_map_str(x->requestHeaders);
-		attr_clear_map_str(x->responseHeaders);
+		delete_map_str(x->requestHeaders);
+		delete_map_str(x->responseHeaders);
+		x->requestHeaders = attr_create_new_requestHeaders_map();
+		x->responseHeaders = attr_create_new_responseHeaders_map();
 
 		x->ready_state = XHR_RSTATE_OPENED;
 		register_bottom_half(onreadystatechange_run, x);

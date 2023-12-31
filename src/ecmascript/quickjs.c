@@ -94,25 +94,6 @@ quickjs_done(struct module *xxx)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	attr_clear_map(map_attrs);
-	attr_clear_map(map_attributes);
-	attr_clear_map_rev(map_rev_attributes);
-	attr_clear_map(map_collections);
-	attr_clear_map_rev(map_rev_collections);
-	attr_clear_map(map_doctypes);
-	attr_clear_map(map_elements);
-	attr_clear_map_void(map_privates);
-	attr_clear_map(map_form);
-	attr_clear_map_rev(map_form_rev);
-	attr_clear_map(map_forms);
-	attr_clear_map_rev(map_rev_forms);
-	attr_clear_map(map_inputs);
-	attr_clear_map(map_nodelist);
-	attr_clear_map_rev(map_rev_nodelist);
-
-	attr_clear_map(map_form_elements);
-	attr_clear_map_rev(map_form_elements_rev);
-
 	attr_delete_map(map_attrs);
 	attr_delete_map(map_attributes);
 	attr_delete_map_rev(map_rev_attributes);
