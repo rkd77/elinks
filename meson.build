@@ -492,7 +492,7 @@ conf_data.set('CONFIG_LIBCSS', false)
 cssdeps = false
 
 if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or conf_data.get('CONFIG_MUJS')
-    cssdeps = dependency('libcss', static: st, version: '>=0.9.1')
+    cssdeps = dependency('libcss', static: st, version: '>=0.9.2')
     deps += cssdeps
     conf_data.set('CONFIG_LIBCSS', true)
 endif
@@ -501,17 +501,17 @@ conf_data.set('CONFIG_LIBDOM', false)
 libdomdeps = false
 
 if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or conf_data.get('CONFIG_MUJS')
-    libdomdeps = dependency('libdom', static: st, version: '>=0.4.1')
+    libdomdeps = dependency('libdom', static: st, version: '>=0.4.2')
     deps += libdomdeps
     conf_data.set('CONFIG_LIBDOM', true)
 endif
 
 if not conf_data.get('CONFIG_LIBCSS') and get_option('libcss')
-    cssdeps = dependency('libcss', static: st, version: '>=0.9.1')
+    cssdeps = dependency('libcss', static: st, version: '>=0.9.2')
     deps += cssdeps
     conf_data.set('CONFIG_LIBCSS', true)
     if not conf_data.get('CONFIG_LIBDOM')
-        libdomdeps = dependency('libdom', static: st, version: '>=0.4.1')
+        libdomdeps = dependency('libdom', static: st, version: '>=0.4.2')
         deps += libdomdeps
         conf_data.set('CONFIG_LIBDOM', true)
     endif
