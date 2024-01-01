@@ -143,7 +143,7 @@ smjs_get_elinks_object(void)
 	return spidermonkey_InitClass(smjs_ctx, obj, NULL,
 	                              (JSClass *) &elinks_class, NULL, 0,
 	                              (JSPropertySpec *) elinks_props,
-	                              elinks_funcs, NULL, NULL);
+	                              elinks_funcs, NULL, NULL, "elinks");
 }
 
 void

@@ -96,11 +96,12 @@ spidermonkey_InitClass(JSContext *cx, JSObject *obj,
 		       JSPropertySpec *ps,
 		       const spidermonkeyFunctionSpec *fs,
 		       JSPropertySpec *static_ps,
-		       const spidermonkeyFunctionSpec *static_fs)
+		       const spidermonkeyFunctionSpec *static_fs,
+		       const char *name)
 {
 	JS::RootedObject hobj(cx, obj);
 	JS::RootedObject r_parent_proto(cx, parent_proto);
-	JSObject *proto = JS_InitClass(cx, hobj, r_parent_proto, clasp,
+	JSObject *proto = JS_InitClass(cx, hobj, clasp, r_parent_proto, name,
 				       constructor, nargs,
 				       ps, NULL, static_ps, NULL);
 

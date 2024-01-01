@@ -787,8 +787,8 @@ SPIDERMONKEY_FOUND=
 
 if test "x$CONFIG_SPIDERMONKEY" = xyes ||
    test "x$CONFIG_SCRIPTING_SPIDERMONKEY" = xyes; then
-	package=mozjs-102
-	AC_MSG_CHECKING([for SpiderMonkey (mozjs-102) in pkg-config $package])
+	package=mozjs-115
+	AC_MSG_CHECKING([for SpiderMonkey (mozjs-115) in pkg-config $package])
 	if $PKG_CONFIG $pkg_config_static --cflags --libs $package > /dev/null 2>&AS_MESSAGE_LOG_FD; then
 		DB_LOCALSTORAGE_LIBS="$($PKG_CONFIG $pkg_config_static --libs sqlite3)"
 		CURL_LIBS="$($PKG_CONFIG $pkg_config_static --libs libcurl)"

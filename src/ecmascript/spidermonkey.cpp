@@ -195,7 +195,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 					      &document_class, NULL, 0,
 					      document_props,
 					      document_funcs,
-					      NULL, NULL);
+					      NULL, NULL, "document");
 	if (!document_obj) {
 		goto release_and_fail;
 	}
@@ -217,7 +217,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 					     &history_class, NULL, 0,
 					     (JSPropertySpec *) NULL,
 					     history_funcs,
-					     NULL, NULL);
+					     NULL, NULL, "history");
 	if (!history_obj) {
 		goto release_and_fail;
 	}
@@ -225,14 +225,14 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 					      &screen_class, NULL, 0,
 					      screen_props,
 					      NULL,
-					      NULL, NULL);
+					      NULL, NULL, "screen");
 
 	if (!screen_obj) {
 		goto release_and_fail;
 	}
 
-	menubar_obj = JS_InitClass(ctx, global, nullptr,
-				   &menubar_class, NULL, 0,
+	menubar_obj = JS_InitClass(ctx, global, &menubar_class, nullptr,
+				   "menubar", NULL, 0,
 				   unibar_props, NULL,
 				   NULL, NULL);
 	if (!menubar_obj) {
@@ -240,8 +240,8 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	}
 	JS::SetReservedSlot(menubar_obj, 0, JS::PrivateValue((char *)"t")); /* to @menubar_class */
 
-	statusbar_obj = JS_InitClass(ctx, global, nullptr,
-				     &statusbar_class, NULL, 0,
+	statusbar_obj = JS_InitClass(ctx, global, &statusbar_class, nullptr,
+				     "statusbar", NULL, 0,
 				     unibar_props, NULL,
 				     NULL, NULL);
 	if (!statusbar_obj) {
@@ -249,8 +249,8 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	}
 	JS::SetReservedSlot(statusbar_obj, 0, JS::PrivateValue((char *)"s")); /* to @statusbar_class */
 
-	navigator_obj = JS_InitClass(ctx, global, nullptr,
-				     &navigator_class, NULL, 0,
+	navigator_obj = JS_InitClass(ctx, global, &navigator_class, nullptr,
+				     "navigator", NULL, 0,
 				     navigator_props, NULL,
 				     NULL, NULL);
 	if (!navigator_obj) {
@@ -261,7 +261,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 					      &console_class, NULL, 0,
 					      nullptr,
 					      console_funcs,
-					      NULL, NULL);
+					      NULL, NULL, "console");
 	if (!console_obj) {
 		goto release_and_fail;
 	}
@@ -270,7 +270,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 					      &localstorage_class, NULL, 0,
 					      nullptr,
 					      localstorage_funcs,
-					      NULL, NULL);
+					      NULL, NULL, "localstorage");
 	if (!localstorage_obj) {
 		goto release_and_fail;
 	}
@@ -279,7 +279,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 					&xhr_class, xhr_constructor, 0,
 					xhr_props,
 					xhr_funcs,
-					xhr_static_props, NULL);
+					xhr_static_props, NULL, "xhr");
 
 	if (!xhr_obj) {
 		goto release_and_fail;

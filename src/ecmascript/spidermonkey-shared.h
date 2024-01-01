@@ -35,7 +35,8 @@ JSObject *spidermonkey_InitClass(JSContext *cx, JSObject *obj,
 				 JSPropertySpec *ps,
 				 const spidermonkeyFunctionSpec *fs,
 				 JSPropertySpec *static_ps,
-				 const spidermonkeyFunctionSpec *static_fs);
+				 const spidermonkeyFunctionSpec *static_fs,
+				 const char *name);
 
 bool spidermonkey_check_if_function_name(const spidermonkeyFunctionSpec funcs[], const char *string);
 

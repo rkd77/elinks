@@ -1134,5 +1134,5 @@ smjs_init_session_interface(void)
 	 spidermonkey_InitClass(smjs_ctx, obj, NULL,
 	                        (JSClass *) &session_class, session_construct,
 	                        0, (JSPropertySpec *) session_props,
-	                        session_funcs, NULL, NULL);
+	                        session_funcs, NULL, NULL, "session");
 }
