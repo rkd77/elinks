@@ -60,6 +60,7 @@ ADD build_wapcaplet.sh /home/elinks/
 RUN runuser -u elinks bash /home/elinks/build_wapcaplet.sh
 
 # libhubbub
+RUN dnf -y install gperf
 ADD build_hubbub.sh /home/elinks/
 RUN runuser -u elinks bash /home/elinks/build_hubbub.sh
 

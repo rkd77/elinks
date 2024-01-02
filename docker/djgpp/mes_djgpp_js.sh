@@ -9,7 +9,7 @@ PKG_CONFIG_PATH="$HOME/lib/pkgconfig" \
 C_INCLUDE_PATH="$HOME/include" \
 CFLAGS="-O2 -I$HOME/include -DWATT32_NO_NAMESPACE -DWATT32_NO_OLDIES" \
 CXXFLAGS="-O2 -I$HOME/include -DWATT32_NO_NAMESPACE -DWATT32_NO_OLDIES" \
-LDFLAGS="-L$HOME/lib" \
+LDFLAGS="-lm -L$HOME/lib" \
 meson setup /tmp/builddir2 --cross-file cross/linux-djgpp.txt \
 -D88-colors=false \
 -D256-colors=false \
