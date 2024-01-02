@@ -7,7 +7,7 @@ export LDFLAGS="-L$HOME/lib"
 export CC="i686-w64-mingw32-gcc"
 export AR="i686-w64-mingw32-ar"
 cd
-wget http://download.netsurf-browser.org/libs/releases/libdom-0.4.1-src.tar.gz
-rm -rf libdom-0.4.1
-tar -xf libdom-0.4.1-src.tar.gz
-make -C libdom-0.4.1 install -j1 Q= PREFIX=$HOME LIBDIR=lib COMPONENT_TYPE=lib-static
+wget http://download.netsurf-browser.org/libs/releases/libdom-0.4.2-src.tar.gz
+rm -rf libdom-0.4.2
+tar -xf libdom-0.4.2-src.tar.gz
+make -C libdom-0.4.2 install -j1 Q= PREFIX=$HOME LIBDIR=lib COMPONENT_TYPE=lib-static

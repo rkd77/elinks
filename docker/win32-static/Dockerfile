@@ -9,7 +9,7 @@ FROM debian:bookworm
 
 # prepare system
 RUN apt-get update && apt-get -y install bash \
-  rsync vim screen git make automake grep sed meson
+  rsync vim screen git make automake grep sed meson gperf
 
 # install dev tools [ platform dependent ] 
 RUN apt-get install -y gcc-mingw-w64-i686 g++-mingw-w64-i686
