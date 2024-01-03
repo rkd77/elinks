@@ -1245,7 +1245,7 @@ in_kbd(struct itrm *itrm)
 
 	r = safe_read(itrm->in.std, itrm->in.queue.data + itrm->in.queue.len,
 		      ITRM_IN_QUEUE_SIZE - itrm->in.queue.len);
-	if (r <= 0) {
+	if (r < 0) {
 		free_itrm(itrm);
 		return;
 	}
