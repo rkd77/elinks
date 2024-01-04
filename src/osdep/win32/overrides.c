@@ -129,25 +129,199 @@ console_key_read(const KEY_EVENT_RECORD *ker, char *buf, int max)
 }
 
 #ifdef CONFIG_MOUSE
+
+struct elwin_mouse {
+	int cons;
+	void (*fn)(void *, char *, int);
+	void *data;
+} elm;
+
 static int
 console_mouse_read(const MOUSE_EVENT_RECORD *mer, char *buf, int max)
 {
-	struct term_event ev;
+	static struct interlink_event_mouse prev_mouse;
+	static int prev_buttons;
+	struct interlink_event ev;
+	struct interlink_event_mouse mouse;
 	int len;
+	int buttons;
+	int change;
+	int wheeled;
+	int extended_button;
 
-	if (mer->dwEventFlags || !mer->dwButtonState)  /* not mouse down, or shifts */
+	mouse.x = mer->dwMousePosition.X;
+	mouse.y = mer->dwMousePosition.Y;
+	change = (mouse.x != prev_mouse.x || mouse.y != prev_mouse.y);
+	prev_mouse = mouse;
+
+	buttons = mer->dwButtonState & 7;
+
+	if (!change && (buttons == prev_buttons) && !mer->dwEventFlags) {
 		return 0;
+	}
 
-	set_mouse_term_event(&ev,
-			     1 + mer->dwMousePosition.X,
-			     1 + mer->dwMousePosition.Y,
-			     B_DOWN);
+	/* It's horrible. */
+	switch (buttons) {
+	case 0:
+		switch (prev_buttons) {
+		case 0:
+			wheeled = mer->dwEventFlags & MOUSE_WHEELED;
 
-	len = int_min(max, sizeof(ev));
-	memcpy(buf, &ev, len);
+			if (wheeled) {
+				int16_t v = (mer->dwButtonState >> 16);
 
-	return len;
+				mouse.button = v > 0 ? B_WHEEL_UP : B_WHEEL_DOWN;
+			}
+			break;
+		case 1:
+		case 3:
+		case 5:
+		case 7:
+			mouse.button = B_LEFT | B_UP;
+//fprintf(stderr, "LEFT UP ");
+			break;
+		case 2:
+		case 6:
+			mouse.button = B_MIDDLE | B_UP;
+//fprintf(stderr, "MIDDLE UP ");
+			break;
+		case 4:
+//fprintf(stderr, "RIGHT UP ");
+			mouse.button = B_RIGHT | B_UP;
+			break;
+		}
+		break;
+	case 1:
+	case 3:
+	case 5:
+	case 7:
+		switch (prev_buttons) {
+		case 0:
+		case 2:
+		case 4:
+		case 6:
+//fprintf(stderr, "LEFT DOWN ");
+			mouse.button = B_LEFT | B_DOWN;
+			break;
+		case 1:
+		case 3:
+		case 5:
+		case 7:
+			if (change) {
+				mouse.button = B_LEFT | B_DRAG;
+//fprintf(stderr, "LEFT DRAG ");
+			} else {
+//fprintf(stderr, "LEFT DOWN2 ");
+				mouse.button = B_LEFT | B_DOWN;
+			}
+			break;
+		}
+		break;
+	case 2:
+	case 6:
+		switch (prev_buttons) {
+		case 1:
+		case 3:
+		case 5:
+		case 7:
+//fprintf(stderr, "LEFT UP2 ");
+			mouse.button = B_LEFT | B_UP;
+			break;
+		case 0:
+		case 4:
+//fprintf(stderr, "MIDDLE DOWN ");
+			mouse.button = B_MIDDLE | B_DOWN;
+			break;
+		case 2:
+		case 6:
+			if (change) {
+				mouse.button = B_MIDDLE | B_DRAG;
+//fprintf(stderr, "MIDDLE DRAG ");
+			} else {
+//fprintf(stderr, "MIDDLE DOWN2 ");
+				mouse.button = B_MIDDLE | B_DOWN;
+			}
+			break;
+		}
+		break;
+	case 4:
+		switch (prev_buttons) {
+		case 1:
+		case 3:
+		case 5:
+		case 7:
+			mouse.button = B_LEFT | B_UP;
+//fprintf(stderr, "LEFT UP3 ");
+			break;
+		case 2:
+		case 6:
+			mouse.button = B_MIDDLE | B_UP;
+//fprintf(stderr, "MIDDLE UP2 ");
+			break;
+		case 0:
+			mouse.button = B_RIGHT | B_DOWN;
+//fprintf(stderr, "RIGHT DOWN ");
+			break;
+		case 4:
+			if (change) {
+				mouse.button = B_RIGHT | B_DRAG;
+//fprintf(stderr, "RIGHT DRAG ");
+			} else {
+//fprintf(stderr, "RIGHT DOWN2 ");
+				mouse.button = B_RIGHT | B_DOWN;
+			}
+			break;
+		}
+		break;
+	}
+	prev_buttons = buttons;
+	set_mouse_interlink_event(&ev, mouse.x, mouse.y, mouse.button);
+
+	if (elm.fn) {
+		elm.fn(elm.data, (char *)&ev, sizeof(ev));
+	}
+	return 0;
 }
+
+static int
+init_mouse(int cons, int suspend)
+{
+	return 1;
+}
+
+static int
+done_mouse(void)
+{
+	return 1;
+}
+
+void *
+handle_mouse(int cons, void (*fn)(void *, char *, int),
+	     void *data)
+{
+	elm.cons = cons;
+	elm.fn = fn;
+	elm.data = data;
+
+	return &elm;
+}
+
+void
+unhandle_mouse(void *h)
+{
+	memset(&elm, 0, sizeof(elm));
+}
+
+void
+suspend_mouse(void *h)
+{
+}
+
+void
+resume_mouse(void *h)
+{
+}
+
 #endif
 
 static int
@@ -188,7 +362,7 @@ static int
 console_peek(HANDLE hnd)
 {
 	DWORD num = 0;
-	char  buf[10];
+	char  buf[32];
 	int   rc = 0;
 
 	if (!GetNumberOfConsoleInputEvents(hnd, &num) || num == 0)
@@ -232,8 +406,9 @@ win32_write(int fd, const void *buf, unsigned len)
 #if 0
 			WriteConsole ((HANDLE) fd, buf, len, &written, NULL);
 			rc = written;
-#endif
+#else
 			rc = VT100_decode((HANDLE) fd, buf, len);
+#endif
 		} else {
 			/* stdout redirected */
 			rc = write(STDOUT_FILENO, buf, len);

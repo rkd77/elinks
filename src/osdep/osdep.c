@@ -959,7 +959,7 @@ elinks_cfmakeraw(struct termios *t)
 	t->c_cc[VTIME] = 0;
 }
 
-#if !defined(CONFIG_MOUSE) || (!defined(CONFIG_GPM) && !defined(CONFIG_SYSMOUSE) && !defined(OS2_MOUSE) && !defined(CONFIG_OS_DOS))
+#if !defined(CONFIG_MOUSE) || (!defined(CONFIG_GPM) && !defined(CONFIG_SYSMOUSE) && !defined(OS2_MOUSE) && !defined(CONFIG_OS_DOS) && !defined(CONFIG_OS_WIN32))
 
 void *
 handle_mouse(int cons, void (*fn)(void *, char *, int),

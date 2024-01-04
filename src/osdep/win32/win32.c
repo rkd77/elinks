@@ -240,15 +240,11 @@ get_input_handle(void)
 	static HANDLE hStdIn = INVALID_HANDLE_VALUE;
 
 	if (hStdIn == INVALID_HANDLE_VALUE) {
-		DWORD dwMode;
-
 		SetConsoleTitle("ELinks - Console mode browser");
 
 		hStdIn = GetStdHandle(STD_INPUT_HANDLE);
-		GetConsoleMode(hStdIn, &dwMode);
-		dwMode &= ~(ENABLE_LINE_INPUT |	ENABLE_ECHO_INPUT);
-		dwMode |= (ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT);
-		SetConsoleMode(hStdIn, dwMode);
+		SetConsoleMode(hStdIn, ENABLE_EXTENDED_FLAGS);
+		SetConsoleMode(hStdIn, (ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT));
 	}
 	return (int) hStdIn;
 }
@@ -258,8 +254,13 @@ get_output_handle(void)
 {
 	static HANDLE hStdOut = INVALID_HANDLE_VALUE;
 
-	if (hStdOut == INVALID_HANDLE_VALUE)
+	if (hStdOut == INVALID_HANDLE_VALUE) {
+		DWORD dwMode;
+
 		hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+		GetConsoleMode(hStdOut, &dwMode);
+		SetConsoleMode(hStdOut, dwMode);
+	}
 	return (int) hStdOut;
 }
 
