@@ -1466,18 +1466,6 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 		clear_bitfield_bit(screen->dirty, y);				\
 										\
 		for (; x <= xmax; x++, current++, pos++) {			\
-			/*  Workaround for terminals without
-			 *  "eat_newline_glitch (xn)", e.g., the cons25 family
-			 *  of terminals and cygwin terminal.
-			 *  It prevents display distortion, but char at bottom
-			 *  right of terminal will not be drawn.
-			 *  A better fix would be to correctly detects
-			 *  terminal type, and/or add a terminal option for
-			 *  this purpose. */					\
-										\
-			if (is_last_line && x == xmax)				\
-				break;						\
-										\
 			if (compare_bg_color(pos->c.color, current->c.color)) {	\
 				/* No update for exact match. */		\
 				if (compare_fg_color(pos->c.color, current->c.color)\
@@ -1499,6 +1487,18 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 			continue;						\
 		}								\
 		add_cursor_move_to_string(image_, y + 1, 1);			\
+																\
+		/*  Workaround for terminals without
+		 *  "eat_newline_glitch (xn)", e.g., the cons25 family
+		 *  of terminals and cygwin terminal.
+		 *  It prevents display distortion, but char at bottom
+		 *  right of terminal will not be drawn.
+		 *  A better fix would be to correctly detects
+		 *  terminal type, and/or add a terminal option for
+		 *  this purpose. */					\
+		if (is_last_line) {	\
+			xmax--;	\
+		}	\
 		for (pos = start_of_line, x = 0; x <= xmax; x++, pos++) {	\
 			ADD_CHAR(image_, driver_, pos, state_);	\
 		}							\
