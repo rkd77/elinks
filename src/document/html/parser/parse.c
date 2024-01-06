@@ -1291,7 +1291,6 @@ xsp:
 	if (he) {
 		add_to_string(head, "Charset: ");
 		add_to_string(head, he);
-		add_crlf_to_string(head);
 		mem_free(he);
 	}
 
@@ -1301,7 +1300,6 @@ xsp:
 	if (!he) goto se;
 
 	add_to_string(head, he);
-	add_crlf_to_string(head);
 	mem_free(he);
 
 	/* FIXME (bug 784): cp is the terminal charset;
@@ -1310,10 +1308,10 @@ xsp:
 	if (c) {
 		add_to_string(head, ": ");
 		add_to_string(head, c);
-		add_crlf_to_string(head);
-		mem_free(c);
+	        mem_free(c);
 	}
 
+	add_crlf_to_string(head);
 	goto se;
 }
 
