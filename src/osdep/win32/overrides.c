@@ -178,16 +178,13 @@ console_mouse_read(const MOUSE_EVENT_RECORD *mer, char *buf, int max)
 		case 5:
 		case 7:
 			mouse.button = B_LEFT | B_UP;
-//fprintf(stderr, "LEFT UP ");
 			break;
 		case 2:
 		case 6:
-			mouse.button = B_MIDDLE | B_UP;
-//fprintf(stderr, "MIDDLE UP ");
+			mouse.button = B_RIGHT | B_UP;
 			break;
 		case 4:
-//fprintf(stderr, "RIGHT UP ");
-			mouse.button = B_RIGHT | B_UP;
+			mouse.button = B_MIDDLE | B_UP;
 			break;
 		}
 		break;
@@ -200,7 +197,6 @@ console_mouse_read(const MOUSE_EVENT_RECORD *mer, char *buf, int max)
 		case 2:
 		case 4:
 		case 6:
-//fprintf(stderr, "LEFT DOWN ");
 			mouse.button = B_LEFT | B_DOWN;
 			break;
 		case 1:
@@ -208,10 +204,8 @@ console_mouse_read(const MOUSE_EVENT_RECORD *mer, char *buf, int max)
 		case 5:
 		case 7:
 			if (change) {
-				mouse.button = B_LEFT | B_DRAG;
-//fprintf(stderr, "LEFT DRAG ");
+				mouse.button = B_LEFT | B_DOWN | B_DRAG;
 			} else {
-//fprintf(stderr, "LEFT DOWN2 ");
 				mouse.button = B_LEFT | B_DOWN;
 			}
 			break;
@@ -224,22 +218,18 @@ console_mouse_read(const MOUSE_EVENT_RECORD *mer, char *buf, int max)
 		case 3:
 		case 5:
 		case 7:
-//fprintf(stderr, "LEFT UP2 ");
 			mouse.button = B_LEFT | B_UP;
 			break;
 		case 0:
 		case 4:
-//fprintf(stderr, "MIDDLE DOWN ");
-			mouse.button = B_MIDDLE | B_DOWN;
+			mouse.button = B_RIGHT | B_DOWN;
 			break;
 		case 2:
 		case 6:
 			if (change) {
-				mouse.button = B_MIDDLE | B_DRAG;
-//fprintf(stderr, "MIDDLE DRAG ");
+				mouse.button = B_RIGHT | B_DOWN | B_DRAG;
 			} else {
-//fprintf(stderr, "MIDDLE DOWN2 ");
-				mouse.button = B_MIDDLE | B_DOWN;
+				mouse.button = B_RIGHT | B_DOWN;
 			}
 			break;
 		}
@@ -251,24 +241,19 @@ console_mouse_read(const MOUSE_EVENT_RECORD *mer, char *buf, int max)
 		case 5:
 		case 7:
 			mouse.button = B_LEFT | B_UP;
-//fprintf(stderr, "LEFT UP3 ");
 			break;
 		case 2:
 		case 6:
-			mouse.button = B_MIDDLE | B_UP;
-//fprintf(stderr, "MIDDLE UP2 ");
+			mouse.button = B_RIGHT | B_UP;
 			break;
 		case 0:
-			mouse.button = B_RIGHT | B_DOWN;
-//fprintf(stderr, "RIGHT DOWN ");
+			mouse.button = B_MIDDLE | B_DOWN;
 			break;
 		case 4:
 			if (change) {
-				mouse.button = B_RIGHT | B_DRAG;
-//fprintf(stderr, "RIGHT DRAG ");
+				mouse.button = B_MIDDLE | B_DOWN | B_DRAG;
 			} else {
-//fprintf(stderr, "RIGHT DOWN2 ");
-				mouse.button = B_RIGHT | B_DOWN;
+				mouse.button = B_MIDDLE | B_DOWN;
 			}
 			break;
 		}
