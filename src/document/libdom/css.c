@@ -2063,7 +2063,7 @@ select_css(struct html_context *html_context, struct html_element *html_element)
 	css_media media = {
 		.type = CSS_MEDIA_SCREEN,
 	};
-	css_unit_ctx unit_len_ctx;
+	css_unit_ctx unit_len_ctx = {0};
 	unit_len_ctx.viewport_width  = 800; // TODO
 	unit_len_ctx.viewport_height = 600; // TODO
 	unit_len_ctx.device_dpi = F_90; //device_dpi;
