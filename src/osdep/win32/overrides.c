@@ -148,123 +148,46 @@ console_mouse_read(const MOUSE_EVENT_RECORD *mer, char *buf, int max)
 	int change;
 	int wheeled;
 	int extended_button;
+	int16_t wdy;
 
 	mouse.x = mer->dwMousePosition.X;
 	mouse.y = mer->dwMousePosition.Y;
 	change = (mouse.x != prev_mouse.x || mouse.y != prev_mouse.y);
-	prev_mouse = mouse;
-
 	buttons = mer->dwButtonState & 7;
 
 	if (!change && (buttons == prev_buttons) && !mer->dwEventFlags) {
 		return 0;
 	}
-
-	/* It's horrible. */
-	switch (buttons) {
-	case 0:
-		switch (prev_buttons) {
-		case 0:
-			wheeled = mer->dwEventFlags & MOUSE_WHEELED;
-
-			if (wheeled) {
-				int16_t v = (mer->dwButtonState >> 16);
-
-				mouse.button = v > 0 ? B_WHEEL_UP : B_WHEEL_DOWN;
-			}
-			break;
-		case 1:
-		case 3:
-		case 5:
-		case 7:
-			mouse.button = B_LEFT | B_UP;
-			break;
-		case 2:
-		case 6:
-			mouse.button = B_RIGHT | B_UP;
-			break;
-		case 4:
-			mouse.button = B_MIDDLE | B_UP;
-			break;
-		}
-		break;
-	case 1:
-	case 3:
-	case 5:
-	case 7:
-		switch (prev_buttons) {
-		case 0:
-		case 2:
-		case 4:
-		case 6:
-			mouse.button = B_LEFT | B_DOWN;
-			break;
-		case 1:
-		case 3:
-		case 5:
-		case 7:
-			if (change) {
-				mouse.button = B_LEFT | B_DOWN | B_DRAG;
-			} else {
-				mouse.button = B_LEFT | B_DOWN;
-			}
-			break;
-		}
-		break;
-	case 2:
-	case 6:
-		switch (prev_buttons) {
-		case 1:
-		case 3:
-		case 5:
-		case 7:
-			mouse.button = B_LEFT | B_UP;
-			break;
-		case 0:
-		case 4:
-			mouse.button = B_RIGHT | B_DOWN;
-			break;
-		case 2:
-		case 6:
-			if (change) {
-				mouse.button = B_RIGHT | B_DOWN | B_DRAG;
-			} else {
-				mouse.button = B_RIGHT | B_DOWN;
-			}
-			break;
-		}
-		break;
-	case 4:
-		switch (prev_buttons) {
-		case 1:
-		case 3:
-		case 5:
-		case 7:
-			mouse.button = B_LEFT | B_UP;
-			break;
-		case 2:
-		case 6:
-			mouse.button = B_RIGHT | B_UP;
-			break;
-		case 0:
-			mouse.button = B_MIDDLE | B_DOWN;
-			break;
-		case 4:
-			if (change) {
-				mouse.button = B_MIDDLE | B_DOWN | B_DRAG;
-			} else {
-				mouse.button = B_MIDDLE | B_DOWN;
-			}
-			break;
-		}
-		break;
-	}
 	prev_buttons = buttons;
+	wheeled = mer->dwEventFlags & MOUSE_WHEELED;
+	wdy = (mer->dwButtonState >> 16);
+
+	if (buttons & FROM_LEFT_1ST_BUTTON_PRESSED)
+		mouse.button = B_LEFT;
+	else if (buttons & FROM_LEFT_2ND_BUTTON_PRESSED)
+		mouse.button = B_MIDDLE;
+	else if (buttons & RIGHTMOST_BUTTON_PRESSED)
+		mouse.button = B_RIGHT;
+	else if (wheeled && wdy < 0)
+		mouse.button = B_WHEEL_DOWN;
+	else if (wheeled && wdy > 0)
+		mouse.button = B_WHEEL_UP;
+	else
+		return 0;
+
+	mouse.button |= B_DOWN;
+	prev_mouse = mouse;
 	set_mouse_interlink_event(&ev, mouse.x, mouse.y, mouse.button);
 
 	if (elm.fn) {
 		elm.fn(elm.data, (char *)&ev, sizeof(ev));
 	}
+	set_mouse_interlink_event(&ev, mouse.x, mouse.y, (mouse.button & ~B_DOWN) | B_UP);
+
+	if (elm.fn) {
+		elm.fn(elm.data, (char *)&ev, sizeof(ev));
+	}
+
 	return 0;
 }
 
