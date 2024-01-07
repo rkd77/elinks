@@ -502,6 +502,7 @@ static struct element_info elements[] = {
  {"MAIN",        html_main,        NULL,                 0, ET_NON_NESTABLE},
  {"MENU",        html_ul,          NULL,                 2, ET_NESTABLE    },
  {"META",        html_meta,        NULL,                 0, ET_NON_PAIRABLE},
+ {"NAV",         html_linebrk,     NULL,                 1, ET_NESTABLE    },
  {"NOFRAMES",    html_noframes,    NULL,                 0, ET_NESTABLE    },
  {"NOSCRIPT",    html_noscript,    NULL,                 0, ET_NESTABLE    },
  {"OBJECT",      html_object,      NULL,                 1, ET_NON_PAIRABLE},
