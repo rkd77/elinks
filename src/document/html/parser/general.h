@@ -9,6 +9,7 @@ extern "C" {
 #endif
 
 element_handler_T html_address;
+element_handler_T html_article;
 element_handler_T html_base;
 element_handler_T html_blockquote;
 element_handler_T html_blockquote_close;
@@ -36,6 +37,7 @@ element_handler_T html_hr;
 element_handler_T html_italic;
 element_handler_T html_li;
 element_handler_T html_linebrk;
+element_handler_T html_main;
 element_handler_T html_meta;
 element_handler_T html_noframes;
 element_handler_T html_noscript;

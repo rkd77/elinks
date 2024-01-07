@@ -42,6 +42,18 @@
 #include "document/html/internal.h"
 
 void
+html_article(struct html_context *html_context, char *a,
+          char *xxx3, char *xxx4, char **xxx5)
+{
+}
+
+void
+html_main(struct html_context *html_context, char *a,
+          char *xxx3, char *xxx4, char **xxx5)
+{
+}
+
+void
 html_section(struct html_context *html_context, char *a,
           char *xxx3, char *xxx4, char **xxx5)
 {
