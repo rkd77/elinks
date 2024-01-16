@@ -10,11 +10,15 @@
 
 #include "elinks.h"
 
+#include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/mujs.h"
 #include "ecmascript/mujs/location.h"
 #include "ecmascript/mujs/window.h"
 #include "protocol/uri.h"
+#include "session/history.h"
+#include "session/location.h"
+#include "session/session.h"
 #include "viewer/text/vs.h"
 
 static void
@@ -548,6 +552,42 @@ mjs_location_reload(js_State *J)
 	js_pushundefined(J);
 }
 
+static void
+mjs_location_replace(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct view_state *vs = interpreter->vs;
+	const char *url;
+
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		js_error(J, "!vs");
+		return;
+	}
+	url = js_tostring(J, 1);
+
+	if (!url) {
+		js_error(J, "out of memory");
+		return;
+	}
+	struct session *ses = vs->doc_view->session;
+
+	if (ses) {
+		struct location *loc = cur_loc(ses);
+
+		if (loc) {
+			del_from_history(&ses->history, loc);
+		}
+	}
+	location_goto_const(vs->doc_view, url);
+	js_pushundefined(J);
+}
+
 /* @location_funcs{"toString"}, @location_funcs{"toLocaleString"} */
 static void
 mjs_location_toString(js_State *J)
@@ -565,6 +605,7 @@ mjs_location_init(js_State *J)
 	{
 		addmethod(J, "assign", mjs_location_assign, 1);
 		addmethod(J, "reload", mjs_location_reload, 0);
+		addmethod(J, "replace", mjs_location_replace, 1);
 		addmethod(J, "toString", mjs_location_toString, 0);
 		addmethod(J, "toLocaleString", mjs_location_toString, 0);
 
