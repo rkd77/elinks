@@ -10,10 +10,14 @@
 
 #include "elinks.h"
 
+#include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/location.h"
 #include "protocol/uri.h"
+#include "session/history.h"
+#include "session/location.h"
+#include "session/session.h"
 #include "viewer/text/vs.h"
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
@@ -621,6 +625,43 @@ js_location_reload(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	return JS_UNDEFINED;
 }
 
+static JSValue
+js_location_replace(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct view_state *vs = interpreter->vs;
+
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return JS_EXCEPTION;
+	}
+	const char *url = JS_ToCString(ctx, argv[0]);
+
+	if (!url) {
+		return JS_EXCEPTION;
+	}
+	struct session *ses = vs->doc_view->session;
+
+	if (ses) {
+		struct location *loc = cur_loc(ses);
+
+		if (loc) {
+			del_from_history(&ses->history, loc);
+		}
+	}
+	location_goto_const(vs->doc_view, url);
+	JS_FreeCString(ctx, url);
+
+	return JS_UNDEFINED;
+}
+
 /* @location_funcs{"toString"}, @location_funcs{"toLocaleString"} */
 static JSValue
 js_location_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
@@ -645,6 +686,7 @@ static const JSCFunctionListEntry js_location_proto_funcs[] = {
 	JS_CGETSET_DEF("search", js_location_get_property_search, js_location_set_property_search),
 	JS_CFUNC_DEF("assign", 1, js_location_assign),
 	JS_CFUNC_DEF("reload", 0, js_location_reload),
+	JS_CFUNC_DEF("replace", 1, js_location_replace),
 	JS_CFUNC_DEF("toString", 0, js_location_toString),
 	JS_CFUNC_DEF("toLocaleString", 0, js_location_toString),
 };
