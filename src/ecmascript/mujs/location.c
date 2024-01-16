@@ -502,6 +502,33 @@ mjs_location_set_property_search(js_State *J)
 }
 
 static void
+mjs_location_assign(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct view_state *vs = interpreter->vs;
+	const char *url;
+
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		js_error(J, "!vs");
+		return;
+	}
+	url = js_tostring(J, 1);
+
+	if (!url) {
+		js_error(J, "out of memory");
+		return;
+	}
+	location_goto_const(vs->doc_view, url);
+	js_pushundefined(J);
+}
+
+static void
 mjs_location_reload(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -536,6 +563,7 @@ mjs_location_init(js_State *J)
 {
 	js_newobject(J);
 	{
+		addmethod(J, "assign", mjs_location_assign, 1);
 		addmethod(J, "reload", mjs_location_reload, 0);
 		addmethod(J, "toString", mjs_location_toString, 0);
 		addmethod(J, "toLocaleString", mjs_location_toString, 0);
