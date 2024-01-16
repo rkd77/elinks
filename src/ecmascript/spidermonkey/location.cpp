@@ -942,11 +942,13 @@ location_set_property_search(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 static bool location_assign(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool location_reload(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool location_replace(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool location_toString(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec location_funcs[] = {
 	{ "assign",			location_assign,	1 },
 	{ "reload",			location_reload,	0 },
+	{ "replace",		location_replace, 	1 },
 	{ "toString",		location_toString,	0 },
 	{ "toLocaleString",	location_toString,	0 },
 	{ NULL }
@@ -1008,7 +1010,6 @@ location_assign(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	return true;
 }
 
-
 static bool
 location_reload(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
@@ -1053,6 +1054,72 @@ location_reload(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	return true;
 }
+
+static bool
+location_replace(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+
+	if (argc != 1) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	struct document_view *doc_view;
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &location_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	vs = interpreter->vs;
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	doc_view = vs->doc_view;
+	char *url = jsval_to_string(ctx, args[0]);
+
+	if (!url) {
+		return false;
+	}
+	struct session *ses = doc_view->session;
+
+	if (ses) {
+		struct location *loc = cur_loc(ses);
+
+		if (loc) {
+			del_from_history(&ses->history, loc);
+		}
+	}
+	location_goto(doc_view, url);
+	mem_free(url);
+
+	return true;
+}
+
 
 /* @location_funcs{"toString"}, @location_funcs{"toLocaleString"} */
 static bool
