@@ -572,6 +572,34 @@ js_location_set_property_search(JSContext *ctx, JSValueConst this_val, JSValue v
 }
 
 static JSValue
+js_location_assign(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct view_state *vs = interpreter->vs;
+
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return JS_EXCEPTION;
+	}
+	const char *url = JS_ToCString(ctx, argv[0]);
+
+	if (!url) {
+		return JS_EXCEPTION;
+	}
+	location_goto_const(vs->doc_view, url);
+	JS_FreeCString(ctx, url);
+
+	return JS_UNDEFINED;
+}
+
+static JSValue
 js_location_reload(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -615,6 +643,7 @@ static const JSCFunctionListEntry js_location_proto_funcs[] = {
 	JS_CGETSET_DEF("port", js_location_get_property_port, js_location_set_property_port),
 	JS_CGETSET_DEF("protocol", js_location_get_property_protocol, js_location_set_property_protocol),
 	JS_CGETSET_DEF("search", js_location_get_property_search, js_location_set_property_search),
+	JS_CFUNC_DEF("assign", 1, js_location_assign),
 	JS_CFUNC_DEF("reload", 0, js_location_reload),
 	JS_CFUNC_DEF("toString", 0, js_location_toString),
 	JS_CFUNC_DEF("toLocaleString", 0, js_location_toString),
