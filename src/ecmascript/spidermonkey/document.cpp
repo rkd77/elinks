@@ -399,6 +399,24 @@ document_get_property_childNodes(JSContext *ctx, unsigned int argc, JS::Value *v
 	return true;
 }
 
+static bool
+document_get_property_defaultView(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	JS::RootedObject win(ctx);
+	JS::Heap<JSObject*> *window_obj = interpreter->ac;
+	win = window_obj->get();
+	args.rval().setObject(*win);
+
+	return true;
+}
 
 static bool
 document_get_property_doctype(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -1080,6 +1098,7 @@ JSPropertySpec document_props[] = {
 	JS_PSG("charset", document_get_property_charset, JSPROP_ENUMERATE),
 	JS_PSG("characterSet", document_get_property_charset, JSPROP_ENUMERATE),
 	JS_PSG("childNodes", document_get_property_childNodes, JSPROP_ENUMERATE),
+	JS_PSG("defaultView", document_get_property_defaultView, JSPROP_ENUMERATE),
 	JS_PSG("doctype", document_get_property_doctype, JSPROP_ENUMERATE),
 	JS_PSG("documentElement", document_get_property_documentElement, JSPROP_ENUMERATE),
 	JS_PSG("documentURI", document_get_property_documentURI, JSPROP_ENUMERATE),
