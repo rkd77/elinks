@@ -286,6 +286,15 @@ mjs_document_get_property_childNodes(js_State *J)
 }
 
 static void
+mjs_document_get_property_defaultView(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	js_pushglobal(J);
+}
+
+static void
 mjs_document_get_property_doctype(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1387,6 +1396,7 @@ mjs_document_init(js_State *J)
 		addproperty(J, "charset", mjs_document_get_property_charset, NULL);
 		addproperty(J, "characterSet", mjs_document_get_property_charset, NULL);
 		addproperty(J, "childNodes", mjs_document_get_property_childNodes, NULL);
+		addproperty(J, "defaultView", mjs_document_get_property_defaultView, NULL);
 		addproperty(J, "doctype", mjs_document_get_property_doctype, NULL);
 		addproperty(J, "documentElement", mjs_document_get_property_documentElement, NULL);
 		addproperty(J, "documentURI", mjs_document_get_property_documentURI, NULL);
