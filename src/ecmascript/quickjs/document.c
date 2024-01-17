@@ -286,6 +286,18 @@ js_document_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 }
 
 static JSValue
+js_document_get_property_defaultView(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	JSValue global_obj = JS_GetGlobalObject(ctx);
+
+	RETURN_JS(global_obj);
+}
+
+static JSValue
 js_document_get_property_doctype(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1549,6 +1561,7 @@ static const JSCFunctionListEntry js_document_proto_funcs[] = {
 	JS_CGETSET_DEF("charset", js_document_get_property_charset, NULL),
 	JS_CGETSET_DEF("characterSet", js_document_get_property_charset, NULL),
 	JS_CGETSET_DEF("childNodes", js_document_get_property_childNodes, NULL),
+	JS_CGETSET_DEF("defaultView", js_document_get_property_defaultView, NULL),
 	JS_CGETSET_DEF("doctype", js_document_get_property_doctype, NULL),
 	JS_CGETSET_DEF("documentElement", js_document_get_property_documentElement, NULL),
 	JS_CGETSET_DEF("documentURI", js_document_get_property_documentURI, NULL),
