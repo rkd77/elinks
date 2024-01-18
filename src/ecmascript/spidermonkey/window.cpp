@@ -10,6 +10,8 @@
 
 #include "elinks.h"
 
+#include "ecmascript/libdom/dom.h"
+
 #include "ecmascript/spidermonkey/util.h"
 #include <js/BigInt.h>
 #include <js/Conversions.h>
@@ -24,6 +26,7 @@
 #include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/spidermonkey/css.h"
 #include "ecmascript/spidermonkey/heartbeat.h"
 #include "ecmascript/spidermonkey/keyboard.h"
 #include "ecmascript/spidermonkey/location.h"
@@ -169,6 +172,7 @@ void location_goto(struct document_view *doc_view, char *url);
 static bool window_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_alert(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_clearTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool window_getComputedStyle(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_open(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_postMessage(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -178,6 +182,7 @@ const spidermonkeyFunctionSpec window_funcs[] = {
 	{ "addEventListener", window_addEventListener, 3 },
 	{ "alert",	window_alert,		1 },
 	{ "clearTimeout",	window_clearTimeout,	1 },
+	{ "getComputedStyle",	window_getComputedStyle,	2 },
 	{ "open",	window_open,		3 },
 	{ "postMessage",	window_postMessage,	3 },
 	{ "removeEventListener", window_removeEventListener, 3 },
@@ -644,6 +649,35 @@ window_clearTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 	return true;
 }
+
+/* @window_funcs{"getComputedStyle"} */
+static bool
+window_getComputedStyle(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	if (argc < 1) {
+		return true;
+	}
+
+	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+	JS::RootedObject node(ctx, &args[0].toObject());
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(node, 0);
+	JSObject *css = getCSSStyleDeclaration(ctx, el);
+	args.rval().setObject(*css);
+
+	return true;
+}
+
 
 #if 0
 static bool
