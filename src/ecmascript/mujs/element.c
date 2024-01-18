@@ -72,7 +72,7 @@ struct mjs_element_private {
 	int ref_count;
 };
 
-static void *
+void *
 mjs_getprivate(js_State *J, int idx)
 {
 	struct mjs_element_private *priv = (struct mjs_element_private *)js_touserdata(J, idx, "element");

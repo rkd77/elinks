@@ -12,6 +12,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef CONFIG_LIBDOM
+#include <dom/dom.h>
+#include <dom/bindings/hubbub/parser.h>
+#endif
+
 #include "elinks.h"
 
 #include "bfu/dialog.h"
@@ -25,6 +30,8 @@
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/mujs.h"
+#include "ecmascript/mujs/css.h"
+#include "ecmascript/mujs/element.h"
 #include "ecmascript/mujs/keyboard.h"
 #include "ecmascript/mujs/location.h"
 #include "ecmascript/mujs/message.h"
@@ -293,6 +300,16 @@ mjs_window_clearTimeout(js_State *J)
 		mem_free(t);
 	}
 	js_pushundefined(J);
+}
+
+static void
+mjs_window_getComputedStyle(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 1));
+	mjs_push_CSSStyleDeclaration(J, el);
 }
 
 static void
@@ -678,6 +695,7 @@ mjs_window_init(js_State *J)
 		addmethod(J, "window.addEventListener", mjs_window_addEventListener, 3);
 		addmethod(J, "window.alert", mjs_window_alert, 1);
 		addmethod(J, "window.clearTimeout", mjs_window_clearTimeout, 1);
+		addmethod(J, "window.getComputedStyle", mjs_window_getComputedStyle, 2);
 		addmethod(J, "window.open", mjs_window_open, 3);
 		addmethod(J, "window.postMessage", mjs_window_postMessage, 3);
 		addmethod(J, "window.removeEventListener", mjs_window_removeEventListener, 3);
