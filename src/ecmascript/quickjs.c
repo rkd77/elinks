@@ -86,6 +86,9 @@ quickjs_init(struct module *xxx)
 	map_form_elements = attr_create_new_form_elements_map();
 	map_form_elements_rev = attr_create_new_form_elements_map_rev();
 	//js_module_init_ok = spidermonkey_runtime_addref();
+
+	map_csses = attr_create_new_csses_map();
+	map_rev_csses = attr_create_new_csses_map_rev();
 }
 
 static void
@@ -112,6 +115,9 @@ quickjs_done(struct module *xxx)
 
 	attr_delete_map(map_form_elements);
 	attr_delete_map_rev(map_form_elements_rev);
+
+	attr_delete_map(map_csses);
+	attr_delete_map_rev(map_rev_csses);
 
 //	if (js_module_init_ok)
 //		spidermonkey_runtime_release();

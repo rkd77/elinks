@@ -8,6 +8,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef CONFIG_LIBDOM
+#include <dom/dom.h>
+#include <dom/bindings/hubbub/parser.h>
+#endif
+
 #include "elinks.h"
 
 #include "bfu/leds.h"
@@ -17,6 +22,8 @@
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs.h"
+#include "ecmascript/quickjs/css.h"
+#include "ecmascript/quickjs/element.h"
 #include "ecmascript/quickjs/heartbeat.h"
 #include "ecmascript/quickjs/keyboard.h"
 #include "ecmascript/quickjs/location.h"
@@ -324,6 +331,25 @@ js_window_clearTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	return JS_UNDEFINED;
 }
 
+/* @window_funcs{"getComputedStyle"} */
+JSValue
+js_window_getComputedStyle(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	if (argc < 1) {
+		return JS_UNDEFINED;
+	}
+	dom_node *el = (dom_node *)(js_getopaque(argv[0], js_element_class_id));
+
+	if (!el) {
+		return JS_NULL;
+	}
+	return getCSSStyleDeclaration(ctx, el);
+}
 
 static JSValue
 js_window_get_property_closed(JSContext *ctx, JSValueConst this_val)
@@ -784,6 +810,7 @@ static const JSCFunctionListEntry js_window_proto_funcs[] = {
 	JS_CFUNC_DEF("addEventListener", 3, js_window_addEventListener),
 	JS_CFUNC_DEF("alert", 1, js_window_alert),
 	JS_CFUNC_DEF("clearTimeout", 1, js_window_clearTimeout),
+	JS_CFUNC_DEF("getComputedStyle", 2, js_window_getComputedStyle),
 	JS_CFUNC_DEF("open", 3, js_window_open),
 	JS_CFUNC_DEF("postMessage", 3, js_window_postMessage),
 	JS_CFUNC_DEF("removeEventListener", 3, js_window_removeEventListener),

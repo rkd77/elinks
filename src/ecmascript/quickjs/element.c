@@ -41,7 +41,7 @@
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
-static JSClassID js_element_class_id;
+JSClassID js_element_class_id;
 
 struct element_listener {
 	LIST_HEAD_EL(struct element_listener);
@@ -56,7 +56,7 @@ struct js_element_private {
 	void *node;
 };
 
-static void *
+void *
 js_getopaque(JSValueConst obj, JSClassID class_id)
 {
 	REF_JS(obj);

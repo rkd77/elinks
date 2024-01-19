@@ -9,6 +9,10 @@ extern "C" {
 
 struct term_event;
 
+extern JSClassID js_element_class_id;
+void *js_getopaque(JSValueConst obj, JSClassID class_id);
+
+
 JSValue getElement(JSContext *ctx, void *node);
 
 int js_element_init(JSContext *ctx);

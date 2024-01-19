@@ -27,6 +27,9 @@ extern void *map_rev_nodelist;
 extern void *map_form_elements;
 extern void *map_form_elements_rev;
 
+extern void *map_csses;
+extern void *map_rev_csses;
+
 void attr_save_in_map(void *m, void *node, JSValueConst value);
 void attr_save_in_map_void(void *m, void *node, void *value);
 
@@ -47,6 +50,9 @@ void *attr_create_new_forms_map_rev(void);
 void *attr_create_new_input_map(void);
 void *attr_create_new_nodelist_map(void);
 void *attr_create_new_nodelist_map_rev(void);
+
+void *attr_create_new_csses_map(void);
+void *attr_create_new_csses_map_rev(void);
 
 void *attr_create_new_requestHeaders_map(void);
 void *attr_create_new_responseHeaders_map(void);

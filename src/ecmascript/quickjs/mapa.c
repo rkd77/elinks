@@ -143,6 +143,19 @@ attr_create_new_nodelist_map(void)
 	return (void *)init_hash8();
 }
 
+void *
+attr_create_new_csses_map(void)
+{
+	return (void *)init_hash8();
+}
+
+void *
+attr_create_new_csses_map_rev(void)
+{
+	return (void *)init_hash8();
+}
+
+
 #if 0
 struct classcomp {
 	bool operator() (const std::string& lhs, const std::string& rhs) const
