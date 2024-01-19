@@ -171,21 +171,25 @@ void location_goto(struct document_view *doc_view, char *url);
 
 static bool window_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_alert(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool window_clearInterval(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_clearTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_getComputedStyle(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_open(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_postMessage(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool window_setInterval(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec window_funcs[] = {
 	{ "addEventListener", window_addEventListener, 3 },
 	{ "alert",	window_alert,		1 },
+	{ "clearInterval",	window_clearInterval,	1 },
 	{ "clearTimeout",	window_clearTimeout,	1 },
 	{ "getComputedStyle",	window_getComputedStyle,	2 },
 	{ "open",	window_open,		3 },
 	{ "postMessage",	window_postMessage,	3 },
 	{ "removeEventListener", window_removeEventListener, 3 },
+	{ "setInterval",	window_setInterval,	2 },
 	{ "setTimeout",	window_setTimeout,	2 },
 	{ NULL }
 };
@@ -565,6 +569,59 @@ end:
 	return true;
 }
 
+/* @window_funcs{"setInterval"} */
+static bool
+window_setInterval(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+//	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
+	char *code;
+	int timeout;
+
+	if (argc != 2)
+		return true;
+
+	timeout = args[1].toInt32();
+
+	if (timeout <= 0) {
+		return true;
+	}
+
+	if (args[0].isString()) {
+		code = jsval_to_string(ctx, args[0]);
+
+		if (!code) {
+			return true;
+		}
+
+		struct ecmascript_timeout *id = ecmascript_set_timeout(interpreter, code, timeout, timeout);
+		JS::BigInt *bi = JS::NumberToBigInt(ctx, reinterpret_cast<int64_t>(id));
+		args.rval().setBigInt(bi);
+		return true;
+	}
+	struct ecmascript_timeout *id = ecmascript_set_timeout2(interpreter, args[0], timeout, timeout);
+	JS::BigInt *bi = JS::NumberToBigInt(ctx, reinterpret_cast<int64_t>(id));
+	args.rval().setBigInt(bi);
+
+	return true;
+}
+
+
+
 /* @window_funcs{"setTimeout"} */
 static bool
 window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
@@ -604,17 +661,51 @@ window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			return true;
 		}
 
-		timer_id_T id = ecmascript_set_timeout(interpreter, code, timeout);
+		struct ecmascript_timeout *id = ecmascript_set_timeout(interpreter, code, timeout, -1);
 		JS::BigInt *bi = JS::NumberToBigInt(ctx, reinterpret_cast<int64_t>(id));
 		args.rval().setBigInt(bi);
 		return true;
 	}
-	timer_id_T id = ecmascript_set_timeout2(interpreter, args[0], timeout);
+	struct ecmascript_timeout *id = ecmascript_set_timeout2(interpreter, args[0], timeout, -1);
 	JS::BigInt *bi = JS::NumberToBigInt(ctx, reinterpret_cast<int64_t>(id));
 	args.rval().setBigInt(bi);
 
 	return true;
 }
+
+/* @window_funcs{"clearInterval"} */
+static bool
+window_clearInterval(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+
+	if (argc != 1) {
+		return true;
+	}
+	JS::BigInt *bi = JS::ToBigInt(ctx, args[0]);
+	int64_t number = JS::ToBigInt64(bi);
+	struct ecmascript_timeout *t = reinterpret_cast<struct ecmascript_timeout *>(number);
+
+	if (t && found_in_map_timer(t->tid)) {
+		kill_timer(&t->tid);
+		done_string(&t->code);
+		del_from_list(t);
+		mem_free(t);
+	}
+	return true;
+}
+
 
 /* @window_funcs{"clearTimeout"} */
 static bool
@@ -638,10 +729,9 @@ window_clearTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 	JS::BigInt *bi = JS::ToBigInt(ctx, args[0]);
 	int64_t number = JS::ToBigInt64(bi);
-	timer_id_T id = reinterpret_cast<timer_id_T>(number);
+	struct ecmascript_timeout *t = reinterpret_cast<struct ecmascript_timeout *>(number);
 
-	if (found_in_map_timer(id)) {
-		struct ecmascript_timeout *t = (struct ecmascript_timeout *)(id->data);
+	if (t && found_in_map_timer(t->tid)) {
 		kill_timer(&t->tid);
 		done_string(&t->code);
 		del_from_list(t);

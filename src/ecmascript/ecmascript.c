@@ -454,13 +454,17 @@ ecmascript_timeout_handler(void *val)
 	assertm(interpreter->vs->doc_view != NULL,
 		"setTimeout: vs with no document (e_f %d)",
 		interpreter->vs->ecmascript_fragile);
-	t->tid = TIMER_ID_UNDEF;
-	/* The expired timer ID has now been erased.  */
 	ecmascript_eval(interpreter, &t->code, NULL, 0);
 
-	del_from_list(t);
-	done_string(&t->code);
-	mem_free(t);
+	if (t->timeout_next > 0) {
+		install_timer(&t->tid, t->timeout_next, ecmascript_timeout_handler, t);
+	} else {
+	/* The expired timer ID has now been erased.  */
+		t->tid = TIMER_ID_UNDEF;
+		del_from_list(t);
+		done_string(&t->code);
+		mem_free(t);
+	}
 
 	check_for_rerender(interpreter, "handler");
 }
@@ -478,23 +482,27 @@ ecmascript_timeout_handler2(void *val)
 	assertm(interpreter->vs->doc_view != NULL,
 		"setTimeout: vs with no document (e_f %d)",
 		interpreter->vs->ecmascript_fragile);
-	t->tid = TIMER_ID_UNDEF;
-	/* The expired timer ID has now been erased.  */
 	ecmascript_call_function(interpreter, t->fun, NULL);
 
-	del_from_list(t);
-	done_string(&t->code);
+	if (t->timeout_next > 0) {
+		install_timer(&t->tid, t->timeout_next, ecmascript_timeout_handler2, t);
+	} else {
+		t->tid = TIMER_ID_UNDEF;
+		/* The expired timer ID has now been erased.  */
+		del_from_list(t);
+		done_string(&t->code);
 #ifdef CONFIG_MUJS
 //	js_unref(t->ctx, t->fun);
 #endif
-	mem_free(t);
+		mem_free(t);
+	}
 
 	check_for_rerender(interpreter, "handler2");
 }
 #endif
 
-timer_id_T
-ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, char *code, int timeout)
+struct ecmascript_timeout *
+ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, char *code, int timeout, int timeout_next)
 {
 	assert(interpreter && interpreter->vs->doc_view->document);
 	if (!code) return NULL;
@@ -513,15 +521,16 @@ ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, char *code, i
 	mem_free(code);
 
 	t->interpreter = interpreter;
+	t->timeout_next = timeout_next;
 	add_to_list(interpreter->vs->doc_view->document->timeouts, t);
 	install_timer(&t->tid, timeout, ecmascript_timeout_handler, t);
 
-	return t->tid;
+	return t;
 }
 
 #ifdef CONFIG_ECMASCRIPT_SMJS
-timer_id_T
-ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleValue f, int timeout)
+struct ecmascript_timeout *
+ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleValue f, int timeout, int timeout_next)
 {
 	assert(interpreter && interpreter->vs->doc_view->document);
 
@@ -535,18 +544,19 @@ ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleVa
 		return NULL;
 	}
 	t->interpreter = interpreter;
+	t->timeout_next = timeout_next;
 	JS::RootedValue fun((JSContext *)interpreter->backend_data, f);
 	t->fun = fun;
 	add_to_list(interpreter->vs->doc_view->document->timeouts, t);
 	install_timer(&t->tid, timeout, ecmascript_timeout_handler2, t);
 
-	return t->tid;
+	return t;
 }
 #endif
 
 #ifdef CONFIG_QUICKJS
-timer_id_T
-ecmascript_set_timeout2q(struct ecmascript_interpreter *interpreter, JSValueConst fun, int timeout)
+struct ecmascript_timeout *
+ecmascript_set_timeout2q(struct ecmascript_interpreter *interpreter, JSValueConst fun, int timeout, int timeout_next)
 {
 	assert(interpreter && interpreter->vs->doc_view->document);
 	struct ecmascript_timeout *t = (struct ecmascript_timeout *)mem_calloc(1, sizeof(*t));
@@ -559,17 +569,18 @@ ecmascript_set_timeout2q(struct ecmascript_interpreter *interpreter, JSValueCons
 		return NULL;
 	}
 	t->interpreter = interpreter;
+	t->timeout_next = timeout_next;
 	t->fun = fun;
 	add_to_list(interpreter->vs->doc_view->document->timeouts, t);
 	install_timer(&t->tid, timeout, ecmascript_timeout_handler2, t);
 
-	return t->tid;
+	return t;
 }
 #endif
 
 #ifdef CONFIG_MUJS
-timer_id_T
-ecmascript_set_timeout2m(js_State *J, const char *handle, int timeout)
+struct ecmascript_timeout *
+ecmascript_set_timeout2m(js_State *J, const char *handle, int timeout, int timeout_next)
 {
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	assert(interpreter && interpreter->vs->doc_view->document);
@@ -586,11 +597,12 @@ ecmascript_set_timeout2m(js_State *J, const char *handle, int timeout)
 	t->interpreter = interpreter;
 	t->ctx = J;
 	t->fun = handle;
+	t->timeout_next = timeout_next;
 
 	add_to_list(interpreter->vs->doc_view->document->timeouts, t);
 	install_timer(&t->tid, timeout, ecmascript_timeout_handler2, t);
 
-	return t->tid;
+	return t;
 }
 #endif
 

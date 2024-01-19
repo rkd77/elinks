@@ -283,6 +283,25 @@ mjs_window_alert(js_State *J)
 }
 
 static void
+mjs_window_clearInterval(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	const char *text = js_tostring(J, 1);
+	int64_t number = atoll(text);
+	struct ecmascript_timeout *t = (struct ecmasctript_timeout *)(number);
+
+	if (t && found_in_map_timer(t->tid)) {
+		kill_timer(&t->tid);
+		done_string(&t->code);
+		del_from_list(t);
+		mem_free(t);
+	}
+	js_pushundefined(J);
+}
+
+static void
 mjs_window_clearTimeout(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -290,10 +309,9 @@ mjs_window_clearTimeout(js_State *J)
 #endif
 	const char *text = js_tostring(J, 1);
 	int64_t number = atoll(text);
-	timer_id_T id = (timer_id_T)(number);
+	struct ecmascript_timeout *t = (struct ecmasctript_timeout *)(number);
 
-	if (found_in_map_timer(id)) {
-		struct ecmascript_timeout *t = (struct ecmascript_timeout *)(id->data);
+	if (t && found_in_map_timer(t->tid)) {
 		kill_timer(&t->tid);
 		done_string(&t->code);
 		del_from_list(t);
@@ -444,6 +462,50 @@ end:
 }
 
 static void
+mjs_window_setInterval(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	int timeout = js_toint32(J, 2);
+
+	if (timeout <= 0) {
+		js_pushundefined(J);
+		return;
+	}
+
+	if (js_isstring(J, 1)) {
+		const char *code = js_tostring(J, 1);
+
+		if (!code) {
+			js_pushundefined(J);
+			return;
+		}
+		char *code2 = stracpy(code);
+
+		if (code2) {
+			struct ecmascript_timeout *id = ecmascript_set_timeout(interpreter, code2, timeout, timeout);
+			char res[32];
+			snprintf(res, 31, "%" PRId64, (int64_t)id);
+			js_pushstring(J, res);
+			return;
+		}
+	} else {
+		js_copy(J, 1);
+		const char *handle = js_ref(J);
+		struct ecmascript_timeout *id = ecmascript_set_timeout2m(J, handle, timeout, timeout);
+		char res[32];
+		snprintf(res, 31, "%" PRId64, (int64_t)id);
+		js_pushstring(J, res);
+		return;
+	}
+	js_pushundefined(J);
+	return;
+}
+
+
+static void
 mjs_window_setTimeout(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -467,7 +529,7 @@ mjs_window_setTimeout(js_State *J)
 		char *code2 = stracpy(code);
 
 		if (code2) {
-			timer_id_T id = ecmascript_set_timeout(interpreter, code2, timeout);
+			struct ecmascript_timeout *id = ecmascript_set_timeout(interpreter, code2, timeout, -1);
 			char res[32];
 			snprintf(res, 31, "%" PRId64, (int64_t)id);
 			js_pushstring(J, res);
@@ -476,7 +538,7 @@ mjs_window_setTimeout(js_State *J)
 	} else {
 		js_copy(J, 1);
 		const char *handle = js_ref(J);
-		timer_id_T id = ecmascript_set_timeout2m(J, handle, timeout);
+		struct ecmascript_timeout *id = ecmascript_set_timeout2m(J, handle, timeout, -1);
 		char res[32];
 		snprintf(res, 31, "%" PRId64, (int64_t)id);
 		js_pushstring(J, res);
@@ -694,11 +756,13 @@ mjs_window_init(js_State *J)
 	{
 		addmethod(J, "window.addEventListener", mjs_window_addEventListener, 3);
 		addmethod(J, "window.alert", mjs_window_alert, 1);
+		addmethod(J, "window.clearInterval", mjs_window_clearInterval, 1);
 		addmethod(J, "window.clearTimeout", mjs_window_clearTimeout, 1);
 		addmethod(J, "window.getComputedStyle", mjs_window_getComputedStyle, 2);
 		addmethod(J, "window.open", mjs_window_open, 3);
 		addmethod(J, "window.postMessage", mjs_window_postMessage, 3);
 		addmethod(J, "window.removeEventListener", mjs_window_removeEventListener, 3);
+		addmethod(J, "window.setInterval", mjs_window_setInterval, 2);
 		addmethod(J, "window.setTimeout", mjs_window_setTimeout, 2);
 		addmethod(J, "window.toString", mjs_window_toString, 0);
 

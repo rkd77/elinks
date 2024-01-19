@@ -248,6 +248,59 @@ end:
 	return ret;
 }
 
+/* @window_funcs{"setInterval"} */
+JSValue
+js_window_setInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	int64_t timeout = 0;
+	JSValueConst func;
+
+	if (argc != 2) {
+		return JS_UNDEFINED;
+	}
+
+	if (JS_ToInt64(ctx, &timeout, argv[1])) {
+		return JS_EXCEPTION;
+	}
+
+	if (timeout <= 0) {
+		return JS_UNDEFINED;
+	}
+
+	func = argv[0];
+
+	if (JS_IsFunction(ctx, func)) {
+		struct ecmascript_timeout *id = ecmascript_set_timeout2q(interpreter, JS_DupValue(ctx, func), timeout, timeout);
+
+		return JS_NewInt64(ctx, (int64_t)(id));
+	}
+
+	if (JS_IsString(func)) {
+		const char *code = JS_ToCString(ctx, func);
+
+		if (!code) {
+			return JS_EXCEPTION;
+		}
+		char *code2 = stracpy(code);
+		JS_FreeCString(ctx, code);
+
+		if (code2) {
+			struct ecmascript_timeout *id = ecmascript_set_timeout(interpreter, code2, timeout, timeout);
+
+			return JS_NewInt64(ctx, (int64_t)(id));
+		}
+	}
+
+	return JS_UNDEFINED;
+}
+
+
 /* @window_funcs{"setTimeout"} */
 JSValue
 js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
@@ -276,7 +329,7 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 	func = argv[0];
 
 	if (JS_IsFunction(ctx, func)) {
-		timer_id_T id = ecmascript_set_timeout2q(interpreter, JS_DupValue(ctx, func), timeout);
+		struct ecmascript_timeout *id = ecmascript_set_timeout2q(interpreter, JS_DupValue(ctx, func), timeout, -1);
 
 		return JS_NewInt64(ctx, (int64_t)(id));
 	}
@@ -291,7 +344,7 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 		JS_FreeCString(ctx, code);
 
 		if (code2) {
-			timer_id_T id = ecmascript_set_timeout(interpreter, code2, timeout);
+			struct ecmascript_timeout *id = ecmascript_set_timeout(interpreter, code2, timeout, -1);
 
 			return JS_NewInt64(ctx, (int64_t)(id));
 		}
@@ -299,6 +352,37 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 
 	return JS_UNDEFINED;
 }
+
+/* @window_funcs{"clearInterval"} */
+JSValue
+js_window_clearInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	if (argc != 1) {
+		return JS_UNDEFINED;
+	}
+	int64_t number;
+
+	if (JS_ToInt64(ctx, &number, argv[0])) {
+		return JS_UNDEFINED;
+	}
+
+	struct ecmascript_timeout *t = (struct ecmascript_timeout *)(number);
+
+	if (t && found_in_map_timer(t->tid)) {
+		kill_timer(&t->tid);
+		done_string(&t->code);
+		del_from_list(t);
+		mem_free(t);
+	}
+
+	return JS_UNDEFINED;
+}
+
 
 /* @window_funcs{"clearTimeout"} */
 JSValue
@@ -317,11 +401,9 @@ js_window_clearTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	if (JS_ToInt64(ctx, &number, argv[0])) {
 		return JS_UNDEFINED;
 	}
+	struct ecmascript_timeout *t = (struct ecmascript_timeout *)(number);
 
-	timer_id_T id = (timer_id_T)(number);
-
-	if (found_in_map_timer(id)) {
-		struct ecmascript_timeout *t = (struct ecmascript_timeout *)(id->data);
+	if (t && found_in_map_timer(t->tid)) {
 		kill_timer(&t->tid);
 		done_string(&t->code);
 		del_from_list(t);
@@ -809,11 +891,13 @@ static const JSCFunctionListEntry js_window_proto_funcs[] = {
 	JS_CGETSET_DEF("window", js_window_get_property_self, NULL),
 	JS_CFUNC_DEF("addEventListener", 3, js_window_addEventListener),
 	JS_CFUNC_DEF("alert", 1, js_window_alert),
+	JS_CFUNC_DEF("clearInterval", 1, js_window_clearInterval),
 	JS_CFUNC_DEF("clearTimeout", 1, js_window_clearTimeout),
 	JS_CFUNC_DEF("getComputedStyle", 2, js_window_getComputedStyle),
 	JS_CFUNC_DEF("open", 3, js_window_open),
 	JS_CFUNC_DEF("postMessage", 3, js_window_postMessage),
 	JS_CFUNC_DEF("removeEventListener", 3, js_window_removeEventListener),
+	JS_CFUNC_DEF("setInterval", 2, js_window_setInterval),
 	JS_CFUNC_DEF("setTimeout", 2, js_window_setTimeout),
 	JS_CFUNC_DEF("toString", 0, js_window_toString)
 };

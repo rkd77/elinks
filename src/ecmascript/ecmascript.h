@@ -130,6 +130,7 @@ struct ecmascript_timeout {
 #endif
 	struct ecmascript_interpreter *interpreter;
 	timer_id_T tid;
+	int timeout_next;
 };
 
 
@@ -165,18 +166,18 @@ void ecmascript_timeout_dialog(struct terminal *term, int max_exec_time);
 
 void ecmascript_set_action(char **action, char *string);
 
-timer_id_T ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, char *code, int timeout);
+struct ecmascript_timeout *ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, char *code, int timeout, int timeout_next);
 
 #ifdef CONFIG_ECMASCRIPT_SMJS
-timer_id_T ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleValue f, int timeout);
+struct ecmascript_timeout *ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleValue f, int timeout, int timeout_next);
 #endif
 
 #ifdef CONFIG_QUICKJS
-timer_id_T ecmascript_set_timeout2q(struct ecmascript_interpreter *interpreter, JSValue f, int timeout);
+struct ecmascript_timeout *ecmascript_set_timeout2q(struct ecmascript_interpreter *interpreter, JSValue f, int timeout, int timeout_next);
 #endif
 
 #ifdef CONFIG_MUJS
-timer_id_T ecmascript_set_timeout2m(js_State *J, const char *handle, int timeout);
+struct ecmascript_timeout *ecmascript_set_timeout2m(js_State *J, const char *handle, int timeout, int timeout_next);
 #endif
 
 int get_ecmascript_enable(struct ecmascript_interpreter *interpreter);
