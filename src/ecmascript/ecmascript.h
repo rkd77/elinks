@@ -119,9 +119,11 @@ struct ecmascript_timeout {
 	LIST_HEAD_EL(struct ecmascript_timeout);
 	struct string code;
 #ifdef CONFIG_QUICKJS
+	JSContext *ctx;
 	JSValueConst fun;
 #endif
 #ifdef CONFIG_ECMASCRIPT_SMJS
+	JSContext *ctx;
 	JS::RootedValue fun;
 #endif
 #ifdef CONFIG_MUJS
@@ -166,14 +168,14 @@ void ecmascript_timeout_dialog(struct terminal *term, int max_exec_time);
 
 void ecmascript_set_action(char **action, char *string);
 
-struct ecmascript_timeout *ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, char *code, int timeout, int timeout_next);
+struct ecmascript_timeout *ecmascript_set_timeout(void *ctx, char *code, int timeout, int timeout_next);
 
 #ifdef CONFIG_ECMASCRIPT_SMJS
-struct ecmascript_timeout *ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleValue f, int timeout, int timeout_next);
+struct ecmascript_timeout *ecmascript_set_timeout2(void *ctx, JS::HandleValue f, int timeout, int timeout_next);
 #endif
 
 #ifdef CONFIG_QUICKJS
-struct ecmascript_timeout *ecmascript_set_timeout2q(struct ecmascript_interpreter *interpreter, JSValue f, int timeout, int timeout_next);
+struct ecmascript_timeout *ecmascript_set_timeout2q(void *ctx, JSValue f, int timeout, int timeout_next);
 #endif
 
 #ifdef CONFIG_MUJS

@@ -584,11 +584,7 @@ window_setInterval(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
-
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
-//	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	char *code;
 	int timeout;
 
@@ -608,19 +604,17 @@ window_setInterval(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			return true;
 		}
 
-		struct ecmascript_timeout *id = ecmascript_set_timeout(interpreter, code, timeout, timeout);
+		struct ecmascript_timeout *id = ecmascript_set_timeout(ctx, code, timeout, timeout);
 		JS::BigInt *bi = JS::NumberToBigInt(ctx, reinterpret_cast<int64_t>(id));
 		args.rval().setBigInt(bi);
 		return true;
 	}
-	struct ecmascript_timeout *id = ecmascript_set_timeout2(interpreter, args[0], timeout, timeout);
+	struct ecmascript_timeout *id = ecmascript_set_timeout2(ctx, args[0], timeout, timeout);
 	JS::BigInt *bi = JS::NumberToBigInt(ctx, reinterpret_cast<int64_t>(id));
 	args.rval().setBigInt(bi);
 
 	return true;
 }
-
-
 
 /* @window_funcs{"setTimeout"} */
 static bool
@@ -637,11 +631,7 @@ window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
-
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
-//	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	char *code;
 	int timeout;
 
@@ -661,12 +651,12 @@ window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			return true;
 		}
 
-		struct ecmascript_timeout *id = ecmascript_set_timeout(interpreter, code, timeout, -1);
+		struct ecmascript_timeout *id = ecmascript_set_timeout(ctx, code, timeout, -1);
 		JS::BigInt *bi = JS::NumberToBigInt(ctx, reinterpret_cast<int64_t>(id));
 		args.rval().setBigInt(bi);
 		return true;
 	}
-	struct ecmascript_timeout *id = ecmascript_set_timeout2(interpreter, args[0], timeout, -1);
+	struct ecmascript_timeout *id = ecmascript_set_timeout2(ctx, args[0], timeout, -1);
 	JS::BigInt *bi = JS::NumberToBigInt(ctx, reinterpret_cast<int64_t>(id));
 	args.rval().setBigInt(bi);
 

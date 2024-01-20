@@ -256,8 +256,6 @@ js_window_setInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
-
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	int64_t timeout = 0;
 	JSValueConst func;
 
@@ -276,7 +274,7 @@ js_window_setInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 	func = argv[0];
 
 	if (JS_IsFunction(ctx, func)) {
-		struct ecmascript_timeout *id = ecmascript_set_timeout2q(interpreter, JS_DupValue(ctx, func), timeout, timeout);
+		struct ecmascript_timeout *id = ecmascript_set_timeout2q(ctx, JS_DupValue(ctx, func), timeout, timeout);
 
 		return JS_NewInt64(ctx, (int64_t)(id));
 	}
@@ -291,7 +289,7 @@ js_window_setInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 		JS_FreeCString(ctx, code);
 
 		if (code2) {
-			struct ecmascript_timeout *id = ecmascript_set_timeout(interpreter, code2, timeout, timeout);
+			struct ecmascript_timeout *id = ecmascript_set_timeout(ctx, code2, timeout, timeout);
 
 			return JS_NewInt64(ctx, (int64_t)(id));
 		}
@@ -309,8 +307,6 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
-
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	int64_t timeout = 0;
 	JSValueConst func;
 
@@ -329,7 +325,7 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 	func = argv[0];
 
 	if (JS_IsFunction(ctx, func)) {
-		struct ecmascript_timeout *id = ecmascript_set_timeout2q(interpreter, JS_DupValue(ctx, func), timeout, -1);
+		struct ecmascript_timeout *id = ecmascript_set_timeout2q(ctx, JS_DupValue(ctx, func), timeout, -1);
 
 		return JS_NewInt64(ctx, (int64_t)(id));
 	}
@@ -344,7 +340,7 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 		JS_FreeCString(ctx, code);
 
 		if (code2) {
-			struct ecmascript_timeout *id = ecmascript_set_timeout(interpreter, code2, timeout, -1);
+			struct ecmascript_timeout *id = ecmascript_set_timeout(ctx, code2, timeout, -1);
 
 			return JS_NewInt64(ctx, (int64_t)(id));
 		}

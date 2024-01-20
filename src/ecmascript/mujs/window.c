@@ -467,7 +467,6 @@ mjs_window_setInterval(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	int timeout = js_toint32(J, 2);
 
 	if (timeout <= 0) {
@@ -485,7 +484,7 @@ mjs_window_setInterval(js_State *J)
 		char *code2 = stracpy(code);
 
 		if (code2) {
-			struct ecmascript_timeout *id = ecmascript_set_timeout(interpreter, code2, timeout, timeout);
+			struct ecmascript_timeout *id = ecmascript_set_timeout(J, code2, timeout, timeout);
 			char res[32];
 			snprintf(res, 31, "%" PRId64, (int64_t)id);
 			js_pushstring(J, res);
@@ -511,7 +510,6 @@ mjs_window_setTimeout(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	int timeout = js_toint32(J, 2);
 
 	if (timeout <= 0) {
@@ -529,7 +527,7 @@ mjs_window_setTimeout(js_State *J)
 		char *code2 = stracpy(code);
 
 		if (code2) {
-			struct ecmascript_timeout *id = ecmascript_set_timeout(interpreter, code2, timeout, -1);
+			struct ecmascript_timeout *id = ecmascript_set_timeout(J, code2, timeout, -1);
 			char res[32];
 			snprintf(res, 31, "%" PRId64, (int64_t)id);
 			js_pushstring(J, res);

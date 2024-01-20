@@ -491,6 +491,9 @@ ecmascript_timeout_handler2(void *val)
 		/* The expired timer ID has now been erased.  */
 		del_from_list(t);
 		done_string(&t->code);
+#ifdef CONFIG_QUICKJS
+		JS_FreeValue(t->ctx, t->fun);
+#endif
 #ifdef CONFIG_MUJS
 //	js_unref(t->ctx, t->fun);
 #endif
@@ -502,8 +505,21 @@ ecmascript_timeout_handler2(void *val)
 #endif
 
 struct ecmascript_timeout *
-ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, char *code, int timeout, int timeout_next)
+ecmascript_set_timeout(void *c, char *code, int timeout, int timeout_next)
 {
+#ifdef CONFIG_QUICKJS
+	JSContext *ctx = (JSContext *)c;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+#endif
+#ifdef CONFIG_ECMASCRIPT_SMJS
+	JSContext *ctx = (JSContext *)c;
+	JS::Realm *comp = js::GetContextRealm((JSContext *)ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+#endif
+#ifdef CONFIG_MUJS
+	js_State *ctx = (js_State *)c;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(ctx);
+#endif
 	assert(interpreter && interpreter->vs->doc_view->document);
 	if (!code) return NULL;
 	struct ecmascript_timeout *t = (struct ecmascript_timeout *)mem_calloc(1, sizeof(*t));
@@ -521,7 +537,11 @@ ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, char *code, i
 	mem_free(code);
 
 	t->interpreter = interpreter;
+	t->ctx = ctx;
 	t->timeout_next = timeout_next;
+#ifdef CONFIG_QUICKJS
+	t->fun = JS_NULL;
+#endif
 	add_to_list(interpreter->vs->doc_view->document->timeouts, t);
 	install_timer(&t->tid, timeout, ecmascript_timeout_handler, t);
 
@@ -530,8 +550,11 @@ ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, char *code, i
 
 #ifdef CONFIG_ECMASCRIPT_SMJS
 struct ecmascript_timeout *
-ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleValue f, int timeout, int timeout_next)
+ecmascript_set_timeout2(void *c, JS::HandleValue f, int timeout, int timeout_next)
 {
+	JSContext *ctx = (JSContext *)c;
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	assert(interpreter && interpreter->vs->doc_view->document);
 
 	struct ecmascript_timeout *t = (struct ecmascript_timeout *)mem_calloc(1, sizeof(*t));
@@ -544,6 +567,7 @@ ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleVa
 		return NULL;
 	}
 	t->interpreter = interpreter;
+	t->ctx = ctx;
 	t->timeout_next = timeout_next;
 	JS::RootedValue fun((JSContext *)interpreter->backend_data, f);
 	t->fun = fun;
@@ -556,8 +580,10 @@ ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleVa
 
 #ifdef CONFIG_QUICKJS
 struct ecmascript_timeout *
-ecmascript_set_timeout2q(struct ecmascript_interpreter *interpreter, JSValueConst fun, int timeout, int timeout_next)
+ecmascript_set_timeout2q(void *c, JSValueConst fun, int timeout, int timeout_next)
 {
+	JSContext *ctx = (JSContext *)c;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter && interpreter->vs->doc_view->document);
 	struct ecmascript_timeout *t = (struct ecmascript_timeout *)mem_calloc(1, sizeof(*t));
 
@@ -569,6 +595,7 @@ ecmascript_set_timeout2q(struct ecmascript_interpreter *interpreter, JSValueCons
 		return NULL;
 	}
 	t->interpreter = interpreter;
+	t->ctx = ctx;
 	t->timeout_next = timeout_next;
 	t->fun = fun;
 	add_to_list(interpreter->vs->doc_view->document->timeouts, t);
