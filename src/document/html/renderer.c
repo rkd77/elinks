@@ -275,6 +275,7 @@ get_format_screen_char(struct html_context *html_context,
 		schar_cache.attr |= SCREEN_ATTR_UNDERLINE;
 	}
 
+	schar_cache.element_offset = (elformat.top_name && html_context->document && html_context->document->text.source) ? elformat.top_name - html_context->document->text.source : 0;
 	return &schar_cache;
 }
 
