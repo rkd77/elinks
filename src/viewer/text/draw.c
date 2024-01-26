@@ -19,6 +19,7 @@
 #include "document/document.h"
 #include "document/html/frames.h"
 #include "document/html/iframes.h"
+#include "document/libdom/renderer2.h"
 #include "document/options.h"
 #include "document/refresh.h"
 #include "document/renderer.h"
@@ -36,6 +37,7 @@
 #include "terminal/tab.h"
 #include "terminal/terminal.h"
 #include "util/error.h"
+#include "util/hash.h"
 #include "util/lists.h"
 #include "util/memory.h"
 #include "util/string.h"
@@ -417,6 +419,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 		if (ses->navigate_mode == NAVIGATE_LINKWISE)
 			check_vs(doc_view);
 	}
+
 	for (y = int_max(vy, 0);
 	     y < int_min(doc_view->document->height, box->height + vy);
 	     y++) {
@@ -441,6 +444,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 				}
 			}
 		}
+
 		for (i = st; i < max; i++) {
 			if (doc_view->document->data[y].ch.chars[i].data != ' ') {
 				first = &doc_view->document->data[y].ch.chars[i];
@@ -458,6 +462,10 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 				   last);
 		}
 	}
+#if 0
+	try_to_color(term, box, doc_view->document, vx, vy);
+#endif
+
 	draw_view_status(ses, doc_view, active);
 	if (has_search_word(doc_view))
 		doc_view->last_x = doc_view->last_y = -1;
@@ -618,11 +626,16 @@ refresh_view(struct session *ses, struct document_view *doc_view, int frames)
 	 * form field has changed, @ses might not be in the current
 	 * tab: consider SELECT pop-ups behind which -remote loads
 	 * another tab, or setTimeout in ECMAScript.  */
-
 	if (ses->tab == get_current_tab(ses->tab->term)) {
 		if (doc_view->parent_doc_view) {
+#ifdef CONFIG_LIBDOM
+			scan_document(doc_view->parent_doc_view);
+#endif
 			draw_doc(ses, doc_view->parent_doc_view, 0);
 		} else {
+#ifdef CONFIG_LIBDOM
+			scan_document(doc_view);
+#endif
 			draw_doc(ses, doc_view, 1);
 		}
 		if (frames) draw_frames(ses);

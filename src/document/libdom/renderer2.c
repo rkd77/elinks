@@ -19,7 +19,9 @@
 #include "document/libdom/doc.h"
 #include "document/libdom/mapa.h"
 #include "document/libdom/renderer2.h"
+#include "document/view.h"
 #include "ecmascript/libdom/parse.h"
+#include "util/hash.h"
 #include "util/string.h"
 
 static int in_script = 0;
@@ -289,6 +291,172 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	dump_xhtml(cached, document, 0);
 }
 
+static struct node_rect *get_element(struct document *doc, int offset);
+
+static void
+walk_tree2(struct document *document, dom_node *node)
+{
+	dom_node *child = NULL;
+	/* Get the node's first child */
+	dom_exception exc = dom_node_get_first_child(node, &child);
+
+	if (exc != DOM_NO_ERR) {
+		fprintf(stderr, "Exception raised for node_get_first_child\n");
+		return;
+	}
+
+	while (child != NULL) {
+		/* Loop though all node's children */
+		dom_node *next_child;
+
+		/* Visit node's descendents */
+		walk_tree2(document, child);
+
+		/* Go to next sibling */
+		exc = dom_node_get_next_sibling(child, &next_child);
+
+		if (exc != DOM_NO_ERR) {
+			fprintf(stderr, "Exception raised for node_get_next_sibling\n");
+			dom_node_unref(child);
+			return;
+		}
+		dom_node_unref(child);
+		child = next_child;
+	}
+
+	int offset = find_offset(document->element_map_rev, node);
+
+	if (offset <= 0) {
+		return;
+	}
+	struct node_rect *tab = get_element(document, offset);
+
+	if (!tab) {
+		return;
+	}
+	exc = dom_node_get_first_child(node, &child);
+
+	if (exc != DOM_NO_ERR) {
+		fprintf(stderr, "Exception raised for node_get_first_child\n");
+		return;
+	}
+
+	while (child != NULL) {
+		/* Loop though all node's children */
+		dom_node *next_child;
+		int offset_i = find_offset(document->element_map_rev, child);
+
+		if (offset_i <= 0) {
+			goto next;
+		}
+		struct node_rect *rect_i = get_element(document, offset_i);
+
+		if (!rect_i) {
+			goto next;
+		}
+
+		if (rect_i->x0 == INT_MAX) {
+			goto next;
+		}
+
+		if (tab->x0 > rect_i->x0) {
+			tab->x0 = rect_i->x0;
+		}
+		if (tab->y0 > rect_i->y0) {
+			tab->y0 = rect_i->y0;
+		}
+		if (tab->x1 < rect_i->x1) {
+			tab->x1 = rect_i->x1;
+		}
+		if (tab->y1 < rect_i->y1) {
+			tab->y1 = rect_i->y1;
+		}
+next:
+		/* Go to next sibling */
+		exc = dom_node_get_next_sibling(child, &next_child);
+
+		if (exc != DOM_NO_ERR) {
+			fprintf(stderr, "Exception raised for node_get_next_sibling\n");
+			dom_node_unref(child);
+			return;
+		}
+		dom_node_unref(child);
+		child = next_child;
+	}
+}
+
+static void
+walk_tree2_color(struct terminal *term, struct el_box *box, struct document *document, int vx, int vy, dom_node *node)
+{
+	dom_node *child = NULL;
+	/* Get the node's first child */
+	dom_exception exc = dom_node_get_first_child(node, &child);
+
+	if (exc != DOM_NO_ERR) {
+		fprintf(stderr, "Exception raised for node_get_first_child\n");
+		return;
+	}
+	int offset = find_offset(document->element_map_rev, node);
+
+	if (offset <= 0) {
+		return;
+	}
+	struct node_rect *tab = get_element(document, offset);
+
+	if (!tab) {
+		return;
+	}
+
+	if (tab->y0 >= document->height) {
+		return;
+	}
+
+	if (tab->x0 >= document->data[tab->y0].length) {
+		return;
+	}
+	struct screen_char *sc = &document->data[tab->y0].ch.chars[tab->x0];
+	int ymax = int_min(document->height, tab->y1 + 1);
+	int y, x;
+
+	for (y = int_max(vy, tab->y0);
+	     y < int_min(ymax, box->height + vy);
+	     y++) {
+		int st = int_max(vx, tab->x0);
+		int xmax = int_min(box->width + vx, tab->x1 + 1);
+
+		for (x = st; x < xmax; x++) {
+			if (x >= document->data[y].length || (document->data[y].ch.chars[x].data == ' ' && document->data[y].ch.chars[x].element_offset == 0)) {
+				draw_space(term, box->x + x - vx, box->y + y - vy, sc);
+			}
+		}
+	}
+	exc = dom_node_get_first_child(node, &child);
+
+	if (exc != DOM_NO_ERR) {
+		fprintf(stderr, "Exception raised for node_get_first_child\n");
+		return;
+	}
+
+	while (child != NULL) {
+		/* Loop though all node's children */
+		dom_node *next_child;
+
+		/* Visit node's descendents */
+		walk_tree2_color(term, box, document, vx, vy, child);
+
+		/* Go to next sibling */
+		exc = dom_node_get_next_sibling(child, &next_child);
+
+		if (exc != DOM_NO_ERR) {
+			fprintf(stderr, "Exception raised for node_get_next_sibling\n");
+			dom_node_unref(child);
+			return;
+		}
+		dom_node_unref(child);
+		child = next_child;
+	}
+}
+
 void
 dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
 {
@@ -301,7 +469,6 @@ dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
 	if (!document->dom) {
 		return;
 	}
-
 	doc = document->dom;
 
 	in_script = 0;
@@ -371,4 +538,173 @@ dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
 		}
 		render_html_document(cached, document, &document->text);
 	}
+}
+
+void
+walk2(struct document *document)
+{
+	dom_exception exc; /* returned by libdom functions */
+	dom_document *doc = NULL; /* document, loaded into libdom */
+	dom_node *root = NULL; /* root element of document */
+
+	if (!document->dom) {
+		return;
+	}
+	doc = document->dom;
+
+	/* Get root element */
+	exc = dom_document_get_document_element(doc, &root);
+	if (exc != DOM_NO_ERR) {
+		fprintf(stderr, "Exception raised for get_document_element\n");
+		//dom_node_unref(doc);
+		return;
+	} else if (root == NULL) {
+		fprintf(stderr, "Broken: root == NULL\n");
+		//dom_node_unref(doc);
+		return;
+	}
+	walk_tree2(document, root);
+	dom_node_unref(root);
+}
+
+static int prev_offset = 0;
+static struct node_rect *prev_element = NULL;
+
+static struct node_rect *
+get_element(struct document *document, int offset)
+{
+	if (offset == prev_offset) {
+		return prev_element;
+	}
+	struct hash_item *item = get_hash_item(document->hh, (const char *)&offset, sizeof(offset));
+
+	if (item) {
+		prev_offset = offset;
+		prev_element = item->value;
+
+		return prev_element;
+	}
+	struct node_rect *n = mem_alloc(sizeof(*n));
+
+	if (!n) {
+		return NULL;
+	}
+	n->x0 = INT_MAX;
+	n->y0 = INT_MAX;
+	n->x1 = 0;
+	n->y1 = 0;
+	n->offset = offset;
+
+	char *key = memacpy((const char *)&offset, sizeof(offset));
+
+	if (key) {
+		item = add_hash_item(document->hh, key, sizeof(offset), n);
+	}
+	if (!item) {
+		mem_free(n);
+		return NULL;
+	}
+	prev_offset = offset;
+	prev_element = n;
+
+	return n;
+}
+//static void dump_results(struct document *document);
+
+void
+scan_document(struct document_view *doc_view)
+{
+	int y, x;
+
+	if (doc_view->document->hh) {
+		free_hash(&doc_view->document->hh);
+	}
+	doc_view->document->hh = init_hash8();
+
+	if (!doc_view->document->hh) {
+		return;
+	}
+
+	if (!doc_view || !doc_view->document) {
+		return;
+	}
+
+	prev_offset = 0;
+	prev_element = NULL;
+
+	for (y = 0; y < doc_view->document->height; y++) {
+		for (x = 0; x < doc_view->document->data[y].length; x++) {
+			int offset = doc_view->document->data[y].ch.chars[x].element_offset;
+
+			if (!offset) {
+				continue;
+			}
+			struct node_rect *tab = get_element(doc_view->document, offset);
+
+			if (!tab) {
+				continue;
+			}
+
+			if (tab->x0 > x) {
+				tab->x0 = x;
+			}
+			if (tab->y0 > y) {
+				tab->y0 = y;
+			}
+			if (tab->x1 < x) {
+				tab->x1 = x;
+			}
+			if (tab->y1 < y) {
+				tab->y1 = x;
+			}
+		}
+	}
+//	dump_results(doc_view->document);
+	prev_offset = 0;
+	prev_element = NULL;
+	walk2(doc_view->document);
+//	dump_results(doc_view->document);
+}
+
+#if 0
+static void
+dump_results(struct document *document)
+{
+	struct hash_item *item;
+	int i;
+
+	foreach_hash_item(item, *(document->hh), i) {
+		struct node_rect *rect = item->value;
+
+		fprintf(stderr, "%d:(%d,%d):(%d,%d)\n", rect->offset, rect->x0, rect->y0, rect->x1, rect->y1);
+	}
+	fprintf(stderr, "=============================\n");
+}
+#endif
+
+void
+try_to_color(struct terminal *term, struct el_box *box, struct document *document, int vx, int vy)
+{
+	dom_exception exc; /* returned by libdom functions */
+	dom_document *doc = NULL; /* document, loaded into libdom */
+	dom_node *root = NULL; /* root element of document */
+
+	if (!document->dom) {
+		return;
+	}
+	doc = document->dom;
+
+	/* Get root element */
+	exc = dom_document_get_document_element(doc, &root);
+	if (exc != DOM_NO_ERR) {
+		fprintf(stderr, "Exception raised for get_document_element\n");
+		//dom_node_unref(doc);
+		return;
+	} else if (root == NULL) {
+		fprintf(stderr, "Broken: root == NULL\n");
+		//dom_node_unref(doc);
+		return;
+	}
+	walk_tree2_color(term, box, document, vx, vy, root);
+	dom_node_unref(root);
 }

@@ -7,10 +7,20 @@ extern "C" {
 
 struct cache_entry;
 struct document;
+struct document_view;
+struct el_box;
 struct string;
+struct terminal;
+
+struct node_rect {
+	int x0, y0, x1, y1, offset;
+};
 
 void render_xhtml_document(struct cache_entry *cached, struct document *document, struct string *buffer);
 void dump_xhtml(struct cache_entry *cached, struct document *document, int parse);
+void walk2(struct document *document);
+void scan_document(struct document_view *doc_view);
+void try_to_color(struct terminal *term, struct el_box *box, struct document *document, int vx, int vy);
 
 #ifdef __cplusplus
 }

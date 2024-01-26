@@ -21,6 +21,7 @@ struct ecmascript_timeout;
 struct el_form_control;
 struct frame_desc;
 struct frameset_desc;
+struct hash;
 struct image;
 struct module;
 struct screen_char;
@@ -241,6 +242,7 @@ struct document {
 	void *element_map_rev;
 	struct string text;
 	void *forms_nodeset;
+	struct hash *hh;
 #endif
 
 #ifdef CONFIG_CSS
