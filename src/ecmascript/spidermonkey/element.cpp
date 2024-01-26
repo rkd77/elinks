@@ -69,6 +69,8 @@ static bool element_get_property_childElementCount(JSContext *ctx, unsigned int 
 static bool element_get_property_childNodes(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_clientLeft(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_clientTop(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_firstChild(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -147,6 +149,8 @@ JSPropertySpec element_props[] = {
 	JS_PSG("childElementCount",	element_get_property_childElementCount, JSPROP_ENUMERATE),
 	JS_PSG("childNodes",	element_get_property_childNodes, JSPROP_ENUMERATE),
 	JS_PSGS("className",	element_get_property_className, element_set_property_className, JSPROP_ENUMERATE),
+	JS_PSG("clientLeft",	element_get_property_clientLeft, JSPROP_ENUMERATE),
+	JS_PSG("clientTop",	element_get_property_clientTop, JSPROP_ENUMERATE),
 	JS_PSGS("dir",	element_get_property_dir, element_set_property_dir, JSPROP_ENUMERATE),
 	JS_PSG("firstChild",	element_get_property_firstChild, JSPROP_ENUMERATE),
 	JS_PSG("firstElementChild",	element_get_property_firstElementChild, JSPROP_ENUMERATE),
@@ -574,6 +578,29 @@ element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return true;
 }
 
+static bool
+element_get_property_clientLeft(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	args.rval().setInt32(0);
+
+	return true;
+}
+
+static bool
+element_get_property_clientTop(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	args.rval().setInt32(0);
+
+	return true;
+}
 
 static bool
 element_get_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
