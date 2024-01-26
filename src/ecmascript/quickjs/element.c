@@ -329,6 +329,24 @@ js_element_get_property_className(JSContext *ctx, JSValueConst this_val)
 }
 
 static JSValue
+js_element_get_property_clientLeft(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return JS_NewInt32(ctx, 0);
+}
+
+static JSValue
+js_element_get_property_clientTop(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return JS_NewInt32(ctx, 0);
+}
+
+static JSValue
 js_element_get_property_dir(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -2819,6 +2837,8 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("childElementCount",	js_element_get_property_childElementCount, NULL),
 	JS_CGETSET_DEF("childNodes",	js_element_get_property_childNodes, NULL),
 	JS_CGETSET_DEF("className",	js_element_get_property_className, js_element_set_property_className),
+	JS_CGETSET_DEF("clientLeft",	js_element_get_property_clientLeft, NULL),
+	JS_CGETSET_DEF("clientTop",	js_element_get_property_clientTop, NULL),
 	JS_CGETSET_DEF("dir",	js_element_get_property_dir, js_element_set_property_dir),
 	JS_CGETSET_DEF("firstChild",	js_element_get_property_firstChild, NULL),
 	JS_CGETSET_DEF("firstElementChild",	js_element_get_property_firstElementChild, NULL),
