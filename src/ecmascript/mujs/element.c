@@ -270,6 +270,24 @@ mjs_element_get_property_className(js_State *J)
 }
 
 static void
+mjs_element_get_property_clientLeft(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	js_pushnumber(J, 0);
+}
+
+static void
+mjs_element_get_property_clientTop(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	js_pushnumber(J, 0);
+}
+
+static void
 mjs_element_get_property_dir(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -2680,6 +2698,8 @@ mjs_push_element(js_State *J, void *node)
 		addproperty(J, "childElementCount",	mjs_element_get_property_childElementCount, NULL);
 		addproperty(J, "childNodes",	mjs_element_get_property_childNodes, NULL);
 		addproperty(J, "className",	mjs_element_get_property_className, mjs_element_set_property_className);
+		addproperty(J, "clientLeft", mjs_element_get_property_clientLeft, NULL);
+		addproperty(J, "clientTop", mjs_element_get_property_clientTop, NULL);
 		addproperty(J, "dir",	mjs_element_get_property_dir, mjs_element_set_property_dir);
 		addproperty(J, "firstChild",	mjs_element_get_property_firstChild, NULL);
 		addproperty(J, "firstElementChild",	mjs_element_get_property_firstElementChild, NULL);
