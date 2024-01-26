@@ -616,6 +616,10 @@ scan_document(struct document_view *doc_view)
 {
 	int y, x;
 
+	if (!doc_view || !doc_view->document) {
+		return;
+	}
+
 	if (doc_view->document->hh) {
 		free_hash(&doc_view->document->hh);
 	}
@@ -624,11 +628,6 @@ scan_document(struct document_view *doc_view)
 	if (!doc_view->document->hh) {
 		return;
 	}
-
-	if (!doc_view || !doc_view->document) {
-		return;
-	}
-
 	prev_offset = 0;
 	prev_element = NULL;
 
