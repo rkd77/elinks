@@ -116,15 +116,14 @@ screen_get_property_availHeight(JSContext *ctx, unsigned int argc, JS::Value *vp
 #endif
 		return false;
 	}
-
 	vs = interpreter->vs;
+
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 		return false;
 	}
-
 	struct document_view *doc_view = vs->doc_view;
 
 	if (!doc_view) {
@@ -133,8 +132,12 @@ screen_get_property_availHeight(JSContext *ctx, unsigned int argc, JS::Value *vp
 #endif
 		return false;
 	}
+	struct session *ses = doc_view->session;
 
-	args.rval().setInt32(doc_view->box.height * 16);
+	if (!ses) {
+		return false;
+	}
+	args.rval().setInt32(doc_view->box.height * ses->tab->term->cell_height);
 
 	return true;
 }
@@ -169,15 +172,14 @@ screen_get_property_availWidth(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-
 	vs = interpreter->vs;
+
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 		return false;
 	}
-
 	struct document_view *doc_view = vs->doc_view;
 
 	if (!doc_view) {
@@ -186,8 +188,12 @@ screen_get_property_availWidth(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
+	struct session *ses = doc_view->session;
 
-	args.rval().setInt32(doc_view->box.width * 8);
+	if (!ses) {
+		return false;
+	}
+	args.rval().setInt32(doc_view->box.width * ses->tab->term->cell_width);
 
 	return true;
 }
@@ -210,7 +216,6 @@ screen_get_property_height(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
@@ -222,15 +227,14 @@ screen_get_property_height(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-
 	vs = interpreter->vs;
+
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 		return false;
 	}
-
 	struct document_view *doc_view = vs->doc_view;
 
 	if (!doc_view) {
@@ -239,7 +243,6 @@ screen_get_property_height(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-
 	struct session *ses = doc_view->session;
 
 	if (!ses) {
@@ -248,8 +251,7 @@ screen_get_property_height(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-
-	args.rval().setInt32(ses->tab->term->height * 16);
+	args.rval().setInt32(ses->tab->term->height * ses->tab->term->cell_height);
 
 	return true;
 }
@@ -272,7 +274,6 @@ screen_get_property_width(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
@@ -284,15 +285,14 @@ screen_get_property_width(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-
 	vs = interpreter->vs;
+
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 		return false;
 	}
-
 	struct document_view *doc_view = vs->doc_view;
 
 	if (!doc_view) {
@@ -301,7 +301,6 @@ screen_get_property_width(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-
 	struct session *ses = doc_view->session;
 
 	if (!ses) {
@@ -310,8 +309,7 @@ screen_get_property_width(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-
-	args.rval().setInt32(ses->tab->term->width * 8);
+	args.rval().setInt32(ses->tab->term->width * ses->tab->term->cell_width);
 
 	return true;
 }
