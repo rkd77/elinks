@@ -19,6 +19,7 @@
 #include "document/document.h"
 #include "document/libdom/corestrings.h"
 #include "document/libdom/mapa.h"
+#include "document/libdom/renderer2.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs/mapa.h"
@@ -326,6 +327,46 @@ js_element_get_property_className(JSContext *ctx, JSValueConst this_val)
 		dom_string_unref(classstr);
 	}
 	RETURN_JS(r);
+}
+
+static JSValue
+js_element_get_property_clientHeight(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+
+	if (!el) {
+		return JS_NULL;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
+	struct session *ses;
+
+	if (!document) {
+		return JS_NewInt32(ctx, 0);
+	}
+	int offset = find_offset(document->element_map_rev, el);
+
+	if (offset <= 0) {
+		return JS_NewInt32(ctx, 0);
+	}
+	struct node_rect *rect = get_element_rect(document, offset);
+
+	if (!rect) {
+		return JS_NewInt32(ctx, 0);
+	}
+	ses = doc_view->session;
+
+	if (!ses) {
+		return JS_NewInt32(ctx, 0);
+	}
+	int dy = int_max(0, (rect->y1 + 1 - rect->y0) * ses->tab->term->cell_height);
+
+	return JS_NewInt32(ctx, dy);
 }
 
 static JSValue
@@ -2837,6 +2878,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("childElementCount",	js_element_get_property_childElementCount, NULL),
 	JS_CGETSET_DEF("childNodes",	js_element_get_property_childNodes, NULL),
 	JS_CGETSET_DEF("className",	js_element_get_property_className, js_element_set_property_className),
+	JS_CGETSET_DEF("clientHeight",	js_element_get_property_clientHeight, NULL),
 	JS_CGETSET_DEF("clientLeft",	js_element_get_property_clientLeft, NULL),
 	JS_CGETSET_DEF("clientTop",	js_element_get_property_clientTop, NULL),
 	JS_CGETSET_DEF("dir",	js_element_get_property_dir, js_element_set_property_dir),
