@@ -34,7 +34,13 @@ mjs_screen_get_property_availHeight(js_State *J)
 		js_pushundefined(J);
 		return;
 	}
-	js_pushnumber(J, doc_view->box.height * 16);
+	struct session *ses = doc_view->session;
+
+	if (!ses) {
+		js_pushundefined(J);
+		return;
+	}
+	js_pushnumber(J, doc_view->box.height * ses->tab->term->cell_height);
 }
 
 static void
@@ -53,7 +59,13 @@ mjs_screen_get_property_availWidth(js_State *J)
 		js_pushundefined(J);
 		return;
 	}
-	js_pushnumber(J, doc_view->box.width * 8);
+	struct session *ses = doc_view->session;
+
+	if (!ses) {
+		js_pushundefined(J);
+		return;
+	}
+	js_pushnumber(J, doc_view->box.width * ses->tab->term->cell_width);
 }
 
 static void
@@ -81,7 +93,7 @@ mjs_screen_get_property_height(js_State *J)
 		js_pushundefined(J);
 		return;
 	}
-	js_pushnumber(J, ses->tab->term->height * 16);
+	js_pushnumber(J, ses->tab->term->height * ses->tab->term->cell_height);
 }
 
 static void
@@ -109,7 +121,7 @@ mjs_screen_get_property_width(js_State *J)
 		js_pushundefined(J);
 		return;
 	}
-	js_pushnumber(J, ses->tab->term->width * 8);
+	js_pushnumber(J, ses->tab->term->width * ses->tab->term->cell_width);
 }
 
 static void
