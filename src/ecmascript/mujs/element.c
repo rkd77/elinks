@@ -25,6 +25,7 @@
 #include "document/forms.h"
 #include "document/libdom/corestrings.h"
 #include "document/libdom/mapa.h"
+#include "document/libdom/renderer2.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/mujs/mapa.h"
@@ -267,6 +268,50 @@ mjs_element_get_property_className(js_State *J)
 		js_pushstring(J, dom_string_data(classstr));
 		dom_string_unref(classstr);
 	}
+}
+
+static void
+mjs_element_get_property_clientHeight(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+
+	if (!el) {
+		js_pushnull(J);
+		return;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
+	struct session *ses;
+
+	if (!document) {
+		js_pushnumber(J, 0);
+		return;
+	}
+	int offset = find_offset(document->element_map_rev, el);
+
+	if (offset <= 0) {
+		js_pushnumber(J, 0);
+		return;
+	}
+	struct node_rect *rect = get_element_rect(document, offset);
+
+	if (!rect) {
+		js_pushnumber(J, 0);
+		return;
+	}
+	ses = doc_view->session;
+
+	if (!ses) {
+		js_pushnumber(J, 0);
+		return;
+	}
+	int dy = int_max(0, (rect->y1 + 1 - rect->y0) * ses->tab->term->cell_height);
+	js_pushnumber(J, dy);
 }
 
 static void
@@ -2698,6 +2743,7 @@ mjs_push_element(js_State *J, void *node)
 		addproperty(J, "childElementCount",	mjs_element_get_property_childElementCount, NULL);
 		addproperty(J, "childNodes",	mjs_element_get_property_childNodes, NULL);
 		addproperty(J, "className",	mjs_element_get_property_className, mjs_element_set_property_className);
+		addproperty(J, "clientHeight",	mjs_element_get_property_clientHeight, NULL);
 		addproperty(J, "clientLeft", mjs_element_get_property_clientLeft, NULL);
 		addproperty(J, "clientTop", mjs_element_get_property_clientTop, NULL);
 		addproperty(J, "dir",	mjs_element_get_property_dir, mjs_element_set_property_dir);
