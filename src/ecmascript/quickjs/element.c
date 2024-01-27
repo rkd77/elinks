@@ -816,6 +816,29 @@ js_element_get_property_nextSibling(JSContext *ctx, JSValueConst this_val)
 }
 
 static JSValue
+js_element_get_property_offsetParent(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	dom_node *el = (dom_node *)js_getopaque(this_val, js_element_class_id);
+	dom_node *node = NULL;
+	dom_exception exc;
+
+	if (!el) {
+		return JS_NULL;
+	}
+	exc = dom_node_get_parent_node(el, &node);
+
+	if (exc != DOM_NO_ERR || !node) {
+		return JS_NULL;
+	}
+
+	return getElement(ctx, node);
+}
+
+static JSValue
 js_element_get_property_ownerDocument(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -2936,6 +2959,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("nodeName",	js_element_get_property_nodeName, NULL),
 	JS_CGETSET_DEF("nodeType",	js_element_get_property_nodeType, NULL),
 	JS_CGETSET_DEF("nodeValue",	js_element_get_property_nodeValue, NULL),
+	JS_CGETSET_DEF("offsetParent",	js_element_get_property_offsetParent, NULL),
 	JS_CGETSET_DEF("outerHTML",	js_element_get_property_outerHtml, NULL),
 	JS_CGETSET_DEF("ownerDocument",	js_element_get_property_ownerDocument, NULL),
 	JS_CGETSET_DEF("parentElement",	js_element_get_property_parentElement, NULL),
