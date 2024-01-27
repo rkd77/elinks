@@ -388,6 +388,46 @@ js_element_get_property_clientTop(JSContext *ctx, JSValueConst this_val)
 }
 
 static JSValue
+js_element_get_property_clientWidth(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+
+	if (!el) {
+		return JS_NULL;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
+	struct session *ses;
+
+	if (!document) {
+		return JS_NewInt32(ctx, 0);
+	}
+	int offset = find_offset(document->element_map_rev, el);
+
+	if (offset <= 0) {
+		return JS_NewInt32(ctx, 0);
+	}
+	struct node_rect *rect = get_element_rect(document, offset);
+
+	if (!rect) {
+		return JS_NewInt32(ctx, 0);
+	}
+	ses = doc_view->session;
+
+	if (!ses) {
+		return JS_NewInt32(ctx, 0);
+	}
+	int dx = int_max(0, (rect->x1 + 1 - rect->x0) * ses->tab->term->cell_width);
+
+	return JS_NewInt32(ctx, dx);
+}
+
+static JSValue
 js_element_get_property_dir(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -2881,6 +2921,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("clientHeight",	js_element_get_property_clientHeight, NULL),
 	JS_CGETSET_DEF("clientLeft",	js_element_get_property_clientLeft, NULL),
 	JS_CGETSET_DEF("clientTop",	js_element_get_property_clientTop, NULL),
+	JS_CGETSET_DEF("clientWidth",	js_element_get_property_clientWidth, NULL),
 	JS_CGETSET_DEF("dir",	js_element_get_property_dir, js_element_set_property_dir),
 	JS_CGETSET_DEF("firstChild",	js_element_get_property_firstChild, NULL),
 	JS_CGETSET_DEF("firstElementChild",	js_element_get_property_firstElementChild, NULL),
