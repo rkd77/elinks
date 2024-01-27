@@ -643,22 +643,22 @@ element_get_property_clientHeight(JSContext *ctx, unsigned int argc, JS::Value *
 		args.rval().setInt32(0);
 		return true;
 	}
+	ses = doc_view->session;
+
+	if (!ses) {
+		args.rval().setInt32(0);
+		return true;
+	}
 	int offset = find_offset(document->element_map_rev, el);
 
 	if (offset <= 0) {
-		args.rval().setInt32(0);
+		args.rval().setInt32(ses->tab->term->cell_height);
 		return true;
 	}
 	struct node_rect *rect = get_element_rect(document, offset);
 
 	if (!rect) {
-		args.rval().setInt32(0);
-		return true;
-	}
-	ses = doc_view->session;
-
-	if (!ses) {
-		args.rval().setInt32(0);
+		args.rval().setInt32(ses->tab->term->cell_height);
 		return true;
 	}
 	int dy = int_max(0, (rect->y1 + 1 - rect->y0) * ses->tab->term->cell_height);
@@ -741,22 +741,22 @@ element_get_property_clientWidth(JSContext *ctx, unsigned int argc, JS::Value *v
 		args.rval().setInt32(0);
 		return true;
 	}
+	ses = doc_view->session;
+
+	if (!ses) {
+		args.rval().setInt32(0);
+		return true;
+	}
 	int offset = find_offset(document->element_map_rev, el);
 
 	if (offset <= 0) {
-		args.rval().setInt32(0);
+		args.rval().setInt32(ses->tab->term->cell_width);
 		return true;
 	}
 	struct node_rect *rect = get_element_rect(document, offset);
 
 	if (!rect) {
-		args.rval().setInt32(0);
-		return true;
-	}
-	ses = doc_view->session;
-
-	if (!ses) {
-		args.rval().setInt32(0);
+		args.rval().setInt32(ses->tab->term->cell_width);
 		return true;
 	}
 	int dx = int_max(0, (rect->x1 + 1 - rect->x0) * ses->tab->term->cell_width);
@@ -1616,22 +1616,22 @@ element_get_property_offsetHeight(JSContext *ctx, unsigned int argc, JS::Value *
 		args.rval().setInt32(0);
 		return true;
 	}
+	ses = doc_view->session;
+
+	if (!ses) {
+		args.rval().setInt32(0);
+		return true;
+	}
 	int offset = find_offset(document->element_map_rev, el);
 
 	if (offset <= 0) {
-		args.rval().setInt32(0);
+		args.rval().setInt32(ses->tab->term->cell_height);
 		return true;
 	}
 	struct node_rect *rect = get_element_rect(document, offset);
 
 	if (!rect) {
-		args.rval().setInt32(0);
-		return true;
-	}
-	ses = doc_view->session;
-
-	if (!ses) {
-		args.rval().setInt32(0);
+		args.rval().setInt32(ses->tab->term->cell_height);
 		return true;
 	}
 	int dy = int_max(0, (rect->y1 + 1 - rect->y0) * ses->tab->term->cell_height);
@@ -1938,21 +1938,21 @@ element_get_property_offsetWidth(JSContext *ctx, unsigned int argc, JS::Value *v
 		return true;
 	}
 	int offset = find_offset(document->element_map_rev, el);
+	ses = doc_view->session;
+
+	if (!ses) {
+		args.rval().setInt32(0);
+		return true;
+	}
 
 	if (offset <= 0) {
-		args.rval().setInt32(0);
+		args.rval().setInt32(ses->tab->term->cell_width);
 		return true;
 	}
 	struct node_rect *rect = get_element_rect(document, offset);
 
 	if (!rect) {
-		args.rval().setInt32(0);
-		return true;
-	}
-	ses = doc_view->session;
-
-	if (!ses) {
-		args.rval().setInt32(0);
+		args.rval().setInt32(ses->tab->term->cell_width);
 		return true;
 	}
 	int dx = int_max(0, (rect->x1 + 1 - rect->x0) * ses->tab->term->cell_width);
