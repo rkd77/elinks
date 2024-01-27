@@ -751,6 +751,29 @@ mjs_element_get_property_nextSibling(js_State *J)
 }
 
 static void
+mjs_element_get_property_offsetParent(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+	dom_node *node = NULL;
+	dom_exception exc;
+
+	if (!el) {
+		js_pushnull(J);
+		return;
+	}
+	exc = dom_node_get_parent_node(el, &node);
+
+	if (exc != DOM_NO_ERR || !node) {
+		js_pushnull(J);
+		return;
+	}
+	mjs_push_element(J, node);
+}
+
+static void
 mjs_element_get_property_ownerDocument(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -2805,6 +2828,7 @@ mjs_push_element(js_State *J, void *node)
 		addproperty(J, "nodeName",	mjs_element_get_property_nodeName, NULL);
 		addproperty(J, "nodeType",	mjs_element_get_property_nodeType, NULL);
 		addproperty(J, "nodeValue",	mjs_element_get_property_nodeValue, NULL);
+		addproperty(J, "offsetParent",	mjs_element_get_property_offsetParent, NULL);
 		addproperty(J, "outerHTML",	mjs_element_get_property_outerHtml, NULL);
 		addproperty(J, "ownerDocument",	mjs_element_get_property_ownerDocument, NULL);
 		addproperty(J, "parentElement",	mjs_element_get_property_parentElement, NULL);
