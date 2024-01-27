@@ -67,6 +67,7 @@ static bool style_get_property_lineStyle(JSContext *ctx, unsigned int argc, JS::
 static bool style_get_property_lineStyleType(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_get_property_textAlign(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_get_property_textDecoration(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool style_get_property_top(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_get_property_whiteSpace(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 static bool style_set_property_background(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -81,8 +82,8 @@ static bool style_set_property_lineStyle(JSContext *ctx, unsigned int argc, JS::
 static bool style_set_property_lineStyleType(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_set_property_textAlign(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_set_property_textDecoration(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool style_set_property_top(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_set_property_whiteSpace(JSContext *ctx, unsigned int argc, JS::Value *vp);
-
 static void style_finalize(JS::GCContext *op, JSObject *obj)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -122,6 +123,7 @@ static JSPropertySpec style_props[] = {
 	JS_PSGS("lineStyleType",	style_get_property_lineStyleType, style_set_property_lineStyleType, JSPROP_ENUMERATE),
 	JS_PSGS("textAlign",	style_get_property_textAlign, style_set_property_textAlign, JSPROP_ENUMERATE),
 	JS_PSGS("textDecoration",style_get_property_textDecoration, style_set_property_textDecoration, JSPROP_ENUMERATE),
+	JS_PSGS("top",	style_get_property_top, style_set_property_top, JSPROP_ENUMERATE),
 	JS_PSGS("whiteSpace",	style_get_property_whiteSpace, style_set_property_whiteSpace, JSPROP_ENUMERATE),
 	JS_PS_END
 };
@@ -232,6 +234,15 @@ style_get_property_textDecoration(JSContext *ctx, unsigned int argc, JS::Value *
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	return style_style(ctx, argc, vp, "text-decoration");
+}
+
+static bool
+style_get_property_top(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return style_style(ctx, argc, vp, "top");
 }
 
 static bool
@@ -349,6 +360,15 @@ style_set_property_textDecoration(JSContext *ctx, unsigned int argc, JS::Value *
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	return style_set_style(ctx, argc, vp, "text-decoration");
+}
+
+static bool
+style_set_property_top(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return style_set_style(ctx, argc, vp, "top");
 }
 
 static bool
