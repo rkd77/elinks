@@ -35,8 +35,13 @@ js_screen_get_property_availHeight(JSContext *ctx, JSValueConst this_val)
 	if (!doc_view) {
 		return JS_UNDEFINED;
 	}
+	struct session *ses = doc_view->session;
 
-	return JS_NewInt32(ctx, doc_view->box.height * 16);
+	if (!ses) {
+		return JS_UNDEFINED;
+	}
+
+	return JS_NewInt32(ctx, doc_view->box.height * ses->tab->term->cell_height);
 }
 
 static JSValue
@@ -54,8 +59,13 @@ js_screen_get_property_availWidth(JSContext *ctx, JSValueConst this_val)
 	if (!doc_view) {
 		return JS_UNDEFINED;
 	}
+	struct session *ses = doc_view->session;
 
-	return JS_NewInt32(ctx, doc_view->box.width * 8);
+	if (!ses) {
+		return JS_UNDEFINED;
+	}
+
+	return JS_NewInt32(ctx, doc_view->box.width * ses->tab->term->cell_width);
 }
 
 static JSValue
@@ -83,7 +93,7 @@ js_screen_get_property_height(JSContext *ctx, JSValueConst this_val)
 		return JS_UNDEFINED;
 	}
 
-	return JS_NewInt32(ctx, ses->tab->term->height * 16);
+	return JS_NewInt32(ctx, ses->tab->term->height * ses->tab->term->cell_height);
 }
 
 static JSValue
@@ -111,7 +121,7 @@ js_screen_get_property_width(JSContext *ctx, JSValueConst this_val)
 		return JS_UNDEFINED;
 	}
 
-	return JS_NewInt32(ctx, ses->tab->term->width * 8);
+	return JS_NewInt32(ctx, ses->tab->term->width * ses->tab->term->cell_width);
 }
 
 static JSValue
