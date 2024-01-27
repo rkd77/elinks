@@ -333,6 +333,50 @@ mjs_element_get_property_clientTop(js_State *J)
 }
 
 static void
+mjs_element_get_property_clientWidth(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+
+	if (!el) {
+		js_pushnull(J);
+		return;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
+	struct session *ses;
+
+	if (!document) {
+		js_pushnumber(J, 0);
+		return;
+	}
+	int offset = find_offset(document->element_map_rev, el);
+
+	if (offset <= 0) {
+		js_pushnumber(J, 0);
+		return;
+	}
+	struct node_rect *rect = get_element_rect(document, offset);
+
+	if (!rect) {
+		js_pushnumber(J, 0);
+		return;
+	}
+	ses = doc_view->session;
+
+	if (!ses) {
+		js_pushnumber(J, 0);
+		return;
+	}
+	int dx = int_max(0, (rect->x1 + 1 - rect->x0) * ses->tab->term->cell_width);
+	js_pushnumber(J, dx);
+}
+
+static void
 mjs_element_get_property_dir(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -2746,6 +2790,7 @@ mjs_push_element(js_State *J, void *node)
 		addproperty(J, "clientHeight",	mjs_element_get_property_clientHeight, NULL);
 		addproperty(J, "clientLeft", mjs_element_get_property_clientLeft, NULL);
 		addproperty(J, "clientTop", mjs_element_get_property_clientTop, NULL);
+		addproperty(J, "clientWidth", mjs_element_get_property_clientWidth, NULL);
 		addproperty(J, "dir",	mjs_element_get_property_dir, mjs_element_set_property_dir);
 		addproperty(J, "firstChild",	mjs_element_get_property_firstChild, NULL);
 		addproperty(J, "firstElementChild",	mjs_element_get_property_firstElementChild, NULL);
