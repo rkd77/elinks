@@ -62,6 +62,7 @@ static bool style_get_property_display(JSContext *ctx, unsigned int argc, JS::Va
 static bool style_get_property_fontStyle(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_get_property_fontWeight(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_get_property_height(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool style_get_property_left(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_get_property_lineStyle(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_get_property_lineStyleType(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_get_property_textAlign(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -75,6 +76,7 @@ static bool style_set_property_display(JSContext *ctx, unsigned int argc, JS::Va
 static bool style_set_property_fontStyle(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_set_property_fontWeight(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_set_property_height(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool style_set_property_left(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_set_property_lineStyle(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_set_property_lineStyleType(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_set_property_textAlign(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -115,6 +117,7 @@ static JSPropertySpec style_props[] = {
 	JS_PSGS("fontStyle",	style_get_property_fontStyle, style_set_property_fontStyle, JSPROP_ENUMERATE),
 	JS_PSGS("fontWeight",	style_get_property_fontWeight, style_set_property_fontWeight, JSPROP_ENUMERATE),
 	JS_PSGS("height",	style_get_property_height, style_set_property_height, JSPROP_ENUMERATE),
+	JS_PSGS("left",	style_get_property_left, style_set_property_left, JSPROP_ENUMERATE),
 	JS_PSGS("lineStyle",	style_get_property_lineStyle, style_set_property_lineStyle, JSPROP_ENUMERATE),
 	JS_PSGS("lineStyleType",	style_get_property_lineStyleType, style_set_property_lineStyleType, JSPROP_ENUMERATE),
 	JS_PSGS("textAlign",	style_get_property_textAlign, style_set_property_textAlign, JSPROP_ENUMERATE),
@@ -184,6 +187,15 @@ style_get_property_height(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	return style_style(ctx, argc, vp, "height");
+}
+
+static bool
+style_get_property_left(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return style_style(ctx, argc, vp, "left");
 }
 
 static bool
@@ -292,6 +304,15 @@ style_set_property_height(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	return style_set_style(ctx, argc, vp, "height");
+}
+
+static bool
+style_set_property_left(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return style_set_style(ctx, argc, vp, "left");
 }
 
 static bool
