@@ -291,8 +291,6 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	dump_xhtml(cached, document, 0);
 }
 
-static struct node_rect *get_element(struct document *doc, int offset);
-
 static void
 walk_tree2(struct document *document, dom_node *node)
 {
@@ -329,7 +327,7 @@ walk_tree2(struct document *document, dom_node *node)
 	if (offset <= 0) {
 		return;
 	}
-	struct node_rect *tab = get_element(document, offset);
+	struct node_rect *tab = get_element_rect(document, offset);
 
 	if (!tab) {
 		return;
@@ -349,7 +347,7 @@ walk_tree2(struct document *document, dom_node *node)
 		if (offset_i <= 0) {
 			goto next;
 		}
-		struct node_rect *rect_i = get_element(document, offset_i);
+		struct node_rect *rect_i = get_element_rect(document, offset_i);
 
 		if (!rect_i) {
 			goto next;
@@ -401,7 +399,7 @@ walk_tree2_color(struct terminal *term, struct el_box *box, struct document *doc
 	if (offset <= 0) {
 		return;
 	}
-	struct node_rect *tab = get_element(document, offset);
+	struct node_rect *tab = get_element_rect(document, offset);
 
 	if (!tab) {
 		return;
@@ -570,8 +568,8 @@ walk2(struct document *document)
 static int prev_offset = 0;
 static struct node_rect *prev_element = NULL;
 
-static struct node_rect *
-get_element(struct document *document, int offset)
+struct node_rect *
+get_element_rect(struct document *document, int offset)
 {
 	if (offset == prev_offset) {
 		return prev_element;
@@ -638,7 +636,7 @@ scan_document(struct document_view *doc_view)
 			if (!offset) {
 				continue;
 			}
-			struct node_rect *tab = get_element(doc_view->document, offset);
+			struct node_rect *tab = get_element_rect(doc_view->document, offset);
 
 			if (!tab) {
 				continue;

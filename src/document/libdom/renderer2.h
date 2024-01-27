@@ -21,6 +21,7 @@ void dump_xhtml(struct cache_entry *cached, struct document *document, int parse
 void walk2(struct document *document);
 void scan_document(struct document_view *doc_view);
 void try_to_color(struct terminal *term, struct el_box *box, struct document *document, int vx, int vy);
+struct node_rect *get_element_rect(struct document *document, int offset);
 
 #ifdef __cplusplus
 }
