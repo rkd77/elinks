@@ -92,6 +92,7 @@ static bool element_get_property_nextSibling(JSContext *ctx, unsigned int argc, 
 static bool element_get_property_nodeName(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_nodeType(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_nodeValue(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_offsetParent(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_ownerDocument(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -170,6 +171,7 @@ JSPropertySpec element_props[] = {
 	JS_PSG("nodeName",	element_get_property_nodeName, JSPROP_ENUMERATE),
 	JS_PSG("nodeType",	element_get_property_nodeType, JSPROP_ENUMERATE),
 	JS_PSG("nodeValue",	element_get_property_nodeValue, JSPROP_ENUMERATE),
+	JS_PSG("offsetParent",	element_get_property_offsetParent, JSPROP_ENUMERATE),
 	JS_PSGS("outerHTML",	element_get_property_outerHtml, element_set_property_outerHtml, JSPROP_ENUMERATE),
 	JS_PSG("ownerDocument",	element_get_property_ownerDocument, JSPROP_ENUMERATE),
 	JS_PSG("parentElement",	element_get_property_parentElement, JSPROP_ENUMERATE),
@@ -1555,6 +1557,66 @@ element_get_property_nextSibling(JSContext *ctx, unsigned int argc, JS::Value *v
 
 	return true;
 }
+
+static bool
+element_get_property_offsetParent(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	vs = interpreter->vs;
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_node *node = NULL;
+	dom_exception exc;
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+	exc = dom_node_get_parent_node(el, &node);
+
+	if (exc != DOM_NO_ERR || !node) {
+		args.rval().setNull();
+		return true;
+	}
+	JSObject *elem = getElement(ctx, node);
+	args.rval().setObject(*elem);
+
+	return true;
+}
+
 
 static bool
 element_get_property_ownerDocument(JSContext *ctx, unsigned int argc, JS::Value *vp)
