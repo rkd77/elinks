@@ -727,7 +727,7 @@ if test "x$CONFIG_QUICKJS" = x; then
 		CFLAGS="$CFLAGS $DB_LOCALSTORAGE_CFLAGS $XMLPLUSPLUS_CFLAGS $CURL_CFLAGS"
 		QUICKJS_LIB="/usr/local/lib/quickjs/libquickjs.a"
 
-		for p in $(tr ':' '\n' <<< "$LIBRARY_PATH"); do
+		for p in $(echo "$LIBRARY_PATH" | tr ':' '\n'); do
 			if test -f "$p/quickjs/libquickjs.a" ; then
 				QUICKJS_LIB="$p/quickjs/libquickjs.a"
 				break
