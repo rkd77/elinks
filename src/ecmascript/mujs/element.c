@@ -751,6 +751,69 @@ mjs_element_get_property_nextSibling(js_State *J)
 }
 
 static void
+mjs_element_get_property_offsetLeft(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+
+	if (!el) {
+		js_pushnull(J);
+		return;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
+	struct session *ses;
+
+	if (!document) {
+		js_pushnumber(J, 0);
+		return;
+	}
+	int offset = find_offset(document->element_map_rev, el);
+
+	if (offset <= 0) {
+		js_pushnumber(J, 0);
+		return;
+	}
+	struct node_rect *rect = get_element_rect(document, offset);
+
+	if (!rect) {
+		js_pushnumber(J, 0);
+		return;
+	}
+	ses = doc_view->session;
+
+	if (!ses) {
+		js_pushnumber(J, 0);
+		return;
+	}
+	dom_node *node = NULL;
+	dom_exception exc = dom_node_get_parent_node(el, &node);
+	if (exc != DOM_NO_ERR || !node) {
+		js_pushnumber(J, 0);
+		return;
+	}
+	int offset_parent = find_offset(document->element_map_rev, node);
+
+	if (offset_parent <= 0) {
+		js_pushnumber(J, 0);
+		return;
+	}
+	struct node_rect *rect_parent = get_element_rect(document, offset_parent);
+
+	if (!rect_parent) {
+		js_pushnumber(J, 0);
+		return;
+	}
+	int dx = int_max(0, (rect->x0 - rect_parent->x0) * ses->tab->term->cell_width);
+	dom_node_unref(node);
+	js_pushnumber(J, dx);
+}
+
+static void
 mjs_element_get_property_offsetParent(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -2828,6 +2891,7 @@ mjs_push_element(js_State *J, void *node)
 		addproperty(J, "nodeName",	mjs_element_get_property_nodeName, NULL);
 		addproperty(J, "nodeType",	mjs_element_get_property_nodeType, NULL);
 		addproperty(J, "nodeValue",	mjs_element_get_property_nodeValue, NULL);
+		addproperty(J, "offsetLeft",	mjs_element_get_property_offsetLeft, NULL);
 		addproperty(J, "offsetParent",	mjs_element_get_property_offsetParent, NULL);
 		addproperty(J, "outerHTML",	mjs_element_get_property_outerHtml, NULL);
 		addproperty(J, "ownerDocument",	mjs_element_get_property_ownerDocument, NULL);
