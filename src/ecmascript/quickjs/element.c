@@ -816,6 +816,61 @@ js_element_get_property_nextSibling(JSContext *ctx, JSValueConst this_val)
 }
 
 static JSValue
+js_element_get_property_offsetLeft(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+
+	if (!el) {
+		return JS_NULL;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
+	struct session *ses;
+
+	if (!document) {
+		return JS_NewInt32(ctx, 0);
+	}
+	int offset = find_offset(document->element_map_rev, el);
+
+	if (offset <= 0) {
+		return JS_NewInt32(ctx, 0);
+	}
+	struct node_rect *rect = get_element_rect(document, offset);
+
+	if (!rect) {
+		return JS_NewInt32(ctx, 0);
+	}
+	ses = doc_view->session;
+
+	if (!ses) {
+		return JS_NewInt32(ctx, 0);
+	}
+	dom_node *node = NULL;
+	dom_exception exc = dom_node_get_parent_node(el, &node);
+	if (exc != DOM_NO_ERR || !node) {
+		return JS_NewInt32(ctx, 0);
+	}
+	int offset_parent = find_offset(document->element_map_rev, node);
+
+	if (offset_parent <= 0) {
+		return JS_NewInt32(ctx, 0);
+	}
+	struct node_rect *rect_parent = get_element_rect(document, offset_parent);
+
+	if (!rect_parent) {
+		return JS_NewInt32(ctx, 0);
+	}
+	int dx = int_max(0, (rect->x0 - rect_parent->x0) * ses->tab->term->cell_width);
+	dom_node_unref(node);
+	return JS_NewInt32(ctx, dx);
+}
+
+static JSValue
 js_element_get_property_offsetParent(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -2959,6 +3014,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("nodeName",	js_element_get_property_nodeName, NULL),
 	JS_CGETSET_DEF("nodeType",	js_element_get_property_nodeType, NULL),
 	JS_CGETSET_DEF("nodeValue",	js_element_get_property_nodeValue, NULL),
+	JS_CGETSET_DEF("offsetLeft",	js_element_get_property_offsetLeft, NULL),
 	JS_CGETSET_DEF("offsetParent",	js_element_get_property_offsetParent, NULL),
 	JS_CGETSET_DEF("outerHTML",	js_element_get_property_outerHtml, NULL),
 	JS_CGETSET_DEF("ownerDocument",	js_element_get_property_ownerDocument, NULL),
