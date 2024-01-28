@@ -649,6 +649,21 @@ element_get_property_clientHeight(JSContext *ctx, unsigned int argc, JS::Value *
 		args.rval().setInt32(0);
 		return true;
 	}
+	dom_string *tag_name = NULL;
+	dom_exception exc = dom_node_get_node_name(el, &tag_name);
+
+	if (exc != DOM_NO_ERR || !tag_name) {
+		args.rval().setInt32(0);
+		return true;
+	}
+	bool root = (!strcmp(dom_string_data(tag_name), "BODY") || !strcmp(dom_string_data(tag_name), "HTML"));
+	dom_string_unref(tag_name);
+
+	if (root) {
+		int height = doc_view->box.height * ses->tab->term->cell_height;
+		args.rval().setInt32(height);
+		return true;
+	}
 	int offset = find_offset(document->element_map_rev, el);
 
 	if (offset <= 0) {
@@ -745,6 +760,21 @@ element_get_property_clientWidth(JSContext *ctx, unsigned int argc, JS::Value *v
 
 	if (!ses) {
 		args.rval().setInt32(0);
+		return true;
+	}
+	dom_string *tag_name = NULL;
+	dom_exception exc = dom_node_get_node_name(el, &tag_name);
+
+	if (exc != DOM_NO_ERR || !tag_name) {
+		args.rval().setInt32(0);
+		return true;
+	}
+	bool root = (!strcmp(dom_string_data(tag_name), "BODY") || !strcmp(dom_string_data(tag_name), "HTML"));
+	dom_string_unref(tag_name);
+
+	if (root) {
+		int width = doc_view->box.width * ses->tab->term->cell_width;
+		args.rval().setInt32(width);
 		return true;
 	}
 	int offset = find_offset(document->element_map_rev, el);
@@ -1572,72 +1602,7 @@ element_get_property_offsetHeight(JSContext *ctx, unsigned int argc, JS::Value *
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JS::CallArgs args = CallArgsFromVp(argc, vp);
-	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct view_state *vs;
-	JS::Realm *comp = js::GetContextRealm(ctx);
-
-	if (!comp) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-	vs = interpreter->vs;
-
-	if (!vs) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
-
-	if (!el) {
-		args.rval().setNull();
-		return true;
-	}
-	struct document_view *doc_view = vs->doc_view;
-	struct document *document = doc_view->document;
-	struct session *ses;
-
-	if (!document) {
-		args.rval().setInt32(0);
-		return true;
-	}
-	ses = doc_view->session;
-
-	if (!ses) {
-		args.rval().setInt32(0);
-		return true;
-	}
-	int offset = find_offset(document->element_map_rev, el);
-
-	if (offset <= 0) {
-		args.rval().setInt32(ses->tab->term->cell_height);
-		return true;
-	}
-	struct node_rect *rect = get_element_rect(document, offset);
-
-	if (!rect) {
-		args.rval().setInt32(ses->tab->term->cell_height);
-		return true;
-	}
-	int dy = int_max(0, (rect->y1 + 1 - rect->y0) * ses->tab->term->cell_height);
-	args.rval().setInt32(dy);
-
-	return true;
+	return element_get_property_clientHeight(ctx, argc, vp);
 }
 
 static bool
@@ -1893,72 +1858,7 @@ element_get_property_offsetWidth(JSContext *ctx, unsigned int argc, JS::Value *v
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JS::CallArgs args = CallArgsFromVp(argc, vp);
-	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct view_state *vs;
-	JS::Realm *comp = js::GetContextRealm(ctx);
-
-	if (!comp) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-	vs = interpreter->vs;
-
-	if (!vs) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
-
-	if (!el) {
-		args.rval().setNull();
-		return true;
-	}
-	struct document_view *doc_view = vs->doc_view;
-	struct document *document = doc_view->document;
-	struct session *ses;
-
-	if (!document) {
-		args.rval().setInt32(0);
-		return true;
-	}
-	int offset = find_offset(document->element_map_rev, el);
-	ses = doc_view->session;
-
-	if (!ses) {
-		args.rval().setInt32(0);
-		return true;
-	}
-
-	if (offset <= 0) {
-		args.rval().setInt32(ses->tab->term->cell_width);
-		return true;
-	}
-	struct node_rect *rect = get_element_rect(document, offset);
-
-	if (!rect) {
-		args.rval().setInt32(ses->tab->term->cell_width);
-		return true;
-	}
-	int dx = int_max(0, (rect->x1 + 1 - rect->x0) * ses->tab->term->cell_width);
-	args.rval().setInt32(dx);
-
-	return true;
+	return element_get_property_clientWidth(ctx, argc, vp);
 }
 
 static bool
