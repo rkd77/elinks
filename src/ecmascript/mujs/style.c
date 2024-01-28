@@ -167,6 +167,24 @@ mjs_style_get_property_fontWeight(js_State *J)
 }
 
 static void
+mjs_style_get_property_height(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	mjs_style(J, "height");
+}
+
+static void
+mjs_style_get_property_left(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	mjs_style(J, "left");
+}
+
+static void
 mjs_style_get_property_listStyle(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -200,6 +218,15 @@ mjs_style_get_property_textDecoration(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	mjs_style(J, "text-decoration");
+}
+
+static void
+mjs_style_get_property_top(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	mjs_style(J, "top");
 }
 
 static void
@@ -265,6 +292,24 @@ mjs_style_set_property_fontWeight(js_State *J)
 }
 
 static void
+mjs_style_set_property_height(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	mjs_set_style(J, "height");
+}
+
+static void
+mjs_style_set_property_left(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	mjs_set_style(J, "left");
+}
+
+static void
 mjs_style_set_property_listStyle(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -298,6 +343,15 @@ mjs_style_set_property_textDecoration(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	mjs_set_style(J, "text-decoration");
+}
+
+static void
+mjs_style_set_property_top(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	mjs_set_style(J, "top");
 }
 
 static void
@@ -336,10 +390,13 @@ mjs_push_style(js_State *J, void *node)
 		addproperty(J, "display", mjs_style_get_property_display, mjs_style_set_property_display);
 		addproperty(J, "fontStyle", mjs_style_get_property_fontStyle, mjs_style_set_property_fontStyle);
 		addproperty(J, "fontWeight", mjs_style_get_property_fontWeight, mjs_style_set_property_fontWeight);
+		addproperty(J, "height", mjs_style_get_property_height, mjs_style_set_property_height);
+		addproperty(J, "left", mjs_style_get_property_left, mjs_style_set_property_left);
 		addproperty(J, "listStyle", mjs_style_get_property_listStyle, mjs_style_set_property_listStyle);
 		addproperty(J, "listStyleType", mjs_style_get_property_listStyleType, mjs_style_set_property_listStyleType);
 		addproperty(J, "textAlign", mjs_style_get_property_textAlign, mjs_style_set_property_textAlign);
 		addproperty(J, "textDecoration", mjs_style_get_property_textDecoration, mjs_style_set_property_textDecoration);
+		addproperty(J, "top", mjs_style_get_property_top, mjs_style_set_property_top);
 		addproperty(J, "whiteSpace", mjs_style_get_property_whiteSpace, mjs_style_set_property_whiteSpace);
 	}
 }
