@@ -349,6 +349,24 @@ js_element_get_property_clientHeight(JSContext *ctx, JSValueConst this_val)
 	if (!document) {
 		return JS_NewInt32(ctx, 0);
 	}
+	ses = doc_view->session;
+
+	if (!ses) {
+		return JS_NewInt32(ctx, 0);
+	}
+	dom_string *tag_name = NULL;
+	dom_exception exc = dom_node_get_node_name(el, &tag_name);
+
+	if (exc != DOM_NO_ERR || !tag_name) {
+		return JS_NewInt32(ctx, 0);
+	}
+	bool root = (!strcmp(dom_string_data(tag_name), "BODY") || !strcmp(dom_string_data(tag_name), "HTML"));
+	dom_string_unref(tag_name);
+
+	if (root) {
+		int height = doc_view->box.height * ses->tab->term->cell_height;
+		return JS_NewInt32(ctx, height);
+	}
 	int offset = find_offset(document->element_map_rev, el);
 
 	if (offset <= 0) {
@@ -357,11 +375,6 @@ js_element_get_property_clientHeight(JSContext *ctx, JSValueConst this_val)
 	struct node_rect *rect = get_element_rect(document, offset);
 
 	if (!rect) {
-		return JS_NewInt32(ctx, 0);
-	}
-	ses = doc_view->session;
-
-	if (!ses) {
 		return JS_NewInt32(ctx, 0);
 	}
 	int dy = int_max(0, (rect->y1 + 1 - rect->y0) * ses->tab->term->cell_height);
@@ -407,6 +420,24 @@ js_element_get_property_clientWidth(JSContext *ctx, JSValueConst this_val)
 	if (!document) {
 		return JS_NewInt32(ctx, 0);
 	}
+	ses = doc_view->session;
+
+	if (!ses) {
+		return JS_NewInt32(ctx, 0);
+	}
+	dom_string *tag_name = NULL;
+	dom_exception exc = dom_node_get_node_name(el, &tag_name);
+
+	if (exc != DOM_NO_ERR || !tag_name) {
+		return JS_NewInt32(ctx, 0);
+	}
+	bool root = (!strcmp(dom_string_data(tag_name), "BODY") || !strcmp(dom_string_data(tag_name), "HTML") || !strcmp(dom_string_data(tag_name), "DIV"));
+	dom_string_unref(tag_name);
+
+	if (root) {
+		int width = doc_view->box.width * ses->tab->term->cell_width;
+		return JS_NewInt32(ctx, width);
+	}
 	int offset = find_offset(document->element_map_rev, el);
 
 	if (offset <= 0) {
@@ -415,11 +446,6 @@ js_element_get_property_clientWidth(JSContext *ctx, JSValueConst this_val)
 	struct node_rect *rect = get_element_rect(document, offset);
 
 	if (!rect) {
-		return JS_NewInt32(ctx, 0);
-	}
-	ses = doc_view->session;
-
-	if (!ses) {
 		return JS_NewInt32(ctx, 0);
 	}
 	int dx = int_max(0, (rect->x1 + 1 - rect->x0) * ses->tab->term->cell_width);
@@ -821,38 +847,7 @@ js_element_get_property_offsetHeight(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
-
-	if (!el) {
-		return JS_NULL;
-	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
-	struct document_view *doc_view = vs->doc_view;
-	struct document *document = doc_view->document;
-	struct session *ses;
-
-	if (!document) {
-		return JS_NewInt32(ctx, 0);
-	}
-	int offset = find_offset(document->element_map_rev, el);
-
-	if (offset <= 0) {
-		return JS_NewInt32(ctx, 0);
-	}
-	struct node_rect *rect = get_element_rect(document, offset);
-
-	if (!rect) {
-		return JS_NewInt32(ctx, 0);
-	}
-	ses = doc_view->session;
-
-	if (!ses) {
-		return JS_NewInt32(ctx, 0);
-	}
-	int dy = int_max(0, (rect->y1 + 1 - rect->y0) * ses->tab->term->cell_height);
-
-	return JS_NewInt32(ctx, dy);
+	return js_element_get_property_clientHeight(ctx, this_val);
 }
 
 
@@ -995,40 +990,8 @@ js_element_get_property_offsetWidth(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
-
-	if (!el) {
-		return JS_NULL;
-	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
-	struct document_view *doc_view = vs->doc_view;
-	struct document *document = doc_view->document;
-	struct session *ses;
-
-	if (!document) {
-		return JS_NewInt32(ctx, 0);
-	}
-	int offset = find_offset(document->element_map_rev, el);
-
-	if (offset <= 0) {
-		return JS_NewInt32(ctx, 0);
-	}
-	struct node_rect *rect = get_element_rect(document, offset);
-
-	if (!rect) {
-		return JS_NewInt32(ctx, 0);
-	}
-	ses = doc_view->session;
-
-	if (!ses) {
-		return JS_NewInt32(ctx, 0);
-	}
-	int dx = int_max(0, (rect->x1 + 1 - rect->x0) * ses->tab->term->cell_width);
-
-	return JS_NewInt32(ctx, dx);
+	return js_element_get_property_clientWidth(ctx, this_val);
 }
-
 
 static JSValue
 js_element_get_property_ownerDocument(JSContext *ctx, JSValueConst this_val)
