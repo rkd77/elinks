@@ -769,7 +769,7 @@ element_get_property_clientWidth(JSContext *ctx, unsigned int argc, JS::Value *v
 		args.rval().setInt32(0);
 		return true;
 	}
-	bool root = (!strcmp(dom_string_data(tag_name), "BODY") || !strcmp(dom_string_data(tag_name), "HTML"));
+	bool root = (!strcmp(dom_string_data(tag_name), "BODY") || !strcmp(dom_string_data(tag_name), "HTML") || !strcmp(dom_string_data(tag_name), "DIV"));
 	dom_string_unref(tag_name);
 
 	if (root) {
