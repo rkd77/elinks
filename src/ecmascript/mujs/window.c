@@ -114,6 +114,62 @@ mjs_window_get_property_event(js_State *J)
 }
 
 static void
+mjs_window_get_property_innerHeight(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+
+	assert(interpreter);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		js_pushundefined(J);
+		return;
+	}
+	struct session *ses = doc_view->session;
+
+	if (!ses) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		js_pushundefined(J);
+		return;
+	}
+	js_pushnumber(J, doc_view->box.height * ses->tab->term->cell_height);
+}
+
+static void
+mjs_window_get_property_innerWidth(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+
+	assert(interpreter);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		js_pushundefined(J);
+		return;
+	}
+	struct session *ses = doc_view->session;
+
+	if (!ses) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		js_pushundefined(J);
+		return;
+	}
+	js_pushnumber(J, doc_view->box.width * ses->tab->term->cell_width);
+}
+
+static void
 mjs_window_get_property_location(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -766,6 +822,8 @@ mjs_window_init(js_State *J)
 
 		addproperty(J, "window.closed", mjs_window_get_property_closed, NULL);
 		addproperty(J, "window.event", mjs_window_get_property_event, NULL);
+		addproperty(J, "window.innerHeight", mjs_window_get_property_innerHeight, NULL);
+		addproperty(J, "window.innerWidth", mjs_window_get_property_innerWidth, NULL);
 		addproperty(J, "window.location", mjs_window_get_property_location, mjs_window_set_property_location);
 		addproperty(J, "window.parent", mjs_window_get_property_parent, NULL);
 		addproperty(J, "window.self", mjs_window_get_property_self, NULL);
