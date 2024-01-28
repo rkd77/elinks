@@ -452,6 +452,62 @@ js_window_get_property_event(JSContext *ctx, JSValueConst this_val)
 }
 
 static JSValue
+js_window_get_property_innerHeight(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		return JS_UNDEFINED;
+	}
+
+	struct session *ses = doc_view->session;
+
+	if (!ses) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return JS_UNDEFINED;
+	}
+
+	return JS_NewInt32(ctx, doc_view->box.height * ses->tab->term->cell_height);
+}
+
+static JSValue
+js_window_get_property_innerWidth(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		return JS_UNDEFINED;
+	}
+
+	struct session *ses = doc_view->session;
+
+	if (!ses) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return JS_UNDEFINED;
+	}
+
+	return JS_NewInt32(ctx, doc_view->box.width * ses->tab->term->cell_width);
+}
+
+static JSValue
 js_window_get_property_location(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -879,6 +935,8 @@ js_window_postMessage(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 static const JSCFunctionListEntry js_window_proto_funcs[] = {
 	JS_CGETSET_DEF("closed", js_window_get_property_closed, NULL),
 	JS_CGETSET_DEF("event", js_window_get_property_event, NULL),
+	JS_CGETSET_DEF("innerHeight", js_window_get_property_innerHeight, NULL),
+	JS_CGETSET_DEF("innerWidth", js_window_get_property_innerWidth, NULL),
 	JS_CGETSET_DEF("location", js_window_get_property_location, js_window_set_property_location),
 	JS_CGETSET_DEF("parent", js_window_get_property_parent, NULL),
 	JS_CGETSET_DEF("self", js_window_get_property_self, NULL),
