@@ -770,12 +770,33 @@ element_get_property_clientWidth(JSContext *ctx, unsigned int argc, JS::Value *v
 		return true;
 	}
 	bool root = (!strcmp(dom_string_data(tag_name), "BODY") || !strcmp(dom_string_data(tag_name), "HTML") || !strcmp(dom_string_data(tag_name), "DIV"));
-	dom_string_unref(tag_name);
 
 	if (root) {
 		int width = doc_view->box.width * ses->tab->term->cell_width;
 		args.rval().setInt32(width);
+		dom_string_unref(tag_name);
 		return true;
+	}
+	bool pre = (!strcmp(dom_string_data(tag_name), "PRE"));
+	dom_string_unref(tag_name);
+
+	if (pre) {
+		dom_string *id = NULL;
+		exc = dom_element_get_attribute(el, corestring_dom_id, &id);
+
+		if (exc == DOM_NO_ERR && id != NULL) {
+			if (!strcmp(dom_string_data(id), "cursor")) {
+				args.rval().setInt32(ses->tab->term->cell_width);
+				dom_string_unref(id);
+				return true;
+			}
+			if (!strcmp(dom_string_data(id), "console")) {
+				args.rval().setInt32(doc_view->box.width * ses->tab->term->cell_width);
+				dom_string_unref(id);
+				return true;
+			}
+			dom_string_unref(id);
+		}
 	}
 	int offset = find_offset(document->element_map_rev, el);
 
