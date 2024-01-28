@@ -172,6 +172,24 @@ js_style_get_property_fontWeight(JSContext *ctx, JSValueConst this_val)
 }
 
 static JSValue
+js_style_get_property_height(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return js_style(ctx, this_val, "height");
+}
+
+static JSValue
+js_style_get_property_left(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return js_style(ctx, this_val, "left");
+}
+
+static JSValue
 js_style_get_property_lineStyle(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -205,6 +223,15 @@ js_style_get_property_textDecoration(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	return js_style(ctx, this_val, "text-decoration");
+}
+
+static JSValue
+js_style_get_property_top(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return js_style(ctx, this_val, "top");
 }
 
 static JSValue
@@ -271,6 +298,24 @@ js_style_set_property_fontWeight(JSContext *ctx, JSValueConst this_val, JSValue 
 }
 
 static JSValue
+js_style_set_property_height(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return js_set_style(ctx, this_val, val, "height");
+}
+
+static JSValue
+js_style_set_property_left(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return js_set_style(ctx, this_val, val, "left");
+}
+
+static JSValue
 js_style_set_property_lineStyle(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -307,6 +352,15 @@ js_style_set_property_textDecoration(JSContext *ctx, JSValueConst this_val, JSVa
 }
 
 static JSValue
+js_style_set_property_top(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return js_set_style(ctx, this_val, val, "top");
+}
+
+static JSValue
 js_style_set_property_whiteSpace(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -337,10 +391,13 @@ static const JSCFunctionListEntry js_style_proto_funcs[] = {
 	JS_CGETSET_DEF("display", js_style_get_property_display, js_style_set_property_display),
 	JS_CGETSET_DEF("fontStyle", js_style_get_property_fontStyle, js_style_set_property_fontStyle),
 	JS_CGETSET_DEF("fontWeight", js_style_get_property_fontWeight, js_style_set_property_fontWeight),
+	JS_CGETSET_DEF("height", js_style_get_property_height, js_style_set_property_height),
+	JS_CGETSET_DEF("left", js_style_get_property_left, js_style_set_property_left),
 	JS_CGETSET_DEF("lineStyle", js_style_get_property_lineStyle, js_style_set_property_lineStyle),
 	JS_CGETSET_DEF("lineStyleType", js_style_get_property_lineStyleType, js_style_set_property_lineStyleType),
 	JS_CGETSET_DEF("textAlign", js_style_get_property_textAlign, js_style_set_property_textAlign),
 	JS_CGETSET_DEF("textDecoration", js_style_get_property_textDecoration, js_style_set_property_textDecoration),
+	JS_CGETSET_DEF("top", js_style_get_property_top, js_style_set_property_top),
 	JS_CGETSET_DEF("whiteSpace", js_style_get_property_whiteSpace, js_style_set_property_whiteSpace),
 	JS_CFUNC_DEF("toString", 0, js_style_toString)
 };
