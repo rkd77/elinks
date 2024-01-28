@@ -292,6 +292,27 @@ mjs_element_get_property_clientHeight(js_State *J)
 		js_pushnumber(J, 0);
 		return;
 	}
+	ses = doc_view->session;
+
+	if (!ses) {
+		js_pushnumber(J, 0);
+		return;
+	}
+	dom_string *tag_name = NULL;
+	dom_exception exc = dom_node_get_node_name(el, &tag_name);
+
+	if (exc != DOM_NO_ERR || !tag_name) {
+		js_pushnumber(J, 0);
+		return;
+	}
+	bool root = (!strcmp(dom_string_data(tag_name), "BODY") || !strcmp(dom_string_data(tag_name), "HTML"));
+	dom_string_unref(tag_name);
+
+	if (root) {
+		int height = doc_view->box.height * ses->tab->term->cell_height;
+		js_pushnumber(J, height);
+		return;
+	}
 	int offset = find_offset(document->element_map_rev, el);
 
 	if (offset <= 0) {
@@ -301,12 +322,6 @@ mjs_element_get_property_clientHeight(js_State *J)
 	struct node_rect *rect = get_element_rect(document, offset);
 
 	if (!rect) {
-		js_pushnumber(J, 0);
-		return;
-	}
-	ses = doc_view->session;
-
-	if (!ses) {
 		js_pushnumber(J, 0);
 		return;
 	}
@@ -354,6 +369,28 @@ mjs_element_get_property_clientWidth(js_State *J)
 		js_pushnumber(J, 0);
 		return;
 	}
+	ses = doc_view->session;
+
+	if (!ses) {
+		js_pushnumber(J, 0);
+		return;
+	}
+	dom_string *tag_name = NULL;
+	dom_exception exc = dom_node_get_node_name(el, &tag_name);
+
+	if (exc != DOM_NO_ERR || !tag_name) {
+		js_pushnumber(J, 0);
+		return;
+	}
+	bool root = (!strcmp(dom_string_data(tag_name), "BODY") || !strcmp(dom_string_data(tag_name), "HTML") || !strcmp(dom_string_data(tag_name), "DIV"));
+	dom_string_unref(tag_name);
+
+	if (root) {
+		int width = doc_view->box.width * ses->tab->term->cell_width;
+		js_pushnumber(J, width);
+		return;
+	}
+
 	int offset = find_offset(document->element_map_rev, el);
 
 	if (offset <= 0) {
@@ -363,12 +400,6 @@ mjs_element_get_property_clientWidth(js_State *J)
 	struct node_rect *rect = get_element_rect(document, offset);
 
 	if (!rect) {
-		js_pushnumber(J, 0);
-		return;
-	}
-	ses = doc_view->session;
-
-	if (!ses) {
 		js_pushnumber(J, 0);
 		return;
 	}
@@ -756,42 +787,7 @@ mjs_element_get_property_offsetHeight(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
-
-	if (!el) {
-		js_pushnull(J);
-		return;
-	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct view_state *vs = interpreter->vs;
-	struct document_view *doc_view = vs->doc_view;
-	struct document *document = doc_view->document;
-	struct session *ses;
-
-	if (!document) {
-		js_pushnumber(J, 0);
-		return;
-	}
-	int offset = find_offset(document->element_map_rev, el);
-
-	if (offset <= 0) {
-		js_pushnumber(J, 0);
-		return;
-	}
-	struct node_rect *rect = get_element_rect(document, offset);
-
-	if (!rect) {
-		js_pushnumber(J, 0);
-		return;
-	}
-	ses = doc_view->session;
-
-	if (!ses) {
-		js_pushnumber(J, 0);
-		return;
-	}
-	int dy = int_max(0, (rect->y1 + 1 - rect->y0) * ses->tab->term->cell_height);
-	js_pushnumber(J, dy);
+	mjs_element_get_property_clientHeight(J);
 }
 
 static void
@@ -949,42 +945,7 @@ mjs_element_get_property_offsetWidth(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
-
-	if (!el) {
-		js_pushnull(J);
-		return;
-	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct view_state *vs = interpreter->vs;
-	struct document_view *doc_view = vs->doc_view;
-	struct document *document = doc_view->document;
-	struct session *ses;
-
-	if (!document) {
-		js_pushnumber(J, 0);
-		return;
-	}
-	int offset = find_offset(document->element_map_rev, el);
-
-	if (offset <= 0) {
-		js_pushnumber(J, 0);
-		return;
-	}
-	struct node_rect *rect = get_element_rect(document, offset);
-
-	if (!rect) {
-		js_pushnumber(J, 0);
-		return;
-	}
-	ses = doc_view->session;
-
-	if (!ses) {
-		js_pushnumber(J, 0);
-		return;
-	}
-	int dx = int_max(0, (rect->x1 + 1 - rect->x0) * ses->tab->term->cell_width);
-	js_pushnumber(J, dx);
+	mjs_element_get_property_clientWidth(J);
 }
 
 static void
