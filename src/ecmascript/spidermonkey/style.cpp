@@ -58,6 +58,7 @@ static bool style_set_style(JSContext *ctx, unsigned int argc, JS::Value *vp, co
 static bool style_get_property_background(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_get_property_backgroundColor(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_get_property_color(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool style_get_property_cssText(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_get_property_display(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_get_property_fontStyle(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_get_property_fontWeight(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -73,6 +74,7 @@ static bool style_get_property_whiteSpace(JSContext *ctx, unsigned int argc, JS:
 static bool style_set_property_background(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_set_property_backgroundColor(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_set_property_color(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool style_set_property_cssText(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_set_property_display(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_set_property_fontStyle(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_set_property_fontWeight(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -113,7 +115,8 @@ JSClass style_class = {
 static JSPropertySpec style_props[] = {
 	JS_PSGS("background",	style_get_property_background, style_set_property_background, JSPROP_ENUMERATE),
 	JS_PSGS("backgroundColor",	style_get_property_backgroundColor, style_set_property_backgroundColor, JSPROP_ENUMERATE),
-	JS_PSGS("color",		style_get_property_color, style_set_property_color, JSPROP_ENUMERATE),
+	JS_PSGS("color",	style_get_property_color, style_set_property_color, JSPROP_ENUMERATE),
+	JS_PSGS("cssText",	style_get_property_cssText, style_set_property_cssText, JSPROP_ENUMERATE),
 	JS_PSGS("display",	style_get_property_display, style_set_property_display, JSPROP_ENUMERATE),
 	JS_PSGS("fontStyle",	style_get_property_fontStyle, style_set_property_fontStyle, JSPROP_ENUMERATE),
 	JS_PSGS("fontWeight",	style_get_property_fontWeight, style_set_property_fontWeight, JSPROP_ENUMERATE),
@@ -558,7 +561,6 @@ style_style(JSContext *ctx, unsigned int argc, JS::Value *vp, const char *proper
 		}
 		return true;
 	}
-
 	res = get_css_value(dom_string_data(style), property);
 	dom_string_unref(style);
 
@@ -567,6 +569,117 @@ style_style(JSContext *ctx, unsigned int argc, JS::Value *vp, const char *proper
 		return true;
 	}
 	args.rval().setString(JS_NewStringCopyZ(ctx, res));
+	mem_free(res);
+
+	return true;
+}
+
+static bool
+style_get_property_cssText(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &style_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_exception exc;
+	dom_string *style = NULL;
+	char *res = NULL;
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+	exc = dom_element_get_attribute(el, corestring_dom_style, &style);
+
+	if (exc != DOM_NO_ERR || !style) {
+		args.rval().setString(JS_NewStringCopyZ(ctx, ""));
+		return true;
+	}
+	args.rval().setString(JS_NewStringCopyZ(ctx, dom_string_data(style)));
+	dom_string_unref(style);
+
+	return true;
+}
+
+static bool
+style_set_property_cssText(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &style_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_exception exc;
+	char *res = NULL;
+	args.rval().setUndefined();
+
+	if (!el) {
+		return true;
+	}
+	char *str = jsval_to_string(ctx, args[0]);
+
+	if (!str) {
+		return true;
+	}
+	void *css = set_elstyle(str);
+	mem_free(str);
+
+	if (!css) {
+		return true;
+	}
+	res = get_elstyle(css);
+
+	if (!res) {
+		return true;
+	}
+	dom_string *stylestr = NULL;
+	exc = dom_string_create((const uint8_t *)res, strlen(res), &stylestr);
+
+	if (exc == DOM_NO_ERR && stylestr) {
+		exc = dom_element_set_attribute(el, corestring_dom_style, stylestr);
+		interpreter->changed = 1;
+		dom_string_unref(stylestr);
+	}
 	mem_free(res);
 
 	return true;
