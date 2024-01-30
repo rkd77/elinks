@@ -67,6 +67,32 @@ js_style(JSContext *ctx, JSValueConst this_val, const char *property)
 }
 
 static JSValue
+js_style_get_property_cssText(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(JS_GetOpaque(this_val, js_style_class_id));
+	dom_exception exc;
+	dom_string *style = NULL;
+	JSValue r;
+
+	if (!el) {
+		return JS_NULL;
+	}
+	exc = dom_element_get_attribute(el, corestring_dom_style, &style);
+
+	if (exc != DOM_NO_ERR || !style) {
+		r = JS_NewString(ctx, "");
+		RETURN_JS(r);
+	}
+	r = JS_NewString(ctx, dom_string_data(style));
+	dom_string_unref(style);
+
+	RETURN_JS(r);
+}
+
+static JSValue
 js_set_style(JSContext *ctx, JSValueConst this_val, JSValue val, const char *property)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -114,6 +140,55 @@ js_set_style(JSContext *ctx, JSValueConst this_val, JSValue val, const char *pro
 		dom_string_unref(stylestr);
 	}
 	mem_free(res);
+	return JS_UNDEFINED;
+}
+
+static JSValue
+js_style_set_property_cssText(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	dom_node *el = (dom_node *)(JS_GetOpaque(this_val, js_style_class_id));
+	dom_exception exc;
+	char *res = NULL;
+
+	if (!el) {
+		return JS_UNDEFINED;
+	}
+	const char *value;
+	size_t len;
+
+	if (!el) {
+		return JS_NULL;
+	}
+	value = JS_ToCStringLen(ctx, &len, val);
+
+	if (!value) {
+		return JS_EXCEPTION;
+	}
+	void *css = set_elstyle(value);
+	JS_FreeCString(ctx, value);
+
+	if (!css) {
+		return JS_UNDEFINED;
+	}
+	res = get_elstyle(css);
+
+	if (!res) {
+		return JS_UNDEFINED;
+	}
+	dom_string *stylestr = NULL;
+	exc = dom_string_create((const uint8_t *)res, strlen(res), &stylestr);
+
+	if (exc == DOM_NO_ERR && stylestr) {
+		exc = dom_element_set_attribute(el, corestring_dom_style, stylestr);
+		interpreter->changed = 1;
+		dom_string_unref(stylestr);
+	}
+	mem_free(res);
+
 	return JS_UNDEFINED;
 }
 
@@ -388,6 +463,7 @@ static const JSCFunctionListEntry js_style_proto_funcs[] = {
 	JS_CGETSET_DEF("background", js_style_get_property_background, js_style_set_property_background),
 	JS_CGETSET_DEF("backgroundColor", js_style_get_property_backgroundColor, js_style_set_property_backgroundColor),
 	JS_CGETSET_DEF("color", js_style_get_property_color, js_style_set_property_color),
+	JS_CGETSET_DEF("cssText", js_style_get_property_cssText, js_style_set_property_cssText),
 	JS_CGETSET_DEF("display", js_style_get_property_display, js_style_set_property_display),
 	JS_CGETSET_DEF("fontStyle", js_style_get_property_fontStyle, js_style_set_property_fontStyle),
 	JS_CGETSET_DEF("fontWeight", js_style_get_property_fontWeight, js_style_set_property_fontWeight),
