@@ -214,11 +214,10 @@ static void element_finalize(JS::GCContext *op, JSObject *obj)
 			free_list(el_private->listeners);
 			mem_free(el_private);
 			JS::SetReservedSlot(obj, 1, JS::UndefinedValue());
+
+			dom_node_unref(el);
+			JS::SetReservedSlot(obj, 0, JS::UndefinedValue());
 		}
-	}
-	if (el) {
-		dom_node_unref(el);
-		JS::SetReservedSlot(obj, 0, JS::UndefinedValue());
 	}
 }
 
