@@ -62,6 +62,30 @@ mjs_style(js_State *J, const char *property)
 }
 
 static void
+mjs_style_get_property_cssText(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (struct dom_node *)js_touserdata(J, 0, "style");
+	dom_exception exc;
+	dom_string *style = NULL;
+
+	if (!el) {
+		js_pushnull(J);
+		return;
+	}
+	exc = dom_element_get_attribute(el, corestring_dom_style, &style);
+
+	if (exc != DOM_NO_ERR || !style) {
+		js_pushstring(J, "");
+		return;
+	}
+	js_pushstring(J, dom_string_data(style));
+	dom_string_unref(style);
+}
+
+static void
 mjs_set_style(js_State *J, const char *property)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -111,6 +135,48 @@ mjs_set_style(js_State *J, const char *property)
 	}
 	mem_free(res);
 	js_pushundefined(J);
+}
+
+static void
+mjs_style_set_property_cssText(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	dom_node *el = (struct dom_node *)js_touserdata(J, 0, "style");
+	dom_exception exc;
+	char *res = NULL;
+	js_pushundefined(J);
+
+	if (!el) {
+		return;
+	}
+	const char *str = js_tostring(J, 1);
+
+	if (!str) {
+		//js_error(J, "out of memory");
+		return;
+	}
+	void *css = set_elstyle(str);
+
+	if (!css) {
+		return;
+	}
+	res = get_elstyle(css);
+
+	if (!res) {
+		return;
+	}
+	dom_string *stylestr = NULL;
+	exc = dom_string_create((const uint8_t *)res, strlen(res), &stylestr);
+
+	if (exc == DOM_NO_ERR && stylestr) {
+		exc = dom_element_set_attribute(el, corestring_dom_style, stylestr);
+		interpreter->changed = 1;
+		dom_string_unref(stylestr);
+	}
+	mem_free(res);
 }
 
 static void
@@ -387,6 +453,7 @@ mjs_push_style(js_State *J, void *node)
 		addproperty(J, "background", mjs_style_get_property_background, mjs_style_set_property_background);
 		addproperty(J, "backgroundColor", mjs_style_get_property_backgroundColor, mjs_style_set_property_backgroundColor);
 		addproperty(J, "color", mjs_style_get_property_color, mjs_style_set_property_color);
+		addproperty(J, "cssText", mjs_style_get_property_cssText, mjs_style_set_property_cssText);
 		addproperty(J, "display", mjs_style_get_property_display, mjs_style_set_property_display);
 		addproperty(J, "fontStyle", mjs_style_get_property_fontStyle, mjs_style_set_property_fontStyle);
 		addproperty(J, "fontWeight", mjs_style_get_property_fontWeight, mjs_style_set_property_fontWeight);
