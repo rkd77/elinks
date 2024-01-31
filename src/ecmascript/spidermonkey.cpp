@@ -279,7 +279,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 					&xhr_class, xhr_constructor, 0,
 					xhr_props,
 					xhr_funcs,
-					xhr_static_props, NULL, "xhr");
+					xhr_static_props, NULL, "XMLHttpRequest");
 
 	if (!xhr_obj) {
 		goto release_and_fail;
