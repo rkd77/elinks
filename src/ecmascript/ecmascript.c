@@ -261,7 +261,6 @@ delayed_reload(void *data)
 	assert(rel);
 	object_unlock(rel->document);
 	dump_xhtml(rel->cached, rel->document, rel->was_write);
-
 	sort_links(rel->document);
 	draw_formatted(ses, rel->was_write ? 2 : 0);
 	load_common(ses);
@@ -311,7 +310,7 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 				rel->cached = cached;
 				rel->document = document;
 				rel->ses = ses;
-				rel->was_write = interpreter->was_write;
+				rel->was_write = 1 || interpreter->was_write;
 				object_lock(document);
 				register_bottom_half(delayed_reload, rel);
 			}
