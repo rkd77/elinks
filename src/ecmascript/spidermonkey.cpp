@@ -270,7 +270,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 					      &localstorage_class, NULL, 0,
 					      nullptr,
 					      localstorage_funcs,
-					      NULL, NULL, "localstorage");
+					      NULL, NULL, "localStorage");
 	if (!localstorage_obj) {
 		goto release_and_fail;
 	}
