@@ -13,6 +13,7 @@
 #include "config/options.h"
 #include "dialogs/status.h"
 #include "document/document.h"
+#include "document/libdom/doc.h"
 #include "document/libdom/mapa.h"
 #include "document/libdom/renderer.h"
 #include "document/libdom/renderer2.h"
@@ -259,10 +260,11 @@ delayed_reload(void *data)
 	struct session *ses = rel->ses;
 
 	assert(rel);
+
 	object_unlock(rel->document);
-	dump_xhtml(rel->cached, rel->document, rel->was_write);
+	dump_xhtml(rel->cached, rel->document, 1 + rel->was_write);
 	sort_links(rel->document);
-	draw_formatted(ses, rel->was_write ? 2 : 0);
+	draw_formatted(ses, 2);
 	load_common(ses);
 	mem_free(rel);
 }
@@ -293,15 +295,13 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 							el_insert_before(document, el, &item->string);
 						} else {
 							add_fragment(cached, 0, item->string.source, item->string.length);
-							document->ecmascript_counter++;
+							document->dom = document_parse(document, &item->string);
 							break;
 						}
 					}
 				}
 			}
 		}
-
-		//fprintf(stderr, "%s\n", text);
 
 		if (document->dom) {
 			struct delayed_rel *rel = (struct delayed_rel *)mem_calloc(1, sizeof(*rel));
@@ -310,7 +310,7 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 				rel->cached = cached;
 				rel->document = document;
 				rel->ses = ses;
-				rel->was_write = 1 || interpreter->was_write;
+				rel->was_write = interpreter->was_write;
 				object_lock(document);
 				register_bottom_half(delayed_reload, rel);
 			}
