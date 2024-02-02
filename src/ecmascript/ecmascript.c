@@ -295,6 +295,7 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 							el_insert_before(document, el, &item->string);
 						} else {
 							add_fragment(cached, 0, item->string.source, item->string.length);
+							free_document(document->dom);
 							document->dom = document_parse(document, &item->string);
 							break;
 						}
