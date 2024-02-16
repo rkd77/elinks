@@ -5,9 +5,7 @@ ELinks is an advanced and well-established feature-rich text mode web
 highly customizable and can be extended via scripts. It is very portable
 and runs on a variety of platforms.
 
-The ELinks official website is available at
-
-    <http://elinks.cz/>
+The ELinks official website is available at <http://elinks.cz/>.
 
 Please see the SITES file for mirrors or other recommended sites. If you
 want to install ELinks on your computer, see the INSTALL file for
@@ -53,13 +51,10 @@ course of modularization and separation of add-on modules (like cookies,
 bookmarks, ssl, scripting etc).
 
 For more details about ELinks history, please see
-
-    <http://elinks.cz/history.html>
+<http://elinks.cz/history.html>.
 
 If you are more interested in the history and various Links clones and
-versions, you can examine the website at
-
-    <http://links.sf.net/>
+versions, you can examine the website at <http://links.sf.net/>.
 
 Old ELinks team lost interest in ELinks development somehow. felinks
 (fork of elinks) is continuation of elinks based on the master branch of
@@ -69,8 +64,6 @@ incompatible changes) no more often than 1 yearly, and point releases
 
 Repository was renamed to elinks on 2020-12-01 with Petr’s approval.
 
-Main repo is at
-
-    <https://github.com/rkd77/elinks.git>
+Main repo is at <https://github.com/rkd77/elinks.git>.
 
 vim: textwidth=80
