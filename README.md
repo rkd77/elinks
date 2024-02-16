@@ -7,7 +7,7 @@ and runs on a variety of platforms.
 
 The ELinks official website is available at
 
-    http://elinks.cz/
+    <http://elinks.cz/>
 
 Please see the SITES file for mirrors or other recommended sites. If you
 want to install ELinks on your computer, see the INSTALL file for
@@ -54,12 +54,12 @@ bookmarks, ssl, scripting etc).
 
 For more details about ELinks history, please see
 
-    http://elinks.cz/history.html
+    <http://elinks.cz/history.html>
 
 If you are more interested in the history and various Links clones and
 versions, you can examine the website at
 
-    http://links.sf.net/
+    <http://links.sf.net/>
 
 Old ELinks team lost interest in ELinks development somehow. felinks
 (fork of elinks) is continuation of elinks based on the master branch of
@@ -71,6 +71,6 @@ Repository was renamed to elinks on 2020-12-01 with Petr’s approval.
 
 Main repo is at
 
-    https://github.com/rkd77/elinks.git
+    <https://github.com/rkd77/elinks.git>
 
 vim: textwidth=80
