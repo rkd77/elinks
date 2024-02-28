@@ -271,10 +271,13 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 		initialised = 1;
 	}
 
-	if (!document->dom && !cached->head && buffer && buffer->source) {
+	if (!document->dom && buffer && buffer->source) {
 		struct string head;
 
 		if (init_string(&head)) {
+			if (cached->head) {
+				add_to_string(&head, cached->head);
+			}
 			scan_http_equiv(buffer->source, buffer->source + buffer->length, &head, NULL, document->cp);
 			mem_free_set(&cached->head, head.source);
 		}
