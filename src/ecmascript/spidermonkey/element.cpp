@@ -70,10 +70,10 @@ static bool element_get_property_childElementCount(JSContext *ctx, unsigned int 
 static bool element_get_property_childNodes(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool element_get_property_clientHeight(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool element_get_property_clientLeft(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool element_get_property_clientTop(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool element_get_property_clientWidth(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool element_get_property_clientHeight(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool element_get_property_clientLeft(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool element_get_property_clientTop(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool element_get_property_clientWidth(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_firstChild(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -92,11 +92,11 @@ static bool element_get_property_nextSibling(JSContext *ctx, unsigned int argc, 
 static bool element_get_property_nodeName(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_nodeType(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_nodeValue(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool element_get_property_offsetHeight(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool element_get_property_offsetLeft(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool element_get_property_offsetHeight(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool element_get_property_offsetLeft(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_offsetParent(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool element_get_property_offsetTop(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool element_get_property_offsetWidth(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool element_get_property_offsetTop(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool element_get_property_offsetWidth(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_ownerDocument(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -157,10 +157,10 @@ JSPropertySpec element_props[] = {
 	JS_PSG("childElementCount",	element_get_property_childElementCount, JSPROP_ENUMERATE),
 	JS_PSG("childNodes",	element_get_property_childNodes, JSPROP_ENUMERATE),
 	JS_PSGS("className",	element_get_property_className, element_set_property_className, JSPROP_ENUMERATE),
-	JS_PSG("clientHeight",	element_get_property_clientHeight, JSPROP_ENUMERATE),
-	JS_PSG("clientLeft",	element_get_property_clientLeft, JSPROP_ENUMERATE),
-	JS_PSG("clientTop",	element_get_property_clientTop, JSPROP_ENUMERATE),
-	JS_PSG("clientWidth",	element_get_property_clientWidth, JSPROP_ENUMERATE),
+//	JS_PSG("clientHeight",	element_get_property_clientHeight, JSPROP_ENUMERATE),
+//	JS_PSG("clientLeft",	element_get_property_clientLeft, JSPROP_ENUMERATE),
+//	JS_PSG("clientTop",	element_get_property_clientTop, JSPROP_ENUMERATE),
+//	JS_PSG("clientWidth",	element_get_property_clientWidth, JSPROP_ENUMERATE),
 	JS_PSGS("dir",	element_get_property_dir, element_set_property_dir, JSPROP_ENUMERATE),
 	JS_PSG("firstChild",	element_get_property_firstChild, JSPROP_ENUMERATE),
 	JS_PSG("firstElementChild",	element_get_property_firstElementChild, JSPROP_ENUMERATE),
@@ -175,11 +175,11 @@ JSPropertySpec element_props[] = {
 	JS_PSG("nodeName",	element_get_property_nodeName, JSPROP_ENUMERATE),
 	JS_PSG("nodeType",	element_get_property_nodeType, JSPROP_ENUMERATE),
 	JS_PSG("nodeValue",	element_get_property_nodeValue, JSPROP_ENUMERATE),
-	JS_PSG("offsetHeight",	element_get_property_offsetHeight, JSPROP_ENUMERATE),
-	JS_PSG("offsetLeft",	element_get_property_offsetLeft, JSPROP_ENUMERATE),
+//	JS_PSG("offsetHeight",	element_get_property_offsetHeight, JSPROP_ENUMERATE),
+//	JS_PSG("offsetLeft",	element_get_property_offsetLeft, JSPROP_ENUMERATE),
 	JS_PSG("offsetParent",	element_get_property_offsetParent, JSPROP_ENUMERATE),
-	JS_PSG("offsetTop",	element_get_property_offsetTop, JSPROP_ENUMERATE),
-	JS_PSG("offsetWidth",	element_get_property_offsetWidth, JSPROP_ENUMERATE),
+//	JS_PSG("offsetTop",	element_get_property_offsetTop, JSPROP_ENUMERATE),
+//	JS_PSG("offsetWidth",	element_get_property_offsetWidth, JSPROP_ENUMERATE),
 	JS_PSGS("outerHTML",	element_get_property_outerHtml, element_set_property_outerHtml, JSPROP_ENUMERATE),
 	JS_PSG("ownerDocument",	element_get_property_ownerDocument, JSPROP_ENUMERATE),
 	JS_PSG("parentElement",	element_get_property_parentElement, JSPROP_ENUMERATE),
@@ -592,6 +592,7 @@ element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return true;
 }
 
+#if 0 // it does not work yet
 static bool
 element_get_property_clientHeight(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -680,7 +681,9 @@ element_get_property_clientHeight(JSContext *ctx, unsigned int argc, JS::Value *
 
 	return true;
 }
+#endif
 
+#if 0
 static bool
 element_get_property_clientLeft(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -692,7 +695,9 @@ element_get_property_clientLeft(JSContext *ctx, unsigned int argc, JS::Value *vp
 
 	return true;
 }
+#endif
 
+#if 0
 static bool
 element_get_property_clientTop(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -704,7 +709,9 @@ element_get_property_clientTop(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+#endif
 
+#if 0
 static bool
 element_get_property_clientWidth(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -814,6 +821,7 @@ element_get_property_clientWidth(JSContext *ctx, unsigned int argc, JS::Value *v
 
 	return true;
 }
+#endif
 
 static bool
 element_get_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -1616,6 +1624,7 @@ element_get_property_nextSibling(JSContext *ctx, unsigned int argc, JS::Value *v
 	return true;
 }
 
+#if 0
 static bool
 element_get_property_offsetHeight(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -1624,7 +1633,9 @@ element_get_property_offsetHeight(JSContext *ctx, unsigned int argc, JS::Value *
 #endif
 	return element_get_property_clientHeight(ctx, argc, vp);
 }
+#endif
 
+#if 0
 static bool
 element_get_property_offsetLeft(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -1718,6 +1729,7 @@ element_get_property_offsetLeft(JSContext *ctx, unsigned int argc, JS::Value *vp
 
 	return true;
 }
+#endif
 
 static bool
 element_get_property_offsetParent(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -1778,6 +1790,7 @@ element_get_property_offsetParent(JSContext *ctx, unsigned int argc, JS::Value *
 	return true;
 }
 
+#if 0
 static bool
 element_get_property_offsetTop(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -1871,7 +1884,9 @@ element_get_property_offsetTop(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+#endif
 
+#if 0
 static bool
 element_get_property_offsetWidth(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -1880,6 +1895,7 @@ element_get_property_offsetWidth(JSContext *ctx, unsigned int argc, JS::Value *v
 #endif
 	return element_get_property_clientWidth(ctx, argc, vp);
 }
+#endif
 
 static bool
 element_get_property_ownerDocument(JSContext *ctx, unsigned int argc, JS::Value *vp)

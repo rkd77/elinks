@@ -64,8 +64,9 @@ struct screen_char {
 		unsigned char color[SCREEN_COLOR_SIZE];
 		unsigned int node_number;
 	} c;
-
+#if 0
 	unsigned int element_offset;
+#endif
 };
 
 /** @relates screen_char */

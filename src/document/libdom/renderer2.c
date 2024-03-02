@@ -294,6 +294,7 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	dump_xhtml(cached, document, 0);
 }
 
+#if 0
 static void
 walk_tree2(struct document *document, dom_node *node)
 {
@@ -385,7 +386,9 @@ next:
 		child = next_child;
 	}
 }
+#endif
 
+#if 0
 static void
 walk_tree2_color(struct terminal *term, struct el_box *box, struct document *document, int vx, int vy, dom_node *node)
 {
@@ -457,6 +460,7 @@ walk_tree2_color(struct terminal *term, struct el_box *box, struct document *doc
 		child = next_child;
 	}
 }
+#endif
 
 void
 dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
@@ -541,6 +545,7 @@ dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
 	}
 }
 
+#if 0
 void
 walk2(struct document *document)
 {
@@ -567,7 +572,9 @@ walk2(struct document *document)
 	walk_tree2(document, root);
 	dom_node_unref(root);
 }
+#endif
 
+#if 0
 static int prev_offset = 0;
 static struct node_rect *prev_element = NULL;
 
@@ -610,8 +617,10 @@ get_element_rect(struct document *document, int offset)
 
 	return n;
 }
+#endif
 //static void dump_results(struct document *document);
 
+#if 0
 void
 scan_document(struct document_view *doc_view)
 {
@@ -665,6 +674,7 @@ scan_document(struct document_view *doc_view)
 	walk2(doc_view->document);
 //	dump_results(doc_view->document);
 }
+#endif
 
 #if 0
 static void
@@ -682,6 +692,7 @@ dump_results(struct document *document)
 }
 #endif
 
+#if 0
 void
 try_to_color(struct terminal *term, struct el_box *box, struct document *document, int vx, int vy)
 {
@@ -708,3 +719,4 @@ try_to_color(struct terminal *term, struct el_box *box, struct document *documen
 	walk_tree2_color(term, box, document, vx, vy, root);
 	dom_node_unref(root);
 }
+#endif

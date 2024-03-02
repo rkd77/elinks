@@ -629,12 +629,12 @@ refresh_view(struct session *ses, struct document_view *doc_view, int frames)
 	if (ses->tab == get_current_tab(ses->tab->term)) {
 		if (doc_view->parent_doc_view) {
 #ifdef CONFIG_LIBDOM
-			scan_document(doc_view->parent_doc_view);
+			//scan_document(doc_view->parent_doc_view);
 #endif
 			draw_doc(ses, doc_view->parent_doc_view, 0);
 		} else {
 #ifdef CONFIG_LIBDOM
-			scan_document(doc_view);
+			//scan_document(doc_view);
 #endif
 			draw_doc(ses, doc_view, 1);
 		}

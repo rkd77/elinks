@@ -274,7 +274,7 @@ get_format_screen_char(struct html_context *html_context,
 	    && html_context->options->underline_links) {
 		schar_cache.attr |= SCREEN_ATTR_UNDERLINE;
 	}
-	schar_cache.element_offset = (html_top->name && html_context->document && html_context->document->text.source) ? html_top->name - html_context->document->text.source : 0;
+	// schar_cache.element_offset = (html_top->name && html_context->document && html_context->document->text.source) ? html_top->name - html_context->document->text.source : 0;
 
 	return &schar_cache;
 }

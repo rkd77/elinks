@@ -329,6 +329,7 @@ js_element_get_property_className(JSContext *ctx, JSValueConst this_val)
 	RETURN_JS(r);
 }
 
+#if 0
 static JSValue
 js_element_get_property_clientHeight(JSContext *ctx, JSValueConst this_val)
 {
@@ -381,7 +382,9 @@ js_element_get_property_clientHeight(JSContext *ctx, JSValueConst this_val)
 
 	return JS_NewInt32(ctx, dy);
 }
+#endif
 
+#if 0
 static JSValue
 js_element_get_property_clientLeft(JSContext *ctx, JSValueConst this_val)
 {
@@ -390,7 +393,9 @@ js_element_get_property_clientLeft(JSContext *ctx, JSValueConst this_val)
 #endif
 	return JS_NewInt32(ctx, 0);
 }
+#endif
 
+#if 0
 static JSValue
 js_element_get_property_clientTop(JSContext *ctx, JSValueConst this_val)
 {
@@ -399,7 +404,9 @@ js_element_get_property_clientTop(JSContext *ctx, JSValueConst this_val)
 #endif
 	return JS_NewInt32(ctx, 0);
 }
+#endif
 
+#if 0
 static JSValue
 js_element_get_property_clientWidth(JSContext *ctx, JSValueConst this_val)
 {
@@ -452,6 +459,7 @@ js_element_get_property_clientWidth(JSContext *ctx, JSValueConst this_val)
 
 	return JS_NewInt32(ctx, dx);
 }
+#endif
 
 static JSValue
 js_element_get_property_dir(JSContext *ctx, JSValueConst this_val)
@@ -841,6 +849,7 @@ js_element_get_property_nextSibling(JSContext *ctx, JSValueConst this_val)
 	return getElement(ctx, node);
 }
 
+#if 0
 static JSValue
 js_element_get_property_offsetHeight(JSContext *ctx, JSValueConst this_val)
 {
@@ -849,8 +858,9 @@ js_element_get_property_offsetHeight(JSContext *ctx, JSValueConst this_val)
 #endif
 	return js_element_get_property_clientHeight(ctx, this_val);
 }
+#endif
 
-
+#if 0
 static JSValue
 js_element_get_property_offsetLeft(JSContext *ctx, JSValueConst this_val)
 {
@@ -905,6 +915,7 @@ js_element_get_property_offsetLeft(JSContext *ctx, JSValueConst this_val)
 	dom_node_unref(node);
 	return JS_NewInt32(ctx, dx);
 }
+#endif
 
 static JSValue
 js_element_get_property_offsetParent(JSContext *ctx, JSValueConst this_val)
@@ -929,6 +940,7 @@ js_element_get_property_offsetParent(JSContext *ctx, JSValueConst this_val)
 	return getElement(ctx, node);
 }
 
+#if 0
 static JSValue
 js_element_get_property_offsetTop(JSContext *ctx, JSValueConst this_val)
 {
@@ -983,7 +995,9 @@ js_element_get_property_offsetTop(JSContext *ctx, JSValueConst this_val)
 	dom_node_unref(node);
 	return JS_NewInt32(ctx, dy);
 }
+#endif
 
+#if 0
 static JSValue
 js_element_get_property_offsetWidth(JSContext *ctx, JSValueConst this_val)
 {
@@ -992,6 +1006,7 @@ js_element_get_property_offsetWidth(JSContext *ctx, JSValueConst this_val)
 #endif
 	return js_element_get_property_clientWidth(ctx, this_val);
 }
+#endif
 
 static JSValue
 js_element_get_property_ownerDocument(JSContext *ctx, JSValueConst this_val)
@@ -3096,10 +3111,10 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("childElementCount",	js_element_get_property_childElementCount, NULL),
 	JS_CGETSET_DEF("childNodes",	js_element_get_property_childNodes, NULL),
 	JS_CGETSET_DEF("className",	js_element_get_property_className, js_element_set_property_className),
-	JS_CGETSET_DEF("clientHeight",	js_element_get_property_clientHeight, NULL),
-	JS_CGETSET_DEF("clientLeft",	js_element_get_property_clientLeft, NULL),
-	JS_CGETSET_DEF("clientTop",	js_element_get_property_clientTop, NULL),
-	JS_CGETSET_DEF("clientWidth",	js_element_get_property_clientWidth, NULL),
+//	JS_CGETSET_DEF("clientHeight",	js_element_get_property_clientHeight, NULL),
+//	JS_CGETSET_DEF("clientLeft",	js_element_get_property_clientLeft, NULL),
+//	JS_CGETSET_DEF("clientTop",	js_element_get_property_clientTop, NULL),
+//	JS_CGETSET_DEF("clientWidth",	js_element_get_property_clientWidth, NULL),
 	JS_CGETSET_DEF("dir",	js_element_get_property_dir, js_element_set_property_dir),
 	JS_CGETSET_DEF("firstChild",	js_element_get_property_firstChild, NULL),
 	JS_CGETSET_DEF("firstElementChild",	js_element_get_property_firstElementChild, NULL),
@@ -3114,11 +3129,11 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("nodeName",	js_element_get_property_nodeName, NULL),
 	JS_CGETSET_DEF("nodeType",	js_element_get_property_nodeType, NULL),
 	JS_CGETSET_DEF("nodeValue",	js_element_get_property_nodeValue, NULL),
-	JS_CGETSET_DEF("offsetHeight",	js_element_get_property_offsetHeight, NULL),
-	JS_CGETSET_DEF("offsetLeft",	js_element_get_property_offsetLeft, NULL),
+//	JS_CGETSET_DEF("offsetHeight",	js_element_get_property_offsetHeight, NULL),
+//	JS_CGETSET_DEF("offsetLeft",	js_element_get_property_offsetLeft, NULL),
 	JS_CGETSET_DEF("offsetParent",	js_element_get_property_offsetParent, NULL),
-	JS_CGETSET_DEF("offsetTop",	js_element_get_property_offsetTop, NULL),
-	JS_CGETSET_DEF("offsetWidth",	js_element_get_property_offsetWidth, NULL),
+//	JS_CGETSET_DEF("offsetTop",	js_element_get_property_offsetTop, NULL),
+//	JS_CGETSET_DEF("offsetWidth",	js_element_get_property_offsetWidth, NULL),
 	JS_CGETSET_DEF("outerHTML",	js_element_get_property_outerHtml, NULL),
 	JS_CGETSET_DEF("ownerDocument",	js_element_get_property_ownerDocument, NULL),
 	JS_CGETSET_DEF("parentElement",	js_element_get_property_parentElement, NULL),

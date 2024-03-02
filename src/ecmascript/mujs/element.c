@@ -270,6 +270,7 @@ mjs_element_get_property_className(js_State *J)
 	}
 }
 
+#if 0
 static void
 mjs_element_get_property_clientHeight(js_State *J)
 {
@@ -328,7 +329,9 @@ mjs_element_get_property_clientHeight(js_State *J)
 	int dy = int_max(0, (rect->y1 + 1 - rect->y0) * ses->tab->term->cell_height);
 	js_pushnumber(J, dy);
 }
+#endif
 
+#if 0
 static void
 mjs_element_get_property_clientLeft(js_State *J)
 {
@@ -337,7 +340,9 @@ mjs_element_get_property_clientLeft(js_State *J)
 #endif
 	js_pushnumber(J, 0);
 }
+#endif
 
+#if 0
 static void
 mjs_element_get_property_clientTop(js_State *J)
 {
@@ -346,7 +351,9 @@ mjs_element_get_property_clientTop(js_State *J)
 #endif
 	js_pushnumber(J, 0);
 }
+#endif
 
+#if 0
 static void
 mjs_element_get_property_clientWidth(js_State *J)
 {
@@ -406,6 +413,7 @@ mjs_element_get_property_clientWidth(js_State *J)
 	int dx = int_max(0, (rect->x1 + 1 - rect->x0) * ses->tab->term->cell_width);
 	js_pushnumber(J, dx);
 }
+#endif
 
 static void
 mjs_element_get_property_dir(js_State *J)
@@ -781,6 +789,7 @@ mjs_element_get_property_nextSibling(js_State *J)
 	mjs_push_element(J, node);
 }
 
+#if 0
 static void
 mjs_element_get_property_offsetHeight(js_State *J)
 {
@@ -789,7 +798,9 @@ mjs_element_get_property_offsetHeight(js_State *J)
 #endif
 	mjs_element_get_property_clientHeight(J);
 }
+#endif
 
+#if 0
 static void
 mjs_element_get_property_offsetLeft(js_State *J)
 {
@@ -852,6 +863,7 @@ mjs_element_get_property_offsetLeft(js_State *J)
 	dom_node_unref(node);
 	js_pushnumber(J, dx);
 }
+#endif
 
 static void
 mjs_element_get_property_offsetParent(js_State *J)
@@ -876,6 +888,7 @@ mjs_element_get_property_offsetParent(js_State *J)
 	mjs_push_element(J, node);
 }
 
+#if 0
 static void
 mjs_element_get_property_offsetTop(js_State *J)
 {
@@ -938,7 +951,9 @@ mjs_element_get_property_offsetTop(js_State *J)
 	dom_node_unref(node);
 	js_pushnumber(J, dy);
 }
+#endif
 
+#if 0
 static void
 mjs_element_get_property_offsetWidth(js_State *J)
 {
@@ -947,6 +962,7 @@ mjs_element_get_property_offsetWidth(js_State *J)
 #endif
 	mjs_element_get_property_clientWidth(J);
 }
+#endif
 
 static void
 mjs_element_get_property_ownerDocument(js_State *J)
@@ -2985,10 +3001,10 @@ mjs_push_element(js_State *J, void *node)
 		addproperty(J, "childElementCount",	mjs_element_get_property_childElementCount, NULL);
 		addproperty(J, "childNodes",	mjs_element_get_property_childNodes, NULL);
 		addproperty(J, "className",	mjs_element_get_property_className, mjs_element_set_property_className);
-		addproperty(J, "clientHeight",	mjs_element_get_property_clientHeight, NULL);
-		addproperty(J, "clientLeft", mjs_element_get_property_clientLeft, NULL);
-		addproperty(J, "clientTop", mjs_element_get_property_clientTop, NULL);
-		addproperty(J, "clientWidth", mjs_element_get_property_clientWidth, NULL);
+//		addproperty(J, "clientHeight",	mjs_element_get_property_clientHeight, NULL);
+//		addproperty(J, "clientLeft", mjs_element_get_property_clientLeft, NULL);
+//		addproperty(J, "clientTop", mjs_element_get_property_clientTop, NULL);
+//		addproperty(J, "clientWidth", mjs_element_get_property_clientWidth, NULL);
 		addproperty(J, "dir",	mjs_element_get_property_dir, mjs_element_set_property_dir);
 		addproperty(J, "firstChild",	mjs_element_get_property_firstChild, NULL);
 		addproperty(J, "firstElementChild",	mjs_element_get_property_firstElementChild, NULL);
@@ -3003,11 +3019,11 @@ mjs_push_element(js_State *J, void *node)
 		addproperty(J, "nodeName",	mjs_element_get_property_nodeName, NULL);
 		addproperty(J, "nodeType",	mjs_element_get_property_nodeType, NULL);
 		addproperty(J, "nodeValue",	mjs_element_get_property_nodeValue, NULL);
-		addproperty(J, "offsetHeight",	mjs_element_get_property_offsetHeight, NULL);
-		addproperty(J, "offsetLeft",	mjs_element_get_property_offsetLeft, NULL);
+//		addproperty(J, "offsetHeight",	mjs_element_get_property_offsetHeight, NULL);
+//		addproperty(J, "offsetLeft",	mjs_element_get_property_offsetLeft, NULL);
 		addproperty(J, "offsetParent",	mjs_element_get_property_offsetParent, NULL);
-		addproperty(J, "offsetTop",	mjs_element_get_property_offsetTop, NULL);
-		addproperty(J, "offsetWidth", mjs_element_get_property_offsetWidth, NULL);
+//		addproperty(J, "offsetTop",	mjs_element_get_property_offsetTop, NULL);
+//		addproperty(J, "offsetWidth", mjs_element_get_property_offsetWidth, NULL);
 		addproperty(J, "outerHTML",	mjs_element_get_property_outerHtml, NULL);
 		addproperty(J, "ownerDocument",	mjs_element_get_property_ownerDocument, NULL);
 		addproperty(J, "parentElement",	mjs_element_get_property_parentElement, NULL);
