@@ -61,6 +61,19 @@
 
 #include <iostream>
 
+struct listener {
+	LIST_HEAD_EL(struct listener);
+	char *typ;
+	JS::RootedValue fun;
+};
+
+struct document_private {
+	LIST_OF(struct listener) listeners;
+	struct ecmascript_interpreter *interpreter;
+	JS::RootedObject thisval;
+	int ref_count;
+};
+
 static JSObject *getDoctype(JSContext *ctx, void *node);
 
 static void document_finalize(JS::GCContext *op, JSObject *obj)
@@ -69,9 +82,22 @@ static void document_finalize(JS::GCContext *op, JSObject *obj)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(obj, 0);
+	struct document_private *doc_private = JS::GetMaybePtrFromReservedSlot<struct document_private>(obj, 1);
+
+	if (doc_private) {
+		struct listener *l;
+
+		foreach(l, doc_private->listeners) {
+			mem_free_set(&l->typ, NULL);
+		}
+		free_list(doc_private->listeners);
+		mem_free(doc_private);
+		JS::SetReservedSlot(obj, 1, JS::UndefinedValue());
+	}
 
 	if (doc) {
 		dom_node_unref(doc);
+		JS::SetReservedSlot(obj, 0, JS::UndefinedValue());
 	}
 }
 
@@ -92,7 +118,7 @@ JSClassOps document_ops = {
 /* Each @document_class object must have a @window_class parent.  */
 JSClass document_class = {
 	"document",
-	JSCLASS_HAS_RESERVED_SLOTS(1),
+	JSCLASS_HAS_RESERVED_SLOTS(2),
 	&document_ops
 };
 
@@ -1118,6 +1144,7 @@ JSPropertySpec document_props[] = {
 	JS_PS_END
 };
 
+static bool document_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_createComment(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_createDocumentFragment(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_createElement(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -1131,8 +1158,10 @@ static bool document_getElementsByName(JSContext *ctx, unsigned int argc, JS::Va
 static bool document_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_querySelector(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool document_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec document_funcs[] = {
+	{ "addEventListener",	document_addEventListener,	3 },
 	{ "createComment",	document_createComment, 1 },
 	{ "createDocumentFragment",	document_createDocumentFragment, 0 },
 	{ "createElement",	document_createElement, 1 },
@@ -1146,6 +1175,7 @@ const spidermonkeyFunctionSpec document_funcs[] = {
 	{ "getElementsByTagName",	document_getElementsByTagName,	1 },
 	{ "querySelector",	document_querySelector,	1 },
 	{ "querySelectorAll",	document_querySelectorAll,	1 },
+	{ "removeEventListener",	document_removeEventListener,	2 },
 	{ NULL }
 };
 
@@ -1296,6 +1326,134 @@ document_replace(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return(true);
 }
+
+static bool
+document_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+	struct document_private *doc_private = JS::GetMaybePtrFromReservedSlot<struct document_private>(hobj, 1);
+
+	if (!doc || !doc_private) {
+		args.rval().setNull();
+		return true;
+	}
+
+	if (argc < 2) {
+		args.rval().setUndefined();
+		return true;
+	}
+	char *method = jsval_to_string(ctx, args[0]);
+	JS::RootedValue fun(ctx, args[1]);
+
+	struct listener *l;
+
+	foreach(l, doc_private->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+		if (l->fun == fun) {
+			args.rval().setUndefined();
+			mem_free(method);
+			return true;
+		}
+	}
+	struct listener *n = (struct listener *)mem_calloc(1, sizeof(*n));
+
+	if (n) {
+		n->typ = method;
+		n->fun = fun;
+		add_to_list_end(doc_private->listeners, n);
+	}
+	args.rval().setUndefined();
+	return true;
+}
+
+static bool
+document_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+	struct document_private *doc_private = JS::GetMaybePtrFromReservedSlot<struct document_private>(hobj, 1);
+
+	if (!doc || !doc_private) {
+		args.rval().setNull();
+		return true;
+	}
+
+	if (argc < 2) {
+		args.rval().setUndefined();
+		return true;
+	}
+	char *method = jsval_to_string(ctx, args[0]);
+
+	if (!method) {
+		return false;
+	}
+	JS::RootedValue fun(ctx, args[1]);
+
+	struct listener *l;
+
+	foreach(l, doc_private->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+		if (l->fun == fun) {
+			del_from_list(l);
+			mem_free_set(&l->typ, NULL);
+			mem_free(l);
+			mem_free(method);
+			args.rval().setUndefined();
+			return true;
+		}
+	}
+	mem_free(method);
+	args.rval().setUndefined();
+	return true;
+}
+
 
 static bool
 document_createComment(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -1915,6 +2073,11 @@ getDocument(JSContext *ctx, void *doc)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	struct document_private *doc_private = (struct document_private *)mem_calloc(1, sizeof(*doc_private));
+
+	if (!doc_private) {
+		return NULL;
+	}
 	JSObject *el = JS_NewObject(ctx, &document_class);
 
 	if (!el) {
@@ -1927,6 +2090,7 @@ getDocument(JSContext *ctx, void *doc)
 	spidermonkey_DefineFunctions(ctx, el, document_funcs);
 
 	JS::SetReservedSlot(el, 0, JS::PrivateValue(doc));
+	JS::SetReservedSlot(el, 1, JS::PrivateValue(doc_private));
 
 	return el;
 }
