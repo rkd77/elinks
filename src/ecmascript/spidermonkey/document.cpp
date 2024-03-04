@@ -2078,6 +2078,9 @@ getDocument(JSContext *ctx, void *doc)
 	if (!doc_private) {
 		return NULL;
 	}
+	init_list(doc_private->listeners);
+	doc_private->ref_count = 1;
+
 	JSObject *el = JS_NewObject(ctx, &document_class);
 
 	if (!el) {
