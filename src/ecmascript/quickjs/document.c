@@ -42,6 +42,32 @@ static JSValue getDoctype(JSContext *ctx, void *node);
 static JSClassID js_doctype_class_id;
 static JSClassID js_document_class_id;
 
+struct document_listener {
+	LIST_HEAD_EL(struct document_listener);
+	char *typ;
+	JSValue fun;
+};
+
+struct js_document_private {
+	LIST_OF(struct document_listener) listeners;
+	struct ecmascript_interpreter *interpreter;
+	JSValue thisval;
+	void *node;
+};
+
+void *
+js_doc_getopaque(JSValueConst obj, JSClassID class_id)
+{
+	REF_JS(obj);
+
+	struct js_document_private *res = (struct js_document_private *)JS_GetOpaque(obj, class_id);
+
+	if (!res) {
+		return NULL;
+	}
+	return res->node;
+}
+
 static JSValue
 js_document_get_property_anchors(JSContext *ctx, JSValueConst this_val)
 {
@@ -985,6 +1011,109 @@ js_document_replace(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 }
 
 static JSValue
+js_document_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	struct js_document_private *doc_private = (struct js_document_private *)(JS_GetOpaque(this_val, js_document_class_id));
+
+	if (!doc_private) {
+		return JS_NULL;
+	}
+
+	if (argc < 2) {
+		return JS_UNDEFINED;
+	}
+	const char *str;
+	size_t len;
+	str = JS_ToCStringLen(ctx, &len, argv[0]);
+
+	if (!str) {
+		return JS_EXCEPTION;
+	}
+	char *method = stracpy(str);
+	JS_FreeCString(ctx, str);
+
+	if (!method) {
+		return JS_EXCEPTION;
+	}
+
+	JSValue fun = argv[1];
+	struct document_listener *l;
+
+	foreach(l, doc_private->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+		if (JS_VALUE_GET_PTR(l->fun) == JS_VALUE_GET_PTR(fun)) {
+			mem_free(method);
+			return JS_UNDEFINED;
+		}
+	}
+	struct document_listener *n = (struct document_listener *)mem_calloc(1, sizeof(*n));
+
+	if (n) {
+		n->typ = method;
+		n->fun = JS_DupValue(ctx, argv[1]);
+		add_to_list_end(doc_private->listeners, n);
+	}
+	return JS_UNDEFINED;
+}
+
+static JSValue
+js_document_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	struct js_document_private *doc_private = (struct js_document_private *)(JS_GetOpaque(this_val, js_document_class_id));
+
+	if (!doc_private) {
+		return JS_NULL;
+	}
+
+	if (argc < 2) {
+		return JS_UNDEFINED;
+	}
+	const char *str;
+	size_t len;
+	str = JS_ToCStringLen(ctx, &len, argv[0]);
+
+	if (!str) {
+		return JS_EXCEPTION;
+	}
+	char *method = stracpy(str);
+	JS_FreeCString(ctx, str);
+
+	if (!method) {
+		return JS_EXCEPTION;
+	}
+	JSValue fun = argv[1];
+	struct document_listener *l;
+
+	foreach(l, doc_private->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+		if (JS_VALUE_GET_PTR(l->fun) == JS_VALUE_GET_PTR(fun)) {
+			del_from_list(l);
+			mem_free_set(&l->typ, NULL);
+			mem_free(l);
+			mem_free(method);
+			return JS_UNDEFINED;
+		}
+	}
+	mem_free(method);
+	return JS_UNDEFINED;
+}
+
+
+static JSValue
 js_document_createComment(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1579,12 +1708,14 @@ static const JSCFunctionListEntry js_document_proto_funcs[] = {
 	JS_CGETSET_DEF("title",	js_document_get_property_title, js_document_set_property_title), /* TODO: Charset? */
 	JS_CGETSET_DEF("URL", js_document_get_property_url, js_document_set_property_url),
 
+	JS_CFUNC_DEF("addEventListener",	3, js_document_addEventListener),
 	JS_CFUNC_DEF("createComment",	1, js_document_createComment),
 	JS_CFUNC_DEF("createDocumentFragment",	0, js_document_createDocumentFragment),
 	JS_CFUNC_DEF("createElement",	1, js_document_createElement),
 	JS_CFUNC_DEF("createTextNode",	1, js_document_createTextNode),
 	JS_CFUNC_DEF("write",		1, js_document_write),
 	JS_CFUNC_DEF("writeln",		1, js_document_writeln),
+	JS_CFUNC_DEF("removeEventListener",	3, js_document_removeEventListener),
 	JS_CFUNC_DEF("replace",		2, js_document_replace),
 	JS_CFUNC_DEF("getElementById",	1, js_document_getElementById),
 	JS_CFUNC_DEF("getElementsByClassName",	1, js_document_getElementsByClassName),
@@ -1596,8 +1727,27 @@ static const JSCFunctionListEntry js_document_proto_funcs[] = {
 	JS_CFUNC_DEF("toString", 0, js_document_toString)
 };
 
+static void
+js_document_finalizer(JSRuntime *rt, JSValue val)
+{
+	REF_JS(val);
+
+	struct js_document_private *doc_private = (struct js_document_private *)JS_GetOpaque(val, js_document_class_id);
+
+	if (doc_private) {
+		struct document_listener *l;
+
+		foreach(l, doc_private->listeners) {
+			mem_free_set(&l->typ, NULL);
+		}
+		free_list(doc_private->listeners);
+		mem_free(doc_private);
+	}
+}
+
 static JSClassDef js_document_class = {
 	"document",
+	js_document_finalizer
 };
 
 JSValue
@@ -1723,12 +1873,24 @@ getDocument(JSContext *ctx, void *doc)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	struct js_document_private *doc_private = (struct js_document_private *)mem_calloc(1, sizeof(*doc_private));
+
+	if (!doc_private) {
+		return JS_NULL;
+	}
+	init_list(doc_private->listeners);
+	doc_private->node = doc;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	doc_private->interpreter = interpreter;
+
 	JSValue document_obj = JS_NewObject(ctx);
 	JS_SetPropertyFunctionList(ctx, document_obj, js_document_proto_funcs, countof(js_document_proto_funcs));
 //	document_class = JS_NewCFunction2(ctx, js_document_ctor, "document", 0, JS_CFUNC_constructor, 0);
 //	JS_SetConstructor(ctx, document_class, document_obj);
 	JS_SetClassProto(ctx, js_document_class_id, document_obj);
-	JS_SetOpaque(document_obj, doc);
+	JS_SetOpaque(document_obj, doc_private);
 
-	RETURN_JS(document_obj);
+	JSValue rr = JS_DupValue(ctx, document_obj);
+	doc_private->thisval = JS_DupValue(ctx, rr);
+	RETURN_JS(rr);
 }
