@@ -62,6 +62,34 @@
 
 //static xmlpp::Document emptyDoc;
 
+struct listener {
+	LIST_HEAD_EL(struct listener);
+	char *typ;
+	const char *fun;
+};
+
+struct mjs_document_private {
+	struct ecmascript_interpreter *interpreter;
+	const char *thisval;
+	LIST_OF(struct listener) listeners;
+	void *node;
+	int ref_count;
+};
+
+#if 0
+void *
+mjs_getprivate(js_State *J, int idx)
+{
+	struct mjs_document_private *priv = (struct mjs_document_private *)js_touserdata(J, idx, "docprivate");
+
+	if (!priv) {
+		return NULL;
+	}
+
+	return priv->node;
+}
+#endif
+
 static void mjs_push_doctype(js_State *J, void *node);
 
 static void
@@ -896,6 +924,101 @@ mjs_document_replace(js_State *J)
 }
 
 static void
+mjs_document_addEventListener(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct mjs_document_private *doc_private = (struct mjs_document_private *)js_touserdata(J, 0, "docprivate");
+
+	if (!doc_private) {
+		js_pushnull(J);
+		return;
+	}
+	const char *str = js_tostring(J, 1);
+
+	if (!str) {
+		js_error(J, "out of memory");
+		return;
+	}
+	char *method = stracpy(str);
+
+	if (!method) {
+		js_error(J, "out of memory");
+		return;
+	}
+	js_copy(J, 2);
+	const char *fun = js_ref(J);
+
+	struct listener *l;
+
+	foreach(l, doc_private->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+		if (!strcmp(l->fun, fun)) {
+			mem_free(method);
+			js_pushundefined(J);
+			return;
+		}
+	}
+	struct listener *n = (struct listener *)mem_calloc(1, sizeof(*n));
+
+	if (n) {
+		n->typ = method;
+		n->fun = fun;
+		add_to_list_end(doc_private->listeners, n);
+	}
+	js_pushundefined(J);
+}
+
+static void
+mjs_document_removeEventListener(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct mjs_document_private *doc_private = (struct mjs_document_private *)js_touserdata(J, 0, "docprivate");
+
+	if (!doc_private) {
+		js_pushnull(J);
+		return;
+	}
+	const char *str = js_tostring(J, 1);
+
+	if (!str) {
+		js_error(J, "!str");
+		return;
+	}
+	char *method = stracpy(str);
+
+	if (!method) {
+		js_error(J, "out of memory");
+		return;
+	}
+	js_copy(J, 2);
+	const char *fun = js_ref(J);
+	struct listener *l;
+
+	foreach(l, doc_private->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+		if (!strcmp(l->fun, fun)) {
+			del_from_list(l);
+			mem_free_set(&l->typ, NULL);
+			if (l->fun) js_unref(J, l->fun);
+			mem_free(l);
+			mem_free(method);
+			js_pushundefined(J);
+			return;
+		}
+	}
+	mem_free(method);
+	js_pushundefined(J);
+}
+
+static void
 mjs_document_createComment(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1372,6 +1495,7 @@ mjs_document_init(js_State *J)
 {
 	js_newobject(J);
 	{
+		addmethod(J, "addEventListener", mjs_document_addEventListener, 3);
 		addmethod(J, "createComment",	mjs_document_createComment, 1);
 		addmethod(J, "createDocumentFragment",mjs_document_createDocumentFragment, 0);
 		addmethod(J, "createElement",	mjs_document_createElement, 1);
@@ -1385,6 +1509,7 @@ mjs_document_init(js_State *J)
 		addmethod(J, "getElementsByTagName",	mjs_document_getElementsByTagName, 1);
 		addmethod(J, "querySelector",	mjs_document_querySelector, 1);
 		addmethod(J, "querySelectorAll",	mjs_document_querySelectorAll, 1);
+		addmethod(J, "removeEventListener", mjs_document_removeEventListener, 3);
 		addmethod(J, "toString", mjs_document_toString, 0);
 
 		addproperty(J, "anchors", mjs_document_get_property_anchors, NULL);
@@ -1454,6 +1579,27 @@ mjs_push_doctype(js_State *J, void *node)
 	attr_save_in_map(map_doctypes, node, node);
 }
 
+static void
+mjs_doc_private_finalizer(js_State *J, void *priv)
+{
+	struct mjs_document_private *doc_private = (struct mjs_document_private *)priv;
+
+	if (doc_private) {
+		struct listener *l;
+
+		foreach(l, doc_private->listeners) {
+			mem_free_set(&l->typ, NULL);
+			if (l->fun) js_unref(J, l->fun);
+		}
+		free_list(doc_private->listeners);
+		//dom_node_unref(doc_private->node);
+		if (doc_private->thisval) {
+			js_unref(J, doc_private->thisval);
+		}
+		mem_free(doc_private);
+	}
+}
+
 void
 mjs_push_document(js_State *J, void *doc)
 {
@@ -1462,4 +1608,17 @@ mjs_push_document(js_State *J, void *doc)
 #endif
 	mjs_document_init(J);
 	js_newuserdata(J, "document", doc, NULL);
+
+	struct mjs_document_private *doc_private = (struct mjs_document_private *)mem_calloc(1, sizeof(*doc_private));
+
+	if (!doc_private) {
+		return;
+	}
+	init_list(doc_private->listeners);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	doc_private->interpreter = interpreter;
+	doc_private->node = doc;
+	doc_private->ref_count = 1;
+	doc_private->thisval = js_ref(J);
+	js_newuserdata(J, "docprivate", doc_private, mjs_doc_private_finalizer);
 }
