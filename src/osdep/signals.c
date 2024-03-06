@@ -106,6 +106,8 @@ poll_fg(void *t_)
 	r = unblock_itrm();
 	if (r == -1) {
 		install_timer(&fg_poll_timer, FG_POLL_TIME, poll_fg, t);
+	} else {
+		resize_terminal();
 	}
 #if 0
 	if (r == -2) {
@@ -123,7 +125,9 @@ poll_fg(void *t_)
 static void
 sig_cont(struct terminal *term)
 {
-	if (!unblock_itrm()) resize_terminal();
+	if (!unblock_itrm()) {
+		resize_terminal();
+	}
 }
 #endif
 
