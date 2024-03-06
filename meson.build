@@ -331,6 +331,10 @@ if compiler.has_header('event2/event.h')
     conf_data.set('HAVE_EVENT2_EVENT_H', 1)
 endif
 
+if compiler.has_header('event.h')
+    conf_data.set('HAVE_EVENT_H', 1)
+endif
+
 if compiler.has_header('alloca.h')
     conf_data.set('HAVE_ALLOCA_H', 1)
 endif
