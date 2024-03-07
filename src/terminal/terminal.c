@@ -191,9 +191,11 @@ init_term(int fdin, int fdout)
 	term->fdout = fdout;
 	term->master = (term->fdout == get_output_handle());
 
+#ifdef HAVE_GETPID
 	if (term->master) {
 		master_pid = getpid();
 	}
+#endif
 
 	term->blocked = -1;
 
