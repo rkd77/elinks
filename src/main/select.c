@@ -1183,10 +1183,8 @@ select_loop(void (*init)(void))
 				check_signals();
 				try_redraw_all_terminals();
 			}
-#if 0
 			if (program.terminate) break;
 			do_event_loop(EVLOOP_ONCE);
-#endif
 		}
 		if (was_installed_timer) {
 			kill_timer(&periodic_redraw_timer);
