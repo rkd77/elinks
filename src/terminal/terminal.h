@@ -14,6 +14,7 @@ struct option;
 struct terminal_screen;
 struct terminal_interlink;
 
+extern pid_t master_pid;
 
 /** The terminal type, meaningful for frames (lines) drawing. */
 enum term_mode_type {

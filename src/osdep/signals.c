@@ -73,21 +73,22 @@ static void
 sig_tstp(struct terminal *term)
 {
 #ifdef SIGSTOP
-	pid_t newpid;
 	pid_t pid = getpid();
 
 	block_itrm();
 #if defined (SIGCONT) && defined(SIGTTOU)
-	newpid = fork();
-	if (!newpid) {
-		sleep(1);
-		kill(pid, SIGCONT);
-		/* Use _exit() rather than exit(), so that atexit
-		 * functions are not called, and stdio output buffers
-		 * are not flushed.  Any such things must have been
-		 * inherited from the parent process, which will take
-		 * care of them when appropriate.  */
-		_exit(0);
+	if (pid == master_pid) {
+		pid_t newpid = fork();
+		if (!newpid) {
+			sleep(1);
+			kill(pid, SIGCONT);
+			/* Use _exit() rather than exit(), so that atexit
+			 * functions are not called, and stdio output buffers
+			 * are not flushed.  Any such things must have been
+			 * inherited from the parent process, which will take
+			 * care of them when appropriate.  */
+			_exit(0);
+		}
 	}
 #endif
 	raise(SIGSTOP);

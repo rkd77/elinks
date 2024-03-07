@@ -54,6 +54,8 @@ INIT_LIST_OF(struct terminal, terminals);
 struct hash *temporary_files;
 static void check_if_no_terminal(void);
 
+pid_t master_pid = 0;
+
 void
 clean_temporary_files(void)
 {
@@ -188,6 +190,11 @@ init_term(int fdin, int fdout)
 	term->fdin = fdin;
 	term->fdout = fdout;
 	term->master = (term->fdout == get_output_handle());
+
+	if (term->master) {
+		master_pid = getpid();
+	}
+
 	term->blocked = -1;
 
 	get_terminal_name(name + 9);
