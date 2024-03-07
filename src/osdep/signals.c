@@ -77,7 +77,7 @@ sig_tstp(struct terminal *term)
 
 	block_itrm();
 #if defined (SIGCONT) && defined(SIGTTOU)
-	if (pid == master_pid) {
+	if (master_pid) {
 		pid_t newpid = fork();
 		if (!newpid) {
 			sleep(1);
