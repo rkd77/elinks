@@ -119,10 +119,8 @@ set_wh_term_event(struct term_event *ev, enum term_event_type type, int width, i
 	ev->ev = type;
 	ev->info.size.width = width;
 	ev->info.size.height = height;
-#ifdef CONFIG_LIBSIXEL
 	ev->info.size.cell_width = cell_width;
 	ev->info.size.cell_height = cell_height;
-#endif
 }
 
 #define set_init_term_event(ev, w, h, cw, ch) set_wh_term_event(ev, EVENT_INIT, w, h, cw, ch)
@@ -136,10 +134,8 @@ set_wh_interlink_event(struct interlink_event *ev, enum term_event_type type, in
 	ev->ev = type;
 	ev->info.size.width = width;
 	ev->info.size.height = height;
-#ifdef CONFIG_LIBSIXEL
 	ev->info.size.cell_width = cell_width;
 	ev->info.size.cell_height = cell_height;
-#endif
 }
 
 #define set_resize_interlink_event(ev, w, h, cw, ch) set_wh_interlink_event(ev, EVENT_RESIZE, w, h, cw, ch)

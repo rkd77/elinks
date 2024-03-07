@@ -178,9 +178,9 @@ struct terminal {
 
 #ifdef CONFIG_LIBSIXEL
 	LIST_OF(struct image) images;
+#endif
 	int cell_width;
 	int cell_height;
-#endif
 };
 
 #define do_not_ignore_next_mouse_event(term) \
