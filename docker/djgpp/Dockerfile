@@ -65,7 +65,6 @@ ADD build_hubbub.sh /home/elinks/
 RUN runuser -u elinks bash /home/elinks/build_hubbub.sh
 
 # libcss
-ADD libCSS-restrict.diff /home/elinks/
 ADD build_libcss.sh /home/elinks/
 RUN runuser -u elinks bash /home/elinks/build_libcss.sh
 
