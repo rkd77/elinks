@@ -277,6 +277,11 @@ got_signal(int sig)
 	s->mask = 1;
 	check_for_select_race();
 
+	if (can_write(signal_pipe[1])) {
+		int wr;
+		EINTRLOOP(wr, (int)write(signal_pipe[1], "", 1));
+	}
+
 	errno = saved_errno;
 }
 

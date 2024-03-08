@@ -50,13 +50,6 @@
 #include <sys/select.h>
 #endif
 
-#define EINTRLOOPX(ret_, call_, x_)			\
-do {							\
-	(ret_) = (call_);				\
-} while ((ret_) == (x_) && errno == EINTR)
-
-#define EINTRLOOP(ret_, call_)	EINTRLOOPX(ret_, call_, -1)
-
 #ifdef CONFIG_LIBCURL
 #include <curl/curl.h>
 #include <sys/cdefs.h>
@@ -1101,11 +1094,35 @@ try_redraw_all_terminals(void)
 	redraw_all_terminals();
 }
 
+#ifndef NO_SIGNAL_HANDLERS
+static void
+clear_events(int h, int blocking)
+{
+#if !defined(O_NONBLOCK) && !defined(FIONBIO)
+	blocking = 1;
+#endif
+	while (blocking ? can_read(h) : 1) {
+		unsigned char c[64];
+		int rd;
+		EINTRLOOP(rd, (int)read(h, c, sizeof c));
+		if (rd != sizeof c) break;
+	}
+}
+
+pid_t signal_pid;
+int signal_pipe[2] = { -1, -1 };
+
+static void
+clear_events_ptr(void *handle)
+{
+	clear_events((int)(intptr_t)handle, 0);
+}
+
+#endif
 
 void
 select_loop(void (*init)(void))
 {
-
 	timeval_T last_time;
 	int select_errors = 0;
 
@@ -1117,6 +1134,16 @@ select_loop(void (*init)(void))
 	timeval_now(&last_time);
 #ifdef SIGPIPE
 	signal(SIGPIPE, SIG_IGN);
+#endif
+#if !defined(NO_SIGNAL_HANDLERS)
+	signal_pid = getpid();
+
+	if (c_pipe(signal_pipe)) {
+		elinks_internal("ERROR: can't create pipe for signal handling");
+	}
+	set_nonblocking_fd(signal_pipe[0]);
+	set_nonblocking_fd(signal_pipe[1]);
+	set_handlers(signal_pipe[0], clear_events_ptr, NULL, NULL, (void *)(intptr_t)signal_pipe[0]);
 #endif
 	init();
 	check_bottom_halves();

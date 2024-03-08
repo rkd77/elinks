@@ -31,6 +31,18 @@
 extern "C" {
 #endif
 
+#define EINTRLOOPX(ret_, call_, x_)			\
+do {							\
+	(ret_) = (call_);				\
+} while ((ret_) == (x_) && errno == EINTR)
+
+#define EINTRLOOP(ret_, call_)	EINTRLOOPX(ret_, call_, -1)
+
+#ifndef NO_SIGNAL_HANDLERS
+extern pid_t signal_pid;
+extern int signal_pipe[2];
+#endif
+
 #if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBEVENT)
 /* Global information, common to all connections */
 typedef struct _GlobalInfo
