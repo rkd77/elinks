@@ -385,6 +385,15 @@ if conf_data.get('CONFIG_LIBEV')
     eventdeps = compiler.find_library('ev', static: st)
     deps += eventdeps
     conf_data.set('CONFIG_LIBEVENT', false)
+    code1 = '''#include <libev/event.h>
+    struct ev_timer timer;
+    '''
+    code2 = '''#include <event.h>
+    struct ev_timer timer;
+    '''
+    if not compiler.compiles(code1) and not compiler.compiles(code2)
+        error('libev cannot be used. Likely not installed libev-libevent-dev')
+    endif
 elif conf_data.get('CONFIG_LIBEVENT')
     eh = '#include <event2/event.h>'
     eventdeps = dependency('libevent', static: st, version: '>=2.0.0')
