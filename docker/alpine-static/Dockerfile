@@ -8,7 +8,7 @@
 FROM alpine:edge
 
 # prepare system
-RUN apk update && apk add git meson gcc g++ cmake pkgconfig make patch wget
+RUN apk update && apk add git meson gcc g++ cmake pkgconfig make patch wget coreutils
 RUN cd /etc/apk && echo https://dl-cdn.alpinelinux.org/alpine/edge/testing >> repositories
 
 # install
@@ -49,6 +49,7 @@ RUN apk add \
  xz-dev \
  xz-static \
  make \
+ musl-dev \
  nghttp2-dev \
  nghttp2-static \
  c-ares-dev \
@@ -57,18 +58,18 @@ RUN apk add \
 ## [*] netsurf libs
 # get netsurf source
 RUN cd /root; \
-wget http://download.netsurf-browser.org/libs/releases/buildsystem-1.9.tar.gz; \
-tar -xf buildsystem-1.9.tar.gz; \
-make -C buildsystem-1.9 install PREFIX=/usr/local
-##rm -rf buildsystem-1.9
+wget http://download.netsurf-browser.org/libs/releases/buildsystem-1.10.tar.gz; \
+tar -xf buildsystem-1.10.tar.gz; \
+make -C buildsystem-1.10 install PREFIX=/usr/local
+##rm -rf buildsystem-1.10
 
 #
 RUN cd /root; \
 export CFLAGS="-Wno-error"; \
-wget http://download.netsurf-browser.org/libs/releases/libparserutils-0.2.4-src.tar.gz; \
-tar -xf libparserutils-0.2.4-src.tar.gz; \
-make -C libparserutils-0.2.4 install -j1 Q= PREFIX=/usr/local LIBDIR=lib COMPONENT_TYPE=lib-static
-##rm -rf libparserutils-0.2.4
+wget http://download.netsurf-browser.org/libs/releases/libparserutils-0.2.5-src.tar.gz; \
+tar -xf libparserutils-0.2.5-src.tar.gz; \
+make -C libparserutils-0.2.5 install -j1 Q= PREFIX=/usr/local LIBDIR=lib COMPONENT_TYPE=lib-static
+##rm -rf libparserutils-0.2.5
 
 RUN cd /root; \
 export CFLAGS="-Wno-error"; \
@@ -77,27 +78,27 @@ tar -xf libwapcaplet-0.4.3-src.tar.gz; \
 make -C libwapcaplet-0.4.3 install -j1 Q= PREFIX=/usr/local LIBDIR=lib COMPONENT_TYPE=lib-static
 ##rm -rf libwapcaplet-0.4.3
 
+RUN apk add gperf
 RUN cd /root; \
 export CFLAGS="-Wno-error"; \
-wget http://download.netsurf-browser.org/libs/releases/libhubbub-0.3.7-src.tar.gz; \
-tar -xf libhubbub-0.3.7-src.tar.gz; \
-make -C libhubbub-0.3.7 install -j1 Q= PREFIX=/usr/local LIBDIR=lib COMPONENT_TYPE=lib-static
-##rm -rf libhubbub-0.3.7
+wget http://download.netsurf-browser.org/libs/releases/libhubbub-0.3.8-src.tar.gz; \
+tar -xf libhubbub-0.3.8-src.tar.gz; \
+make -C libhubbub-0.3.8 install -j1 Q= PREFIX=/usr/local LIBDIR=lib COMPONENT_TYPE=lib-static
+##rm -rf libhubbub-0.3.8
+
+RUN apk add libpsl-dev libpsl-static
+RUN cd /root; \
+wget http://download.netsurf-browser.org/libs/releases/libcss-0.9.2-src.tar.gz; tar -xf libcss-0.9.2-src.tar.gz ; \
+export CFLAGS="-Wno-error"; \
+make -C libcss-0.9.2 install -j1 Q= PREFIX=/usr/local LIBDIR=lib COMPONENT_TYPE=lib-static
+##rm -rf libcss-0.9.2
 
 RUN cd /root; \
-wget http://download.netsurf-browser.org/libs/releases/libcss-0.9.1-src.tar.gz; tar -xf libcss-0.9.1-src.tar.gz
-ADD libCSS-restrict.diff /root/libCSS-restrict.diff
-RUN cd /root/libcss-0.9.1; patch -p1 < /root/libCSS-restrict.diff; cd .. ;\
 export CFLAGS="-Wno-error"; \
-make -C libcss-0.9.1 install -j1 Q= PREFIX=/usr/local LIBDIR=lib COMPONENT_TYPE=lib-static
-##rm -rf libcss-0.9.1
-
-RUN cd /root; \
-export CFLAGS="-Wno-error"; \
-wget http://download.netsurf-browser.org/libs/releases/libdom-0.4.1-src.tar.gz; \
-tar -xf libdom-0.4.1-src.tar.gz; \
-make -C libdom-0.4.1 install -j1 Q= PREFIX=/usr/local LIBDIR=lib COMPONENT_TYPE=lib-static
-##rm -rf libdom-0.4.1
+wget http://download.netsurf-browser.org/libs/releases/libdom-0.4.2-src.tar.gz; \
+tar -xf libdom-0.4.2-src.tar.gz; \
+make -C libdom-0.4.2 install -j1 Q= PREFIX=/usr/local LIBDIR=lib COMPONENT_TYPE=lib-static
+##rm -rf libdom-0.4.2
 
 ## [*] elinks sources
 # get elinks source
