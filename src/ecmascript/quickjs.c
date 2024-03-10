@@ -28,6 +28,7 @@
 #include "ecmascript/quickjs/console.h"
 #include "ecmascript/quickjs/document.h"
 #include "ecmascript/quickjs/element.h"
+#include "ecmascript/quickjs/event.h"
 #include "ecmascript/quickjs/heartbeat.h"
 #include "ecmascript/quickjs/history.h"
 #include "ecmascript/quickjs/localstorage.h"
@@ -174,6 +175,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	js_localstorage_init(ctx);
 	js_element_init(ctx);
 	js_xhr_init(ctx);
+	js_event_init(ctx);
 
 	interpreter->document_obj = js_document_init(ctx);
 
