@@ -20,10 +20,18 @@
 
 static JSClassID js_event_class_id;
 
+static JSValue js_event_get_property_bubbles(JSContext *ctx, JSValueConst this_val);
+static JSValue js_event_get_property_cancelable(JSContext *ctx, JSValueConst this_val);
+static JSValue js_event_get_property_composed(JSContext *ctx, JSValueConst this_val);
+static JSValue js_event_get_property_defaultPrevented(JSContext *ctx, JSValueConst this_val);
 static JSValue js_event_get_property_type(JSContext *ctx, JSValueConst this_val);
 
 struct eljs_event {
 	char *type_;
+	unsigned int bubbles:1;
+	unsigned int cancelable:1;
+	unsigned int composed:1;
+	unsigned int defaultPrevented:1;
 };
 
 static
@@ -45,8 +53,84 @@ static JSClassDef js_event_class = {
 };
 
 static const JSCFunctionListEntry js_event_proto_funcs[] = {
+	JS_CGETSET_DEF("bubbles",	js_event_get_property_bubbles, NULL),
+	JS_CGETSET_DEF("cancelable",	js_event_get_property_cancelable, NULL),
+	JS_CGETSET_DEF("composed",	js_event_get_property_composed, NULL),
+	JS_CGETSET_DEF("defaultPrevented",	js_event_get_property_defaultPrevented, NULL),
 	JS_CGETSET_DEF("type",	js_event_get_property_type, NULL)
 };
+
+static JSValue
+js_event_get_property_bubbles(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	struct eljs_event *event = (struct eljs_event *)(JS_GetOpaque(this_val, js_event_class_id));
+
+	if (!event) {
+		return JS_NULL;
+	}
+	JSValue r = JS_NewBool(ctx, event->bubbles);
+
+	RETURN_JS(r);
+}
+
+static JSValue
+js_event_get_property_cancelable(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	struct eljs_event *event = (struct eljs_event *)(JS_GetOpaque(this_val, js_event_class_id));
+
+	if (!event) {
+		return JS_NULL;
+	}
+	JSValue r = JS_NewBool(ctx, event->cancelable);
+
+	RETURN_JS(r);
+}
+
+static JSValue
+js_event_get_property_composed(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	struct eljs_event *event = (struct eljs_event *)(JS_GetOpaque(this_val, js_event_class_id));
+
+	if (!event) {
+		return JS_NULL;
+	}
+	JSValue r = JS_NewBool(ctx, event->composed);
+
+	RETURN_JS(r);
+}
+
+static JSValue
+js_event_get_property_defaultPrevented(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	struct eljs_event *event = (struct eljs_event *)(JS_GetOpaque(this_val, js_event_class_id));
+
+	if (!event) {
+		return JS_NULL;
+	}
+	JSValue r = JS_NewBool(ctx, event->defaultPrevented);
+
+	RETURN_JS(r);
+}
 
 static JSValue
 js_event_get_property_type(JSContext *ctx, JSValueConst this_val)
