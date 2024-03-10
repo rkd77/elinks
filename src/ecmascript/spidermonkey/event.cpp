@@ -60,10 +60,17 @@
 
 struct eljs_event {
 	char *type_;
+	unsigned int bubbles:1;
+	unsigned int cancelable:1;
+	unsigned int composed:1;
+	unsigned int defaultPrevented:1;
 };
 
+static bool event_get_property_bubbles(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool event_get_property_cancelable(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool event_get_property_composed(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool event_get_property_defaultPrevented(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool event_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp);
-
 
 static void
 event_finalize(JS::GCContext *op, JSObject *event_obj)
@@ -135,9 +142,117 @@ event_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
 }
 
 JSPropertySpec event_props[] = {
+	JS_PSG("bubbles",	event_get_property_bubbles, JSPROP_ENUMERATE),
+	JS_PSG("cancelable",	event_get_property_cancelable, JSPROP_ENUMERATE),
+	JS_PSG("composed",	event_get_property_composed, JSPROP_ENUMERATE),
+	JS_PSG("defaultPrevented",	event_get_property_defaultPrevented, JSPROP_ENUMERATE),
 	JS_PSG("type",	event_get_property_type, JSPROP_ENUMERATE),
 	JS_PS_END
 };
+
+static bool
+event_get_property_bubbles(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct eljs_event *event = JS::GetMaybePtrFromReservedSlot<struct eljs_event>(hobj, 0);
+
+	if (!event) {
+		return false;
+	}
+	args.rval().setBoolean(event->bubbles);
+
+	return true;
+}
+
+static bool
+event_get_property_cancelable(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct eljs_event *event = JS::GetMaybePtrFromReservedSlot<struct eljs_event>(hobj, 0);
+
+	if (!event) {
+		return false;
+	}
+	args.rval().setBoolean(event->cancelable);
+
+	return true;
+}
+
+static bool
+event_get_property_composed(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct eljs_event *event = JS::GetMaybePtrFromReservedSlot<struct eljs_event>(hobj, 0);
+
+	if (!event) {
+		return false;
+	}
+	args.rval().setBoolean(event->composed);
+
+	return true;
+}
+
+static bool
+event_get_property_defaultPrevented(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct eljs_event *event = JS::GetMaybePtrFromReservedSlot<struct eljs_event>(hobj, 0);
+
+	if (!event) {
+		return false;
+	}
+	args.rval().setBoolean(event->defaultPrevented);
+
+	return true;
+}
 
 static bool
 event_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
