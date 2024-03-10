@@ -5,6 +5,7 @@
 
 extern JSClass event_class;
 extern JSPropertySpec event_props[];
+extern const spidermonkeyFunctionSpec event_funcs[];
 bool event_constructor(JSContext* ctx, unsigned argc, JS::Value* vp);
 
 #endif

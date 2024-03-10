@@ -72,6 +72,8 @@ static bool event_get_property_composed(JSContext *ctx, unsigned int argc, JS::V
 static bool event_get_property_defaultPrevented(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool event_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
+static bool event_preventDefault(JSContext *ctx, unsigned int argc, JS::Value *vp);
+
 static void
 event_finalize(JS::GCContext *op, JSObject *event_obj)
 {
@@ -148,6 +150,11 @@ JSPropertySpec event_props[] = {
 	JS_PSG("defaultPrevented",	event_get_property_defaultPrevented, JSPROP_ENUMERATE),
 	JS_PSG("type",	event_get_property_type, JSPROP_ENUMERATE),
 	JS_PS_END
+};
+
+const spidermonkeyFunctionSpec event_funcs[] = {
+	{ "preventDefault",	event_preventDefault,	0 },
+	{ NULL }
 };
 
 static bool
@@ -250,6 +257,35 @@ event_get_property_defaultPrevented(JSContext *ctx, unsigned int argc, JS::Value
 		return false;
 	}
 	args.rval().setBoolean(event->defaultPrevented);
+
+	return true;
+}
+
+static bool
+event_preventDefault(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct eljs_event *event = JS::GetMaybePtrFromReservedSlot<struct eljs_event>(hobj, 0);
+
+	if (!event) {
+		return false;
+	}
+	if (event->cancelable) {
+		event->defaultPrevented = 1;
+	}
+	args.rval().setUndefined();
 
 	return true;
 }

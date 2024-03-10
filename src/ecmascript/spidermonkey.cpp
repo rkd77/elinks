@@ -289,7 +289,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	event_obj = spidermonkey_InitClass(ctx, global, NULL,
 					&event_class, event_constructor, 0,
 					event_props,
-					NULL,
+					event_funcs,
 					NULL, NULL, "Event");
 
 	if (!event_obj) {
