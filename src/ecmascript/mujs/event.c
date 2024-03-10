@@ -181,6 +181,16 @@ mjs_event_constructor(js_State *J)
 	}
 	event->type_ = null_or_stracpy(js_tostring(J, 1));
 
+	js_getproperty(J, 2, "bubbles");
+	event->bubbles = js_toboolean(J, -1);
+	js_pop(J, 1);
+	js_getproperty(J, 2, "cancelable");
+	event->cancelable = js_toboolean(J, -1);
+	js_pop(J, 1);
+	js_getproperty(J, 2, "composed");
+	event->composed = js_toboolean(J, -1);
+	js_pop(J, 1);
+
 	js_newobject(J);
 	{
 		js_newuserdata(J, "event", event, mjs_event_finalizer);
