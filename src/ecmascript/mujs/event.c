@@ -22,6 +22,8 @@ static void mjs_event_get_property_composed(js_State *J);
 static void mjs_event_get_property_defaultPrevented(js_State *J);
 static void mjs_event_get_property_type(js_State *J);
 
+static void mjs_event_preventDefault(js_State *J);
+
 struct eljs_event {
 	char *type_;
 	unsigned int bubbles:1;
@@ -55,6 +57,7 @@ mjs_push_event(js_State *J, char *type_)
 	js_newobject(J);
 	{
 		js_newuserdata(J, "event", event, mjs_event_finalizer);
+		addmethod(J, "preventDefault", mjs_event_preventDefault, 0);
 		addproperty(J, "bubbles", mjs_event_get_property_bubbles, NULL);
 		addproperty(J, "cancelable", mjs_event_get_property_cancelable, NULL);
 		addproperty(J, "composed", mjs_event_get_property_composed, NULL);
@@ -139,6 +142,24 @@ mjs_event_get_property_type(js_State *J)
 }
 
 static void
+mjs_event_preventDefault(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct eljs_event *event = (struct eljs_event *)js_touserdata(J, 0, "event");
+
+	if (!event) {
+		js_pushnull(J);
+		return;
+	}
+	if (event->cancelable) {
+		event->defaultPrevented = 1;
+	}
+	js_pushundefined(J);
+}
+
+static void
 mjs_event_fun(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -163,6 +184,7 @@ mjs_event_constructor(js_State *J)
 	js_newobject(J);
 	{
 		js_newuserdata(J, "event", event, mjs_event_finalizer);
+		addmethod(J, "preventDefault", mjs_event_preventDefault, 0);
 		addproperty(J, "bubbles", mjs_event_get_property_bubbles, NULL);
 		addproperty(J, "cancelable", mjs_event_get_property_cancelable, NULL);
 		addproperty(J, "composed", mjs_event_get_property_composed, NULL);
