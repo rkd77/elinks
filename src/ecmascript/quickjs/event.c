@@ -26,6 +26,8 @@ static JSValue js_event_get_property_composed(JSContext *ctx, JSValueConst this_
 static JSValue js_event_get_property_defaultPrevented(JSContext *ctx, JSValueConst this_val);
 static JSValue js_event_get_property_type(JSContext *ctx, JSValueConst this_val);
 
+static JSValue js_event_preventDefault(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv);
+
 struct eljs_event {
 	char *type_;
 	unsigned int bubbles:1;
@@ -57,7 +59,8 @@ static const JSCFunctionListEntry js_event_proto_funcs[] = {
 	JS_CGETSET_DEF("cancelable",	js_event_get_property_cancelable, NULL),
 	JS_CGETSET_DEF("composed",	js_event_get_property_composed, NULL),
 	JS_CGETSET_DEF("defaultPrevented",	js_event_get_property_defaultPrevented, NULL),
-	JS_CGETSET_DEF("type",	js_event_get_property_type, NULL)
+	JS_CGETSET_DEF("type",	js_event_get_property_type, NULL),
+	JS_CFUNC_DEF("preventDefault", 0, js_event_preventDefault),
 };
 
 static JSValue
@@ -152,6 +155,25 @@ js_event_get_property_type(JSContext *ctx, JSValueConst this_val)
 	JSValue r = JS_NewString(ctx, event->type_);
 
 	RETURN_JS(r);
+}
+
+static JSValue
+js_event_preventDefault(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	struct eljs_event *event = (struct eljs_event *)(JS_GetOpaque(this_val, js_event_class_id));
+
+	if (!event) {
+		return JS_NULL;
+	}
+	if (event->cancelable) {
+		event->defaultPrevented = 1;
+	}
+	return JS_UNDEFINED;
 }
 
 static JSValue
