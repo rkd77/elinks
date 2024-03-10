@@ -208,6 +208,16 @@ js_event_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueC
 			JS_FreeCString(ctx, str);
 		}
 	}
+
+	if (argc > 1) {
+		JSValue r = JS_GetPropertyStr(ctx, argv[1], "bubbles");
+		event->bubbles = JS_ToBool(ctx, r);
+		r = JS_GetPropertyStr(ctx, argv[1], "cancelable");
+		event->cancelable = JS_ToBool(ctx, r);
+		r = JS_GetPropertyStr(ctx, argv[1], "composed");
+		event->composed = JS_ToBool(ctx, r);
+	}
+
 	JS_SetOpaque(obj, event);
 
 	return obj;
