@@ -28,6 +28,7 @@
 #include "ecmascript/mujs/console.h"
 #include "ecmascript/mujs/document.h"
 #include "ecmascript/mujs/element.h"
+#include "ecmascript/mujs/event.h"
 #include "ecmascript/mujs/history.h"
 #include "ecmascript/mujs/localstorage.h"
 #include "ecmascript/mujs/location.h"
@@ -135,6 +136,7 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	mjs_location_init(J);
 	mjs_document_init(J);
 	mjs_xhr_init(J);
+	mjs_event_init(J);
 
 	return J;
 #if 0
