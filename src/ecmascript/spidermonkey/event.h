@@ -1,0 +1,10 @@
+#ifndef EL__ECMASCRIPT_SPIDERMONKEY_EVENT_H
+#define EL__ECMASCRIPT_SPIDERMONKEY_EVENT_H
+
+#include "ecmascript/spidermonkey/util.h"
+
+extern JSClass event_class;
+extern JSPropertySpec event_props[];
+bool event_constructor(JSContext* ctx, unsigned argc, JS::Value* vp);
+
+#endif

@@ -29,6 +29,7 @@
 #include "ecmascript/spidermonkey.h"
 #include "ecmascript/spidermonkey/console.h"
 #include "ecmascript/spidermonkey/document.h"
+#include "ecmascript/spidermonkey/event.h"
 #include "ecmascript/spidermonkey/form.h"
 #include "ecmascript/spidermonkey/heartbeat.h"
 #include "ecmascript/spidermonkey/history.h"
@@ -146,7 +147,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	JSContext *ctx;
 	JSObject *console_obj, *document_obj, /* *forms_obj,*/ *history_obj,
 	         *statusbar_obj, *menubar_obj, *navigator_obj, *localstorage_obj, *screen_obj,
-	         *xhr_obj;
+	         *xhr_obj, *event_obj;
 
 	assert(interpreter);
 	if (!js_module_init_ok) return NULL;
@@ -284,6 +285,17 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!xhr_obj) {
 		goto release_and_fail;
 	}
+
+	event_obj = spidermonkey_InitClass(ctx, global, NULL,
+					&event_class, event_constructor, 0,
+					event_props,
+					NULL,
+					NULL, NULL, "Event");
+
+	if (!event_obj) {
+		goto release_and_fail;
+	}
+
 
 	JS::SetRealmPrivate(js::GetContextRealm(ctx), interpreter);
 
