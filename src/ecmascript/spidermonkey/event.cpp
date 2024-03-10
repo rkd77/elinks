@@ -138,6 +138,21 @@ event_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
 		event->type_ = jsval_to_string(ctx, args[0]);
 	}
 
+	if (argc > 1) {
+		JS::RootedValue v(ctx);
+		JS::RootedObject v_obj(ctx, &args[1].toObject());
+
+		if (JS_GetProperty(ctx, v_obj, "bubbles", &v)) {
+			event->bubbles = (unsigned int)v.toBoolean();
+		}
+		if (JS_GetProperty(ctx, v_obj, "cancelable", &v)) {
+			event->cancelable = (unsigned int)v.toBoolean();
+		}
+		if (JS_GetProperty(ctx, v_obj, "composed", &v)) {
+			event->composed = (unsigned int)v.toBoolean();
+		}
+	}
+
 	args.rval().setObject(*newObj);
 
 	return true;
