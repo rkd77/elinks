@@ -35,6 +35,7 @@
 #include "ecmascript/quickjs/localstorage.h"
 #include "ecmascript/quickjs/location.h"
 #include "ecmascript/quickjs/mapa.h"
+#include "ecmascript/quickjs/message.h"
 #include "ecmascript/quickjs/navigator.h"
 #include "ecmascript/quickjs/screen.h"
 #include "ecmascript/quickjs/unibar.h"
@@ -178,6 +179,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	js_xhr_init(ctx);
 	js_event_init(ctx);
 	js_keyboardEvent_init(ctx);
+	js_messageEvent_init(ctx);
 
 	interpreter->document_obj = js_document_init(ctx);
 

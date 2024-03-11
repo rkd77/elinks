@@ -7,6 +7,7 @@
 extern "C" {
 #endif
 
+int js_messageEvent_init(JSContext *ctx);
 JSValue get_messageEvent(JSContext *ctx, char *data, char *origin, char *source);
 
 #ifdef __cplusplus

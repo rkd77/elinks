@@ -9,6 +9,8 @@ extern "C" {
 
 struct term_event;
 
+int js_keyboardEvent_init(JSContext *ctx);
+
 JSValue get_keyboardEvent(JSContext *ctx, struct term_event *ev);
 
 #ifdef __cplusplus
