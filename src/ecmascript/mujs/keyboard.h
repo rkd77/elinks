@@ -9,7 +9,9 @@ extern "C" {
 
 struct term_event;
 
-void mjs_push_keyboardEvent(js_State *J, struct term_event *ev);
+void mjs_push_keyboardEvent(js_State *J, struct term_event *ev, const char *type_);
+int mjs_keyboardEvent_init(js_State *J);
+
 
 #ifdef __cplusplus
 }

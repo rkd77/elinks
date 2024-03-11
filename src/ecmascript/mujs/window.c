@@ -110,7 +110,7 @@ mjs_window_get_property_event(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	mjs_push_keyboardEvent(J, NULL);
+	mjs_push_keyboardEvent(J, NULL, "");
 }
 
 static void
