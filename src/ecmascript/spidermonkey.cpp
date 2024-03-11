@@ -36,6 +36,7 @@
 #include "ecmascript/spidermonkey/keyboard.h"
 #include "ecmascript/spidermonkey/location.h"
 #include "ecmascript/spidermonkey/localstorage.h"
+#include "ecmascript/spidermonkey/message.h"
 #include "ecmascript/spidermonkey/navigator.h"
 #include "ecmascript/spidermonkey/screen.h"
 #include "ecmascript/spidermonkey/unibar.h"
@@ -148,7 +149,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	JSContext *ctx;
 	JSObject *console_obj, *document_obj, /* *forms_obj,*/ *history_obj,
 	         *statusbar_obj, *menubar_obj, *navigator_obj, *localstorage_obj, *screen_obj,
-	         *xhr_obj, *event_obj, *keyboardEvent_obj;
+	         *xhr_obj, *event_obj, *keyboardEvent_obj, *messageEvent_obj;
 
 	assert(interpreter);
 	if (!js_module_init_ok) return NULL;
@@ -304,6 +305,16 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 					NULL, NULL, "KeyboardEvent");
 
 	if (!keyboardEvent_obj) {
+		goto release_and_fail;
+	}
+
+	messageEvent_obj = spidermonkey_InitClass(ctx, global, NULL,
+					&messageEvent_class, messageEvent_constructor, 0,
+					messageEvent_props,
+					messageEvent_funcs,
+					NULL, NULL, "MessageEvent");
+
+	if (!messageEvent_obj) {
 		goto release_and_fail;
 	}
 

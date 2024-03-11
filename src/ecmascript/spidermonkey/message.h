@@ -5,6 +5,8 @@
 
 extern JSClass messageEvent_class;
 extern JSPropertySpec messageEvent_props[];
+extern const spidermonkeyFunctionSpec messageEvent_funcs[];
+
 bool messageEvent_constructor(JSContext* ctx, unsigned argc, JS::Value* vp);
 
 JSObject *get_messageEvent(JSContext *ctx, char *data, char *origin, char *source);
