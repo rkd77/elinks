@@ -7,6 +7,7 @@
 extern "C" {
 #endif
 
+int mjs_messageEvent_init(js_State *J);
 void mjs_push_messageEvent(js_State *J, char *data, char *origin, char *source);
 
 #ifdef __cplusplus

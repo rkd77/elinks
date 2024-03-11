@@ -34,6 +34,7 @@
 #include "ecmascript/mujs/localstorage.h"
 #include "ecmascript/mujs/location.h"
 #include "ecmascript/mujs/mapa.h"
+#include "ecmascript/mujs/message.h"
 #include "ecmascript/mujs/navigator.h"
 #include "ecmascript/mujs/screen.h"
 #include "ecmascript/mujs/unibar.h"
@@ -139,6 +140,7 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	mjs_xhr_init(J);
 	mjs_event_init(J);
 	mjs_keyboardEvent_init(J);
+	mjs_messageEvent_init(J);
 
 	return J;
 #if 0
