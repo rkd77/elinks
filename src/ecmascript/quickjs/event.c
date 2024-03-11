@@ -223,7 +223,6 @@ js_event_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueC
 	return obj;
 }
 
-
 static void
 JS_NewGlobalCConstructor2(JSContext *ctx, JSValue func_obj, const char *name, JSValueConst proto)
 {

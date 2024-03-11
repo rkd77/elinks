@@ -31,6 +31,7 @@
 #include "ecmascript/quickjs/event.h"
 #include "ecmascript/quickjs/heartbeat.h"
 #include "ecmascript/quickjs/history.h"
+#include "ecmascript/quickjs/keyboard.h"
 #include "ecmascript/quickjs/localstorage.h"
 #include "ecmascript/quickjs/location.h"
 #include "ecmascript/quickjs/mapa.h"
@@ -176,6 +177,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	js_element_init(ctx);
 	js_xhr_init(ctx);
 	js_event_init(ctx);
+	js_keyboardEvent_init(ctx);
 
 	interpreter->document_obj = js_document_init(ctx);
 
