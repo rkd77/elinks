@@ -33,6 +33,7 @@
 #include "ecmascript/spidermonkey/form.h"
 #include "ecmascript/spidermonkey/heartbeat.h"
 #include "ecmascript/spidermonkey/history.h"
+#include "ecmascript/spidermonkey/keyboard.h"
 #include "ecmascript/spidermonkey/location.h"
 #include "ecmascript/spidermonkey/localstorage.h"
 #include "ecmascript/spidermonkey/navigator.h"
@@ -147,7 +148,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	JSContext *ctx;
 	JSObject *console_obj, *document_obj, /* *forms_obj,*/ *history_obj,
 	         *statusbar_obj, *menubar_obj, *navigator_obj, *localstorage_obj, *screen_obj,
-	         *xhr_obj, *event_obj;
+	         *xhr_obj, *event_obj, *keyboardEvent_obj;
 
 	assert(interpreter);
 	if (!js_module_init_ok) return NULL;
@@ -296,6 +297,15 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 		goto release_and_fail;
 	}
 
+	keyboardEvent_obj = spidermonkey_InitClass(ctx, global, NULL,
+					&keyboardEvent_class, keyboardEvent_constructor, 0,
+					keyboardEvent_props,
+					keyboardEvent_funcs,
+					NULL, NULL, "KeyboardEvent");
+
+	if (!keyboardEvent_obj) {
+		goto release_and_fail;
+	}
 
 	JS::SetRealmPrivate(js::GetContextRealm(ctx), interpreter);
 
