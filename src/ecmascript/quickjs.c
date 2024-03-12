@@ -26,6 +26,7 @@
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/console.h"
+#include "ecmascript/quickjs/customevent.h"
 #include "ecmascript/quickjs/document.h"
 #include "ecmascript/quickjs/element.h"
 #include "ecmascript/quickjs/event.h"
@@ -180,6 +181,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	js_event_init(ctx);
 	js_keyboardEvent_init(ctx);
 	js_messageEvent_init(ctx);
+	js_customEvent_init(ctx);
 
 	interpreter->document_obj = js_document_init(ctx);
 
