@@ -26,6 +26,7 @@
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/mujs.h"
 #include "ecmascript/mujs/console.h"
+#include "ecmascript/mujs/customevent.h"
 #include "ecmascript/mujs/document.h"
 #include "ecmascript/mujs/element.h"
 #include "ecmascript/mujs/event.h"
@@ -141,6 +142,7 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	mjs_event_init(J);
 	mjs_keyboardEvent_init(J);
 	mjs_messageEvent_init(J);
+	mjs_customEvent_init(J);
 
 	return J;
 #if 0
