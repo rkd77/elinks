@@ -271,24 +271,28 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 		initialised = 1;
 	}
 
-	if (!document->dom && buffer && buffer->source) {
-		struct string head;
-
-		if (init_string(&head)) {
-			if (cached->head) {
-				add_to_string(&head, cached->head);
-			}
-			scan_http_equiv(buffer->source, buffer->source + buffer->length, &head, NULL, document->cp);
-			mem_free_set(&cached->head, head.source);
-		}
-	}
-
 	if (!document->dom) {
 		(void)get_convert_table(cached->head ?: (char *)"", document->options.cp,
 					  document->options.assume_cp,
 					  &document->cp,
 					  &document->cp_status,
 					  document->options.hard_assume);
+
+		if (document->cp_status == CP_STATUS_ASSUMED) {
+			if (buffer && buffer->source) {
+				struct string head;
+
+				if (init_string(&head)) {
+					scan_http_equiv(buffer->source, buffer->source + buffer->length, &head, NULL, document->cp);
+					(void)get_convert_table(head.source, document->options.cp,
+					  document->options.assume_cp,
+					  &document->cp,
+					  &document->cp_status,
+					  document->options.hard_assume);
+					done_string(&head);
+				}
+			}
+		}
 		document->dom = document_parse(document, buffer);
 	}
 	dump_xhtml(cached, document, 0);
