@@ -5,6 +5,8 @@
 #     cat .links/html.cfg .links/links.cfg .links/user.cfg |
 #       conf-links2elinks.pl > .config/elinks/elinks.conf
 
+use Array::Base +1;
+
 eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 			# this emulates #! processing on NIH machines.
@@ -13,7 +15,6 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
 eval '$'.$1.'$2;' while $ARGV[0] =~ /^([A-Za-z_0-9]+=)(.*)/ && shift;
 			# process any FOO=bar switches
 
-$[ = 1;			# set array base to 1
 $, = ' ';		# set output field separator
 $\ = "\n";		# set output record separator
 
@@ -148,7 +149,8 @@ while (<>) {
 	print 'set protocol.http.user_agent = ' . $Fld[2];
     }
     if ($Fld[1] eq 'terminal') {
-	$Fld[2] = substr($Fld[2], 2, length($Fld[2]) - 2);
+	$Fld[2] = substr($Fld[2], 1, length($Fld[2]) - 2);
+
 	print 'set terminal.' . $Fld[2] . '.type = ' . $Fld[4];
 	print 'set terminal.' . $Fld[2] . '.m11_hack = ' . $Fld[4];
 	print 'set terminal.' . $Fld[2] . '.utf_8_io = ' . (($Fld[7] eq '') ? '0' : '1');
@@ -158,23 +160,25 @@ while (<>) {
 	print 'set terminal.' . $Fld[2] . '.charset = "' . $Fld[6] . '"';
     }
     if ($Fld[1] eq 'extension') {
-	$num_exts = (@ext = split(/, */, substr($Fld[2], 2, length($Fld[2]) - 2), 9999));
+	$num_exts = (@ext = split(/, */, substr($Fld[2], 1, length($Fld[2]) - 2), 9999));
+
 	for ($i = $num_exts; $i; --$i) {
 	    $ext[$i] =~ s/\./*/g;
 	    print 'set mime.extension.' . $ext[$i] . ' = ' . $Fld[3];
 	}
     }
     if ($Fld[1] eq 'association') {
-	$pos = length($Fld[1]) + 2;
+	$pos = length($Fld[1]) + 1;
 	$line = $_;
 
 	$name = &get_token();
-	$name = substr($name, 2, length($name) - 2);
+
+	$name = substr($name, 1, length($name) - 2);
 	$name =~ s/[ \t]/_/g;
-	$name =~ s/[^a-zA-Z0-9_]/-/g;
+	$name =~ s/[^a-zA-Z0-9_]/\./g;
 
 	$mimelist = &get_token();
-	$mimelist = substr($mimelist, 2, length($mimelist) - 2);
+	$mimelist = substr($mimelist, 1, length($mimelist) - 2);
 	$mimelist =~ s/\./*/g;
 	$mimelist =~ s/\//./g;
 	$num_mimetypes = (@mimetype = split(/, */, $mimelist, 9999));
