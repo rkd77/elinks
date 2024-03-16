@@ -175,7 +175,7 @@ while (<>) {
 
 	$name = substr($name, 1, length($name) - 2);
 	$name =~ s/[ \t]/_/g;
-	$name =~ s/[^a-zA-Z0-9_]/\./g;
+	$name =~ s/[^a-zA-Z0-9_]/-/g;
 
 	$mimelist = &get_token();
 	$mimelist = substr($mimelist, 1, length($mimelist) - 2);
