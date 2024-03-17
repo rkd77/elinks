@@ -1272,10 +1272,8 @@ select_loop(void (*init)(void))
 
 		has_timer = get_next_timer_time(&t);
 		if (!w_max && !has_timer) break;
-		critical_section = 1;
 
 		if (check_signals()) {
-			critical_section = 0;
 			continue;
 		}
 #if 0
@@ -1309,8 +1307,6 @@ select_loop(void (*init)(void))
 			 * might change errno.  */
 			const int errno_from_select = errno;
 
-			critical_section = 0;
-			uninstall_alarm();
 			if (errno_from_select != EINTR) {
 				ERROR(gettext("The call to %s failed: %d (%s)"),
 				      "select()", errno_from_select, (char *) strerror(errno_from_select));
@@ -1322,8 +1318,6 @@ select_loop(void (*init)(void))
 		}
 
 		select_errors = 0;
-		critical_section = 0;
-		uninstall_alarm();
 		check_signals();
 		/*printf("sel: %d\n", n);*/
 		check_timers(&last_time);

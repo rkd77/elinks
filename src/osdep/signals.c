@@ -245,9 +245,6 @@ struct signal_info {
 };
 
 static struct signal_info signal_info[NUM_SIGNALS];
-volatile int critical_section = 0;
-
-static void check_for_select_race(void);
 
 /* TODO: In order to gain better portability, we should use signal() instead.
  * Highest care should be given to careful watching of which signals are
@@ -276,7 +273,6 @@ got_signal(int sig)
 	}
 
 	s->mask = 1;
-	check_for_select_race();
 
 	if (can_write(signal_pipe[1])) {
 		int wr;
@@ -323,41 +319,6 @@ install_signal_handler(int sig, void (*fn)(void *), void *data, int critical)
 	signal(sig, handler);
 #endif
 }
-
-static volatile int pending_alarm = 0;
-
-#ifdef SIGALRM
-static void
-alarm_handler(void *x)
-{
-	pending_alarm = 0;
-	check_for_select_race();
-}
-#endif
-
-static void
-check_for_select_race(void)
-{
-	if (critical_section) {
-#ifdef SIGALRM
-		install_signal_handler(SIGALRM, alarm_handler, NULL, 1);
-#endif
-		pending_alarm = 1;
-#ifdef HAVE_ALARM
-		alarm(1);
-#endif
-	}
-}
-
-void
-uninstall_alarm(void)
-{
-	pending_alarm = 0;
-#ifdef HAVE_ALARM
-	alarm(0);
-#endif
-}
-
 
 #ifdef SIGCHLD
 static void
