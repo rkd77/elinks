@@ -522,6 +522,9 @@ mcode_or_die(const char *where, CURLMcode code)
 	}
 }
 
+#endif
+
+#ifdef CONFIG_LIBCURL
 /* Called by libevent when our timeout expires */
 static void
 timer_cb_select(void *userp)
