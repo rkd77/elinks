@@ -524,7 +524,7 @@ mcode_or_die(const char *where, CURLMcode code)
 
 /* Called by libevent when our timeout expires */
 static void
-timer_cb(void *userp)
+timer_cb_select(void *userp)
 {
 	GlobalInfo *g = (GlobalInfo *)userp;
 	CURLMcode rc;
@@ -536,7 +536,7 @@ timer_cb(void *userp)
 
 /* Update the event timer after curl_multi library calls */
 static int
-multi_timer_cb(CURLM *multi, long timeout_ms, GlobalInfo *g)
+multi_timer_cb_select(CURLM *multi, long timeout_ms, GlobalInfo *g)
 {
 	(void)multi;
 	//fprintf(stderr, "multi_timer_cb: Setting timeout to %ld ms\n", timeout_ms);
@@ -551,14 +551,14 @@ multi_timer_cb(CURLM *multi, long timeout_ms, GlobalInfo *g)
 	if (timeout_ms == -1) {
 		kill_timer(&g->tim);
 	} else { /* includes timeout zero */
-		install_timer(&g->tim, timeout_ms, timer_cb, g);
+		install_timer(&g->tim, timeout_ms, timer_cb_select, g);
 	}
 
 	return 0;
 }
 
 static void
-event_read_cb(void *userp)
+event_read_cb_select(void *userp)
 {
 	SockInfo *f = (SockInfo *)userp;
 	GlobalInfo *g = (GlobalInfo*)f->global;
@@ -572,7 +572,7 @@ event_read_cb(void *userp)
 }
 
 static void
-event_write_cb(void *userp)
+event_write_cb_select(void *userp)
 {
 	SockInfo *f = (SockInfo *)userp;
 	GlobalInfo *g = (GlobalInfo*)f->global;
@@ -587,7 +587,7 @@ event_write_cb(void *userp)
 
 /* Clean up the SockInfo structure */
 static void
-remsock(SockInfo *f)
+remsock_select(SockInfo *f)
 {
 	//fprintf(stderr, "remsock f=%p\n", f);
 	if (f) {
@@ -600,7 +600,7 @@ remsock(SockInfo *f)
 
 /* Assign information to a SockInfo structure */
 static void
-setsock(SockInfo *f, curl_socket_t s, CURL *e, int act, GlobalInfo *g)
+setsock_select(SockInfo *f, curl_socket_t s, CURL *e, int act, GlobalInfo *g)
 {
 	int in = act & CURL_POLL_IN;
 	int out = act & CURL_POLL_OUT;
@@ -609,24 +609,24 @@ setsock(SockInfo *f, curl_socket_t s, CURL *e, int act, GlobalInfo *g)
 	f->action = act;
 	f->easy = e;
 
-	set_handlers(s + SOCK_SHIFT, in ? event_read_cb : NULL, out ? event_write_cb : NULL, NULL, f);
+	set_handlers(s + SOCK_SHIFT, in ? event_read_cb_select : NULL, out ? event_write_cb_select : NULL, NULL, f);
 }
 
 /* Initialize a new SockInfo structure */
 static void
-addsock(curl_socket_t s, CURL *easy, int action, GlobalInfo *g)
+addsock_select(curl_socket_t s, CURL *easy, int action, GlobalInfo *g)
 {
 	//fprintf(stderr, "addsock easy=%p\n", easy);
 
 	SockInfo *fdp = mem_calloc(1, sizeof(SockInfo));
 	fdp->global = g;
-	setsock(fdp, s, easy, action, g);
+	setsock_select(fdp, s, easy, action, g);
 	curl_multi_assign(g->multi, s, fdp);
 }
 
 /* CURLMOPT_SOCKETFUNCTION */
 static int
-sock_cb(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp)
+sock_cb_select(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp)
 {
 	GlobalInfo *g = (GlobalInfo*) cbp;
 	SockInfo *fdp = (SockInfo*) sockp;
@@ -636,14 +636,14 @@ sock_cb(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp)
 
 	if (what == CURL_POLL_REMOVE) {
 		//fprintf(stderr, "\n");
-		remsock(fdp);
+		remsock_select(fdp);
 	} else {
 		if (!fdp) {
 			//fprintf(stderr, "Adding data: %s\n", whatstr[what]);
-			addsock(s, e, what, g);
+			addsock_select(s, e, what, g);
 		} else {
 			//fprintf(stderr, "Changing action from %s to %s\n", whatstr[fdp->action], whatstr[what]);
-			setsock(fdp, s, e, what, g);
+			setsock_select(fdp, s, e, what, g);
 		}
 	}
 
@@ -1244,14 +1244,12 @@ select_loop(void (*init)(void))
 		g.multi = curl_multi_init();
 
 		/* setup the generic multi interface options we want */
-		curl_multi_setopt(g.multi, CURLMOPT_SOCKETFUNCTION, sock_cb);
+		curl_multi_setopt(g.multi, CURLMOPT_SOCKETFUNCTION, sock_cb_select);
 		curl_multi_setopt(g.multi, CURLMOPT_SOCKETDATA, &g);
-		curl_multi_setopt(g.multi, CURLMOPT_TIMERFUNCTION, multi_timer_cb);
+		curl_multi_setopt(g.multi, CURLMOPT_TIMERFUNCTION, multi_timer_cb_select);
 		curl_multi_setopt(g.multi, CURLMOPT_TIMERDATA, &g);
 		/* we do not call any curl_multi_socket*() function yet as we have no handles added! */
 #endif
-
-
 
 	while (!program.terminate) {
 		struct timeval timeout = { 0, 0 };
