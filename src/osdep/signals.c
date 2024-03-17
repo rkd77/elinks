@@ -80,8 +80,9 @@ sig_tstp(struct terminal *term)
 	if (master_pid) {
 		pid_t newpid = fork();
 		if (!newpid) {
+			int r;
 			sleep(1);
-			kill(pid, SIGCONT);
+			EINTRLOOP(r, kill(pid, SIGCONT));
 			/* Use _exit() rather than exit(), so that atexit
 			 * functions are not called, and stdio output buffers
 			 * are not flushed.  Any such things must have been
