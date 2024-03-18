@@ -164,7 +164,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 	struct fragment *fragment = get_cache_fragment(cached);
 	char *url = struri(cached->uri);
 
-	if (my_perl && ses && url && cached->length && *fragment->data)
+	if (my_perl && url && cached->length && *fragment->data)
 		do_script_hook_pre_format_html(url, cached, fragment);
 
 	return EVENT_HOOK_STATUS_NEXT;
