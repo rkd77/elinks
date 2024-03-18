@@ -1149,7 +1149,6 @@ select_loop(void (*init)(void))
 	set_handlers(signal_pipe[0], clear_events_ptr, NULL, NULL, (void *)(intptr_t)signal_pipe[0]);
 #endif
 	init();
-	check_bottom_halves();
 
 #ifdef USE_LIBEVENT
 	enable_libevent();
@@ -1206,6 +1205,7 @@ select_loop(void (*init)(void))
 
 		/* we do not call any curl_multi_socket*() function yet as we have no handles added! */
 #endif
+		check_bottom_halves();
 		while (!program.terminate) {
 			check_signals();
 			if (1 /*(!F)*/) {
@@ -1253,6 +1253,7 @@ select_loop(void (*init)(void))
 		curl_multi_setopt(g.multi, CURLMOPT_TIMERDATA, &g);
 		/* we do not call any curl_multi_socket*() function yet as we have no handles added! */
 #endif
+		check_bottom_halves();
 
 	while (!program.terminate) {
 		struct timeval timeout = { 0, 0 };
