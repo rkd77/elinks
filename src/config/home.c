@@ -39,6 +39,127 @@ strip_trailing_dir_sep(char *path)
 	path[i + 1] = 0;
 }
 
+#if defined _WIN32 || defined __WIN32__ || defined __EMX__ || defined __DJGPP__
+  /* Win32, OS/2, DOS */
+#define HAS_DEVICE(P) (isasciialpha((P)[0]) && (P)[1] == ':')
+#define IS_ABSOLUTE_PATH(P) (dir_sep((P)[0]) || HAS_DEVICE (P))
+#define IS_PATH_WITH_DIR(P) (strchr ((const char *)(P), '/') || strchr ((const char *)(P), '\\') || HAS_DEVICE (P))
+#else
+  /* Unix */
+#define IS_ABSOLUTE_PATH(P) dir_sep((P)[0])
+#define IS_PATH_WITH_DIR(P) strchr ((const char *)(P), '/')
+#endif
+
+static char *
+path_skip_root(const char *file_name)
+{
+#if defined _WIN32 || defined __WIN32__ || defined __EMX__ || defined __DJGPP__
+	/* Skip \\server\share or //server/share */
+
+	if (dir_sep(file_name[0]) && dir_sep(file_name[1]) && file_name[2] && !dir_sep(file_name[2])) {
+		char *p = strchr (file_name + 2, CHAR_DIR_SEP);
+
+#ifdef CONFIG_WIN32
+		{
+			char *q = strchr (file_name + 2, '/');
+
+			if (p == NULL || (q != NULL && q < p)) {
+				p = q;
+			}
+		}
+#endif
+		if (p && p > file_name + 2 && p[1]) {
+			file_name = p + 1;
+
+			while (file_name[0] && !dir_sep(file_name[0])) {
+				file_name++;
+			}
+			/* Possibly skip a backslash after the share name */
+
+			if (dir_sep(file_name[0])) {
+				file_name++;
+			}
+			return (char *)file_name;
+		}
+	}
+#endif
+
+	/* Skip initial slashes */
+	if (dir_sep(file_name[0])) {
+		while (dir_sep(file_name[0])) {
+			file_name++;
+		}
+		return (char *)file_name;
+	}
+
+#if defined _WIN32 || defined __WIN32__ || defined __EMX__ || defined __DJGPP__
+	/* Skip X:\ */
+
+	if (HAS_DEVICE(file_name) && dir_sep(file_name[2])) {
+		return (char *)file_name + 3;
+	}
+#endif
+	return NULL;
+}
+
+static int
+mkdir_with_parents(const char *pathname, mode_t mode)
+{
+	char *fn = stracpy(pathname);
+	char *p;
+
+	if (!fn) {
+		return -1;
+	}
+
+	if (IS_ABSOLUTE_PATH(fn)) {
+		p = path_skip_root(fn);
+	} else {
+		p = fn;
+	}
+
+	do {
+		struct stat st;
+		while (*p && !dir_sep(*p)) {
+			p++;
+		}
+
+		if (!*p) {
+			p = NULL;
+		} else {
+			*p = '\0';
+		}
+
+		if (stat(fn, &st)) {
+			if (mkdir(fn, mode) == -1 && errno != EEXIST) {
+				int errno_save = errno;
+
+				if (errno != ENOENT || !p) {
+					mem_free(fn);
+					errno = errno_save;
+					return -1;
+				}
+			}
+		} else {
+			if (!S_ISDIR(st.st_mode)) {
+				mem_free(fn);
+				errno = ENOTDIR;
+				return -1;
+			}
+		}
+
+		if (p) {
+			*p++ = CHAR_DIR_SEP;
+
+			while (*p && dir_sep(*p)) {
+				p++;
+			}
+		}
+	} while (p);
+	mem_free(fn);
+	return 0;
+}
+
 static char *
 test_confdir(const char *home, const char *path,
 	     char *error_message)
@@ -69,7 +190,9 @@ test_confdir(const char *home, const char *path,
 #endif
 			return confdir;
 		}
-
+		if (!mkdir_with_parents(confdir, 0700)) {
+			return confdir;
+		}
 	} else if (S_ISDIR(st.st_mode)) {
 		first_use = 0;
 		return confdir;
