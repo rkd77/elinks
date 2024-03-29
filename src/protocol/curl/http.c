@@ -196,7 +196,6 @@ do_http(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_PRIVATE, conn);
 		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-		curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, my_fwrite_header);
 		curl_easy_setopt(curl, CURLOPT_ACCEPT_ENCODING, "");
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 0L);
 		curl_easy_setopt(curl, CURLOPT_RESUME_FROM_LARGE, offset);
