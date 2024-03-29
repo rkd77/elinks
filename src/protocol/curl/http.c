@@ -381,6 +381,8 @@ http_curl_got_header(void *stream, void *buf, size_t len)
 		}
 		mem_free_set(&conn->cached->head, memacpy(http->headers.source, http->headers.length));
 		mem_free_set(&conn->cached->content_type, NULL);
+		done_string(&http->headers);
+		init_string(&http->headers);
 	}
 }
 
