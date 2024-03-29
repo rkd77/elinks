@@ -249,6 +249,31 @@ do_http(struct connection *conn)
 			curl_easy_setopt(curl, CURLOPT_PASSWORD, auth->password);
 		}
 
+		optstr = get_opt_str("protocol.http.accept_language", NULL);
+		if (optstr[0]) {
+			struct string acclang;
+			if (init_string(&acclang)) {
+				add_to_string(&acclang, "Accept-Language: ");
+				add_to_string(&acclang, optstr);
+				http->list = curl_slist_append(http->list, acclang.source);
+				done_string(&acclang);
+			}
+		}
+#ifdef CONFIG_NLS
+		else if (get_opt_bool("protocol.http.accept_ui_language", NULL)) {
+			const char *code = language_to_iso639(current_language);
+
+			if (code) {
+				struct string acclang;
+				if (init_string(&acclang)) {
+					add_to_string(&acclang, "Accept-Language: ");
+					add_to_string(&acclang, code);
+					http->list = curl_slist_append(http->list, acclang.source);
+					done_string(&acclang);
+				}
+			}
+		}
+#endif
 		if (conn->uri->post) {
 			char *postend = strchr(conn->uri->post, '\n');
 			char *post = postend ? postend + 1 : conn->uri->post;
@@ -303,8 +328,11 @@ do_http(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_NOBODY, 0L);
 		curl_easy_setopt(curl, CURLOPT_HTTP_VERSION, (long)CURL_HTTP_VERSION_3);
 
-		if (http->is_post) {
+		if (http->list) {
 			curl_easy_setopt(curl, CURLOPT_HTTPHEADER, http->list);
+		}
+
+		if (http->is_post) {
 			curl_easy_setopt(curl, CURLOPT_POST, 1L);
 			curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE_LARGE, http->post.total_upload_length);
 			curl_easy_setopt(curl, CURLOPT_READDATA, conn);
