@@ -905,7 +905,21 @@ fi
 # Check for libcss
 # ===================================================================
 
+AC_ARG_WITH([libcss],
+	[AS_HELP_STRING([--with-libcss],
+		[compile with libcss])])
+
 CONFIG_LIBCSS=
+
+case "$with_libcss" in
+	"" | no)
+		;;
+	yes)
+		CONFIG_LIBDOM=yes
+		;;
+	*)
+		;;
+esac
 
 if test "x$CONFIG_LIBDOM" = xyes; then
 	LIBCSS_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libcss)"
