@@ -467,7 +467,7 @@ def load_sections(sections, fname, dir=None, namepat=NAME_RE):
     if not os.path.isfile(fname):
         return
     lines = open(fname).readlines()
-    reo = re.compile(r'^\[(?P<section>'+namepat+')\]\s*$')
+    reo = re.compile(r'^\[(?P<section>'+namepat+r')\]\s*$')
     section,contents = '',[]
     for line in lines:
         if line and line[0] == '#': # Skip comment lines.
@@ -1172,9 +1172,9 @@ class Document:
             return
         s = s.strip()
         mo = re.match(r'^(?P<name1>[^<>\s]+)'
-                '(\s+(?P<name2>[^<>\s]+))?'
-                '(\s+(?P<name3>[^<>\s]+))?'
-                '(\s+<(?P<email>\S+)>)?$',s)
+                r'(\s+(?P<name2>[^<>\s]+))?'
+                r'(\s+(?P<name3>[^<>\s]+))?'
+                r'(\s+<(?P<email>\S+)>)?$',s)
         if not mo:
             error('malformed author line')
             return
@@ -1239,7 +1239,7 @@ class Header:
                 if s:
                     # Match RCS/CVS $Id$ marker format.
                     mo = re.match(r'^\$Id: \S+ (?P<revision>\S+)'
-                        ' (?P<date>\S+) \S+ \S+ \S+ \$$',s)
+                        r' (?P<date>\S+) \S+ \S+ \S+ \$$',s)
                     if not mo:
                         # Match AsciiDoc revision,date format.
                         mo = re.match(r'^\D*(?P<revision>.*?),(?P<date>.+)$',s)
@@ -2697,7 +2697,7 @@ class Tables(AbstractBlocks):
                 + r'(\d*|' + re.escape(b.fillchar) + r'*)' \
                 + r')+' \
                 + re.escape(b.fillchar) + r'+' \
-                + '([\d\.]*)$'
+                + r'([\d\.]*)$'
             delimiters.append(b.delimiter)
             if not b.headrow:
                 b.headrow = b.bodyrow
