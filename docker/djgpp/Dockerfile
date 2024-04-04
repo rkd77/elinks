@@ -5,17 +5,17 @@
 # [*] base system
 
 # get latest fedora
-FROM fedora:38
+FROM fedora:39
 
 # prepare system
 RUN dnf -y update && dnf -y install bash wget \
   rsync vim screen git make automake meson unzip cmake patch upx gcc p7zip
 
-RUN cd /root; wget http://ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-12.2.0/djcross-gcc-12.2.0-1ap.x86_64.rpm ; \
-wget http://ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-12.2.0/djcross-gcc-c++-12.2.0-1ap.x86_64.rpm ; \
-wget http://ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-12.2.0/djcross-gcc-tools-12.2.0-1ap.x86_64.rpm ; \
-wget http://ftp.delorie.com/pub/djgpp/rpms/djcross-binutils-2.34-1ap.x86_64.rpm ; \
-wget http://ftp.delorie.com/pub/djgpp/rpms/djcrx-2.05-5.x86_64.rpm ; \
+RUN cd /root; wget http://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-12.2.0/djcross-gcc-12.2.0-1ap.x86_64.rpm ; \
+wget http://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-12.2.0/djcross-gcc-c++-12.2.0-1ap.x86_64.rpm ; \
+wget http://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-12.2.0/djcross-gcc-tools-12.2.0-1ap.x86_64.rpm ; \
+wget http://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/rpms/djcross-binutils-2.34-1ap.x86_64.rpm ; \
+wget http://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/rpms/djcrx-2.05-5.x86_64.rpm ; \
 rpm -Uhv *.rpm
 
 # create user

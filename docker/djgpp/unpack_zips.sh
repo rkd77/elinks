@@ -2,16 +2,16 @@ cd
 mkdir -p lib/pkgconfig
 mkdir zip
 cd zip
-wget http://ftp.delorie.com/pub/djgpp/current/v2tk/expat20br2.zip
-wget http://ftp.delorie.com/pub/djgpp/current/v2tk/wat3211b.zip
-wget http://ftp.delorie.com/pub/djgpp/current/v2tk/zlb13b.zip
-wget http://ftp.delorie.com/pub/djgpp/current/v2apps/xz-525a.zip
-wget http://ftp.delorie.com/pub/djgpp/current/v2apps/bz2-108a.zip
+wget http://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/current/v2tk/expat20br2.zip
+wget http://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/current/v2tk/wat3211b.zip
+wget http://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/current/v2tk/zlb13b.zip
+wget http://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/current/v2apps/xz-525a.zip
+wget http://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/current/v2apps/bz2-108a.zip
 wget https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.3/apps/sqlite.zip
-wget http://ftp.delorie.com/pub/djgpp/current/v2gnu/licv116b.zip
-wget http://ftp.delorie.com/pub/djgpp/current/v2gnu/lus0910b.zip
-wget http://ftp.delorie.com/pub/djgpp/current/v2tk/lua522b.zip
-wget http://ftp.delorie.com/pub/djgpp/current/v2gnu/rdln80b.zip
+wget http://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/current/v2gnu/licv116b.zip
+wget http://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/current/v2gnu/lus0910b.zip
+wget http://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/current/v2tk/lua522b.zip
+wget http://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/current/v2gnu/rdln80b.zip
 wget http://mik.dyndns.pro/dos-stuff/bin/misc-dev.7z
 
 mkdir tmp; unzip expat20br2.zip -d tmp; cp -a tmp/include $HOME/; cp -a tmp/lib $HOME/; rm -rf tmp
