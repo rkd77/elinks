@@ -70,6 +70,8 @@
 #define OFFT_MAX INT_MAX
 #elif SIZEOF_OFF_T == SIZEOF_SHORT
 #define OFFT_MAX SHRT_MAX
+#else
+#define OFFT_MAX LONG_MAX
 #endif
 #endif
 
