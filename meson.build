@@ -144,7 +144,12 @@ conf_data.set('CONFIG_ECMASCRIPT_SMJS_HEARTBEAT', true)
 
 conf_data.set('CONFIG_SCRIPTING', true)
 
-system = host_machine.system()
+if get_option('msys2')
+    system = 'msys2'
+else
+    system = host_machine.system()
+endif
+
 if system == 'haiku'
     conf_data.set('CONFIG_OS_BEOS', true)
 else
@@ -347,15 +352,15 @@ if compiler.has_header('term.h')
     conf_data.set('HAVE_TERM_H', 1)
 endif
 
-if compiler.has_header('windows.h')
+if conf_data.get('CONFIG_OS_WIN32') and compiler.has_header('windows.h')
     conf_data.set('HAVE_WINDOWS_H', 1)
 endif
 
-if compiler.has_header('winsock2.h')
+if conf_data.get('CONFIG_OS_WIN32') and compiler.has_header('winsock2.h')
     conf_data.set('HAVE_WINSOCK2_H', 1)
 endif
 
-if compiler.has_header('ws2tcpip.h')
+if conf_data.get('CONFIG_OS_WIN32') and compiler.has_header('ws2tcpip.h')
     conf_data.set('HAVE_WS2TCPIP_H', 1)
 endif
 
@@ -365,7 +370,7 @@ deps = []
 if conf_data.get('CONFIG_GZIP')
     zdeps = dependency('zlib', static: st, required: false)
     if not zdeps.found()
-        zdeps = compiler.find_library('z', static: st, dirs: [get_option('prefix')+'/lib', '/usr/local/lib'])
+        zdeps = compiler.find_library('z', static: st, dirs: [get_option('prefix')+'/lib'])
     endif
     if zdeps.found()
         deps += zdeps
@@ -409,7 +414,7 @@ ssldeps = []
 if conf_data.get('CONFIG_OPENSSL')
     ssldeps = dependency('openssl', static: st, required: false)
     if not ssldeps.found()
-        ssldeps = compiler.find_library('ssl', static: st, dirs: [get_option('prefix')+'/lib', '/usr/local/lib'])
+        ssldeps = compiler.find_library('ssl', static: st, dirs: [get_option('prefix')+'/lib'])
     endif
     deps += ssldeps
     conf_data.set('USE_OPENSSL', true)
@@ -461,7 +466,7 @@ endif
 if conf_data.get('CONFIG_BZIP2')
     bz2deps = dependency('bzip2', static: st, required: false)
     if not bz2deps.found()
-        bz2deps = compiler.find_library('bz2', static: st, dirs: [get_option('prefix')+'/lib', '/usr/local/lib'])
+        bz2deps = compiler.find_library('bz2', static: st, dirs: [get_option('prefix')+'/lib'])
     endif
     deps += bz2deps
 endif
@@ -482,7 +487,7 @@ curldeps = false
 if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or conf_data.get('CONFIG_MUJS')
     curldeps = dependency('libcurl', static: st, required: false)
     if not curldeps.found()
-        curldeps = compiler.find_library('curl', static: st, dirs: [get_option('prefix')+'/lib', '/usr/local/lib'])
+        curldeps = compiler.find_library('curl', static: st, dirs: [get_option('prefix')+'/lib'])
     endif
     if curldeps.found()
         deps += curldeps
@@ -493,7 +498,7 @@ endif
 if not conf_data.get('CONFIG_LIBCURL') and get_option('libcurl')
     curldeps = dependency('libcurl', static: st, required: false)
     if not curldeps.found()
-        curldeps = compiler.find_library('curl', static: st, dirs: [get_option('prefix')+'/lib', '/usr/local/lib'])
+        curldeps = compiler.find_library('curl', static: st, dirs: [get_option('prefix')+'/lib'])
     endif
     if curldeps.found()
         deps += curldeps
@@ -545,7 +550,7 @@ endif
 if conf_data.get('CONFIG_SCRIPTING_LUA')
     luadeps = dependency(luapkg, static: st, required: false)
     if not luadeps.found()
-        luadeps = compiler.find_library(luapkg, static: st, dirs: [get_option('prefix')+'/lib','/usr/local/lib'])
+        luadeps = compiler.find_library(luapkg, static: st, dirs: [get_option('prefix')+'/lib'])
     endif
     deps += luadeps
 endif
@@ -553,7 +558,7 @@ endif
 if conf_data.get('CONFIG_XBEL_BOOKMARKS')
     expatdeps = dependency('expat', static: st, required: false)
     if not expatdeps.found()
-        expatdeps = compiler.find_library('expat', static: st, dirs: [get_option('prefix')+'/lib','/usr/local/lib'])
+        expatdeps = compiler.find_library('expat', static: st, dirs: [get_option('prefix')+'/lib'])
     endif
     deps += expatdeps
 endif
@@ -624,7 +629,7 @@ endif
 if conf_data.get('CONFIG_QUICKJS')
     quickjsdeps = compiler.find_library('quickjs', static: st, required: false)
     if not quickjsdeps.found()
-        quickjsdeps = compiler.find_library('quickjs/libquickjs', static: true, dirs: [get_option('prefix')+'/lib','/usr/local/lib'])
+        quickjsdeps = compiler.find_library('quickjs/libquickjs', static: true, dirs: [get_option('prefix')+'/lib'])
     endif
     deps += quickjsdeps
     deps += dep_atomic
@@ -653,7 +658,7 @@ if conf_data.get('CONFIG_LIBSIXEL')
 endif
 
 if conf_data.get('CONFIG_OS_DOS')
-    wattdeps = compiler.find_library('watt', static: st, dirs: [get_option('prefix')+'/lib','/usr/local/lib'])
+    wattdeps = compiler.find_library('watt', static: st, dirs: [get_option('prefix')+'/lib'])
     deps += wattdeps
 else
     wattdeps = []
@@ -974,7 +979,7 @@ if compiler.has_function('ASN1_STRING_get0_data', prefix: '#include <openssl/asn
     conf_data.set('HAVE_ASN1_STRING_GET0_DATA', 1)
 endif
 
-iconvdeps = compiler.find_library('iconv', static: st, dirs: [get_option('prefix')+'/lib','/usr/local/lib'], required: false)
+iconvdeps = compiler.find_library('iconv', static: st, dirs: [get_option('prefix')+'/lib'], required: false)
 if iconvdeps.found()
     deps += iconvdeps
 endif
