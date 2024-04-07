@@ -537,7 +537,7 @@ ssl_connect(struct socket *socket)
 	 * ELinks must just cast the pointer the best it can and hope
 	 * that the conversions match.  */
 	gnutls_transport_set_ptr(*((ssl_t *) socket->ssl),
-				 (gnutls_transport_ptr_t) (longptr_T) socket->fd);
+				 (gnutls_transport_ptr_t) (intptr_t) socket->fd);
 
 	/* TODO: Some certificates fuss. --pasky */
 #endif

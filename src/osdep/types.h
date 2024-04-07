@@ -140,12 +140,6 @@ typedef unsigned long long uint32_t;
 #define __SHRT_MAX__ 0x7fff
 #endif
 
-/*
- * long l; (long) (longptr_T) l == l
- * void *p; (void *) (longptr_T) p == p
- */
-typedef long longptr_T;
-
 /* To print off_t offset, ELinks does:
  *
  * printf("%" OFF_PRINT_FORMAT, (off_print_T) offset);
