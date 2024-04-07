@@ -77,7 +77,7 @@ static const char *keymap_2[] = {
 
 #define TRACE(m...)					\
 	do {						\
-		if (get_cmd_opt_int("verbose") == 2)	\
+		if (cmdline_options && (get_cmd_opt_int("verbose") == 2))	\
 			DBG(m);				\
 	} while (0)
 
