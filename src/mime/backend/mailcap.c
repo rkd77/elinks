@@ -809,6 +809,7 @@ main(int argc, char *argv[])
 {
 	char *format = "description,ask,block,program";
 	int has_gotten = 0;
+	int setenv_display = 0;
 	int i;
 
 	for (i = 1; i < argc; i++) {
@@ -826,6 +827,10 @@ main(int argc, char *argv[])
 		} else if (get_test_opt(&arg, "format", &i, argc, argv, "a string")) {
 			format = arg;
 
+		} else if (get_test_opt(&arg, "display", &i, argc, argv, "a string")) {
+			if (strcmp(arg, "1") == 0 || strcmp(arg, "yes") == 0)
+				setenv_display = 1;
+
 		} else if (get_test_opt(&arg, "get", &i, argc, argv, "a string")) {
 			struct mime_handler *handler;
 
@@ -833,7 +838,7 @@ main(int argc, char *argv[])
 				printf("\n");
 			has_gotten = 1;
 			printf("type: %s\n", arg);
-			handler = get_mime_handler_mailcap(arg, 0);
+			handler = get_mime_handler_mailcap(arg, setenv_display);
 			if (!handler) continue;
 
 			if (strstr(format, "description"))
