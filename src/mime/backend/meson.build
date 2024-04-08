@@ -10,7 +10,7 @@ endif
 
 srcs += files('common.c', 'default.c')
 
-if conf_data.get('CONFIG_MAILCAP') and get_option('test')
+if conf_data.get('CONFIG_MAILCAP') and (get_option('test-mailcap') or get_option('test'))
 	mailcap_cache_files = files('common.c', 'mailcap.c', meson.source_root()+'/src/osdep/osdep.c')
 
 	if conf_data.get('CONFIG_NLS') and not conf_data.get('CONFIG_GETTEXT')
