@@ -416,7 +416,7 @@ init_mailcap_map(void)
 	if (!mailcap_map) return NULL;
 
 	/* Try to setup mailcap_path */
-	path = get_mailcap_path();
+	path = (char *)get_mailcap_path();
 	if (!path || !*path) path = getenv("MAILCAP");
 	if (!path) path = (char *)DEFAULT_MAILCAP_PATH;
 
