@@ -195,7 +195,7 @@ do_http(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, http->error);
 		curl_easy_setopt(curl, CURLOPT_PRIVATE, conn);
 		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
-		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 0L);
 		curl_easy_setopt(curl, CURLOPT_ACCEPT_ENCODING, "");
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 0L);
 		curl_easy_setopt(curl, CURLOPT_RESUME_FROM_LARGE, offset);
@@ -466,8 +466,13 @@ http_curl_handle_error(struct connection *conn, CURLcode res)
 		struct http_curl_connection_info *http = (struct http_curl_connection_info *)conn->info;
 
 		if (url) {
-			redirect_cache(conn->cached, url, (http->code == 303L), -1);
-			abort_connection(conn, connection_state(S_OK));
+			struct uri *uri = redirect_cache(conn->cached, url, (http->code == 303L), -1);
+
+			if (uri) {
+				set_connection_state(conn, connection_state(S_TRANS));
+			} else {
+				abort_connection(conn, connection_state(S_OK));
+			}
 			return;
 		}
 
