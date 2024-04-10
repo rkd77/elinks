@@ -530,19 +530,10 @@ init_interlink(void)
 		if (pid == -1) return -1;
 
 		if (pid > 0) {
-			int i;
-
-			for (i = 1; i <= (MAX_BIND_TRIES+2); ++i) {
-				fd = connect_to_af_unix();
-
-				if (fd != -1) {
-					master_pid = pid;
-					return fd;
-				}
-				elinks_usleep(BIND_TRIES_DELAY * i);
-			}
-			return -1;
+			master_pid = pid;
+			return connect_to_af_unix();
 		}
+
 		/* child */
 		master_pid = getpid();
 		close_terminal_pipes();
