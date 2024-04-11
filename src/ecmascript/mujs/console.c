@@ -18,6 +18,45 @@
 #define DEBUG 0
 
 static void
+mjs_console_assert(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	if (!get_opt_bool("ecmascript.enable_console_log", NULL)) {
+		js_pushundefined(J);
+		return;
+	}
+	bool res = js_toboolean(J, 1);
+
+	if (res) {
+		js_pushundefined(J);
+		return;
+	}
+	FILE *log = fopen(console_error_filename, "a");
+
+	if (!log) {
+		js_pushundefined(J);
+		return;
+	}
+	fprintf(log, "Assertion failed:");
+
+	for (int i = 2;; i++) {
+		if (js_isundefined(J, i)) {
+			break;
+		}
+		const char *val = js_tostring(J, i);
+
+		if (val) {
+			fprintf(log, " %s", val);
+		}
+	}
+	fprintf(log, "\n");
+	fclose(log);
+	js_pushundefined(J);
+}
+
+static void
 mjs_console_log_common(js_State *J, const char *str, const char *log_filename)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -72,6 +111,7 @@ mjs_console_init(js_State *J)
 {
 	js_newobject(J);
 	{
+		addmethod(J, "console.assert", mjs_console_assert, 2);
 		addmethod(J, "console.log", mjs_console_log, 1);
 		addmethod(J, "console.error", mjs_console_error, 1);
 		addmethod(J, "console.toString", mjs_console_toString, 0);
