@@ -862,10 +862,6 @@ if not conf_data.get('CONFIG_OS_DOS') and compiler.has_function('fork', prefix :
     conf_data.set('HAVE_FORK', 1)
 endif
 
-if compiler.has_function('getpid', prefix : '#include <unistd.h>')
-    conf_data.set('HAVE_GETPID', 1)
-endif
-
 if compiler.has_function('setpgid', prefix : '#include <unistd.h>')
     conf_data.set('HAVE_SETPGID', 1)
 endif

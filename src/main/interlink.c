@@ -544,9 +544,7 @@ init_interlink(void)
 			return -1;
 		}
 		/* child */
-#ifdef HAVE_GETPID
 		master_pid = getpid();
-#endif
 		close_terminal_pipes();
 	}
 	bind_to_af_unix();

@@ -195,9 +195,7 @@ init(void)
 	    || get_cmd_opt_bool("source")
 	    || (fd = init_interlink()) == -1) {
 
-#ifdef HAVE_GETPID
 		master_pid = getpid();
-#endif
 		parse_options_again();
 		init_b = 1;
 		init_modules(builtin_modules);

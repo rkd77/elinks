@@ -336,7 +336,6 @@ AC_CHECK_FUNCS(mkstemps)
 # These aren't probably needed now, as they are commented in links.h.
 # I've no idea about their historical background, but I keep them here
 # just in the case they will help later. --pasky
-AC_CHECK_FUNCS(getpid, HAVE_GETPID=yes)
 AC_CHECK_FUNCS(setpgid getpgid setpgrp getpgrp)
 AC_CHECK_FUNCS(raise, HAVE_RAISE=yes)
 AC_CHECK_FUNCS(kill, HAVE_KILL=yes)
@@ -346,7 +345,7 @@ AC_CHECK_FUNCS(fpathconf, HAVE_FPATHCONF=yes)
 AC_CHECK_FUNCS(poll, HAVE_POLL=yes)
 
 if test x"$HAVE_RAISE" = x; then
-	if test x"$HAVE_KILL" = x || test x"$HAVE_GETPID" = x; then
+	if test x"$HAVE_KILL" = x; then
 		AC_MSG_ERROR([Unable to emulate raise()])
 	fi
 fi

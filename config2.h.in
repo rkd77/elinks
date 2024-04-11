@@ -448,9 +448,6 @@
 /* Define to 1 if you have the `getpgrp' function. */
 #mesondefine HAVE_GETPGRP
 
-/* Define to 1 if you have the `getpid' function. */
-#mesondefine HAVE_GETPID
-
 /* Define to 1 if you have the `getpwnam' function. */
 #mesondefine HAVE_GETPWNAM
 
