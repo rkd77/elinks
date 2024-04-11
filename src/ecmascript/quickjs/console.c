@@ -13,6 +13,7 @@
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/console.h"
+#include "main/main.h"
 
 #define DEBUG 0
 
@@ -114,6 +115,20 @@ js_console_error(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *
 }
 
 static JSValue
+js_console_exit(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	if (!get_cmd_opt_bool("test")) {
+		return JS_UNDEFINED;
+	}
+	program.retval = JS_ToBool(ctx, argv[0]) ? RET_ERROR : RET_OK;
+	program.terminate = 1;
+	return JS_UNDEFINED;
+}
+
+static JSValue
 js_console_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -128,6 +143,7 @@ static const JSCFunctionListEntry js_console_funcs[] = {
 	JS_CFUNC_DEF("assert", 2, js_console_assert),
 	JS_CFUNC_DEF("log", 1, js_console_log),
 	JS_CFUNC_DEF("error", 1, js_console_error),
+	JS_CFUNC_DEF("exit", 1, js_console_exit),
 	JS_CFUNC_DEF("toString", 0, js_console_toString)
 };
 
