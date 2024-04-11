@@ -23,6 +23,7 @@ struct program {
 };
 
 extern struct program program;
+extern pid_t master_pid;
 
 void shrink_memory(int);
 void parse_options_again(void);

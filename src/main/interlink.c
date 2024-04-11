@@ -518,13 +518,15 @@ int
 init_interlink(void)
 {
 	int fd = connect_to_af_unix();
-	int pid;
 
 	if (fd != -1 || remote_session_flags) return fd;
 
 	parse_options_again();
 
 	if (get_opt_bool("ui.sessions.fork_on_start", NULL)) {
+
+		pid_t pid;
+
 		pid = fork();
 
 		if (pid == -1) return -1;
@@ -535,11 +537,18 @@ init_interlink(void)
 			for (i = 1; i <= (MAX_BIND_TRIES+2); ++i) {
 				fd = connect_to_af_unix();
 
-				if (fd != -1) return fd;
+				if (fd != -1) {
+					master_pid = pid;
+					return fd;
+				}
 				elinks_usleep(BIND_TRIES_DELAY * i);
 			}
 			return -1;
 		}
+		/* child */
+#ifdef HAVE_GETPID
+		master_pid = getpid();
+#endif
 		close_terminal_pipes();
 	}
 	bind_to_af_unix();
