@@ -13,7 +13,7 @@
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/mujs.h"
 #include "ecmascript/mujs/console.h"
-
+#include "main/main.h"
 
 #define DEBUG 0
 
@@ -98,6 +98,21 @@ mjs_console_error(js_State *J)
 }
 
 static void
+mjs_console_exit(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	if (!get_cmd_opt_bool("test")) {
+		js_pushundefined(J);
+		return;
+	}
+	program.retval = js_toboolean(J, 1) ? RET_ERROR : RET_OK;
+	program.terminate = 1;
+	js_pushundefined(J);
+}
+
+static void
 mjs_console_toString(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -114,6 +129,7 @@ mjs_console_init(js_State *J)
 		addmethod(J, "console.assert", mjs_console_assert, 2);
 		addmethod(J, "console.log", mjs_console_log, 1);
 		addmethod(J, "console.error", mjs_console_error, 1);
+		addmethod(J, "console.exit", mjs_console_exit, 1);
 		addmethod(J, "console.toString", mjs_console_toString, 0);
 	}
 	js_defglobal(J, "console", JS_DONTENUM);
