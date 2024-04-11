@@ -875,6 +875,10 @@ done_draw(void)
 int
 get_output_handle(void)
 {
+	if (get_cmd_opt_bool("test")) {
+		return open("/dev/null", O_WRONLY);
+	}
+
 	return 1;
 }
 

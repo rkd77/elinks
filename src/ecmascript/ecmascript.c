@@ -643,7 +643,7 @@ init_ecmascript_module(struct module *module)
 	if (xdg_config_home) {
 		/* ecmascript console log */
 		console_log_filename = straconcat(xdg_config_home, "/console.log", NULL);
-		console_error_filename = straconcat(xdg_config_home, "/console.err", NULL);
+		console_error_filename = get_cmd_opt_bool("test") ? stracpy("/dev/stderr") : straconcat(xdg_config_home, "/console.err", NULL);
 		/* ecmascript local storage db location */
 #ifdef CONFIG_OS_DOS
 		local_storage_filename = stracpy("elinks_ls.db");

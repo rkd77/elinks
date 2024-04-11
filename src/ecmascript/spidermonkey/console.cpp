@@ -20,6 +20,7 @@
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/spidermonkey/console.h"
 #include "intl/libintl.h"
+#include "main/main.h"
 #include "osdep/newwin.h"
 #include "osdep/sysname.h"
 #include "util/conv.h"
@@ -55,12 +56,14 @@ const JSClass console_class = {
 
 static bool console_assert(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool console_error(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool console_exit(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool console_log(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 const spidermonkeyFunctionSpec console_funcs[] = {
 	{ "assert",		console_assert,		2 },
 	{ "log",		console_log,	 	1 },
 	{ "error",		console_error,	 	1 },
+	{ "exit",		console_exit,	 	1 },
 	{ NULL }
 };
 
@@ -144,4 +147,21 @@ console_error(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	return console_log_common(ctx, argc, vp, console_error_filename);
+}
+
+static bool
+console_exit(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	args.rval().setUndefined();
+
+	if (!get_cmd_opt_bool("test")) {
+		return true;
+	}
+	program.retval = args[0].toBoolean() ? RET_ERROR : RET_OK;
+	program.terminate = 1;
+	return true;
 }

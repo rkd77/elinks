@@ -1009,6 +1009,10 @@ union option_info cmdline_options_info[] = {
 		N_("When enabled, terminfo ncurses functions will be used "
 		"instead of hardcoded sequences.")),
 
+	INIT_OPT_BOOL("", N_("Test js"),
+		"test", OPT_ZERO, 0,
+		N_("When enabled, helps to test js.")),
+
 	INIT_OPT_BOOL("", N_("Touch files in ~/.config/elinks when running with -no-connect/-session-ring"),
 		"touch-files", OPT_ZERO, 0,
 		N_("When enabled, runtime state files (bookmarks, history, "
