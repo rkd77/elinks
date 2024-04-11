@@ -525,9 +525,7 @@ init_interlink(void)
 
 	if (get_opt_bool("ui.sessions.fork_on_start", NULL)) {
 
-		pid_t pid;
-
-		pid = fork();
+		pid_t pid = fork();
 
 		if (pid == -1) return -1;
 
