@@ -53,14 +53,51 @@ const JSClass console_class = {
 	&console_ops
 };
 
+static bool console_assert(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool console_error(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool console_log(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 const spidermonkeyFunctionSpec console_funcs[] = {
+	{ "assert",		console_assert,		2 },
 	{ "log",		console_log,	 	1 },
 	{ "error",		console_error,	 	1 },
 	{ NULL }
 };
+
+static bool
+console_assert(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	args.rval().setUndefined();
+
+	if (argc < 1 || !get_opt_bool("ecmascript.enable_console_log", NULL)) {
+		return true;
+	}
+	bool res = jsval_to_boolean(ctx, args[0]);
+
+	if (res) {
+		return true;
+	}
+	FILE *log = fopen(console_error_filename, "a");
+
+	if (!log) {
+		return true;
+	}
+	fprintf(log, "Assertion failed:");
+
+	for (int i = 1; i < argc; i++) {
+		char *val = jsval_to_string(ctx, args[i]);
+
+		if (val) {
+			fprintf(log, " %s", val);
+			mem_free(val);
+		}
+	}
+	fprintf(log, "\n");
+	fclose(log);
+
+	return true;
+}
 
 static bool
 console_log_common(JSContext *ctx, unsigned int argc, JS::Value *vp, const char *log_filename)

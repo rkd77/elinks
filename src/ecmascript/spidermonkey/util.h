@@ -7,7 +7,7 @@
 static void string_to_jsval(JSContext *ctx, JS::Value *vp, char *string);
 static void astring_to_jsval(JSContext *ctx, JS::Value *vp, char *string);
 
-static int jsval_to_boolean(JSContext *ctx, JS::Value *vp);
+static bool jsval_to_boolean(JSContext *ctx, JS::HandleValue hvp);
 
 /** Inline functions */
 
@@ -28,13 +28,12 @@ astring_to_jsval(JSContext *ctx, JS::Value *vp, char *string)
 	mem_free_if(string);
 }
 
-static inline int
-jsval_to_boolean(JSContext *ctx, JS::Value *vp)
-{
-	JS::RootedValue r_vp(ctx, *vp);
-	return (int)r_vp.toBoolean();
-}
 
+static inline bool
+jsval_to_boolean(JSContext *ctx, JS::HandleValue hvp)
+{
+	return hvp.toBoolean();
+}
 
 /* Since SpiderMonkey 52 the Mutable Handle Object
  * is different for String and Number and must be
