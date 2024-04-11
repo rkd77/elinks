@@ -21,6 +21,45 @@
 static JSClassID js_console_class_id;
 
 static JSValue
+js_console_assert(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	if (argc < 1 || !get_opt_bool("ecmascript.enable_console_log", NULL)) {
+		return JS_UNDEFINED;
+	}
+	bool res = JS_ToBool(ctx, argv[0]);
+
+	if (res) {
+		return JS_UNDEFINED;
+	}
+	FILE *log = fopen(console_error_filename, "a");
+
+	if (!log) {
+		return JS_UNDEFINED;
+	}
+	fprintf(log, "Assertion failed:");
+
+	for (int i = 1; i < argc; i++) {
+		size_t len;
+
+		const char *val = JS_ToCStringLen(ctx, &len, argv[i]);
+
+		if (val) {
+			fprintf(log, " %s", val);
+			JS_FreeCString(ctx, val);
+		}
+	}
+	fprintf(log, "\n");
+	fclose(log);
+
+	return JS_UNDEFINED;
+}
+
+static JSValue
 js_console_log_common(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv, const char *log_filename)
 {
 	REF_JS(this_val);
@@ -86,6 +125,7 @@ js_console_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 }
 
 static const JSCFunctionListEntry js_console_funcs[] = {
+	JS_CFUNC_DEF("assert", 2, js_console_assert),
 	JS_CFUNC_DEF("log", 1, js_console_log),
 	JS_CFUNC_DEF("error", 1, js_console_error),
 	JS_CFUNC_DEF("toString", 0, js_console_toString)
