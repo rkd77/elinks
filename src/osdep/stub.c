@@ -224,7 +224,7 @@ elinks_memrchr(const void *s, int c, size_t n)
 
 #ifndef HAVE_RAISE
 
-#if !defined(HAVE_KILL) || !defined(HAVE_GETPID)
+#if !defined(HAVE_KILL)
 #error The raise() stub function requires kill() and getpid()
 #endif
 
