@@ -10,6 +10,9 @@ DEBs:
 RPMs:
 	http://rpmfind.net/linux/rpm2html/search.php?query=elinks
 
+MacOS:
+	https://formulae.brew.sh/formula/felinks
+
 GIT root:
 	https://github.com/rkd77/elinks.git
 
