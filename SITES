@@ -13,6 +13,9 @@ RPMs:
 MacOS:
 	https://formulae.brew.sh/formula/felinks
 
+MSYS2 (Windows):
+	https://packages.msys2.org/base/elinks
+
 GIT root:
 	https://github.com/rkd77/elinks.git
 
