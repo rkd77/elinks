@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+First Name: <input name="fname" type="text" value="Michael"><br>
+First Name: <input name="fname" type="text" value="Doug">
+
+<p>Click the button to get the tag name of the first element in the document that has a name attribute with the value "fname".</p>
+
+<button onclick="myFunction()">Try it</button>
+
+
+<img src="planets.gif" width="145" height="126" alt="Planets" usemap="#planetmap">
+
+<map name="planetmap">
+  <area shape="rect" coords="0,0,82,126" href="sun.htm" alt="Sun">
+  <area shape="circle" coords="90,58,3" href="mercur.htm" alt="Mercury">
+  <area shape="circle" coords="124,58,8" href="venus.htm" alt="Venus">
+</map>
+
+<a href="/">/</a>
+<a href="/home">/home</a>
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var x = document.links.length;
+  console.assert(x === 5, 5);
+}
+
+console.error('document.links.html');
+myFunction();
+console.exit(0);
+</script>
+
+</body>
+</html>
