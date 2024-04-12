@@ -1,0 +1,20 @@
+<html>
+<body>
+<a href="/home">BBB</a>
+<b dir="ltr" id="aaaa" class="a b c">bbb</b>
+<a dir="rtl" id="blabla" href="/"><b id="b1">AAA</b><u dir="auto" id="ble" title="test">UUUAAAAAAA</u></a>
+<a id="bb" dir="blalalala" href="/">BB</a>
+<script>
+function aa()
+{
+	var x = document.getElementById('blabla').lastChild.innerHTML;
+	console.assert(x === 'UUUAAAAAAA', 'UUUAAAAAAA');
+}
+
+console.error('element.lastChild.html');
+aa();
+console.exit(0);
+</script>
+<button onclick="return aa()">Click me!</button>
+</body>
+</html>
