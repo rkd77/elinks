@@ -1,0 +1,30 @@
+<html>
+<body>
+<a href="/home">BBB</a>
+<b id="aaaa" lang="en">bbb</b>
+<a id="blabla" href="/">
+<b>AAA</b><u id="ble" title="test">UUU</u>AAAAAAA
+</a>
+<a id="bb" href="/">BB</a>
+<script>
+function testaa(expected)
+{
+	var x = document.getElementById('aaaa').lang;
+	console.assert(x === expected, expected);
+}
+
+function bb()
+{
+	document.getElementById('aaaa').lang = 'pl';
+	testaa('pl');
+}
+
+console.error('element.lang.html');
+testaa('en');
+bb();
+console.exit(0);
+</script>
+<button onclick="return aa()">Click me!</button>
+<button onclick="return bb()">Set lang to pl</button>
+</body>
+</html>
