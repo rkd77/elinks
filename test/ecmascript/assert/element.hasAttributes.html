@@ -1,0 +1,22 @@
+<html>
+<body>
+<a href="/home">BBB</a>
+<b id="aaaa">bbb</b>
+<a id="blabla" href="/" rel="nofollow">
+<b>AAA</b><u id="ble">UUU</u>AAAAAAA
+</a>
+<a id="bb" href="/">BB</a>
+<script>
+function aa()
+{
+	var a = document.getElementById('blabla').hasAttributes();
+	console.assert(a, 'True');
+}
+
+console.error('element.hasAttributes.html');
+aa();
+console.exit(0);
+</script>
+<button onclick="return aa()">blabla has attributes</button>
+</body>
+</html>
