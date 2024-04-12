@@ -1,0 +1,21 @@
+<html>
+<body>
+<a href="/home">BBB</a>
+<b dir="ltr" id="aaaa" class="a b c">bbb</b>
+<a dir="rtl" id="blabla" href="/">BBB<b id="b1">AAA</b><u dir="auto" id="ble" title="test">UUU</u>AAAAAAA
+</a>
+<a id="bb" dir="blalalala" href="/">BB</a>
+<script>
+function aa()
+{
+	var x = document.getElementById('blabla').firstElementChild.outerHTML;
+	console.assert(x === '<B id="b1">AAA</B>', 'B');
+}
+
+console.error('element.firstElementChild');
+aa();
+console.exit(0);
+</script>
+<button onclick="return aa()">blabla firstElementChild outerHTML</button>
+</body>
+</html>
