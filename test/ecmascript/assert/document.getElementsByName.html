@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+First Name: <input name="fname" type="text" value="Michael"><br>
+First Name: <input name="fname" type="text" value="Doug">
+
+<p>Click the button to get the tag name of the first element in the document that has a name attribute with the value "fname".</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var x = document.getElementsByName("fname");//.item(1).outerHTML;
+  console.assert(x === '<input name="fname" type="text" value="Doug">', 'TODO');
+}
+
+console.error('document.getElementsByName.html');
+myFunction();
+console.exit(0);
+</script>
+
+</body>
+</html>
