@@ -1,0 +1,30 @@
+<html>
+<body>
+<a href="/home">BBB</a>
+<b id="aaaa">bbb</b>
+<a id="blabla" href="/" rel="nofollow">
+<b>AAA</b><u id="ble">UUU</u>AAAAAAA
+</a>
+<a id="bb" href="/">BB</a>
+<script>
+function aa()
+{
+	var a = document.getElementById('blabla').getAttribute('rel');
+	console.assert(a === 'nofollow', a);
+}
+
+function bb()
+{
+	var b = document.getElementById('ble').getAttribute('href');
+	console.assert(b === null, b);
+}
+
+console.error('element.getAttribute.html');
+aa();
+bb();
+console.exit(0);
+</script>
+<button onclick="return aa()">blabla rel nofollow</button>
+<button onclick="return bb()">ble href null</button>
+</body>
+</html>

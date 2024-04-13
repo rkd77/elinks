@@ -1,0 +1,24 @@
+<html>
+<body>
+<a id="blabla" href="/" rel="nofollow"><b>AAA</b><u id="ble">UUU</u></a>
+<b id="empty"></b>
+<script>
+function aa()
+{
+	console.assert(document.getElementById('blabla').childElementCount == 2, 'Two, b and u');
+}
+
+function bb()
+{
+	console.assert(document.getElementById('empty').childElementCount == 0, 'zero');
+}
+
+console.error('element.childElementCount.html');
+aa();
+bb();
+console.exit(0);
+</script>
+<button onclick="return aa()">blabla child element count</button>
+<button onclick="return bb()">empty child element count</button>
+</body>
+</html>

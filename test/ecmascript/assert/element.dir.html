@@ -1,0 +1,32 @@
+<html>
+<body>
+<a href="/home">BBB</a>
+<b dir="ltr" id="aaaa">bbb</b>
+<a dir="rtl" id="blabla" href="/">
+<b>AAA</b><u dir="auto" id="ble" title="test">UUU</u>AAAAAAA
+</a>
+<a id="bb" dir="blalalala" href="/">BB</a>
+<script>
+function aa()
+{
+	console.assert(document.getElementById('aaaa').dir === 'ltr', 'aaaa', 'ltr');
+	console.assert(document.getElementById('blabla').dir === 'rtl', 'blabla', 'rtl');
+	console.assert(document.getElementById('ble').dir === 'auto', 'ble', 'auto');
+	console.assert(document.getElementById('bb').dir === '', 'bb', 'empty');
+}
+
+function bb()
+{
+	document.getElementById('blabla').dir = 'ltr';
+	console.assert(document.getElementById('blabla').dir === 'ltr', 'blabla ltr');
+}
+
+console.error('element.dir.html');
+aa();
+bb();
+console.exit(0);
+</script>
+<button onclick="return aa()">Click me!</button>
+<button onclick="return bb()">blabla.dir = ltr</button>
+</body>
+</html>

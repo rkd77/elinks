@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head><title>HEAD</title></head>
+<body id="test">
+
+<button onclick="myFunction()">Try it</button>
+
+<a href="/">/</a>
+<a href="/home">/home</a>
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var x = document.head; //.innerHTML;
+  console.assert(x === '<TITLE>HEAD></TITLE>', x);
+}
+
+console.error('document.head.html');
+myFunction();
+console.exit(0);
+</script>
+
+</body>
+</html>

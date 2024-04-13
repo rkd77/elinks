@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<ul id="myList1"><li>Coffee</li><li>Tea</li></ul>
+<ul id="myList2"><li>Water</li><li>Milk</li></ul>
+
+<p>Click the button to copy an item from one list to another.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<p>Try changing the <em>deep</em> parameter to false, and only an empty LI element will be cloned.</p>
+
+<script>
+function myFunction() {
+  var itm = document.getElementById("myList2").lastChild;
+  console.assert(itm.outerHTML === '<LI>Milk</LI>', 'Milk');
+  var cln = itm.cloneNode(true);
+  document.getElementById("myList1").appendChild(cln);
+  console.assert(document.getElementById("myList1").innerHTML === '<LI>Coffee</LI><LI>Tea</LI><LI>Milk</LI>', 'Coffee, Tea, Milk');
+}
+
+console.error('element.cloneNode.html');
+myFunction();
+console.exit(0);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<div class="demo container"> Grandparent
+  <div class="demo container">Parent
+    <div id="myElement" class="demo">The outer HTML of closest element will be shown.</div>
+  </div>
+</div>
+
+<script>
+var element = document.getElementById("myElement");
+var closest = element.closest(".container");
+
+console.error('element.closest.html');
+console.assert(closest.outerHTML === '<DIV class="demo container">Parent\n    <DIV id="myElement" class="demo">The outer HTML of closest element will be shown.</DIV>\n  </DIV>', 'TODO');
+console.exit(1);
+</script>
+
+</body>
+</html>

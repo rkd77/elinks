@@ -1,0 +1,21 @@
+<ul id="birds">
+  <li>Orange-winged parrot</li>
+  <li class="endangered">Philippine eagle</li>
+  <li>Great white pelican</li>
+</ul>
+
+<script type="text/javascript">
+
+console.error('element.matches');
+
+  var birds = document.getElementsByTagName('li');
+
+  for (var i = 0; i < birds.length; i++) {
+    if (birds[i].matches('.endangered')) {
+      console.assert(birds[i].textContent === 'Philippine eagle', 'endangered');
+    }
+  }
+
+console.exit(0);
+
+</script>

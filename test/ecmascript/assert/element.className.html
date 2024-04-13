@@ -1,0 +1,29 @@
+<html>
+<body>
+<a href="/home">BBB</a>
+<b dir="ltr" id="aaaa" class="a b c">bbb</b>
+<a dir="rtl" id="blabla" href="/">
+<b>AAA</b><u dir="auto" id="ble" title="test">UUU</u>AAAAAAA
+</a>
+<a id="bb" dir="blalalala" href="/">BB</a>
+<script>
+function aa()
+{
+	console.assert(document.getElementById('aaaa').className === 'a b c', 'a b c');
+}
+
+function bb()
+{
+	document.getElementById('aaaa').className = 'abc';
+	console.assert(document.getElementById('aaaa').className === 'abc', 'abc');
+}
+
+console.error('element.className.html');
+aa();
+bb();
+console.exit(0);
+</script>
+<button onclick="return aa()">Click me!</button>
+<button onclick="return bb()">Set className to abc</button>
+</body>
+</html>

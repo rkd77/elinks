@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+First Name: <input name="fname" type="text" value="Michael"><br>
+First Name: <input name="fname" type="text" value="Doug">
+
+<p>Click the button to get the outer html of anchor number 1. Anchors are counted from 0.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<a href="/" name="aaa">/</a>
+<a href="/home" name="bbb">/home</a>
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var x = document.anchors.item(1).outerHTML;
+  console.assert(x === '<A href="/home" name="bbb">/home</A>', 'anchors');
+}
+
+console.error('document.anchors.html');
+myFunction();
+console.exit(0);
+</script>
+
+</body>
+</html>

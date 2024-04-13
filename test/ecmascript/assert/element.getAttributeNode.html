@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.democlass {
+  color: red;
+}
+</style>
+</head>
+<body>
+<h1 class="democlass">Hello World</h1>
+<p>Click the button to display the value of the class attribute node of the h1 element.</p>
+<button onclick="myFunction()">Try it</button>
+<p id="demo"></p>
+<script>
+function myFunction() {
+  var elmnt = document.getElementsByTagName("H1")[0];
+  var attr = elmnt.getAttributeNode("class").value;
+  console.assert(attr === 'democlass', 'democlass');
+}
+
+console.error('element.getAttributeNode.html');
+myFunction();
+console.exit(0);
+</script>
+</body>
+</html>

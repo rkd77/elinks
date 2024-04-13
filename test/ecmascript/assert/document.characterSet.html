@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>Click the button to check the encoding of this document.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<p><strong>Note:</strong> Internet Explorer 8 and earlier does not support the characterSet property.</p>
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var x = document.characterSet;
+  console.assert(x === 'utf-8', 'Usually utf-8');
+}
+
+console.error('document.characterSet');
+myFunction();
+console.exit(0);
+</script>
+
+</body>
+</html>

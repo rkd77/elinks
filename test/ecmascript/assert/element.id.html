@@ -1,0 +1,14 @@
+<html>
+<body>
+<a href="/">inner</a>
+<button id="blabla">AAAAA</button>
+<button>BBBB</button>
+<script>
+console.error('element.id.html');
+console.assert(document.getElementById('blabla').innerHTML === 'AAAAA', 'AAAAA');
+document.getElementsByTagName("A")[0].id = 'test';
+console.assert(document.getElementById('test').innerHTML === 'inner', 'inner');
+console.exit(0);
+</script>
+</body>
+</html>

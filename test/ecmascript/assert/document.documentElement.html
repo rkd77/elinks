@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<body id="test">
+
+<button onclick="myFunction()">Try it</button>
+
+<a href="/">/</a>
+<a href="/home">/home</a>
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var x = document.documentElement.innerHTML;
+  console.assert(x.startsWith('<HEAD></HEAD><BODY id="test">'), 'head was added');
+}
+
+console.error('document.documentElement.html');
+myFunction();
+console.exit(0);
+</script>
+
+</body>
+</html>
