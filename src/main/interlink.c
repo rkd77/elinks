@@ -321,11 +321,6 @@ setsock_reuse_addr(int fd)
 /* Number of connections in listen backlog. */
 #define LISTEN_BACKLOG			100
 
-/* Max. number of connect attempts. */
-#define MAX_CONNECT_TRIES		3
-/* Base delay in useconds between connect attempts. */
-#define CONNECT_TRIES_DELAY		50000
-
 static void
 report_af_unix_error(const char *function, int error)
 {
@@ -443,31 +438,24 @@ free_and_error:
 static int
 connect_to_af_unix(void)
 {
-	int attempts = 0;
 	int pf = get_address(&s_info_connect, ADDR_IP_CLIENT);
 
-	while (pf != -1 && attempts++ < MAX_CONNECT_TRIES) {
-		int saved_errno;
-
+	if (pf != -1) {
 		s_info_connect.fd = socket(pf, SOCK_STREAM, 0);
 		if (s_info_connect.fd == -1) {
 			report_af_unix_error("socket()", errno);
-			break;
-		}
-
-		if (connect(s_info_connect.fd, s_info_connect.addr,
-			    s_info_connect.size) >= 0)
+		} else {
+			if (connect(s_info_connect.fd, s_info_connect.addr,
+			            s_info_connect.size) >= 0) {
 				return s_info_connect.fd;
-
-		saved_errno = errno;
-		close(s_info_connect.fd);
-
-		if (saved_errno != ECONNREFUSED && saved_errno != ENOENT) {
-			report_af_unix_error("connect()", errno);
-			break;
+			}
+			if (errno != ECONNREFUSED && errno != ENOENT) {
+				report_af_unix_error("connect()", errno);
+			}
+			else if (close(s_info_connect.fd) == -1) {
+				report_af_unix_error("close(afsock)", errno);
+			}
 		}
-
-		elinks_usleep(CONNECT_TRIES_DELAY * attempts);
 	}
 
 	mem_free_set(&s_info_connect.addr, NULL);
@@ -517,6 +505,9 @@ done_interlink(void)
 int
 init_interlink(void)
 {
+	int pipefds[2];
+	char trigger;
+	ssize_t n;
 	int fd = connect_to_af_unix();
 
 	if (fd != -1 || remote_session_flags) return fd;
@@ -525,12 +516,33 @@ init_interlink(void)
 
 	if (get_opt_bool("ui.sessions.fork_on_start", NULL)) {
 
-		pid_t pid = fork();
+		pid_t pid;
+		if (pipe(pipefds) == -1) {
+			report_af_unix_error("pipe()", errno);
+			return -1;
+		}
+		pid = fork();
 
 		if (pid == -1) return -1;
 
 		if (pid > 0) {
+			int error = 0;
 			master_pid = pid;
+
+			/* wait for forked child to complete the bind() */
+			if ((n = read(pipefds[0], &trigger, 1)) <= 0) {
+				if (n == 0) {
+					errno = EPIPE; /* write end closed */
+				}
+				report_af_unix_error("read()", errno);
+				error = 1;
+			}
+			if (close(pipefds[0]) == -1) {
+				report_af_unix_error("close(pipe_r)", errno);
+				error = 1;
+			}
+			if (error) return -1;
+
 			return connect_to_af_unix();
 		}
 
@@ -539,6 +551,17 @@ init_interlink(void)
 		close_terminal_pipes();
 	}
 	bind_to_af_unix();
+	if (get_opt_bool("ui.sessions.fork_on_start", NULL)) {
+		if ((n = write(pipefds[1], &trigger, 1)) <= 0) {
+			if (n == 0) {
+				errno = EPIPE; /* read end closed */
+			}
+			report_af_unix_error("write()", errno);
+		}
+		if (close(pipefds[1]) == -1) {
+			report_af_unix_error("close(pipe_w)", errno);
+		}
+	}
 	return -1;
 }
 
@@ -546,5 +569,3 @@ init_interlink(void)
 #undef MAX_BIND_TRIES
 #undef BIND_TRIES_DELAY
 #undef LISTEN_BACKLOG
-#undef MAX_CONNECT_TRIES
-#undef CONNECT_TRIES_DELAY
