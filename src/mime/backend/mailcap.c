@@ -795,6 +795,22 @@ struct module mailcap_mime_module = struct_module(
 
 #include "util/test.h"
 
+struct option *cmdline_options;
+
+#ifdef CONFIG_DEBUG
+union option_value *
+get_opt_(char *a, int, enum option_type b, struct option *c, const char *d, struct session *e)
+{
+	return NULL;
+}
+#else
+union option_value *
+get_opt_(struct option *a , const char *b, struct session *c)
+{
+	return NULL;
+}
+#endif
+
 char *get_ui_clipboard_file(void) { return NULL; }
 
 /* Some ugly shortcuts for getting defined symbols to work. */
