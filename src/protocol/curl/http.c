@@ -199,6 +199,8 @@ do_http(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_ACCEPT_ENCODING, "");
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 0L);
 		curl_easy_setopt(curl, CURLOPT_RESUME_FROM_LARGE, offset);
+		curl_easy_setopt(curl, CURLOPT_MAX_RECV_SPEED_LARGE, (curl_off_t)get_opt_long("protocol.http.curl_max_recv_speed", NULL));
+		curl_easy_setopt(curl, CURLOPT_MAX_SEND_SPEED_LARGE, (curl_off_t)get_opt_long("protocol.http.curl_max_send_speed", NULL));
 
 		if (bundle) {
 			curl_easy_setopt(curl, CURLOPT_CAINFO, bundle);

@@ -80,6 +80,14 @@ union option_info ftp_options[] = {
 	INIT_OPT_BOOL("protocol.ftp", N_("Use libcurl"),
 		"use_curl", OPT_ZERO, 0,
 		N_("Use libcurl implementation of ftp.")),
+
+	INIT_OPT_LONG("protocol.ftp", N_("Curl max receive speed"),
+		"curl_max_recv_speed", OPT_ZERO, 0, LONG_MAX, 0,
+		N_("Max download speed in bytes/s. 0 means unlimited.")),
+
+	INIT_OPT_LONG("protocol.ftp", N_("Curl max send speed"),
+		"curl_max_send_speed", OPT_ZERO, 0, LONG_MAX, 0,
+		N_("Max upload speed in bytes/s. 0 means unlimited.")),
 #endif
 
 	INIT_OPT_BOOL("protocol.ftp", N_("Use passive mode (IPv4)"),

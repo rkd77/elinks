@@ -446,6 +446,8 @@ do_ftpes(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_PRIVATE, conn);
 		curl_easy_setopt(curl, CURLOPT_RESUME_FROM_LARGE, offset);
 		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
+		curl_easy_setopt(curl, CURLOPT_MAX_RECV_SPEED_LARGE, (curl_off_t)get_opt_long("protocol.ftp.curl_max_recv_speed", NULL));
+		curl_easy_setopt(curl, CURLOPT_MAX_SEND_SPEED_LARGE, (curl_off_t)get_opt_long("protocol.ftp.curl_max_send_speed", NULL));
 
 		//curl_easy_setopt(curl, CURLOPT_XFERINFODATA, conn);
 		//curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, progress_callback);

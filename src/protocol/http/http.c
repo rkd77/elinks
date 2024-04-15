@@ -201,6 +201,14 @@ static union option_info http_options[] = {
 	INIT_OPT_BOOL("protocol.http", N_("Use libcurl"),
 		"use_curl", OPT_ZERO, 0,
 		N_("Use libcurl implementation of http(s).")),
+
+	INIT_OPT_LONG("protocol.http", N_("Curl max receive speed"),
+		"curl_max_recv_speed", OPT_ZERO, 0, LONG_MAX, 0,
+		N_("Max download speed in bytes/s. 0 means unlimited.")),
+
+	INIT_OPT_LONG("protocol.http", N_("Curl max send speed"),
+		"curl_max_send_speed", OPT_ZERO, 0, LONG_MAX, 0,
+		N_("Max upload speed in bytes/s. 0 means unlimited.")),
 #endif
 	/* OSNews.com is supposed to be relying on the textmode token, at least. */
 	INIT_OPT_STRING("protocol.http", N_("User-agent identification"),
