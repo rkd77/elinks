@@ -462,9 +462,13 @@ do_ftpes(struct connection *conn)
 		/* We activate SSL and we require it for control */
 		if (conn->uri->protocol == PROTOCOL_FTPES) {
 			char *bundle = getenv("CURL_CA_BUNDLE");
+			char *ciphers = get_opt_str("protocol.ftp.curl_tls13_ciphers", NULL);
 
 			if (bundle) {
 				curl_easy_setopt(curl, CURLOPT_CAINFO, bundle);
+			}
+			if (ciphers && *ciphers) {
+				curl_easy_setopt(curl, CURLOPT_TLS13_CIPHERS, ciphers);
 			}
 			curl_easy_setopt(curl, CURLOPT_USE_SSL, CURLUSESSL_CONTROL);
 		}

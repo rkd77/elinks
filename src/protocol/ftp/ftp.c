@@ -88,6 +88,10 @@ union option_info ftp_options[] = {
 	INIT_OPT_LONG("protocol.ftp", N_("Curl max send speed"),
 		"curl_max_send_speed", OPT_ZERO, 0, LONG_MAX, 0,
 		N_("Max upload speed in bytes/s. 0 means unlimited.")),
+
+	INIT_OPT_STRING("protocol.ftp", N_("Curl TLS13 ciphers"),
+		"curl_tls13_ciphers", OPT_ZERO, "",
+		N_("Colon separated list of TLS13 ciphers. See https://curl.se/docs/ssl-ciphers.html")),
 #endif
 
 	INIT_OPT_BOOL("protocol.ftp", N_("Use passive mode (IPv4)"),
