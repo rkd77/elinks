@@ -202,6 +202,14 @@ do_http(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_MAX_RECV_SPEED_LARGE, (curl_off_t)get_opt_long("protocol.http.curl_max_recv_speed", NULL));
 		curl_easy_setopt(curl, CURLOPT_MAX_SEND_SPEED_LARGE, (curl_off_t)get_opt_long("protocol.http.curl_max_send_speed", NULL));
 
+		if (conn->uri->protocol == PROTOCOL_HTTPS) {
+			char *ciphers = get_opt_str("protocol.https.curl_tls13_ciphers", NULL);
+
+			if (ciphers && *ciphers) {
+				curl_easy_setopt(curl, CURLOPT_TLS13_CIPHERS, ciphers);
+			}
+		}
+
 		if (bundle) {
 			curl_easy_setopt(curl, CURLOPT_CAINFO, bundle);
 		}

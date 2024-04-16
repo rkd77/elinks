@@ -235,6 +235,12 @@ static union option_info http_options[] = {
 		"https", OPT_ZERO,
 		N_("HTTPS-specific options.")),
 
+#if defined(CONFIG_LIBCURL)
+	INIT_OPT_STRING("protocol.https", N_("Curl TLS13 ciphers"),
+		"curl_tls13_ciphers", OPT_ZERO, "",
+		N_("Colon separated list of TLS13 ciphers. See https://curl.se/docs/ssl-ciphers.html")),
+#endif
+
 	INIT_OPT_TREE("protocol.https", N_("Proxy configuration"),
 		"proxy", OPT_ZERO,
 		N_("HTTPS proxy configuration.")),
@@ -244,6 +250,7 @@ static union option_info http_options[] = {
 		N_("Host and port-number (host:port) of the HTTPS CONNECT "
 		"proxy, or blank. If it's blank, HTTPS_PROXY environment "
 		"variable is checked as well.")),
+
 	NULL_OPTION_INFO,
 };
 
