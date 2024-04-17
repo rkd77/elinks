@@ -352,6 +352,10 @@ if compiler.has_header('term.h')
     conf_data.set('HAVE_TERM_H', 1)
 endif
 
+if compiler.has_header('execinfo.h')
+    conf_data.set('HAVE_EXECINFO_H', 1)
+endif
+
 if conf_data.get('CONFIG_OS_WIN32') and compiler.has_header('windows.h')
     conf_data.set('HAVE_WINDOWS_H', 1)
 endif
