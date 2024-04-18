@@ -184,8 +184,6 @@ lookup_cmd(struct option *o, char ***argv, int *argc)
 
 		if (code == IDN2_OK) {
 			idname = idname2;
-		} else {
-			idname2 = NULL;
 		}
 	}
 #endif
