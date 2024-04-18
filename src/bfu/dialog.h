@@ -222,6 +222,7 @@ struct widget_data *select_widget_by_id(struct dialog_data *dlg_data, int i);
 
 #define add_dlg_end(dlg, n)						\
 	do {								\
+		if (0 && (n));						\
 		assert(n == (dlg)->number_of_widgets);			\
 	} while (0)
 
