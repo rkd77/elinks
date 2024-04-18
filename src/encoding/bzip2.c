@@ -36,8 +36,8 @@ struct bz2_enc_data {
 	 * end-of-stream marker and all data has been decompressed.
 	 * Then we neither read from the file nor call BZ2_bzDecompress
 	 * any more.  */
-	int last_read:1;
-	int after_end:1;
+	unsigned int last_read:1;
+	unsigned int after_end:1;
 
 	/* A buffer for data that has been read from the file but not
 	 * yet decompressed.  fbz_stream.next_in and fbz_stream.avail_in

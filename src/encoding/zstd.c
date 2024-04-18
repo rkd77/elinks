@@ -35,7 +35,7 @@ struct zstd_enc_data {
 	size_t sent_pos;
 	/* The file descriptor from which we read.  */
 	int fdread;
-	int decoded:1;
+	unsigned int decoded:1;
 };
 
 static int

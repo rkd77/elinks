@@ -27,8 +27,8 @@
 struct lzma_enc_data {
 	lzma_stream flzma_stream;
 	int fdread;
-	int last_read:1;
-	int after_end:1;
+	unsigned int last_read:1;
+	unsigned int after_end:1;
 	unsigned char buf[ELINKS_BZ_BUFFER_LENGTH];
 };
 
