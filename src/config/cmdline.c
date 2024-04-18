@@ -169,7 +169,6 @@ lookup_cmd(struct option *o, char ***argv, int *argc)
 	char *idname;
 #ifdef CONFIG_IDN2
 	char *idname2 = NULL;
-	int allocated = 0;
 #endif
 
 	if (!*argc) return gettext("Parameter expected");
@@ -185,7 +184,8 @@ lookup_cmd(struct option *o, char ***argv, int *argc)
 
 		if (code == IDN2_OK) {
 			idname = idname2;
-			allocated = 1;
+		} else {
+			idname2 = NULL;
 		}
 	}
 #endif
@@ -198,7 +198,7 @@ lookup_cmd(struct option *o, char ***argv, int *argc)
 #endif
 
 #ifdef CONFIG_IDN2
-		if (allocated) {
+		if (idname2) {
 			free(idname2);
 		}
 #endif
@@ -231,7 +231,7 @@ lookup_cmd(struct option *o, char ***argv, int *argc)
 	fflush(stdout);
 
 #ifdef CONFIG_IDN2
-	if (allocated) {
+	if (idname2) {
 		free(idname2);
 	}
 #endif
