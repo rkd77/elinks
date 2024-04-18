@@ -166,8 +166,11 @@ lookup_cmd(struct option *o, char ***argv, int *argc)
 {
 	struct sockaddr_storage *addrs = NULL;
 	int addrno, i;
-	char *idname, *idname2;
+	char *idname;
+#ifdef CONFIG_IDN2
+	char *idname2 = NULL;
 	int allocated = 0;
+#endif
 
 	if (!*argc) return gettext("Parameter expected");
 	if (*argc > 1) return gettext("Too many parameters");
@@ -193,9 +196,12 @@ lookup_cmd(struct option *o, char ***argv, int *argc)
 #else
 		usrerror(gettext("Host not found"));
 #endif
+
+#ifdef CONFIG_IDN2
 		if (allocated) {
 			free(idname2);
 		}
+#endif
 		return "";
 	}
 
@@ -224,9 +230,11 @@ lookup_cmd(struct option *o, char ***argv, int *argc)
 
 	fflush(stdout);
 
+#ifdef CONFIG_IDN2
 	if (allocated) {
 		free(idname2);
 	}
+#endif
 
 	return "";
 }
