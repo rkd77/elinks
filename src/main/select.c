@@ -790,12 +790,6 @@ int event_enabled = 0;
 #define sizeof_struct_event		(event_get_struct_event_size())
 #endif
 
-static inline
-struct event *timer_event(struct timer *tm)
-{
-	return (struct event *)((char *)tm - sizeof_struct_event);
-}
-
 #ifdef HAVE_EVENT_BASE_SET
 struct event_base *event_base;
 #endif
