@@ -433,9 +433,6 @@
 /* Define to 1 if you have the `getifaddrs' function. */
 #mesondefine HAVE_GETIFADDRS
 
-/* Define to 1 if you have the `getpagesize' function. */
-#mesondefine HAVE_GETPAGESIZE
-
 /* Define to 1 if you have the `getpgid' function. */
 #mesondefine HAVE_GETPGID
 
