@@ -388,9 +388,6 @@
 /* Define to 1 if you have the <execinfo.h> header file. */
 #mesondefine HAVE_EXECINFO_H
 
-/* Define to 1 if you have the <expat.h> header file. */
-#mesondefine HAVE_EXPAT_H
-
 /* Define to 1 if you have the <fcntl.h> header file. */
 #mesondefine HAVE_FCNTL_H
 
