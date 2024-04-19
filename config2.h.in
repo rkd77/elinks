@@ -609,9 +609,6 @@
 /* Define to 1 if you have the <net/if.h> header file. */
 #mesondefine HAVE_NET_IF_H
 
-/* Define to 1 if you have the <nl_types.h> header file. */
-#mesondefine HAVE_NL_TYPES_H
-
 /* Define to 1 if you have the <nss_compat_ossl/nss_compat_ossl.h> header
    file. */
 #mesondefine HAVE_NSS_COMPAT_OSSL_NSS_COMPAT_OSSL_H
