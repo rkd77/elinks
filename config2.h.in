@@ -418,9 +418,6 @@
 /* Define to 1 if you have the `ftello' function. */
 #mesondefine HAVE_FTELLO
 
-/* Define to 1 if you have the `getcwd' function. */
-#mesondefine HAVE_GETCWD
-
 /* Define to 1 if you have the `getegid' function. */
 #mesondefine HAVE_GETEGID
 
