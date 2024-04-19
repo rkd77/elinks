@@ -59,7 +59,7 @@ conf_data.set('CONFIG_CSS', get_option('css'))
 conf_data.set('CONFIG_DOM', get_option('html-highlight'))
 
 conf_data.set('CONFIG_BACKTRACE', get_option('backtrace'))
-conf_data.set('CONFIG_NO_ROOT', get_option('no-root'))
+conf_data.set('CONFIG_NO_ROOT_EXEC', get_option('no-root'))
 conf_data.set('CONFIG_DEBUG', get_option('withdebug'))
 conf_data.set('CONFIG_FASTMEM', get_option('fastmem'))
 conf_data.set('CONFIG_OWN_LIBC', get_option('own-libc'))
