@@ -207,7 +207,7 @@ AC_HEADER_SYS_WAIT
 AC_HEADER_TIME
 
 AC_CHECK_HEADERS(wchar.h wctype.h)
-AC_CHECK_HEADERS(fcntl.h limits.h time.h unistd.h)
+AC_CHECK_HEADERS(fcntl.h time.h unistd.h)
 AC_CHECK_HEADERS(libgen.h)
 AC_CHECK_HEADERS(sigaction.h)
 AC_CHECK_HEADERS(arpa/inet.h)
@@ -229,7 +229,7 @@ AC_CHECK_HEADERS([net/if.h], [], [],
 #endif
 ]])
 AC_CHECK_HEADERS(stdint.h inttypes.h)
-AC_CHECK_HEADERS(locale.h pwd.h)
+AC_CHECK_HEADERS(pwd.h)
 AC_CHECK_HEADERS(termios.h)
 AC_CHECK_HEADERS(poll.h)
 AC_CHECK_HEADERS(stdalign.h)
