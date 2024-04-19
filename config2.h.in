@@ -299,12 +299,6 @@
 /* Define to 1 if you have the `access' function. */
 #mesondefine HAVE_ACCESS
 
-/* Define if you have struct addrinfo */
-#mesondefine HAVE_ADDRINFO
-
-/* Define to 1 if you have the `alarm' function. */
-#mesondefine HAVE_ALARM
-
 /* Define to 1 if you have `alloca', as a function or macro. */
 #mesondefine HAVE_ALLOCA
 
@@ -352,9 +346,6 @@
 /* Define to 1 if you have the `event_base_free' function. */
 #mesondefine HAVE_EVENT_BASE_FREE
 
-/* Define to 1 if you have the `event_base_get_method' function. */
-#mesondefine HAVE_EVENT_BASE_GET_METHOD
-
 /* Define to 1 if you have the `event_base_new' function. */
 #mesondefine HAVE_EVENT_BASE_NEW
 
@@ -364,14 +355,8 @@
 /* Define to 1 if you have the `event_config_set_flag' function. */
 #mesondefine HAVE_EVENT_CONFIG_SET_FLAG
 
-/* Define to 1 if you have the `event_get_method' function. */
-#mesondefine HAVE_EVENT_GET_METHOD
-
 /* Define to 1 if you have the `event_get_struct_event_size' function. */
 #mesondefine HAVE_EVENT_GET_STRUCT_EVENT_SIZE
-
-/* Define to 1 if you have the `event_get_version' function. */
-#mesondefine HAVE_EVENT_GET_VERSION
 
 /* Define to 1 if you have the <event.h> header file. */
 #mesondefine HAVE_EVENT_H
@@ -409,9 +394,6 @@
 /* Define to 1 if you have the `fseeko' function. */
 #mesondefine HAVE_FSEEKO
 
-/* Define to 1 if you have the <fsplib.h> header file. */
-#mesondefine HAVE_FSPLIB_H
-
 /* Define to 1 if you have the `fsync' function. */
 #mesondefine HAVE_FSYNC
 
@@ -432,12 +414,6 @@
 
 /* Define to 1 if you have the `getifaddrs' function. */
 #mesondefine HAVE_GETIFADDRS
-
-/* Define to 1 if you have the `getpgid' function. */
-#mesondefine HAVE_GETPGID
-
-/* Define to 1 if you have the `getpgrp' function. */
-#mesondefine HAVE_GETPGRP
 
 /* Define to 1 if you have the `getpwnam' function. */
 #mesondefine HAVE_GETPWNAM
@@ -503,9 +479,6 @@
 /* Define if your <locale.h> file defines LC_MESSAGES. */
 #mesondefine HAVE_LC_MESSAGES
 
-/* Define to 1 if you have the `dl' library (-ldl). */
-#mesondefine HAVE_LIBDL
-
 /* Define to 1 if you have the `ev' library (-lev). */
 #mesondefine HAVE_LIBEV
 
@@ -518,24 +491,8 @@
 /* Define to 1 if you have the <libgen.h> header file. */
 #mesondefine HAVE_LIBGEN_H
 
-/* Define to 1 if you have the `nsl' library (-lnsl). */
-#mesondefine HAVE_LIBNSL
-
-/* Define to 1 if you have the `nss_compat_ossl' library (-lnss_compat_ossl).
-   */
-#mesondefine HAVE_LIBNSS_COMPAT_OSSL
-
-/* Define to 1 if you have the <libsmbclient.h> header file. */
-#mesondefine HAVE_LIBSMBCLIENT_H
-
-/* Define to 1 if you have the `socket' library (-lsocket). */
-#mesondefine HAVE_LIBSOCKET
-
 /* Define if you have long long */
 #mesondefine HAVE_LONG_LONG
-
-/* Define to 1 if you have the <lzma.h> header file. */
-#mesondefine HAVE_LZMA_H
 
 /* Define to 1 if you have the <machine/console.h> header file. */
 #mesondefine HAVE_MACHINE_CONSOLE_H
@@ -545,9 +502,6 @@
 
 /* Define to 1 if you have the `memmove' function. */
 #mesondefine HAVE_MEMMOVE
-
-/* Define to 1 if you have the <memory.h> header file. */
-#mesondefine HAVE_MEMORY_H
 
 /* Define to 1 if you have the `mempcpy' function. */
 #mesondefine HAVE_MEMPCPY
@@ -566,9 +520,6 @@
 
 /* Define to 1 if you have the `munmap' function. */
 #mesondefine HAVE_MUNMAP
-
-/* Define to 1 if you have the <ndir.h> header file, and it defines `DIR'. */
-#mesondefine HAVE_NDIR_H
 
 /* Define to 1 if you have the <netdb.h> header file. */
 #mesondefine HAVE_NETDB_H
@@ -590,10 +541,6 @@
 
 /* Define to 1 if you have the <net/if.h> header file. */
 #mesondefine HAVE_NET_IF_H
-
-/* Define to 1 if you have the <nss_compat_ossl/nss_compat_ossl.h> header
-   file. */
-#mesondefine HAVE_NSS_COMPAT_OSSL_NSS_COMPAT_OSSL_H
 
 /* Define if you have off_t */
 #mesondefine HAVE_OFF_T
@@ -628,9 +575,6 @@
 /* Define if you have _read_kbd() */
 #mesondefine HAVE_READ_KBD
 
-/* Define if you have struct sockaddr_in6 */
-#mesondefine HAVE_SA_IN6
-
 /* Define if you have struct sockaddr_storage */
 #mesondefine HAVE_SA_STORAGE
 
@@ -640,23 +584,14 @@
 /* Define to 1 if you have the `setenv' function. */
 #mesondefine HAVE_SETENV
 
-/* Define to 1 if you have the `setitimer' function. */
-#mesondefine HAVE_SETITIMER
-
 /* Define to 1 if you have the `setlocale' function. */
 #mesondefine HAVE_SETLOCALE
 
 /* Define to 1 if you have the `setpgid' function. */
 #mesondefine HAVE_SETPGID
 
-/* Define to 1 if you have the `setpgrp' function. */
-#mesondefine HAVE_SETPGRP
-
 /* Define to 1 if you have the `sigaction' function. */
 #mesondefine HAVE_SIGACTION
-
-/* Define to 1 if you have the <sigaction.h> header file. */
-#mesondefine HAVE_SIGACTION_H
 
 /* Define to 1 if you have the `snprintf' function. */
 #mesondefine HAVE_SNPRINTF
@@ -685,17 +620,11 @@
 /* Define to 1 if you have the `strftime' function. */
 #mesondefine HAVE_STRFTIME
 
-/* Define to 1 if you have the <strings.h> header file. */
-#mesondefine HAVE_STRINGS_H
-
 /* Define to 1 if you have the `strncasecmp' function. */
 #mesondefine HAVE_STRNCASECMP
 
 /* Define to 1 if you have the `strptime' function. */
 #mesondefine HAVE_STRPTIME
-
-/* Define to 1 if you have the `strrchr' function. */
-#mesondefine HAVE_STRRCHR
 
 /* Define to 1 if you have the `strstr' function. */
 #mesondefine HAVE_STRSTR
@@ -709,10 +638,6 @@
 /* Define to 1 if you have the <sys/cygwin.h> header file. */
 #mesondefine HAVE_SYS_CYGWIN_H
 
-/* Define to 1 if you have the <sys/dir.h> header file, and it defines `DIR'.
-   */
-#mesondefine HAVE_SYS_DIR_H
-
 /* Define to 1 if you have the <sys/fmutex.h> header file. */
 #mesondefine HAVE_SYS_FMUTEX_H
 
@@ -721,10 +646,6 @@
 
 /* Define to 1 if you have the <sys/kd.h> header file */
 #mesondefine HAVE_SYS_KD_H
-
-/* Define to 1 if you have the <sys/ndir.h> header file, and it defines `DIR'.
-   */
-#mesondefine HAVE_SYS_NDIR_H
 
 /* Define to 1 if you have the <sys/param.h> header file. */
 #mesondefine HAVE_SYS_PARAM_H
@@ -740,9 +661,6 @@
 
 /* Define to 1 if you have the <sys/sockio.h> header file. */
 #mesondefine HAVE_SYS_SOCKIO_H
-
-/* Define to 1 if you have the <sys/stat.h> header file. */
-#mesondefine HAVE_SYS_STAT_H
 
 /* Define to 1 if you have the <sys/time.h> header file. */
 #mesondefine HAVE_SYS_TIME_H
@@ -804,9 +722,6 @@
 /* Define to 1 if you have the <wctype.h> header file. */
 #mesondefine HAVE_WCTYPE_H
 
-/* Define to 1 if you have the `wcwidth' function. */
-#mesondefine HAVE_WCWIDTH
-
 /* Define to 1 if you have the <windows.h> header file. */
 #mesondefine HAVE_WINDOWS_H
 
@@ -818,12 +733,6 @@
 
 /* Define if you have X11 for restoring window titles */
 #mesondefine HAVE_X11
-
-/* Define to 1 if you have the <zlib.h> header file. */
-#mesondefine HAVE_ZLIB_H
-
-/* Define to 1 if you have the <zstd.h> header file. */
-#mesondefine HAVE_ZSTD_H
 
 /* Define to 1 if you have the `__argz_count' function. */
 #mesondefine HAVE___ARGZ_COUNT
