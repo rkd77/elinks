@@ -200,6 +200,10 @@ if conf_data.get('CONFIG_ECMASCRIPT')
     extracppflags += ['-fpermissive', '-Wno-sign-compare']
 endif
 
+if compiler.has_header('argz.h')
+    conf_data.set('HAVE_ARGZ_H', 1)
+endif
+
 if compiler.has_header('sys/wait.h')
     conf_data.set('HAVE_SYS_WAIT_H', 1)
 endif
@@ -340,12 +344,36 @@ if compiler.has_header('event.h')
     conf_data.set('HAVE_EVENT_H', 1)
 endif
 
+if compiler.has_header('ev-event.h')
+    conf_data.set('HAVE_EV_EVENT_H', 1)
+endif
+
 if compiler.has_header('alloca.h')
     conf_data.set('HAVE_ALLOCA_H', 1)
 endif
 
+if compiler.has_header('lauxlib.h')
+    conf_data.set('HAVE_LAUXLIB_H', 1)
+endif
+
+if compiler.has_header('machine/console.h')
+    conf_data.set('HAVE_MACHINE_CONSOLE_H', 1)
+endif
+
+if compiler.has_header('malloc.h')
+    conf_data.set('HAVE_MALLOC_H', 1)
+endif
+
 if compiler.has_header('stdalign.h')
     conf_data.set('HAVE_STDALIGN_H', 1)
+endif
+
+if compiler.has_header('sys/consio.h')
+    conf_data.set('HAVE_SYS_CONSIO_H', 1)
+endif
+
+if compiler.has_header('sys/param.h')
+    conf_data.set('HAVE_SYS_PARAM_H', 1)
 endif
 
 if compiler.has_header('term.h')
