@@ -491,15 +491,6 @@
 /* Define to 1 if you have the `isdigit' function. */
 #mesondefine HAVE_ISDIGIT
 
-/* Define to 1 if you have the `JS_ReportAllocationOverflow' function. */
-#mesondefine HAVE_JS_REPORTALLOCATIONOVERFLOW
-
-/* Define to 1 if you have the `JS_SetBranchCallback' function. */
-#mesondefine HAVE_JS_SETBRANCHCALLBACK
-
-/* Define to 1 if you have the `JS_TriggerOperationCallback' function. */
-#mesondefine HAVE_JS_TRIGGEROPERATIONCALLBACK
-
 /* Define to 1 if you have the `kill' function. */
 #mesondefine HAVE_KILL
 
