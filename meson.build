@@ -879,6 +879,14 @@ if compiler.has_function('unsetenv', prefix : '#include <stdlib.h>')
     conf_data.set('HAVE_UNSETENV', 1)
 endif
 
+if compiler.has_function('getegid', prefix : '#include <unistd.h>')
+    conf_data.set('HAVE_GETEGID', 1)
+endif
+
+if compiler.has_function('getgid', prefix : '#include <unistd.h>')
+    conf_data.set('HAVE_GETGID', 1)
+endif
+
 if compiler.has_function('getuid', prefix : '#include <unistd.h>')
     conf_data.set('HAVE_GETUID', 1)
 endif
