@@ -1096,8 +1096,14 @@ if compiler.has_function('strtoul', prefix: '#include <stdlib.h>')
     conf_data.set('HAVE_STRTOUL', 1)
 endif
 
-if compiler.compiles('int a; typeof(a) b;')
+if compiler.compiles('int a; typeof(a) b;', name: 'typeof')
     conf_data.set('HAVE_TYPEOF', 1)
+endif
+
+if compiler.compiles('''#include <unistd.h>
+int func(void) { return sysconf(_SC_PAGE_SIZE); }
+''', name: '_SC_PAGE_SIZE')
+    conf_data.set('HAVE_SC_PAGE_SIZE', 1)
 endif
 
 conf_data.set('ICONV_CONST', true)
