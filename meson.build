@@ -1092,6 +1092,10 @@ if compiler.has_function('mkstemps', prefix: '#include <stdlib.h>', args: '-D_GN
     conf_data.set('HAVE_MKSTEMPS', 1)
 endif
 
+if compiler.has_function('setlocale', prefix: '#include <locale.h>')
+    conf_data.set('HAVE_SETLOCALE', 1)
+endif
+
 if compiler.has_function('strtoul', prefix: '#include <stdlib.h>')
     conf_data.set('HAVE_STRTOUL', 1)
 endif
@@ -1104,6 +1108,12 @@ if compiler.compiles('''#include <unistd.h>
 int func(void) { return sysconf(_SC_PAGE_SIZE); }
 ''', name: '_SC_PAGE_SIZE')
     conf_data.set('HAVE_SC_PAGE_SIZE', 1)
+endif
+
+if compiler.compiles('''#include <locale.h>
+int func(void) { return LC_MESSAGES; }
+''', name: 'LC_MESSAGES')
+    conf_data.set('HAVE_LC_MESSAGES', 1)
 endif
 
 conf_data.set('ICONV_CONST', true)
