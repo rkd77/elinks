@@ -722,8 +722,36 @@ conf_data.set('HAVE_VARIADIC_MACROS', 1)
 #AC_FUNC_MEMCMP
 #AC_FUNC_MMAP
 
+if compiler.has_function('_beginthread', prefix: '#include <stdlib.h>')
+    conf_data.set('HAVE_BEGINTHREAD', 1)
+endif
+
+if compiler.has_function('cygwin_conv_to_full_win32_path', prefix: '#include <stdlib.h>')
+    conf_data.set('HAVE_CYGWIN_CONV_TO_FULL_WIN32_PATH', 1)
+endif
+
+if compiler.has_function('feof_unlocked', prefix: '#include <stdio.h>')
+    conf_data.set('HAVE_FEOF_UNLOCKED', 1)
+endif
+
+if compiler.has_function('fgets_unlocked', prefix: '#include <stdio.h>', args: '-D_GNU_SOURCE')
+    conf_data.set('HAVE_FGETS_UNLOCKED', 1)
+endif
+
 if compiler.has_function('mmap', prefix: '#include <sys/mman.h>')
     conf_data.set('HAVE_MMAP', 1)
+endif
+
+if compiler.has_function('MouOpen', prefix: '#include <stdlib.h>')
+    conf_data.set('HAVE_MOUOPEN', 1)
+endif
+
+if compiler.has_function('munmap', prefix: '#include <sys/mman.h>')
+    conf_data.set('HAVE_MUNMAP', 1)
+endif
+
+if compiler.has_function('_read_kbd', prefix: '#include <stdlib.h>')
+    conf_data.set('HAVE_READ_KBD', 1)
 endif
 
 if compiler.has_function('strftime', prefix: '#include <time.h>')
@@ -732,6 +760,22 @@ endif
 
 if compiler.has_function('strptime', prefix: '#include <time.h>', args: '-D_XOPEN_SOURCE')
     conf_data.set('HAVE_STRPTIME', 1)
+endif
+
+if compiler.has_function('tsearch', prefix: '#include <search.h>')
+    conf_data.set('HAVE_TSEARCH', 1)
+endif
+
+if compiler.has_function('__argz_count', prefix: '#include <argz.h>')
+    conf_data.set('HAVE___ARGZ_COUNT', 1)
+endif
+
+if compiler.has_function('__argz_next', prefix: '#include <argz.h>')
+    conf_data.set('HAVE___ARGZ_NEXT', 1)
+endif
+
+if compiler.has_function('__argz_stringify', prefix: '#include <argz.h>')
+    conf_data.set('HAVE___ARGZ_STRINGIFY', 1)
 endif
 
 if compiler.has_function('atoll', prefix : '#include <stdlib.h>')
