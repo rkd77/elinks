@@ -5,6 +5,7 @@
 #include "config.h"
 #endif
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -133,7 +134,7 @@ add_selector_property(struct css_selector *selector, struct css_property *prop)
 
 	if (newprop) {
 		copy_struct(newprop, prop);
-		add_to_list(selector->properties, newprop);
+		add_to_list_end(selector->properties, newprop);
 	}
 }
 
