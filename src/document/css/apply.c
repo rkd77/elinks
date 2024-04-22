@@ -236,7 +236,9 @@ examine_element(struct html_context *html_context, struct css_selector *base,
 
 #ifdef CONFIG_CSS
 #ifdef CONFIG_LIBCSS
-#else
+	if (!html_context->options->libcss_enable)
+#endif
+	{
 	if (element->attr.class_ && seltype <= CST_CLASS) {
 		const char *class_ = element->attr.class_;
 
@@ -258,7 +260,7 @@ examine_element(struct html_context *html_context, struct css_selector *base,
 		selector = find_css_selector(selectors, CST_ID, rel, element->attr.id, -1);
 		process_found_selector(selector, CST_ID, base);
 	}
-#endif
+	}
 #endif
 
 #undef process_found_selector
