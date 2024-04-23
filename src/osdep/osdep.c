@@ -62,6 +62,7 @@
 #include "elinks.h"
 
 #include "config/options.h"
+#include "main/main.h"
 #include "main/select.h"
 #include "osdep/osdep.h"
 #include "osdep/signals.h"
@@ -875,7 +876,7 @@ done_draw(void)
 int
 get_output_handle(void)
 {
-	if (get_cmd_opt_bool("test")) {
+	if (program.testjs) {
 		return open("/dev/null", O_WRONLY);
 	}
 

@@ -103,7 +103,7 @@ mjs_console_exit(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	if (!get_cmd_opt_bool("test")) {
+	if (!program.testjs) {
 		js_pushundefined(J);
 		return;
 	}

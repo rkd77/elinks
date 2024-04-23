@@ -34,6 +34,7 @@
 #include "ecmascript/timer.h"
 #include "intl/libintl.h"
 #include "main/module.h"
+#include "main/main.h"
 #include "main/select.h"
 #include "main/timer.h"
 #include "osdep/osdep.h"
@@ -275,7 +276,7 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %s %d\n", __FILE__, __FUNCTION__, text, interpreter->changed);
 #endif
-	if (interpreter->changed && !get_cmd_opt_bool("test")) {
+	if (interpreter->changed && !program.testjs) {
 		struct document_view *doc_view = interpreter->vs->doc_view;
 		struct document *document = doc_view->document;
 		struct session *ses = doc_view->session;
@@ -643,7 +644,7 @@ init_ecmascript_module(struct module *module)
 	if (xdg_config_home) {
 		/* ecmascript console log */
 		console_log_filename = straconcat(xdg_config_home, "/console.log", NULL);
-		console_error_filename = get_cmd_opt_bool("test") ? stracpy("/dev/stderr") : straconcat(xdg_config_home, "/console.err", NULL);
+		console_error_filename = program.testjs ? stracpy("/dev/stderr") : straconcat(xdg_config_home, "/console.err", NULL);
 		/* ecmascript local storage db location */
 #ifdef CONFIG_OS_DOS
 		local_storage_filename = stracpy("elinks_ls.db");

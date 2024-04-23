@@ -120,7 +120,7 @@ js_console_exit(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *a
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	if (!get_cmd_opt_bool("test")) {
+	if (!program.testjs) {
 		return JS_UNDEFINED;
 	}
 	program.retval = JS_ToBool(ctx, argv[0]) ? RET_ERROR : RET_OK;

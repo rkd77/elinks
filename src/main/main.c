@@ -176,6 +176,7 @@ init(void)
 		free_string_list(&url_list);
 		return;
 	}
+	program.testjs = get_cmd_opt_bool("test");
 
 	if (!remote_session_flags) {
 		check_stdio(&url_list);

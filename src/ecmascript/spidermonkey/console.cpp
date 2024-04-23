@@ -158,7 +158,7 @@ console_exit(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	args.rval().setUndefined();
 
-	if (!get_cmd_opt_bool("test")) {
+	if (!program.testjs) {
 		return true;
 	}
 	program.retval = args[0].toBoolean() ? RET_ERROR : RET_OK;

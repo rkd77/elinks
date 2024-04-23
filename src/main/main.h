@@ -20,6 +20,7 @@ struct program {
 	int terminate;
 	enum retval retval;
 	char *path;
+	unsigned int testjs:1;
 };
 
 extern struct program program;
