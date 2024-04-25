@@ -8,6 +8,7 @@
 
 #include "cache/cache.h"
 #include "config/conf.h"
+#include "config/options.h"
 #include "network/connection.h"
 #include "protocol/about.h"
 #include "protocol/protocol.h"
@@ -97,7 +98,7 @@ about_protocol_handler(struct connection *conn)
 	if (cached && !cached->content_type) {
 #ifndef CONFIG_SMALL
 		{
-			if (!strncmp(conn->uri->data, "config", 6)) {
+			if (!strncmp(conn->uri->data, "config", 6) && !get_cmd_opt_bool("anonymous")) {
 				char *str;
 
 				if (conn->referrer && conn->referrer->protocol == PROTOCOL_ABOUT) {
