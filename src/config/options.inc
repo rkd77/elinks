@@ -1356,6 +1356,10 @@ static union option_info config_options_info[] = {
 		"showip-text", "black", "white", "black", "white",
 		N_("Status bar show ip text colors.")),
 
+	INIT_OPT_COLORS(".status", N_("Status bar show available memory"),
+		"showmem-text", "black", "white", "black", "white",
+		N_("Status bar show available memory text colors.")),
+
 	INIT_OPT_COLORS(".status", N_("Generic status bar"),
 		"status-bar", "black", "white", "black", "white",
 		N_("Generic status bar colors.")),

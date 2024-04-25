@@ -64,6 +64,7 @@ enum led_option {
 	LEDS_CLOCK_ALIAS,
 
 	LEDS_SHOW_IP_ENABLE,
+	LEDS_SHOW_MEM_ENABLE,
 
 	LEDS_TEMPERATURE_TREE,
 	LEDS_TEMPERATURE_ENABLE,
@@ -96,6 +97,10 @@ static union option_info led_options[] = {
 		"show_ip", OPT_ZERO, 0,
 		N_("Whether to display IP of the document in the status bar.")),
 
+	INIT_OPT_BOOL("ui", N_("Show available memory"),
+		"show_mem", OPT_ZERO, 0,
+		N_("Whether to display available memory. From /proc/meminfo.")),
+
 	INIT_OPT_TREE("ui", N_("Temperature"),
 		"temperature", OPT_ZERO, N_("Temperature of CPU.")),
 
@@ -125,6 +130,7 @@ static union option_info led_options[] = {
 #define get_leds_clock_format()		get_opt_leds(LEDS_CLOCK_FORMAT).string
 #define get_leds_panel_enable()		get_opt_leds(LEDS_PANEL_ENABLE).number
 #define get_leds_show_ip_enable()	get_opt_leds(LEDS_SHOW_IP_ENABLE).number
+#define get_leds_show_mem_enable()	get_opt_leds(LEDS_SHOW_MEM_ENABLE).number
 #define get_leds_temperature_enable()	get_opt_leds(LEDS_TEMPERATURE_ENABLE).number
 #define get_leds_temperature_filename()		get_opt_leds(LEDS_TEMPERATURE_FILENAME).string
 
@@ -207,6 +213,58 @@ draw_show_ip(struct session *ses, int xpos, int ypos, struct color_pair *color)
 		return length;
 	}
 	return 0;
+}
+
+static int
+draw_show_mem(struct session *ses, int xpos, int ypos, struct color_pair *color)
+{
+	struct terminal *term = ses->tab->term;
+	FILE *f;
+	struct string text;
+	int i;
+	int length;
+	char *pos;
+	size_t ret = 0;
+
+	f = fopen("/proc/meminfo", "r");
+
+	if (!f) {
+		return 0;
+	}
+
+	while (!feof(f)) {
+		char buffer[128];
+
+		if (!fgets(buffer, 127, f)) {
+			break;
+		}
+		if (strncmp(buffer, "MemAvailable:", sizeof("MemAvailable:")-1)) {
+			continue;
+		}
+		if (sscanf(buffer, "MemAvailable:%ld", &ret) < 1) {
+			ret = 0;
+			break;
+		} else {
+			break;
+		}
+	}
+	fclose(f);
+
+	if (ret < 1) {
+		return 0;
+	}
+
+	if (!init_string(&text)) {
+		return 0;
+	}
+	add_format_to_string(&text, "[%ld MiB]", ret / 1024);
+	length = text.length;
+	for (i = 0, pos = text.source; i < length; i++) {
+		draw_char(term, xpos - length + i, ypos, pos[i], 0, color);
+	}
+	done_string(&text);
+
+	return length;
 }
 
 static int
@@ -330,6 +388,12 @@ draw_leds(struct session *ses)
 		struct color_pair *color = get_bfu_color(term, "status.status-text");
 
 		if (color) term->leds_length += draw_temperature(ses, xpos - term->leds_length, ypos, color);
+	}
+
+	if (get_leds_show_mem_enable()) {
+		struct color_pair *color = get_bfu_color(term, "status.showmem-text");
+
+		if (color) term->leds_length += draw_show_mem(ses, xpos - term->leds_length, ypos, color);
 	}
 
 	if (get_leds_show_ip_enable()) {
