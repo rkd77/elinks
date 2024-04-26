@@ -224,7 +224,7 @@ draw_show_mem(struct session *ses, int xpos, int ypos, struct color_pair *color)
 	int i;
 	int length;
 	char *pos;
-	size_t ret = 0;
+	long ret = 0;
 
 	f = fopen("/proc/meminfo", "r");
 
