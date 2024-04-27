@@ -5966,7 +5966,7 @@ msgstr "Wyczyść ~całą pamięć podręczną"
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:336
 msgid "Re~move temporary files"
-msgstr "Usuń tymczasowe pliki"
+msgstr "Usuń tymc~zasowe pliki"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:337
