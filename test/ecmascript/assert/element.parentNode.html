@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>Example list:</p>
+
+<ul>
+  <li id="myLI">Coffee</li>
+  <li>Tea</li>
+</ul>
+
+<p>Click the button to get the node name of the parent node of the li element in the list.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var x = document.getElementById("myLI").parentNode.tagName;
+  console.assert(x === 'UL', 'parentNode is UL');
+}
+console.error("element.parentNode.html");
+myFunction();
+console.exit(0);
+</script>
+
+</body>
+</html>
