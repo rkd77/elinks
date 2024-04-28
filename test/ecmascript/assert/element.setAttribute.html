@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.democlass {
+  color: red;
+}
+</style>
+</head>
+<body>
+
+<h1>Hello World</h1>
+
+<p>Click the button to add a class attribute with the value of "democlass" to the h1 element.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<script>
+function myFunction() {
+  var before = document.getElementsByTagName("H1")[0].outerHTML;
+  console.assert(before === '<H1>Hello World</H1>', 'H1');
+  document.getElementsByTagName("H1")[0].setAttribute("class", "democlass");
+  var after = document.getElementsByTagName("H1")[0].outerHTML;
+  console.assert(after === '<H1 class="democlass">Hello World</H1>', 'H1 with class');
+}
+console.error("element.setAttribute.html");
+myFunction();
+console.exit(0);
+</script>
+
+</body>
+</html>
