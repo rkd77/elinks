@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p id="myP"><!--Click the button--> to get the node type of this element.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var x = document.getElementById("myP").firstChild.nodeValue;
+  console.assert(x === 'Click the button', 'Click the button');
+}
+console.error("element.nodeValue.html");
+myFunction();
+console.exit(0);
+</script>
+
+</body>
+</html>
