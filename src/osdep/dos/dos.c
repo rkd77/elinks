@@ -983,6 +983,18 @@ int dos_select(int n, fd_set *rs, fd_set *ws, fd_set *es, struct timeval *t, int
 	}
 }
 
+long
+os_get_free_mem_in_mib(void)
+{
+	__dpmi_memory_info buffer;
+	int ret = __dpmi_get_memory_information(&buffer);
+
+	if (ret) {
+		return 0;
+	}
+	return buffer.total_available_bytes_of_virtual_memory_client / (1024 * 1024);
+}
+
 #ifdef DOS_EXTRA_KEYBOARD
 
 int dos_setraw(int ctl, int save)

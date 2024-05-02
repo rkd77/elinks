@@ -21,6 +21,7 @@
 #include "intl/libintl.h"
 #include "main/module.h"
 #include "main/timer.h"
+#include "osdep/osdep.h"
 #include "session/session.h"
 #include "terminal/draw.h"
 #include "terminal/tab.h"
@@ -219,45 +220,15 @@ static int
 draw_show_mem(struct session *ses, int xpos, int ypos, struct color_pair *color)
 {
 	struct terminal *term = ses->tab->term;
-	FILE *f;
 	struct string text;
 	int i;
 	int length;
 	char *pos;
-	long ret = 0;
-
-	f = fopen("/proc/meminfo", "r");
-
-	if (!f) {
-		return 0;
-	}
-
-	while (!feof(f)) {
-		char buffer[128];
-
-		if (!fgets(buffer, 127, f)) {
-			break;
-		}
-		if (strncmp(buffer, "MemAvailable:", sizeof("MemAvailable:")-1)) {
-			continue;
-		}
-		if (sscanf(buffer, "MemAvailable:%ld", &ret) < 1) {
-			ret = 0;
-			break;
-		} else {
-			break;
-		}
-	}
-	fclose(f);
-
-	if (ret < 1) {
-		return 0;
-	}
 
 	if (!init_string(&text)) {
 		return 0;
 	}
-	add_format_to_string(&text, "[%ld MiB]", ret / 1024);
+	add_format_to_string(&text, "[%ld MiB]", os_get_free_mem_in_mib());
 	length = text.length;
 	for (i = 0, pos = text.source; i < length; i++) {
 		draw_char(term, xpos - length + i, ypos, pos[i], 0, color);

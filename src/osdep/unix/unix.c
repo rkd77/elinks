@@ -6,6 +6,8 @@
 
 #include "osdep/system.h"
 
+#include <stdio.h>
+
 #if defined(CONFIG_GPM) && defined(HAVE_GPM_H)
 #include <gpm.h>
 #endif
@@ -155,5 +157,38 @@ resume_mouse(void *h)
 
 	set_handlers(gms->h, (select_handler_T) gpm_mouse_in, NULL, NULL, gms);
 }
-
 #endif
+
+long
+os_get_free_mem_in_mib(void)
+{
+	FILE *f = fopen("/proc/meminfo", "r");
+	long ret = 0;
+
+	if (!f) {
+		return 0;
+	}
+
+	while (!feof(f)) {
+		char buffer[128];
+
+		if (!fgets(buffer, 127, f)) {
+			break;
+		}
+		if (strncmp(buffer, "MemAvailable:", sizeof("MemAvailable:")-1)) {
+			continue;
+		}
+		if (sscanf(buffer, "MemAvailable:%ld", &ret) < 1) {
+			ret = 0;
+			break;
+		} else {
+			break;
+		}
+	}
+	fclose(f);
+
+	if (ret < 1) {
+		return 0;
+	}
+	return ret / 1024;
+}

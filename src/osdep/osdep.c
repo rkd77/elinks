@@ -74,6 +74,14 @@
 #include "util/string.h"
 
 
+#if !defined(CONFIG_OS_DOS) && !defined(CONFIG_OS_UNIX)
+long
+os_get_free_mem_in_mib(void)
+{
+	return 0;
+}
+#endif
+
 #ifndef CONFIG_OS_DOS
 /* Set a file descriptor to non-blocking mode. It returns a non-zero value
  * on error. */

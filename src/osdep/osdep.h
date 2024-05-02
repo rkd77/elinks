@@ -54,6 +54,7 @@ int can_resize_window(int);
 int can_open_os_shell(int);
 void set_highpri(void);
 char *tempname(const char *dir, const char *pfx, char *suff);
+long os_get_free_mem_in_mib(void);
 
 #ifdef USE_OPEN_PREALLOC
 int open_prealloc(char *, int, int, off_t);
