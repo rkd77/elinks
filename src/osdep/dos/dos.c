@@ -990,7 +990,10 @@ os_get_free_mem_in_mib(void)
 	int ret = __dpmi_get_memory_information(&buffer);
 
 	if (ret) {
-		return 0;
+		__dpmi_free_mem_info info;
+		__dpmi_get_free_memory_information(&info);
+
+		return info.total_number_of_free_pages / 256;
 	}
 	return buffer.total_available_bytes_of_virtual_memory_client / (1024 * 1024);
 }
