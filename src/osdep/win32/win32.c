@@ -336,3 +336,13 @@ user_appdata_directory(void)
 	else
 		return NULL;
 }
+
+long
+os_get_free_mem_in_mib(void)
+{
+	MEMORYSTATUSEX statex;
+	statex.dwLength = sizeof(statex);
+	GlobalMemoryStatusEx(&statex);
+
+	return statex.ullAvailPhys / (1024 * 1024);
+}

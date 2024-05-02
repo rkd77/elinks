@@ -74,7 +74,7 @@
 #include "util/string.h"
 
 
-#if !defined(CONFIG_OS_DOS) && !defined(CONFIG_OS_UNIX)
+#if !defined(CONFIG_OS_DOS) && !defined(CONFIG_OS_UNIX) && !defined(CONFIG_OS_WIN32)
 long
 os_get_free_mem_in_mib(void)
 {
