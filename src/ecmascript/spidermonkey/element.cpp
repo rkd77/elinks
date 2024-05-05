@@ -4032,29 +4032,50 @@ element_closest(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	void *res = NULL;
+
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document = doc_view->document;
+
+	if (!document->dom) {
+		args.rval().setNull();
+		return true;
+	}
+	dom_node *root = NULL; /* root element of document */
+	/* Get root element */
+	dom_exception exc = dom_document_get_document_element(document->dom, &root);
+
+	if (exc != DOM_NO_ERR || !root) {
+		args.rval().setNull();
+		return true;
+	}
 
 	while (el) {
-		void *res = el_match_selector(selector, el);
+		res = el_match_selector(selector, el);
 
 		if (res) {
-			el = (dom_node *)res;
+			break;
+		}
+		if (el == root) {
 			break;
 		}
 		dom_node *node = NULL;
-		dom_exception exc = dom_node_get_parent_node(el, &node);
+		exc = dom_node_get_parent_node(el, &node);
 		if (exc != DOM_NO_ERR || !node) {
-			el = NULL;
 			break;
 		}
 		el = node;
 	}
 	mem_free(selector);
+	dom_node_unref(root);
 
-	if (!el) {
+	if (!res) {
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *ret = getElement(ctx, el);
+	JSObject *ret = getElement(ctx, res);
 	args.rval().setObject(*ret);
 
 	return true;
