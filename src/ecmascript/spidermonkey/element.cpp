@@ -28,6 +28,7 @@
 #include "document/libdom/renderer2.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/ecmascript-c.h"
 #include "ecmascript/spidermonkey/attr.h"
 #include "ecmascript/spidermonkey/attributes.h"
 #include "ecmascript/spidermonkey/collection.h"
@@ -4735,48 +4736,28 @@ element_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-
-// TODO
-#if 0
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
 	if (!el) {
-		args.rval().setBoolean(false);
-		return true;
-	}
-
-	struct string cssstr;
-	if (!init_string(&cssstr)) {
-		return false;
-	}
-	jshandle_value_to_char_string(&cssstr, ctx, args[0]);
-	xmlpp::ustring css = cssstr.source;
-	xmlpp::ustring xpath = css2xpath(css);
-	done_string(&cssstr);
-
-	xmlpp::Node::NodeSet elements;
-
-	try {
-		elements = el->find(xpath);
-	} catch (xmlpp::exception &e) {
 		args.rval().setNull();
 		return true;
 	}
+	char *selector = jsval_to_string(ctx, args[0]);
 
-	for (auto node: elements)
-	{
-		if (isAncestor(el, static_cast<xmlpp::Element *>(node)))
-		{
-			JSObject *elem = getElement(ctx, node);
-
-			if (elem) {
-				args.rval().setObject(*elem);
-				return true;
-			}
-		}
+	if (!selector) {
+		args.rval().setNull();
+		return true;
 	}
-	args.rval().setNull();
-#endif
+	void *ret = walk_tree_query(el, selector, 0);
+	mem_free(selector);
+
+	if (!ret) {
+		args.rval().setNull();
+	} else {
+		JSObject *el = getElement(ctx, ret);
+		args.rval().setObject(*el);
+	}
+
 	return true;
 }
 
