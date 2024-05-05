@@ -40,6 +40,8 @@ void ecmascript_detach_form_view(struct form_view *fv);
 void ecmascript_detach_form_state(struct form_state *fs);
 void ecmascript_moved_form_state(struct form_state *fs);
 
+void *walk_tree_query(dom_node *node, char *selector, int depth);
+
 extern struct module ecmascript_module;
 
 #ifdef __cplusplus

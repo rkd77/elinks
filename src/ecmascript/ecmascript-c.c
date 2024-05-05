@@ -8,6 +8,7 @@
 
 #include "dialogs/status.h"
 #include "document/document.h"
+#include "document/libdom/doc.h"
 #include "document/libdom/mapa.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
@@ -480,4 +481,60 @@ void ecmascript_moved_form_state(struct form_state *fs)
 #else
 	spidermonkey_moved_form_state(fs);
 #endif
+}
+
+void *
+walk_tree_query(dom_node *node, char *selector, int depth)
+{
+	dom_exception exc;
+	dom_node *child;
+	void *res = NULL;
+	dom_node_type typ;
+
+	/* Only interested in element nodes */
+	exc = dom_node_get_node_type(node, &typ);
+	if (typ != DOM_ELEMENT_NODE) {
+		return NULL;
+	}
+
+	if (res = el_match_selector(selector, node)) {
+		/* There was an error; return */
+		return res;
+	}
+	/* Get the node's first child */
+	exc = dom_node_get_first_child(node, &child);
+
+	if (exc != DOM_NO_ERR) {
+		fprintf(stderr, "Exception raised for node_get_first_child\n");
+		return NULL;
+	} else if (child != NULL) {
+		/* node has children;  decend to children's depth */
+		depth++;
+
+		/* Loop though all node's children */
+		do {
+			dom_node *next_child;
+
+			/* Visit node's descendents */
+			res = walk_tree_query(child, selector, depth);
+			/* There was an error; return */
+			if (res) {
+				dom_node_unref(child);
+				return res;
+			}
+
+			/* Go to next sibling */
+			exc = dom_node_get_next_sibling(child, &next_child);
+			if (exc != DOM_NO_ERR) {
+				fprintf(stderr, "Exception raised for "
+						"node_get_next_sibling\n");
+				dom_node_unref(child);
+				return NULL;
+			}
+
+			dom_node_unref(child);
+			child = next_child;
+		} while (child != NULL); /* No more children */
+	}
+	return NULL;
 }
