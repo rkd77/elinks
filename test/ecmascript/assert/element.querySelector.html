@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<body>
+<p class="a">Class a.</p>
+<p class="b">Class b.</p>
+<p id="start">
+<b class="a">This a class.</b>
+<b class="b">This b class.</b>
+</p>
+
+<script>
+function myFunction() {
+  var el = document.getElementById('start');
+  console.assert(!(el === null), 'start exists');
+
+  var x = el.querySelector('.nonexistent');
+  console.assert(x === null, 'nonexistent element');
+
+  var y = el.querySelector('.b');
+  console.assert(!(y === null), 'Class b');
+  var inp = y.innerHTML;
+  console.assert(inp === 'This b class.', 'Class b.');
+}
+
+console.error('element.querySelector.html');
+myFunction();
+console.exit(0);
+</script>
+
+</body>
+</html>
