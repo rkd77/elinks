@@ -9,12 +9,15 @@
 console.error('element.matches');
 
   var birds = document.getElementsByTagName('li');
+  var ch = false;
 
   for (var i = 0; i < birds.length; i++) {
     if (birds[i].matches('.endangered')) {
-      console.assert(birds[i].textContent === 'Philippine eagle', 'endangered');
+      console.assert(birds[i].innerHTML === 'Philippine eagle', birds[i].innerHTML);
+      ch = true;
     }
   }
+  console.assert(ch, 'was matched');
 
 console.exit(0);
 

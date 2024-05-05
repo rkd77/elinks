@@ -24,6 +24,7 @@
 #include "document/document.h"
 #include "document/forms.h"
 #include "document/libdom/corestrings.h"
+#include "document/libdom/doc.h"
 #include "document/libdom/mapa.h"
 #include "document/libdom/renderer2.h"
 #include "document/view.h"
@@ -4677,44 +4678,24 @@ element_matches(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-
-// TODO
-#if 0
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
 	if (!el) {
 		args.rval().setBoolean(false);
 		return true;
 	}
+	char *selector = jsval_to_string(ctx, args[0]);
 
-	struct string cssstr;
-	if (!init_string(&cssstr)) {
-		return false;
-	}
-	jshandle_value_to_char_string(&cssstr, ctx, args[0]);
-	xmlpp::ustring css = cssstr.source;
-	xmlpp::ustring xpath = css2xpath(css);
-	done_string(&cssstr);
-
-	xmlpp::Node::NodeSet elements;
-
-	try {
-		elements = el->find(xpath);
-	} catch (xmlpp::exception &e) {
+	if (!selector) {
 		args.rval().setBoolean(false);
 		return true;
 	}
-	for (auto node: elements) {
-		if (node == el) {
-			args.rval().setBoolean(true);
-			return true;
-		}
-	}
-	args.rval().setBoolean(false);
-#endif
+	void *res = el_match_selector(selector, el);
+	mem_free(selector);
+
+	args.rval().setBoolean(res);
 	return true;
 }
-
 
 static bool
 element_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
