@@ -506,7 +506,7 @@ int
 init_interlink(void)
 {
 	int pipefds[2];
-	char trigger;
+	char trigger = 0;
 	ssize_t n;
 	int fd = connect_to_af_unix();
 
