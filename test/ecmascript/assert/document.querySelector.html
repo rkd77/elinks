@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<body>
+<p class="a">Class a.</p>
+<p class="b">Class b.</p>
+
+<script>
+function myFunction() {
+  var x = document.querySelector('.nonexistent');
+  console.assert(x === null, 'nonexistent element');
+
+  var y = document.querySelector('.b');
+  console.assert(!(y === null), 'Class b');
+}
+
+console.error('document.querySelector.html');
+myFunction();
+console.exit(0);
+</script>
+
+</body>
+</html>
