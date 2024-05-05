@@ -4025,56 +4025,38 @@ element_closest(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
+	char *selector = jsval_to_string(ctx, args[0]);
+	if (!selector) {
+		args.rval().setNull();
+		return true;
+	}
 
-// TODO
-#if 0
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+
+	while (el) {
+		void *res = el_match_selector(selector, el);
+
+		if (res) {
+			el = (dom_node *)res;
+			break;
+		}
+		dom_node *node = NULL;
+		dom_exception exc = dom_node_get_parent_node(el, &node);
+		if (exc != DOM_NO_ERR || !node) {
+			el = NULL;
+			break;
+		}
+		el = node;
+	}
+	mem_free(selector);
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
+	JSObject *ret = getElement(ctx, el);
+	args.rval().setObject(*ret);
 
-	struct string cssstr;
-	if (!init_string(&cssstr)) {
-		return false;
-	}
-	jshandle_value_to_char_string(&cssstr, ctx, args[0]);
-	xmlpp::ustring css = cssstr.source;
-	xmlpp::ustring xpath = css2xpath(css);
-	done_string(&cssstr);
-
-	xmlpp::Node::NodeSet elements;
-
-	try {
-		elements = el->find(xpath);
-	} catch (xmlpp::exception &e) {
-		args.rval().setNull();
-
-		return true;
-	}
-
-	if (elements.size() == 0) {
-		args.rval().setNull();
-		return true;
-	}
-
-	while (el)
-	{
-		for (auto node: elements)
-		{
-			if (isAncestor(el, static_cast<xmlpp::Element *>(node)))
-			{
-				JSObject *elem = getElement(ctx, node);
-				args.rval().setObject(*elem);
-
-				return true;
-			}
-		}
-		el = el->get_parent();
-	}
-	args.rval().setNull();
-#endif
 	return true;
 }
 

@@ -10,7 +10,7 @@
 
 <script>
 var element = document.getElementById("myElement");
-var closest = element.closest(".container");
+var closest = element.closest("div.container");
 
 console.error('element.closest.html');
 console.assert(closest.outerHTML === '<DIV class="demo container">Parent\n    <DIV id="myElement" class="demo">The outer HTML of closest element will be shown.</DIV>\n  </DIV>', 'TODO');
