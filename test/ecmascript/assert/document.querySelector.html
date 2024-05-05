@@ -11,6 +11,8 @@ function myFunction() {
 
   var y = document.querySelector('.b');
   console.assert(!(y === null), 'Class b');
+  var inp = y.innerHTML;
+  console.assert(inp === 'Class b.', 'Class b.');
 }
 
 console.error('document.querySelector.html');

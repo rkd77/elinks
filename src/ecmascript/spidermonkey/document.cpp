@@ -1819,6 +1819,62 @@ document_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return true;
 }
 
+void *
+walk_tree_query(dom_node *node, char *selector, int depth)
+{
+	dom_exception exc;
+	dom_node *child;
+	void *res = NULL;
+	dom_node_type typ;
+
+	/* Only interested in element nodes */
+	exc = dom_node_get_node_type(node, &typ);
+	if (typ != DOM_ELEMENT_NODE) {
+		return NULL;
+	}
+
+	if (res = el_match_selector(selector, node)) {
+		/* There was an error; return */
+		return res;
+	}
+	/* Get the node's first child */
+	exc = dom_node_get_first_child(node, &child);
+
+	if (exc != DOM_NO_ERR) {
+		fprintf(stderr, "Exception raised for node_get_first_child\n");
+		return NULL;
+	} else if (child != NULL) {
+		/* node has children;  decend to children's depth */
+		depth++;
+
+		/* Loop though all node's children */
+		do {
+			dom_node *next_child;
+
+			/* Visit node's descendents */
+			res = walk_tree_query(child, selector, depth);
+			/* There was an error; return */
+			if (res) {
+				dom_node_unref(child);
+				return res;
+			}
+
+			/* Go to next sibling */
+			exc = dom_node_get_next_sibling(child, &next_child);
+			if (exc != DOM_NO_ERR) {
+				fprintf(stderr, "Exception raised for "
+						"node_get_next_sibling\n");
+				dom_node_unref(child);
+				return NULL;
+			}
+
+			dom_node_unref(child);
+			child = next_child;
+		} while (child != NULL); /* No more children */
+	}
+	return NULL;
+}
+
 static bool
 document_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -1841,8 +1897,31 @@ document_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setNull();
 		return true;
 	}
-// TODO
-	args.rval().setNull();
+	dom_node *root = NULL; /* root element of document */
+	/* Get root element */
+	dom_exception exc = dom_document_get_document_element(document->dom, &root);
+
+	if (exc != DOM_NO_ERR) {
+		args.rval().setNull();
+		return true;
+	}
+	char *selector = jsval_to_string(ctx, args[0]);
+
+	if (!selector) {
+		dom_node_unref(root);
+		args.rval().setNull();
+		return true;
+	}
+	void *ret = walk_tree_query(root, selector, 0);
+	mem_free(selector);
+	dom_node_unref(root);
+
+	if (!ret) {
+		args.rval().setNull();
+	} else {
+		JSObject *el = getElement(ctx, ret);
+		args.rval().setObject(*el);
+	}
 
 	return true;
 }

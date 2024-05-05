@@ -97,7 +97,11 @@ static css_error node_presentational_hint(void *pw, void *node,
 	return CSS_OK;
 }
 
-
+static css_error
+resolve_url_empty(void *pw, const char *base, lwc_string *rel, lwc_string **abs)
+{
+	return CSS_OK;
+}
 
 css_error
 resolve_url(void *pw, const char *base, lwc_string *rel, lwc_string **abs)
@@ -2308,4 +2312,123 @@ import_css2(struct html_context *html_context, struct uri *uri)
 //		css_parse_stylesheet(css, uri, fragment->data, end);
 //		css->import_level--;
 	}
+}
+
+void *
+el_match_selector(const char *selector, void *node)
+{
+	struct string text;
+	css_error code;
+	size_t size;
+	uint32_t count;
+	css_stylesheet_params params;
+	css_stylesheet *sheet = NULL;
+	css_select_ctx *select_ctx = NULL;
+	css_select_results *style = NULL;
+	uint8_t color_type;
+	css_color color_shade;
+
+	css_media media = {
+		.type = CSS_MEDIA_SCREEN,
+	};
+
+	css_unit_ctx unit_len_ctx = {0};
+	unit_len_ctx.viewport_width  = 800; // TODO
+	unit_len_ctx.viewport_height = 600; // TODO
+	unit_len_ctx.device_dpi = F_90; //device_dpi;
+
+	/** \todo Change nsoption font sizes to px. */
+///	f_size = FDIV(FMUL(F_96, FDIV(INTTOFIX(nsoption_int(font_size)), F_10)), F_72);
+///	f_min  = FDIV(FMUL(F_96, FDIV(INTTOFIX(nsoption_int(font_min_size)), F_10)), F_72);
+
+	unsigned int f_size = FDIV(FMUL(F_96, FDIV(INTTOFIX(50), F_10)), F_72); // TODO
+	unsigned int f_min  = FDIV(FMUL(F_96, FDIV(INTTOFIX(50), F_10)), F_72); // TODO
+
+	unit_len_ctx.font_size_default = f_size;
+	unit_len_ctx.font_size_minimum = f_min;
+	void *ret = NULL;
+
+	params.params_version = CSS_STYLESHEET_PARAMS_VERSION_1;
+	params.level = CSS_LEVEL_21;
+	params.charset = "UTF-8";
+	params.url = "foo";
+	params.title = "foo";
+	params.allow_quirks = false;
+	params.inline_style = false;
+	params.resolve = resolve_url_empty;
+	params.resolve_pw = NULL;
+	params.import = NULL;
+	params.import_pw = NULL;
+	params.color = NULL;
+	params.color_pw = NULL;
+	params.font = NULL;
+	params.font_pw = NULL;
+
+	if (!selector) {
+		return NULL;
+	}
+	if (!init_string(&text)) {
+		return NULL;
+	}
+	add_to_string(&text, selector);
+	add_to_string(&text, "{color:#123456}");
+
+	/* create a stylesheet */
+	code = css_stylesheet_create(&params, &sheet);
+
+	if (code != CSS_OK) {
+		goto empty;
+	}
+	code = css_stylesheet_append_data(sheet, (const uint8_t *) text.source, text.length);
+
+	if (code != CSS_OK && code != CSS_NEEDDATA) {
+		goto empty;
+	}
+	code = css_stylesheet_data_done(sheet);
+	if (code != CSS_OK) {
+		goto empty;
+	}
+	code = css_stylesheet_size(sheet, &size);
+
+	/* prepare a selection context containing the stylesheet */
+	code = css_select_ctx_create(&select_ctx);
+
+	if (code != CSS_OK) {
+		goto empty;
+	}
+	code = css_select_ctx_append_sheet(select_ctx, sheet, CSS_ORIGIN_AUTHOR, NULL);
+
+	if (code != CSS_OK) {
+		goto empty;
+	}
+	code = css_select_ctx_count_sheets(select_ctx, &count);
+
+	if (code != CSS_OK) {
+		goto empty;
+	}
+	code = css_select_style(select_ctx, node, &unit_len_ctx, &media, NULL, &selection_handler, 0, &style);
+
+	if (code != CSS_OK) {
+		goto empty;
+	}
+
+	color_type = css_computed_color(style->styles[CSS_PSEUDO_ELEMENT_NONE], &color_shade);
+
+	if (color_type && color_shade == 0xff123456) {
+		ret = node;
+	}
+
+empty:
+	if (style) {
+		css_select_results_destroy(style);
+	}
+	if (select_ctx) {
+		css_select_ctx_destroy(select_ctx);
+	}
+	if (sheet) {
+		css_stylesheet_destroy(sheet);
+	}
+	done_string(&text);
+
+	return ret;
 }
