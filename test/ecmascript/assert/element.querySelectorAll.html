@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<body>
+<p class="a">Class a.</p>
+<p class="b">Class b.</p>
+<p id="start">
+<b class="a">This a class.</b>
+<b class="b">This b class.</b>
+</p>
+
+<script>
+function myFunction() {
+  var el = document.getElementById('start');
+  var x = el.querySelectorAll('.nonexistent');
+  console.assert(x.length === 0, 'nonexistent element');
+
+  var y = el.querySelectorAll('.b');
+  console.assert(y.length === 1, 'b class b.');
+}
+
+console.error('element.querySelectorAll.html');
+myFunction();
+console.exit(0);
+</script>
+
+</body>
+</html>
