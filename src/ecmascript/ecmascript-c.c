@@ -538,3 +538,64 @@ walk_tree_query(dom_node *node, char *selector, int depth)
 	}
 	return NULL;
 }
+
+void
+walk_tree_query_append(dom_node *root, dom_node *node, char *selector, int depth)
+{
+	dom_exception exc;
+	dom_node *child;
+	void *res = NULL;
+	dom_node_type typ;
+
+	/* Only interested in element nodes */
+	exc = dom_node_get_node_type(node, &typ);
+
+	if (typ != DOM_ELEMENT_NODE) {
+		return;
+	}
+
+	if (res = el_match_selector(selector, node)) {
+		dom_node *clone = NULL;
+		exc = dom_node_clone_node(res, false, &clone);
+
+		if (exc != DOM_NO_ERR || !clone) {
+		} else {
+			dom_node *result = NULL;
+			exc = dom_node_append_child(root, clone, &result);
+		}
+
+		if (exc != DOM_NO_ERR) {
+			return;
+		}
+	}
+	/* Get the node's first child */
+	exc = dom_node_get_first_child(node, &child);
+
+	if (exc != DOM_NO_ERR) {
+		fprintf(stderr, "Exception raised for node_get_first_child\n");
+		return;
+	} else if (child != NULL) {
+		/* node has children;  decend to children's depth */
+		depth++;
+
+		/* Loop though all node's children */
+		do {
+			dom_node *next_child;
+
+			/* Visit node's descendents */
+			walk_tree_query_append(root, child, selector, depth);
+
+			/* Go to next sibling */
+			exc = dom_node_get_next_sibling(child, &next_child);
+			if (exc != DOM_NO_ERR) {
+				fprintf(stderr, "Exception raised for "
+						"node_get_next_sibling\n");
+				dom_node_unref(child);
+				return;
+			}
+
+			dom_node_unref(child);
+			child = next_child;
+		} while (child != NULL); /* No more children */
+	}
+}

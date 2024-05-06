@@ -1562,7 +1562,7 @@ document_createElement(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setBoolean(false);
 		return true;
 	}
-// TODO
+
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
@@ -1883,7 +1883,6 @@ document_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setBoolean(false);
 		return true;
 	}
-
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
@@ -1893,8 +1892,55 @@ document_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setNull();
 		return true;
 	}
-// TODO
-	args.rval().setNull();
+	dom_node *doc_root = NULL; /* root element of document */
+	/* Get root element */
+	dom_exception exc = dom_document_get_document_element(document->dom, &doc_root);
+
+	if (exc != DOM_NO_ERR) {
+		args.rval().setNull();
+		return true;
+	}
+	char *selector = jsval_to_string(ctx, args[0]);
+
+	if (!selector) {
+		dom_node_unref(doc_root);
+		args.rval().setNull();
+		return true;
+	}
+
+	dom_string *tag_name = NULL;
+	exc = dom_string_create((const uint8_t *)"B", 1, &tag_name);
+
+	if (exc != DOM_NO_ERR || !tag_name) {
+		dom_node_unref(doc_root);
+		mem_free(selector);
+		args.rval().setNull();
+		return true;
+	}
+	dom_element *element = NULL;
+	exc = dom_document_create_element(document->dom, tag_name, &element);
+	dom_string_unref(tag_name);
+
+	if (exc != DOM_NO_ERR || !element) {
+		dom_node_unref(doc_root);
+		mem_free(selector);
+		args.rval().setNull();
+		return true;
+	}
+	walk_tree_query_append((dom_node *)element, doc_root, selector, 0);
+	dom_node_unref(doc_root);
+	mem_free(selector);
+
+	dom_nodelist *nodes = NULL;
+	exc = dom_node_get_child_nodes(element, &nodes);
+	dom_node_unref(element);
+
+	if (exc != DOM_NO_ERR || !nodes) {
+		args.rval().setNull();
+		return true;
+	}
+	JSObject *obj = getNodeList(ctx, nodes);
+	args.rval().setObject(*obj);
 
 	return true;
 }
