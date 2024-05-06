@@ -340,6 +340,8 @@ src/ecmascript/quickjs/style.c
 src/ecmascript/quickjs/style.h
 src/ecmascript/quickjs/unibar.c
 src/ecmascript/quickjs/unibar.h
+src/ecmascript/quickjs/url.c
+src/ecmascript/quickjs/url.h
 src/ecmascript/quickjs/window.c
 src/ecmascript/quickjs/window.h
 src/ecmascript/quickjs/xhr.c
