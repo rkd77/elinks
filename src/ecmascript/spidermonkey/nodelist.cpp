@@ -82,7 +82,7 @@ JSClassOps nodeList_ops = {
 
 JSClass nodeList_class = {
 	"nodeList",
-	JSCLASS_HAS_RESERVED_SLOTS(1),
+	JSCLASS_HAS_RESERVED_SLOTS(1) | JSCLASS_HAS_CACHED_PROTO(JSProto_Array),
 	&nodeList_ops
 };
 

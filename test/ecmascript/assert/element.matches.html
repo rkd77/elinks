@@ -18,6 +18,14 @@ console.error('element.matches');
     }
   }
   console.assert(ch, 'was matched');
+  birds = document.querySelectorAll('li');
+
+  ch = false;
+  var counter = 0;
+  birds.forEach(function(b) {
+     counter++;
+  });
+  console.assert(counter === 3, 'Three');
 
 console.exit(0);
 
