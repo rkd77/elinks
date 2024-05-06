@@ -21,6 +21,7 @@
 #include "document/libdom/doc.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/ecmascript-c.h"
 #include "ecmascript/libdom/parse.h"
 #include "ecmascript/quickjs/mapa.h"
 #include "ecmascript/quickjs.h"
@@ -1498,40 +1499,28 @@ js_document_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	if (!document->dom) {
 		return JS_NULL;
 	}
+	dom_node *root = NULL; /* root element of document */
+	/* Get root element */
+	dom_exception exc = dom_document_get_document_element(document->dom, &root);
 
-// TODO
-	return JS_NULL;
-#if 0
-	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
-	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
-	const char *str;
+	if (exc != DOM_NO_ERR) {
+		return JS_NULL;
+	}
 	size_t len;
+	const char *selector = JS_ToCStringLen(ctx, &len, argv[0]);
 
-	str = JS_ToCStringLen(ctx, &len, argv[0]);
-
-	if (!str) {
-		return JS_EXCEPTION;
-	}
-	xmlpp::ustring css = str;
-	JS_FreeCString(ctx, str);
-	xmlpp::ustring xpath = css2xpath(css);
-
-	xmlpp::Node::NodeSet elements;
-
-	try {
-		elements = root->find(xpath);
-	} catch (xmlpp::exception &e) {
+	if (!selector) {
+		dom_node_unref(root);
 		return JS_NULL;
 	}
+	void *ret = walk_tree_query(root, selector, 0);
+	JS_FreeCString(ctx, selector);
+	dom_node_unref(root);
 
-	if (elements.size() == 0) {
+	if (!ret) {
 		return JS_NULL;
 	}
-
-	auto node = elements[0];
-
-	return getElement(ctx, node);
-#endif
+	return getElement(ctx, ret);
 }
 
 static JSValue
