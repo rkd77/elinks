@@ -2787,44 +2787,25 @@ js_element_matches(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
-
-// TODO
-#if 0
 	if (argc != 1) {
 		return JS_UNDEFINED;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_FALSE;
 	}
-	const char *str;
+	const char *selector;
 	size_t len;
-	str = JS_ToCStringLen(ctx, &len, argv[0]);
+	selector = JS_ToCStringLen(ctx, &len, argv[0]);
 
-	if (!str) {
-		return JS_EXCEPTION;
-	}
-	xmlpp::ustring css = str;
-	xmlpp::ustring xpath = css2xpath(css);
-	JS_FreeCString(ctx, str);
-
-	xmlpp::Node::NodeSet elements;
-
-	try {
-		elements = el->find(xpath);
-	} catch (xmlpp::exception &e) {
+	if (!selector) {
 		return JS_FALSE;
 	}
+	void *res = el_match_selector(selector, el);
+	JS_FreeCString(ctx, selector);
 
-	for (auto node: elements) {
-		if (node == el) {
-			return JS_TRUE;
-		}
-	}
-#endif
-
-	return JS_FALSE;
+	return JS_NewBool(ctx, res);
 }
 
 static JSValue
