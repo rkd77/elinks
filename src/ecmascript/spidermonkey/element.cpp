@@ -4765,50 +4765,58 @@ element_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-// TODO
-#if 0
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document = doc_view->document;
 
-	if (!el) {
-		args.rval().setBoolean(false);
+	if (!document->dom) {
+		args.rval().setNull();
 		return true;
 	}
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
-	struct string cssstr;
-
-	if (!init_string(&cssstr)) {
-		return false;
-	}
-	jshandle_value_to_char_string(&cssstr, ctx, args[0]);
-	xmlpp::ustring css = cssstr.source;
-	xmlpp::ustring xpath = css2xpath(css);
-	done_string(&cssstr);
-	xmlpp::Node::NodeSet *res = new(std::nothrow) xmlpp::Node::NodeSet;
-
-	if (!res) {
-		return false;
-	}
-
-	xmlpp::Node::NodeSet elements;
-
-	try {
-		elements = el->find(xpath);
-	} catch (xmlpp::exception &e) {}
-
-	for (auto node : elements)
-	{
-		if (isAncestor(el, static_cast<xmlpp::Element *>(node))) {
-			res->push_back(node);
-		}
-	}
-	JSObject *elem = getCollection(ctx, res);
-
-	if (elem) {
-		args.rval().setObject(*elem);
-	} else {
+	if (!el) {
 		args.rval().setNull();
+		return true;
 	}
-#endif
+	char *selector = jsval_to_string(ctx, args[0]);
+
+	if (!selector) {
+		args.rval().setNull();
+		return true;
+	}
+	dom_string *tag_name = NULL;
+	dom_exception exc = dom_string_create((const uint8_t *)"B", 1, &tag_name);
+
+	if (exc != DOM_NO_ERR || !tag_name) {
+		mem_free(selector);
+		args.rval().setNull();
+		return true;
+	}
+	dom_element *element = NULL;
+	exc = dom_document_create_element(document->dom, tag_name, &element);
+	dom_string_unref(tag_name);
+
+	if (exc != DOM_NO_ERR || !element) {
+		mem_free(selector);
+		args.rval().setNull();
+		return true;
+	}
+	walk_tree_query_append((dom_node *)element, el, selector, 0);
+	mem_free(selector);
+
+	dom_nodelist *nodes = NULL;
+	exc = dom_node_get_child_nodes(element, &nodes);
+	dom_node_unref(element);
+
+	if (exc != DOM_NO_ERR || !nodes) {
+		args.rval().setNull();
+		return true;
+	}
+	JSObject *obj = getNodeList(ctx, nodes);
+	args.rval().setObject(*obj);
+
 	return true;
 }
 
