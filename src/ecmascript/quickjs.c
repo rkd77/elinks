@@ -40,6 +40,7 @@
 #include "ecmascript/quickjs/navigator.h"
 #include "ecmascript/quickjs/screen.h"
 #include "ecmascript/quickjs/unibar.h"
+#include "ecmascript/quickjs/url.h"
 #include "ecmascript/quickjs/window.h"
 #include "ecmascript/quickjs/xhr.h"
 #include "intl/libintl.h"
@@ -182,6 +183,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	js_keyboardEvent_init(ctx);
 	js_messageEvent_init(ctx);
 	js_customEvent_init(ctx);
+	js_url_init(ctx);
 
 	interpreter->document_obj = js_document_init(ctx);
 
