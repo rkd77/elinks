@@ -1541,38 +1541,50 @@ js_document_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JS
 	if (!document->dom) {
 		return JS_NULL;
 	}
+	dom_node *doc_root = NULL; /* root element of document */
+	/* Get root element */
+	dom_exception exc = dom_document_get_document_element(document->dom, &doc_root);
 
-// TODO
-	return JS_NULL;
-#if 0
-	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
-	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
-	const char *str;
-	size_t len;
-
-	str = JS_ToCStringLen(ctx, &len, argv[0]);
-
-	if (!str) {
-		return JS_EXCEPTION;
+	if (exc != DOM_NO_ERR) {
+		return JS_NULL;
 	}
-	xmlpp::ustring css = str;
-	JS_FreeCString(ctx, str);
-	xmlpp::ustring xpath = css2xpath(css);
-	xmlpp::Node::NodeSet *elements = new(std::nothrow) xmlpp::Node::NodeSet;
+	size_t len;
+	const char *selector = JS_ToCStringLen(ctx, &len, argv[0]);
 
-	if (!elements) {
+	if (!selector) {
+		dom_node_unref(doc_root);
 		return JS_NULL;
 	}
 
-	try {
-		*elements = root->find(xpath);
-	} catch (xmlpp::exception &e) {
-	}
-	JSValue rr = getCollection(ctx, elements);
-	JS_FreeValue(ctx, rr);
+	dom_string *tag_name = NULL;
+	exc = dom_string_create((const uint8_t *)"B", 1, &tag_name);
 
-	RETURN_JS(rr);
-#endif
+	if (exc != DOM_NO_ERR || !tag_name) {
+		dom_node_unref(doc_root);
+		JS_FreeCString(ctx, selector);
+		return JS_NULL;
+	}
+	dom_element *element = NULL;
+	exc = dom_document_create_element(document->dom, tag_name, &element);
+	dom_string_unref(tag_name);
+
+	if (exc != DOM_NO_ERR || !element) {
+		dom_node_unref(doc_root);
+		JS_FreeCString(ctx, selector);
+		return JS_NULL;
+	}
+	walk_tree_query_append((dom_node *)element, doc_root, selector, 0);
+	dom_node_unref(doc_root);
+	JS_FreeCString(ctx, selector);
+
+	dom_nodelist *nodes = NULL;
+	exc = dom_node_get_child_nodes(element, &nodes);
+	dom_node_unref(element);
+
+	if (exc != DOM_NO_ERR || !nodes) {
+		return JS_NULL;
+	}
+	return getNodeList(ctx, nodes);
 }
 
 #if 0

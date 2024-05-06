@@ -163,7 +163,10 @@ getNodeList(JSContext *ctx, void *node)
 	attr_save_in_map(map_nodelist, node, nodeList_obj);
 	js_nodeList_SetOpaque(nodeList_obj, node);
 	js_nodeList_set_items(ctx, nodeList_obj, node);
-	JSValue rr = JS_DupValue(ctx, nodeList_obj);
 
-	RETURN_JS(rr);
+	return nodeList_obj;
+
+//	JSValue rr = JS_DupValue(ctx, nodeList_obj);
+
+//	RETURN_JS(rr);
 }
