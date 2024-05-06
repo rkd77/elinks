@@ -484,7 +484,7 @@ void ecmascript_moved_form_state(struct form_state *fs)
 }
 
 void *
-walk_tree_query(dom_node *node, char *selector, int depth)
+walk_tree_query(dom_node *node, const char *selector, int depth)
 {
 	dom_exception exc;
 	dom_node *child;
@@ -540,7 +540,7 @@ walk_tree_query(dom_node *node, char *selector, int depth)
 }
 
 void
-walk_tree_query_append(dom_node *root, dom_node *node, char *selector, int depth)
+walk_tree_query_append(dom_node *root, dom_node *node, const char *selector, int depth)
 {
 	dom_exception exc;
 	dom_node *child;

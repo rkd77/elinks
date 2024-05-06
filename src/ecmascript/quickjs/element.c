@@ -22,6 +22,7 @@
 #include "document/libdom/renderer2.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/ecmascript-c.h"
 #include "ecmascript/quickjs/mapa.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/attr.h"
@@ -2834,45 +2835,31 @@ js_element_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 #endif
 	REF_JS(this_val);
 
-// TODO
-#if 0
 	if (argc != 1) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return JS_UNDEFINED;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
-		return JS_FALSE;
+		return JS_NULL;
 	}
-	const char *str;
 	size_t len;
-	str = JS_ToCStringLen(ctx, &len, argv[0]);
+	const char *selector = JS_ToCStringLen(ctx, &len, argv[0]);
 
-	if (!str) {
-		return JS_EXCEPTION;
+	if (!selector) {
+		return JS_NULL;
 	}
-	xmlpp::ustring css = str;
-	xmlpp::ustring xpath = css2xpath(css);
+	void *ret = walk_tree_query(el, selector, 0);
+	JS_FreeCString(ctx, selector);
 
-	JS_FreeCString(ctx, str);
-	xmlpp::Node::NodeSet elements;
-
-	try {
-		elements = el->find(xpath);
-	} catch (xmlpp::exception &e) {
+	if (!ret) {
 		return JS_NULL;
 	}
 
-	for (auto node: elements)
-	{
-		if (isAncestor(el, node))
-		{
-			return getElement(ctx, node);
-		}
-	}
-#endif
-
-	return JS_NULL;
+	return getElement(ctx, ret);
 }
 
 static JSValue
