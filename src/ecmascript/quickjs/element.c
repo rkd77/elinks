@@ -2294,56 +2294,59 @@ js_element_closest(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-
-// TODO
-
-#if 0
 	REF_JS(this_val);
 
 	if (argc != 1) {
 		return JS_UNDEFINED;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	void *res = NULL;
 
-	if (!el) {
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document = doc_view->document;
+
+	if (!document->dom) {
 		return JS_NULL;
 	}
-	const char *str;
 	size_t len;
-	str = JS_ToCStringLen(ctx, &len, argv[0]);
+	const char *selector = JS_ToCStringLen(ctx, &len, argv[0]);
 
-	if (!str) {
-		return JS_EXCEPTION;
+	if (!selector) {
+		return JS_NULL;
 	}
-	xmlpp::ustring css = str;
-	xmlpp::ustring xpath = css2xpath(css);
-	JS_FreeCString(ctx, str);
+	dom_node *root = NULL; /* root element of document */
+	/* Get root element */
+	dom_exception exc = dom_document_get_document_element(document->dom, &root);
 
-	xmlpp::Node::NodeSet elements;
-
-	try {
-		elements = el->find(xpath);
-	} catch (xmlpp::exception &e) {
+	if (exc != DOM_NO_ERR || !root) {
+		JS_FreeCString(ctx, selector);
 		return JS_NULL;
 	}
 
-	if (elements.size() == 0) {
-		return JS_NULL;
-	}
+	while (el) {
+		res = el_match_selector(selector, el);
 
-	while (el)
-	{
-		for (auto node: elements)
-		{
-			if (isAncestor(el, node))
-			{
-				return getElement(ctx, node);
-			}
+		if (res) {
+			break;
 		}
-		el = el->get_parent();
+		if (el == root) {
+			break;
+		}
+		dom_node *node = NULL;
+		exc = dom_node_get_parent_node(el, &node);
+		if (exc != DOM_NO_ERR || !node) {
+			break;
+		}
+		el = node;
 	}
-#endif
-	return JS_NULL;
+	JS_FreeCString(ctx, selector);
+	dom_node_unref(root);
+
+	if (!res) {
+		return JS_NULL;
+	}
+	return getElement(ctx, res);
 }
 
 static JSValue
