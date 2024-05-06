@@ -2853,50 +2853,54 @@ js_element_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
-// TODO
-#if 0
+
 	if (argc != 1) {
 		return JS_FALSE;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document = doc_view->document;
 
-	if (!el) {
-		return JS_FALSE;
-	}
-	const char *str;
-	size_t len;
-	str = JS_ToCStringLen(ctx, &len, argv[0]);
-
-	if (!str) {
-		return JS_EXCEPTION;
-	}
-	xmlpp::ustring css = str;
-	xmlpp::ustring xpath = css2xpath(css);
-	JS_FreeCString(ctx, str);
-
-	xmlpp::Node::NodeSet elements;
-	xmlpp::Node::NodeSet *res = new(std::nothrow) xmlpp::Node::NodeSet;
-
-	if (!res) {
+	if (!document->dom) {
 		return JS_NULL;
 	}
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
-	try {
-		elements = el->find(xpath);
-	} catch (xmlpp::exception &e) {}
-
-	for (auto node: elements)
-	{
-		if (isAncestor(el, node)) {
-			res->push_back(node);
-		}
+	if (!el) {
+		return JS_NULL;
 	}
-	JSValue rr = getCollection(ctx, res);
-	JS_FreeValue(ctx, rr);
+	size_t len;
+	const char *selector = JS_ToCStringLen(ctx, &len, argv[0]);
 
-	RETURN_JS(rr);
-#endif
-	return JS_FALSE;
+	if (!selector) {
+		return JS_NULL;
+	}
+	dom_string *tag_name = NULL;
+	dom_exception exc = dom_string_create((const uint8_t *)"B", 1, &tag_name);
+
+	if (exc != DOM_NO_ERR || !tag_name) {
+		JS_FreeCString(ctx, selector);
+		return JS_NULL;
+	}
+	dom_element *element = NULL;
+	exc = dom_document_create_element(document->dom, tag_name, &element);
+	dom_string_unref(tag_name);
+
+	if (exc != DOM_NO_ERR || !element) {
+		JS_FreeCString(ctx, selector);
+		return JS_NULL;
+	}
+	walk_tree_query_append((dom_node *)element, el, selector, 0);
+	JS_FreeCString(ctx, selector);
+
+	dom_nodelist *nodes = NULL;
+	exc = dom_node_get_child_nodes(element, &nodes);
+	dom_node_unref(element);
+
+	if (exc != DOM_NO_ERR || !nodes) {
+		return JS_NULL;
+	}
+	return getNodeList(ctx, nodes);
 }
 
 static JSValue
