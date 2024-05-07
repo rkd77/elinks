@@ -242,7 +242,6 @@ js_element_get_property_children(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 	JSValue rr = getNodeList(ctx, nodes);
-	JS_FreeValue(ctx, rr);
 
 	RETURN_JS(rr);
 }
@@ -295,7 +294,6 @@ js_element_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 	JSValue rr = getNodeList(ctx, nodes);
-	JS_FreeValue(ctx, rr);
 
 	RETURN_JS(rr);
 }
@@ -2559,7 +2557,6 @@ js_element_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc,
 		return JS_NULL;
 	}
 	JSValue rr = getNodeList(ctx, nlist);
-	JS_FreeValue(ctx, rr);
 
 	RETURN_JS(rr);
 }

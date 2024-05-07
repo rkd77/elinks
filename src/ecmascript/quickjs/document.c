@@ -1476,7 +1476,6 @@ js_document_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc
 		return JS_NULL;
 	}
 	JSValue rr = getNodeList(ctx, nodes);
-	JS_FreeValue(ctx, rr);
 
 	RETURN_JS(rr);
 }
