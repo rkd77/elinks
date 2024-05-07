@@ -6,19 +6,20 @@
 
 <script type="text/javascript">
 
-console.error('element.matches');
+console.error('element.matches.html');
 
   var birds = document.getElementsByTagName('li');
   var ch = false;
+  console.assert(birds.length === 3, '3');
 
   for (var i = 0; i < birds.length; i++) {
-    if (birds[i].matches('.endangered')) {
-      console.assert(birds[i].innerHTML === 'Philippine eagle', birds[i].innerHTML);
+    if (birds.item(i).matches('.endangered')) {
+      console.assert(birds.item(i).innerHTML === 'Philippine eagle', birds.item(i).innerHTML);
       ch = true;
     }
   }
   console.assert(ch, 'was matched');
-  birds = document.querySelectorAll('li');
+//  birds = document.querySelectorAll('li');
 
   ch = false;
 //  var counter = 0;

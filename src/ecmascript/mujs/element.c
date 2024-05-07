@@ -24,6 +24,7 @@
 #include "document/document.h"
 #include "document/forms.h"
 #include "document/libdom/corestrings.h"
+#include "document/libdom/doc.h"
 #include "document/libdom/mapa.h"
 #include "document/libdom/renderer2.h"
 #include "document/view.h"
@@ -2657,35 +2658,21 @@ mjs_element_matches(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-// TODO
-#if 0
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushboolean(J, 0);
 		return;
 	}
-	const char *str = js_tostring(J, 1);
-	xmlpp::ustring css = str;
-	xmlpp::ustring xpath = css2xpath(css);
+	const char *selector = js_tostring(J, 1);
 
-	xmlpp::Node::NodeSet elements;
-
-	try {
-		elements = el->find(xpath);
-	} catch (xmlpp::exception &e) {
+	if (!selector) {
 		js_pushboolean(J, 0);
 		return;
 	}
+	void *res = el_match_selector(selector, el);
 
-	for (auto node: elements) {
-		if (node == el) {
-			js_pushboolean(J, 1);
-			return;
-		}
-	}
-#endif
-	js_pushboolean(J, 0);
+	js_pushboolean(J, res);
 }
 
 static void
