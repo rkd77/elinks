@@ -28,6 +28,7 @@
 #include "document/libdom/doc.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/ecmascript-c.h"
 #include "ecmascript/mujs/mapa.h"
 #include "ecmascript/libdom/parse.h"
 #include "ecmascript/mujs.h"
@@ -1337,36 +1338,29 @@ mjs_document_querySelector(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-// TODO
-#if 0
-	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
-	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
-	const char *str = js_tostring(J, 1);
+	dom_node *root = NULL; /* root element of document */
+	/* Get root element */
+	dom_exception exc = dom_document_get_document_element(document->dom, &root);
 
-	if (!str) {
-		js_error(J, "!str");
-		return;
-	}
-	xmlpp::ustring css = str;
-	xmlpp::ustring xpath = css2xpath(css);
-
-	xmlpp::Node::NodeSet elements;
-
-	try {
-		elements = root->find(xpath);
-	} catch (xmlpp::exception &e) {
+	if (exc != DOM_NO_ERR) {
 		js_pushnull(J);
 		return;
 	}
+	const char *selector = js_tostring(J, 1);
 
-	if (elements.size() == 0) {
+	if (!selector) {
+		dom_node_unref(root);
 		js_pushnull(J);
 		return;
 	}
-	auto node = elements[0];
-	mjs_push_element(J, node);
-#endif
-	js_pushnull(J);
+	void *ret = walk_tree_query(root, selector, 0);
+	dom_node_unref(root);
+
+	if (!ret) {
+		js_pushnull(J);
+		return;
+	}
+	mjs_push_element(J, ret);
 }
 
 static void
