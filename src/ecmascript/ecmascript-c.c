@@ -505,7 +505,6 @@ walk_tree_query(dom_node *node, const char *selector, int depth)
 	exc = dom_node_get_first_child(node, &child);
 
 	if (exc != DOM_NO_ERR) {
-		fprintf(stderr, "Exception raised for node_get_first_child\n");
 		return NULL;
 	} else if (child != NULL) {
 		/* node has children;  decend to children's depth */
@@ -526,8 +525,6 @@ walk_tree_query(dom_node *node, const char *selector, int depth)
 			/* Go to next sibling */
 			exc = dom_node_get_next_sibling(child, &next_child);
 			if (exc != DOM_NO_ERR) {
-				fprintf(stderr, "Exception raised for "
-						"node_get_next_sibling\n");
 				dom_node_unref(child);
 				return NULL;
 			}
@@ -572,7 +569,6 @@ walk_tree_query_append(dom_node *root, dom_node *node, const char *selector, int
 	exc = dom_node_get_first_child(node, &child);
 
 	if (exc != DOM_NO_ERR) {
-		fprintf(stderr, "Exception raised for node_get_first_child\n");
 		return;
 	} else if (child != NULL) {
 		/* node has children;  decend to children's depth */
@@ -588,8 +584,6 @@ walk_tree_query_append(dom_node *root, dom_node *node, const char *selector, int
 			/* Go to next sibling */
 			exc = dom_node_get_next_sibling(child, &next_child);
 			if (exc != DOM_NO_ERR) {
-				fprintf(stderr, "Exception raised for "
-						"node_get_next_sibling\n");
 				dom_node_unref(child);
 				return;
 			}
