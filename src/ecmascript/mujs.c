@@ -39,6 +39,7 @@
 #include "ecmascript/mujs/navigator.h"
 #include "ecmascript/mujs/screen.h"
 #include "ecmascript/mujs/unibar.h"
+#include "ecmascript/mujs/url.h"
 #include "ecmascript/mujs/window.h"
 #include "ecmascript/mujs/xhr.h"
 #include "intl/libintl.h"
@@ -143,6 +144,7 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	mjs_keyboardEvent_init(J);
 	mjs_messageEvent_init(J);
 	mjs_customEvent_init(J);
+	mjs_url_init(J);
 
 	return J;
 #if 0
