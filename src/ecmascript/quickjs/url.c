@@ -665,19 +665,24 @@ js_url_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueCon
 	}
 
 	if (argc > 0) {
-		const char *urlstring;
+		const char *str;
 		size_t len;
 
-		urlstring = JS_ToCStringLen(ctx, &len, argv[0]);
+		str = JS_ToCStringLen(ctx, &len, argv[0]);
+
+		if (!str) {
+			JS_FreeValue(ctx, obj);
+			return JS_EXCEPTION;
+		}
+		char *urlstring = memacpy(str, len);
+		JS_FreeCString(ctx, str);
 
 		if (!urlstring) {
-			JS_FreeValue(ctx, obj);
 			return JS_EXCEPTION;
 		}
 		int ret = parse_uri(&url->uri, urlstring);
 
 		if (ret != URI_ERRNO_OK) {
-			JS_FreeCString(ctx, urlstring);
 			JS_FreeValue(ctx, obj);
 			return JS_EXCEPTION;
 		}
