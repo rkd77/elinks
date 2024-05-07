@@ -2256,46 +2256,54 @@ mjs_element_closest(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-// TODO
-#if 0
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+	void *res = NULL;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document = doc_view->document;
 
-	if (!el) {
+	if (!document->dom) {
 		js_pushnull(J);
 		return;
 	}
-	const char *str = js_tostring(J, 1);
-	xmlpp::ustring css = str;
-	xmlpp::ustring xpath = css2xpath(css);
+	const char *selector = js_tostring(J, 1);
 
-	xmlpp::Node::NodeSet elements;
+	if (!selector) {
+		js_pushnull(J);
+		return;
+	}
+	dom_node *root = NULL; /* root element of document */
+	/* Get root element */
+	dom_exception exc = dom_document_get_document_element(document->dom, &root);
 
-	try {
-		elements = el->find(xpath);
-	} catch (xmlpp::exception &e) {
+	if (exc != DOM_NO_ERR || !root) {
 		js_pushnull(J);
 		return;
 	}
 
-	if (elements.size() == 0) {
-		js_pushnull(J);
-		return;
-	}
+	while (el) {
+		res = el_match_selector(selector, el);
 
-	while (el)
-	{
-		for (auto node: elements)
-		{
-			if (isAncestor(el, node))
-			{
-				mjs_push_element(J, node);
-				return;
-			}
+		if (res) {
+			break;
 		}
-		el = el->get_parent();
+		if (el == root) {
+			break;
+		}
+		dom_node *node = NULL;
+		exc = dom_node_get_parent_node(el, &node);
+		if (exc != DOM_NO_ERR || !node) {
+			break;
+		}
+		el = node;
 	}
-#endif
-	js_pushnull(J);
+	dom_node_unref(root);
+
+	if (!res) {
+		js_pushnull(J);
+		return;
+	}
+	mjs_push_element(J, res);
 }
 
 static void
