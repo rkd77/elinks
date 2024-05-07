@@ -284,6 +284,8 @@ src/ecmascript/mujs/style.c
 src/ecmascript/mujs/style.h
 src/ecmascript/mujs/unibar.c
 src/ecmascript/mujs/unibar.h
+src/ecmascript/mujs/url.c
+src/ecmascript/mujs/url.h
 src/ecmascript/mujs/window.c
 src/ecmascript/mujs/window.h
 src/ecmascript/mujs/xhr.c
