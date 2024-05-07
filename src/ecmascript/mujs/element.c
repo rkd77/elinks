@@ -28,6 +28,7 @@
 #include "document/libdom/renderer2.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/ecmascript-c.h"
 #include "ecmascript/mujs/mapa.h"
 #include "ecmascript/mujs.h"
 #include "ecmascript/mujs/attr.h"
@@ -2693,36 +2694,25 @@ mjs_element_querySelector(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-// TODO
-#if 0
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
 
 	if (!el) {
-		js_pushboolean(J, 0);
-		return;
-	}
-	const char *str = js_tostring(J, 1);
-	xmlpp::ustring css = str;
-	xmlpp::ustring xpath = css2xpath(css);
-	xmlpp::Node::NodeSet elements;
-
-	try {
-		elements = el->find(xpath);
-	} catch (xmlpp::exception &e) {
 		js_pushnull(J);
 		return;
 	}
+	const char *selector = js_tostring(J, 1);
 
-	for (auto node: elements)
-	{
-		if (isAncestor(el, node))
-		{
-			mjs_push_element(J, node);
-			return;
-		}
+	if (!selector) {
+		js_pushnull(J);
+		return;
 	}
-#endif
-	js_pushnull(J);
+	void *ret = walk_tree_query(el, selector, 0);
+
+	if (!ret) {
+		js_pushnull(J);
+		return;
+	}
+	mjs_push_element(J, ret);
 }
 
 static void
