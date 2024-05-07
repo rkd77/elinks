@@ -1377,33 +1377,51 @@ mjs_document_querySelectorAll(js_State *J)
 		js_pushnull(J);
 		return;
 	}
+	dom_node *doc_root = NULL; /* root element of document */
+	/* Get root element */
+	dom_exception exc = dom_document_get_document_element(document->dom, &doc_root);
 
-// TODO
-#if 0
-	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
-	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
-	const char *str = js_tostring(J, 1);
-
-	if (!str) {
-		js_error(J, "!str");
+	if (exc != DOM_NO_ERR) {
+		js_pushnull(J);
 		return;
 	}
-	xmlpp::ustring css = str;
-	xmlpp::ustring xpath = css2xpath(css);
-	xmlpp::Node::NodeSet *elements = new(std::nothrow) xmlpp::Node::NodeSet;
+	const char *selector = js_tostring(J, 1);
 
-	if (!elements) {
+	if (!selector) {
+		dom_node_unref(doc_root);
 		js_pushnull(J);
 		return;
 	}
 
-	try {
-		*elements = root->find(xpath);
-	} catch (xmlpp::exception &e) {
+	dom_string *tag_name = NULL;
+	exc = dom_string_create((const uint8_t *)"B", 1, &tag_name);
+
+	if (exc != DOM_NO_ERR || !tag_name) {
+		dom_node_unref(doc_root);
+		js_pushnull(J);
+		return;
 	}
-	mjs_push_collection(J, elements);
-#endif
-	js_pushnull(J);
+	dom_element *element = NULL;
+	exc = dom_document_create_element(document->dom, tag_name, &element);
+	dom_string_unref(tag_name);
+
+	if (exc != DOM_NO_ERR || !element) {
+		dom_node_unref(doc_root);
+		js_pushnull(J);
+		return;
+	}
+	walk_tree_query_append((dom_node *)element, doc_root, selector, 0);
+	dom_node_unref(doc_root);
+
+	dom_nodelist *nodes = NULL;
+	exc = dom_node_get_child_nodes(element, &nodes);
+	dom_node_unref(element);
+
+	if (exc != DOM_NO_ERR || !nodes) {
+		js_pushnull(J);
+		return;
+	}
+	mjs_push_nodelist(J, nodes);
 }
 
 static void
