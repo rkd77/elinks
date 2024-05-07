@@ -2716,38 +2716,52 @@ mjs_element_querySelectorAll(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-// TODO
-#if 0
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document = doc_view->document;
 
-	if (!el) {
-		js_pushboolean(J, 0);
-		return;
-	}
-	const char *str = js_tostring(J, 1);
-	xmlpp::ustring css = str;
-	xmlpp::ustring xpath = css2xpath(css);
-	xmlpp::Node::NodeSet elements;
-	xmlpp::Node::NodeSet *res = new(std::nothrow) xmlpp::Node::NodeSet;
-
-	if (!res) {
+	if (!document->dom) {
 		js_pushnull(J);
 		return;
 	}
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
 
-	try {
-		elements = el->find(xpath);
-	} catch (xmlpp::exception &e) {}
-
-	for (auto node: elements)
-	{
-		if (isAncestor(el, node)) {
-			res->push_back(node);
-		}
+	if (!el) {
+		js_pushnull(J);
+		return;
 	}
-	mjs_push_collection(J, res);
-#endif
-	js_pushnull(J);
+	const char *selector = js_tostring(J, 1);
+
+	if (!selector) {
+		js_pushnull(J);
+		return;
+	}
+	dom_string *tag_name = NULL;
+	dom_exception exc = dom_string_create((const uint8_t *)"B", 1, &tag_name);
+
+	if (exc != DOM_NO_ERR || !tag_name) {
+		js_pushnull(J);
+		return;
+	}
+	dom_element *element = NULL;
+	exc = dom_document_create_element(document->dom, tag_name, &element);
+	dom_string_unref(tag_name);
+
+	if (exc != DOM_NO_ERR || !element) {
+		js_pushnull(J);
+		return;
+	}
+	walk_tree_query_append((dom_node *)element, el, selector, 0);
+
+	dom_nodelist *nodes = NULL;
+	exc = dom_node_get_child_nodes(element, &nodes);
+	dom_node_unref(element);
+
+	if (exc != DOM_NO_ERR || !nodes) {
+		js_pushnull(J);
+		return;
+	}
+	mjs_push_nodelist(J, nodes);
 }
 
 static void
