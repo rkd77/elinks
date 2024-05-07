@@ -1,0 +1,20 @@
+<ul id="birds">
+  <li>Orange-winged parrot</li>
+  <li class="endangered">Philippine eagle</li>
+  <li>Great white pelican</li>
+</ul>
+
+<script type="text/javascript">
+
+console.error('nodelist.forEach.html');
+var birds = document.querySelectorAll('li');
+
+var counter = 0;
+birds.forEach(function(b) {
+  counter++;
+});
+console.assert(counter === 3, 'Three');
+
+console.exit(0);
+
+</script>
