@@ -88,9 +88,10 @@ mjs_nodeList_set_items(js_State *J, void *node)
 			continue;
 		}
 		mjs_push_element(J, element);
-		js_setindex(J, 1, i);
+		js_setindex(J, -2, i);
 		dom_node_unref(element);
 	}
+	js_setlength(J, -1, length);
 }
 
 static void
@@ -138,10 +139,10 @@ mjs_push_nodelist(js_State *J, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	js_newobject(J);
+	js_newarray(J);
 	{
 		js_newuserdata(J, "nodelist", node, mjs_nodeList_finalizer);
-		addproperty(J, "length", mjs_nodeList_get_property_length, NULL);
+//		addproperty(J, "length", mjs_nodeList_get_property_length, NULL);
 		addmethod(J, "item", mjs_nodeList_item, 1);
 		addmethod(J, "toString", mjs_nodeList_toString, 0);
 		mjs_nodeList_set_items(J, node);
