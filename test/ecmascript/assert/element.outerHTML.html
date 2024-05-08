@@ -15,8 +15,8 @@ function aa()
 
 function bb()
 {
-	const container = document.getElementById("container");
-	const d = document.getElementById("d");
+	var container = document.getElementById("container");
+	var d = document.getElementById("d");
 	console.assert(container.firstElementChild.nodeName === 'DIV', 'DIV');
 	d.outerHTML = '<p>' + d.outerHTML + '</p>';
 	console.assert(container.firstElementChild.nodeName === 'P', 'P');
