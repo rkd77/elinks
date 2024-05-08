@@ -18,10 +18,10 @@
 <script>
 function myFunction() {
   var before = document.getElementsByTagName("H1")[0].outerHTML;
-  console.assert(before === '<H1>Hello World</H1>', 'H1');
+  console.assert(before === '<h1>Hello World</h1>', 'H1');
   document.getElementsByTagName("H1")[0].setAttribute("class", "democlass");
   var after = document.getElementsByTagName("H1")[0].outerHTML;
-  console.assert(after === '<H1 class="democlass">Hello World</H1>', 'H1 with class');
+  console.assert(after === '<h1 class="democlass">Hello World</h1>', 'H1 with class');
 }
 console.error("element.setAttribute.html");
 myFunction();

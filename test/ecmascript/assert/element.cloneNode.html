@@ -14,10 +14,10 @@
 <script>
 function myFunction() {
   var itm = document.getElementById("myList2").lastChild;
-  console.assert(itm.outerHTML === '<LI>Milk</LI>', 'Milk');
+  console.assert(itm.outerHTML === '<li>Milk</li>', 'Milk');
   var cln = itm.cloneNode(true);
   document.getElementById("myList1").appendChild(cln);
-  console.assert(document.getElementById("myList1").innerHTML === '<LI>Coffee</LI><LI>Tea</LI><LI>Milk</LI>', 'Coffee, Tea, Milk');
+  console.assert(document.getElementById("myList1").innerHTML === '<li>Coffee</li><li>Tea</li><li>Milk</li>', 'Coffee, Tea, Milk');
 }
 
 console.error('element.cloneNode.html');

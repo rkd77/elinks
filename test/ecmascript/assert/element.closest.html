@@ -13,8 +13,7 @@ var element = document.getElementById("myElement");
 var closes2 = element.closest("div.container");
 
 console.error('element.closest.html');
-console.assert(closes2, 'not null');
-//console.assert(closes2.outerHTML === '<DIV class="demo container">Parent\n    <DIV id="myElement" class="demo">The outer HTML of closest element will be shown.</DIV>\n  </DIV>', 'TODO');
+console.assert(closes2 != null, 'not null');
 
 closes2 = element.closest("p.test");
 console.assert(closes2 === null, 'NULL');

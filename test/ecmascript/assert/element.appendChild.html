@@ -19,7 +19,7 @@ function myFunction() {
   var textnode = document.createTextNode("Water");
   node.appendChild(textnode);
   document.getElementById("myList").appendChild(node);
-  console.assert(document.getElementsByTagName("UL")[0].outerHTML === '<UL id="myList">\n  <LI>Coffee</LI>\n  <LI>Tea</LI>\n<LI>Water</LI></UL>', 'Water');
+  console.assert(document.getElementsByTagName("UL")[0].outerHTML === '<ul id="myList">\n  <li>Coffee</li>\n  <li>Tea</li>\n<li>Water</li></ul>', 'Water');
 }
 console.error('element.appendChild.html');
 myFunction();

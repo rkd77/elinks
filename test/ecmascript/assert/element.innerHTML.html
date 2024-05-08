@@ -10,7 +10,7 @@
 function aa()
 {
 	var a1 = document.getElementById('blabla').innerHTML;
-	console.assert(a1 === '\n<B>AAA</B><U id="ble">UUU</U>AAAAAAA\n', a1);
+	console.assert(a1 === '\n<b>AAA</b><u id="ble">UUU</u>AAAAAAA\n', a1);
 	var a2 = document.getElementById('ble').innerHTML;
 	console.assert(a2 === 'UUU', 'UUU');
 }
@@ -19,7 +19,7 @@ function bb()
 {
 	document.getElementById('blabla').innerHTML = '<u>test</u><b>OK</b>';
 	var b1 = document.getElementById('blabla').outerHTML;
-	console.assert(b1 === '<A id="blabla" href="/"><U>test</U><B>OK</B></A>', 'Changed');
+	console.assert(b1 === '<a id="blabla" href="/"><u>test</u><b>OK</b></a>', 'Changed');
 }
 
 console.error('element.innerHTML.html');

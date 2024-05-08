@@ -21,7 +21,7 @@ function myFunction() {
   var list = document.getElementById("myList");
   list.insertBefore(newItem, list.firstChild);
   var result = document.getElementsByTagName("UL")[0].outerHTML;
-  console.assert(result === '<UL id="myList"><LI>Water</LI>\n  <LI>Coffee</LI>\n  <LI>Tea</LI>\n</UL>', 'Water, Coffee, Tea');
+  console.assert(result === '<ul id="myList"><li>Water</li>\n  <li>Coffee</li>\n  <li>Tea</li>\n</ul>', 'Water, Coffee, Tea');
 }
 
 console.error('element.insertBefore.html');
