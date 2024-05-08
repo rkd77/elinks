@@ -60,7 +60,7 @@ dump_dom_element_closing(struct string *buf, dom_node *node)
 
 	if (strcmp(dom_string_data(node_name), "BR")) {
 		add_to_string(buf, "</");
-		add_bytes_to_string(buf, dom_string_data(node_name), dom_string_byte_length(node_name));
+		add_lowercase_to_string(buf, dom_string_data(node_name), dom_string_byte_length(node_name));
 		add_char_to_string(buf, '>');
 	}
 
@@ -169,7 +169,7 @@ dump_dom_element(void *mapa, void *mapa_rev, struct string *buf, dom_node *node,
 	save_offset_in_map(mapa_rev, node, buf->length);
 
 	/* Get string data and print element name */
-	add_bytes_to_string(buf, dom_string_data(node_name), dom_string_byte_length(node_name));
+	add_lowercase_to_string(buf, dom_string_data(node_name), dom_string_byte_length(node_name));
 
 	if (strcmp(dom_string_data(node_name), "BR") == 0) {
 		add_char_to_string(buf, '/');

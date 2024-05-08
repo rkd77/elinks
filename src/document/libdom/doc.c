@@ -85,3 +85,22 @@ free_document(void *doc)
 	dom_node *ddd = (dom_node *)doc;
 	dom_node_unref(ddd);
 }
+
+void
+add_lowercase_to_string(struct string *buf, const char *str, int len)
+{
+	char *tmp = memacpy(str, len);
+	int i;
+
+	if (!tmp) {
+		return;
+	}
+
+	for (i = 0; i < len; i++) {
+		if (tmp[i] >= 'A' && tmp[i] <= 'Z') {
+			tmp[i] += 32;
+		}
+	}
+	add_bytes_to_string(buf, tmp, len);
+	mem_free(tmp);
+}
