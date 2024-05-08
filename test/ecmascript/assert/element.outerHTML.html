@@ -1,0 +1,31 @@
+<html>
+<body>
+<b id="test">Test</b>
+
+<div id="container">
+  <div id="d">This is a div.</div>
+</div>
+
+<script>
+function aa()
+{
+	var a1 = document.getElementById('test').outerHTML;
+	console.assert(a1 === '<b id="test">Test</b>', a1);
+}
+
+function bb()
+{
+	const container = document.getElementById("container");
+	const d = document.getElementById("d");
+	console.assert(container.firstElementChild.nodeName === 'DIV', 'DIV');
+	d.outerHTML = "<p>This paragraph replaced the original div.</p>";
+	console.assert(container.firstElementChild.nodeName === 'P', 'P');
+}
+
+console.error('element.outerHTML.html');
+aa();
+bb();
+console.exit(0);
+</script>
+</body>
+</html>
