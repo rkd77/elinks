@@ -1872,6 +1872,147 @@ js_element_set_property_lang(JSContext *ctx, JSValueConst this_val, JSValue val)
 }
 
 static JSValue
+js_element_set_property_outerHtml(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	REF_JS(val);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct view_state *vs = interpreter->vs;
+	if (!vs) {
+		return JS_UNDEFINED;
+	}
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+
+	if (!el) {
+		return JS_UNDEFINED;
+	}
+	dom_node *parent = NULL;
+	dom_exception exc = dom_node_get_parent_node(el, &parent);
+
+	if (exc != DOM_NO_ERR) {
+		return JS_UNDEFINED;
+	}
+	size_t size;
+	const char *s = JS_ToCStringLen(ctx, &size, val);
+
+	if (!s) {
+		return JS_EXCEPTION;
+	}
+	struct dom_node *cref = NULL;
+
+	dom_hubbub_parser_params parse_params;
+	dom_hubbub_error error;
+	dom_hubbub_parser *parser = NULL;
+	struct dom_document *doc = NULL;
+	struct dom_document_fragment *fragment = NULL;
+	struct dom_node *child = NULL, *html = NULL, *body = NULL;
+	struct dom_nodelist *bodies = NULL;
+
+	exc = dom_node_get_owner_document(el, &doc);
+	if (exc != DOM_NO_ERR) goto out;
+
+	parse_params.enc = "UTF-8";
+	parse_params.fix_enc = true;
+	parse_params.enable_script = false;
+	parse_params.msg = NULL;
+	parse_params.script = NULL;
+	parse_params.ctx = NULL;
+	parse_params.daf = NULL;
+
+	error = dom_hubbub_fragment_parser_create(&parse_params,
+						  doc,
+						  &parser,
+						  &fragment);
+	if (error != DOM_HUBBUB_OK) {
+		fprintf(stderr, "Unable to create fragment parser!");
+		goto out;
+	}
+
+	error = dom_hubbub_parser_parse_chunk(parser, (const uint8_t*)s, size);
+	if (error != DOM_HUBBUB_OK) {
+		fprintf(stderr, "Unable to parse HTML chunk");
+		goto out;
+	}
+	error = dom_hubbub_parser_completed(parser);
+	if (error != DOM_HUBBUB_OK) {
+		fprintf(stderr, "Unable to complete parser");
+		goto out;
+	}
+
+	/* The first child in the fragment will be an HTML element
+	 * because that's how hubbub works, walk through that to the body
+	 * element hubbub will have created, we want to migrate that element's
+	 * children into ourself.
+	 */
+	exc = dom_node_get_first_child(fragment, &html);
+	if (exc != DOM_NO_ERR) goto out;
+
+	/* We can then ask that HTML element to give us its body */
+	exc = dom_element_get_elements_by_tag_name(html, corestring_dom_BODY, &bodies);
+	if (exc != DOM_NO_ERR) goto out;
+
+	/* And now we can get the body which will be the zeroth body */
+	exc = dom_nodelist_item(bodies, 0, &body);
+	if (exc != DOM_NO_ERR) goto out;
+
+	/* Migrate the children */
+	exc = dom_node_get_first_child(body, &child);
+	if (exc != DOM_NO_ERR) goto out;
+	while (child != NULL) {
+		exc = dom_node_remove_child(body, child, &cref);
+		if (exc != DOM_NO_ERR) goto out;
+		dom_node_unref(cref);
+
+		dom_node *spare = NULL;
+		exc = dom_node_insert_before(parent, child, el, &spare);
+
+		if (exc != DOM_NO_ERR) goto out;
+		dom_node_unref(spare);
+		dom_node_unref(cref);
+		dom_node_unref(child);
+		child = NULL;
+		exc = dom_node_get_first_child(body, &child);
+		if (exc != DOM_NO_ERR) goto out;
+	}
+	exc = dom_node_remove_child(parent, el, &cref);
+
+	if (exc != DOM_NO_ERR) goto out;
+out:
+	if (parser != NULL) {
+		dom_hubbub_parser_destroy(parser);
+	}
+	if (doc != NULL) {
+		dom_node_unref(doc);
+	}
+	if (fragment != NULL) {
+		dom_node_unref(fragment);
+	}
+	if (child != NULL) {
+		dom_node_unref(child);
+	}
+	if (html != NULL) {
+		dom_node_unref(html);
+	}
+	if (bodies != NULL) {
+		dom_nodelist_unref(bodies);
+	}
+	if (body != NULL) {
+		dom_node_unref(body);
+	}
+	if (cref != NULL) {
+		dom_node_unref(cref);
+	}
+	dom_node_unref(parent);
+	JS_FreeCString(ctx, s);
+	interpreter->changed = 1;
+
+	return JS_UNDEFINED;
+}
+
+static JSValue
 js_element_set_property_title(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -3107,7 +3248,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("offsetParent",	js_element_get_property_offsetParent, NULL),
 //	JS_CGETSET_DEF("offsetTop",	js_element_get_property_offsetTop, NULL),
 //	JS_CGETSET_DEF("offsetWidth",	js_element_get_property_offsetWidth, NULL),
-	JS_CGETSET_DEF("outerHTML",	js_element_get_property_outerHtml, NULL),
+	JS_CGETSET_DEF("outerHTML",	js_element_get_property_outerHtml, js_element_set_property_outerHtml),
 	JS_CGETSET_DEF("ownerDocument",	js_element_get_property_ownerDocument, NULL),
 	JS_CGETSET_DEF("parentElement",	js_element_get_property_parentElement, NULL),
 	JS_CGETSET_DEF("parentNode",	js_element_get_property_parentNode, NULL),
