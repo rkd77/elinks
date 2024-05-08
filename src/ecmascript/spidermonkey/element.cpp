@@ -2512,7 +2512,7 @@ dump_element(struct string *buf, dom_node *node, bool toSortAttrs)
 	//save_in_map(mapa, node, buf->length);
 
 	/* Get string data and print element name */
-	add_bytes_to_string(buf, dom_string_data(node_name), dom_string_byte_length(node_name));
+	add_lowercase_to_string(buf, dom_string_data(node_name), dom_string_byte_length(node_name));
 
 	exc = dom_node_get_attributes(node, &attrs);
 
@@ -2596,7 +2596,7 @@ walk_tree(struct string *buf, void *nod, bool start, bool toSortAttrs)
 
 			if (exc == DOM_NO_ERR && node_name) {
 				add_to_string(buf, "</");
-				add_bytes_to_string(buf, dom_string_data(node_name), dom_string_length(node_name));
+				add_lowercase_to_string(buf, dom_string_data(node_name), dom_string_length(node_name));
 				add_char_to_string(buf, '>');
 				dom_string_unref(node_name);
 			}
