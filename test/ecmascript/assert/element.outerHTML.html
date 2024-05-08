@@ -18,8 +18,9 @@ function bb()
 	const container = document.getElementById("container");
 	const d = document.getElementById("d");
 	console.assert(container.firstElementChild.nodeName === 'DIV', 'DIV');
-	d.outerHTML = "<p>This paragraph replaced the original div.</p>";
+	d.outerHTML = '<p>' + d.outerHTML + '</p>';
 	console.assert(container.firstElementChild.nodeName === 'P', 'P');
+	console.assert(container.innerHTML === '\n  <p></p><div id="d">This is a div.</div><p></p>\n', 'div p div');
 }
 
 console.error('element.outerHTML.html');
