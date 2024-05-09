@@ -273,7 +273,7 @@ js_customEvent_constructor(JSContext *ctx, JSValueConst new_target, int argc, JS
 		bubbles = JS_ToBool(ctx, r);
 		r = JS_GetPropertyStr(ctx, argv[1], "cancelable");
 		cancelable = JS_ToBool(ctx, r);
-		r = JS_GetPropertyStr(ctx, argv[1], "composed");
+		//r = JS_GetPropertyStr(ctx, argv[1], "composed");
 		//composed = JS_ToBool(ctx, r);
 		detail = calloc(1, sizeof(*detail));
 
