@@ -1,0 +1,11 @@
+<script>
+var e = new Event('message', { cancelable: true });
+
+console.error('event.html');
+console.assert(e.cancelable, 'cancelable true');
+console.assert(!e.defaultPrevented, 'false');
+e.preventDefault();
+console.assert(e.defaultPrevented, 'true');
+console.assert(e.type === 'message', 'message');
+console.exit(0);
+</script>
