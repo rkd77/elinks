@@ -11,6 +11,7 @@
 #include "elinks.h"
 
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/libdom/dom.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/event.h"
 #include "intl/charsets.h"
@@ -22,30 +23,21 @@ static JSClassID js_event_class_id;
 
 static JSValue js_event_get_property_bubbles(JSContext *ctx, JSValueConst this_val);
 static JSValue js_event_get_property_cancelable(JSContext *ctx, JSValueConst this_val);
-static JSValue js_event_get_property_composed(JSContext *ctx, JSValueConst this_val);
+//static JSValue js_event_get_property_composed(JSContext *ctx, JSValueConst this_val);
 static JSValue js_event_get_property_defaultPrevented(JSContext *ctx, JSValueConst this_val);
 static JSValue js_event_get_property_type(JSContext *ctx, JSValueConst this_val);
 
 static JSValue js_event_preventDefault(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv);
-
-struct eljs_event {
-	char *type_;
-	unsigned int bubbles:1;
-	unsigned int cancelable:1;
-	unsigned int composed:1;
-	unsigned int defaultPrevented:1;
-};
 
 static
 void js_event_finalizer(JSRuntime *rt, JSValue val)
 {
 	REF_JS(val);
 
-	struct eljs_event *event = (struct eljs_event *)JS_GetOpaque(val, js_event_class_id);
+	dom_event *event = (dom_event *)JS_GetOpaque(val, js_event_class_id);
 
 	if (event) {
-		mem_free_if(event->type_);
-		mem_free(event);
+		dom_event_unref(event);
 	}
 }
 
@@ -57,7 +49,7 @@ static JSClassDef js_event_class = {
 static const JSCFunctionListEntry js_event_proto_funcs[] = {
 	JS_CGETSET_DEF("bubbles",	js_event_get_property_bubbles, NULL),
 	JS_CGETSET_DEF("cancelable",	js_event_get_property_cancelable, NULL),
-	JS_CGETSET_DEF("composed",	js_event_get_property_composed, NULL),
+//	JS_CGETSET_DEF("composed",	js_event_get_property_composed, NULL),
 	JS_CGETSET_DEF("defaultPrevented",	js_event_get_property_defaultPrevented, NULL),
 	JS_CGETSET_DEF("type",	js_event_get_property_type, NULL),
 	JS_CFUNC_DEF("preventDefault", 0, js_event_preventDefault),
@@ -71,12 +63,14 @@ js_event_get_property_bubbles(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	struct eljs_event *event = (struct eljs_event *)(JS_GetOpaque(this_val, js_event_class_id));
+	dom_event *event = (dom_event *)(JS_GetOpaque(this_val, js_event_class_id));
 
 	if (!event) {
 		return JS_NULL;
 	}
-	JSValue r = JS_NewBool(ctx, event->bubbles);
+	bool bubbles = false;
+	dom_exception exc = dom_event_get_bubbles(event, &bubbles);
+	JSValue r = JS_NewBool(ctx, bubbles);
 
 	RETURN_JS(r);
 }
@@ -89,16 +83,19 @@ js_event_get_property_cancelable(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	struct eljs_event *event = (struct eljs_event *)(JS_GetOpaque(this_val, js_event_class_id));
+	dom_event *event = (dom_event *)(JS_GetOpaque(this_val, js_event_class_id));
 
 	if (!event) {
 		return JS_NULL;
 	}
-	JSValue r = JS_NewBool(ctx, event->cancelable);
+	bool cancelable = false;
+	dom_exception exc = dom_event_get_cancelable(event, &cancelable);
+	JSValue r = JS_NewBool(ctx, cancelable);
 
 	RETURN_JS(r);
 }
 
+#if 0
 static JSValue
 js_event_get_property_composed(JSContext *ctx, JSValueConst this_val)
 {
@@ -116,6 +113,7 @@ js_event_get_property_composed(JSContext *ctx, JSValueConst this_val)
 
 	RETURN_JS(r);
 }
+#endif
 
 static JSValue
 js_event_get_property_defaultPrevented(JSContext *ctx, JSValueConst this_val)
@@ -125,12 +123,14 @@ js_event_get_property_defaultPrevented(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	struct eljs_event *event = (struct eljs_event *)(JS_GetOpaque(this_val, js_event_class_id));
+	dom_event *event = (dom_event *)(JS_GetOpaque(this_val, js_event_class_id));
 
 	if (!event) {
 		return JS_NULL;
 	}
-	JSValue r = JS_NewBool(ctx, event->defaultPrevented);
+	bool prevented = false;
+	dom_exception exc = dom_event_is_default_prevented(event, &prevented);
+	JSValue r = JS_NewBool(ctx, prevented);
 
 	RETURN_JS(r);
 }
@@ -143,16 +143,20 @@ js_event_get_property_type(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	struct eljs_event *event = (struct eljs_event *)(JS_GetOpaque(this_val, js_event_class_id));
+	dom_event *event = (dom_event *)(JS_GetOpaque(this_val, js_event_class_id));
 
 	if (!event) {
 		return JS_NULL;
 	}
-	if (!event->type_) {
+	dom_string *typ = NULL;
+	dom_exception exc = dom_event_get_type(event, &typ);
+
+	if (exc != DOM_NO_ERR || !typ) {
 		JSValue r = JS_NewString(ctx, "");
 		RETURN_JS(r);
 	}
-	JSValue r = JS_NewString(ctx, event->type_);
+	JSValue r = JS_NewString(ctx, dom_string_data(typ));
+	dom_string_unref(typ);
 
 	RETURN_JS(r);
 }
@@ -165,14 +169,13 @@ js_event_preventDefault(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 #endif
 	REF_JS(this_val);
 
-	struct eljs_event *event = (struct eljs_event *)(JS_GetOpaque(this_val, js_event_class_id));
+	dom_event *event = (dom_event *)(JS_GetOpaque(this_val, js_event_class_id));
 
 	if (!event) {
 		return JS_NULL;
 	}
-	if (event->cancelable) {
-		event->defaultPrevented = 1;
-	}
+	dom_event_prevent_default(event);
+
 	return JS_UNDEFINED;
 }
 
@@ -190,12 +193,14 @@ js_event_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueC
 	if (JS_IsException(obj)) {
 		return obj;
 	}
-	struct eljs_event *event = (struct eljs_event *)mem_calloc(1, sizeof(*event));
+	dom_event *event = NULL;
+	dom_exception exc = dom_event_create(&event);
 
-	if (!event) {
+	if (exc != DOM_NO_ERR) {
 		JS_FreeValue(ctx, obj);
 		return JS_EXCEPTION;
 	}
+	dom_string *typ = NULL;
 
 	if (argc > 0) {
 		const char *str;
@@ -204,20 +209,26 @@ js_event_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueC
 		str = JS_ToCStringLen(ctx, &len, argv[0]);
 
 		if (str) {
-			event->type_ = memacpy(str, len);
+			exc = dom_string_create(str, len, &typ);
 			JS_FreeCString(ctx, str);
 		}
 	}
+	bool bubbles = false;
+	bool cancelable = false;
 
 	if (argc > 1) {
 		JSValue r = JS_GetPropertyStr(ctx, argv[1], "bubbles");
-		event->bubbles = JS_ToBool(ctx, r);
+		bubbles = JS_ToBool(ctx, r);
 		r = JS_GetPropertyStr(ctx, argv[1], "cancelable");
-		event->cancelable = JS_ToBool(ctx, r);
-		r = JS_GetPropertyStr(ctx, argv[1], "composed");
-		event->composed = JS_ToBool(ctx, r);
+		cancelable = JS_ToBool(ctx, r);
+//		r = JS_GetPropertyStr(ctx, argv[1], "composed");
+//		event->composed = JS_ToBool(ctx, r);
 	}
+	exc = dom_event_init(event, typ, bubbles, cancelable);
 
+	if (typ) {
+		dom_string_unref(typ);
+	}
 	JS_SetOpaque(obj, event);
 
 	return obj;
