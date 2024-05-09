@@ -1,0 +1,12 @@
+<script>
+var e = new CustomEvent('message', { cancelable: true, detail: {name:"cat"}});
+
+console.error('customEvent.html');
+console.assert(e.cancelable, 'cancelable')
+console.assert(!e.defaultPrevented, 'defaultPrevented false');
+e.preventDefault();
+console.assert(e.defaultPrevented, 'defaultPrevented true');
+console.assert(e.type === 'message', 'message');
+console.assert(e.detail.name == 'cat', 'detail');
+console.exit(0);
+</script>
