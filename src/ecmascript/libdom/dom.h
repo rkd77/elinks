@@ -10,6 +10,7 @@ extern "C" {
 #ifdef CONFIG_LIBDOM
 #include <dom/dom.h>
 #include <dom/bindings/hubbub/parser.h>
+#include <dom/events/custom_event.h>
 #include <dom/events/event.h>
 #endif
 
