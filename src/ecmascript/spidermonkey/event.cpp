@@ -24,6 +24,7 @@
 #include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/libdom/dom.h"
 #include "ecmascript/spidermonkey.h"
 #include "ecmascript/spidermonkey/heartbeat.h"
 #include "ecmascript/spidermonkey/event.h"
@@ -58,17 +59,9 @@
 #include <sstream>
 #include <vector>
 
-struct eljs_event {
-	char *type_;
-	unsigned int bubbles:1;
-	unsigned int cancelable:1;
-	unsigned int composed:1;
-	unsigned int defaultPrevented:1;
-};
-
 static bool event_get_property_bubbles(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool event_get_property_cancelable(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool event_get_property_composed(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool event_get_property_composed(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool event_get_property_defaultPrevented(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool event_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
@@ -81,11 +74,10 @@ event_finalize(JS::GCContext *op, JSObject *event_obj)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 
-	struct eljs_event *event = JS::GetMaybePtrFromReservedSlot<struct eljs_event>(event_obj, 0);
+	dom_event *event = JS::GetMaybePtrFromReservedSlot<dom_event>(event_obj, 0);
 
 	if (event) {
-		mem_free_if(event->type_);
-		mem_free(event);
+		dom_event_unref(event);
 	}
 }
 
@@ -127,32 +119,45 @@ event_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
 	if (!newObj) {
 		return false;
 	}
-	struct eljs_event *event = (struct eljs_event *)mem_calloc(1, sizeof(*event));
+	dom_event *event = NULL;
+	dom_exception exc = dom_event_create(&event);
 
-	if (!event) {
+	if (exc != DOM_NO_ERR) {
 		return false;
 	}
 	JS::SetReservedSlot(newObj, 0, JS::PrivateValue(event));
 
+	dom_string *typ = NULL;
+
 	if (argc > 0) {
-		event->type_ = jsval_to_string(ctx, args[0]);
+		char *tt = jsval_to_string(ctx, args[0]);
+
+		if (tt) {
+			exc = dom_string_create((const uint8_t *)tt, strlen(tt), &typ);
+			mem_free(tt);
+		}
 	}
+	bool bubbles = false;
+	bool cancelable = false;
 
 	if (argc > 1) {
 		JS::RootedValue v(ctx);
 		JS::RootedObject v_obj(ctx, &args[1].toObject());
 
 		if (JS_GetProperty(ctx, v_obj, "bubbles", &v)) {
-			event->bubbles = (unsigned int)v.toBoolean();
+			bubbles = (unsigned int)v.toBoolean();
 		}
 		if (JS_GetProperty(ctx, v_obj, "cancelable", &v)) {
-			event->cancelable = (unsigned int)v.toBoolean();
+			cancelable = (unsigned int)v.toBoolean();
 		}
-		if (JS_GetProperty(ctx, v_obj, "composed", &v)) {
-			event->composed = (unsigned int)v.toBoolean();
-		}
+//		if (JS_GetProperty(ctx, v_obj, "composed", &v)) {
+//			event->composed = (unsigned int)v.toBoolean();
+//		}
 	}
-
+	exc = dom_event_init(event, typ, bubbles, cancelable);
+	if (typ) {
+		dom_string_unref(typ);
+	}
 	args.rval().setObject(*newObj);
 
 	return true;
@@ -161,7 +166,6 @@ event_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
 JSPropertySpec event_props[] = {
 	JS_PSG("bubbles",	event_get_property_bubbles, JSPROP_ENUMERATE),
 	JS_PSG("cancelable",	event_get_property_cancelable, JSPROP_ENUMERATE),
-	JS_PSG("composed",	event_get_property_composed, JSPROP_ENUMERATE),
 	JS_PSG("defaultPrevented",	event_get_property_defaultPrevented, JSPROP_ENUMERATE),
 	JS_PSG("type",	event_get_property_type, JSPROP_ENUMERATE),
 	JS_PS_END
@@ -188,12 +192,14 @@ event_get_property_bubbles(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	struct eljs_event *event = JS::GetMaybePtrFromReservedSlot<struct eljs_event>(hobj, 0);
+	dom_event *event = JS::GetMaybePtrFromReservedSlot<dom_event>(hobj, 0);
 
 	if (!event) {
 		return false;
 	}
-	args.rval().setBoolean(event->bubbles);
+	bool bubbles = false;
+	dom_exception exc = dom_event_get_bubbles(event, &bubbles);
+	args.rval().setBoolean(bubbles);
 
 	return true;
 }
@@ -214,16 +220,19 @@ event_get_property_cancelable(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	struct eljs_event *event = JS::GetMaybePtrFromReservedSlot<struct eljs_event>(hobj, 0);
+	dom_event *event = JS::GetMaybePtrFromReservedSlot<dom_event>(hobj, 0);
 
 	if (!event) {
 		return false;
 	}
-	args.rval().setBoolean(event->cancelable);
+	bool cancelable = false;
+	dom_exception exc = dom_event_get_cancelable(event, &cancelable);
+	args.rval().setBoolean(cancelable);
 
 	return true;
 }
 
+#if 0
 static bool
 event_get_property_composed(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -240,7 +249,7 @@ event_get_property_composed(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	struct eljs_event *event = JS::GetMaybePtrFromReservedSlot<struct eljs_event>(hobj, 0);
+	struct eljs_event *event = JS::GetMaybePtrFromReservedSlot<dom_event>(hobj, 0);
 
 	if (!event) {
 		return false;
@@ -249,6 +258,7 @@ event_get_property_composed(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+#endif
 
 static bool
 event_get_property_defaultPrevented(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -266,12 +276,14 @@ event_get_property_defaultPrevented(JSContext *ctx, unsigned int argc, JS::Value
 #endif
 		return false;
 	}
-	struct eljs_event *event = JS::GetMaybePtrFromReservedSlot<struct eljs_event>(hobj, 0);
+	dom_event *event = JS::GetMaybePtrFromReservedSlot<dom_event>(hobj, 0);
 
 	if (!event) {
 		return false;
 	}
-	args.rval().setBoolean(event->defaultPrevented);
+	bool prevented = false;
+	dom_exception exc = dom_event_is_default_prevented(event, &prevented);
+	args.rval().setBoolean(prevented);
 
 	return true;
 }
@@ -292,14 +304,12 @@ event_preventDefault(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	struct eljs_event *event = JS::GetMaybePtrFromReservedSlot<struct eljs_event>(hobj, 0);
+	dom_event *event = JS::GetMaybePtrFromReservedSlot<dom_event>(hobj, 0);
 
 	if (!event) {
 		return false;
 	}
-	if (event->cancelable) {
-		event->defaultPrevented = 1;
-	}
+	dom_event_prevent_default(event);
 	args.rval().setUndefined();
 
 	return true;
@@ -321,17 +331,20 @@ event_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	struct eljs_event *event = JS::GetMaybePtrFromReservedSlot<struct eljs_event>(hobj, 0);
+	dom_event *event = JS::GetMaybePtrFromReservedSlot<dom_event>(hobj, 0);
 
 	if (!event) {
 		return false;
 	}
+	dom_string *typ = NULL;
+	dom_exception exc = dom_event_get_type(event, &typ);
 
-	if (!event->type_) {
+	if (exc != DOM_NO_ERR || !typ) {
 		args.rval().setString(JS_NewStringCopyZ(ctx, ""));
 		return true;
 	}
-	args.rval().setString(JS_NewStringCopyZ(ctx, event->type_));
+	args.rval().setString(JS_NewStringCopyZ(ctx, dom_string_data(typ)));
+	dom_string_unref(typ);
 
 	return true;
 }
@@ -347,9 +360,10 @@ get_Event(JSContext *ctx)
 	JS::RootedObject r_event(ctx, k);
 	JS_DefineProperties(ctx, r_event, (JSPropertySpec *)event_props);
 
-	struct eljs_event *event = (struct eljs_event *)mem_calloc(1, sizeof(*event));
+	dom_event *event = NULL;
+	dom_exception exc = dom_event_create(&event);
 
-	if (!event) {
+	if (exc != DOM_NO_ERR) {
 		return NULL;
 	}
 	JS::SetReservedSlot(k, 0, JS::PrivateValue(event));
