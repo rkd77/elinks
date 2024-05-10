@@ -2947,7 +2947,7 @@ js_element_matches(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	void *res = el_match_selector(selector, el);
 	JS_FreeCString(ctx, selector);
 
-	return JS_NewBool(ctx, res);
+	return JS_NewBool(ctx, res != NULL);
 }
 
 static JSValue

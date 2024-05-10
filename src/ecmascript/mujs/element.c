@@ -2824,7 +2824,7 @@ mjs_element_matches(js_State *J)
 	}
 	void *res = el_match_selector(selector, el);
 
-	js_pushboolean(J, res);
+	js_pushboolean(J, res != NULL);
 }
 
 static void

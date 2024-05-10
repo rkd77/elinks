@@ -4823,7 +4823,7 @@ element_matches(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	void *res = el_match_selector(selector, el);
 	mem_free(selector);
 
-	args.rval().setBoolean(res);
+	args.rval().setBoolean(res != NULL);
 	return true;
 }
 
