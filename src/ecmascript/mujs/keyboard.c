@@ -11,13 +11,14 @@
 #include "elinks.h"
 
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/libdom/dom.h"
 #include "ecmascript/mujs.h"
 #include "ecmascript/mujs/keyboard.h"
 #include "intl/charsets.h"
 #include "terminal/event.h"
 
+static void mjs_keyboardEvent_get_property_code(js_State *J);
 static void mjs_keyboardEvent_get_property_key(js_State *J);
-static void mjs_keyboardEvent_get_property_keyCode(js_State *J);
 
 static void mjs_keyboardEvent_get_property_bubbles(js_State *J);
 static void mjs_keyboardEvent_get_property_cancelable(js_State *J);
@@ -29,50 +30,52 @@ static void mjs_keyboardEvent_preventDefault(js_State *J);
 
 static unicode_val_T keyCode;
 
-struct keyboard {
-	unicode_val_T keyCode;
-	char *type_;
-	unsigned int bubbles:1;
-	unsigned int cancelable:1;
-	unsigned int composed:1;
-	unsigned int defaultPrevented:1;
-};
-
 extern struct term_event last_event;
 
 static void
 mjs_keyboardEvent_finalizer(js_State *J, void *val)
 {
-	struct keyboard *keyb = (struct keyboard *)val;
+	dom_keyboard_event *event = (dom_keyboard_event *)val;
 
-	if (keyb) {
-		mem_free_if(keyb->type_);
-		mem_free(keyb);
+	if (event) {
+		dom_event_unref(event);
 	}
 }
 
 void
 mjs_push_keyboardEvent(js_State *J, struct term_event *ev, const char *type_)
 {
-	struct keyboard *keyb = (struct keyboard *)mem_calloc(1, sizeof(*keyb));
+	dom_keyboard_event *event = NULL;
+	dom_exception exc = dom_keyboard_event_create(&event);
 
-	if (!keyb) {
-		js_error(J, "out of memory");
+	if (exc != DOM_NO_ERR) {
+		js_error(J, "error");
 		return;
 	}
-	keyCode = keyb->keyCode = ev ? get_kbd_key(ev) : 0;
-	keyb->type_ = null_or_stracpy(type_);
+	keyCode = ev ? get_kbd_key(ev) : 0;
+	dom_string *typ = NULL;
+	const char *t = js_tostring(J, 1);
+
+	if (t) {
+		exc = dom_string_create(t, strlen(t), &typ);
+	}
+	exc = dom_keyboard_event_init(event, typ, false, false,
+		NULL, NULL, NULL, DOM_KEY_LOCATION_STANDARD,
+		false, false, false, false,
+		false, false);
+
+	if (typ) dom_string_unref(typ);
 
 	js_newobject(J);
 	{
-		js_newuserdata(J, "event", keyb, mjs_keyboardEvent_finalizer);
+		js_newuserdata(J, "event", event, mjs_keyboardEvent_finalizer);
 		addmethod(J, "preventDefault", mjs_keyboardEvent_preventDefault, 0);
 		addproperty(J, "bubbles", mjs_keyboardEvent_get_property_bubbles, NULL);
 		addproperty(J, "cancelable", mjs_keyboardEvent_get_property_cancelable, NULL);
-		addproperty(J, "composed", mjs_keyboardEvent_get_property_composed, NULL);
+		addproperty(J, "code", mjs_keyboardEvent_get_property_code, NULL);
+//		addproperty(J, "composed", mjs_keyboardEvent_get_property_composed, NULL);
 		addproperty(J, "defaultPrevented", mjs_keyboardEvent_get_property_defaultPrevented, NULL);
 		addproperty(J, "key", mjs_keyboardEvent_get_property_key, NULL);
-		addproperty(J, "keyCode", mjs_keyboardEvent_get_property_keyCode, NULL);
 		addproperty(J, "type", mjs_keyboardEvent_get_property_type, NULL);
 	}
 }
@@ -83,13 +86,15 @@ mjs_keyboardEvent_get_property_bubbles(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct keyboard *keyb = (struct keyboard *)js_touserdata(J, 0, "event");
+	dom_keyboard_event *event = (dom_keyboard_event *)js_touserdata(J, 0, "event");
 
-	if (!keyb) {
+	if (!event) {
 		js_pushnull(J);
 		return;
 	}
-	js_pushboolean(J, keyb->bubbles);
+	bool bubbles = false;
+	dom_exception exc = dom_event_get_bubbles(event, &bubbles);
+	js_pushboolean(J, bubbles);
 }
 
 static void
@@ -98,15 +103,18 @@ mjs_keyboardEvent_get_property_cancelable(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct keyboard *keyb = (struct keyboard *)js_touserdata(J, 0, "event");
+	dom_keyboard_event *event = (dom_keyboard_event *)js_touserdata(J, 0, "event");
 
-	if (!keyb) {
+	if (!event) {
 		js_pushnull(J);
 		return;
 	}
-	js_pushboolean(J, keyb->cancelable);
+	bool cancelable = false;
+	dom_exception exc = dom_event_get_cancelable(event, &cancelable);
+	js_pushboolean(J, cancelable);
 }
 
+#if 0
 static void
 mjs_keyboardEvent_get_property_composed(js_State *J)
 {
@@ -121,6 +129,7 @@ mjs_keyboardEvent_get_property_composed(js_State *J)
 	}
 	js_pushboolean(J, keyb->composed);
 }
+#endif
 
 static void
 mjs_keyboardEvent_get_property_defaultPrevented(js_State *J)
@@ -128,13 +137,15 @@ mjs_keyboardEvent_get_property_defaultPrevented(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct keyboard *keyb = (struct keyboard *)js_touserdata(J, 0, "event");
+	dom_keyboard_event *event = (dom_keyboard_event *)js_touserdata(J, 0, "event");
 
-	if (!keyb) {
+	if (!event) {
 		js_pushnull(J);
 		return;
 	}
-	js_pushboolean(J, keyb->defaultPrevented);
+	bool prevented = false;
+	dom_exception exc = dom_event_is_default_prevented(event, &prevented);
+	js_pushboolean(J, prevented);
 }
 
 static void
@@ -143,37 +154,44 @@ mjs_keyboardEvent_get_property_key(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct keyboard *keyb = (struct keyboard *)js_touserdata(J, 0, "event");
+	dom_keyboard_event *event = (dom_keyboard_event *)js_touserdata(J, 0, "event");
 
-	if (!keyb) {
+	if (!event) {
 		js_pushnull(J);
 		return;
 	}
-	char text[8] = {0};
+	dom_string *key = NULL;
+	dom_exception exc = dom_keyboard_event_get_key(event, &key);
 
-	*text = keyb->keyCode;
-	js_pushstring(J, text);
+	if (exc != DOM_NO_ERR || !key) {
+		js_pushnull(J);
+		return;
+	}
+	js_pushstring(J, dom_string_data(key));
+	dom_string_unref(key);
 }
 
 static void
-mjs_keyboardEvent_get_property_keyCode(js_State *J)
+mjs_keyboardEvent_get_property_code(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct keyboard *keyb = (struct keyboard *)js_touserdata(J, 0, "event");
-	unicode_val_T code;
+	dom_keyboard_event *event = (dom_keyboard_event *)js_touserdata(J, 0, "event");
 
-	if (!keyb) {
+	if (!event) {
 		js_pushnull(J);
 		return;
 	}
-	code = keyb->keyCode ?: get_kbd_key(&last_event);
+	dom_string *code = NULL;
+	dom_exception exc = dom_keyboard_event_get_code(event, &code);
 
-	if (code == KBD_ENTER) {
-		code = 13;
+	if (exc != DOM_NO_ERR || !code) {
+		js_pushnull(J);
+		return;
 	}
-	js_pushnumber(J, code);
+	js_pushstring(J, dom_string_data(code));
+	dom_string_unref(code);
 }
 
 static void
@@ -182,13 +200,21 @@ mjs_keyboardEvent_get_property_type(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct keyboard *keyb = (struct keyboard *)js_touserdata(J, 0, "event");
+	dom_keyboard_event *event = (dom_keyboard_event *)js_touserdata(J, 0, "event");
 
-	if (!keyb) {
+	if (!event) {
 		js_pushnull(J);
 		return;
 	}
-	js_pushstring(J, keyb->type_ ?: "");
+	dom_string *typ = NULL;
+	dom_exception exc = dom_event_get_type(event, &typ);
+
+	if (exc != DOM_NO_ERR || !typ) {
+		js_pushstring(J, "");
+		return;
+	}
+	js_pushstring(J, dom_string_data(typ));
+	dom_string_unref(typ);
 }
 
 static void
@@ -197,15 +223,13 @@ mjs_keyboardEvent_preventDefault(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct keyboard *keyb = (struct keyboard *)js_touserdata(J, 0, "event");
+	dom_keyboard_event *event = (dom_keyboard_event *)js_touserdata(J, 0, "event");
 
-	if (!keyb) {
+	if (!event) {
 		js_pushnull(J);
 		return;
 	}
-	if (keyb->cancelable) {
-		keyb->defaultPrevented = 1;
-	}
+	dom_event_prevent_default(event);
 	js_pushundefined(J);
 }
 
@@ -224,36 +248,65 @@ mjs_keyboardEvent_constructor(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct keyboard *keyb = (struct keyboard *)mem_calloc(1, sizeof(*keyb));
+	dom_keyboard_event *event = NULL;
+	dom_exception exc = dom_keyboard_event_create(&event);
 
-	if (!keyb) {
+	if (exc != DOM_NO_ERR) {
+		js_error(J, "error");
 		return;
 	}
-	keyb->type_ = null_or_stracpy(js_tostring(J, 1));
+	dom_string *typ = NULL;
+	const char *t = js_tostring(J, 1);
+
+	if (t) {
+		exc = dom_string_create(t, strlen(t), &typ);
+	}
+	bool bubbles = false;
+	bool cancelable = false;
+	dom_string *key = NULL;
+	dom_string *code = NULL;
 
 	js_getproperty(J, 2, "bubbles");
-	keyb->bubbles = js_toboolean(J, -1);
+	bubbles = js_toboolean(J, -1);
 	js_pop(J, 1);
+
 	js_getproperty(J, 2, "cancelable");
-	keyb->cancelable = js_toboolean(J, -1);
+	cancelable = js_toboolean(J, -1);
 	js_pop(J, 1);
-	js_getproperty(J, 2, "composed");
-	keyb->composed = js_toboolean(J, -1);
+
+	js_getproperty(J, 2, "code");
+	const char *c = js_tostring(J, -1);
 	js_pop(J, 1);
-	js_getproperty(J, 2, "keyCode");
-	keyb->keyCode = js_toint32(J, -1);
+
+	if (c) {
+		exc = dom_string_create(c, strlen(c), &code);
+	}
+
+	js_getproperty(J, 2, "key");
+	const char *k = js_tostring(J, -1);
 	js_pop(J, 1);
+
+	if (k) {
+		exc = dom_string_create(k, strlen(k), &key);
+	}
+	exc = dom_keyboard_event_init(event, typ, bubbles, cancelable, NULL/*view*/,
+		key, code, DOM_KEY_LOCATION_STANDARD,
+		false, false, false,
+		false, false, false);
+	if (typ) dom_string_unref(typ);
+	if (key) dom_string_unref(key);
+	if (code) dom_string_unref(code);
 
 	js_newobject(J);
 	{
-		js_newuserdata(J, "event", keyb, mjs_keyboardEvent_finalizer);
+		js_newuserdata(J, "event", event, mjs_keyboardEvent_finalizer);
 		addmethod(J, "preventDefault", mjs_keyboardEvent_preventDefault, 0);
 		addproperty(J, "bubbles", mjs_keyboardEvent_get_property_bubbles, NULL);
 		addproperty(J, "cancelable", mjs_keyboardEvent_get_property_cancelable, NULL);
-		addproperty(J, "composed", mjs_keyboardEvent_get_property_composed, NULL);
+		addproperty(J, "code", mjs_keyboardEvent_get_property_code, NULL);
+//		addproperty(J, "composed", mjs_keyboardEvent_get_property_composed, NULL);
 		addproperty(J, "defaultPrevented", mjs_keyboardEvent_get_property_defaultPrevented, NULL);
 		addproperty(J, "key", mjs_keyboardEvent_get_property_key, NULL);
-		addproperty(J, "keyCode", mjs_keyboardEvent_get_property_keyCode, NULL);
 		addproperty(J, "type", mjs_keyboardEvent_get_property_type, NULL);
 	}
 }

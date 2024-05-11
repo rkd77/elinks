@@ -334,6 +334,8 @@ js_keyboardEvent_constructor(JSContext *ctx, JSValueConst new_target, int argc, 
 		false, false, false,
 		false, false, false);
 	if (typ) dom_string_unref(typ);
+	if (key) dom_string_unref(key);
+	if (code) dom_string_unref(code);
 
 	JS_SetOpaque(obj, event);
 
