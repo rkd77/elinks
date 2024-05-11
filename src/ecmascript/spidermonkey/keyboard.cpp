@@ -60,8 +60,8 @@
 #include <vector>
 
 
+static bool keyboardEvent_get_property_code(JSContext *cx, unsigned int argc, JS::Value *vp);
 static bool keyboardEvent_get_property_key(JSContext *cx, unsigned int argc, JS::Value *vp);
-static bool keyboardEvent_get_property_keyCode(JSContext *cx, unsigned int argc, JS::Value *vp);
 
 static bool keyboardEvent_get_property_bubbles(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool keyboardEvent_get_property_cancelable(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -189,10 +189,10 @@ keyboardEvent_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
 JSPropertySpec keyboardEvent_props[] = {
 	JS_PSG("bubbles",	keyboardEvent_get_property_bubbles, JSPROP_ENUMERATE),
 	JS_PSG("cancelable",	keyboardEvent_get_property_cancelable, JSPROP_ENUMERATE),
+	JS_PSG("code",	keyboardEvent_get_property_code, JSPROP_ENUMERATE),
 //	JS_PSG("composed",	keyboardEvent_get_property_composed, JSPROP_ENUMERATE),
 	JS_PSG("defaultPrevented",	keyboardEvent_get_property_defaultPrevented, JSPROP_ENUMERATE),
 	JS_PSG("key",	keyboardEvent_get_property_key, JSPROP_ENUMERATE),
-	JS_PSG("keyCode",	keyboardEvent_get_property_keyCode, JSPROP_ENUMERATE),
 	JS_PSG("type",	keyboardEvent_get_property_type, JSPROP_ENUMERATE),
 	JS_PS_END
 };
@@ -348,7 +348,7 @@ keyboardEvent_get_property_key(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 static bool
-keyboardEvent_get_property_keyCode(JSContext *ctx, unsigned int argc, JS::Value *vp)
+keyboardEvent_get_property_code(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
