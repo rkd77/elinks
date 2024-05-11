@@ -12,6 +12,7 @@ extern "C" {
 #include <dom/bindings/hubbub/parser.h>
 #include <dom/events/custom_event.h>
 #include <dom/events/event.h>
+#include <dom/events/keyboard_event.h>
 #endif
 
 #undef namespace
