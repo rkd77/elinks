@@ -180,6 +180,9 @@ keyboardEvent_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
 		key, code, DOM_KEY_LOCATION_STANDARD,
 		false, false, false,
 		false, false, false);
+	if (typ) {
+		dom_string_unref(typ);
+	}
 	JS::SetReservedSlot(newObj, 0, JS::PrivateValue(event));
 	args.rval().setObject(*newObj);
 
