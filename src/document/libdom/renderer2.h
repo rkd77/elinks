@@ -19,6 +19,8 @@ struct node_rect {
 void render_xhtml_document(struct cache_entry *cached, struct document *document, struct string *buffer);
 void dump_xhtml(struct cache_entry *cached, struct document *document, int parse);
 
+void free_libdom(void);
+
 #if 0
 void walk2(struct document *document);
 void scan_document(struct document_view *doc_view);

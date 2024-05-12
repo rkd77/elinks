@@ -24,6 +24,7 @@
 #include "util/hash.h"
 #include "util/string.h"
 
+static int libdom_initialised = 0;
 static int in_script = 0;
 
 static bool
@@ -264,11 +265,10 @@ walk_tree(void *mapa, void *mapa_rev, struct string *buf, dom_node *node, bool s
 void
 render_xhtml_document(struct cache_entry *cached, struct document *document, struct string *buffer)
 {
-	static int initialised = 0;
-
-	if (!initialised) {
+	if (!libdom_initialised) {
 		corestrings_init();
-		initialised = 1;
+		keybstrings_init();
+		libdom_initialised = 1;
 	}
 
 	if (!document->dom) {
@@ -296,6 +296,15 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 		document->dom = document_parse(document, buffer);
 	}
 	dump_xhtml(cached, document, 0);
+}
+
+void
+free_libdom(void)
+{
+	if (libdom_initialised) {
+		keybstrings_fini();
+		corestrings_fini();
+	}
 }
 
 #if 0

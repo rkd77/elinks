@@ -29,6 +29,9 @@
 #include "config/options.h"
 #include "dialogs/menu.h"
 #include "document/document.h"
+#ifdef CONFIG_LIBDOM
+#include "document/libdom/renderer2.h"
+#endif
 #include "intl/charsets.h"
 #include "intl/libintl.h"
 #include "main/event.h"
@@ -327,6 +330,9 @@ terminate_all_subsystems(void)
 	terminate_osdep();
 #ifdef CONFIG_COMBINE
 	free_combined();
+#endif
+#ifdef CONFIG_LIBDOM
+	free_libdom();
 #endif
 	clean_temporary_files();
 }

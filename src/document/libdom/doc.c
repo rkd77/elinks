@@ -274,8 +274,8 @@ static enum {
 
 static lwc_string *keyb_lwc[KEYB_COUNT];
 
-static void
-initialize_keyb(void)
+void
+keybstrings_init(void)
 {
 	int i;
 
@@ -284,13 +284,12 @@ initialize_keyb(void)
 
 		if (err != lwc_error_ok) {
 			return;
-			//return _dom_exception_from_lwc_error(err);
 		}
 	}
 }
 
-static void
-finalize_keyb(void)
+void
+keybstrings_fini(void)
 {
 	int i;
 
@@ -304,12 +303,6 @@ finalize_keyb(void)
 unicode_val_T
 convert_dom_string_to_keycode(dom_string *dom_key)
 {
-	static int initialized = 0;
-
-	if (!initialized) {
-		initialize_keyb();
-		initialized = 1;
-	}
 	if (!dom_key) {
 		return 0;
 	}
