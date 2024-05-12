@@ -228,7 +228,6 @@ static const char *__keys_names[] = {
 	"Insert",
 	"Delete",
 	"F1",
-	"F1",
 	"F2",
 	"F3",
 	"F4",
@@ -254,6 +253,7 @@ static enum {
 	KEYB_HOME,
 	KEYB_END,
 	KEYB_ESCAPE,
+	KEYB_BACKSPACE,
 	KEYB_TAB,
 	KEYB_INSERT,
 	KEYB_DELETE,
@@ -338,30 +338,55 @@ convert_dom_string_to_keycode(dom_string *dom_key)
 	case KEYB_ENTER:
 		return 13;
 	case KEYB_ARROW_LEFT:
+		return 37;
 	case KEYB_ARROW_RIGHT:
+		return 39;
 	case KEYB_ARROW_UP:
+		return 38;
 	case KEYB_ARROW_DOWN:
+		return 40;
 	case KEYB_PAGE_UP:
+		return 33;
 	case KEYB_PAGE_DOWN:
+		return 34;
 	case KEYB_HOME:
+		return 36;
 	case KEYB_END:
+		return 35;
 	case KEYB_ESCAPE:
+		return 27;
+	case KEYB_BACKSPACE:
+		return 8;
 	case KEYB_TAB:
+		return 9;
 	case KEYB_INSERT:
+		return 45;
 	case KEYB_DELETE:
+		return 46;
 	case KEYB_F1:
+		return 112;
 	case KEYB_F2:
+		return 113;
 	case KEYB_F3:
+		return 114;
 	case KEYB_F4:
+		return 115;
 	case KEYB_F5:
+		return 116;
 	case KEYB_F6:
+		return 117;
 	case KEYB_F7:
+		return 118;
 	case KEYB_F8:
+		return 119;
 	case KEYB_F9:
+		return 120;
 	case KEYB_F10:
+		return 121;
 	case KEYB_F11:
+		return 122;
 	case KEYB_F12:
-		return 0;
+		return 123;
 	default:
 	{
 		char *utf8 = dom_string_data(dom_key);
