@@ -211,3 +211,162 @@ convert_key_to_dom_string(term_event_key_T key, dom_string **res)
 	*res = dom_key;
 	return true;
 }
+
+static const char *__keys_names[] = {
+	"Enter",
+	"ArrowLeft",
+	"ArrowRight",
+	"ArrowUp",
+	"ArrowDown",
+	"PageUp",
+	"PageDown",
+	"Home",
+	"End",
+	"Escape",
+	"Backspace",
+	"Tab",
+	"Insert",
+	"Delete",
+	"F1",
+	"F1",
+	"F2",
+	"F3",
+	"F4",
+	"F5",
+	"F6",
+	"F7",
+	"F8",
+	"F9",
+	"F10",
+	"F11",
+	"F12",
+	NULL
+};
+
+static enum {
+	KEYB_ENTER,
+	KEYB_ARROW_LEFT,
+	KEYB_ARROW_RIGHT,
+	KEYB_ARROW_UP,
+	KEYB_ARROW_DOWN,
+	KEYB_PAGE_UP,
+	KEYB_PAGE_DOWN,
+	KEYB_HOME,
+	KEYB_END,
+	KEYB_ESCAPE,
+	KEYB_TAB,
+	KEYB_INSERT,
+	KEYB_DELETE,
+	KEYB_F1,
+	KEYB_F2,
+	KEYB_F3,
+	KEYB_F4,
+	KEYB_F5,
+	KEYB_F6,
+	KEYB_F7,
+	KEYB_F8,
+	KEYB_F9,
+	KEYB_F10,
+	KEYB_F11,
+	KEYB_F12,
+	KEYB_COUNT
+};
+
+static lwc_string *keyb_lwc[KEYB_COUNT];
+
+static void
+initialize_keyb(void)
+{
+	int i;
+
+	for (i = 0; i < KEYB_COUNT; i++) {
+		dom_exception err = lwc_intern_string(__keys_names[i], strlen(__keys_names[i]), &keyb_lwc[i]);
+
+		if (err != lwc_error_ok) {
+			return;
+			//return _dom_exception_from_lwc_error(err);
+		}
+	}
+}
+
+static void
+finalize_keyb(void)
+{
+	int i;
+
+	for (i = 0; i < KEYB_COUNT; i++) {
+		if (keyb_lwc[i] != NULL) {
+			lwc_string_unref(keyb_lwc[i]);
+		}
+	}
+}
+
+unicode_val_T
+convert_dom_string_to_keycode(dom_string *dom_key)
+{
+	static int initialized = 0;
+
+	if (!initialized) {
+		initialize_keyb();
+		initialized = 1;
+	}
+	if (!dom_key) {
+		return 0;
+	}
+
+	int et = -1;
+	lwc_string *t = NULL;
+	dom_exception err;
+
+	int i;
+	err = dom_string_intern(dom_key, &t);
+
+	if (err != DOM_NO_ERR) {
+		return 0;
+	}
+	assert(t != NULL);
+
+	for (i = 0; i < KEYB_COUNT; i++) {
+		if (keyb_lwc[i] == t) {
+			et = i;
+			break;
+		}
+	}
+	lwc_string_unref(t);
+
+	switch (et) {
+	case KEYB_ENTER:
+		return 13;
+	case KEYB_ARROW_LEFT:
+	case KEYB_ARROW_RIGHT:
+	case KEYB_ARROW_UP:
+	case KEYB_ARROW_DOWN:
+	case KEYB_PAGE_UP:
+	case KEYB_PAGE_DOWN:
+	case KEYB_HOME:
+	case KEYB_END:
+	case KEYB_ESCAPE:
+	case KEYB_TAB:
+	case KEYB_INSERT:
+	case KEYB_DELETE:
+	case KEYB_F1:
+	case KEYB_F2:
+	case KEYB_F3:
+	case KEYB_F4:
+	case KEYB_F5:
+	case KEYB_F6:
+	case KEYB_F7:
+	case KEYB_F8:
+	case KEYB_F9:
+	case KEYB_F10:
+	case KEYB_F11:
+	case KEYB_F12:
+		return 0;
+	default:
+	{
+		char *utf8 = dom_string_data(dom_key);
+		char *end = utf8 + dom_string_length(dom_key);
+		return utf8_to_unicode(&utf8, end);
+	}
+	}
+}

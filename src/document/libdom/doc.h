@@ -17,6 +17,7 @@ void free_document(void *doc);
 void *el_match_selector(const char *selector, void *node);
 void add_lowercase_to_string(struct string *buf, const char *str, int len);
 bool convert_key_to_dom_string(term_event_key_T key, dom_string **res);
+unicode_val_T convert_dom_string_to_keycode(dom_string *dom_key);
 
 #ifdef __cplusplus
 }

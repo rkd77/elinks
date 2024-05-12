@@ -1,5 +1,5 @@
 <script>
-var e = new KeyboardEvent('message', { cancelable: true, key: "e" });
+var e = new KeyboardEvent('message', { cancelable: true, key: "Enter" });
 
 console.error('keyboardEvent.html');
 console.assert(e.cancelable, 'cancelable true');
@@ -7,6 +7,7 @@ console.assert(!e.defaultPrevented, 'false');
 e.preventDefault();
 console.assert(e.defaultPrevented, 'true');
 console.assert(e.type === 'message', 'message');
-console.assert(e.key === 'e', 'key e');
+console.assert(e.key === 'Enter', 'key Enter');
+console.assert(e.keyCode === 13, 'ENTER = 13');
 console.exit(0);
 </script>

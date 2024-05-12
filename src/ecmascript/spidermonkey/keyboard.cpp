@@ -64,6 +64,7 @@
 
 static bool keyboardEvent_get_property_code(JSContext *cx, unsigned int argc, JS::Value *vp);
 static bool keyboardEvent_get_property_key(JSContext *cx, unsigned int argc, JS::Value *vp);
+static bool keyboardEvent_get_property_keyCode(JSContext *cx, unsigned int argc, JS::Value *vp);
 
 static bool keyboardEvent_get_property_bubbles(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool keyboardEvent_get_property_cancelable(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -199,6 +200,7 @@ JSPropertySpec keyboardEvent_props[] = {
 //	JS_PSG("composed",	keyboardEvent_get_property_composed, JSPROP_ENUMERATE),
 	JS_PSG("defaultPrevented",	keyboardEvent_get_property_defaultPrevented, JSPROP_ENUMERATE),
 	JS_PSG("key",	keyboardEvent_get_property_key, JSPROP_ENUMERATE),
+	JS_PSG("keyCode",	keyboardEvent_get_property_keyCode, JSPROP_ENUMERATE),
 	JS_PSG("type",	keyboardEvent_get_property_type, JSPROP_ENUMERATE),
 	JS_PS_END
 };
@@ -349,6 +351,40 @@ keyboardEvent_get_property_key(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 	args.rval().setString(JS_NewStringCopyZ(ctx, dom_string_data(key)));
 	dom_string_unref(key);
+
+	return true;
+}
+
+static bool
+keyboardEvent_get_property_keyCode(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	dom_keyboard_event *event = JS::GetMaybePtrFromReservedSlot<dom_keyboard_event>(hobj, 0);
+
+	if (!event) {
+		return false;
+	}
+	dom_string *key = NULL;
+	dom_exception exc = dom_keyboard_event_get_key(event, &key);
+
+	if (exc != DOM_NO_ERR) {
+		return false;
+	}
+	unicode_val_T keyCode = convert_dom_string_to_keycode(key);
+	args.rval().setInt32(keyCode);
+	if (key) dom_string_unref(key);
 
 	return true;
 }
