@@ -4,6 +4,7 @@
 #include "document/document.h"
 #include "ecmascript/libdom/dom.h"
 #include "main/module.h"
+#include "terminal/kbd.h"
 
 #ifdef __cplusplus
 extern "C" {

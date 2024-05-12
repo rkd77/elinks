@@ -10,6 +10,7 @@
 
 #include "elinks.h"
 
+#include "ecmascript/libdom/dom.h"
 #include "document/libdom/doc.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/libdom/parse.h"

@@ -16,6 +16,7 @@
 
 #include "cache/cache.h"
 #include "document/document.h"
+#include "document/libdom/corestrings.h"
 #include "document/libdom/doc.h"
 #include "intl/charsets.h"
 #include "util/string.h"
@@ -103,4 +104,110 @@ add_lowercase_to_string(struct string *buf, const char *str, int len)
 	}
 	add_bytes_to_string(buf, tmp, len);
 	mem_free(tmp);
+}
+
+bool
+convert_key_to_dom_string(term_event_key_T key, dom_string **res)
+{
+	bool is_special = key <= 0x001F || (0x007F <= key && key <= 0x009F);
+	dom_string *dom_key = NULL;
+	dom_exception exc;
+
+	if (is_special) {
+		switch (key) {
+		case KBD_ENTER:
+			dom_key = dom_string_ref(corestring_dom_Enter);
+			break;
+		case KBD_LEFT:
+			dom_key = dom_string_ref(corestring_dom_ArrowLeft);
+			break;
+		case KBD_RIGHT:
+			dom_key = dom_string_ref(corestring_dom_ArrowRight);
+			break;
+		case KBD_UP:
+			dom_key = dom_string_ref(corestring_dom_ArrowUp);
+			break;
+		case KBD_DOWN:
+			dom_key = dom_string_ref(corestring_dom_ArrowDown);
+			break;
+		case KBD_PAGE_UP:
+			dom_key = dom_string_ref(corestring_dom_PageUp);
+			break;
+		case KBD_PAGE_DOWN:
+			dom_key = dom_string_ref(corestring_dom_PageDown);
+			break;
+		case KBD_HOME:
+			dom_key = dom_string_ref(corestring_dom_Home);
+			break;
+		case KBD_END:
+			dom_key = dom_string_ref(corestring_dom_End);
+			break;
+		case KBD_ESC:
+			dom_key = dom_string_ref(corestring_dom_Escape);
+			break;
+		case KBD_BS: // Backspace
+			dom_key = dom_string_ref(corestring_dom_Backspace);
+			break;
+		case KBD_TAB: // Tab
+			dom_key = dom_string_ref(corestring_dom_Tab);
+			break;
+		case KBD_INS: // Insert
+			dom_key = dom_string_ref(corestring_dom_Insert);
+			break;
+		case KBD_DEL: // Delete
+			dom_key = dom_string_ref(corestring_dom_Delete);
+			break;
+		case KBD_F1: // F1
+			dom_key = dom_string_ref(corestring_dom_F1);
+			break;
+		case KBD_F2: // F2
+			dom_key = dom_string_ref(corestring_dom_F2);
+			break;
+		case KBD_F3: // F3
+			dom_key = dom_string_ref(corestring_dom_F3);
+			break;
+		case KBD_F4: // F4
+			dom_key = dom_string_ref(corestring_dom_F4);
+			break;
+		case KBD_F5: // F5
+			dom_key = dom_string_ref(corestring_dom_F5);
+			break;
+		case KBD_F6: // F6
+			dom_key = dom_string_ref(corestring_dom_F6);
+			break;
+		case KBD_F7: // F7
+			dom_key = dom_string_ref(corestring_dom_F7);
+			break;
+		case KBD_F8: // F8
+			dom_key = dom_string_ref(corestring_dom_F8);
+			break;
+		case KBD_F9: // F9
+			dom_key = dom_string_ref(corestring_dom_F9);
+			break;
+		case KBD_F10: // F10
+			dom_key = dom_string_ref(corestring_dom_F10);
+			break;
+		case KBD_F11: // F11
+			dom_key = dom_string_ref(corestring_dom_F11);
+			break;
+		case KBD_F12: // F12
+			dom_key = dom_string_ref(corestring_dom_F12);
+			break;
+		default:
+			dom_key = NULL;
+			break;
+		}
+	} else {
+		char *utf8 = encode_utf8(key);
+
+		if (utf8) {
+			exc = dom_string_create((const uint8_t *)utf8, strlen(utf8), &dom_key);
+
+			if (exc != DOM_NO_ERR) {
+				return false;
+			}
+		}
+	}
+	*res = dom_key;
+	return true;
 }

@@ -9,6 +9,8 @@
 
 #include "elinks.h"
 
+#include "ecmascript/libdom/dom.h"
+
 #include "config/home.h"
 #include "config/options.h"
 #include "dialogs/status.h"

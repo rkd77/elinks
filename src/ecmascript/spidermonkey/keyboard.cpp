@@ -14,6 +14,8 @@
 #include <js/BigInt.h>
 #include <js/Conversions.h>
 
+#include "ecmascript/libdom/dom.h"
+
 #include "bfu/dialog.h"
 #include "cache/cache.h"
 #include "cookies/cookies.h"
@@ -22,9 +24,9 @@
 #include "document/html/frames.h"
 #include "document/document.h"
 #include "document/forms.h"
+#include "document/libdom/doc.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
-#include "ecmascript/libdom/dom.h"
 #include "ecmascript/spidermonkey.h"
 #include "ecmascript/spidermonkey/heartbeat.h"
 #include "ecmascript/spidermonkey/keyboard.h"
@@ -72,7 +74,7 @@ static bool keyboardEvent_get_property_type(JSContext *ctx, unsigned int argc, J
 static bool keyboardEvent_preventDefault(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 
-static unicode_val_T keyCode;
+static term_event_key_T keyCode;
 
 static void
 keyboardEvent_finalize(JS::GCContext *op, JSObject *keyb_obj)
@@ -463,16 +465,25 @@ get_keyboardEvent(JSContext *ctx, struct term_event *ev)
 	if (exc != DOM_NO_ERR) {
 		return NULL;
 	}
-	keyCode = get_kbd_key(ev);
+	term_event_key_T keyCode = get_kbd_key(ev);
 
-	if (keyCode == KBD_ENTER) {
-		keyCode = 13;
-	}
-	exc = dom_keyboard_event_init(keyb, NULL, false, false,
-		NULL, NULL, NULL, DOM_KEY_LOCATION_STANDARD,
+	dom_string *dom_key = NULL;
+	convert_key_to_dom_string(keyCode, &dom_key);
+
+	dom_string *keydown = NULL;
+	exc = dom_string_create("keydown", strlen("keydown"), &keydown);
+
+	exc = dom_keyboard_event_init(keyb, keydown, false, false,
+		NULL, dom_key, NULL, DOM_KEY_LOCATION_STANDARD,
 		false, false, false, false,
 		false, false);
 
+	if (dom_key) {
+		dom_string_unref(dom_key);
+	}
+	if (keydown) {
+		dom_string_unref(keydown);
+	}
 //	keyb->keyCode = keyCode;
 	JS::SetReservedSlot(k, 0, JS::PrivateValue(keyb));
 

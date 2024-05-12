@@ -6,6 +6,8 @@
 
 #include "elinks.h"
 
+#include "ecmascript/libdom/dom.h"
+
 #include "dialogs/status.h"
 #include "document/document.h"
 #include "document/libdom/doc.h"
@@ -593,3 +595,4 @@ walk_tree_query_append(dom_node *root, dom_node *node, const char *selector, int
 		} while (child != NULL); /* No more children */
 	}
 }
+
