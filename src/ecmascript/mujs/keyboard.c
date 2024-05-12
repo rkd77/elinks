@@ -79,7 +79,7 @@ mjs_push_keyboardEvent(js_State *J, struct term_event *ev, const char *type_)
 //		addproperty(J, "composed", mjs_keyboardEvent_get_property_composed, NULL);
 		addproperty(J, "defaultPrevented", mjs_keyboardEvent_get_property_defaultPrevented, NULL);
 		addproperty(J, "key", mjs_keyboardEvent_get_property_key, NULL);
-		addproperty(J, "keyCode", mjs_keyboardEvent_get_property_key, NULL);
+		addproperty(J, "keyCode", mjs_keyboardEvent_get_property_keyCode, NULL);
 		addproperty(J, "type", mjs_keyboardEvent_get_property_type, NULL);
 	}
 }
