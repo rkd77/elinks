@@ -185,7 +185,7 @@ js_keyboardEvent_get_property_keyCode(JSContext *ctx, JSValueConst this_val)
 	}
 	unicode_val_T keyCode = convert_dom_string_to_keycode(key);
 	JSValue r = JS_NewUint32(ctx, keyCode);
-	dom_string_unref(key);
+	if (key) dom_string_unref(key);
 
 	RETURN_JS(r);
 }

@@ -10,8 +10,10 @@
 
 #include "elinks.h"
 
-#include "ecmascript/ecmascript.h"
 #include "ecmascript/libdom/dom.h"
+
+#include "document/libdom/doc.h"
+#include "ecmascript/ecmascript.h"
 #include "ecmascript/mujs.h"
 #include "ecmascript/mujs/keyboard.h"
 #include "intl/charsets.h"
@@ -19,6 +21,7 @@
 
 static void mjs_keyboardEvent_get_property_code(js_State *J);
 static void mjs_keyboardEvent_get_property_key(js_State *J);
+static void mjs_keyboardEvent_get_property_keyCode(js_State *J);
 
 static void mjs_keyboardEvent_get_property_bubbles(js_State *J);
 static void mjs_keyboardEvent_get_property_cancelable(js_State *J);
@@ -27,8 +30,6 @@ static void mjs_keyboardEvent_get_property_defaultPrevented(js_State *J);
 static void mjs_keyboardEvent_get_property_type(js_State *J);
 
 static void mjs_keyboardEvent_preventDefault(js_State *J);
-
-static unicode_val_T keyCode;
 
 extern struct term_event last_event;
 
@@ -52,19 +53,21 @@ mjs_push_keyboardEvent(js_State *J, struct term_event *ev, const char *type_)
 		js_error(J, "error");
 		return;
 	}
-	keyCode = ev ? get_kbd_key(ev) : 0;
+	term_event_key_T keyCode = ev ? get_kbd_key(ev) : 0;
 	dom_string *typ = NULL;
-	const char *t = js_tostring(J, 1);
+	const char *t = type_ ?: "keydown";
 
-	if (t) {
-		exc = dom_string_create(t, strlen(t), &typ);
-	}
+	exc = dom_string_create(t, strlen(t), &typ);
+	dom_string *dom_key = NULL;
+	convert_key_to_dom_string(keyCode, &dom_key);
+
 	exc = dom_keyboard_event_init(event, typ, false, false,
-		NULL, NULL, NULL, DOM_KEY_LOCATION_STANDARD,
+		NULL, dom_key, NULL, DOM_KEY_LOCATION_STANDARD,
 		false, false, false, false,
 		false, false);
 
 	if (typ) dom_string_unref(typ);
+	if (dom_key) dom_string_unref(dom_key);
 
 	js_newobject(J);
 	{
@@ -76,6 +79,7 @@ mjs_push_keyboardEvent(js_State *J, struct term_event *ev, const char *type_)
 //		addproperty(J, "composed", mjs_keyboardEvent_get_property_composed, NULL);
 		addproperty(J, "defaultPrevented", mjs_keyboardEvent_get_property_defaultPrevented, NULL);
 		addproperty(J, "key", mjs_keyboardEvent_get_property_key, NULL);
+		addproperty(J, "keyCode", mjs_keyboardEvent_get_property_key, NULL);
 		addproperty(J, "type", mjs_keyboardEvent_get_property_type, NULL);
 	}
 }
@@ -169,6 +173,30 @@ mjs_keyboardEvent_get_property_key(js_State *J)
 	}
 	js_pushstring(J, dom_string_data(key));
 	dom_string_unref(key);
+}
+
+static void
+mjs_keyboardEvent_get_property_keyCode(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_keyboard_event *event = (dom_keyboard_event *)js_touserdata(J, 0, "event");
+
+	if (!event) {
+		js_pushnull(J);
+		return;
+	}
+	dom_string *key = NULL;
+	dom_exception exc = dom_keyboard_event_get_key(event, &key);
+
+	if (exc != DOM_NO_ERR) {
+		js_pushnull(J);
+		return;
+	}
+	unicode_val_T keyCode = convert_dom_string_to_keycode(key);
+	if (key) dom_string_unref(key);
+	js_pushnumber(J, keyCode);
 }
 
 static void
@@ -307,6 +335,7 @@ mjs_keyboardEvent_constructor(js_State *J)
 //		addproperty(J, "composed", mjs_keyboardEvent_get_property_composed, NULL);
 		addproperty(J, "defaultPrevented", mjs_keyboardEvent_get_property_defaultPrevented, NULL);
 		addproperty(J, "key", mjs_keyboardEvent_get_property_key, NULL);
+		addproperty(J, "keyCode", mjs_keyboardEvent_get_property_keyCode, NULL);
 		addproperty(J, "type", mjs_keyboardEvent_get_property_type, NULL);
 	}
 }
