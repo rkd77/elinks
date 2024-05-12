@@ -10,8 +10,10 @@
 
 #include "elinks.h"
 
-#include "ecmascript/ecmascript.h"
 #include "ecmascript/libdom/dom.h"
+
+#include "document/libdom/doc.h"
+#include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/keyboard.h"
 #include "intl/charsets.h"
@@ -23,6 +25,7 @@ static JSClassID js_keyboardEvent_class_id;
 
 static JSValue js_keyboardEvent_get_property_code(JSContext *ctx, JSValueConst this_val);
 static JSValue js_keyboardEvent_get_property_key(JSContext *ctx, JSValueConst this_val);
+static JSValue js_keyboardEvent_get_property_keyCode(JSContext *ctx, JSValueConst this_val);
 
 static JSValue js_keyboardEvent_get_property_bubbles(JSContext *ctx, JSValueConst this_val);
 static JSValue js_keyboardEvent_get_property_cancelable(JSContext *ctx, JSValueConst this_val);
@@ -31,8 +34,6 @@ static JSValue js_keyboardEvent_get_property_defaultPrevented(JSContext *ctx, JS
 static JSValue js_keyboardEvent_get_property_type(JSContext *ctx, JSValueConst this_val);
 
 static JSValue js_keyboardEvent_preventDefault(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv);
-
-static unicode_val_T keyCode;
 
 static
 void js_keyboardEvent_finalizer(JSRuntime *rt, JSValue val)
@@ -58,6 +59,7 @@ static const JSCFunctionListEntry js_keyboardEvent_proto_funcs[] = {
 //	JS_CGETSET_DEF("composed",	js_keyboardEvent_get_property_composed, NULL),
 	JS_CGETSET_DEF("defaultPrevented",	js_keyboardEvent_get_property_defaultPrevented, NULL),
 	JS_CGETSET_DEF("key",	js_keyboardEvent_get_property_key, NULL),
+	JS_CGETSET_DEF("keyCode",	js_keyboardEvent_get_property_keyCode, NULL),
 	JS_CGETSET_DEF("type",	js_keyboardEvent_get_property_type, NULL),
 	JS_CFUNC_DEF("preventDefault", 0, js_keyboardEvent_preventDefault)
 };
@@ -164,6 +166,31 @@ js_keyboardEvent_get_property_key(JSContext *ctx, JSValueConst this_val)
 }
 
 static JSValue
+js_keyboardEvent_get_property_keyCode(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	struct dom_keyboard_event *event = (dom_keyboard_event *)(JS_GetOpaque(this_val, js_keyboardEvent_class_id));
+
+	if (!event) {
+		return JS_NULL;
+	}
+	dom_string *key = NULL;
+	dom_exception exc = dom_keyboard_event_get_key(event, &key);
+
+	if (exc != DOM_NO_ERR) {
+		return JS_NULL;
+	}
+	unicode_val_T keyCode = convert_dom_string_to_keycode(key);
+	JSValue r = JS_NewUint32(ctx, keyCode);
+	dom_string_unref(key);
+
+	RETURN_JS(r);
+}
+
+static JSValue
 js_keyboardEvent_get_property_code(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -249,17 +276,20 @@ get_keyboardEvent(JSContext *ctx, struct term_event *ev)
 	if (exc != DOM_NO_ERR) {
 		return JS_NULL;
 	}
-	keyCode = get_kbd_key(ev);
+	term_event_key_T keyCode = get_kbd_key(ev);
+	dom_string *dom_key = NULL;
+	convert_key_to_dom_string(keyCode, &dom_key);
 
-	if (keyCode == KBD_ENTER) {
-		keyCode = 13;
-	}
-//	keyb->keyCode = keyCode;
+	dom_string *keydown = NULL;
+	exc = dom_string_create("keydown", strlen("keydown"), &keydown);
 
-	exc = dom_keyboard_event_init(event, NULL, false, false,
-		NULL, NULL, NULL, DOM_KEY_LOCATION_STANDARD,
+	exc = dom_keyboard_event_init(event, keydown, false, false,
+		NULL, dom_key, NULL, DOM_KEY_LOCATION_STANDARD,
 		false, false, false, false,
 		false, false);
+
+	if (dom_key) dom_string_unref(dom_key);
+	if (keydown) dom_string_unref(keydown);
 
 	JSValue keyb_obj = JS_NewObjectClass(ctx, js_keyboardEvent_class_id);
 	JS_SetPropertyFunctionList(ctx, keyb_obj, js_keyboardEvent_proto_funcs, countof(js_keyboardEvent_proto_funcs));
