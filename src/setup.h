@@ -125,4 +125,6 @@
 #define FG_POLL_TIME			500
 #define TERMINAL_POLL_TIMEOUT		1000
 
+//#define ECMASCRIPT_DEBUG 1
+
 #endif

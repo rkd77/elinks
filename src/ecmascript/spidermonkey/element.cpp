@@ -2904,7 +2904,6 @@ element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
@@ -2921,6 +2920,8 @@ element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!vs) {
 		return true;
 	}
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
 
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
@@ -2940,6 +2941,7 @@ element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		exc = dom_element_set_attribute(el, corestring_dom_class, classstr);
 		interpreter->changed = 1;
 		dom_string_unref(classstr);
+		debug_dump_xhtml(document->dom);
 	}
 	mem_free(str);
 
@@ -2965,7 +2967,6 @@ element_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
@@ -2981,6 +2982,8 @@ element_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!vs) {
 		return true;
 	}
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
 
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
@@ -3002,6 +3005,7 @@ element_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 			exc = dom_element_set_attribute(el, corestring_dom_dir, dir);
 			interpreter->changed = 1;
 			dom_string_unref(dir);
+			debug_dump_xhtml(document->dom);
 		}
 	}
 	mem_free(str);
@@ -3045,6 +3049,8 @@ element_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!vs) {
 		return true;
 	}
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
 
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
@@ -3064,6 +3070,7 @@ element_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		exc = dom_element_set_attribute(el, corestring_dom_id, idstr);
 		interpreter->changed = 1;
 		dom_string_unref(idstr);
+		debug_dump_xhtml(document->dom);
 	}
 	mem_free(str);
 
@@ -3105,6 +3112,8 @@ element_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!vs) {
 		return true;
 	}
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
 
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
@@ -3117,6 +3126,9 @@ element_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	size_t size = strlen(s);
+
+	fprintf(stderr, "set innerHTML:%s\n", s);
+
 
 	dom_hubbub_parser_params parse_params;
 	dom_hubbub_error error;
@@ -3230,6 +3242,7 @@ out:
 	}
 	mem_free(s);
 	interpreter->changed = 1;
+	debug_dump_xhtml(document->dom);
 
 	return true;
 }
@@ -3269,6 +3282,8 @@ element_set_property_innerText(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!vs) {
 		return true;
 	}
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
 
 	dom_node *el = JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 	if (!el) {
@@ -3286,6 +3301,7 @@ element_set_property_innerText(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	el->add_child_text(text);
 	interpreter->changed = 1;
 	mem_free_if(text);
+	debug_dump_xhtml(document->dom);
 #endif
 
 	return true;
@@ -3326,6 +3342,9 @@ element_set_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!vs) {
 		return true;
 	}
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
+
 
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
@@ -3345,6 +3364,7 @@ element_set_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		exc = dom_element_set_attribute(el, corestring_dom_lang, langstr);
 		interpreter->changed = 1;
 		dom_string_unref(langstr);
+		debug_dump_xhtml(document->dom);
 	}
 	mem_free(str);
 
@@ -3386,6 +3406,9 @@ element_set_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!vs) {
 		return true;
 	}
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
+
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
 	if (!el) {
@@ -3512,6 +3535,7 @@ out:
 
 	mem_free(s);
 	interpreter->changed = 1;
+	debug_dump_xhtml(document->dom);
 
 	return true;
 }
@@ -3589,6 +3613,8 @@ element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!vs) {
 		return true;
 	}
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
 
 	dom_string *titlestr = NULL;
 	dom_exception exc;
@@ -3610,6 +3636,7 @@ element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		exc = dom_element_set_attribute(el, corestring_dom_title, titlestr);
 		interpreter->changed = 1;
 		dom_string_unref(titlestr);
+		debug_dump_xhtml(document->dom);
 	}
 	mem_free(str);
 
@@ -3942,6 +3969,9 @@ element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
 
 	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
 #ifdef ECMASCRIPT_DEBUG
@@ -3972,6 +4002,7 @@ element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		interpreter->changed = 1;
 		JSObject *obj = getElement(ctx, res);
 		args.rval().setObject(*obj);
+		debug_dump_xhtml(document->dom);
 		return true;
 	}
 	args.rval().setNull();
@@ -4654,6 +4685,9 @@ element_insertBefore(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
 
 	JS::CallArgs args = CallArgsFromVp(argc, rval);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -4691,6 +4725,7 @@ element_insertBefore(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	JSObject *obj = getElement(ctx, spare);
 	args.rval().setObject(*obj);
 	interpreter->changed = 1;
+	debug_dump_xhtml(document->dom);
 
 	return true;
 }
@@ -4973,6 +5008,10 @@ element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 // TODO
 #if 0
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
+
 	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
@@ -4981,6 +5020,7 @@ element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	xmlpp::Node::remove_node(el);
 	interpreter->changed = 1;
+	debug_dump_xhtml(document->dom);
 #endif
 	return true;
 }
@@ -5004,6 +5044,9 @@ element_removeChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
 
 	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
 #ifdef ECMASCRIPT_DEBUG
@@ -5027,6 +5070,7 @@ element_removeChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		interpreter->changed = 1;
 		JSObject *obj = getElement(ctx, spare);
 		args.rval().setObject(*obj);
+		debug_dump_xhtml(document->dom);
 		return true;
 	}
 	args.rval().setNull();
@@ -5060,6 +5104,10 @@ element_replaceWith(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 // TODO
 #if 0
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
+
 	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el || !args[0].isObject()) {
@@ -5074,6 +5122,7 @@ element_replaceWith(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	xmlpp::Node::remove_node(el);
 	interpreter->changed = 1;
 	args.rval().setUndefined();
+	debug_dump_xhtml(document->dom);
 #endif
 	return true;
 }
@@ -5097,6 +5146,9 @@ element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
 
 	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
 #ifdef ECMASCRIPT_DEBUG
@@ -5152,6 +5204,7 @@ element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return true;
 	}
 	interpreter->changed = 1;
+	debug_dump_xhtml(document->dom);
 
 	return true;
 }

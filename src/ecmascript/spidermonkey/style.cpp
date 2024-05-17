@@ -24,6 +24,7 @@
 #include "document/document.h"
 #include "document/forms.h"
 #include "document/libdom/corestrings.h"
+#include "document/libdom/renderer2.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/libdom/dom.h"
@@ -638,6 +639,8 @@ style_set_property_cssText(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document = doc_view->document;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -679,6 +682,7 @@ style_set_property_cssText(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		exc = dom_element_set_attribute(el, corestring_dom_style, stylestr);
 		interpreter->changed = 1;
 		dom_string_unref(stylestr);
+		debug_dump_xhtml(document->dom);
 	}
 	mem_free(res);
 
@@ -702,6 +706,8 @@ style_set_style(JSContext *ctx, unsigned int argc, JS::Value *vp, const char *pr
 		return false;
 	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document = doc_view->document;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -752,6 +758,7 @@ style_set_style(JSContext *ctx, unsigned int argc, JS::Value *vp, const char *pr
 		exc = dom_element_set_attribute(el, corestring_dom_style, stylestr);
 		interpreter->changed = 1;
 		dom_string_unref(stylestr);
+		debug_dump_xhtml(document->dom);
 	}
 	mem_free(res);
 	return true;

@@ -30,8 +30,6 @@
 #include "util/string.h"
 #include "util/time.h"
 
-//#define ECMASCRIPT_DEBUG 1
-
 #ifdef ECMASCRIPT_DEBUG
 #include <stdio.h>
 #endif

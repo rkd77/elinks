@@ -20,6 +20,7 @@ void render_xhtml_document(struct cache_entry *cached, struct document *document
 void dump_xhtml(struct cache_entry *cached, struct document *document, int parse);
 
 void free_libdom(void);
+void debug_dump_xhtml(void *doc);
 
 #if 0
 void walk2(struct document *document);

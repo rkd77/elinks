@@ -175,12 +175,11 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	JS::Heap<JSObject*> *window_obj = new JS::Heap<JSObject*>(JS_NewGlobalObject(ctx, &window_class, NULL, JS::FireOnNewGlobalHook, options));
 
 	global = window_obj->get();
-	interpreter->ar = new JSAutoRealm(ctx, global);
 
 	if (!global) {
 		goto release_and_fail;
 	}
-
+	interpreter->ar = new JSAutoRealm(ctx, global);
 	interpreter->ac = window_obj;
 
 	if (!JS::InitRealmStandardClasses(ctx)) {

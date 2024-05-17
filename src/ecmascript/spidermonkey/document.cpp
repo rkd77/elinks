@@ -25,6 +25,7 @@
 #include "document/document.h"
 #include "document/forms.h"
 #include "document/libdom/doc.h"
+#include "document/libdom/renderer2.h"
 #include "document/view.h"
 #include "ecmascript/css2xpath.h"
 #include "ecmascript/ecmascript.h"
@@ -1197,6 +1198,10 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 	}
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
+
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 
 	if (argc >= 1) {
@@ -1227,6 +1232,7 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 			}
 			interpreter->changed = 1;
 			interpreter->was_write = 1;
+			debug_dump_xhtml(document->dom);
 		}
 	}
 

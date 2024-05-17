@@ -166,8 +166,12 @@ dump_dom_element(void *mapa, void *mapa_rev, struct string *buf, dom_node *node,
 	}
 
 	add_char_to_string(buf, '<');
-	save_in_map(mapa, node, buf->length);
-	save_offset_in_map(mapa_rev, node, buf->length);
+	if (mapa) {
+		save_in_map(mapa, node, buf->length);
+	}
+	if (mapa_rev) {
+		save_offset_in_map(mapa_rev, node, buf->length);
+	}
 
 	/* Get string data and print element name */
 	add_lowercase_to_string(buf, dom_string_data(node_name), dom_string_byte_length(node_name));
@@ -474,6 +478,48 @@ walk_tree2_color(struct terminal *term, struct el_box *box, struct document *doc
 	}
 }
 #endif
+
+void
+debug_dump_xhtml(void *d)
+{
+#ifdef ECMASCRIPT_DEBUG
+	dom_document *doc = (dom_document *)d;
+
+	if (!doc) {
+		return;
+	}
+	dom_node *root = NULL;
+	dom_exception exc = dom_document_get_document_element(doc, &root);
+
+	if (exc != DOM_NO_ERR) {
+		fprintf(stderr, "Exception raised for get_document_element\n");
+		//dom_node_unref(doc);
+		return;
+	} else if (root == NULL) {
+		fprintf(stderr, "Broken: root == NULL\n");
+		//dom_node_unref(doc);
+		return;
+	}
+	struct string text;
+
+	if (!init_string(&text)) {
+		dom_node_unref(root);
+		return;
+	}
+
+	if (walk_tree(NULL, NULL, &text, root, true, 0) == false) {
+		fprintf(stderr, "Failed to complete DOM structure dump.\n");
+		dom_node_unref(root);
+		done_string(&text);
+		//dom_node_unref(doc);
+		return;
+	}
+
+	fprintf(stderr, "\n---%s\n", text.source);
+	done_string(&text);
+	dom_node_unref(root);
+#endif
+}
 
 void
 dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
