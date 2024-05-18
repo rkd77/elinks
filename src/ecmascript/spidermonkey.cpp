@@ -163,6 +163,9 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	}
 
 	interpreter->backend_data = ctx;
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
 
 	// JS_SetContextPrivate(ctx, interpreter);
 
@@ -204,6 +207,9 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 		goto release_and_fail;
 	}
 
+	if (!initDocument(document_obj, document->dom)) {
+		goto release_and_fail;
+	}
 	interpreter->document_obj = document_obj;
 
 /*

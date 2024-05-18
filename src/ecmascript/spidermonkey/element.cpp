@@ -3127,9 +3127,6 @@ element_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 	size_t size = strlen(s);
 
-	fprintf(stderr, "set innerHTML:%s\n", s);
-
-
 	dom_hubbub_parser_params parse_params;
 	dom_hubbub_error error;
 	dom_hubbub_parser *parser = NULL;

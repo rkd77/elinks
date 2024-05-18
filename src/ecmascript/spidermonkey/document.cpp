@@ -132,18 +132,23 @@ document_get_property_anchors(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
 
-	if (!document->dom) {
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	dom_html_document *doc = (dom_html_document *)JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+
+	if (!doc) {
 		args.rval().setNull();
 		return true;
 	}
-
-	dom_html_document *doc = (dom_html_document *)document->dom;
 	dom_html_collection *anchors = NULL;
 	dom_exception exc = dom_html_document_get_anchors(doc, &anchors);
 
@@ -218,17 +223,23 @@ document_get_property_body(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
 
-	if (!document->dom) {
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	dom_html_document *doc = (dom_html_document *)JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+
+	if (!doc) {
 		args.rval().setNull();
 		return true;
 	}
-	dom_html_document *doc = (dom_html_document *)document->dom;
 	dom_html_element *body = NULL;
 	dom_exception exc = dom_html_document_get_body(doc, &body);
 
@@ -248,6 +259,7 @@ document_set_property_body(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	// TODO
 	return true;
 }
 
@@ -346,13 +358,6 @@ document_get_property_charset(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		args.rval().setNull();
-		return true;
-	}
 // TODO
 	args.rval().setString(JS_NewStringCopyZ(ctx, "utf-8"));
 
@@ -389,23 +394,12 @@ document_get_property_childNodes(JSContext *ctx, unsigned int argc, JS::Value *v
 #endif
 		return false;
 	}
+	dom_html_document *doc = (dom_html_document *)JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
 
-	vs = interpreter->vs;
-	if (!vs) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	struct document *document = vs->doc_view->document;
-
-	if (!document->dom) {
+	if (!doc) {
 		args.rval().setNull();
 		return true;
 	}
-
-	dom_html_document *doc = (dom_html_document *)document->dom;
 	dom_element *root = NULL;
 	dom_exception exc = dom_document_get_document_element(doc, &root);
 
@@ -453,18 +447,23 @@ document_get_property_doctype(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
 
-	if (!document->dom) {
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	dom_html_document *doc = (dom_html_document *)JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+
+	if (!doc) {
 		args.rval().setNull();
 		return true;
 	}
-
-	dom_html_document *doc = (dom_html_document *)document->dom;
 	dom_document_type *dtd;
 	dom_document_get_doctype(doc, &dtd);
 
@@ -481,17 +480,23 @@ document_get_property_documentElement(JSContext *ctx, unsigned int argc, JS::Val
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
 
-	if (!document->dom) {
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	dom_html_document *doc = (dom_html_document *)JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+
+	if (!doc) {
 		args.rval().setNull();
 		return true;
 	}
-	dom_html_document *doc = (dom_html_document *)document->dom;
 	dom_html_element *root = NULL;
 	dom_exception exc = dom_document_get_document_element(doc, &root);
 
@@ -617,17 +622,23 @@ document_get_property_forms(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
 
-	if (!document->dom) {
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	dom_html_document *doc = (dom_html_document *)JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+
+	if (!doc) {
 		args.rval().setNull();
 		return true;
 	}
-	dom_html_document *doc = (dom_html_document *)document->dom;
 	dom_html_collection *forms = NULL;
 	dom_exception exc = dom_html_document_get_forms(doc, &forms);
 
@@ -651,13 +662,6 @@ document_get_property_head(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		args.rval().setNull();
-		return true;
-	}
 // TODO
 	args.rval().setNull();
 	return true;
@@ -670,17 +674,23 @@ document_get_property_images(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
 
-	if (!document->dom) {
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	dom_html_document *doc = (dom_html_document *)JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+
+	if (!doc) {
 		args.rval().setNull();
 		return true;
 	}
-	dom_html_document *doc = (dom_html_document *)document->dom;
 	dom_html_collection *images = NULL;
 	dom_exception exc = dom_html_document_get_images(doc, &images);
 
@@ -701,16 +711,10 @@ document_get_property_implementation(JSContext *ctx, unsigned int argc, JS::Valu
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		args.rval().setNull();
-		return true;
-	}
 
 	JSObject *obj = getImplementation(ctx);
 	if (!obj) {
@@ -728,17 +732,23 @@ document_get_property_links(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
 
-	if (!document->dom) {
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	dom_html_document *doc = (dom_html_document *)JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+
+	if (!doc) {
 		args.rval().setNull();
 		return true;
 	}
-	dom_html_document *doc = (dom_html_document *)document->dom;
 	dom_html_collection *links = NULL;
 	dom_exception exc = dom_html_document_get_links(doc, &links);
 
@@ -935,13 +945,6 @@ document_get_property_scripts(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		args.rval().setNull();
-		return true;
-	}
 // TODO
 	args.rval().setNull();
 
@@ -1469,6 +1472,14 @@ document_createComment(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
 
 	if (argc != 1) {
 		args.rval().setBoolean(false);
@@ -1476,10 +1487,7 @@ document_createComment(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document;
-	document = doc_view->document;
-	dom_document *doc = (dom_document *)document->dom;
+	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
 
 	if (!doc) {
 		args.rval().setNull();
@@ -1524,6 +1532,14 @@ document_createDocumentFragment(JSContext *ctx, unsigned int argc, JS::Value *vp
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
 
 	if (argc != 0) {
 		args.rval().setBoolean(false);
@@ -1532,16 +1548,12 @@ document_createDocumentFragment(JSContext *ctx, unsigned int argc, JS::Value *vp
 
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
+	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
 
-	if (!document->dom) {
+	if (!doc) {
 		args.rval().setNull();
 		return true;
 	}
-// TODO
-
-	dom_document *doc = (dom_document *)(document->dom);
 	dom_document_fragment *fragment = NULL;
 	dom_exception exc = dom_document_create_document_fragment(doc, &fragment);
 
@@ -1563,18 +1575,22 @@ document_createElement(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
 
 	if (argc != 1) {
 		args.rval().setBoolean(false);
 		return true;
 	}
-
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
-
-	dom_document *doc = (dom_document *)document->dom;
+	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
 	dom_string *tag_name = NULL;
 	dom_exception exc;
 	char *str;
@@ -1614,17 +1630,22 @@ document_createTextNode(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
 
 	if (argc != 1) {
 		args.rval().setBoolean(false);
 		return true;
 	}
-// TODO
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
-	dom_document *doc = (dom_document *)document->dom;
+	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
 	dom_string *data = NULL;
 	dom_exception exc;
 	char *str;
@@ -1664,6 +1685,14 @@ document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
 
 	if (argc != 1) {
 		args.rval().setBoolean(false);
@@ -1672,15 +1701,12 @@ document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
+	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
 
-	if (!document->dom) {
+	if (!doc) {
 		args.rval().setNull();
 		return true;
 	}
-
-	dom_document *doc = (dom_document *)document->dom;
 	dom_string *id = NULL;
 	dom_exception exc;
 	char *str;
@@ -1728,13 +1754,6 @@ document_getElementsByClassName(JSContext *ctx, unsigned int argc, JS::Value *vp
 
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		args.rval().setNull();
-		return true;
-	}
 
 // TODO
 	args.rval().setNull();
@@ -1757,13 +1776,6 @@ document_getElementsByName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		args.rval().setNull();
-		return true;
-	}
 
 // TODO
 	args.rval().setNull();
@@ -1778,6 +1790,14 @@ document_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
 
 	if (argc != 1) {
 		args.rval().setBoolean(false);
@@ -1786,14 +1806,12 @@ document_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
+	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
 
-	if (!document->dom) {
+	if (!doc) {
 		args.rval().setNull();
 		return true;
 	}
-	dom_document *doc = (dom_document *)document->dom;
 	dom_string *tagname = NULL;
 	dom_exception exc;
 	char *str;
@@ -1833,6 +1851,14 @@ document_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
 
 	if (argc != 1) {
 		args.rval().setBoolean(false);
@@ -1841,16 +1867,15 @@ document_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
+	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
 
-	if (!document->dom) {
+	if (!doc) {
 		args.rval().setNull();
 		return true;
 	}
 	dom_node *root = NULL; /* root element of document */
 	/* Get root element */
-	dom_exception exc = dom_document_get_document_element(document->dom, &root);
+	dom_exception exc = dom_document_get_document_element(doc, &root);
 
 	if (exc != DOM_NO_ERR) {
 		args.rval().setNull();
@@ -1884,6 +1909,14 @@ document_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
 
 	if (argc != 1) {
 		args.rval().setBoolean(false);
@@ -1891,16 +1924,15 @@ document_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
+	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
 
-	if (!document->dom) {
+	if (!doc) {
 		args.rval().setNull();
 		return true;
 	}
 	dom_node *doc_root = NULL; /* root element of document */
 	/* Get root element */
-	dom_exception exc = dom_document_get_document_element(document->dom, &doc_root);
+	dom_exception exc = dom_document_get_document_element(doc, &doc_root);
 
 	if (exc != DOM_NO_ERR) {
 		args.rval().setNull();
@@ -1924,7 +1956,7 @@ document_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 	dom_element *element = NULL;
-	exc = dom_document_create_element(document->dom, tag_name, &element);
+	exc = dom_document_create_element(doc, tag_name, &element);
 	dom_string_unref(tag_name);
 
 	if (exc != DOM_NO_ERR || !element) {
@@ -2172,4 +2204,24 @@ getDocument(JSContext *ctx, void *doc)
 	JS::SetReservedSlot(el, 1, JS::PrivateValue(doc_private));
 
 	return el;
+}
+
+bool
+initDocument(JSObject *document_obj, void *doc)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct document_private *doc_private = (struct document_private *)mem_calloc(1, sizeof(*doc_private));
+
+	if (!doc_private) {
+		return false;
+	}
+	init_list(doc_private->listeners);
+	doc_private->ref_count = 1;
+
+	JS::SetReservedSlot(document_obj, 0, JS::PrivateValue(doc));
+	JS::SetReservedSlot(document_obj, 1, JS::PrivateValue(doc_private));
+
+	return true;
 }
