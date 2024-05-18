@@ -86,7 +86,7 @@ keyboardEvent_finalize(JS::GCContext *op, JSObject *keyb_obj)
 	dom_keyboard_event *event = JS::GetMaybePtrFromReservedSlot<dom_keyboard_event>(keyb_obj, 0);
 
 	if (event) {
-		dom_event_unref(&event);
+		dom_event_unref(event);
 	}
 }
 
