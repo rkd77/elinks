@@ -833,6 +833,9 @@ mjs_window_init(js_State *J)
 	js_defglobal(J, "window", 0);
 
 	js_dostring(J, "Date.prototype.toGMTString = Date.prototype.toUTCString;");
+	js_dostring(J, "String.prototype.endsWith || (String.prototype.endsWith = function(suffix) { return this.indexOf(suffix, this.length - suffix.length) !== -1; });");
+	js_dostring(J, "String.prototype.startsWith || (String.prototype.startsWith = function(word) { return this.lastIndexOf(word, 0) === 0; });");
+
 
 	return 0;
 }

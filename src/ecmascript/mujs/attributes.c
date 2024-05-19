@@ -45,6 +45,7 @@ mjs_attributes_set_items(js_State *J, void *node)
 		//dom_namednodemap_unref(attrs);
 		return;
 	}
+
 	for (idx = 0; idx < num_attrs; ++idx) {
 		dom_attr *attr;
 		dom_string *name = NULL;
@@ -57,6 +58,7 @@ mjs_attributes_set_items(js_State *J, void *node)
 // TODO Check it
 		mjs_push_attr(J, attr);
 		js_setindex(J, -2, idx);
+
 		err = dom_attr_get_name(attr, &name);
 
 		if (err != DOM_NO_ERR) {
@@ -78,6 +80,7 @@ next:
 		}
 		dom_node_unref(attr);
 	}
+	js_setlength(J, -1, num_attrs);
 }
 
 static void
@@ -183,7 +186,6 @@ mjs_push_attributes_namedItem2(js_State *J, const char *str)
 	}
 	mjs_push_attr(J, attr);
 	dom_node_unref(attr);
-	js_pushundefined(J);
 }
 
 static void
@@ -224,7 +226,7 @@ mjs_push_attributes(js_State *J, void *node)
 		addmethod(J, "item", mjs_attributes_item, 1);
 		addmethod(J, "getNamedItem", mjs_attributes_getNamedItem, 1);
 		addmethod(J, "toString", mjs_attributes_toString, 0);
-		addproperty(J, "length", mjs_attributes_get_property_length, NULL);
+//		addproperty(J, "length", mjs_attributes_get_property_length, NULL);
 
 		mjs_attributes_set_items(J, node);
 	}

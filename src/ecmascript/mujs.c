@@ -127,6 +127,9 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!J) {
 		return NULL;
 	}
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
 	interpreter->backend_data = J;
 	js_setcontext(J, interpreter);
 	mjs_window_init(J);
@@ -138,7 +141,7 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	mjs_localstorage_init(J);
 	mjs_element_init(J);
 	mjs_location_init(J);
-	mjs_document_init(J);
+	mjs_push_document(J, document->dom);
 	mjs_xhr_init(J);
 	mjs_event_init(J);
 	mjs_keyboardEvent_init(J);

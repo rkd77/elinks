@@ -77,11 +77,10 @@ struct mjs_document_private {
 	int ref_count;
 };
 
-#if 0
-void *
-mjs_getprivate(js_State *J, int idx)
+static void *
+mjs_doc_getprivate(js_State *J, int idx)
 {
-	struct mjs_document_private *priv = (struct mjs_document_private *)js_touserdata(J, idx, "docprivate");
+	struct mjs_document_private *priv = (struct mjs_document_private *)js_touserdata(J, idx, "document");
 
 	if (!priv) {
 		return NULL;
@@ -89,7 +88,6 @@ mjs_getprivate(js_State *J, int idx)
 
 	return priv->node;
 }
-#endif
 
 static void mjs_push_doctype(js_State *J, void *node);
 
@@ -100,15 +98,12 @@ mjs_document_get_property_anchors(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
+	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
 
-	if (!document->dom) {
+	if (!doc) {
 		js_pushnull(J);
 		return;
 	}
-
-	dom_html_document *doc = (dom_html_document *)document->dom;
 	dom_html_collection *anchors = NULL;
 	dom_exception exc = dom_html_document_get_anchors(doc, &anchors);
 
@@ -157,14 +152,12 @@ mjs_document_get_property_body(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
+	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
 
-	if (!document->dom) {
+	if (!doc) {
 		js_pushnull(J);
 		return;
 	}
-	dom_html_document *doc = (dom_html_document *)document->dom;
 	dom_html_element *body = NULL;
 	dom_exception exc = dom_html_document_get_body(doc, &body);
 
@@ -260,14 +253,6 @@ mjs_document_get_property_charset(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		js_pushnull(J);
-		return;
-	}
-
 // TODO
 	js_pushstring(J, "utf-8");
 }
@@ -279,23 +264,12 @@ mjs_document_get_property_childNodes(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct view_state *vs = interpreter->vs;
+	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
 
-	if (!vs) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
+	if (!doc) {
 		js_pushnull(J);
 		return;
 	}
-	struct document *document = vs->doc_view->document;
-
-	if (!document->dom) {
-		js_pushnull(J);
-		return;
-	}
-
-	dom_html_document *doc = (dom_html_document *)document->dom;
 	dom_element *root = NULL;
 	dom_exception exc = dom_document_get_document_element(doc, &root);
 
@@ -330,15 +304,12 @@ mjs_document_get_property_doctype(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
+	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
 
-	if (!document->dom) {
+	if (!doc) {
 		js_pushundefined(J);
 		return;
 	}
-
-	dom_html_document *doc = (dom_html_document *)document->dom;
 	dom_document_type *dtd;
 	dom_document_get_doctype(doc, &dtd);
 	mjs_push_doctype(J, dtd);
@@ -351,15 +322,12 @@ mjs_document_get_property_documentElement(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
+	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
 
-	if (!document->dom) {
+	if (!doc) {
 		js_pushnull(J);
 		return;
 	}
-
-	dom_html_document *doc = (dom_html_document *)document->dom;
 	dom_html_element *root = NULL;
 	dom_exception exc = dom_document_get_document_element(doc, &root);
 
@@ -384,7 +352,6 @@ mjs_document_get_property_documentURI(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-
 	char *str = get_uri_string(vs->uri, URI_BASE);
 
 	if (!str) {
@@ -436,14 +403,12 @@ mjs_document_get_property_forms(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
+	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
 
-	if (!document->dom) {
+	if (!doc) {
 		js_pushnull(J);
 		return;
 	}
-	dom_html_document *doc = (dom_html_document *)document->dom;
 	dom_html_collection *forms = NULL;
 	dom_exception exc = dom_html_document_get_forms(doc, &forms);
 
@@ -493,14 +458,12 @@ mjs_document_get_property_images(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
+	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
 
-	if (!document->dom) {
+	if (!doc) {
 		js_pushnull(J);
 		return;
 	}
-	dom_html_document *doc = (dom_html_document *)document->dom;
 	dom_html_collection *images = NULL;
 	dom_exception exc = dom_html_document_get_images(doc, &images);
 
@@ -517,14 +480,6 @@ mjs_document_get_property_implementation(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		js_pushnull(J);
-		return;
-	}
 	mjs_push_implementation(J);
 }
 
@@ -535,14 +490,12 @@ mjs_document_get_property_links(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
+	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
 
-	if (!document->dom) {
+	if (!doc) {
 		js_pushnull(J);
 		return;
 	}
-	dom_html_document *doc = (dom_html_document *)document->dom;
 	dom_html_collection *links = NULL;
 	dom_exception exc = dom_html_document_get_links(doc, &links);
 
@@ -930,7 +883,7 @@ mjs_document_addEventListener(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct mjs_document_private *doc_private = (struct mjs_document_private *)js_touserdata(J, 0, "docprivate");
+	struct mjs_document_private *doc_private = (struct mjs_document_private *)js_touserdata(J, 0, "document");
 
 	if (!doc_private) {
 		js_pushnull(J);
@@ -979,7 +932,7 @@ mjs_document_removeEventListener(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct mjs_document_private *doc_private = (struct mjs_document_private *)js_touserdata(J, 0, "docprivate");
+	struct mjs_document_private *doc_private = (struct mjs_document_private *)js_touserdata(J, 0, "document");
 
 	if (!doc_private) {
 		js_pushnull(J);
@@ -1026,10 +979,7 @@ mjs_document_createComment(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document;
-	document = doc_view->document;
-	dom_document *doc = (dom_document *)document->dom;
+	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
 
 	if (!doc) {
 		js_pushnull(J);
@@ -1067,17 +1017,12 @@ mjs_document_createDocumentFragment(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
+	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
 
-	if (!document->dom) {
+	if (!doc) {
 		js_pushnull(J);
 		return;
 	}
-
-// TODO
-
-	dom_document *doc = (dom_document *)(document->dom);
 	dom_document_fragment *fragment = NULL;
 	dom_exception exc = dom_document_create_document_fragment(doc, &fragment);
 
@@ -1095,10 +1040,7 @@ mjs_document_createElement(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document;
-	document = doc_view->document;
-	dom_document *doc = (dom_document *)document->dom;
+	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
 	dom_string *tag_name = NULL;
 	dom_exception exc;
 	const char *str = js_tostring(J, 1);
@@ -1131,10 +1073,7 @@ mjs_document_createTextNode(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document;
-	document = doc_view->document;
-	dom_document *doc = (dom_document *)document->dom;
+	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
 	dom_string *data = NULL;
 	dom_exception exc;
 	const char *str = js_tostring(J, 1);
@@ -1167,14 +1106,12 @@ mjs_document_getElementById(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
+	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
 
-	if (!document->dom) {
+	if (!doc) {
 		js_pushnull(J);
 		return;
 	}
-	dom_document *doc = (dom_document *)document->dom;
 	dom_string *id = NULL;
 	dom_exception exc;
 	const char *str = js_tostring(J, 1);
@@ -1291,14 +1228,12 @@ mjs_document_getElementsByTagName(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
+	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
 
-	if (!document->dom) {
+	if (!doc) {
 		js_pushnull(J);
 		return;
 	}
-	dom_document *doc = (dom_document *)document->dom;
 	dom_string *tagname = NULL;
 	dom_exception exc;
 	const char *str = js_tostring(J, 1);
@@ -1331,16 +1266,15 @@ mjs_document_querySelector(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
+	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
 
-	if (!document->dom) {
+	if (!doc) {
 		js_pushnull(J);
 		return;
 	}
 	dom_node *root = NULL; /* root element of document */
 	/* Get root element */
-	dom_exception exc = dom_document_get_document_element(document->dom, &root);
+	dom_exception exc = dom_document_get_document_element(doc, &root);
 
 	if (exc != DOM_NO_ERR) {
 		js_pushnull(J);
@@ -1370,16 +1304,15 @@ mjs_document_querySelectorAll(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
+	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
 
-	if (!document->dom) {
+	if (!doc) {
 		js_pushnull(J);
 		return;
 	}
 	dom_node *doc_root = NULL; /* root element of document */
 	/* Get root element */
-	dom_exception exc = dom_document_get_document_element(document->dom, &doc_root);
+	dom_exception exc = dom_document_get_document_element(doc, &doc_root);
 
 	if (exc != DOM_NO_ERR) {
 		js_pushnull(J);
@@ -1402,7 +1335,7 @@ mjs_document_querySelectorAll(js_State *J)
 		return;
 	}
 	dom_element *element = NULL;
-	exc = dom_document_create_element(document->dom, tag_name, &element);
+	exc = dom_document_create_element(doc, tag_name, &element);
 	dom_string_unref(tag_name);
 
 	if (exc != DOM_NO_ERR || !element) {
@@ -1549,10 +1482,9 @@ mjs_document_init(js_State *J)
 		addproperty(J, "scripts", mjs_document_get_property_scripts, NULL);
 		addproperty(J, "title",	mjs_document_get_property_title, mjs_document_set_property_title); /* TODO: Charset? */
 		addproperty(J, "URL", mjs_document_get_property_url, mjs_document_set_property_url);
-
 	}
 	js_defglobal(J, "document", JS_DONTENUM);
-	js_dostring(J, "document.location = location; window.document = document;");
+//	js_dostring(J, "document.location = location; window.document = document;");
 
 	return 0;
 }
@@ -1604,7 +1536,9 @@ mjs_doc_private_finalizer(js_State *J, void *priv)
 			if (l->fun) js_unref(J, l->fun);
 		}
 		free_list(doc_private->listeners);
-		//dom_node_unref(doc_private->node);
+		if (doc_private->node) {
+			dom_node_unref(doc_private->node);
+		}
 		if (doc_private->thisval) {
 			js_unref(J, doc_private->thisval);
 		}
@@ -1618,19 +1552,63 @@ mjs_push_document(js_State *J, void *doc)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	mjs_document_init(J);
-	js_newuserdata(J, "document", doc, NULL);
-
 	struct mjs_document_private *doc_private = (struct mjs_document_private *)mem_calloc(1, sizeof(*doc_private));
 
 	if (!doc_private) {
 		return;
 	}
+	js_newobject(J);
+	{
+		js_newuserdata(J, "document", doc_private, mjs_doc_private_finalizer);
+		addmethod(J, "addEventListener", mjs_document_addEventListener, 3);
+		addmethod(J, "createComment",	mjs_document_createComment, 1);
+		addmethod(J, "createDocumentFragment",mjs_document_createDocumentFragment, 0);
+		addmethod(J, "createElement",	mjs_document_createElement, 1);
+		addmethod(J, "createTextNode",	mjs_document_createTextNode, 1);
+		addmethod(J, "write",		mjs_document_write, 1);
+		addmethod(J, "writeln",		mjs_document_writeln, 1);
+		addmethod(J, "replace",		mjs_document_replace, 2);
+		addmethod(J, "getElementById",	mjs_document_getElementById, 1);
+		addmethod(J, "getElementsByClassName",	mjs_document_getElementsByClassName, 1);
+		addmethod(J, "getElementsByName",	mjs_document_getElementsByName, 1);
+		addmethod(J, "getElementsByTagName",	mjs_document_getElementsByTagName, 1);
+		addmethod(J, "querySelector",	mjs_document_querySelector, 1);
+		addmethod(J, "querySelectorAll",	mjs_document_querySelectorAll, 1);
+		addmethod(J, "removeEventListener", mjs_document_removeEventListener, 3);
+		addmethod(J, "toString", mjs_document_toString, 0);
+
+		addproperty(J, "anchors", mjs_document_get_property_anchors, NULL);
+		addproperty(J, "baseURI", mjs_document_get_property_baseURI, NULL);
+		addproperty(J, "body", mjs_document_get_property_body, mjs_document_set_property_body);
+#ifdef CONFIG_COOKIES
+		addproperty(J, "cookie", mjs_document_get_property_cookie, mjs_document_set_property_cookie);
+#endif
+		addproperty(J, "charset", mjs_document_get_property_charset, NULL);
+		addproperty(J, "characterSet", mjs_document_get_property_charset, NULL);
+		addproperty(J, "childNodes", mjs_document_get_property_childNodes, NULL);
+		addproperty(J, "defaultView", mjs_document_get_property_defaultView, NULL);
+		addproperty(J, "doctype", mjs_document_get_property_doctype, NULL);
+		addproperty(J, "documentElement", mjs_document_get_property_documentElement, NULL);
+		addproperty(J, "documentURI", mjs_document_get_property_documentURI, NULL);
+		addproperty(J, "domain", mjs_document_get_property_domain, NULL);
+		addproperty(J, "forms", mjs_document_get_property_forms, NULL);
+		addproperty(J, "head", mjs_document_get_property_head, NULL);
+		addproperty(J, "images", mjs_document_get_property_images, NULL);
+		addproperty(J, "implementation", mjs_document_get_property_implementation, NULL);
+		addproperty(J, "inputEncoding", mjs_document_get_property_charset, NULL);
+		addproperty(J, "links", mjs_document_get_property_links, NULL);
+		addproperty(J, "nodeType", mjs_document_get_property_nodeType, NULL);
+		addproperty(J, "referrer", mjs_document_get_property_referrer, NULL);
+		addproperty(J, "scripts", mjs_document_get_property_scripts, NULL);
+		addproperty(J, "title",	mjs_document_get_property_title, mjs_document_set_property_title); /* TODO: Charset? */
+		addproperty(J, "URL", mjs_document_get_property_url, mjs_document_set_property_url);
+	}
+	js_defglobal(J, "document", JS_DONTENUM);
+
 	init_list(doc_private->listeners);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	doc_private->interpreter = interpreter;
 	doc_private->node = doc;
 	doc_private->ref_count = 1;
 	doc_private->thisval = js_ref(J);
-	js_newuserdata(J, "docprivate", doc_private, mjs_doc_private_finalizer);
 }
