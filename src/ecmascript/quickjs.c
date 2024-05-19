@@ -149,6 +149,9 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!interpreter->rt) {
 		return NULL;
 	}
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
 
 	JS_SetMemoryLimit(interpreter->rt, 64 * 1024 * 1024);
 	JS_SetGCThreshold(interpreter->rt, 16 * 1024 * 1024);
@@ -185,7 +188,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	js_customEvent_init(ctx);
 	js_url_init(ctx);
 
-	interpreter->document_obj = js_document_init(ctx);
+	interpreter->document_obj = getDocument(ctx, document->dom);
 
 	return ctx;
 }
