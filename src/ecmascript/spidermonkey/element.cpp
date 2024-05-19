@@ -217,9 +217,12 @@ static void element_finalize(JS::GCContext *op, JSObject *obj)
 			mem_free(el_private);
 			JS::SetReservedSlot(obj, 1, JS::UndefinedValue());
 
-			dom_node_unref(el);
-			JS::SetReservedSlot(obj, 0, JS::UndefinedValue());
 		}
+	}
+
+	if (el) {
+		dom_node_unref(el);
+		JS::SetReservedSlot(obj, 0, JS::UndefinedValue());
 	}
 }
 
@@ -5246,6 +5249,8 @@ getElement(JSContext *ctx, void *node)
 
 	el_private->thisval = r_el;
 	map_privates[node] = el_private;
+
+	dom_node_ref((dom_node *)node);
 
 	return el;
 }
