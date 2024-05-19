@@ -1778,14 +1778,16 @@ getDocument(JSContext *ctx, void *doc)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	doc_private->interpreter = interpreter;
 	static int initialized;
+
+	JSValue global_obj = JS_GetGlobalObject(ctx);
+
 	/* create the element class */
 	if (!initialized) {
 		JS_NewClassID(&js_document_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_document_class_id, &js_document_class);
 		initialized = 1;
 	}
-	JSValue global_obj = JS_GetGlobalObject(ctx);
-	REF_JS(global_obj);
+	//REF_JS(global_obj);
 
 	JSValue document_obj = JS_NewObjectClass(ctx, js_document_class_id);
 	JS_SetPropertyFunctionList(ctx, document_obj, js_document_proto_funcs, countof(js_document_proto_funcs));
@@ -1794,12 +1796,8 @@ getDocument(JSContext *ctx, void *doc)
 	JS_SetOpaque(document_obj, doc_private);
 //	JS_SetClassProto(ctx, js_document_class_id, document_obj);
 	JS_SetPropertyStr(ctx, global_obj, "document", document_obj);
-
-	JSValue rr = JS_DupValue(ctx, document_obj);
-	doc_private->thisval = rr;
-	JS_FreeValue(ctx, rr);
-
 	JS_FreeValue(ctx, global_obj);
+	doc_private->thisval = document_obj;
 
-	RETURN_JS(rr);
+	RETURN_JS(document_obj);
 }

@@ -62,7 +62,9 @@ js_implementation_createHTMLDocument(JSContext *ctx, JSValueConst this_val, int 
 	done_string(&str);
 	JS_FreeCString(ctx, title);
 
-	return getDocument(ctx, docu);
+	JSValue rr = JS_DupValue(ctx, getDocument(ctx, docu));
+
+	RETURN_JS(rr);
 }
 
 static JSValue
@@ -152,5 +154,7 @@ getImplementation(JSContext *ctx)
 //	JS_SetConstructor(ctx, implementation_class, implementation_obj);
 	JS_SetClassProto(ctx, js_implementation_class_id, implementation_obj);
 
-	RETURN_JS(implementation_obj);
+	JSValue rr = JS_DupValue(ctx, implementation_obj);
+
+	RETURN_JS(rr);
 }

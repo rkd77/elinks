@@ -116,7 +116,7 @@ quickjs_done(struct module *xxx)
 	attr_delete_map_rev(map_rev_forms);
 	attr_delete_map(map_inputs);
 	attr_delete_map(map_nodelist);
-	attr_delete_map_rev(map_rev_nodelist);
+//	attr_delete_map_rev(map_rev_nodelist);
 
 	attr_delete_map(map_form_elements);
 	attr_delete_map_rev(map_form_elements_rev);
