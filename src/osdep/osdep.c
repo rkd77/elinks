@@ -330,7 +330,7 @@ is_xterm(void)
 	if (xt == -1) {
 		char *term = getenv("TERM");
 
-		if (term && !strncmp("xterm", term, 5)) {
+		if (term && strstr(term, "xterm")) {
 			xt = 1;
 		} else {
 			char *wayland = getenv("WAYLAND_DISPLAY");
