@@ -1005,8 +1005,9 @@ call_onsubmit_and_submit(struct session *ses, struct document_view *doc_view,
 			struct ecmascript_interpreter *interpreter;
 			int res;
 
-			if (vs->ecmascript_fragile)
+			if (vs->ecmascript_fragile) {
 				ecmascript_reset_state(vs);
+			}
 			interpreter = vs->ecmascript;
 			/* If there is an onsubmit script and we want
 			 * to run it, but the ECMAScript interpreter

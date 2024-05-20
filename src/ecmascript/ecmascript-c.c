@@ -357,6 +357,10 @@ check_events_for_element(struct ecmascript_interpreter *ecmascript, dom_node *el
 {
 	const char *event_name = script_event_hook_name[SEVHOOK_ONKEYDOWN];
 
+	if (!ecmascript) {
+		return;
+	}
+
 	check_element_event(ecmascript, element, event_name, ev);
 	event_name = script_event_hook_name[SEVHOOK_ONKEYUP];
 	check_element_event(ecmascript, element, event_name, ev);
