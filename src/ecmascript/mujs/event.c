@@ -13,6 +13,7 @@
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/libdom/dom.h"
 #include "ecmascript/mujs.h"
+#include "ecmascript/mujs/element.h"
 #include "ecmascript/mujs/event.h"
 #include "intl/charsets.h"
 #include "terminal/event.h"
@@ -21,6 +22,7 @@ static void mjs_event_get_property_bubbles(js_State *J);
 static void mjs_event_get_property_cancelable(js_State *J);
 //static void mjs_event_get_property_composed(js_State *J);
 static void mjs_event_get_property_defaultPrevented(js_State *J);
+static void mjs_event_get_property_target(js_State *J);
 static void mjs_event_get_property_type(js_State *J);
 
 static void mjs_event_preventDefault(js_State *J);
@@ -60,6 +62,7 @@ mjs_push_event(js_State *J, char *type_)
 		addproperty(J, "cancelable", mjs_event_get_property_cancelable, NULL);
 //		addproperty(J, "composed", mjs_event_get_property_composed, NULL);
 		addproperty(J, "defaultPrevented", mjs_event_get_property_defaultPrevented, NULL);
+		addproperty(J, "target", mjs_event_get_property_type, NULL);
 		addproperty(J, "type", mjs_event_get_property_type, NULL);
 	}
 }
@@ -130,6 +133,29 @@ mjs_event_get_property_defaultPrevented(js_State *J)
 	bool prevented = false;
 	dom_exception exc = dom_event_is_default_prevented(event, &prevented);
 	js_pushboolean(J, prevented);
+}
+
+static void
+mjs_event_get_property_target(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_event *event = (dom_event *)js_touserdata(J, 0, "event");
+
+	if (!event) {
+		js_pushnull(J);
+		return;
+	}
+	dom_event_target *target = NULL;
+	dom_exception exc = dom_event_get_type(event, &target);
+
+	if (exc != DOM_NO_ERR || !target) {
+		js_pushnull(J);
+		return;
+	}
+	mjs_push_element(J, target);
+	dom_node_unref(target);
 }
 
 static void

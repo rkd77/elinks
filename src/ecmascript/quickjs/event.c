@@ -13,6 +13,7 @@
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/libdom/dom.h"
 #include "ecmascript/quickjs.h"
+#include "ecmascript/quickjs/element.h"
 #include "ecmascript/quickjs/event.h"
 #include "intl/charsets.h"
 #include "terminal/event.h"
@@ -25,6 +26,7 @@ static JSValue js_event_get_property_bubbles(JSContext *ctx, JSValueConst this_v
 static JSValue js_event_get_property_cancelable(JSContext *ctx, JSValueConst this_val);
 //static JSValue js_event_get_property_composed(JSContext *ctx, JSValueConst this_val);
 static JSValue js_event_get_property_defaultPrevented(JSContext *ctx, JSValueConst this_val);
+static JSValue js_event_get_property_target(JSContext *ctx, JSValueConst this_val);
 static JSValue js_event_get_property_type(JSContext *ctx, JSValueConst this_val);
 
 static JSValue js_event_preventDefault(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv);
@@ -51,6 +53,7 @@ static const JSCFunctionListEntry js_event_proto_funcs[] = {
 	JS_CGETSET_DEF("cancelable",	js_event_get_property_cancelable, NULL),
 //	JS_CGETSET_DEF("composed",	js_event_get_property_composed, NULL),
 	JS_CGETSET_DEF("defaultPrevented",	js_event_get_property_defaultPrevented, NULL),
+	JS_CGETSET_DEF("target",	js_event_get_property_target, NULL),
 	JS_CGETSET_DEF("type",	js_event_get_property_type, NULL),
 	JS_CFUNC_DEF("preventDefault", 0, js_event_preventDefault),
 };
@@ -131,6 +134,31 @@ js_event_get_property_defaultPrevented(JSContext *ctx, JSValueConst this_val)
 	bool prevented = false;
 	dom_exception exc = dom_event_is_default_prevented(event, &prevented);
 	JSValue r = JS_NewBool(ctx, prevented);
+
+	RETURN_JS(r);
+}
+
+static JSValue
+js_event_get_property_target(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	dom_event *event = (dom_event *)(JS_GetOpaque(this_val, js_event_class_id));
+
+	if (!event) {
+		return JS_NULL;
+	}
+	dom_event_target *target = NULL;
+	dom_exception exc = dom_event_get_target(event, &target);
+
+	if (exc != DOM_NO_ERR || !target) {
+		return JS_NULL;
+	}
+	JSValue r = getElement(ctx, target);
+	dom_node_unref(target);
 
 	RETURN_JS(r);
 }

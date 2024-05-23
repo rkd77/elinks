@@ -26,6 +26,7 @@
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/libdom/dom.h"
 #include "ecmascript/spidermonkey.h"
+#include "ecmascript/spidermonkey/element.h"
 #include "ecmascript/spidermonkey/heartbeat.h"
 #include "ecmascript/spidermonkey/event.h"
 #include "ecmascript/timer.h"
@@ -63,6 +64,7 @@ static bool event_get_property_bubbles(JSContext *ctx, unsigned int argc, JS::Va
 static bool event_get_property_cancelable(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool event_get_property_composed(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool event_get_property_defaultPrevented(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool event_get_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool event_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 static bool event_preventDefault(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -167,6 +169,7 @@ JSPropertySpec event_props[] = {
 	JS_PSG("bubbles",	event_get_property_bubbles, JSPROP_ENUMERATE),
 	JS_PSG("cancelable",	event_get_property_cancelable, JSPROP_ENUMERATE),
 	JS_PSG("defaultPrevented",	event_get_property_defaultPrevented, JSPROP_ENUMERATE),
+	JS_PSG("target", event_get_property_target, JSPROP_ENUMERATE),
 	JS_PSG("type",	event_get_property_type, JSPROP_ENUMERATE),
 	JS_PS_END
 };
@@ -311,6 +314,41 @@ event_preventDefault(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 	dom_event_prevent_default(event);
 	args.rval().setUndefined();
+
+	return true;
+}
+
+static bool
+event_get_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	dom_event *event = JS::GetMaybePtrFromReservedSlot<dom_event>(hobj, 0);
+
+	if (!event) {
+		return false;
+	}
+	dom_event_target *target = NULL;
+	dom_exception exc = dom_event_get_target(event, &target);
+
+	if (exc != DOM_NO_ERR || !target) {
+		args.rval().setNull();
+		return true;
+	}
+	JSObject *obj = getElement(ctx, target);
+	args.rval().setObject(*obj);
+	dom_node_unref(target);
 
 	return true;
 }

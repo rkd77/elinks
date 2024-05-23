@@ -2,6 +2,7 @@
 var e = new Event('message', { cancelable: true });
 
 console.error('event.html');
+console.assert(e.target === null, e.target);
 console.assert(e.cancelable, 'cancelable true');
 console.assert(!e.defaultPrevented, 'false');
 e.preventDefault();
