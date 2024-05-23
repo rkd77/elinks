@@ -15,6 +15,7 @@
 #include "document/libdom/doc.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs.h"
+#include "ecmascript/quickjs/element.h"
 #include "ecmascript/quickjs/keyboard.h"
 #include "intl/charsets.h"
 #include "terminal/event.h"
@@ -31,6 +32,7 @@ static JSValue js_keyboardEvent_get_property_bubbles(JSContext *ctx, JSValueCons
 static JSValue js_keyboardEvent_get_property_cancelable(JSContext *ctx, JSValueConst this_val);
 static JSValue js_keyboardEvent_get_property_composed(JSContext *ctx, JSValueConst this_val);
 static JSValue js_keyboardEvent_get_property_defaultPrevented(JSContext *ctx, JSValueConst this_val);
+static JSValue js_keyboardEvent_get_property_target(JSContext *ctx, JSValueConst this_val);
 static JSValue js_keyboardEvent_get_property_type(JSContext *ctx, JSValueConst this_val);
 
 static JSValue js_keyboardEvent_preventDefault(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv);
@@ -60,6 +62,7 @@ static const JSCFunctionListEntry js_keyboardEvent_proto_funcs[] = {
 	JS_CGETSET_DEF("defaultPrevented",	js_keyboardEvent_get_property_defaultPrevented, NULL),
 	JS_CGETSET_DEF("key",	js_keyboardEvent_get_property_key, NULL),
 	JS_CGETSET_DEF("keyCode",	js_keyboardEvent_get_property_keyCode, NULL),
+	JS_CGETSET_DEF("target",	js_keyboardEvent_get_property_target, NULL),
 	JS_CGETSET_DEF("type",	js_keyboardEvent_get_property_type, NULL),
 	JS_CFUNC_DEF("preventDefault", 0, js_keyboardEvent_preventDefault)
 };
@@ -210,6 +213,30 @@ js_keyboardEvent_get_property_code(JSContext *ctx, JSValueConst this_val)
 	}
 	JSValue r = JS_NewString(ctx, dom_string_data(code));
 	dom_string_unref(code);
+
+	RETURN_JS(r);
+}
+
+static JSValue
+js_keyboardEvent_get_property_target(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	struct dom_keyboard_event *event = (dom_keyboard_event *)(JS_GetOpaque(this_val, js_keyboardEvent_class_id));
+
+	if (!event) {
+		return JS_NULL;
+	}
+	dom_event_target *target = NULL;
+	dom_exception exc = dom_event_get_target(event, &target);
+
+	if (exc != DOM_NO_ERR || !target) {
+		return JS_NULL;
+	}
+	JSValue r = getElement(ctx, target);
+	dom_node_unref(target);
 
 	RETURN_JS(r);
 }

@@ -28,6 +28,7 @@
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/spidermonkey.h"
+#include "ecmascript/spidermonkey/element.h"
 #include "ecmascript/spidermonkey/heartbeat.h"
 #include "ecmascript/spidermonkey/keyboard.h"
 #include "ecmascript/timer.h"
@@ -70,6 +71,7 @@ static bool keyboardEvent_get_property_bubbles(JSContext *ctx, unsigned int argc
 static bool keyboardEvent_get_property_cancelable(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool keyboardEvent_get_property_composed(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool keyboardEvent_get_property_defaultPrevented(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool keyboardEvent_get_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool keyboardEvent_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 static bool keyboardEvent_preventDefault(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -201,6 +203,7 @@ JSPropertySpec keyboardEvent_props[] = {
 	JS_PSG("defaultPrevented",	keyboardEvent_get_property_defaultPrevented, JSPROP_ENUMERATE),
 	JS_PSG("key",	keyboardEvent_get_property_key, JSPROP_ENUMERATE),
 	JS_PSG("keyCode",	keyboardEvent_get_property_keyCode, JSPROP_ENUMERATE),
+	JS_PSG("target",	keyboardEvent_get_property_target, JSPROP_ENUMERATE),
 	JS_PSG("type",	keyboardEvent_get_property_type, JSPROP_ENUMERATE),
 	JS_PS_END
 };
@@ -418,6 +421,41 @@ keyboardEvent_get_property_code(JSContext *ctx, unsigned int argc, JS::Value *vp
 	}
 	args.rval().setString(JS_NewStringCopyZ(ctx, dom_string_data(code)));
 	dom_string_unref(code);
+
+	return true;
+}
+
+static bool
+keyboardEvent_get_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	dom_keyboard_event *keyb = JS::GetMaybePtrFromReservedSlot<dom_keyboard_event>(hobj, 0);
+
+	if (!keyb) {
+		return false;
+	}
+	dom_event_target *target = NULL;
+	dom_exception exc = dom_event_get_target(keyb, &target);
+
+	if (exc != DOM_NO_ERR || !target) {
+		args.rval().setNull();
+		return true;
+	}
+	JSObject *obj = getElement(ctx, target);
+	args.rval().setObject(*obj);
+	dom_node_unref(target);
 
 	return true;
 }

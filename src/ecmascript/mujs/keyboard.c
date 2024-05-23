@@ -15,6 +15,7 @@
 #include "document/libdom/doc.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/mujs.h"
+#include "ecmascript/mujs/element.h"
 #include "ecmascript/mujs/keyboard.h"
 #include "intl/charsets.h"
 #include "terminal/event.h"
@@ -27,6 +28,7 @@ static void mjs_keyboardEvent_get_property_bubbles(js_State *J);
 static void mjs_keyboardEvent_get_property_cancelable(js_State *J);
 static void mjs_keyboardEvent_get_property_composed(js_State *J);
 static void mjs_keyboardEvent_get_property_defaultPrevented(js_State *J);
+static void mjs_keyboardEvent_get_property_target(js_State *J);
 static void mjs_keyboardEvent_get_property_type(js_State *J);
 
 static void mjs_keyboardEvent_preventDefault(js_State *J);
@@ -80,6 +82,7 @@ mjs_push_keyboardEvent(js_State *J, struct term_event *ev, const char *type_)
 		addproperty(J, "defaultPrevented", mjs_keyboardEvent_get_property_defaultPrevented, NULL);
 		addproperty(J, "key", mjs_keyboardEvent_get_property_key, NULL);
 		addproperty(J, "keyCode", mjs_keyboardEvent_get_property_keyCode, NULL);
+		addproperty(J, "target", mjs_keyboardEvent_get_property_target, NULL);
 		addproperty(J, "type", mjs_keyboardEvent_get_property_type, NULL);
 	}
 }
@@ -220,6 +223,29 @@ mjs_keyboardEvent_get_property_code(js_State *J)
 	}
 	js_pushstring(J, dom_string_data(code));
 	dom_string_unref(code);
+}
+
+static void
+mjs_keyboardEvent_get_property_target(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_keyboard_event *event = (dom_keyboard_event *)js_touserdata(J, 0, "event");
+
+	if (!event) {
+		js_pushnull(J);
+		return;
+	}
+	dom_event_target *target = NULL;
+	dom_exception exc = dom_event_get_target(event, &target);
+
+	if (exc != DOM_NO_ERR || !target) {
+		js_pushnull(J);
+		return;
+	}
+	mjs_push_element(J, target);
+	dom_node_unref(target);
 }
 
 static void
