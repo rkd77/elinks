@@ -15,6 +15,7 @@
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/libdom/dom.h"
 #include "ecmascript/quickjs.h"
+#include "ecmascript/quickjs/element.h"
 #include "ecmascript/quickjs/event.h"
 #include "intl/charsets.h"
 #include "terminal/event.h"
@@ -29,6 +30,7 @@ static JSValue js_customEvent_get_property_cancelable(JSContext *ctx, JSValueCon
 //static JSValue js_customEvent_get_property_composed(JSContext *ctx, JSValueConst this_val);
 static JSValue js_customEvent_get_property_defaultPrevented(JSContext *ctx, JSValueConst this_val);
 static JSValue js_customEvent_get_property_detail(JSContext *ctx, JSValueConst this_val);
+static JSValue js_customEvent_get_property_target(JSContext *ctx, JSValueConst this_val);
 static JSValue js_customEvent_get_property_type(JSContext *ctx, JSValueConst this_val);
 
 static JSValue js_customEvent_preventDefault(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv);
@@ -63,6 +65,7 @@ static const JSCFunctionListEntry js_customEvent_proto_funcs[] = {
 //	JS_CGETSET_DEF("composed",	js_customEvent_get_property_composed, NULL),
 	JS_CGETSET_DEF("defaultPrevented",	js_customEvent_get_property_defaultPrevented, NULL),
 	JS_CGETSET_DEF("detail",	js_customEvent_get_property_detail, NULL),
+	JS_CGETSET_DEF("target",	js_customEvent_get_property_target, NULL),
 	JS_CGETSET_DEF("type",	js_customEvent_get_property_type, NULL),
 	JS_CFUNC_DEF("preventDefault", 0, js_customEvent_preventDefault),
 };
@@ -169,6 +172,29 @@ js_customEvent_get_property_detail(JSContext *ctx, JSValueConst this_val)
 	RETURN_JS(*detail);
 }
 
+static JSValue
+js_customEvent_get_property_target(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	struct dom_custom_event *event = (dom_custom_event *)(JS_GetOpaque(this_val, js_customEvent_class_id));
+
+	if (!event) {
+		return JS_NULL;
+	}
+	dom_event_target *target = NULL;
+	dom_exception exc = dom_event_get_target(event, &target);
+
+	if (exc != DOM_NO_ERR || !target) {
+		return JS_NULL;
+	}
+	JSValue r = getElement(ctx, target);
+	dom_string_unref(target);
+
+	RETURN_JS(r);
+}
 
 static JSValue
 js_customEvent_get_property_type(JSContext *ctx, JSValueConst this_val)

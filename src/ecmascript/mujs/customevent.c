@@ -16,6 +16,7 @@
 #include "ecmascript/libdom/dom.h"
 #include "ecmascript/mujs.h"
 #include "ecmascript/mujs/customevent.h"
+#include "ecmascript/mujs/element.h"
 #include "intl/charsets.h"
 #include "terminal/event.h"
 #include "viewer/text/vs.h"
@@ -25,6 +26,7 @@ static void mjs_customEvent_get_property_cancelable(js_State *J);
 //static void mjs_customEvent_get_property_composed(js_State *J);
 static void mjs_customEvent_get_property_defaultPrevented(js_State *J);
 static void mjs_customEvent_get_property_detail(js_State *J);
+static void mjs_customEvent_get_property_target(js_State *J);
 static void mjs_customEvent_get_property_type(js_State *J);
 
 static void mjs_customEvent_preventDefault(js_State *J);
@@ -101,6 +103,7 @@ mjs_push_customEvent(js_State *J, char *type_)
 //		addproperty(J, "composed", mjs_customEvent_get_property_composed, NULL);
 		addproperty(J, "defaultPrevented", mjs_customEvent_get_property_defaultPrevented, NULL);
 		addproperty(J, "detail", mjs_customEvent_get_property_detail, NULL);
+		addproperty(J, "target", mjs_customEvent_get_property_target, NULL);
 		addproperty(J, "type", mjs_customEvent_get_property_type, NULL);
 	}
 }
@@ -193,6 +196,29 @@ mjs_customEvent_get_property_detail(js_State *J)
 		return;
 	}
 	js_getregistry(J, detail);
+}
+
+static void
+mjs_customEvent_get_property_target(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_custom_event *event = (dom_custom_event *)js_touserdata(J, 0, "event");
+
+	if (!event) {
+		js_pushnull(J);
+		return;
+	}
+	dom_event_target *target = NULL;
+	dom_exception exc = dom_event_get_target(event, &target);
+
+	if (exc != DOM_NO_ERR || !target) {
+		js_pushnull(J);
+		return;
+	}
+	mjs_push_element(J, target);
+	dom_node_unref(target);
 }
 
 static void
