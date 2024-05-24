@@ -20,7 +20,7 @@
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
-static JSClassID js_event_class_id;
+JSClassID js_event_class_id;
 
 static JSValue js_event_get_property_bubbles(JSContext *ctx, JSValueConst this_val);
 static JSValue js_event_get_property_cancelable(JSContext *ctx, JSValueConst this_val);
@@ -314,4 +314,21 @@ js_event_init(JSContext *ctx)
 //	JS_SetPropertyFunctionList(ctx, obj, js_event_class_funcs, countof(js_event_class_funcs));
 
 	return 0;
+}
+
+JSValue
+getEvent(JSContext *ctx, void *eve)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JSValue obj = JS_NewObjectClass(ctx, js_event_class_id);
+	REF_JS(obj);
+
+	dom_event *event = (dom_event *)eve;
+	dom_event_ref(event);
+	JS_SetOpaque(obj, event);
+	JSValue r = obj;
+
+	RETURN_JS(r);
 }

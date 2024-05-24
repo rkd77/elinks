@@ -8,7 +8,8 @@ extern "C" {
 #endif
 
 int js_event_init(JSContext *ctx);
-//JSValue get_keyboardEvent(JSContext *ctx);
+JSValue getEvent(JSContext *ctx, void *eve);
+extern JSClassID js_event_class_id;
 
 #ifdef __cplusplus
 }
