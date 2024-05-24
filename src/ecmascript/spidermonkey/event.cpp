@@ -388,7 +388,7 @@ event_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 JSObject *
-get_Event(JSContext *ctx)
+getEvent(JSContext *ctx, void *eve)
 {
 	JSObject *k = JS_NewObject(ctx, &event_class);
 
@@ -398,12 +398,8 @@ get_Event(JSContext *ctx)
 	JS::RootedObject r_event(ctx, k);
 	JS_DefineProperties(ctx, r_event, (JSPropertySpec *)event_props);
 
-	dom_event *event = NULL;
-	dom_exception exc = dom_event_create(&event);
-
-	if (exc != DOM_NO_ERR) {
-		return NULL;
-	}
+	dom_event *event = (dom_event *)eve;
+	dom_event_ref(event);
 	JS::SetReservedSlot(k, 0, JS::PrivateValue(event));
 
 	return k;

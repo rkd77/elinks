@@ -1,0 +1,15 @@
+<script>
+
+function ff(ev)
+{
+    console.assert(ev.type === 'message', ev.type);
+    console.exit(0);
+}
+
+var e = new Event('message', { cancelable: true });
+
+console.error('eventListener.html');
+document.addEventListener("message", ff);
+document.dispatchEvent(e);
+
+</script>

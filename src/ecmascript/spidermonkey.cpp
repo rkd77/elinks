@@ -207,9 +207,10 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 		goto release_and_fail;
 	}
 
-	if (!initDocument(document_obj, document->dom)) {
+	if (!initDocument(ctx, interpreter, document_obj, document->dom)) {
 		goto release_and_fail;
 	}
+
 	interpreter->document_obj = document_obj;
 
 /*

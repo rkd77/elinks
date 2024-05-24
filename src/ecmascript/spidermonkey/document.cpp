@@ -38,6 +38,8 @@
 #include "ecmascript/spidermonkey/location.h"
 #include "ecmascript/spidermonkey/document.h"
 #include "ecmascript/spidermonkey/element.h"
+#include "ecmascript/spidermonkey/event.h"
+#include "ecmascript/spidermonkey/heartbeat.h"
 #include "ecmascript/spidermonkey/nodelist.h"
 #include "ecmascript/spidermonkey/util.h"
 #include "ecmascript/spidermonkey/window.h"
@@ -63,20 +65,23 @@
 
 #include <iostream>
 
-struct listener {
-	LIST_HEAD_EL(struct listener);
+struct el_listener {
+	LIST_HEAD_EL(struct el_listener);
 	char *typ;
 	JS::RootedValue fun;
 };
 
 struct document_private {
-	LIST_OF(struct listener) listeners;
+	LIST_OF(struct el_listener) listeners;
 	struct ecmascript_interpreter *interpreter;
+	dom_document *doc;
 	JS::RootedObject thisval;
+	dom_event_listener *listener;
 	int ref_count;
 };
 
 static JSObject *getDoctype(JSContext *ctx, void *node);
+static void document_event_handler(dom_event *event, void *pw);
 
 static void document_finalize(JS::GCContext *op, JSObject *obj)
 {
@@ -87,7 +92,11 @@ static void document_finalize(JS::GCContext *op, JSObject *obj)
 	struct document_private *doc_private = JS::GetMaybePtrFromReservedSlot<struct document_private>(obj, 1);
 
 	if (doc_private) {
-		struct listener *l;
+		struct el_listener *l;
+
+		if (doc_private->listener) {
+			dom_event_listener_unref(doc_private->listener);
+		}
 
 		foreach(l, doc_private->listeners) {
 			mem_free_set(&l->typ, NULL);
@@ -1154,6 +1163,7 @@ static bool document_createComment(JSContext *ctx, unsigned int argc, JS::Value 
 static bool document_createDocumentFragment(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_createElement(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_createTextNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool document_dispatchEvent(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_write(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_writeln(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_replace(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -1171,6 +1181,7 @@ const spidermonkeyFunctionSpec document_funcs[] = {
 	{ "createDocumentFragment",	document_createDocumentFragment, 0 },
 	{ "createElement",	document_createElement, 1 },
 	{ "createTextNode",	document_createTextNode, 1 },
+	{ "dispatchEvent",	document_dispatchEvent, 1 },
 	{ "write",		document_write,		1 },
 	{ "writeln",		document_writeln,	1 },
 	{ "replace",		document_replace,	2 },
@@ -1375,28 +1386,54 @@ document_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return true;
 	}
 	char *method = jsval_to_string(ctx, args[0]);
+
+	if (!method) {
+		args.rval().setUndefined();
+		return true;
+	}
+
 	JS::RootedValue fun(ctx, args[1]);
 
-	struct listener *l;
+	struct el_listener *n = (struct el_listener *)mem_calloc(1, sizeof(*n));
 
-	foreach(l, doc_private->listeners) {
-		if (strcmp(l->typ, method)) {
-			continue;
-		}
-		if (l->fun == fun) {
+	if (!n) {
+		args.rval().setUndefined();
+		return false;
+	}
+	n->fun = fun;
+	n->typ = method;
+	add_to_list_end(doc_private->listeners, n);
+	dom_exception exc;
+
+	if (doc_private->listener) {
+		dom_event_listener_ref(doc_private->listener);
+	} else {
+		exc = dom_event_listener_create(document_event_handler, doc_private, &doc_private->listener);
+
+		if (exc != DOM_NO_ERR || !doc_private->listener) {
 			args.rval().setUndefined();
-			mem_free(method);
 			return true;
 		}
 	}
-	struct listener *n = (struct listener *)mem_calloc(1, sizeof(*n));
+	dom_string *typ = NULL;
+	exc = dom_string_create(method, strlen(method), &typ);
 
-	if (n) {
-		n->typ = method;
-		n->fun = fun;
-		add_to_list_end(doc_private->listeners, n);
+	if (exc != DOM_NO_ERR || !typ) {
+		goto ex;
 	}
+	exc = dom_event_target_add_event_listener(doc, typ, doc_private->listener, false);
+
+	if (exc == DOM_NO_ERR) {
+		dom_event_listener_ref(doc_private->listener);
+	}
+
+ex:
+	if (typ) {
+		dom_string_unref(typ);
+	}
+	dom_event_listener_unref(doc_private->listener);
 	args.rval().setUndefined();
+
 	return true;
 }
 
@@ -1444,13 +1481,23 @@ document_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 	JS::RootedValue fun(ctx, args[1]);
 
-	struct listener *l;
+	struct  el_listener *l;
 
 	foreach(l, doc_private->listeners) {
 		if (strcmp(l->typ, method)) {
 			continue;
 		}
 		if (l->fun == fun) {
+
+			dom_string *typ = NULL;
+			dom_exception exc = dom_string_create(method, strlen(method), &typ);
+
+			if (exc != DOM_NO_ERR || !typ) {
+				continue;
+			}
+			dom_event_target_remove_event_listener(doc, typ, doc_private->listener, false);
+			dom_string_unref(typ);
+
 			del_from_list(l);
 			mem_free_set(&l->typ, NULL);
 			mem_free(l);
@@ -1463,7 +1510,6 @@ document_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	args.rval().setUndefined();
 	return true;
 }
-
 
 static bool
 document_createComment(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -1621,6 +1667,100 @@ document_createElement(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	args.rval().setObject(*obj);
 
 	return true;
+}
+
+static bool
+document_dispatchEvent(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+	struct document_private *doc_private = JS::GetMaybePtrFromReservedSlot<struct document_private>(hobj, 1);
+
+	if (!doc || !doc_private) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+
+	if (argc < 1) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+	JS::RootedObject eve(ctx, &args[0].toObject());
+	dom_event *event = (dom_event *)JS::GetMaybePtrFromReservedSlot<dom_event>(eve, 0);
+	bool result = false;
+	dom_exception exc = dom_event_target_dispatch_event(doc, event, &result);
+
+	args.rval().setBoolean(result);
+	return true;
+}
+
+
+static void
+document_event_handler(dom_event *event, void *pw)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct document_private *doc_private = (struct document_private *)pw;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)doc_private->interpreter;
+	JSContext *ctx = (JSContext *)interpreter->backend_data;
+	dom_document *doc = (dom_document *)doc_private->doc;
+
+	JSAutoRealm ar(ctx, (JSObject *)interpreter->ac->get());
+	JS::RootedValue r_val(ctx);
+	interpreter->heartbeat = add_heartbeat(interpreter);
+
+	if (!event) {
+		return;
+	}
+	dom_string *typ = NULL;
+	dom_exception exc = dom_event_get_type(event, &typ);
+
+	if (exc != DOM_NO_ERR || !typ) {
+		return;
+	}
+	JSObject *obj_ev = getEvent(ctx, event);
+	interpreter->heartbeat = add_heartbeat(interpreter);
+
+	struct el_listener *l;
+
+	foreach(l, doc_private->listeners) {
+		if (strcmp(l->typ, dom_string_data(typ))) {
+			continue;
+		}
+		JS::RootedValueVector argv(ctx);
+
+		if (!argv.resize(1)) {
+			return;
+		}
+		argv[0].setObject(*obj_ev);
+		JS::RootedValue r_val(ctx);
+		JS_CallFunctionValue(ctx, doc_private->thisval, l->fun, argv, &r_val);
+	}
+	done_heartbeat(interpreter->heartbeat);
+	check_for_rerender(interpreter, dom_string_data(typ));
+	dom_string_unref(typ);
 }
 
 static bool
@@ -2188,6 +2328,7 @@ getDocument(JSContext *ctx, void *doc)
 	}
 	init_list(doc_private->listeners);
 	doc_private->ref_count = 1;
+	doc_private->doc = doc;
 
 	JSObject *el = JS_NewObject(ctx, &document_class);
 
@@ -2196,6 +2337,10 @@ getDocument(JSContext *ctx, void *doc)
 	}
 
 	JS::RootedObject r_el(ctx, el);
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	doc_private->interpreter = interpreter;
+	doc_private->thisval = r_el;
 
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) document_props);
 	spidermonkey_DefineFunctions(ctx, el, document_funcs);
@@ -2207,7 +2352,7 @@ getDocument(JSContext *ctx, void *doc)
 }
 
 bool
-initDocument(JSObject *document_obj, void *doc)
+initDocument(JSContext *ctx, struct ecmascript_interpreter *interpreter, JSObject *document_obj, void *doc)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -2217,6 +2362,11 @@ initDocument(JSObject *document_obj, void *doc)
 	if (!doc_private) {
 		return false;
 	}
+	JS::RootedObject r_el(ctx, document_obj);
+	doc_private->interpreter = interpreter;
+	doc_private->thisval = r_el;
+	doc_private->doc = doc;
+
 	init_list(doc_private->listeners);
 	doc_private->ref_count = 1;
 
