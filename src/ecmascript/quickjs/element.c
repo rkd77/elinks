@@ -30,6 +30,7 @@
 #include "ecmascript/quickjs/attributes.h"
 #include "ecmascript/quickjs/collection.h"
 #include "ecmascript/quickjs/element.h"
+#include "ecmascript/quickjs/event.h"
 #include "ecmascript/quickjs/heartbeat.h"
 #include "ecmascript/quickjs/keyboard.h"
 #include "ecmascript/quickjs/nodelist.h"
@@ -56,8 +57,11 @@ struct js_element_private {
 	LIST_OF(struct element_listener) listeners;
 	struct ecmascript_interpreter *interpreter;
 	JSValue thisval;
+	dom_event_listener *listener;
 	void *node;
 };
+
+static void element_event_handler(dom_event *event, void *pw);
 
 void *
 js_getopaque(JSValueConst obj, JSClassID class_id)
@@ -2174,6 +2178,37 @@ check_contains(dom_node *node, dom_node *searched, bool *result_set, bool *resul
 }
 
 static JSValue
+js_element_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	struct js_element_private *el_private = (struct js_element_private *)(JS_GetOpaque(this_val, js_element_class_id));
+
+	if (!el_private) {
+		return JS_FALSE;
+	}
+	dom_node *el = el_private->node;
+
+	if (!el) {
+		return JS_FALSE;
+	}
+
+	if (argc < 1) {
+		return JS_FALSE;
+	}
+	JSValue eve = argv[0];
+//	JS_DupValue(ctx, eve);
+	dom_event *event = (dom_event *)(JS_GetOpaque(eve, js_event_class_id));
+	bool result = false;
+	dom_exception exc = dom_event_target_dispatch_event(el, event, &result);
+
+	return JS_NewBool(ctx, result);
+}
+
+static JSValue
 js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -2184,6 +2219,11 @@ js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	struct js_element_private *el_private = (struct js_element_private *)(JS_GetOpaque(this_val, js_element_class_id));
 
 	if (!el_private) {
+		return JS_NULL;
+	}
+	dom_node *el = el_private->node;
+
+	if (!el) {
 		return JS_NULL;
 	}
 
@@ -2205,24 +2245,44 @@ js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	}
 
 	JSValue fun = argv[1];
-	struct element_listener *l;
 
-	foreach(l, el_private->listeners) {
-		if (strcmp(l->typ, method)) {
-			continue;
-		}
-		if (JS_VALUE_GET_PTR(l->fun) == JS_VALUE_GET_PTR(fun)) {
-			mem_free(method);
+	struct element_listener *n = (struct element_listener *)mem_calloc(1, sizeof(*n));
+
+	if (!n) {
+		return JS_UNDEFINED;
+	}
+	n->fun = fun;
+	n->typ = method;
+	add_to_list_end(el_private->listeners, n);
+	dom_exception exc;
+
+	if (el_private->listener) {
+		dom_event_listener_ref(el_private->listener);
+	} else {
+		exc = dom_event_listener_create(element_event_handler, el_private, &el_private->listener);
+
+		if (exc != DOM_NO_ERR || !el_private->listener) {
 			return JS_UNDEFINED;
 		}
 	}
-	struct element_listener *n = (struct element_listener *)mem_calloc(1, sizeof(*n));
+	dom_string *typ = NULL;
+	exc = dom_string_create(method, strlen(method), &typ);
 
-	if (n) {
-		n->typ = method;
-		n->fun = JS_DupValue(ctx, argv[1]);
-		add_to_list_end(el_private->listeners, n);
+	if (exc != DOM_NO_ERR || !typ) {
+		goto ex;
 	}
+	exc = dom_event_target_add_event_listener(el, typ, el_private->listener, false);
+
+	if (exc == DOM_NO_ERR) {
+		dom_event_listener_ref(el_private->listener);
+	}
+
+ex:
+	if (typ) {
+		dom_string_unref(typ);
+	}
+	dom_event_listener_unref(el_private->listener);
+
 	return JS_UNDEFINED;
 }
 
@@ -2239,6 +2299,11 @@ js_element_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, 
 	if (!el_private) {
 		return JS_NULL;
 	}
+	dom_node *el = el_private->node;
+
+	if (!el) {
+		return JS_NULL;
+	}
 
 	if (argc < 2) {
 		return JS_UNDEFINED;
@@ -2257,24 +2322,36 @@ js_element_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, 
 		return JS_EXCEPTION;
 	}
 	JSValue fun = argv[1];
+
 	struct element_listener *l;
 
 	foreach(l, el_private->listeners) {
 		if (strcmp(l->typ, method)) {
 			continue;
 		}
+
 		if (JS_VALUE_GET_PTR(l->fun) == JS_VALUE_GET_PTR(fun)) {
+			dom_string *typ = NULL;
+			dom_exception exc = dom_string_create(method, strlen(method), &typ);
+
+			if (exc != DOM_NO_ERR || !typ) {
+				continue;
+			}
+			dom_event_target_remove_event_listener(el, typ, el_private->listener, false);
+			dom_string_unref(typ);
+
 			del_from_list(l);
 			mem_free_set(&l->typ, NULL);
 			mem_free(l);
 			mem_free(method);
+
 			return JS_UNDEFINED;
 		}
 	}
 	mem_free(method);
+
 	return JS_UNDEFINED;
 }
-
 
 static JSValue
 js_element_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
@@ -3266,6 +3343,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CFUNC_DEF("cloneNode",	1, js_element_cloneNode),
 	JS_CFUNC_DEF("closest",		1, js_element_closest),
 	JS_CFUNC_DEF("contains",	1, js_element_contains),
+	JS_CFUNC_DEF("dispatchEvent",	1, js_element_dispatchEvent),
 	JS_CFUNC_DEF("focus",		0, js_element_focus),
 	JS_CFUNC_DEF("getAttribute",	1,	js_element_getAttribute),
 	JS_CFUNC_DEF("getAttributeNode",1,	js_element_getAttributeNode),
@@ -3304,6 +3382,10 @@ void js_element_finalizer(JSRuntime *rt, JSValue val)
 	if (el_private) {
 		struct element_listener *l;
 		dom_node *el = (dom_node *)el_private->node;
+
+		if (el_private->listener) {
+			dom_event_listener_unref(el_private->listener);
+		}
 
 		if (el) {
 			dom_node_unref(el);
@@ -3344,7 +3426,7 @@ js_element_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 static JSClassDef js_element_class = {
 	"Element",
 	.finalizer = js_element_finalizer,
-	.gc_mark = js_element_mark,
+	//.gc_mark = js_element_mark,
 };
 
 int
@@ -3379,21 +3461,21 @@ getElement(JSContext *ctx, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSValue second;
-	static int initialized;
-	/* create the element class */
-	if (!initialized) {
-		JS_NewClassID(&js_element_class_id);
-		JS_NewClass(JS_GetRuntime(ctx), js_element_class_id, &js_element_class);
-		initialized = 1;
-	}
-	second = attr_find_in_map(map_elements, node);
 
-	if (!JS_IsNull(second)) {
-		JSValue r = JS_DupValue(ctx, second);
-		RETURN_JS(r);
-	}
-
+//	JSValue second;
+//	static int initialized;
+//	/* create the element class */
+//	if (!initialized) {
+//		JS_NewClassID(&js_element_class_id);
+//		JS_NewClass(JS_GetRuntime(ctx), js_element_class_id, &js_element_class);
+//		initialized = 1;
+//	}
+//	second = attr_find_in_map(map_elements, node);
+//
+//	if (!JS_IsNull(second)) {
+//		JSValue r = JS_DupValue(ctx, second);
+//		RETURN_JS(r);
+//	}
 	struct js_element_private *el_private = (struct js_element_private *)mem_calloc(1, sizeof(*el_private));
 
 	if (!el_private) {
@@ -3415,7 +3497,7 @@ getElement(JSContext *ctx, void *node)
 	attr_save_in_map_void(map_privates, node, el_private);
 
 	JSValue rr = JS_DupValue(ctx, element_obj);
-	el_private->thisval = JS_DupValue(ctx, rr);
+	el_private->thisval = rr;
 	RETURN_JS(rr);
 }
 
@@ -3455,4 +3537,45 @@ check_element_event(void *interp, void *elem, const char *event_name, struct ter
 	}
 	done_heartbeat(interpreter->heartbeat);
 	check_for_rerender(interpreter, event_name);
+}
+
+static void
+element_event_handler(dom_event *event, void *pw)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct js_element_private *el_private = (struct js_element_private *)pw;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)el_private->interpreter;
+	JSContext *ctx = (JSContext *)interpreter->backend_data;
+	dom_node *el = (dom_node *)el_private->node;
+
+	if (!event) {
+		return;
+	}
+
+	dom_string *typ = NULL;
+	dom_exception exc = dom_event_get_type(event, &typ);
+
+	if (exc != DOM_NO_ERR || !typ) {
+		return;
+	}
+//	interpreter->heartbeat = add_heartbeat(interpreter);
+
+	struct element_listener *l;
+
+	foreach(l, el_private->listeners) {
+		if (strcmp(l->typ, dom_string_data(typ))) {
+			continue;
+		}
+		JSValue func = JS_DupValue(ctx, l->fun);
+		JSValue arg = getEvent(ctx, event);
+		JSValue ret = JS_Call(ctx, func, el_private->thisval, 1, (JSValueConst *) &arg);
+		JS_FreeValue(ctx, ret);
+		JS_FreeValue(ctx, func);
+		JS_FreeValue(ctx, arg);
+	}
+//	done_heartbeat(interpreter->heartbeat);
+	check_for_rerender(interpreter, dom_string_data(typ));
+	dom_string_unref(typ);
 }
