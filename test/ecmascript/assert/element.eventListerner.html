@@ -1,0 +1,21 @@
+<html>
+<body>
+<div id="test"></div>
+<script>
+
+function ff(ev)
+{
+    console.assert(ev.type === 'message', ev.type);
+    console.exit(0);
+}
+
+var e = new Event('message', { cancelable: true });
+
+console.error('element.eventListener.html');
+var elem = document.getElementById('test');
+elem.addEventListener("message", ff);
+elem.dispatchEvent(e);
+
+</script>
+</body>
+</html>

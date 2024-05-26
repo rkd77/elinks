@@ -33,6 +33,7 @@
 #include "ecmascript/spidermonkey/attr.h"
 #include "ecmascript/spidermonkey/attributes.h"
 #include "ecmascript/spidermonkey/collection.h"
+#include "ecmascript/spidermonkey/event.h"
 #include "ecmascript/spidermonkey/element.h"
 #include "ecmascript/spidermonkey/heartbeat.h"
 #include "ecmascript/spidermonkey/keyboard.h"
@@ -116,22 +117,26 @@ static bool element_get_property_value(JSContext *ctx, unsigned int argc, JS::Va
 static bool element_set_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 
-struct listener {
-	LIST_HEAD_EL(struct listener);
+struct ele_listener {
+	LIST_HEAD_EL(struct ele_listener);
 	char *typ;
 	JS::RootedValue fun;
 };
 
 struct element_private {
-	LIST_OF(struct listener) listeners;
+	LIST_OF(struct ele_listener) listeners;
 	struct ecmascript_interpreter *interpreter;
 	JS::RootedObject thisval;
+	dom_event_listener *listener;
+	dom_node *node;
 	int ref_count;
 };
 
 static std::map<void *, struct element_private *> map_privates;
 
 static void element_finalize(JS::GCContext *op, JSObject *obj);
+
+static void element_event_handler(dom_event *event, void *pw);
 
 JSClassOps element_ops = {
 	nullptr,  // addProperty
@@ -208,7 +213,11 @@ static void element_finalize(JS::GCContext *op, JSObject *obj)
 		if (--el_private->ref_count <= 0) {
 			map_privates.erase(el);
 
-			struct listener *l;
+			if (el_private->listener) {
+				dom_event_listener_unref(el_private->listener);
+			}
+
+			struct ele_listener *l;
 
 			foreach(l, el_private->listeners) {
 				mem_free_set(&l->typ, NULL);
@@ -3726,6 +3735,7 @@ static bool element_click(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_cloneNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_closest(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_contains(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool element_dispatchEvent(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_focus(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_getAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -3753,6 +3763,7 @@ const spidermonkeyFunctionSpec element_funcs[] = {
 	{ "cloneNode",	element_cloneNode,	1 },
 	{ "closest",	element_closest,	1 },
 	{ "contains",	element_contains,	1 },
+	{ "dispatchEvent", element_dispatchEvent,	1 },
 	{ "focus",	element_focus,		0 },
 	{ "getAttribute",	element_getAttribute,	1 },
 	{ "getAttributeNode",	element_getAttributeNode,	1 },
@@ -3863,26 +3874,46 @@ element_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	char *method = jsval_to_string(ctx, args[0]);
 	JS::RootedValue fun(ctx, args[1]);
 
-	struct listener *l;
+	struct ele_listener *n = (struct ele_listener *)mem_calloc(1, sizeof(*n));
 
-	foreach(l, el_private->listeners) {
-		if (strcmp(l->typ, method)) {
-			continue;
-		}
-		if (l->fun == fun) {
+	if (!n) {
+		args.rval().setUndefined();
+		return false;
+	}
+	n->fun = fun;
+	n->typ = method;
+	add_to_list_end(el_private->listeners, n);
+	dom_exception exc;
+
+	if (el_private->listener) {
+		dom_event_listener_ref(el_private->listener);
+	} else {
+		exc = dom_event_listener_create(element_event_handler, el_private, &el_private->listener);
+
+		if (exc != DOM_NO_ERR || !el_private->listener) {
 			args.rval().setUndefined();
-			mem_free(method);
 			return true;
 		}
 	}
-	struct listener *n = (struct listener *)mem_calloc(1, sizeof(*n));
+	dom_string *typ = NULL;
+	exc = dom_string_create(method, strlen(method), &typ);
 
-	if (n) {
-		n->typ = method;
-		n->fun = fun;
-		add_to_list_end(el_private->listeners, n);
+	if (exc != DOM_NO_ERR || !typ) {
+		goto ex;
 	}
+	exc = dom_event_target_add_event_listener(el, typ, el_private->listener, false);
+
+	if (exc == DOM_NO_ERR) {
+		dom_event_listener_ref(el_private->listener);
+	}
+
+ex:
+	if (typ) {
+		dom_string_unref(typ);
+	}
+	dom_event_listener_unref(el_private->listener);
 	args.rval().setUndefined();
+
 	return true;
 }
 
@@ -3930,13 +3961,23 @@ element_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 	JS::RootedValue fun(ctx, args[1]);
 
-	struct listener *l;
+	struct ele_listener *l;
 
 	foreach(l, el_private->listeners) {
 		if (strcmp(l->typ, method)) {
 			continue;
 		}
 		if (l->fun == fun) {
+
+			dom_string *typ = NULL;
+			dom_exception exc = dom_string_create(method, strlen(method), &typ);
+
+			if (exc != DOM_NO_ERR || !typ) {
+				continue;
+			}
+			dom_event_target_remove_event_listener(el, typ, el_private->listener, false);
+			dom_string_unref(typ);
+
 			del_from_list(l);
 			mem_free_set(&l->typ, NULL);
 			mem_free(l);
@@ -5227,6 +5268,7 @@ getElement(JSContext *ctx, void *node)
 		}
 		init_list(el_private->listeners);
 		el_private->ref_count = 1;
+		el_private->node = (dom_node *)node;
 	}
 
 	JSObject *el = JS_NewObject(ctx, &element_class);
@@ -5271,7 +5313,7 @@ check_element_event(void *interp, void *elem, const char *event_name, struct ter
 	JS::RootedValue r_val(ctx);
 	interpreter->heartbeat = add_heartbeat(interpreter);
 
-	struct listener *l;
+	struct ele_listener *l;
 
 	foreach(l, el_private->listeners) {
 		if (strcmp(l->typ, event_name)) {
@@ -5292,4 +5334,95 @@ check_element_event(void *interp, void *elem, const char *event_name, struct ter
 	done_heartbeat(interpreter->heartbeat);
 
 	check_for_rerender(interpreter, event_name);
+}
+
+static bool
+element_dispatchEvent(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	dom_node *element = JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+
+	if (!element) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+
+	if (argc < 1) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+	JS::RootedObject eve(ctx, &args[0].toObject());
+	dom_event *event = (dom_event *)JS::GetMaybePtrFromReservedSlot<dom_event>(eve, 0);
+	bool result = false;
+	dom_exception exc = dom_event_target_dispatch_event(element, event, &result);
+
+	args.rval().setBoolean(result);
+	return true;
+}
+
+static void
+element_event_handler(dom_event *event, void *pw)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct element_private *el_private = (struct element_private *)pw;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)el_private->interpreter;
+	JSContext *ctx = (JSContext *)interpreter->backend_data;
+	dom_node *element = (dom_node *)el_private->node;
+
+	JSAutoRealm ar(ctx, (JSObject *)interpreter->ac->get());
+	JS::RootedValue r_val(ctx);
+	interpreter->heartbeat = add_heartbeat(interpreter);
+
+	if (!event) {
+		return;
+	}
+	dom_string *typ = NULL;
+	dom_exception exc = dom_event_get_type(event, &typ);
+
+	if (exc != DOM_NO_ERR || !typ) {
+		return;
+	}
+	JSObject *obj_ev = getEvent(ctx, event);
+	interpreter->heartbeat = add_heartbeat(interpreter);
+
+	struct ele_listener *l;
+
+	foreach(l, el_private->listeners) {
+		if (strcmp(l->typ, dom_string_data(typ))) {
+			continue;
+		}
+		JS::RootedValueVector argv(ctx);
+
+		if (!argv.resize(1)) {
+			return;
+		}
+		argv[0].setObject(*obj_ev);
+		JS::RootedValue r_val(ctx);
+		JS_CallFunctionValue(ctx, el_private->thisval, l->fun, argv, &r_val);
+	}
+	done_heartbeat(interpreter->heartbeat);
+	check_for_rerender(interpreter, dom_string_data(typ));
+	dom_string_unref(typ);
 }

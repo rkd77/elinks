@@ -1715,7 +1715,6 @@ document_dispatchEvent(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	return true;
 }
 
-
 static void
 document_event_handler(dom_event *event, void *pw)
 {
