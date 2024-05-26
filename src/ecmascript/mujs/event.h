@@ -8,6 +8,7 @@ extern "C" {
 #endif
 
 int mjs_event_init(js_State *J);
+void mjs_push_event(js_State *J, void *eve);
 
 #ifdef __cplusplus
 }

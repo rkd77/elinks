@@ -33,6 +33,7 @@
 #include "ecmascript/libdom/parse.h"
 #include "ecmascript/mujs.h"
 #include "ecmascript/mujs/collection.h"
+#include "ecmascript/mujs/event.h"
 #include "ecmascript/mujs/form.h"
 #include "ecmascript/mujs/forms.h"
 #include "ecmascript/mujs/implementation.h"
@@ -63,8 +64,8 @@
 
 //static xmlpp::Document emptyDoc;
 
-struct listener {
-	LIST_HEAD_EL(struct listener);
+struct el_listener {
+	LIST_HEAD_EL(struct el_listener);
 	char *typ;
 	const char *fun;
 };
@@ -72,10 +73,13 @@ struct listener {
 struct mjs_document_private {
 	struct ecmascript_interpreter *interpreter;
 	const char *thisval;
-	LIST_OF(struct listener) listeners;
+	LIST_OF(struct el_listener) listeners;
+	dom_event_listener *listener;
 	void *node;
 	int ref_count;
 };
+
+static void document_event_handler(dom_event *event, void *pw);
 
 static void *
 mjs_doc_getprivate(js_State *J, int idx)
@@ -90,6 +94,8 @@ mjs_doc_getprivate(js_State *J, int idx)
 }
 
 static void mjs_push_doctype(js_State *J, void *node);
+
+static void mjs_document_dispatchEvent(js_State *J);
 
 static void
 mjs_document_get_property_anchors(js_State *J)
@@ -889,6 +895,12 @@ mjs_document_addEventListener(js_State *J)
 		js_pushnull(J);
 		return;
 	}
+	dom_document *doc = (dom_document *)doc_private->node;
+
+	if (!doc) {
+		js_pushnull(J);
+		return;
+	}
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
@@ -904,25 +916,45 @@ mjs_document_addEventListener(js_State *J)
 	js_copy(J, 2);
 	const char *fun = js_ref(J);
 
-	struct listener *l;
+	struct el_listener *n = (struct el_listener *)mem_calloc(1, sizeof(*n));
 
-	foreach(l, doc_private->listeners) {
-		if (strcmp(l->typ, method)) {
-			continue;
-		}
-		if (!strcmp(l->fun, fun)) {
-			mem_free(method);
+	if (!n) {
+		js_pushundefined(J);
+		return;
+	}
+	n->fun = fun;
+	n->typ = method;
+	add_to_list_end(doc_private->listeners, n);
+	dom_exception exc;
+
+	if (doc_private->listener) {
+		dom_event_listener_ref(doc_private->listener);
+	} else {
+		exc = dom_event_listener_create(document_event_handler, doc_private, &doc_private->listener);
+
+		if (exc != DOM_NO_ERR || !doc_private->listener) {
 			js_pushundefined(J);
 			return;
 		}
 	}
-	struct listener *n = (struct listener *)mem_calloc(1, sizeof(*n));
+	dom_string *typ = NULL;
+	exc = dom_string_create(method, strlen(method), &typ);
 
-	if (n) {
-		n->typ = method;
-		n->fun = fun;
-		add_to_list_end(doc_private->listeners, n);
+	if (exc != DOM_NO_ERR || !typ) {
+		goto ex;
 	}
+	exc = dom_event_target_add_event_listener(doc, typ, doc_private->listener, false);
+
+	if (exc == DOM_NO_ERR) {
+		dom_event_listener_ref(doc_private->listener);
+	}
+
+ex:
+	if (typ) {
+		dom_string_unref(typ);
+	}
+	dom_event_listener_unref(doc_private->listener);
+
 	js_pushundefined(J);
 }
 
@@ -935,6 +967,12 @@ mjs_document_removeEventListener(js_State *J)
 	struct mjs_document_private *doc_private = (struct mjs_document_private *)js_touserdata(J, 0, "document");
 
 	if (!doc_private) {
+		js_pushnull(J);
+		return;
+	}
+	dom_document *doc = (dom_document *)doc_private->node;
+
+	if (!doc) {
 		js_pushnull(J);
 		return;
 	}
@@ -952,18 +990,28 @@ mjs_document_removeEventListener(js_State *J)
 	}
 	js_copy(J, 2);
 	const char *fun = js_ref(J);
-	struct listener *l;
+	struct el_listener *l;
 
 	foreach(l, doc_private->listeners) {
 		if (strcmp(l->typ, method)) {
 			continue;
 		}
-		if (!strcmp(l->fun, fun)) {
+		if (l->fun == fun) {
+			dom_string *typ = NULL;
+			dom_exception exc = dom_string_create(method, strlen(method), &typ);
+
+			if (exc != DOM_NO_ERR || !typ) {
+				continue;
+			}
+			dom_event_target_remove_event_listener(doc, typ, doc_private->listener, false);
+			dom_string_unref(typ);
+
+			js_unref(J, l->fun);
 			del_from_list(l);
 			mem_free_set(&l->typ, NULL);
-			if (l->fun) js_unref(J, l->fun);
 			mem_free(l);
 			mem_free(method);
+
 			js_pushundefined(J);
 			return;
 		}
@@ -1445,6 +1493,7 @@ mjs_document_init(js_State *J)
 		addmethod(J, "createDocumentFragment",mjs_document_createDocumentFragment, 0);
 		addmethod(J, "createElement",	mjs_document_createElement, 1);
 		addmethod(J, "createTextNode",	mjs_document_createTextNode, 1);
+		addmethod(J, "dispatchEvent",	mjs_document_dispatchEvent, 1);
 		addmethod(J, "write",		mjs_document_write, 1);
 		addmethod(J, "writeln",		mjs_document_writeln, 1);
 		addmethod(J, "replace",		mjs_document_replace, 2);
@@ -1529,7 +1578,11 @@ mjs_doc_private_finalizer(js_State *J, void *priv)
 	struct mjs_document_private *doc_private = (struct mjs_document_private *)priv;
 
 	if (doc_private) {
-		struct listener *l;
+		struct el_listener *l;
+
+		if (doc_private->listener) {
+			dom_event_listener_unref(doc_private->listener);
+		}
 
 		foreach(l, doc_private->listeners) {
 			mem_free_set(&l->typ, NULL);
@@ -1565,6 +1618,7 @@ mjs_push_document(js_State *J, void *doc)
 		addmethod(J, "createDocumentFragment",mjs_document_createDocumentFragment, 0);
 		addmethod(J, "createElement",	mjs_document_createElement, 1);
 		addmethod(J, "createTextNode",	mjs_document_createTextNode, 1);
+		addmethod(J, "dispatchEvent",	mjs_document_dispatchEvent, 1);
 		addmethod(J, "write",		mjs_document_write, 1);
 		addmethod(J, "writeln",		mjs_document_writeln, 1);
 		addmethod(J, "replace",		mjs_document_replace, 2);
@@ -1611,4 +1665,67 @@ mjs_push_document(js_State *J, void *doc)
 	doc_private->node = doc;
 	doc_private->ref_count = 1;
 	doc_private->thisval = js_ref(J);
+}
+
+static void
+mjs_document_dispatchEvent(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
+
+	if (!doc) {
+		js_pushboolean(J, 0);
+		return;
+	}
+	dom_event *event = (dom_event *)js_touserdata(J, 1, "event");
+
+	if (!event) {
+		js_pushboolean(J, 0);
+		return;
+	}
+	bool result = false;
+	dom_exception exc = dom_event_target_dispatch_event(doc, event, &result);
+	js_pushboolean(J, result);
+}
+
+static void
+document_event_handler(dom_event *event, void *pw)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct mjs_document_private *doc_private = (struct mjs_document_private *)pw;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)doc_private->interpreter;
+	js_State *J = (js_State *)interpreter->backend_data;
+	dom_document *doc = (dom_document *)doc_private->node;
+
+	if (!event) {
+		return;
+	}
+
+	dom_string *typ = NULL;
+	dom_exception exc = dom_event_get_type(event, &typ);
+
+	if (exc != DOM_NO_ERR || !typ) {
+		return;
+	}
+//	interpreter->heartbeat = add_heartbeat(interpreter);
+
+	struct el_listener *l;
+
+	foreach(l, doc_private->listeners) {
+		if (strcmp(l->typ, dom_string_data(typ))) {
+			continue;
+		}
+		js_getregistry(J, l->fun); /* retrieve the js function from the registry */
+		js_getregistry(J, doc_private->thisval);
+		mjs_push_event(J, event);
+		js_pcall(J, 1);
+		js_pop(J, 1);
+	}
+//	done_heartbeat(interpreter->heartbeat);
+	check_for_rerender(interpreter, dom_string_data(typ));
+	dom_string_unref(typ);
 }

@@ -38,22 +38,16 @@ mjs_event_finalizer(js_State *J, void *val)
 }
 
 void
-mjs_push_event(js_State *J, char *type_)
+mjs_push_event(js_State *J, void *eve)
 {
-	dom_event *event = NULL;
-	dom_exception exc = dom_event_create(&event);
+	dom_event *event = (dom_event *)eve;
 
-	if (exc != DOM_NO_ERR) {
+	if (!event) {
 		js_error(J, "out of memory");
 		return;
 	}
+	dom_event_ref(event);
 
-	if (type_) {
-		dom_string *typ = NULL;
-		exc = dom_string_create(type_, strlen(type_), &typ);
-		dom_event_init(event, typ, false, false);
-		if (typ) dom_string_unref(typ);
-	}
 	js_newobject(J);
 	{
 		js_newuserdata(J, "event", event, mjs_event_finalizer);
