@@ -37,6 +37,7 @@
 #include "ecmascript/mujs/collection.h"
 #include "ecmascript/mujs/document.h"
 #include "ecmascript/mujs/element.h"
+#include "ecmascript/mujs/event.h"
 #include "ecmascript/mujs/keyboard.h"
 #include "ecmascript/mujs/nodelist.h"
 #include "ecmascript/mujs/style.h"
@@ -61,8 +62,8 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-struct listener {
-	LIST_HEAD_EL(struct listener);
+struct ele_listener {
+	LIST_HEAD_EL(struct ele_listener);
 	char *typ;
 	const char *fun;
 };
@@ -70,10 +71,14 @@ struct listener {
 struct mjs_element_private {
 	struct ecmascript_interpreter *interpreter;
 	const char *thisval;
-	LIST_OF(struct listener) listeners;
+	LIST_OF(struct ele_listener) listeners;
+	dom_event_listener *listener;
 	void *node;
 	int ref_count;
 };
+
+static void element_event_handler(dom_event *event, void *pw);
+static void mjs_element_dispatchEvent(js_State *J);
 
 void *
 mjs_getprivate(js_State *J, int idx)
@@ -2170,6 +2175,13 @@ mjs_element_addEventListener(js_State *J)
 		js_pushnull(J);
 		return;
 	}
+	dom_node *el = el_private->node;
+
+	if (!el) {
+		js_pushnull(J);
+		return;
+	}
+
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
@@ -2185,25 +2197,44 @@ mjs_element_addEventListener(js_State *J)
 	js_copy(J, 2);
 	const char *fun = js_ref(J);
 
-	struct listener *l;
+	struct ele_listener *n = (struct ele_listener *)mem_calloc(1, sizeof(*n));
 
-	foreach(l, el_private->listeners) {
-		if (strcmp(l->typ, method)) {
-			continue;
-		}
-		if (!strcmp(l->fun, fun)) {
-			mem_free(method);
+	if (!n) {
+		js_pushundefined(J);
+		return;
+	}
+	n->fun = fun;
+	n->typ = method;
+	add_to_list_end(el_private->listeners, n);
+	dom_exception exc;
+
+	if (el_private->listener) {
+		dom_event_listener_ref(el_private->listener);
+	} else {
+		exc = dom_event_listener_create(element_event_handler, el_private, &el_private->listener);
+
+		if (exc != DOM_NO_ERR || !el_private->listener) {
 			js_pushundefined(J);
 			return;
 		}
 	}
-	struct listener *n = (struct listener *)mem_calloc(1, sizeof(*n));
+	dom_string *typ = NULL;
+	exc = dom_string_create(method, strlen(method), &typ);
 
-	if (n) {
-		n->typ = method;
-		n->fun = fun;
-		add_to_list_end(el_private->listeners, n);
+	if (exc != DOM_NO_ERR || !typ) {
+		goto ex;
 	}
+	exc = dom_event_target_add_event_listener(el, typ, el_private->listener, false);
+
+	if (exc == DOM_NO_ERR) {
+		dom_event_listener_ref(el_private->listener);
+	}
+
+ex:
+	if (typ) {
+		dom_string_unref(typ);
+	}
+	dom_event_listener_unref(el_private->listener);
 	js_pushundefined(J);
 }
 
@@ -2219,6 +2250,13 @@ mjs_element_removeEventListener(js_State *J)
 		js_pushnull(J);
 		return;
 	}
+	dom_node *el = el_private->node;
+
+	if (!el) {
+		js_pushnull(J);
+		return;
+	}
+
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
@@ -2233,18 +2271,28 @@ mjs_element_removeEventListener(js_State *J)
 	}
 	js_copy(J, 2);
 	const char *fun = js_ref(J);
-	struct listener *l;
+	struct ele_listener *l;
 
 	foreach(l, el_private->listeners) {
 		if (strcmp(l->typ, method)) {
 			continue;
 		}
-		if (!strcmp(l->fun, fun)) {
+		if (l->fun == fun) {
+			dom_string *typ = NULL;
+			dom_exception exc = dom_string_create(method, strlen(method), &typ);
+
+			if (exc != DOM_NO_ERR || !typ) {
+				continue;
+			}
+			dom_event_target_remove_event_listener(el, typ, el_private->listener, false);
+			dom_string_unref(typ);
+
+			js_unref(J, l->fun);
 			del_from_list(l);
 			mem_free_set(&l->typ, NULL);
-			if (l->fun) js_unref(J, l->fun);
 			mem_free(l);
 			mem_free(method);
+
 			js_pushundefined(J);
 			return;
 		}
@@ -3054,7 +3102,11 @@ mjs_element_finalizer(js_State *J, void *priv)
 			attr_erase_from_map(map_elements, el_private);
 			attr_erase_from_map(map_privates, el_private->node);
 
-			struct listener *l;
+			struct ele_listener *l;
+
+			if (el_private->listener) {
+				dom_event_listener_unref(el_private->listener);
+			}
 
 			foreach(l, el_private->listeners) {
 				mem_free_set(&l->typ, NULL);
@@ -3118,6 +3170,7 @@ mjs_push_element(js_State *J, void *node)
 		addmethod(J, "cloneNode",	mjs_element_cloneNode, 1);
 		addmethod(J, "closest",	mjs_element_closest, 1);
 		addmethod(J, "contains",	mjs_element_contains, 1);
+		addmethod(J, "dispatchEvent",	mjs_element_dispatchEvent, 1);
 		addmethod(J, "focus",		mjs_element_focus, 0);
 		addmethod(J, "getAttribute",	mjs_element_getAttribute, 1);
 		addmethod(J, "getAttributeNode",	mjs_element_getAttributeNode, 1);
@@ -3203,7 +3256,7 @@ check_element_event(void *interp, void *elem, const char *event_name, struct ter
 	}
 	struct mjs_element_private *el_private = (struct mjs_element_private *)second;
 
-	struct listener *l;
+	struct ele_listener *l;
 
 	foreach(l, el_private->listeners) {
 		if (strcmp(l->typ, event_name)) {
@@ -3225,4 +3278,66 @@ check_element_event(void *interp, void *elem, const char *event_name, struct ter
 		}
 	}
 	check_for_rerender(interpreter, event_name);
+}
+
+static void
+mjs_element_dispatchEvent(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+
+	if (!el) {
+		js_pushboolean(J, 0);
+		return;
+	}
+	dom_event *event = (dom_event *)js_touserdata(J, 1, "event");
+
+	if (!event) {
+		js_pushboolean(J, 0);
+		return;
+	}
+	bool result = false;
+	dom_exception exc = dom_event_target_dispatch_event(el, event, &result);
+	js_pushboolean(J, result);
+}
+
+static void
+element_event_handler(dom_event *event, void *pw)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct mjs_element_private *el_private = (struct mjs_element_private *)pw;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)el_private->interpreter;
+	js_State *J = (js_State *)interpreter->backend_data;
+
+	if (!event) {
+		return;
+	}
+
+	dom_string *typ = NULL;
+	dom_exception exc = dom_event_get_type(event, &typ);
+
+	if (exc != DOM_NO_ERR || !typ) {
+		return;
+	}
+//	interpreter->heartbeat = add_heartbeat(interpreter);
+
+	struct ele_listener *l;
+
+	foreach(l, el_private->listeners) {
+		if (strcmp(l->typ, dom_string_data(typ))) {
+			continue;
+		}
+		js_getregistry(J, l->fun); /* retrieve the js function from the registry */
+		js_getregistry(J, el_private->thisval);
+		mjs_push_event(J, event);
+		js_pcall(J, 1);
+		js_pop(J, 1);
+	}
+//	done_heartbeat(interpreter->heartbeat);
+	check_for_rerender(interpreter, dom_string_data(typ));
+	dom_string_unref(typ);
 }
