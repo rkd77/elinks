@@ -51,6 +51,7 @@
 #include "protocol/common.h"
 #include "protocol/curl/ftpes.h"
 #include "protocol/curl/http.h"
+#include "protocol/curl/sftp.h"
 #include "protocol/http/http.h"
 #include "protocol/http/post.h"
 #include "protocol/uri.h"
@@ -532,7 +533,14 @@ check_multi_info(GlobalInfo *g)
 			}
 
 #ifdef CONFIG_FTP
-			if (conn->uri->protocol == PROTOCOL_FTP || conn->uri->protocol == PROTOCOL_FTPES || conn->uri->protocol == PROTOCOL_SFTP) {
+			if (conn->uri->protocol == PROTOCOL_FTP || conn->uri->protocol == PROTOCOL_FTPES) {
+				ftp_curl_handle_error(conn, res);
+				continue;
+			}
+#endif
+
+#ifdef CONFIG_SFTP
+			if (conn->uri->protocol == PROTOCOL_SFTP) {
 				ftp_curl_handle_error(conn, res);
 				continue;
 			}
