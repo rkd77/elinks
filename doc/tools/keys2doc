@@ -75,7 +75,7 @@ print_keymap_defaults()
 	| while read entry
 	do
 		entry=$(echo "$entry" | sed 's/.*{ { //')
-		key=$(echo "$entry" | sed "s/\(KBD_[^,]*\|'.*'\),.*/\1/")
+		key=$(echo "$entry" | sed -E "s/(KBD_[^,]*|'.*'),.*/\1/")
 		action=$(echo "$entry" | sed "s/.*,.*\(ACT_$KEYMAP\)_\([A-Z_]*\).*/\2/")
 		# If there are backslashed quotes, remove the backslashes.
 		# (This is not needed in print_keymap_actions because
