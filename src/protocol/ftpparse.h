@@ -1,7 +1,7 @@
 /* FTP directory parsing */
 
-#ifndef EL__PROTOCOL_FTP_PARSE_H
-#define EL__PROTOCOL_FTP_PARSE_H
+#ifndef EL__PROTOCOL_FTPPARSE_H
+#define EL__PROTOCOL_FTPPARSE_H
 
 #include "util/string.h"
 

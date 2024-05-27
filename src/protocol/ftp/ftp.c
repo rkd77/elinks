@@ -49,7 +49,7 @@
 #include "protocol/common.h"
 #include "protocol/curl/ftpes.h"
 #include "protocol/ftp/ftp.h"
-#include "protocol/ftp/parse.h"
+#include "protocol/ftpparse.h"
 #include "protocol/uri.h"
 #include "util/conv.h"
 #include "util/error.h"

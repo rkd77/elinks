@@ -48,15 +48,16 @@
 #include "protocol/curl/ftpes.h"
 #include "protocol/curl/http.h"
 #include "protocol/curl/sftp.h"
-#include "protocol/ftp/parse.h"
+#include "protocol/ftpparse.h"
 #include "protocol/uri.h"
 #include "util/conv.h"
 #include "util/error.h"
 #include "util/memory.h"
 #include "util/string.h"
 
-#ifdef CONFIG_FTP
+#if defined(CONFIG_FTP) || defined(CONFIG_SFTP)
 
+#ifdef CONFIG_FTP
 static char el_curlversion[256];
 
 static void
@@ -75,7 +76,9 @@ struct module ftpes_protocol_module = struct_module(
 	/* init: */		init_ftpes,
 	/* done: */		NULL
 );
+#endif
 
+#ifdef CONFIG_SFTP
 struct module sftp_protocol_module = struct_module(
 	/* name: */		N_("SFTP"),
 	/* options: */		NULL,
@@ -85,7 +88,7 @@ struct module sftp_protocol_module = struct_module(
 	/* init: */		NULL,
 	/* done: */		NULL
 );
-
+#endif
 
 #define FTP_BUF_SIZE	16384
 
@@ -643,6 +646,7 @@ ftp_curl_handle_error(struct connection *conn, CURLcode res)
 	abort_connection(conn, connection_state(S_CURL_ERROR - res));
 }
 
+#ifdef CONFIG_FTP
 void
 ftpes_protocol_handler(struct connection *conn)
 {
@@ -650,7 +654,9 @@ ftpes_protocol_handler(struct connection *conn)
 		do_ftpes(conn);
 	}
 }
+#endif
 
+#ifdef CONFIG_SFTP
 void
 sftp_protocol_handler(struct connection *conn)
 {
@@ -658,4 +664,6 @@ sftp_protocol_handler(struct connection *conn)
 		do_ftpes(conn);
 	}
 }
+#endif
+
 #endif

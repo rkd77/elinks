@@ -1,6 +1,6 @@
 idna_dep = dependency('libidn2')
 
-uri_test_files = files('uri-test.c', 'stub.c', meson.current_source_dir()+'/../protocol.cpp', meson.current_source_dir()+'/../uri.c')
+uri_test_files = files('uri-test.c', 'stub.c', meson.current_source_dir()+'/../protocol.c', meson.current_source_dir()+'/../uri.c')
 
 exe = executable('uri-test', uri_test_files,
 testdeps, dependencies: [iconvdeps, idna_dep, mozjsdeps, wattdeps],

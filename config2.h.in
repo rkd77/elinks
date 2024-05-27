@@ -247,6 +247,9 @@
 /* Define if you want: SpiderMonkey support */
 #mesondefine CONFIG_SCRIPTING_SPIDERMONKEY
 
+/* Define if you want: SFTP protocol support. Requires libcurl */
+#mesondefine CONFIG_SFTP
+
 /* Define if you want: Small binary support */
 #mesondefine CONFIG_SMALL
 

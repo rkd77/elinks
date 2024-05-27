@@ -23,7 +23,7 @@
 #include "osdep/ascii.h"
 #include "osdep/stat.h"
 #include "protocol/date.h"
-#include "protocol/ftp/parse.h"
+#include "protocol/ftpparse.h"
 #include "util/conv.h"
 #include "util/string.h"
 #include "util/time.h"

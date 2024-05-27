@@ -1691,6 +1691,9 @@ fi
 EL_ARG_ENABLE(CONFIG_FTP, ftp, [FTP protocol],
 	      [  --disable-ftp           disable ftp protocol support])
 
+EL_ARG_ENABLE(CONFIG_SFTP, sftp, [SFTP protocol],
+	      [  --disable-sftp           disable sftp protocol support])
+
 EL_ARG_ENABLE(CONFIG_GEMINI, gemini, [Gemini protocol],
 	      [  --enable-gemini         enable gemini protocol support])
 

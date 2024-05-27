@@ -35,6 +35,11 @@ subdir('http')
 if conf_data.get('CONFIG_DATA')
 	srcs += files('data.c')
 endif
+
+if conf_data.get('CONFIG_FTP') or conf_data.get('CONFIG_SFTP')
+	srcs += files('ftpparse.c')
+endif
+
 srcs += files('about.c', 'common.c', 'date.c', 'header.c', 'protocol.c', 'proxy.c', 'uri.c', 'user.c')
 
 if get_option('test')

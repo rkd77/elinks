@@ -1,7 +1,7 @@
-srcs += files('ftp.c', 'parse.c')
+srcs += files('ftp.c')
 
 if get_option('test')
-    exe = executable('ftp-parser', 'ftp-parser.c', 'parse.c', meson.source_root()+'/src/protocol/date.c', testdeps, dependencies:[iconvdeps],
+    exe = executable('ftp-parser', 'ftp-parser.c', meson.source_root()+'/src/protocol/date.c', meson.source_root()+'/src/protocol/ftpparse.c', testdeps, dependencies:[iconvdeps],
     c_args:['-DHAVE_CONFIG_H'], cpp_args:['-DHAVE_CONFIG_H'], include_directories:['.','../..','../../..'],
     build_by_default:false)
 

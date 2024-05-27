@@ -12,7 +12,7 @@
 #include "elinks.h"
 
 #include "osdep/stat.h"
-#include "protocol/ftp/parse.h"
+#include "protocol/ftpparse.h"
 #include "util/test.h"
 
 /* fake tty get function, needed for charsets.c */
