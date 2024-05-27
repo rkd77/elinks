@@ -505,3 +505,45 @@ http_curl_protocol_handler(struct connection *conn)
 		do_http(conn);
 	}
 }
+
+/* Check for completed transfers, and remove their easy handles */
+void
+check_multi_info(GlobalInfo *g)
+{
+	//char *eff_url;
+	CURLMsg *msg;
+	int msgs_left;
+	struct connection *conn;
+	CURL *easy;
+	CURLcode res;
+
+	//fprintf(stderr, "REMAINING: %d\n", g->still_running);
+
+	while ((msg = curl_multi_info_read(g->multi, &msgs_left))) {
+		if (msg->msg == CURLMSG_DONE) {
+			easy = msg->easy_handle;
+			res = msg->data.result;
+			curl_easy_getinfo(easy, CURLINFO_PRIVATE, &conn);
+
+			if (conn->uri->protocol == PROTOCOL_HTTP || conn->uri->protocol == PROTOCOL_HTTPS) {
+				http_curl_handle_error(conn, res);
+				continue;
+			}
+
+#ifdef CONFIG_FTP
+			if (conn->uri->protocol == PROTOCOL_FTP || conn->uri->protocol == PROTOCOL_FTPES || conn->uri->protocol == PROTOCOL_SFTP) {
+				ftp_curl_handle_error(conn, res);
+				continue;
+			}
+#endif
+			else {
+				abort_connection(conn, connection_state(S_OK));
+			}
+		}
+	}
+#if 0
+	if (g->still_running == 0 && g->stopped) {
+		event_base_loopbreak(g->evbase);
+	}
+#endif
+}
