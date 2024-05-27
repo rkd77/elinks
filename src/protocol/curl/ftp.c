@@ -624,7 +624,7 @@ again:
 	abort_connection(conn, connection_state(S_OK));
 }
 
-static void
+void
 ftp_curl_handle_error(struct connection *conn, CURLcode res)
 {
 	if (res == CURLE_OK) {
