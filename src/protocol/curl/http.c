@@ -49,6 +49,7 @@
 #include "osdep/sysname.h"
 #include "protocol/auth/auth.h"
 #include "protocol/common.h"
+#include "protocol/curl/ftpes.h"
 #include "protocol/curl/http.h"
 #include "protocol/http/http.h"
 #include "protocol/http/post.h"
