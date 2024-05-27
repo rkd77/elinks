@@ -59,7 +59,6 @@ do {							\
 
 #ifdef CONFIG_LIBCURL
 #include <curl/curl.h>
-#include <sys/cdefs.h>
 #endif
 
 #include "elinks.h"
