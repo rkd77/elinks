@@ -3,6 +3,10 @@ Elinks installation guidelines
 
   Quick guide for the impatient:
 
+	meson setup builddir && cd builddir && meson compile && meson install
+
+  Alternatively, instead of meson:
+
 	./configure && make && make install
 
   Check out the bottom of this file if you're upgrading from Links or an older
