@@ -602,8 +602,27 @@ if conf_data.get('CONFIG_GPM')
 endif
 
 if conf_data.get('CONFIG_SCRIPTING_PYTHON')
-    python3deps = dependency('python3-embed', static: st)
-    deps += python3deps
+    python3 = import('python').find_installation()
+    if not python3.found()
+        error('Python3 not found')
+    endif
+    python3_inc = run_command(python3, '-c', 'from distutils import sysconfig; print(sysconfig.get_python_inc())').stdout().strip()
+    python3_plat_inc = run_command(python3, '-c', 'from distutils import sysconfig; print(sysconfig.get_python_inc(plat_specific=True))').stdout().strip()
+    python3_lib = run_command(python3, '-c', 'from distutils import sysconfig; var = sysconfig.get_config_var; print(var("LIBPL"))').stdout().strip()
+    python3_version = run_command(python3, '-c', 'from distutils import sysconfig; var = sysconfig.get_config_var; print(var("VERSION"))').stdout().strip()
+    python3_cflags = [
+        '-I' + python3_inc,
+        '-I' + python3_plat_inc
+    ]
+    python3_libs = [
+        '-L' + python3_lib,
+        '-lpython' + python3_version
+    ]
+    python3_dep = declare_dependency(
+        include_directories: include_directories(python3_inc, python3_plat_inc),
+        link_args: python3_libs
+    )
+    deps += python3_dep
 endif
 
 if conf_data.get('CONFIG_SCRIPTING_PERL')
