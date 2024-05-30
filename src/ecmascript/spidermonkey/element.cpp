@@ -3986,7 +3986,7 @@ element_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
 			}
-			dom_event_target_remove_event_listener(el, typ, el_private->listener, false);
+			//dom_event_target_remove_event_listener(el, typ, el_private->listener, false);
 			dom_string_unref(typ);
 
 			del_from_list(l);
