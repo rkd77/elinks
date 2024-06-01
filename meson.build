@@ -1167,3 +1167,7 @@ subdir('contrib')
 if get_option('doc')
     subdir('doc')
 endif
+
+if get_option('test')
+    subdir('test')
+endif
