@@ -17,6 +17,9 @@
 
 #define DEBUG 0
 
+static int assertions;
+static int failed_assertions;
+
 static void
 mjs_console_assert(js_State *J)
 {
@@ -28,12 +31,14 @@ mjs_console_assert(js_State *J)
 		return;
 	}
 	bool res = js_toboolean(J, 1);
+	assertions++;
 
 	if (res) {
 		js_pushundefined(J);
 		return;
 	}
 	FILE *log = fopen(console_error_filename, "a");
+	failed_assertions++;
 
 	if (!log) {
 		js_pushundefined(J);
@@ -107,7 +112,8 @@ mjs_console_exit(js_State *J)
 		js_pushundefined(J);
 		return;
 	}
-	program.retval = js_toboolean(J, 1) ? RET_ERROR : RET_OK;
+	fprintf(stderr, "Assertions: %d, failed assertions: %d\n", assertions, failed_assertions);
+	program.retval = failed_assertions ? RET_ERROR : RET_OK;
 	program.terminate = 1;
 	js_pushundefined(J);
 }
@@ -129,7 +135,7 @@ mjs_console_init(js_State *J)
 		addmethod(J, "console.assert", mjs_console_assert, 2);
 		addmethod(J, "console.log", mjs_console_log, 1);
 		addmethod(J, "console.error", mjs_console_error, 1);
-		addmethod(J, "console.exit", mjs_console_exit, 1);
+		addmethod(J, "console.exit", mjs_console_exit, 0);
 		addmethod(J, "console.toString", mjs_console_toString, 0);
 	}
 	js_defglobal(J, "console", JS_DONTENUM);
