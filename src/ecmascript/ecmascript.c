@@ -644,10 +644,6 @@ init_ecmascript_module(struct module *module)
 	char *xdg_config_home = get_xdg_config_home();
 	read_url_list();
 
-	if (program.testjs) {
-		alarm(5);
-	}
-
 	if (xdg_config_home) {
 		/* ecmascript console log */
 		console_log_filename = straconcat(xdg_config_home, "/console.log", NULL);
