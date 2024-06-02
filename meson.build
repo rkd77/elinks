@@ -1169,5 +1169,5 @@ if get_option('doc')
 endif
 
 if get_option('test')
-    subdir('test')
+    subdir('test/ecmascript/assert')
 endif

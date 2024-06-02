@@ -896,7 +896,9 @@ get_ctl_handle(void)
 {
 	static int fd = -1;
 
-	if (isatty(0)) return 0;
+	if (isatty(0)) {
+		return 0;
+	}
 	if (fd < 0) fd = open("/dev/tty", O_RDONLY);
 	return fd;
 }

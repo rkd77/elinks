@@ -85,9 +85,9 @@ console_assert(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (res) {
 		return true;
 	}
+	failed_assertions++;
 	FILE *log = fopen(console_error_filename, "a");
 
-	failed_assertions++;
 	if (!log) {
 		return true;
 	}
