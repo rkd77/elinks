@@ -44,13 +44,13 @@ features_txt = custom_target('features.txt',
                capture: true,
                install: true,
                install_dir: doc_dir,
-               command: [meson.current_source_dir() + '/tools/conf2doc', '@INPUT@'])
+               command: [meson.current_source_dir() / 'tools/conf2doc', '@INPUT@'])
 
 keymap_actions_txt = custom_target('keymap-actions.txt',
                input: ['../src/config/kbdbind.c'],
                output: 'keymap-actions.txt',
                capture: true,
-               command: [meson.current_source_dir() + '/tools/keys2doc', '@INPUT@', 'keymap-actions.txt'])
+               command: [meson.current_source_dir() / 'tools/keys2doc', '@INPUT@', 'keymap-actions.txt'])
 
 keymap_defaults_txt = custom_target('keymap-defaults.txt',
                input: ['../src/config/kbdbind.c'],
@@ -58,12 +58,12 @@ keymap_defaults_txt = custom_target('keymap-defaults.txt',
                capture: true,
                install: true,
                install_dir: doc_dir,
-               command: [meson.current_source_dir() + '/tools/keys2doc', '@INPUT@', 'keymap-defaults.txt'])
+               command: [meson.current_source_dir() / 'tools/keys2doc', '@INPUT@', 'keymap-defaults.txt'])
 
 if not meson.is_cross_build()
     ELINKS = elinks
 else
-    ELINKS = meson.current_source_dir() + '/tools/' + meson.get_external_property('elinks_wrapper')
+    ELINKS = meson.current_source_dir() / 'tools' / meson.get_external_property('elinks_wrapper')
 endif
 
 option_command_frag_xml = custom_target('option-command.frag.xml',
@@ -71,14 +71,14 @@ option_command_frag_xml = custom_target('option-command.frag.xml',
                output: 'option-command.frag.xml',
                env: ['LC_ALL=C', 'LANGUAGE=en', 'ELINKS_BINARY='+elinks.full_path()],
                depends: elinks,
-               command: [meson.current_source_dir() + '/tools/help2xml', ELINKS, '@OUTPUT@'])
+               command: [meson.current_source_dir() / 'tools/help2xml', ELINKS, '@OUTPUT@'])
 
 option_config_frag_xml = custom_target('option-config.frag.xml',
                input: [],
                output: 'option-config.frag.xml',
                env: ['LC_ALL=C', 'LANGUAGE=en', 'ELINKS_BINARY='+elinks.full_path()],
                depends: elinks,
-               command: [meson.current_source_dir() + '/tools/help2xml', ELINKS, '@OUTPUT@'])
+               command: [meson.current_source_dir() / 'tools/help2xml', ELINKS, '@OUTPUT@'])
 
 option_command_frag_xhtml = custom_target('option-command.frag.xhtml',
                input: [],
@@ -87,14 +87,14 @@ option_command_frag_xhtml = custom_target('option-command.frag.xhtml',
                depends: elinks,
                install: true,
                install_dir: doc_dir,
-               command: [meson.current_source_dir() + '/tools/help2xml', ELINKS, '@OUTPUT@'])
+               command: [meson.current_source_dir() / 'tools/help2xml', ELINKS, '@OUTPUT@'])
 
 option_config_frag_xhtml = custom_target('option-config.frag.xhtml',
                input: [],
                output: 'option-config.frag.xhtml',
                env: ['LC_ALL=C', 'LANGUAGE=en', 'ELINKS_BINARY='+elinks.full_path()],
                depends: elinks,
-               command: [meson.current_source_dir() + '/tools/help2xml', ELINKS, '@OUTPUT@'])
+               command: [meson.current_source_dir() / 'tools/help2xml', ELINKS, '@OUTPUT@'])
 
 elinks_1_html = custom_target('elinks.1.html',
                 input: 'elinks.1.txt',
@@ -103,10 +103,10 @@ elinks_1_html = custom_target('elinks.1.html',
                 env: asciidoc_env,
                 install: true,
                 install_dir: doc_dir,
-                command: [meson.current_source_dir() + '/tools/asciidoc/asciidoc.py',
-                '--no-conf', '-f', meson.current_source_dir() + '/tools/asciidoc/asciidoc.conf',
-                '-f', meson.current_source_dir() + '/tools/asciidoc/xhtml11.conf',
-                '-f', meson.current_source_dir() + '/asciidoc.conf',
+                command: [meson.current_source_dir() / 'tools/asciidoc/asciidoc.py',
+                '--no-conf', '-f', meson.current_source_dir() / 'tools/asciidoc/asciidoc.conf',
+                '-f', meson.current_source_dir() / 'tools/asciidoc/xhtml11.conf',
+                '-f', meson.current_source_dir() / 'asciidoc.conf',
                 '-a', 'builddir='+meson.current_build_dir()+'/',
                 '-a', 'elinks_version='+meson.project_version(),
                 '-b', 'xhtml11',
@@ -117,10 +117,10 @@ elinks_conf_5_html = custom_target('elinks.conf.5.html',
                 output: 'elinks.conf.5.html',
                 depends: option_config_frag_xhtml,
                 env: asciidoc_env,
-                command: [meson.current_source_dir() + '/tools/asciidoc/asciidoc.py',
-                '--no-conf', '-f', meson.current_source_dir() + '/tools/asciidoc/asciidoc.conf',
-                '-f', meson.current_source_dir() + '/tools/asciidoc/xhtml11.conf',
-                '-f', meson.current_source_dir() + '/asciidoc.conf',
+                command: [meson.current_source_dir() / 'tools/asciidoc/asciidoc.py',
+                '--no-conf', '-f', meson.current_source_dir() / 'tools/asciidoc/asciidoc.conf',
+                '-f', meson.current_source_dir() / 'tools/asciidoc/xhtml11.conf',
+                '-f', meson.current_source_dir() / 'asciidoc.conf',
                 '-a', 'builddir='+meson.current_build_dir()+'/',
                 '-a', 'elinks_version='+meson.project_version(),
                 '-b', 'xhtml11',
@@ -133,10 +133,10 @@ elinkskeys_5_html = custom_target('elinkskeys.5.html',
                 env: asciidoc_env,
                 install: true,
                 install_dir: doc_dir,
-                command: [meson.current_source_dir() + '/tools/asciidoc/asciidoc.py',
-                '--no-conf', '-f', meson.current_source_dir() + '/tools/asciidoc/asciidoc.conf',
-                '-f', meson.current_source_dir() + '/tools/asciidoc/xhtml11.conf',
-                '-f', meson.current_source_dir() + '/asciidoc.conf',
+                command: [meson.current_source_dir() / 'tools/asciidoc/asciidoc.py',
+                '--no-conf', '-f', meson.current_source_dir() / 'tools/asciidoc/asciidoc.conf',
+                '-f', meson.current_source_dir() / 'tools/asciidoc/xhtml11.conf',
+                '-f', meson.current_source_dir() / 'asciidoc.conf',
                 '-a', 'builddir='+meson.current_build_dir()+'/',
                 '-a', 'elinks_version='+meson.project_version(),
                 '-b', 'xhtml11',
@@ -146,10 +146,10 @@ hacking_html = custom_target('hacking.html',
                 input: 'hacking.txt',
                 output: 'hacking.html',
                 env: asciidoc_env,
-                command: [meson.current_source_dir() + '/tools/asciidoc/asciidoc.py',
-                '--no-conf', '-f', meson.current_source_dir() + '/tools/asciidoc/asciidoc.conf',
-                '-f', meson.current_source_dir() + '/tools/asciidoc/xhtml11.conf',
-                '-f', meson.current_source_dir() + '/asciidoc.conf',
+                command: [meson.current_source_dir() / 'tools/asciidoc/asciidoc.py',
+                '--no-conf', '-f', meson.current_source_dir() / 'tools/asciidoc/asciidoc.conf',
+                '-f', meson.current_source_dir() / 'tools/asciidoc/xhtml11.conf',
+                '-f', meson.current_source_dir() / 'asciidoc.conf',
                 '-a', 'builddir='+meson.current_build_dir()+'/',
                 '-a', 'elinks_version='+meson.project_version(),
                 '-b', 'xhtml11',
@@ -162,10 +162,10 @@ manual_html = custom_target('manual.html',
                 env: asciidoc_env,
                 install: true,
                 install_dir: doc_dir,
-                command: [meson.current_source_dir() + '/tools/asciidoc/asciidoc.py',
-                '--no-conf', '-f', meson.current_source_dir() + '/tools/asciidoc/asciidoc.conf',
-                '-f', meson.current_source_dir() + '/tools/asciidoc/xhtml11.conf',
-                '-f', meson.current_source_dir() + '/asciidoc.conf',
+                command: [meson.current_source_dir() / 'tools/asciidoc/asciidoc.py',
+                '--no-conf', '-f', meson.current_source_dir() / 'tools/asciidoc/asciidoc.conf',
+                '-f', meson.current_source_dir() / 'tools/asciidoc/xhtml11.conf',
+                '-f', meson.current_source_dir() / 'asciidoc.conf',
                 '-a', 'builddir='+meson.current_build_dir()+'/',
                 '-a', 'elinks_version='+meson.project_version(),
                 '-b', 'xhtml11',
@@ -176,10 +176,10 @@ elinks_1_xml = custom_target('elinks.1.xml',
                 output: 'elinks.1.xml',
                 depends: option_command_frag_xml,
                 env: asciidoc_env,
-                command: [meson.current_source_dir() + '/tools/asciidoc/asciidoc.py',
-                '--no-conf', '-f', meson.current_source_dir() + '/tools/asciidoc/asciidoc.conf',
-                '-f', meson.current_source_dir() + '/tools/asciidoc/docbook.conf',
-                '-f', meson.current_source_dir() + '/asciidoc.conf',
+                command: [meson.current_source_dir() / 'tools/asciidoc/asciidoc.py',
+                '--no-conf', '-f', meson.current_source_dir() / 'tools/asciidoc/asciidoc.conf',
+                '-f', meson.current_source_dir() / 'tools/asciidoc/docbook.conf',
+                '-f', meson.current_source_dir() / 'asciidoc.conf',
                 '-a', 'builddir='+meson.current_build_dir()+'/',
                 '-a', 'elinks_version='+meson.project_version(),
                 '-b', 'docbook',
@@ -191,10 +191,10 @@ elinks_conf_5_xml = custom_target('elinks.conf.5.xml',
                 output: 'elinks.conf.5.xml',
                 depends: option_config_frag_xml,
                 env: asciidoc_env,
-                command: [meson.current_source_dir() + '/tools/asciidoc/asciidoc.py',
-                '--no-conf', '-f', meson.current_source_dir() + '/tools/asciidoc/asciidoc.conf',
-                '-f', meson.current_source_dir() + '/tools/asciidoc/docbook.conf',
-                '-f', meson.current_source_dir() + '/asciidoc.conf',
+                command: [meson.current_source_dir() / 'tools/asciidoc/asciidoc.py',
+                '--no-conf', '-f', meson.current_source_dir() / 'tools/asciidoc/asciidoc.conf',
+                '-f', meson.current_source_dir() / 'tools/asciidoc/docbook.conf',
+                '-f', meson.current_source_dir() / 'asciidoc.conf',
                 '-a', 'builddir='+meson.current_build_dir()+'/',
                 '-a', 'elinks_version='+meson.project_version(),
                 '-b', 'docbook',
@@ -206,10 +206,10 @@ elinkskeys_5_xml = custom_target('elinkskeys.5.xml',
                 output: 'elinkskeys.5.xml',
                 depends: [keymap_actions_txt, keymap_defaults_txt],
                 env: asciidoc_env,
-                command: [meson.current_source_dir() + '/tools/asciidoc/asciidoc.py',
-                '--no-conf', '-f', meson.current_source_dir() + '/tools/asciidoc/asciidoc.conf',
-                '-f', meson.current_source_dir() + '/tools/asciidoc/docbook.conf',
-                '-f', meson.current_source_dir() + '/asciidoc.conf',
+                command: [meson.current_source_dir() / 'tools/asciidoc/asciidoc.py',
+                '--no-conf', '-f', meson.current_source_dir() / 'tools/asciidoc/asciidoc.conf',
+                '-f', meson.current_source_dir() / 'tools/asciidoc/docbook.conf',
+                '-f', meson.current_source_dir() / 'asciidoc.conf',
                 '-a', 'builddir='+meson.current_build_dir()+'/',
                 '-a', 'elinks_version='+meson.project_version(),
                 '-b', 'docbook',
@@ -220,10 +220,10 @@ hacking_xml = custom_target('hacking.xml',
                 input: 'hacking.txt',
                 output: 'hacking.xml',
                 env: asciidoc_env,
-                command: [meson.current_source_dir() + '/tools/asciidoc/asciidoc.py',
-                '--no-conf', '-f', meson.current_source_dir() + '/tools/asciidoc/asciidoc.conf',
-                '-f', meson.current_source_dir() + '/tools/asciidoc/docbook.conf',
-                '-f', meson.current_source_dir() + '/asciidoc.conf',
+                command: [meson.current_source_dir() / 'tools/asciidoc/asciidoc.py',
+                '--no-conf', '-f', meson.current_source_dir() / 'tools/asciidoc/asciidoc.conf',
+                '-f', meson.current_source_dir() / 'tools/asciidoc/docbook.conf',
+                '-f', meson.current_source_dir() / 'asciidoc.conf',
                 '-a', 'builddir='+meson.current_build_dir()+'/',
                 '-a', 'elinks_version='+meson.project_version(),
                 '-b', 'docbook',
@@ -234,10 +234,10 @@ manual_xml = custom_target('manual.xml',
                 output: 'manual.xml',
                 depends: features_txt,
                 env: asciidoc_env,
-                command: [meson.current_source_dir() + '/tools/asciidoc/asciidoc.py',
-                '--no-conf', '-f', meson.current_source_dir() + '/tools/asciidoc/asciidoc.conf',
-                '-f', meson.current_source_dir() + '/tools/asciidoc/docbook.conf',
-                '-f', meson.current_source_dir() + '/asciidoc.conf',
+                command: [meson.current_source_dir() / 'tools/asciidoc/asciidoc.py',
+                '--no-conf', '-f', meson.current_source_dir() / 'tools/asciidoc/asciidoc.conf',
+                '-f', meson.current_source_dir() / 'tools/asciidoc/docbook.conf',
+                '-f', meson.current_source_dir() / 'asciidoc.conf',
                 '-a', 'builddir='+meson.current_build_dir()+'/',
                 '-a', 'elinks_version='+meson.project_version(),
                 '-b', 'docbook',
@@ -258,7 +258,7 @@ if xmlto.found() and get_option('htmldoc')
                 depends: elinks_1_xml,
                 install: true,
                 install_dir: man1_dir,
-                command: [xmlto, '-o', meson.current_build_dir(), 'man', meson.current_build_dir()+'/elinks.1.xml'])
+                command: [xmlto, '-o', meson.current_build_dir(), 'man', meson.current_build_dir() / 'elinks.1.xml'])
 
     elinks_conf_5 = custom_target('elinks.conf.5',
                 input: [],
@@ -266,7 +266,7 @@ if xmlto.found() and get_option('htmldoc')
                 depends: elinks_conf_5_xml,
                 install: true,
                 install_dir: man5_dir,
-                command: [xmlto, '-o', meson.current_build_dir(), 'man', meson.current_build_dir()+'/elinks.conf.5.xml'])
+                command: [xmlto, '-o', meson.current_build_dir(), 'man', meson.current_build_dir() / 'elinks.conf.5.xml'])
 
     elinkskeys_5 = custom_target('elinkskeys.5',
                 input: [],
@@ -274,7 +274,7 @@ if xmlto.found() and get_option('htmldoc')
                 depends: elinkskeys_5_xml,
                 install: true,
                 install_dir: man5_dir,
-                command: [xmlto, '-o', meson.current_build_dir(), 'man', meson.current_build_dir()+'/elinkskeys.5.xml'])
+                command: [xmlto, '-o', meson.current_build_dir(), 'man', meson.current_build_dir() / 'elinkskeys.5.xml'])
 
     manual_html_chunked = custom_target('manual.html-chunked',
                 input: [],
@@ -282,7 +282,7 @@ if xmlto.found() and get_option('htmldoc')
                 depends: manual_xml,
                 install: true,
                 install_dir: doc_dir,
-                command: [xmlto, '-o', meson.current_build_dir() + '/manual.html-chunked', 'html', meson.current_build_dir()+'/manual.xml'])
+                command: [xmlto, '-o', meson.current_build_dir() / 'manual.html-chunked', 'html', meson.current_build_dir() / 'manual.xml'])
 endif
 
 manual_pdf = []
@@ -294,7 +294,7 @@ if dblatex.found() and get_option('pdfdoc')
                 depends: manual_xml,
                 install: true,
                 install_dir: doc_dir,
-                command: [dblatex, meson.current_build_dir() + '/manual.xml'])
+                command: [dblatex, meson.current_build_dir() / 'manual.xml'])
 endif
 
 doxygen_api = []
@@ -305,7 +305,7 @@ if doxygen.found() and get_option('apidoc')
                 env: ['OUTPUT_DIRECTORY='+meson.current_build_dir()+'/'],
                 install: true,
                 install_dir: doc_dir,
-                command: [doxygen, meson.current_build_dir()+'/Doxyfile'])
+                command: [doxygen, meson.current_build_dir() / 'Doxyfile'])
 endif
 
 txt = alias_target('txt', elinks, features_txt, keymap_actions_txt, keymap_defaults_txt)
