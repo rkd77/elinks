@@ -12,6 +12,7 @@
 #include "document/document.h"
 #include "document/libdom/doc.h"
 #include "document/libdom/mapa.h"
+#include "document/libdom/renderer2.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/ecmascript-c.h"
@@ -292,6 +293,8 @@ check_for_snippets(struct view_state *vs, struct document_options *options, stru
 			process_snippets(vs->ecmascript,
 					 &vs->ecmascript->onload_snippets,
 					 &vs->ecmascript->current_onload_snippet);
+
+			fire_onload(document->dom);
 			check_for_rerender(vs->ecmascript, "process_snippets");
 		}
 	}

@@ -64,6 +64,9 @@
 #include "viewer/text/vs.h"
 
 #include <iostream>
+#include <map>
+
+static std::map<void *, bool> handler_privates;
 
 struct el_listener {
 	LIST_HEAD_EL(struct el_listener);
@@ -92,6 +95,12 @@ static void document_finalize(JS::GCContext *op, JSObject *obj)
 	struct document_private *doc_private = JS::GetMaybePtrFromReservedSlot<struct document_private>(obj, 1);
 
 	if (doc_private) {
+		auto h = handler_privates.find(doc_private);
+
+		if (h != handler_privates.end()) {
+			handler_privates.erase(h);
+		}
+
 		struct el_listener *l;
 
 		if (doc_private->listener) {
@@ -1391,9 +1400,19 @@ document_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		args.rval().setUndefined();
 		return true;
 	}
-
 	JS::RootedValue fun(ctx, args[1]);
+	struct el_listener *l;
 
+	foreach(l, doc_private->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+		if (l->fun == fun) {
+			mem_free(method);
+			args.rval().setUndefined();
+			return true;
+		}
+	}
 	struct el_listener *n = (struct el_listener *)mem_calloc(1, sizeof(*n));
 
 	if (!n) {
@@ -1414,6 +1433,7 @@ document_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			args.rval().setUndefined();
 			return true;
 		}
+		handler_privates[doc_private] = true;
 	}
 	dom_string *typ = NULL;
 	exc = dom_string_create(method, strlen(method), &typ);
@@ -1480,7 +1500,6 @@ document_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 	JS::RootedValue fun(ctx, args[1]);
-
 	struct  el_listener *l;
 
 	foreach(l, doc_private->listeners) {
@@ -1495,7 +1514,7 @@ document_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
 			}
-			dom_event_target_remove_event_listener(doc, typ, doc_private->listener, false);
+			//dom_event_target_remove_event_listener(doc, typ, doc_private->listener, false);
 			dom_string_unref(typ);
 
 			del_from_list(l);
@@ -1728,9 +1747,13 @@ document_event_handler(dom_event *event, void *pw)
 
 	JSAutoRealm ar(ctx, (JSObject *)interpreter->ac->get());
 	JS::RootedValue r_val(ctx);
-	interpreter->heartbeat = add_heartbeat(interpreter);
 
 	if (!event) {
+		return;
+	}
+	auto h = handler_privates.find(doc_private);
+
+	if (h == handler_privates.end()) {
 		return;
 	}
 	dom_string *typ = NULL;
@@ -1741,10 +1764,9 @@ document_event_handler(dom_event *event, void *pw)
 	}
 	JSObject *obj_ev = getEvent(ctx, event);
 	interpreter->heartbeat = add_heartbeat(interpreter);
+	struct el_listener *l, *next;
 
-	struct el_listener *l;
-
-	foreach(l, doc_private->listeners) {
+	foreachsafe(l, next, doc_private->listeners) {
 		if (strcmp(l->typ, dom_string_data(typ))) {
 			continue;
 		}
@@ -2328,7 +2350,6 @@ getDocument(JSContext *ctx, void *doc)
 	init_list(doc_private->listeners);
 	doc_private->ref_count = 1;
 	doc_private->doc = doc;
-
 	JSObject *el = JS_NewObject(ctx, &document_class);
 
 	if (!el) {
@@ -2368,7 +2389,6 @@ initDocument(JSContext *ctx, struct ecmascript_interpreter *interpreter, JSObjec
 
 	init_list(doc_private->listeners);
 	doc_private->ref_count = 1;
-
 	JS::SetReservedSlot(document_obj, 0, JS::PrivateValue(doc));
 	JS::SetReservedSlot(document_obj, 1, JS::PrivateValue(doc_private));
 

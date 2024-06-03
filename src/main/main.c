@@ -76,6 +76,10 @@ check_stdio(LIST_OF(struct string_list_item) *url_list)
 {
 	assert(!remote_session_flags);
 
+	if (program.testjs) {
+		return;
+	}
+
 	/* Should the document be read from stdin? */
 	if (!isatty(STDIN_FILENO)) {
 		/* Only start reading from stdin if no URL was given on the

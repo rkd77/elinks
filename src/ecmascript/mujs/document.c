@@ -915,7 +915,19 @@ mjs_document_addEventListener(js_State *J)
 	}
 	js_copy(J, 2);
 	const char *fun = js_ref(J);
+	struct el_listener *l;
 
+	foreach(l, doc_private->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+
+		if (l->fun == fun) {
+			mem_free(method);
+			js_pushundefined(J);
+			return;
+		}
+	}
 	struct el_listener *n = (struct el_listener *)mem_calloc(1, sizeof(*n));
 
 	if (!n) {
@@ -1003,7 +1015,7 @@ mjs_document_removeEventListener(js_State *J)
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
 			}
-			dom_event_target_remove_event_listener(doc, typ, doc_private->listener, false);
+			//dom_event_target_remove_event_listener(doc, typ, doc_private->listener, false);
 			dom_string_unref(typ);
 
 			js_unref(J, l->fun);
@@ -1713,9 +1725,9 @@ document_event_handler(dom_event *event, void *pw)
 	}
 //	interpreter->heartbeat = add_heartbeat(interpreter);
 
-	struct el_listener *l;
+	struct el_listener *l, *next;
 
-	foreach(l, doc_private->listeners) {
+	foreachsafe(l, next, doc_private->listeners) {
 		if (strcmp(l->typ, dom_string_data(typ))) {
 			continue;
 		}

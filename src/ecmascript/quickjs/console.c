@@ -21,6 +21,9 @@
 
 static JSClassID js_console_class_id;
 
+static int assertions;
+static int failed_assertions;
+
 static JSValue
 js_console_assert(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
@@ -33,11 +36,13 @@ js_console_assert(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst 
 		return JS_UNDEFINED;
 	}
 	bool res = JS_ToBool(ctx, argv[0]);
+	assertions++;
 
 	if (res) {
 		return JS_UNDEFINED;
 	}
 	FILE *log = fopen(console_error_filename, "a");
+	failed_assertions++;
 
 	if (!log) {
 		return JS_UNDEFINED;
@@ -123,7 +128,8 @@ js_console_exit(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *a
 	if (!program.testjs) {
 		return JS_UNDEFINED;
 	}
-	program.retval = JS_ToBool(ctx, argv[0]) ? RET_ERROR : RET_OK;
+	fprintf(stderr, "Assertions: %d, failed assertions: %d\n", assertions, failed_assertions);
+	program.retval = failed_assertions ? RET_ERROR : RET_OK;
 	program.terminate = 1;
 	return JS_UNDEFINED;
 }
@@ -143,7 +149,7 @@ static const JSCFunctionListEntry js_console_funcs[] = {
 	JS_CFUNC_DEF("assert", 2, js_console_assert),
 	JS_CFUNC_DEF("log", 1, js_console_log),
 	JS_CFUNC_DEF("error", 1, js_console_error),
-	JS_CFUNC_DEF("exit", 1, js_console_exit),
+	JS_CFUNC_DEF("exit", 0, js_console_exit),
 	JS_CFUNC_DEF("toString", 0, js_console_toString)
 };
 

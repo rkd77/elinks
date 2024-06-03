@@ -3873,7 +3873,18 @@ element_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 	char *method = jsval_to_string(ctx, args[0]);
 	JS::RootedValue fun(ctx, args[1]);
+	struct ele_listener *l;
 
+	foreach(l, el_private->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+		if (l->fun == fun) {
+			mem_free(method);
+			args.rval().setUndefined();
+			return true;
+		}
+	}
 	struct ele_listener *n = (struct ele_listener *)mem_calloc(1, sizeof(*n));
 
 	if (!n) {
@@ -3975,7 +3986,7 @@ element_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
 			}
-			dom_event_target_remove_event_listener(el, typ, el_private->listener, false);
+			//dom_event_target_remove_event_listener(el, typ, el_private->listener, false);
 			dom_string_unref(typ);
 
 			del_from_list(l);
@@ -5407,9 +5418,9 @@ element_event_handler(dom_event *event, void *pw)
 	JSObject *obj_ev = getEvent(ctx, event);
 	interpreter->heartbeat = add_heartbeat(interpreter);
 
-	struct ele_listener *l;
+	struct ele_listener *l, *next;
 
-	foreach(l, el_private->listeners) {
+	foreachsafe(l, next, el_private->listeners) {
 		if (strcmp(l->typ, dom_string_data(typ))) {
 			continue;
 		}

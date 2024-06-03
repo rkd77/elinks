@@ -1,0 +1,19 @@
+<html>
+<head>
+<!--<script src="jquery.js"></script>-->
+</head>
+<body>
+<div id="test">A</div>
+<script>
+function ff()
+{
+	document.removeEventListener("DOMContentLoaded", ff);
+	alert('Loaded');
+}
+document.addEventListener("DOMContentLoaded", ff);
+//$(document).ready(function(){
+//	alert('READY');
+//});
+</script>
+</body>
+</html>

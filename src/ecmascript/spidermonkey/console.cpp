@@ -63,9 +63,12 @@ const spidermonkeyFunctionSpec console_funcs[] = {
 	{ "assert",		console_assert,		2 },
 	{ "log",		console_log,	 	1 },
 	{ "error",		console_error,	 	1 },
-	{ "exit",		console_exit,	 	1 },
+	{ "exit",		console_exit,	 	0 },
 	{ NULL }
 };
+
+static int assertions;
+static int failed_assertions;
 
 static bool
 console_assert(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -76,11 +79,13 @@ console_assert(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (argc < 1 || !get_opt_bool("ecmascript.enable_console_log", NULL)) {
 		return true;
 	}
+	assertions++;
 	bool res = jsval_to_boolean(ctx, args[0]);
 
 	if (res) {
 		return true;
 	}
+	failed_assertions++;
 	FILE *log = fopen(console_error_filename, "a");
 
 	if (!log) {
@@ -161,7 +166,8 @@ console_exit(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!program.testjs) {
 		return true;
 	}
-	program.retval = args[0].toBoolean() ? RET_ERROR : RET_OK;
+	fprintf(stderr, "Assertions: %d, failed assertions: %d\n", assertions, failed_assertions);
+	program.retval = failed_assertions ? RET_ERROR : RET_OK;
 	program.terminate = 1;
 	return true;
 }

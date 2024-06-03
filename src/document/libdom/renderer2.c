@@ -604,6 +604,50 @@ dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
 	}
 }
 
+static bool
+fire_dom_event(dom_event *event, dom_node *target)
+{
+	dom_exception exc;
+	bool result;
+
+	exc = dom_event_target_dispatch_event(target, event, &result);
+	if (exc != DOM_NO_ERR) {
+		return false;
+	}
+
+	return result;
+}
+
+/* Copy from netsurf */
+int
+fire_generic_dom_event(void *t, void *tar, int bubbles, int cancelable)
+{
+	dom_string *typ = (dom_string *)t;
+	dom_node *target = (dom_node *)tar;
+	dom_exception exc;
+	dom_event *evt;
+	bool result;
+
+	exc = dom_event_create(&evt);
+	if (exc != DOM_NO_ERR) return false;
+	exc = dom_event_init(evt, typ, bubbles, cancelable);
+	if (exc != DOM_NO_ERR) {
+		dom_event_unref(evt);
+		return false;
+	}
+//	NSLOG(netsurf, INFO, "Dispatching '%*s' against %p",
+//	      (int)dom_string_length(type), dom_string_data(type), target);
+	result = fire_dom_event(evt, target);
+	dom_event_unref(evt);
+	return result;
+}
+
+int
+fire_onload(void *doc)
+{
+	return fire_generic_dom_event(corestring_dom_DOMContentLoaded, doc, false, false);
+}
+
 #if 0
 void
 walk2(struct document *document)

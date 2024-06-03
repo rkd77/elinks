@@ -988,9 +988,19 @@ js_document_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JS
 	if (!method) {
 		return JS_EXCEPTION;
 	}
-
 	JSValue fun = argv[1];
+	struct document_listener *l;
 
+	foreach(l, doc_private->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+
+		if (JS_VALUE_GET_PTR(l->fun) == JS_VALUE_GET_PTR(fun)) {
+			mem_free(method);
+			return JS_UNDEFINED;
+		}
+	}
 	struct document_listener *n = (struct document_listener *)mem_calloc(1, sizeof(*n));
 
 	if (!n) {
@@ -1107,7 +1117,7 @@ js_document_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc,
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
 			}
-			dom_event_target_remove_event_listener(doc, typ, doc_private->listener, false);
+			//dom_event_target_remove_event_listener(doc, typ, doc_private->listener, false);
 			dom_string_unref(typ);
 
 			del_from_list(l);
@@ -1897,9 +1907,9 @@ document_event_handler(dom_event *event, void *pw)
 	}
 //	interpreter->heartbeat = add_heartbeat(interpreter);
 
-	struct document_listener *l;
+	struct document_listener *l, *next;
 
-	foreach(l, doc_private->listeners) {
+	foreachsafe(l, next, doc_private->listeners) {
 		if (strcmp(l->typ, dom_string_data(typ))) {
 			continue;
 		}
