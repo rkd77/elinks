@@ -71,14 +71,14 @@ static std::map<void *, bool> handler_privates;
 struct el_listener {
 	LIST_HEAD_EL(struct el_listener);
 	char *typ;
-	JS::RootedValue fun;
+	JS::Heap<JS::Value> *fun;
 };
 
 struct document_private {
 	LIST_OF(struct el_listener) listeners;
 	struct ecmascript_interpreter *interpreter;
 	dom_document *doc;
-	JS::RootedObject thisval;
+	JS::Heap<JSObject *> thisval;
 	dom_event_listener *listener;
 	int ref_count;
 };
@@ -109,6 +109,7 @@ static void document_finalize(JS::GCContext *op, JSObject *obj)
 
 		foreach(l, doc_private->listeners) {
 			mem_free_set(&l->typ, NULL);
+			delete (l->fun);
 		}
 		free_list(doc_private->listeners);
 		mem_free(doc_private);
@@ -1407,7 +1408,7 @@ document_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		if (strcmp(l->typ, method)) {
 			continue;
 		}
-		if (l->fun == fun) {
+		if (*(l->fun) == fun) {
 			mem_free(method);
 			args.rval().setUndefined();
 			return true;
@@ -1419,7 +1420,7 @@ document_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		args.rval().setUndefined();
 		return false;
 	}
-	n->fun = fun;
+	n->fun = new JS::Heap<JS::Value>(fun);
 	n->typ = method;
 	add_to_list_end(doc_private->listeners, n);
 	dom_exception exc;
@@ -1506,7 +1507,7 @@ document_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		if (strcmp(l->typ, method)) {
 			continue;
 		}
-		if (l->fun == fun) {
+		if (*(l->fun) == fun) {
 
 			dom_string *typ = NULL;
 			dom_exception exc = dom_string_create(method, strlen(method), &typ);
@@ -1519,6 +1520,7 @@ document_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 			del_from_list(l);
 			mem_free_set(&l->typ, NULL);
+			delete (l->fun);
 			mem_free(l);
 			mem_free(method);
 			args.rval().setUndefined();
@@ -1770,14 +1772,12 @@ document_event_handler(dom_event *event, void *pw)
 		if (strcmp(l->typ, dom_string_data(typ))) {
 			continue;
 		}
-		JS::RootedValueVector argv(ctx);
-
-		if (!argv.resize(1)) {
-			return;
-		}
+		JS::RootedValueArray<1> argv(ctx);
 		argv[0].setObject(*obj_ev);
 		JS::RootedValue r_val(ctx);
-		JS_CallFunctionValue(ctx, doc_private->thisval, l->fun, argv, &r_val);
+		JS::RootedObject thisv(ctx, doc_private->thisval);
+		JS::RootedValue vfun(ctx, *(l->fun));
+		JS_CallFunctionValue(ctx, thisv, vfun, argv, &r_val);
 	}
 	done_heartbeat(interpreter->heartbeat);
 	check_for_rerender(interpreter, dom_string_data(typ));
