@@ -57,6 +57,7 @@
 static bool style_style(JSContext *ctx, unsigned int argc, JS::Value *vp, const char *property);
 static bool style_set_style(JSContext *ctx, unsigned int argc, JS::Value *vp, const char *property);
 static bool style_get_property_background(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool style_get_property_backgroundClip(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_get_property_backgroundColor(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_get_property_color(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_get_property_cssText(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -73,6 +74,7 @@ static bool style_get_property_top(JSContext *ctx, unsigned int argc, JS::Value 
 static bool style_get_property_whiteSpace(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 static bool style_set_property_background(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool style_set_property_backgroundClip(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_set_property_backgroundColor(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_set_property_color(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_set_property_cssText(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -115,6 +117,7 @@ JSClass style_class = {
 
 static JSPropertySpec style_props[] = {
 	JS_PSGS("background",	style_get_property_background, style_set_property_background, JSPROP_ENUMERATE),
+	JS_PSGS("backgroundClip",	style_get_property_backgroundClip, style_set_property_backgroundClip, JSPROP_ENUMERATE),
 	JS_PSGS("backgroundColor",	style_get_property_backgroundColor, style_set_property_backgroundColor, JSPROP_ENUMERATE),
 	JS_PSGS("color",	style_get_property_color, style_set_property_color, JSPROP_ENUMERATE),
 	JS_PSGS("cssText",	style_get_property_cssText, style_set_property_cssText, JSPROP_ENUMERATE),
@@ -139,6 +142,15 @@ style_get_property_background(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	return style_style(ctx, argc, vp, "background");
+}
+
+static bool
+style_get_property_backgroundClip(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return style_style(ctx, argc, vp, "background-clip");
 }
 
 static bool
@@ -268,6 +280,16 @@ style_set_property_background(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 static bool
+style_set_property_backgroundClip(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return style_set_style(ctx, argc, vp, "background-clip");
+}
+
+
+static bool
 style_set_property_backgroundColor(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -386,6 +408,7 @@ style_set_property_whiteSpace(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 const std::map<std::string, bool> good = {
 	{ "background",		true },
+	{ "background-clip",	true },
 	{ "background-color",	true },
 	{ "color",		true },
 	{ "display",		true },
