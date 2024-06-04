@@ -202,6 +202,15 @@ js_style_get_property_background(JSContext *ctx, JSValueConst this_val)
 }
 
 static JSValue
+js_style_get_property_backgroundClip(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return js_style(ctx, this_val, "background-clip");
+}
+
+static JSValue
 js_style_get_property_backgroundColor(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -325,6 +334,15 @@ js_style_set_property_background(JSContext *ctx, JSValueConst this_val, JSValue 
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	return js_set_style(ctx, this_val, val, "background");
+}
+
+static JSValue
+js_style_set_property_backgroundClip(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return js_set_style(ctx, this_val, val, "background-clip");
 }
 
 static JSValue
@@ -461,6 +479,7 @@ js_style_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst 
 
 static const JSCFunctionListEntry js_style_proto_funcs[] = {
 	JS_CGETSET_DEF("background", js_style_get_property_background, js_style_set_property_background),
+	JS_CGETSET_DEF("backgroundClip", js_style_get_property_backgroundClip, js_style_set_property_backgroundClip),
 	JS_CGETSET_DEF("backgroundColor", js_style_get_property_backgroundColor, js_style_set_property_backgroundColor),
 	JS_CGETSET_DEF("color", js_style_get_property_color, js_style_set_property_color),
 	JS_CGETSET_DEF("cssText", js_style_get_property_cssText, js_style_set_property_cssText),
