@@ -1,7 +1,7 @@
 tofail = [
 'console.assert.html',
 #'document.getElementsByClassName.html', // not implemented
-'document.getElementsByName.html',
+#'document.getElementsByName.html', // not implemented
 'document.head.html',
 'element.namedItem.html'
 ]

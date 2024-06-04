@@ -1713,7 +1713,7 @@ static const JSCFunctionListEntry js_document_proto_funcs[] = {
 	JS_CFUNC_DEF("replace",		2, js_document_replace),
 	JS_CFUNC_DEF("getElementById",	1, js_document_getElementById),
 //	JS_CFUNC_DEF("getElementsByClassName",	1, js_document_getElementsByClassName),
-	JS_CFUNC_DEF("getElementsByName",	1, js_document_getElementsByName),
+//	JS_CFUNC_DEF("getElementsByName",	1, js_document_getElementsByName),
 	JS_CFUNC_DEF("getElementsByTagName",	1, js_document_getElementsByTagName),
 	JS_CFUNC_DEF("querySelector",	1, js_document_querySelector),
 	JS_CFUNC_DEF("querySelectorAll",	1, js_document_querySelectorAll),

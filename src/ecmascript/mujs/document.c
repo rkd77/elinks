@@ -1511,7 +1511,7 @@ mjs_document_init(js_State *J)
 		addmethod(J, "replace",		mjs_document_replace, 2);
 		addmethod(J, "getElementById",	mjs_document_getElementById, 1);
 //		addmethod(J, "getElementsByClassName",	mjs_document_getElementsByClassName, 1);
-		addmethod(J, "getElementsByName",	mjs_document_getElementsByName, 1);
+//		addmethod(J, "getElementsByName",	mjs_document_getElementsByName, 1);
 		addmethod(J, "getElementsByTagName",	mjs_document_getElementsByTagName, 1);
 		addmethod(J, "querySelector",	mjs_document_querySelector, 1);
 		addmethod(J, "querySelectorAll",	mjs_document_querySelectorAll, 1);
@@ -1636,7 +1636,7 @@ mjs_push_document(js_State *J, void *doc)
 		addmethod(J, "replace",		mjs_document_replace, 2);
 		addmethod(J, "getElementById",	mjs_document_getElementById, 1);
 //		addmethod(J, "getElementsByClassName",	mjs_document_getElementsByClassName, 1);
-		addmethod(J, "getElementsByName",	mjs_document_getElementsByName, 1);
+//		addmethod(J, "getElementsByName",	mjs_document_getElementsByName, 1);
 		addmethod(J, "getElementsByTagName",	mjs_document_getElementsByTagName, 1);
 		addmethod(J, "querySelector",	mjs_document_querySelector, 1);
 		addmethod(J, "querySelectorAll",	mjs_document_querySelectorAll, 1);
