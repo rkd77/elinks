@@ -346,7 +346,7 @@ mjs_window_clearInterval(js_State *J)
 #endif
 	const char *text = js_tostring(J, 1);
 	int64_t number = atoll(text);
-	struct ecmascript_timeout *t = (struct ecmasctript_timeout *)(number);
+	struct ecmascript_timeout *t = (struct ecmascript_timeout *)(number);
 
 	if (t && found_in_map_timer(t->tid)) {
 		kill_timer(&t->tid);
@@ -365,7 +365,7 @@ mjs_window_clearTimeout(js_State *J)
 #endif
 	const char *text = js_tostring(J, 1);
 	int64_t number = atoll(text);
-	struct ecmascript_timeout *t = (struct ecmasctript_timeout *)(number);
+	struct ecmascript_timeout *t = (struct ecmascript_timeout *)(number);
 
 	if (t && found_in_map_timer(t->tid)) {
 		kill_timer(&t->tid);
