@@ -1196,7 +1196,7 @@ const spidermonkeyFunctionSpec document_funcs[] = {
 	{ "writeln",		document_writeln,	1 },
 	{ "replace",		document_replace,	2 },
 	{ "getElementById",	document_getElementById,	1 },
-	{ "getElementsByClassName",	document_getElementsByClassName,	1 },
+//	{ "getElementsByClassName",	document_getElementsByClassName,	1 },
 	{ "getElementsByName",	document_getElementsByName,	1 },
 	{ "getElementsByTagName",	document_getElementsByTagName,	1 },
 	{ "querySelector",	document_querySelector,	1 },
