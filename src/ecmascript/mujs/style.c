@@ -189,6 +189,15 @@ mjs_style_get_property_background(js_State *J)
 }
 
 static void
+mjs_style_get_property_backgroundClip(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	mjs_style(J, "background-clip");
+}
+
+static void
 mjs_style_get_property_backgroundColor(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -311,6 +320,15 @@ mjs_style_set_property_background(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	mjs_set_style(J, "background");
+}
+
+static void
+mjs_style_set_property_backgroundClip(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	mjs_set_style(J, "background-clip");
 }
 
 static void
@@ -451,6 +469,7 @@ mjs_push_style(js_State *J, void *node)
 		js_newuserdata(J, "style", node, mjs_style_finalizer);
 		addmethod(J, "toString", mjs_style_toString, 0);
 		addproperty(J, "background", mjs_style_get_property_background, mjs_style_set_property_background);
+		addproperty(J, "backgroundClip", mjs_style_get_property_backgroundClip, mjs_style_set_property_backgroundClip);
 		addproperty(J, "backgroundColor", mjs_style_get_property_backgroundColor, mjs_style_set_property_backgroundColor);
 		addproperty(J, "color", mjs_style_get_property_color, mjs_style_set_property_color);
 		addproperty(J, "cssText", mjs_style_get_property_cssText, mjs_style_set_property_cssText);
