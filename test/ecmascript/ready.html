@@ -8,7 +8,7 @@
 function ff()
 {
 	document.removeEventListener("DOMContentLoaded", ff);
-	alert('Loaded');
+	alert(document.readyState);
 }
 document.addEventListener("DOMContentLoaded", ff);
 //$(document).ready(function(){

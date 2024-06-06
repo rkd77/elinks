@@ -74,6 +74,12 @@ struct el_listener {
 	JS::Heap<JS::Value> *fun;
 };
 
+enum readyState {
+	LOADING = 0,
+	INTERACTIVE,
+	COMPLETE
+};
+
 struct document_private {
 	LIST_OF(struct el_listener) listeners;
 	struct ecmascript_interpreter *interpreter;
@@ -81,6 +87,7 @@ struct document_private {
 	JS::Heap<JSObject *> thisval;
 	dom_event_listener *listener;
 	int ref_count;
+	enum readyState state;
 };
 
 static JSObject *getDoctype(JSContext *ctx, void *node);
@@ -833,6 +840,44 @@ document_get_property_nodeType(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return true;
 }
 
+static bool
+document_get_property_readyState(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct document_private *doc_private = JS::GetMaybePtrFromReservedSlot<struct document_private>(hobj, 1);
+
+	if (!doc_private) {
+		args.rval().setNull();
+		return true;
+	}
+
+	switch (doc_private->state) {
+	case LOADING:
+		args.rval().setString(JS_NewStringCopyZ(ctx, "loading"));
+		break;
+	case INTERACTIVE:
+		args.rval().setString(JS_NewStringCopyZ(ctx, "interactive"));
+		break;
+	case COMPLETE:
+		args.rval().setString(JS_NewStringCopyZ(ctx, "complete"));
+		break;
+	}
+
+	return true;
+}
 
 static bool
 document_set_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -1161,6 +1206,7 @@ JSPropertySpec document_props[] = {
 	JS_PSG("links", document_get_property_links, JSPROP_ENUMERATE),
 	JS_PSGS("location",	document_get_property_location, document_set_property_location, JSPROP_ENUMERATE),
 	JS_PSG("nodeType", document_get_property_nodeType, JSPROP_ENUMERATE),
+	JS_PSG("readyState", document_get_property_readyState, JSPROP_ENUMERATE),
 	JS_PSG("referrer",	document_get_property_referrer, JSPROP_ENUMERATE),
 	JS_PSG("scripts",	document_get_property_scripts, JSPROP_ENUMERATE),
 	JS_PSGS("title",	document_get_property_title, document_set_property_title, JSPROP_ENUMERATE), /* TODO: Charset? */
@@ -1763,6 +1809,10 @@ document_event_handler(dom_event *event, void *pw)
 
 	if (exc != DOM_NO_ERR || !typ) {
 		return;
+	}
+
+	if (!strcmp("DOMContentLoaded", dom_string_data(typ))) {
+		doc_private->state = COMPLETE;
 	}
 	JSObject *obj_ev = getEvent(ctx, event);
 	interpreter->heartbeat = add_heartbeat(interpreter);
