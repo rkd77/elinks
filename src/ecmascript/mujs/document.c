@@ -70,6 +70,12 @@ struct el_listener {
 	const char *fun;
 };
 
+enum readyState {
+	LOADING = 0,
+	INTERACTIVE,
+	COMPLETE
+};
+
 struct mjs_document_private {
 	struct ecmascript_interpreter *interpreter;
 	const char *thisval;
@@ -77,6 +83,7 @@ struct mjs_document_private {
 	dom_event_listener *listener;
 	void *node;
 	int ref_count;
+	enum readyState state;
 };
 
 static void document_event_handler(dom_event *event, void *pw);
@@ -519,6 +526,31 @@ mjs_document_get_property_nodeType(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	js_pushnumber(J, 9);
+}
+
+static void
+mjs_document_get_property_readyState(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct mjs_document_private *doc_private = (struct mjs_document_private *)js_touserdata(J, 0, "document");
+
+	if (!doc_private) {
+		js_pushnull(J);
+		return;
+	}
+	switch (doc_private->state) {
+	case LOADING:
+		js_pushstring(J, "loading");
+		break;
+	case INTERACTIVE:
+		js_pushstring(J, "interactive");
+		break;
+	case COMPLETE:
+		js_pushstring(J, "complete");
+		break;
+	}
 }
 
 static void
@@ -1540,6 +1572,7 @@ mjs_document_init(js_State *J)
 		addproperty(J, "links", mjs_document_get_property_links, NULL);
 		addproperty(J, "nodeType", mjs_document_get_property_nodeType, NULL);
 		addproperty(J, "referrer", mjs_document_get_property_referrer, NULL);
+		addproperty(J, "readyState", mjs_document_get_property_readyState, NULL);
 		addproperty(J, "scripts", mjs_document_get_property_scripts, NULL);
 		addproperty(J, "title",	mjs_document_get_property_title, mjs_document_set_property_title); /* TODO: Charset? */
 		addproperty(J, "URL", mjs_document_get_property_url, mjs_document_set_property_url);
@@ -1664,6 +1697,7 @@ mjs_push_document(js_State *J, void *doc)
 		addproperty(J, "inputEncoding", mjs_document_get_property_charset, NULL);
 		addproperty(J, "links", mjs_document_get_property_links, NULL);
 		addproperty(J, "nodeType", mjs_document_get_property_nodeType, NULL);
+		addproperty(J, "readyState", mjs_document_get_property_readyState, NULL);
 		addproperty(J, "referrer", mjs_document_get_property_referrer, NULL);
 		addproperty(J, "scripts", mjs_document_get_property_scripts, NULL);
 		addproperty(J, "title",	mjs_document_get_property_title, mjs_document_set_property_title); /* TODO: Charset? */
@@ -1722,6 +1756,10 @@ document_event_handler(dom_event *event, void *pw)
 
 	if (exc != DOM_NO_ERR || !typ) {
 		return;
+	}
+
+	if (!strcmp("DOMContentLoaded", dom_string_data(typ))) {
+		doc_private->state = COMPLETE;
 	}
 //	interpreter->heartbeat = add_heartbeat(interpreter);
 
