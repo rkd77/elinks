@@ -50,12 +50,19 @@ struct document_listener {
 	JSValue fun;
 };
 
+enum readyState {
+	LOADING = 0,
+	INTERACTIVE,
+	COMPLETE
+};
+
 struct js_document_private {
 	LIST_OF(struct document_listener) listeners;
 	struct ecmascript_interpreter *interpreter;
 	JSValue thisval;
 	dom_event_listener *listener;
 	void *node;
+	enum readyState state;
 };
 
 static void document_event_handler(dom_event *event, void *pw);
@@ -574,6 +581,34 @@ js_document_set_property_location(JSContext *ctx, JSValueConst this_val, JSValue
 	JS_FreeCString(ctx, url);
 
 	return JS_UNDEFINED;
+}
+
+static JSValue
+js_document_get_property_readyState(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	struct js_document_private *doc_private = (struct js_document_private *)(JS_GetOpaque(this_val, js_document_class_id));
+
+	if (!doc_private) {
+		return JS_NULL;
+	}
+	JSValue r;
+
+	switch (doc_private->state) {
+	case LOADING:
+		r = JS_NewString(ctx, "loading");
+		break;
+	case INTERACTIVE:
+		r = JS_NewString(ctx, "interactive");
+		break;
+	case COMPLETE:
+		r = JS_NewString(ctx, "complete");
+		break;
+	}
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -1696,6 +1731,7 @@ static const JSCFunctionListEntry js_document_proto_funcs[] = {
 	JS_CGETSET_DEF("links", js_document_get_property_links, NULL),
 	JS_CGETSET_DEF("location",	js_document_get_property_location, js_document_set_property_location),
 	JS_CGETSET_DEF("nodeType", js_document_get_property_nodeType, NULL),
+	JS_CGETSET_DEF("readyState", js_document_get_property_readyState, NULL),
 	JS_CGETSET_DEF("referrer", js_document_get_property_referrer, NULL),
 	JS_CGETSET_DEF("scripts", js_document_get_property_scripts, NULL),
 	JS_CGETSET_DEF("title",	js_document_get_property_title, js_document_set_property_title), /* TODO: Charset? */
@@ -1904,6 +1940,10 @@ document_event_handler(dom_event *event, void *pw)
 
 	if (exc != DOM_NO_ERR || !typ) {
 		return;
+	}
+
+	if (!strcmp("DOMContentLoaded", dom_string_data(typ))) {
+		doc_private->state = COMPLETE;
 	}
 //	interpreter->heartbeat = add_heartbeat(interpreter);
 
