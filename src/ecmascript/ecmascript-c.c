@@ -69,29 +69,35 @@ ecmascript_protocol_handler(struct session *ses, struct uri *uri)
 	char *redirect_url, *redirect_abs_url;
 	struct uri *redirect_uri;
 
-	if (!doc_view) /* Blank initial document. TODO: Start at about:blank? */
+	if (!doc_view) {/* Blank initial document. TODO: Start at about:blank? */
 		return;
+	}
 	assert(doc_view->vs);
-	if (doc_view->vs->ecmascript_fragile)
+	if (doc_view->vs->ecmascript_fragile) {
 		ecmascript_reset_state(doc_view->vs);
-	if (!doc_view->vs->ecmascript)
+	}
+	if (!doc_view->vs->ecmascript) {
 		return;
+	}
 
 	redirect_url = ecmascript_eval_stringback(doc_view->vs->ecmascript,
 		&current_url);
-	if (!redirect_url)
+	if (!redirect_url) {
 		return;
+	}
 	/* XXX: This code snippet is duplicated over here,
 	 * location_set_property(), html_a() and who knows where else. */
 	redirect_abs_url = join_urls(doc_view->document->uri,
 	                             trim_chars(redirect_url, ' ', 0));
 	mem_free(redirect_url);
-	if (!redirect_abs_url)
+	if (!redirect_abs_url) {
 		return;
+	}
 	redirect_uri = get_uri(redirect_abs_url, URI_NONE);
 	mem_free(redirect_abs_url);
-	if (!redirect_uri)
+	if (!redirect_uri) {
 		return;
+	}
 
 	/* XXX: Is that safe to do at this point? --pasky */
 	goto_uri_frame(ses, redirect_uri, doc_view->name,
@@ -254,8 +260,10 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 void
 check_for_snippets(struct view_state *vs, struct document_options *options, struct document *document)
 {
-	if (!vs->ecmascript_fragile)
+	if (!vs->ecmascript_fragile) {
 		assert(vs->ecmascript);
+	}
+
 	if (!options->dump && !options->gradual_rerendering) {
 		/* We also reset the state if the underlying document changed
 		 * from the last time we did the snippets. This may be
@@ -274,14 +282,13 @@ check_for_snippets(struct view_state *vs, struct document_options *options, stru
 		 * other tab when we press ^L here? */
 		if (vs->ecmascript_fragile
 		    || (vs->ecmascript
-		       && vs->ecmascript->onload_snippets_cache_id
-		       && document->cache_id != vs->ecmascript->onload_snippets_cache_id))
+		       && vs->ecmascript->onload_snippets_cache_id)) {
 			ecmascript_reset_state(vs);
+		}
 		/* If ecmascript_reset_state cannot construct a new
 		 * ECMAScript interpreter, it sets vs->ecmascript =
 		 * NULL and vs->ecmascript_fragile = 1.  */
 		if (vs->ecmascript) {
-			vs->ecmascript->onload_snippets_cache_id = document->cache_id;
 
 			/* Passing of the onload_snippets pointers
 			 * gives *_snippets() some feeling of
@@ -296,6 +303,8 @@ check_for_snippets(struct view_state *vs, struct document_options *options, stru
 
 			fire_onload(document->dom);
 			check_for_rerender(vs->ecmascript, "process_snippets");
+
+			vs->ecmascript->onload_snippets_cache_id = 0;
 		}
 	}
 }
@@ -381,18 +390,22 @@ ecmascript_reset_state(struct view_state *vs)
 	 * ecmascript_obj pointers are also NULL.  However, they might
 	 * be non-NULL if the ECMAScript objects have been lazily
 	 * created because of scripts running in sibling HTML frames.  */
-	foreach (fv, vs->forms)
+	foreach (fv, vs->forms) {
 		ecmascript_detach_form_view(fv);
-	for (i = 0; i < vs->form_info_len; i++)
+	}
+	for (i = 0; i < vs->form_info_len; i++) {
 		ecmascript_detach_form_state(&vs->form_info[i]);
+	}
 
 	vs->ecmascript_fragile = 0;
-	if (vs->ecmascript)
+	if (vs->ecmascript) {
 		ecmascript_put_interpreter(vs->ecmascript);
+	}
 
 	vs->ecmascript = ecmascript_get_interpreter(vs);
-	if (!vs->ecmascript)
+	if (!vs->ecmascript) {
 		vs->ecmascript_fragile = 1;
+	}
 }
 
 int

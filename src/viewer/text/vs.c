@@ -69,8 +69,9 @@ destroy_vs(struct view_state *vs, int blast_ecmascript)
 	
 	if (vs->uri) done_uri(vs->uri);
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
-	if (blast_ecmascript && vs->ecmascript)
+	if (blast_ecmascript && vs->ecmascript) {
 		ecmascript_put_interpreter(vs->ecmascript);
+	}
 #endif
 	if (vs->doc_view) {
 		vs->doc_view->vs = NULL;

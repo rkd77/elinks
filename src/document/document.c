@@ -471,10 +471,12 @@ release_document(struct document *document)
 	assert(document);
 	if_assert_failed return;
 
-	if (document->refresh) kill_document_refresh(document->refresh);
+	if (document->refresh) {
+		kill_document_refresh(document->refresh);
+	}
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
-	kill_ecmascript_timeouts(document);
-	free_list(document->timeouts);
+//	kill_ecmascript_timeouts(document);
+//	free_list(document->timeouts);
 #endif
 	object_unlock(document);
 	move_document_to_top_of_format_cache(document);
@@ -569,8 +571,8 @@ get_cached_document(struct cache_entry *cached, struct document_options *options
 		    || compare_opt(&document->options, options))
 			continue;
 
-		if (options->no_cache
-		    || cached->cache_id != document->cache_id
+		if (
+		    cached->cache_id != document->cache_id
 		    || !check_document_css_magic(document)) {
 			if (!is_object_used(document)) {
 				add_to_document_list(&to_remove, document);

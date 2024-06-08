@@ -534,7 +534,6 @@ dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
 		return;
 	}
 	doc = document->dom;
-
 	in_script = 0;
 	/* Get root element */
 	exc = dom_document_get_document_element(doc, &root);

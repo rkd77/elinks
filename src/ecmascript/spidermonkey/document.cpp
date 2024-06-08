@@ -1302,6 +1302,7 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 			}
 			interpreter->changed = 1;
 			interpreter->was_write = 1;
+			interpreter->onload_snippets_cache_id = 1;
 			debug_dump_xhtml(document->dom);
 		}
 	}
@@ -1812,6 +1813,10 @@ document_event_handler(dom_event *event, void *pw)
 	}
 
 	if (!strcmp("DOMContentLoaded", dom_string_data(typ))) {
+		if (doc_private->state == COMPLETE) {
+			dom_string_unref(typ);
+			return;
+		}
 		doc_private->state = COMPLETE;
 	}
 	JSObject *obj_ev = getEvent(ctx, event);
