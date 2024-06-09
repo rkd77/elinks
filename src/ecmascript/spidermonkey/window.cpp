@@ -639,12 +639,17 @@ window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	char *code;
 	int timeout;
 
-	if (argc != 2)
+	if (argc < 1) {
 		return true;
+	}
 
-	timeout = args[1].toInt32();
+	if (argc > 1) {
+		timeout = args[1].toInt32();
+	} else {
+		timeout = 0;
+	}
 
-	if (timeout <= 0) {
+	if (timeout < 0) {
 		return true;
 	}
 
