@@ -69,6 +69,7 @@ took = [
 'keyboardEvent.html',
 'navigator.appCodeName.html',
 'nodelist.forEach.html',
+'window.setTimeout.html',
 'URL.html']
 
 if conf_data.get('CONFIG_ECMASCRIPT')
