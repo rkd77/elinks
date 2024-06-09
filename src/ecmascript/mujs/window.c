@@ -568,7 +568,7 @@ mjs_window_setTimeout(js_State *J)
 #endif
 	int timeout = js_toint32(J, 2);
 
-	if (timeout <= 0) {
+	if (timeout < 0) {
 		js_pushundefined(J);
 		return;
 	}
