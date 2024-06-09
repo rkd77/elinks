@@ -310,15 +310,17 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 	int64_t timeout = 0;
 	JSValueConst func;
 
-	if (argc != 2) {
+	if (argc < 1) {
 		return JS_UNDEFINED;
 	}
 
-	if (JS_ToInt64(ctx, &timeout, argv[1])) {
-		return JS_EXCEPTION;
+	if (argc > 1) {
+		if (JS_ToInt64(ctx, &timeout, argv[1])) {
+			return JS_EXCEPTION;
+		}
 	}
 
-	if (timeout <= 0) {
+	if (timeout < 0) {
 		return JS_UNDEFINED;
 	}
 
