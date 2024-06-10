@@ -133,7 +133,7 @@ hooks_module_exists(void)
 	int found_hooks = 0;
 
 	/*
-	 * Use the find_module() function in Python's imp module to look for
+	 * Use the find_spec() function in Python's importlib.util module to look for
 	 * the hooks module in Python's search path. An ImportError exception
 	 * indicates that no such module was found; any other exception will
 	 * be reported as an error.
