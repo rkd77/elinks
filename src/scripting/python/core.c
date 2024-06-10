@@ -138,10 +138,10 @@ hooks_module_exists(void)
 	 * indicates that no such module was found; any other exception will
 	 * be reported as an error.
 	 */
-	imp_module = PyImport_ImportModule("imp");
+	imp_module = PyImport_ImportModule("importlib.util");
 	if (!imp_module) goto python_error;
 
-	result = PyObject_CallMethod(imp_module, "find_module", "s", "hooks");
+	result = PyObject_CallMethod(imp_module, "find_spec", "s", "hooks");
 	if (result) {
 		found_hooks = 1;
 		goto end;
