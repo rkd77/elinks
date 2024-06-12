@@ -70,7 +70,9 @@ took = [
 'navigator.appCodeName.html',
 'nodelist.forEach.html',
 'window.setTimeout.html',
-'URL.html']
+'URL.html',
+'URLSearchParams.html'
+]
 
 if conf_data.get('CONFIG_ECMASCRIPT')
     foreach t: tofail
