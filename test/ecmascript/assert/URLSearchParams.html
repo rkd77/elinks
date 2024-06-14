@@ -1,6 +1,9 @@
 <script>
 console.error("URLSearchParams.html");
 
+var empty = new URLSearchParams('');
+console.assert(empty.size === 0, 'empty');
+
 var param = new URLSearchParams('?foo=1&bar=2&cc=3');
 console.assert(param.size === 3, 'size is 3');
 console.assert(param.has('foo'), 'foo');

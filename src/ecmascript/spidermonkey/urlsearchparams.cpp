@@ -103,6 +103,10 @@ JSClass urlSearchParams_class = {
 static void
 parse_text(JSContext *ctx, JS::HandleObject obj, char *str)
 {
+	if (!str || !*str) {
+		return;
+	}
+
 	char *kvpairs[1024];
 	int i = qs_parse(str, kvpairs, 1024);
 	int j;
