@@ -1,10 +1,12 @@
 <script>
 console.error("URLSearchParams.html");
-var param = new URLSearchParams('?foo=1&bar=2');
-console.assert(param.size === 2, 'size is 2');
+
+var param = new URLSearchParams('?foo=1&bar=2&cc=3');
+console.assert(param.size === 3, 'size is 3');
 console.assert(param.has('foo'), 'foo');
+console.assert(param.has('cc'), 'cc');
 console.assert(param.has('bar', '2'), 'bar=2');
 console.assert(param.get('bar') === '2', 'bar = 2');
-console.assert(param.toString() === 'foo=1&bar=2', 'without ?');
+console.assert(param.toString() === 'foo=1&bar=2&cc=3', 'without ?');
 console.exit();
 </script>

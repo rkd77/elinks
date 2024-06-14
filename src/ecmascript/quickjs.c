@@ -41,6 +41,7 @@
 #include "ecmascript/quickjs/screen.h"
 #include "ecmascript/quickjs/unibar.h"
 #include "ecmascript/quickjs/url.h"
+#include "ecmascript/quickjs/urlsearchparams.h"
 #include "ecmascript/quickjs/window.h"
 #include "ecmascript/quickjs/xhr.h"
 #include "intl/libintl.h"
@@ -187,6 +188,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	js_messageEvent_init(ctx);
 	js_customEvent_init(ctx);
 	js_url_init(ctx);
+	js_urlSearchParams_init(ctx);
 
 	interpreter->document_obj = getDocument(ctx, document->dom);
 
