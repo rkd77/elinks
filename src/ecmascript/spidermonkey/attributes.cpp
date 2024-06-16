@@ -62,12 +62,14 @@ static void attributes_finalize(JS::GCContext *op, JSObject *obj)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+
+#if 0
 	dom_namednodemap *attrs = (dom_namednodemap *)JS::GetMaybePtrFromReservedSlot<dom_namednodemap>(obj, 0);
 
 	if (attrs) {
 		dom_namednodemap_unref(attrs);
 	}
-
+#endif
 }
 
 JSClassOps attributes_ops = {
