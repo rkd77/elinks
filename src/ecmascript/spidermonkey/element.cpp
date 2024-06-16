@@ -3741,7 +3741,7 @@ static bool element_dispatchEvent(JSContext *ctx, unsigned int argc, JS::Value *
 static bool element_focus(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_getAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool element_getBoundingRect(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool element_getBoundingClientRect(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -3770,7 +3770,7 @@ const spidermonkeyFunctionSpec element_funcs[] = {
 	{ "focus",	element_focus,		0 },
 	{ "getAttribute",	element_getAttribute,	1 },
 	{ "getAttributeNode",	element_getAttributeNode,	1 },
-	{ "getBoundingRect",	element_getBoundingRect, 	0 },
+	{ "getBoundingClientRect",	element_getBoundingClientRect, 	0 },
 	{ "getElementsByTagName",	element_getElementsByTagName,	1 },
 	{ "hasAttribute",		element_hasAttribute,	1 },
 	{ "hasAttributes",		element_hasAttributes,	0 },
@@ -4532,7 +4532,7 @@ element_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 }
 
 static bool
-element_getBoundingRect(JSContext *ctx, unsigned int argc, JS::Value *rval)
+element_getBoundingClientRect(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);

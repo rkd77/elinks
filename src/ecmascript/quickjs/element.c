@@ -29,6 +29,7 @@
 #include "ecmascript/quickjs/attr.h"
 #include "ecmascript/quickjs/attributes.h"
 #include "ecmascript/quickjs/collection.h"
+#include "ecmascript/quickjs/domrect.h"
 #include "ecmascript/quickjs/element.h"
 #include "ecmascript/quickjs/event.h"
 #include "ecmascript/quickjs/heartbeat.h"
@@ -2745,6 +2746,19 @@ js_element_getAttributeNode(JSContext *ctx, JSValueConst this_val, int argc, JSV
 }
 
 static JSValue
+js_element_getBoundingClientRect(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	JSValue rect = getDomRect(ctx);
+
+	RETURN_JS(rect);
+}
+
+static JSValue
 js_element_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -3357,6 +3371,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CFUNC_DEF("focus",		0, js_element_focus),
 	JS_CFUNC_DEF("getAttribute",	1,	js_element_getAttribute),
 	JS_CFUNC_DEF("getAttributeNode",1,	js_element_getAttributeNode),
+	JS_CFUNC_DEF("getBoundingClientRect",	0,	js_element_getBoundingClientRect),
 	JS_CFUNC_DEF("getElementsByTagName", 1,	js_element_getElementsByTagName),
 	JS_CFUNC_DEF("hasAttribute",	1,	js_element_hasAttribute),
 	JS_CFUNC_DEF("hasAttributes",	0,	js_element_hasAttributes),

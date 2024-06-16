@@ -55,14 +55,14 @@ static bool domRect_set_property_bottom(JSContext *ctx, unsigned int argc, JS::V
 static bool domRect_set_property_left(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 struct eljs_domrect {
-	float x;
-	float y;
-	float width;
-	float height;
-	float top;
-	float right;
-	float bottom;
-	float left;
+	double x;
+	double y;
+	double width;
+	double height;
+	double top;
+	double right;
+	double bottom;
+	double left;
 };
 
 static void
