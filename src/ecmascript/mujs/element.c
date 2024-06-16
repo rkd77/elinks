@@ -36,6 +36,7 @@
 #include "ecmascript/mujs/attributes.h"
 #include "ecmascript/mujs/collection.h"
 #include "ecmascript/mujs/document.h"
+#include "ecmascript/mujs/domrect.h"
 #include "ecmascript/mujs/element.h"
 #include "ecmascript/mujs/event.h"
 #include "ecmascript/mujs/keyboard.h"
@@ -2658,6 +2659,21 @@ mjs_element_getAttributeNode(js_State *J)
 }
 
 static void
+mjs_element_getBoundingClientRect(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+
+	if (!el) {
+		js_pushundefined(J);
+		return;
+	}
+	mjs_push_domRect(J);
+}
+
+static void
 mjs_element_getElementsByTagName(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -3186,6 +3202,7 @@ mjs_push_element(js_State *J, void *node)
 		addmethod(J, "focus",		mjs_element_focus, 0);
 		addmethod(J, "getAttribute",	mjs_element_getAttribute, 1);
 		addmethod(J, "getAttributeNode",	mjs_element_getAttributeNode, 1);
+		addmethod(J, "getBoundingClientRect",	mjs_element_getBoundingClientRect, 0);
 		addmethod(J, "getElementsByTagName",	mjs_element_getElementsByTagName, 1);
 		addmethod(J, "hasAttribute",	mjs_element_hasAttribute, 1);
 		addmethod(J, "hasAttributes",	mjs_element_hasAttributes, 0);
