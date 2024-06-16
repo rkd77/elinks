@@ -59,6 +59,17 @@ js_CSSStyleDeclaration_get_property_length(JSContext *ctx, JSValueConst this_val
 }
 
 static JSValue
+js_CSSStyleDeclaration_getPropertyValue(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	return JS_UNDEFINED;
+}
+
+static JSValue
 js_CSSStyleDeclaration_item2(JSContext *ctx, JSValueConst this_val, int idx)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -133,6 +144,7 @@ js_CSSStyleDeclaration_toString(JSContext *ctx, JSValueConst this_val, int argc,
 
 static const JSCFunctionListEntry js_CSSStyleDeclaration_proto_funcs[] = {
 	JS_CGETSET_DEF("length", js_CSSStyleDeclaration_get_property_length, NULL),
+	JS_CFUNC_DEF("getPropertyValue", 1, js_CSSStyleDeclaration_getPropertyValue),
 	JS_CFUNC_DEF("item", 1, js_CSSStyleDeclaration_item),
 	JS_CFUNC_DEF("namedItem", 1, js_CSSStyleDeclaration_namedItem),
 	JS_CFUNC_DEF("toString", 0, js_CSSStyleDeclaration_toString)

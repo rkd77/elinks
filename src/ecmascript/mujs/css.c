@@ -41,6 +41,15 @@ mjs_push_CSSStyleDeclaration_item2(js_State *J, int idx)
 }
 
 static void
+mjs_CSSStyleDeclaration_getPropertyValue(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	js_pushundefined(J); // fake
+}
+
+static void
 mjs_CSSStyleDeclaration_item(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -104,6 +113,7 @@ mjs_push_CSSStyleDeclaration(js_State *J, void *node)
 	js_newarray(J);
 	{
 		js_newuserdata(J, "CSSStyleDeclaration", node, mjs_CSSStyleDeclaration_finalizer);
+		addmethod(J, "getPropertyValue", mjs_CSSStyleDeclaration_getPropertyValue, 1);
 		addmethod(J, "item", mjs_CSSStyleDeclaration_item, 1);
 		addmethod(J, "namedItem", mjs_CSSStyleDeclaration_namedItem, 1);
 		addmethod(J, "toString", mjs_CSSStyleDeclaration_toString, 0);

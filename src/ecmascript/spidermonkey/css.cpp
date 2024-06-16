@@ -54,6 +54,7 @@
 
 
 static bool CSSStyleDeclaration_item(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool CSSStyleDeclaration_getPropertyValue(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool CSSStyleDeclaration_namedItem(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool CSSStyleDeclaration_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
 static bool CSSStyleDeclaration_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::MutableHandleValue hvp);
@@ -85,6 +86,7 @@ JSClass CSSStyleDeclaration_class = {
 };
 
 static const spidermonkeyFunctionSpec CSSStyleDeclaration_funcs[] = {
+	{ "getPropertyValue",	CSSStyleDeclaration_getPropertyValue,		1 },
 	{ "item",		CSSStyleDeclaration_item,		1 },
 	{ "namedItem",		CSSStyleDeclaration_namedItem,	1 },
 	{ NULL }
@@ -121,6 +123,18 @@ CSSStyleDeclaration_get_property_length(JSContext *ctx, unsigned int argc, JS::V
 }
 
 static bool
+CSSStyleDeclaration_getPropertyValue(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	args.rval().setUndefined();
+
+	return true;
+}
+
+static bool
 CSSStyleDeclaration_item(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -137,6 +151,7 @@ CSSStyleDeclaration_item(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return ret;
 }
+
 
 static bool
 CSSStyleDeclaration_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
