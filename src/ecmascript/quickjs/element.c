@@ -92,13 +92,16 @@ js_element_get_property_attributes(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	exc = dom_node_get_attributes(el, &attrs);
 
 	if (exc != DOM_NO_ERR || !attrs) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 	JSValue rr = getAttributes(ctx, attrs);
 	JS_FreeValue(ctx, rr);
+	dom_node_unref(el);
 
 	RETURN_JS(rr);
 }
@@ -135,14 +138,18 @@ js_element_get_property_checked(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_UNDEFINED;
 	}
+	dom_node_ref(el);
+
 	offset = find_offset(doc->element_map_rev, el);
 
 	if (offset < 0) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	linknum = get_link_number_by_offset(doc, offset);
 
 	if (linknum < 0) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 
@@ -150,6 +157,7 @@ js_element_get_property_checked(JSContext *ctx, JSValueConst this_val)
 	fc = get_link_form_control(link);
 
 	if (!fc) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	fs = find_form_state(doc_view, fc);
@@ -158,8 +166,10 @@ js_element_get_property_checked(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
+		dom_node_unref(el);
 		return JS_NULL; /* detached */
 	}
+	dom_node_unref(el);
 
 	return JS_NewBool(ctx, fs->state);
 }
@@ -196,14 +206,18 @@ js_element_set_property_checked(JSContext *ctx, JSValueConst this_val, JSValue v
 	if (!el) {
 		return JS_UNDEFINED;
 	}
+	dom_node_ref(el);
+
 	offset = find_offset(doc->element_map_rev, el);
 
 	if (offset < 0) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	linknum = get_link_number_by_offset(doc, offset);
 
 	if (linknum < 0) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 
@@ -211,18 +225,22 @@ js_element_set_property_checked(JSContext *ctx, JSValueConst this_val, JSValue v
 	fc = get_link_form_control(link);
 
 	if (!fc) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	fs = find_form_state(doc_view, fc);
 
 	if (!fs) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 
 	if (fc->type != FC_CHECKBOX && fc->type != FC_RADIO) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	fs->state = JS_ToBool(ctx, val);
+	dom_node_unref(el);
 
 	return JS_UNDEFINED;
 }
@@ -242,12 +260,15 @@ js_element_get_property_children(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	exc = dom_node_get_child_nodes(el, &nodes);
 
 	if (exc != DOM_NO_ERR || !nodes) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 	JSValue rr = getNodeList(ctx, nodes);
+	dom_node_unref(el);
 
 	RETURN_JS(rr);
 }
@@ -268,13 +289,16 @@ js_element_get_property_childElementCount(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	exc = dom_node_get_child_nodes(el, &nodes);
 
 	if (exc != DOM_NO_ERR || !nodes) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 	exc = dom_nodelist_get_length(nodes, &res);
 	dom_nodelist_unref(nodes);
+	dom_node_unref(el);
 
 	return JS_NewUint32(ctx, res);
 }
@@ -294,12 +318,15 @@ js_element_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	exc = dom_node_get_child_nodes(el, &nodes);
 
 	if (exc != DOM_NO_ERR || !nodes) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 	JSValue rr = getNodeList(ctx, nodes);
+	dom_node_unref(el);
 
 	RETURN_JS(rr);
 }
@@ -320,9 +347,11 @@ js_element_get_property_className(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	exc = dom_element_get_attribute(el, corestring_dom_class, &classstr);
 
 	if (exc != DOM_NO_ERR) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 	if (!classstr) {
@@ -331,6 +360,8 @@ js_element_get_property_className(JSContext *ctx, JSValueConst this_val)
 		r = JS_NewStringLen(ctx, dom_string_data(classstr), dom_string_length(classstr));
 		dom_string_unref(classstr);
 	}
+	dom_node_unref(el);
+
 	RETURN_JS(r);
 }
 
@@ -482,9 +513,11 @@ js_element_get_property_dir(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	exc = dom_element_get_attribute(el, corestring_dom_dir, &dir);
 
 	if (exc != DOM_NO_ERR) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 	if (!dir) {
@@ -497,6 +530,8 @@ js_element_get_property_dir(JSContext *ctx, JSValueConst this_val)
 		}
 		dom_string_unref(dir);
 	}
+	dom_node_unref(el);
+
 	RETURN_JS(r);
 }
 
@@ -515,11 +550,14 @@ js_element_get_property_firstChild(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	exc = dom_node_get_first_child(el, &node);
 
 	if (exc != DOM_NO_ERR || !node) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
+	dom_node_unref(el);
 
 	return getElement(ctx, node);
 }
@@ -541,15 +579,18 @@ js_element_get_property_firstElementChild(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	exc = dom_node_get_child_nodes(el, &nodes);
 
 	if (exc != DOM_NO_ERR || !nodes) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 	exc = dom_nodelist_get_length(nodes, &size);
 
 	if (exc != DOM_NO_ERR || !size) {
 		dom_nodelist_unref(nodes);
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 
@@ -566,11 +607,13 @@ js_element_get_property_firstElementChild(JSContext *ctx, JSValueConst this_val)
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
 			dom_nodelist_unref(nodes);
+			dom_node_unref(el);
 			return getElement(ctx, child);
 		}
 		dom_node_unref(child);
 	}
 	dom_nodelist_unref(nodes);
+	dom_node_unref(el);
 
 	return JS_NULL;
 }
@@ -591,9 +634,11 @@ js_element_get_property_id(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	exc = dom_element_get_attribute(el, corestring_dom_id, &id);
 
 	if (exc != DOM_NO_ERR) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 	if (!id) {
@@ -602,6 +647,8 @@ js_element_get_property_id(JSContext *ctx, JSValueConst this_val)
 		r = JS_NewStringLen(ctx, dom_string_data(id), dom_string_length(id));
 		dom_string_unref(id);
 	}
+	dom_node_unref(el);
+
 	RETURN_JS(r);
 }
 
@@ -621,9 +668,11 @@ js_element_get_property_lang(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	exc = dom_element_get_attribute(el, corestring_dom_lang, &lang);
 
 	if (exc != DOM_NO_ERR) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 	if (!lang) {
@@ -632,6 +681,8 @@ js_element_get_property_lang(JSContext *ctx, JSValueConst this_val)
 		r = JS_NewStringLen(ctx, dom_string_data(lang), dom_string_length(lang));
 		dom_string_unref(lang);
 	}
+	dom_node_unref(el);
+
 	RETURN_JS(r);
 }
 
@@ -650,11 +701,14 @@ js_element_get_property_lastChild(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	exc = dom_node_get_last_child(el, &last_child);
 
 	if (exc != DOM_NO_ERR || !last_child) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
+	dom_node_unref(el);
 
 	return getElement(ctx, last_child);
 }
@@ -676,15 +730,18 @@ js_element_get_property_lastElementChild(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	exc = dom_node_get_child_nodes(el, &nodes);
 
 	if (exc != DOM_NO_ERR || !nodes) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 	exc = dom_nodelist_get_length(nodes, &size);
 
 	if (exc != DOM_NO_ERR || !size) {
 		dom_nodelist_unref(nodes);
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 
@@ -700,11 +757,13 @@ js_element_get_property_lastElementChild(JSContext *ctx, JSValueConst this_val)
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
 			dom_nodelist_unref(nodes);
+			dom_node_unref(el);
 			return getElement(ctx, child);
 		}
 		dom_node_unref(child);
 	}
 	dom_nodelist_unref(nodes);
+	dom_node_unref(el);
 
 	return JS_NULL;
 }
@@ -724,6 +783,7 @@ js_element_get_property_nextElementSibling(JSContext *ctx, JSValueConst this_val
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	node = el;
 
 	while (true) {
@@ -741,6 +801,7 @@ js_element_get_property_nextElementSibling(JSContext *ctx, JSValueConst this_val
 		exc = dom_node_get_node_type(next, &type);
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
+			dom_node_unref(el);
 			return getElement(ctx, next);
 		}
 		prev_next = next;
@@ -767,14 +828,18 @@ js_element_get_property_nodeName(JSContext *ctx, JSValueConst this_val)
 		r = JS_NewStringLen(ctx, "", 0);
 		RETURN_JS(r);
 	}
+	dom_node_ref(node);
 	exc = dom_node_get_node_name(node, &name);
 
 	if (exc != DOM_NO_ERR || !name) {
 		r = JS_NewStringLen(ctx, "", 0);
+		dom_node_unref(node);
+
 		RETURN_JS(r);
 	}
 	r = JS_NewStringLen(ctx, dom_string_data(name), dom_string_length(name));
 	dom_string_unref(name);
+	dom_node_unref(node);
 
 	RETURN_JS(r);
 }
@@ -794,11 +859,14 @@ js_element_get_property_nodeType(JSContext *ctx, JSValueConst this_val)
 	if (!node) {
 		return JS_NULL;
 	}
+	dom_node_ref(node);
 	exc = dom_node_get_node_type(node, &type);
 
 	if (exc == DOM_NO_ERR) {
+		dom_node_unref(node);
 		return JS_NewUint32(ctx, type);
 	}
+	dom_node_unref(node);
 
 	return JS_NULL;
 }
@@ -819,13 +887,16 @@ js_element_get_property_nodeValue(JSContext *ctx, JSValueConst this_val)
 	if (!node) {
 		return JS_NULL;
 	}
+	dom_node_ref(node);
 	exc = dom_node_get_node_value(node, &content);
 
 	if (exc != DOM_NO_ERR || !content) {
+		dom_node_unref(node);
 		return JS_NULL;
 	}
 	r = JS_NewStringLen(ctx, dom_string_data(content), dom_string_length(content));
 	dom_string_unref(content);
+	dom_node_unref(node);
 
 	RETURN_JS(r);
 }
@@ -845,11 +916,14 @@ js_element_get_property_nextSibling(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	exc = dom_node_get_next_sibling(el, &node);
 
 	if (exc != DOM_NO_ERR || !node) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
+	dom_node_unref(el);
 
 	return getElement(ctx, node);
 }
@@ -936,11 +1010,14 @@ js_element_get_property_offsetParent(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	exc = dom_node_get_parent_node(el, &node);
 
 	if (exc != DOM_NO_ERR || !node) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
+	dom_node_unref(el);
 
 	return getElement(ctx, node);
 }
@@ -1042,11 +1119,14 @@ js_element_get_property_parentElement(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	exc = dom_node_get_parent_node(el, &node);
 
 	if (exc != DOM_NO_ERR || !node) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
+	dom_node_unref(el);
 
 	return getElement(ctx, node);
 }
@@ -1065,11 +1145,14 @@ js_element_get_property_parentNode(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	exc = dom_node_get_parent_node(el, &node);
 
 	if (exc != DOM_NO_ERR || !node) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
+	dom_node_unref(el);
 
 	return getElement(ctx, node);
 }
@@ -1089,6 +1172,7 @@ js_element_get_property_previousElementSibling(JSContext *ctx, JSValueConst this
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	node = el;
 
 	while (true) {
@@ -1106,11 +1190,13 @@ js_element_get_property_previousElementSibling(JSContext *ctx, JSValueConst this
 		exc = dom_node_get_node_type(prev, &type);
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
+			dom_node_unref(el);
 			return getElement(ctx, prev);
 		}
 		prev_prev = prev;
 		node = prev;
 	}
+	dom_node_unref(el);
 
 	return JS_NULL;
 }
@@ -1129,11 +1215,14 @@ js_element_get_property_previousSibling(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	exc = dom_node_get_previous_sibling(el, &node);
 
 	if (exc != DOM_NO_ERR || !node) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
+	dom_node_unref(el);
 
 	return getElement(ctx, node);
 }
@@ -1169,14 +1258,17 @@ js_element_get_property_tagName(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	dom_string *tag_name = NULL;
 	dom_exception exc = dom_node_get_node_name(el, &tag_name);
 
 	if (exc != DOM_NO_ERR || !tag_name) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 	r = JS_NewStringLen(ctx, dom_string_data(tag_name), dom_string_length(tag_name));
 	dom_string_unref(tag_name);
+	dom_node_unref(el);
 
 	RETURN_JS(r);
 }
@@ -1197,9 +1289,11 @@ js_element_get_property_title(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	exc = dom_element_get_attribute(el, corestring_dom_title, &title);
 
 	if (exc != DOM_NO_ERR) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 	if (!title) {
@@ -1208,6 +1302,8 @@ js_element_get_property_title(JSContext *ctx, JSValueConst this_val)
 		r = JS_NewStringLen(ctx, dom_string_data(title), dom_string_length(title));
 		dom_string_unref(title);
 	}
+	dom_node_unref(el);
+
 	RETURN_JS(r);
 }
 
@@ -1243,14 +1339,17 @@ js_element_get_property_value(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_UNDEFINED;
 	}
+	dom_node_ref(el);
 	offset = find_offset(doc->element_map_rev, el);
 
 	if (offset < 0) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	linknum = get_link_number_by_offset(doc, offset);
 
 	if (linknum < 0) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 
@@ -1258,14 +1357,18 @@ js_element_get_property_value(JSContext *ctx, JSValueConst this_val)
 	fc = get_link_form_control(link);
 
 	if (!fc) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	fs = find_form_state(doc_view, fc);
 
 	if (!fs) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	r = JS_NewString(ctx, fs->value);
+	dom_node_unref(el);
+
 	RETURN_JS(r);
 }
 
@@ -1499,13 +1602,17 @@ js_element_get_property_innerHtml(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	struct string buf;
+
 	if (!init_string(&buf)) {
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	walk_tree(&buf, el, true, false);
 	JSValue ret = JS_NewStringLen(ctx, buf.source, buf.length);
 	done_string(&buf);
+	dom_node_unref(el);
 
 	RETURN_JS(ret);
 }
@@ -1523,13 +1630,17 @@ js_element_get_property_outerHtml(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	struct string buf;
+
 	if (!init_string(&buf)) {
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	walk_tree(&buf, el, false, false);
 	JSValue ret = JS_NewStringLen(ctx, buf.source, buf.length);
 	done_string(&buf);
+	dom_node_unref(el);
 
 	RETURN_JS(ret);
 }
@@ -1547,14 +1658,17 @@ js_element_get_property_textContent(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	dom_string *content = NULL;
 	dom_exception exc = dom_node_get_text_content(el, &content);
 
 	if (exc != DOM_NO_ERR || !content) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 	JSValue ret = JS_NewStringLen(ctx, dom_string_data(content), dom_string_length(content));
 	dom_string_unref(&content);
+	dom_node_unref(el);
 
 	RETURN_JS(ret);
 }
@@ -1576,10 +1690,12 @@ js_element_set_property_className(JSContext *ctx, JSValueConst this_val, JSValue
 	if (!el) {
 		return JS_UNDEFINED;
 	}
+	dom_node_ref(el);
 	size_t len;
 	const char *str = JS_ToCStringLen(ctx, &len, val);
 
 	if (!str) {
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	exc = dom_string_create((const uint8_t *)str, len, &classstr);
@@ -1590,6 +1706,7 @@ js_element_set_property_className(JSContext *ctx, JSValueConst this_val, JSValue
 		dom_string_unref(classstr);
 	}
 	JS_FreeCString(ctx, str);
+	dom_node_unref(el);
 
 	return JS_UNDEFINED;
 }
@@ -1610,10 +1727,12 @@ js_element_set_property_dir(JSContext *ctx, JSValueConst this_val, JSValue val)
 	if (!el) {
 		return JS_UNDEFINED;
 	}
+	dom_node_ref(el);
 	size_t len;
 	const char *str = JS_ToCStringLen(ctx, &len, val);
 
 	if (!str) {
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	if (!strcmp(str, "ltr") || !strcmp(str, "rtl") || !strcmp(str, "auto")) {
@@ -1627,6 +1746,7 @@ js_element_set_property_dir(JSContext *ctx, JSValueConst this_val, JSValue val)
 		}
 	}
 	JS_FreeCString(ctx, str);
+	dom_node_unref(el);
 
 	return JS_UNDEFINED;
 }
@@ -1648,10 +1768,12 @@ js_element_set_property_id(JSContext *ctx, JSValueConst this_val, JSValue val)
 	if (!el) {
 		return JS_UNDEFINED;
 	}
+	dom_node_ref(el);
 	size_t len;
 	const char *str = JS_ToCStringLen(ctx, &len, val);
 
 	if (!str) {
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	exc = dom_string_create((const uint8_t *)str, len, &idstr);
@@ -1662,6 +1784,7 @@ js_element_set_property_id(JSContext *ctx, JSValueConst this_val, JSValue val)
 		dom_string_unref(idstr);
 	}
 	JS_FreeCString(ctx, str);
+	dom_node_unref(el);
 
 	return JS_UNDEFINED;
 }
@@ -1681,11 +1804,13 @@ js_element_set_property_innerHtml(JSContext *ctx, JSValueConst this_val, JSValue
 	if (!el) {
 		return JS_UNDEFINED;
 	}
+	dom_node_ref(el);
 
 	size_t size;
 	const char *s = JS_ToCStringLen(ctx, &size, val);
 
 	if (!s) {
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	dom_hubbub_parser_params parse_params;
@@ -1800,6 +1925,7 @@ out:
 	}
 	JS_FreeCString(ctx, s);
 	interpreter->changed = 1;
+	dom_node_unref(el);
 
 	return JS_UNDEFINED;
 }
@@ -1859,10 +1985,13 @@ js_element_set_property_lang(JSContext *ctx, JSValueConst this_val, JSValue val)
 	if (!el) {
 		return JS_UNDEFINED;
 	}
+	dom_node_ref(el);
+
 	size_t len;
 	const char *str = JS_ToCStringLen(ctx, &len, val);
 
 	if (!str) {
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	exc = dom_string_create((const uint8_t *)str, len, &langstr);
@@ -1873,6 +2002,7 @@ js_element_set_property_lang(JSContext *ctx, JSValueConst this_val, JSValue val)
 		dom_string_unref(langstr);
 	}
 	JS_FreeCString(ctx, str);
+	dom_node_unref(el);
 
 	return JS_UNDEFINED;
 }
@@ -1895,16 +2025,19 @@ js_element_set_property_outerHtml(JSContext *ctx, JSValueConst this_val, JSValue
 	if (!el) {
 		return JS_UNDEFINED;
 	}
+	dom_node_ref(el);
 	dom_node *parent = NULL;
 	dom_exception exc = dom_node_get_parent_node(el, &parent);
 
 	if (exc != DOM_NO_ERR) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	size_t size;
 	const char *s = JS_ToCStringLen(ctx, &size, val);
 
 	if (!s) {
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	struct dom_node *cref = NULL;
@@ -2014,6 +2147,7 @@ out:
 	dom_node_unref(parent);
 	JS_FreeCString(ctx, s);
 	interpreter->changed = 1;
+	dom_node_unref(el);
 
 	return JS_UNDEFINED;
 }
@@ -2033,10 +2167,12 @@ js_element_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSVal
 	if (!el) {
 		return JS_UNDEFINED;
 	}
+	dom_node_ref(el);
 	size_t len;
 	const char *str = JS_ToCStringLen(ctx, &len, val);
 
 	if (!str) {
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	dom_string *content = NULL;
@@ -2044,10 +2180,12 @@ js_element_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSVal
 	JS_FreeCString(ctx, str);
 
 	if (exc != DOM_NO_ERR || !content) {
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	exc = dom_node_set_text_content(el, content);
 	dom_string_unref(&content);
+	dom_node_unref(el);
 
 	return JS_UNDEFINED;
 }
@@ -2069,10 +2207,12 @@ js_element_set_property_title(JSContext *ctx, JSValueConst this_val, JSValue val
 	if (!el) {
 		return JS_UNDEFINED;
 	}
+	dom_node_ref(el);
 	size_t len;
 	const char *str = JS_ToCStringLen(ctx, &len, val);
 
 	if (!str) {
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	exc = dom_string_create((const uint8_t *)str, len, &titlestr);
@@ -2083,6 +2223,7 @@ js_element_set_property_title(JSContext *ctx, JSValueConst this_val, JSValue val
 		dom_string_unref(titlestr);
 	}
 	JS_FreeCString(ctx, str);
+	dom_node_unref(el);
 
 	return JS_UNDEFINED;
 }
@@ -2119,14 +2260,17 @@ js_element_set_property_value(JSContext *ctx, JSValueConst this_val, JSValue val
 	if (!el) {
 		return JS_UNDEFINED;
 	}
+	dom_node_ref(el);
 	offset = find_offset(doc->element_map_rev, el);
 
 	if (offset < 0) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	linknum = get_link_number_by_offset(doc, offset);
 
 	if (linknum < 0) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 
@@ -2134,11 +2278,13 @@ js_element_set_property_value(JSContext *ctx, JSValueConst this_val, JSValue val
 	fc = get_link_form_control(link);
 
 	if (!fc) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	fs = find_form_state(doc_view, fc);
 
 	if (!fs) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 
@@ -2150,6 +2296,7 @@ js_element_set_property_value(JSContext *ctx, JSValueConst this_val, JSValue val
 		str = JS_ToCStringLen(ctx, &len, val);
 
 		if (!str) {
+			dom_node_unref(el);
 			return JS_EXCEPTION;
 		}
 
@@ -2157,9 +2304,12 @@ js_element_set_property_value(JSContext *ctx, JSValueConst this_val, JSValue val
 		JS_FreeCString(ctx, str);
 
 		mem_free_set(&fs->value, string);
-		if (fc->type == FC_TEXT || fc->type == FC_PASSWORD)
+
+		if (fc->type == FC_TEXT || fc->type == FC_PASSWORD) {
 			fs->state = strlen(fs->value);
+		}
 	}
+	dom_node_unref(el);
 
 	return JS_UNDEFINED;
 }
@@ -2231,15 +2381,26 @@ js_element_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 	if (!el) {
 		return JS_FALSE;
 	}
+	dom_node_ref(el);
 
 	if (argc < 1) {
+		dom_node_unref(el);
 		return JS_FALSE;
 	}
 	JSValue eve = argv[0];
 //	JS_DupValue(ctx, eve);
 	dom_event *event = (dom_event *)(JS_GetOpaque(eve, js_event_class_id));
+
+	if (event) {
+		dom_event_ref(event);
+	}
 	bool result = false;
 	dom_exception exc = dom_event_target_dispatch_event(el, event, &result);
+
+	if (event) {
+		dom_event_unref(event);
+	}
+	dom_node_unref(el);
 
 	return JS_NewBool(ctx, result);
 }
@@ -2262,8 +2423,10 @@ js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 
 	if (argc < 2) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	const char *str;
@@ -2271,12 +2434,14 @@ js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	str = JS_ToCStringLen(ctx, &len, argv[0]);
 
 	if (!str) {
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	char *method = stracpy(str);
 	JS_FreeCString(ctx, str);
 
 	if (!method) {
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	JSValue fun = argv[1];
@@ -2295,6 +2460,7 @@ js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	struct element_listener *n = (struct element_listener *)mem_calloc(1, sizeof(*n));
 
 	if (!n) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	n->fun = fun;
@@ -2308,6 +2474,7 @@ js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSV
 		exc = dom_event_listener_create(element_event_handler, el_private, &el_private->listener);
 
 		if (exc != DOM_NO_ERR || !el_private->listener) {
+			dom_node_unref(el);
 			return JS_UNDEFINED;
 		}
 	}
@@ -2328,6 +2495,7 @@ ex:
 		dom_string_unref(typ);
 	}
 	dom_event_listener_unref(el_private->listener);
+	dom_node_unref(el);
 
 	return JS_UNDEFINED;
 }
@@ -2350,8 +2518,10 @@ js_element_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, 
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 
 	if (argc < 2) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	const char *str;
@@ -2359,12 +2529,14 @@ js_element_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, 
 	str = JS_ToCStringLen(ctx, &len, argv[0]);
 
 	if (!str) {
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	char *method = stracpy(str);
 	JS_FreeCString(ctx, str);
 
 	if (!method) {
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	JSValue fun = argv[1];
@@ -2390,11 +2562,13 @@ js_element_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, 
 			mem_free_set(&l->typ, NULL);
 			mem_free(l);
 			mem_free(method);
+			dom_node_unref(el);
 
 			return JS_UNDEFINED;
 		}
 	}
 	mem_free(method);
+	dom_node_unref(el);
 
 	return JS_UNDEFINED;
 }
@@ -2419,14 +2593,17 @@ js_element_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	dom_node *el2 = (dom_node *)(js_getopaque(argv[0], js_element_class_id));
 	exc = dom_node_append_child(el, el2, &res);
 
 	if (exc == DOM_NO_ERR && res) {
 		interpreter->changed = 1;
+		dom_node_unref(el);
 
 		return getElement(ctx, res);
 	}
+	dom_node_unref(el);
 
 	return JS_NULL;
 }
@@ -2474,14 +2651,17 @@ js_element_click(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *
 	if (!el) {
 		return JS_UNDEFINED;
 	}
+	dom_node_ref(el);
 	offset = find_offset(doc->element_map_rev, el);
 
 	if (offset < 0) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	linknum = get_link_number_by_offset(doc, offset);
 
 	if (linknum < 0) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	ses = doc_view->session;
@@ -2492,6 +2672,7 @@ js_element_click(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *
 	} else {
 		print_screen_status(ses);
 	}
+	dom_node_unref(el);
 
 	return JS_UNDEFINED;
 }
@@ -2515,14 +2696,19 @@ js_element_cloneNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
+
 	dom_exception exc;
 	bool deep = JS_ToBool(ctx, argv[0]);
 	dom_node *clone = NULL;
 	exc = dom_node_clone_node(el, deep, &clone);
 
 	if (exc != DOM_NO_ERR || !clone) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
+	dom_node_unref(el);
+
 	return getElement(ctx, clone);
 }
 
@@ -2587,6 +2773,12 @@ js_element_closest(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 		return JS_NULL;
 	}
 
+	dom_node *el_copy = el;
+
+	if (el_copy) {
+		dom_node_ref(el_copy);
+	}
+
 	while (el) {
 		res = el_match_selector(selector, el);
 
@@ -2605,6 +2797,10 @@ js_element_closest(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	}
 	JS_FreeCString(ctx, selector);
 	dom_node_unref(root);
+
+	if (el_copy) {
+		dom_node_unref(el_copy);
+	}
 
 	if (!res) {
 		return JS_NULL;
@@ -2631,9 +2827,11 @@ js_element_contains(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 	if (!el) {
 		return JS_FALSE;
 	}
+	dom_node_ref(el);
 	dom_node *el2 = (dom_node *)(js_getopaque(argv[0], js_element_class_id));
 
 	if (!el2) {
+		dom_node_unref(el);
 		return JS_FALSE;
 	}
 
@@ -2641,6 +2839,7 @@ js_element_contains(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 	bool result = false;
 
 	check_contains(el, el2, &result_set, &result);
+	dom_node_unref(el);
 
 	return JS_NewBool(ctx, result);
 }
@@ -2673,17 +2872,21 @@ js_element_focus(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *
 	if (!el) {
 		return JS_UNDEFINED;
 	}
+	dom_node_ref(el);
 	offset = find_offset(doc->element_map_rev, el);
 
 	if (offset < 0) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	linknum = get_link_number_by_offset(doc, offset);
 
 	if (linknum < 0) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	jump_to_link_number(doc_view->session, doc_view, linknum);
+	dom_node_unref(el);
 
 	return JS_UNDEFINED;
 }
@@ -2711,10 +2914,12 @@ js_element_getAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	if (!el) {
 		return JS_FALSE;
 	}
+	dom_node_ref(el);
 	size_t len;
 	const char *str = JS_ToCStringLen(ctx, &len, argv[0]);
 
 	if (!str) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 
@@ -2722,6 +2927,7 @@ js_element_getAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	JS_FreeCString(ctx, str);
 
 	if (exc != DOM_NO_ERR || !attr_name) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 
@@ -2729,10 +2935,12 @@ js_element_getAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	dom_string_unref(attr_name);
 
 	if (exc != DOM_NO_ERR || !attr_value) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 	r = JS_NewStringLen(ctx, dom_string_data(attr_value), dom_string_length(attr_value));
 	dom_string_unref(attr_value);
+	dom_node_unref(el);
 
 	RETURN_JS(r);
 }
@@ -2759,23 +2967,28 @@ js_element_getAttributeNode(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	if (!el) {
 		return JS_UNDEFINED;
 	}
+	dom_node_ref(el);
 	size_t len;
 	const char *str = JS_ToCStringLen(ctx, &len, argv[0]);
 
 	if (!str) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 	exc = dom_string_create((const uint8_t *)str, len, &attr_name);
 	JS_FreeCString(ctx, str);
 
 	if (exc != DOM_NO_ERR || !attr_name) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 	exc = dom_element_get_attribute_node(el, attr_name, &attr);
 
 	if (exc != DOM_NO_ERR || !attr) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
+	dom_node_unref(el);
 
 	return getAttr(ctx, attr);
 }
@@ -2809,12 +3022,14 @@ js_element_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc,
 	if (!el) {
 		return JS_UNDEFINED;
 	}
+	dom_node_ref(el);
 	const char *str;
 	size_t len;
 
 	str = JS_ToCStringLen(ctx, &len, argv[0]);
 
 	if (!str) {
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	dom_nodelist *nlist = NULL;
@@ -2825,6 +3040,7 @@ js_element_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc,
 	JS_FreeCString(ctx, str);
 
 	if (exc != DOM_NO_ERR || !tagname) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 
@@ -2832,9 +3048,11 @@ js_element_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc,
 	dom_string_unref(tagname);
 
 	if (exc != DOM_NO_ERR || !nlist) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 	JSValue rr = getNodeList(ctx, nlist);
+	dom_node_unref(el);
 
 	RETURN_JS(rr);
 }
@@ -2858,10 +3076,12 @@ js_element_hasAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	if (!el) {
 		return JS_FALSE;
 	}
+	dom_node_ref(el);
 	size_t slen;
 	const char *s = JS_ToCStringLen(ctx, &slen, argv[0]);
 
 	if (!s) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 	dom_string *attr_name = NULL;
@@ -2871,6 +3091,7 @@ js_element_hasAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	JS_FreeCString(ctx, s);
 
 	if (exc != DOM_NO_ERR) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 
@@ -2878,8 +3099,10 @@ js_element_hasAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	dom_string_unref(attr_name);
 
 	if (exc != DOM_NO_ERR) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
+	dom_node_unref(el);
 
 	return JS_NewBool(ctx, res);
 }
@@ -2905,11 +3128,14 @@ js_element_hasAttributes(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 	if (!el) {
 		return JS_FALSE;
 	}
+	dom_node_ref(el);
 	exc = dom_node_has_attributes(el, &res);
 
 	if (exc != DOM_NO_ERR) {
+		dom_node_unref(el);
 		return JS_FALSE;
 	}
+	dom_node_unref(el);
 
 	return JS_NewBool(ctx, res);
 }
@@ -2935,11 +3161,14 @@ js_element_hasChildNodes(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 	if (!el) {
 		return JS_FALSE;
 	}
+	dom_node_ref(el);
 	exc = dom_node_has_child_nodes(el, &res);
 
 	if (exc != DOM_NO_ERR) {
+		dom_node_unref(el);
 		return JS_FALSE;
 	}
+	dom_node_unref(el);
 
 	return JS_NewBool(ctx, res);
 }
@@ -2964,6 +3193,7 @@ js_element_insertBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	if (!el) {
 		return JS_UNDEFINED;
 	}
+	dom_node_ref(el);
 
 	JSValue next_sibling1 = argv[1];
 	JSValue child1 = argv[0];
@@ -2971,6 +3201,7 @@ js_element_insertBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	dom_node *next_sibling = (dom_node *)(js_getopaque(next_sibling1, js_element_class_id));
 
 	if (!next_sibling) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 
@@ -2981,9 +3212,11 @@ js_element_insertBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 
 	err = dom_node_insert_before(el, child, next_sibling, &spare);
 	if (err != DOM_NO_ERR) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	interpreter->changed = 1;
+	dom_node_unref(el);
 
 	return getElement(ctx, spare);
 }
@@ -3007,6 +3240,7 @@ js_element_isEqualNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	if (!el) {
 		return JS_FALSE;
 	}
+	dom_node_ref(el);
 
 	JSValue node = argv[0];
 	dom_node *el2 = (dom_node *)(js_getopaque(node, js_element_class_id));
@@ -3015,9 +3249,11 @@ js_element_isEqualNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	struct string second;
 
 	if (!init_string(&first)) {
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	if (!init_string(&second)) {
+		dom_node_unref(el);
 		done_string(&first);
 		return JS_EXCEPTION;
 	}
@@ -3029,6 +3265,7 @@ js_element_isEqualNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 
 	done_string(&first);
 	done_string(&second);
+	dom_node_unref(el);
 
 	return JS_NewBool(ctx, ret);
 }
@@ -3052,10 +3289,13 @@ js_element_isSameNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 	if (!el) {
 		return JS_FALSE;
 	}
+	dom_node_ref(el);
 	JSValue node = argv[0];
 	dom_node *el2 = (dom_node *)(js_getopaque(node, js_element_class_id));
+	bool res = (el == el2);
+	dom_node_unref(el);
 
-	return JS_NewBool(ctx, (el == el2));
+	return JS_NewBool(ctx, res);
 }
 
 static JSValue
@@ -3073,15 +3313,18 @@ js_element_matches(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	if (!el) {
 		return JS_FALSE;
 	}
+	dom_node_ref(el);
 	const char *selector;
 	size_t len;
 	selector = JS_ToCStringLen(ctx, &len, argv[0]);
 
 	if (!selector) {
+		dom_node_unref(el);
 		return JS_FALSE;
 	}
 	void *res = el_match_selector(selector, el);
 	JS_FreeCString(ctx, selector);
+	dom_node_unref(el);
 
 	return JS_NewBool(ctx, res != NULL);
 }
@@ -3105,18 +3348,22 @@ js_element_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	size_t len;
 	const char *selector = JS_ToCStringLen(ctx, &len, argv[0]);
 
 	if (!selector) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 	void *ret = walk_tree_query(el, selector, 0);
 	JS_FreeCString(ctx, selector);
 
 	if (!ret) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
+	dom_node_unref(el);
 
 	return getElement(ctx, ret);
 }
@@ -3144,10 +3391,13 @@ js_element_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
+
 	size_t len;
 	const char *selector = JS_ToCStringLen(ctx, &len, argv[0]);
 
 	if (!selector) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 	dom_string *tag_name = NULL;
@@ -3155,6 +3405,7 @@ js_element_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JSV
 
 	if (exc != DOM_NO_ERR || !tag_name) {
 		JS_FreeCString(ctx, selector);
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 	dom_element *element = NULL;
@@ -3163,6 +3414,7 @@ js_element_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JSV
 
 	if (exc != DOM_NO_ERR || !element) {
 		JS_FreeCString(ctx, selector);
+		dom_node_unref(el);
 		return JS_NULL;
 	}
 	walk_tree_query_append((dom_node *)element, el, selector, 0);
@@ -3173,8 +3425,11 @@ js_element_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	dom_node_unref(element);
 
 	if (exc != DOM_NO_ERR || !nodes) {
+		dom_node_unref(el);
 		return JS_NULL;
 	}
+	dom_node_unref(el);
+
 	return getNodeList(ctx, nodes);
 }
 
@@ -3230,6 +3485,7 @@ js_element_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	if (!el || !JS_IsObject(argv[0])) {
 		return JS_NULL;
 	}
+	dom_node_ref(el);
 	JSValue node = argv[0];
 	dom_node *el2 = (dom_node *)(js_getopaque(node, js_element_class_id));
 	dom_exception exc;
@@ -3238,9 +3494,11 @@ js_element_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 
 	if (exc == DOM_NO_ERR && spare) {
 		interpreter->changed = 1;
+		dom_node_unref(el);
 
 		return getElement(ctx, spare);
 	}
+	dom_node_unref(el);
 
 	return JS_NULL;
 }
@@ -3299,18 +3557,22 @@ js_element_setAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	if (!el) {
 		return JS_UNDEFINED;
 	}
+	dom_node_ref(el);
+
 	const char *attr;
 	const char *value;
 	size_t attr_len, value_len;
 	attr = JS_ToCStringLen(ctx, &attr_len, argv[0]);
 
 	if (!attr) {
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	value = JS_ToCStringLen(ctx, &value_len, argv[1]);
 
 	if (!value) {
 		JS_FreeCString(ctx, attr);
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 
@@ -3322,12 +3584,15 @@ js_element_setAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 
 	if (exc != DOM_NO_ERR || !attr_str) {
 		JS_FreeCString(ctx, value);
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	exc = dom_string_create((const uint8_t *)value, value_len, &value_str);
 	JS_FreeCString(ctx, value);
+
 	if (exc != DOM_NO_ERR) {
 		dom_string_unref(attr_str);
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 
@@ -3335,10 +3600,13 @@ js_element_setAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 			attr_str, value_str);
 	dom_string_unref(attr_str);
 	dom_string_unref(value_str);
+
 	if (exc != DOM_NO_ERR) {
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	interpreter->changed = 1;
+	dom_node_unref(el);
 
 	return JS_UNDEFINED;
 }
@@ -3613,11 +3881,13 @@ element_event_handler(dom_event *event, void *pw)
 	if (!event) {
 		return;
 	}
+	dom_node_ref(el);
 
 	dom_string *typ = NULL;
 	dom_exception exc = dom_event_get_type(event, &typ);
 
 	if (exc != DOM_NO_ERR || !typ) {
+		dom_node_unref(el);
 		return;
 	}
 //	interpreter->heartbeat = add_heartbeat(interpreter);
@@ -3638,4 +3908,5 @@ element_event_handler(dom_event *event, void *pw)
 //	done_heartbeat(interpreter->heartbeat);
 	check_for_rerender(interpreter, dom_string_data(typ));
 	dom_string_unref(typ);
+	dom_node_unref(el);
 }
