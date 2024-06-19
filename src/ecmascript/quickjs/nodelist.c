@@ -67,11 +67,14 @@ js_nodeList_get_property_length(JSContext *ctx, JSValueConst this_val)
 	if (!nl) {
 		return JS_NewInt32(ctx, 0);
 	}
+	dom_nodelist_ref(nl);
 	err = dom_nodelist_get_length(nl, &size);
 
 	if (err != DOM_NO_ERR) {
+		dom_nodelist_unref(nl);
 		return JS_NewInt32(ctx, 0);
 	}
+	dom_nodelist_unref(nl);
 
 	return JS_NewInt32(ctx, size);
 }
@@ -92,13 +95,16 @@ js_nodeList_item2(JSContext *ctx, JSValueConst this_val, int idx)
 	if (!nl) {
 		return JS_UNDEFINED;
 	}
+	dom_nodelist_ref(nl);
 	err = dom_nodelist_item(nl, idx, (void *)&element);
 
 	if (err != DOM_NO_ERR || !element) {
+		dom_nodelist_unref(nl);
 		return JS_UNDEFINED;
 	}
 	ret = getElement(ctx, element);
 	dom_node_unref(element);
+	dom_nodelist_unref(nl);
 
 	return ret;
 }
@@ -136,9 +142,11 @@ js_nodeList_set_items(JSContext *ctx, JSValue this_val, void *node)
 	if (!nl) {
 		return;
 	}
+	dom_nodelist_ref(nl);
 	err = dom_nodelist_get_length(nl, &length);
 
 	if (err != DOM_NO_ERR) {
+		dom_nodelist_unref(nl);
 		return;
 	}
 
@@ -158,6 +166,7 @@ js_nodeList_set_items(JSContext *ctx, JSValue this_val, void *node)
 		JS_FreeValue(ctx, obj);
 		dom_node_unref(element);
 	}
+	dom_nodelist_unref(nl);
 }
 
 static JSValue
