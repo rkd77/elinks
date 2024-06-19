@@ -64,6 +64,7 @@ took = [
 'element.querySelectorAll.html',
 'element.querySelector.html',
 'element.setAttribute.html',
+'element.textContent.html',
 #'event.html',
 'eventListener.html',
 'keyboardEvent.html',

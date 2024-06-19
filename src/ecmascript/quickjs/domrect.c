@@ -377,9 +377,16 @@ getDomRect(JSContext *ctx)
 
 	JSValue proto, obj;
 
-	/* Event class */
-	JS_NewClassID(&js_domRect_class_id);
-	JS_NewClass(JS_GetRuntime(ctx), js_domRect_class_id, &js_domRect_class);
+	{
+		static int initialised;
+
+		if (!initialised) {
+			/* Event class */
+			JS_NewClassID(&js_domRect_class_id);
+			JS_NewClass(JS_GetRuntime(ctx), js_domRect_class_id, &js_domRect_class);
+			initialised = 1;
+		}
+	}
 	proto = JS_NewObject(ctx);
 	REF_JS(proto);
 
@@ -391,6 +398,8 @@ getDomRect(JSContext *ctx)
 
 	JS_SetOpaque(proto, d);
 	JSValue r = proto;
+
+	JS_DupValue(ctx, r);
 
 	RETURN_JS(r);
 }

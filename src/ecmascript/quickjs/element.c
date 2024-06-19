@@ -1547,13 +1547,14 @@ js_element_get_property_textContent(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
-	struct string buf;
-	if (!init_string(&buf)) {
-		return JS_EXCEPTION;
+	dom_string *content = NULL;
+	dom_exception exc = dom_node_get_text_content(el, &content);
+
+	if (exc != DOM_NO_ERR || !content) {
+		return JS_NULL;
 	}
-	walk_tree_content(&buf, el);
-	JSValue ret = JS_NewStringLen(ctx, buf.source, buf.length);
-	done_string(&buf);
+	JSValue ret = JS_NewStringLen(ctx, dom_string_data(content), dom_string_length(content));
+	dom_string_unref(&content);
 
 	RETURN_JS(ret);
 }
@@ -2013,6 +2014,40 @@ out:
 	dom_node_unref(parent);
 	JS_FreeCString(ctx, s);
 	interpreter->changed = 1;
+
+	return JS_UNDEFINED;
+}
+
+static JSValue
+js_element_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	REF_JS(val);
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+
+	if (!el) {
+		return JS_UNDEFINED;
+	}
+	size_t len;
+	const char *str = JS_ToCStringLen(ctx, &len, val);
+
+	if (!str) {
+		return JS_EXCEPTION;
+	}
+	dom_string *content = NULL;
+	dom_exception exc = dom_string_create((const uint8_t *)str, len, &content);
+	JS_FreeCString(ctx, str);
+
+	if (exc != DOM_NO_ERR || !content) {
+		return JS_EXCEPTION;
+	}
+	exc = dom_node_set_text_content(el, content);
+	dom_string_unref(&content);
 
 	return JS_UNDEFINED;
 }
@@ -3357,7 +3392,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("previousSibling",	js_element_get_property_previousSibling, NULL),
 	JS_CGETSET_DEF("style",		js_element_get_property_style, NULL),
 	JS_CGETSET_DEF("tagName",	js_element_get_property_tagName, NULL),
-	JS_CGETSET_DEF("textContent",	js_element_get_property_textContent, NULL),
+	JS_CGETSET_DEF("textContent",	js_element_get_property_textContent, js_element_set_property_textContent),
 	JS_CGETSET_DEF("title",	js_element_get_property_title, js_element_set_property_title),
 	JS_CGETSET_DEF("value",	js_element_get_property_value, js_element_set_property_value),
 	JS_CFUNC_DEF("addEventListener",	3, js_element_addEventListener),
