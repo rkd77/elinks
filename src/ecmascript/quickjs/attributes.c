@@ -60,10 +60,11 @@ js_attributes_set_items(JSContext *ctx, JSValue this_val, void *node)
 	if (!attrs) {
 		return;
 	}
+	dom_namednodemap_ref(attrs);
 
 	err = dom_namednodemap_get_length(attrs, &num_attrs);
 	if (err != DOM_NO_ERR) {
-		//dom_namednodemap_unref(attrs);
+		dom_namednodemap_unref(attrs);
 		return;
 	}
 
@@ -98,6 +99,7 @@ next:
 		dom_node_unref(attr);
 		JS_FreeValue(ctx, obj);
 	}
+	dom_namednodemap_unref(attrs);
 }
 
 static JSValue
@@ -125,11 +127,14 @@ js_attributes_get_property_length(JSContext *ctx, JSValueConst this_val)
 	if (!attrs) {
 		return JS_NewInt32(ctx, 0);
 	}
+	dom_namednodemap_ref(attrs);
 	err = dom_namednodemap_get_length(attrs, &num_attrs);
+
 	if (err != DOM_NO_ERR) {
-		//dom_namednodemap_unref(attrs);
+		dom_namednodemap_unref(attrs);
 		return JS_NewInt32(ctx, 0);
 	}
+	dom_namednodemap_unref(attrs);
 
 	return JS_NewInt32(ctx, num_attrs);
 }
@@ -151,14 +156,16 @@ js_attributes_item2(JSContext *ctx, JSValueConst this_val, int idx)
 	if (!attrs) {
 		return JS_UNDEFINED;
 	}
-
+	dom_namednodemap_ref(attrs);
 	err = dom_namednodemap_item(attrs, idx, (void *)&attr);
 
 	if (err != DOM_NO_ERR) {
+		dom_namednodemap_unref(attrs);
 		return JS_UNDEFINED;
 	}
 	ret = getAttr(ctx, attr);
 	dom_node_unref(attr);
+	dom_namednodemap_unref(attrs);
 
 	return ret;
 }
@@ -200,19 +207,23 @@ js_attributes_namedItem2(JSContext *ctx, JSValueConst this_val, const char *str)
 	if (!attrs) {
 		return JS_UNDEFINED;
 	}
+	dom_namednodemap_ref(attrs);
 	err = dom_string_create((const uint8_t*)str, strlen(str), &name);
 
 	if (err != DOM_NO_ERR) {
+		dom_namednodemap_unref(attrs);
 		return JS_UNDEFINED;
 	}
 	err = dom_namednodemap_get_named_item(attrs, name, &attr);
 	dom_string_unref(name);
 
 	if (err != DOM_NO_ERR || !attr) {
+		dom_namednodemap_unref(attrs);
 		return JS_UNDEFINED;
 	}
 	obj = getAttr(ctx, attr);
 	dom_node_unref(attr);
+	dom_namednodemap_unref(attrs);
 
 	RETURN_JS(obj);
 }
