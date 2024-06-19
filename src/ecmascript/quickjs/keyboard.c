@@ -79,9 +79,11 @@ js_keyboardEvent_get_property_bubbles(JSContext *ctx, JSValueConst this_val)
 	if (!event) {
 		return JS_NULL;
 	}
+	dom_event_ref(event);
 	bool bubbles = false;
 	dom_exception exc = dom_event_get_bubbles(event, &bubbles);
 	JSValue r = JS_NewBool(ctx, bubbles);
+	dom_event_unref(event);
 
 	RETURN_JS(r);
 }
@@ -98,9 +100,11 @@ js_keyboardEvent_get_property_cancelable(JSContext *ctx, JSValueConst this_val)
 	if (!event) {
 		return JS_NULL;
 	}
+	dom_event_ref(event);
 	bool cancelable = false;
 	dom_exception exc = dom_event_get_cancelable(event, &cancelable);
 	JSValue r = JS_NewBool(ctx, cancelable);
+	dom_event_unref(event);
 
 	RETURN_JS(r);
 }
@@ -137,9 +141,11 @@ js_keyboardEvent_get_property_defaultPrevented(JSContext *ctx, JSValueConst this
 	if (!event) {
 		return JS_NULL;
 	}
+	dom_event_ref(event);
 	bool prevented = false;
 	dom_exception exc = dom_event_is_default_prevented(event, &prevented);
 	JSValue r = JS_NewBool(ctx, prevented);
+	dom_event_unref(event);
 
 	RETURN_JS(r);
 }
@@ -156,14 +162,17 @@ js_keyboardEvent_get_property_key(JSContext *ctx, JSValueConst this_val)
 	if (!event) {
 		return JS_NULL;
 	}
+	dom_event_ref(event);
 	dom_string *key = NULL;
 	dom_exception exc = dom_keyboard_event_get_key(event, &key);
 
 	if (exc != DOM_NO_ERR || !key) {
+		dom_event_unref(event);
 		return JS_NULL;
 	}
 	JSValue r = JS_NewString(ctx, dom_string_data(key));
 	dom_string_unref(key);
+	dom_event_unref(event);
 
 	RETURN_JS(r);
 }
@@ -180,15 +189,18 @@ js_keyboardEvent_get_property_keyCode(JSContext *ctx, JSValueConst this_val)
 	if (!event) {
 		return JS_NULL;
 	}
+	dom_event_ref(event);
 	dom_string *key = NULL;
 	dom_exception exc = dom_keyboard_event_get_key(event, &key);
 
 	if (exc != DOM_NO_ERR) {
+		dom_event_unref(event);
 		return JS_NULL;
 	}
 	unicode_val_T keyCode = convert_dom_string_to_keycode(key);
 	JSValue r = JS_NewUint32(ctx, keyCode);
 	if (key) dom_string_unref(key);
+	dom_event_unref(event);
 
 	RETURN_JS(r);
 }
@@ -205,14 +217,18 @@ js_keyboardEvent_get_property_code(JSContext *ctx, JSValueConst this_val)
 	if (!event) {
 		return JS_NULL;
 	}
+	dom_event_ref(event);
+
 	dom_string *code = NULL;
 	dom_exception exc = dom_keyboard_event_get_code(event, &code);
 
 	if (exc != DOM_NO_ERR || !code) {
+		dom_event_unref(event);
 		return JS_NULL;
 	}
 	JSValue r = JS_NewString(ctx, dom_string_data(code));
 	dom_string_unref(code);
+	dom_event_unref(event);
 
 	RETURN_JS(r);
 }
@@ -229,14 +245,18 @@ js_keyboardEvent_get_property_target(JSContext *ctx, JSValueConst this_val)
 	if (!event) {
 		return JS_NULL;
 	}
+	dom_event_ref(event);
+
 	dom_event_target *target = NULL;
 	dom_exception exc = dom_event_get_target(event, &target);
 
 	if (exc != DOM_NO_ERR || !target) {
+		dom_event_unref(event);
 		return JS_NULL;
 	}
 	JSValue r = getElement(ctx, target);
 	dom_node_unref(target);
+	dom_event_unref(event);
 
 	RETURN_JS(r);
 }
@@ -253,15 +273,19 @@ js_keyboardEvent_get_property_type(JSContext *ctx, JSValueConst this_val)
 	if (!event) {
 		return JS_NULL;
 	}
+	dom_event_ref(event);
+
 	dom_string *typ = NULL;
 	dom_exception exc = dom_event_get_type(event, &typ);
 
 	if (exc != DOM_NO_ERR || !typ) {
 		JSValue r = JS_NewString(ctx, "");
+		dom_event_unref(event);
 		RETURN_JS(r);
 	}
 	JSValue r = JS_NewString(ctx, dom_string_data(typ));
 	dom_string_unref(typ);
+	dom_event_unref(event);
 
 	RETURN_JS(r);
 }
@@ -279,7 +303,9 @@ js_keyboardEvent_preventDefault(JSContext *ctx, JSValueConst this_val, int argc,
 	if (!event) {
 		return JS_NULL;
 	}
+	dom_event_ref(event);
 	dom_event_prevent_default(event);
+	dom_event_unref(event);
 
 	return JS_UNDEFINED;
 }
