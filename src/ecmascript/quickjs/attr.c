@@ -48,14 +48,17 @@ js_attr_get_property_name(JSContext *ctx, JSValueConst this_val)
 	if (!attr) {
 		return JS_NULL;
 	}
-
+	dom_node_ref(attr);
 	err = dom_attr_get_name(attr, &name);
+
 	if (err != DOM_NO_ERR || name == NULL) {
+		dom_node_unref(attr);
 		return JS_NULL;
 	}
 
 	r = JS_NewStringLen(ctx, dom_string_data(name), dom_string_length(name));
 	dom_string_unref(name);
+	dom_node_unref(attr);
 
 	RETURN_JS(r);
 }
@@ -84,13 +87,16 @@ js_attr_get_property_value(JSContext *ctx, JSValueConst this_val)
 	if (!attr) {
 		return JS_NULL;
 	}
+	dom_node_ref(attr);
 	err = dom_attr_get_value(attr, &value);
 
 	if (err != DOM_NO_ERR || value == NULL) {
+		dom_node_unref(attr);
 		return JS_NULL;
 	}
 	r = JS_NewStringLen(ctx, dom_string_data(value), dom_string_length(value));
 	dom_string_unref(value);
+	dom_node_unref(attr);
 
 	RETURN_JS(r);
 }
