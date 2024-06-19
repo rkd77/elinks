@@ -60,9 +60,13 @@ js_htmlCollection_get_property_length(JSContext *ctx, JSValueConst this_val)
 	if (!ns) {
 		return JS_NewInt32(ctx, 0);
 	}
+	dom_html_collection_ref(ns);
+
 	if (dom_html_collection_get_length(ns, &size) != DOM_NO_ERR) {
+		dom_html_collection_unref(ns);
 		return JS_NewInt32(ctx, 0);
 	}
+	dom_html_collection_unref(ns);
 
 	return JS_NewInt32(ctx, size);
 }
@@ -82,13 +86,16 @@ js_htmlCollection_item2(JSContext *ctx, JSValueConst this_val, int idx)
 	if (!ns) {
 		return JS_UNDEFINED;
 	}
+	dom_html_collection_ref(ns);
 	err = dom_html_collection_item(ns, idx, &node);
 
 	if (err != DOM_NO_ERR) {
+		dom_html_collection_unref(ns);
 		return JS_UNDEFINED;
 	}
 	ret = getElement(ctx, node);
 	dom_node_unref(node);
+	dom_html_collection_unref(ns);
 
 	return ret;
 }
@@ -126,14 +133,16 @@ js_htmlCollection_namedItem2(JSContext *ctx, JSValueConst this_val, const char *
 	if (!ns) {
 		return JS_UNDEFINED;
 	}
+	dom_html_collection_ref(ns);
 
 	if (dom_html_collection_get_length(ns, &size) != DOM_NO_ERR) {
+		dom_html_collection_unref(ns);
 		return JS_UNDEFINED;
 	}
-
 	err = dom_string_create((const uint8_t*)str, strlen(str), &name);
 
 	if (err != DOM_NO_ERR) {
+		dom_html_collection_unref(ns);
 		return JS_UNDEFINED;
 	}
 
@@ -146,7 +155,6 @@ js_htmlCollection_namedItem2(JSContext *ctx, JSValueConst this_val, const char *
 		if (err != DOM_NO_ERR || !element) {
 			continue;
 		}
-
 		err = dom_element_get_attribute(element, corestring_dom_id, &val);
 
 		if (err == DOM_NO_ERR && val) {
@@ -155,12 +163,12 @@ js_htmlCollection_namedItem2(JSContext *ctx, JSValueConst this_val, const char *
 				dom_string_unref(val);
 				dom_string_unref(name);
 				dom_node_unref(element);
+				dom_html_collection_unref(ns);
 
 				return ret;
 			}
 			dom_string_unref(val);
 		}
-
 		err = dom_element_get_attribute(element, corestring_dom_name, &val);
 
 		if (err == DOM_NO_ERR && val) {
@@ -169,6 +177,7 @@ js_htmlCollection_namedItem2(JSContext *ctx, JSValueConst this_val, const char *
 				dom_string_unref(val);
 				dom_string_unref(name);
 				dom_node_unref(element);
+				dom_html_collection_unref(ns);
 
 				return ret;
 			}
@@ -177,6 +186,7 @@ js_htmlCollection_namedItem2(JSContext *ctx, JSValueConst this_val, const char *
 		dom_node_unref(element);
 	}
 	dom_string_unref(name);
+	dom_html_collection_unref(ns);
 
 	return JS_UNDEFINED;
 }
@@ -224,8 +234,10 @@ js_htmlCollection_set_items(JSContext *ctx, JSValue this_val, void *node)
 	if (!ns) {
 		return;
 	}
+	dom_html_collection_ref(ns);
 
 	if (dom_html_collection_get_length(ns, &size) != DOM_NO_ERR) {
+		dom_html_collection_unref(ns);
 		return;
 	}
 
@@ -259,6 +271,7 @@ js_htmlCollection_set_items(JSContext *ctx, JSValue this_val, void *node)
 		}
 		dom_node_unref(element);
 	}
+	dom_html_collection_unref(ns);
 }
 
 static JSValue
