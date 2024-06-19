@@ -83,9 +83,11 @@ js_customEvent_get_property_bubbles(JSContext *ctx, JSValueConst this_val)
 	if (!event) {
 		return JS_NULL;
 	}
+	dom_event_ref(event);
 	bool bubbles = false;
 	dom_exception exc = dom_event_get_bubbles(event, &bubbles);
 	JSValue r = JS_NewBool(ctx, bubbles);
+	dom_event_unref(event);
 
 	RETURN_JS(r);
 }
@@ -103,9 +105,12 @@ js_customEvent_get_property_cancelable(JSContext *ctx, JSValueConst this_val)
 	if (!event) {
 		return JS_NULL;
 	}
+	dom_event_ref(event);
+
 	bool cancelable = false;
 	dom_exception exc = dom_event_get_cancelable(event, &cancelable);
 	JSValue r = JS_NewBool(ctx, cancelable);
+	dom_event_unref(event);
 
 	RETURN_JS(r);
 }
@@ -143,9 +148,11 @@ js_customEvent_get_property_defaultPrevented(JSContext *ctx, JSValueConst this_v
 	if (!event) {
 		return JS_NULL;
 	}
+	dom_event_ref(event);
 	bool prevented = false;
 	dom_exception exc = dom_event_is_default_prevented(event, &prevented);
 	JSValue r = JS_NewBool(ctx, prevented);
+	dom_event_unref(event);
 
 	RETURN_JS(r);
 }
@@ -163,12 +170,17 @@ js_customEvent_get_property_detail(JSContext *ctx, JSValueConst this_val)
 	if (!event) {
 		return JS_NULL;
 	}
+	dom_event_ref(event);
+
 	JSValue *detail = NULL;
 	dom_exception exc = dom_custom_event_get_detail(event, &detail);
 
 	if (exc != DOM_NO_ERR || !detail) {
+		dom_event_unref(event);
 		return JS_NULL;
 	}
+	dom_event_unref(event);
+
 	RETURN_JS(*detail);
 }
 
@@ -184,14 +196,17 @@ js_customEvent_get_property_target(JSContext *ctx, JSValueConst this_val)
 	if (!event) {
 		return JS_NULL;
 	}
+	dom_event_ref(event);
 	dom_event_target *target = NULL;
 	dom_exception exc = dom_event_get_target(event, &target);
 
 	if (exc != DOM_NO_ERR || !target) {
+		dom_event_unref(event);
 		return JS_NULL;
 	}
 	JSValue r = getElement(ctx, target);
 	dom_string_unref(target);
+	dom_event_unref(event);
 
 	RETURN_JS(r);
 }
@@ -208,15 +223,19 @@ js_customEvent_get_property_type(JSContext *ctx, JSValueConst this_val)
 	if (!event) {
 		return JS_NULL;
 	}
+	dom_event_ref(event);
+
 	dom_string *typ = NULL;
 	dom_exception exc = dom_event_get_type(event, &typ);
 
 	if (exc != DOM_NO_ERR || !typ) {
 		JSValue r = JS_NewString(ctx, "");
+		dom_event_unref(event);
 		RETURN_JS(r);
 	}
 	JSValue r = JS_NewString(ctx, dom_string_data(typ));
 	dom_string_unref(typ);
+	dom_event_unref(event);
 
 	RETURN_JS(r);
 }
@@ -234,7 +253,9 @@ js_customEvent_preventDefault(JSContext *ctx, JSValueConst this_val, int argc, J
 	if (!event) {
 		return JS_NULL;
 	}
+	dom_event_ref(event);
 	dom_event_prevent_default(event);
+	dom_event_unref(event);
 
 	return JS_UNDEFINED;
 }
