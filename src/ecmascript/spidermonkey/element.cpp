@@ -2813,14 +2813,15 @@ element_get_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *v
 		args.rval().setNull();
 		return true;
 	}
-	struct string buf;
-	if (!init_string(&buf)) {
+	dom_string *content = NULL;
+	dom_exception exc = dom_node_get_text_content(el, &content);
+
+	if (exc != DOM_NO_ERR || !content) {
 		args.rval().setNull();
-		return false;
+		return true;
 	}
-	walk_tree_content(&buf, el);
-	args.rval().setString(JS_NewStringCopyZ(ctx,buf.source));
-	done_string(&buf);
+	args.rval().setString(JS_NewStringCopyZ(ctx, dom_string_data(content)));
+	dom_string_unref(content);
 
 	return true;
 }
@@ -3580,11 +3581,27 @@ element_set_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *v
 #endif
 		return false;
 	}
-//TODO
-	struct view_state *vs = interpreter->vs;
-	if (!vs) {
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+
+	if (!el) {
+		args.rval().setUndefined();
 		return true;
 	}
+	const char *str = jsval_to_string(ctx, args[0]);
+
+	if (!str) {
+		return false;
+	}
+	dom_string *content = NULL;
+	dom_exception exc = dom_string_create((const uint8_t *)str, strlen(str), &content);
+	mem_free(str);
+
+	if (exc != DOM_NO_ERR || !content) {
+		return false;
+	}
+	exc = dom_node_set_text_content(el, content);
+	dom_string_unref(content);
+	args.rval().setUndefined();
 
 	return true;
 }
