@@ -18,8 +18,59 @@
 #include "document/document.h"
 #include "document/libdom/corestrings.h"
 #include "document/libdom/doc.h"
+
+#ifdef CONFIG_QUICKJS
+#include "ecmascript/quickjs/mapa.h"
+#endif
+
 #include "intl/charsets.h"
 #include "util/string.h"
+
+void
+js_html_document_user_data_handler(dom_node_operation operation,
+				dom_string *key, void *data,
+				struct dom_node *src,
+				struct dom_node *dst)
+{
+	if (dom_string_isequal(corestring_dom___ns_key_html_content_data,
+			       key) == false) {
+		return;
+	}
+
+	switch (operation) {
+	case DOM_NODE_CLONED:
+		//fprintf(stderr, "CLONED: data=%p src=%p dst=%p\n", data, src, dst);
+		//NSLOG(netsurf, INFO, "Cloned");
+		break;
+	case DOM_NODE_RENAMED:
+		//fprintf(stderr, "RENAMED: data=%p src=%p dst=%p\n", data, src, dst);
+		//NSLOG(netsurf, INFO, "Renamed");
+		break;
+	case DOM_NODE_IMPORTED:
+		//fprintf(stderr, "IMPORTED: data=%p src=%p dst=%p\n", data, src, dst);
+		//NSLOG(netsurf, INFO, "imported");
+		break;
+	case DOM_NODE_ADOPTED:
+		//fprintf(stderr, "ADOPTED: data=%p src=%p dst=%p\n", data, src, dst);
+		//NSLOG(netsurf, INFO, "Adopted");
+		break;
+	case DOM_NODE_DELETED:
+#ifdef CONFIG_QUICKJS
+		if (map_privates) {
+			attr_erase_from_map(map_privates, data);
+		}
+		if (map_elements) {
+			attr_erase_from_map(map_elements, data);
+		}
+#endif
+		//fprintf(stderr, "DELETED: data=%p src=%p dst=%p\n", data, src, dst);
+		/* This is the only path I expect */
+		break;
+	default:
+		//NSLOG(netsurf, INFO, "User data operation not handled.");
+		//assert(0);
+	}
+}
 
 void *
 document_parse_text(const char *charset, char *data, size_t length)
@@ -65,6 +116,7 @@ document_parse_text(const char *charset, char *data, size_t length)
 
 	return doc;
 }
+
 
 void *
 document_parse(struct document *document, struct string *source)

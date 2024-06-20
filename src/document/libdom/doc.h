@@ -21,6 +21,8 @@ unicode_val_T convert_dom_string_to_keycode(dom_string *dom_key);
 void keybstrings_init(void);
 void keybstrings_fini(void);
 
+void js_html_document_user_data_handler(dom_node_operation operation, dom_string *key, void *data, struct dom_node *src, struct dom_node *dst);
+
 #ifdef __cplusplus
 }
 #endif

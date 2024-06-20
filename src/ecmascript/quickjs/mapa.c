@@ -311,7 +311,7 @@ attr_erase_from_map(void *m, void *node)
 
 			if (item) {
 				mem_free_set(&item->key, NULL);
-				mem_free_set(&item->value, NULL);
+				//mem_free_set(&item->value, NULL);
 				del_hash_item(hash, item);
 			}
 			mem_free(key);

@@ -110,7 +110,9 @@ quickjs_done(struct module *xxx)
 	attr_delete_map_rev(map_rev_collections);
 	attr_delete_map(map_doctypes);
 	attr_delete_map(map_elements);
+	map_elements = NULL;
 	attr_delete_map_void(map_privates);
+	map_privates = NULL;
 	attr_delete_map(map_form);
 	attr_delete_map_rev(map_form_rev);
 	attr_delete_map(map_forms);

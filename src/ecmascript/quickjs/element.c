@@ -74,6 +74,12 @@ js_getopaque(JSValueConst obj, JSClassID class_id)
 	if (!res) {
 		return NULL;
 	}
+	void *v = attr_find_in_map_void(map_privates, res->node);
+
+	if (!v) {
+		return NULL;
+	}
+
 	return res->node;
 }
 
@@ -2591,10 +2597,15 @@ js_element_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	}
 
 	if (!el) {
-		return JS_NULL;
+		return JS_EXCEPTION;
 	}
 	dom_node_ref(el);
 	dom_node *el2 = (dom_node *)(js_getopaque(argv[0], js_element_class_id));
+
+	if (!el2) {
+		dom_node_unref(el);
+		return JS_EXCEPTION;
+	}
 	exc = dom_node_append_child(el, el2, &res);
 
 	if (exc == DOM_NO_ERR && res) {
@@ -2605,7 +2616,7 @@ js_element_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	}
 	dom_node_unref(el);
 
-	return JS_NULL;
+	return JS_EXCEPTION;
 }
 
 /* @element_funcs{"blur"} */
@@ -3823,6 +3834,12 @@ getElement(JSContext *ctx, void *node)
 
 	attr_save_in_map(map_elements, node, element_obj);
 	attr_save_in_map_void(map_privates, node, el_private);
+
+	void *old_node_data = NULL;
+	dom_node_set_user_data(node,
+				     corestring_dom___ns_key_html_content_data,
+				     (void *)node, js_html_document_user_data_handler,
+				     (void *) &old_node_data);
 
 	JSValue rr = JS_DupValue(ctx, element_obj);
 	el_private->thisval = rr;
