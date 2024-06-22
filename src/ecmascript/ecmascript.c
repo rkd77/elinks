@@ -266,6 +266,9 @@ delayed_reload(void *data)
 	assert(rel);
 
 	object_unlock(rel->document);
+
+	reset_document(rel->document);
+	rel->document->links_sorted = 0;
 	dump_xhtml(rel->cached, rel->document, 1 + rel->was_write);
 	sort_links(rel->document);
 	draw_formatted(ses, 2);

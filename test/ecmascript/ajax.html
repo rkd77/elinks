@@ -11,8 +11,7 @@
 function loadDoc() {
   var xhttp = new XMLHttpRequest();
   xhttp.onload = function() {
-    document.getElementById("demo").innerHTML =
-    xhttp.responseText;
+    document.getElementById("demo").innerHTML = xhttp.responseText;
   }
   xhttp.open("GET", "ajax_info.txt");
   xhttp.send();

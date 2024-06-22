@@ -585,8 +585,9 @@ draw_formatted(struct session *ses, int rerender)
 
 	if (rerender) {
 		rerender--; /* Mind this when analyzing @rerender. */
-		if (!(rerender & 2) && session_is_loading(ses))
+		if (!(rerender & 2) && session_is_loading(ses)) {
 			rerender |= 2;
+		}
 		render_document_frames(ses, rerender);
 
 		/* Rerendering kills the document refreshing so restart it. */

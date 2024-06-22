@@ -4619,7 +4619,6 @@ element_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setNull();
 		return true;
 	}
-
 	exc = dom_element_get_elements_by_tag_name(el, tagname, &nlist);
 	dom_string_unref(tagname);
 
