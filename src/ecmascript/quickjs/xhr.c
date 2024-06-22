@@ -709,6 +709,10 @@ xhr_statustext_get(JSContext *ctx, JSValueConst this_val)
 		return JS_EXCEPTION;
 	}
 
+	if (!x->status_text) {
+		return JS_NULL;
+	}
+
 	return JS_NewString(ctx, x->status_text);
 }
 
@@ -1080,16 +1084,17 @@ xhr_open(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 		if (!x->uri) {
 			return JS_UNDEFINED;
 		}
-
 		char *username = NULL;
 		char *password = NULL;
 
-		if (argc > 3) {
+		if (argc > 3 && !JS_IsUndefined(argv[3])) {
 			username = (char *)JS_ToCString(ctx, argv[3]);
 		}
-		if (argc > 4) {
+
+		if (argc > 4 && !JS_IsUndefined(argv[4])) {
 			password = (char *)JS_ToCString(ctx, argv[4]);
 		}
+
 		if (username || password) {
 			if (username) {
 				x->uri->user = username;
