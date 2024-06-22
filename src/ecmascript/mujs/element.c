@@ -1493,14 +1493,15 @@ mjs_element_get_property_textContent(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	struct string buf;
-	if (!init_string(&buf)) {
-		js_error(J, "out of memory");
+	dom_string *content = NULL;
+	dom_exception exc = dom_node_get_text_content(el, &content);
+
+	if (exc != DOM_NO_ERR || !content) {
+		js_pushnull(J);
 		return;
 	}
-	walk_tree_content(&buf, el);
-	js_pushstring(J, buf.source);
-	done_string(&buf);
+	js_pushstring(J, dom_string_data(content));
+	dom_string_unref(content);
 }
 
 static void
@@ -2003,6 +2004,39 @@ out:
 	js_pushundefined(J);
 }
 
+static void
+mjs_element_set_property_textContent(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_string *titlestr = NULL;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	assert(interpreter);
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+
+	if (!el) {
+		js_pushundefined(J);
+		return;
+	}
+	const char *str = js_tostring(J, 1);
+
+	if (!str) {
+		js_error(J, "out of memory");
+		return;
+	}
+	dom_string *content = NULL;
+	dom_exception exc = dom_string_create((const uint8_t *)str, strlen(str), &content);
+
+	if (exc != DOM_NO_ERR || !content) {
+		js_error(J, "error");
+		return;
+	}
+	exc = dom_node_set_text_content(el, content);
+	dom_string_unref(&content);
+
+	js_pushundefined(J);
+}
 
 static void
 mjs_element_set_property_title(js_State *J)
@@ -3257,7 +3291,7 @@ mjs_push_element(js_State *J, void *node)
 		addproperty(J, "previousSibling",	mjs_element_get_property_previousSibling, NULL);
 		addproperty(J, "style",		mjs_element_get_property_style, NULL);
 		addproperty(J, "tagName",	mjs_element_get_property_tagName, NULL);
-		addproperty(J, "textContent",	mjs_element_get_property_textContent, NULL);
+		addproperty(J, "textContent",	mjs_element_get_property_textContent, mjs_element_set_property_textContent);
 		addproperty(J, "title",	mjs_element_get_property_title, mjs_element_set_property_title);
 		addproperty(J, "value", mjs_element_get_property_value, mjs_element_set_property_value);
 	}
