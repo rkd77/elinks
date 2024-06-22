@@ -642,10 +642,10 @@ xhr_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	char *username = NULL;
 	char *password = NULL;
 
-	if (argc > 3) {
+	if (argc > 3 && !args[3].isUndefined()) {
 		username = jsval_to_string(ctx, args[3]);
 	}
-	if (argc > 4) {
+	if (argc > 4 && !args[4].isUndefined()) {
 		password = jsval_to_string(ctx, args[4]);
 	}
 	if (username || password) {
