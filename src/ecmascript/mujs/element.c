@@ -2564,6 +2564,11 @@ mjs_element_contains(js_State *J)
 		return;
 	}
 
+	if (el == el2) {
+		js_pushboolean(J, 1);
+		return;
+	}
+
 	bool result_set = false;
 	bool result = false;
 
