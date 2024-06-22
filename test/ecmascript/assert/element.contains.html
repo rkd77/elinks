@@ -26,8 +26,10 @@ function myFunction() {
   var span2 = document.getElementById("mySPAN2");
   var div = document.getElementById("myDIV").contains(span);
   var div2 = document.getElementById("myDIV").contains(span2);
+  var itself = document.getElementById("mySPAN").contains(span);
   console.assert(div, 'myDIV contains mySPAN');
   console.assert(!div2, '!myDIV contains mySPAN2');
+  console.assert(itself, 'element contains itself');
 }
 
 console.error('element.contains.html');

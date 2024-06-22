@@ -2846,6 +2846,10 @@ js_element_contains(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 		return JS_FALSE;
 	}
 
+	if (el == el2) {
+		dom_node_unref(el);
+		return JS_TRUE;
+	}
 	bool result_set = false;
 	bool result = false;
 
