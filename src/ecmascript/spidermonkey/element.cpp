@@ -4351,6 +4351,10 @@ element_contains(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return true;
 	}
 
+	if (el == el2) {
+		args.rval().setBoolean(true);
+		return true;
+	}
 	bool result_set = false;
 	bool result = false;
 
