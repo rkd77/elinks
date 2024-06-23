@@ -255,7 +255,7 @@ mjs_element_get_property_className(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+	dom_html_element *el = (dom_html_element *)(mjs_getprivate(J, 0));
 	dom_string *classstr = NULL;
 	dom_exception exc;
 
@@ -263,7 +263,7 @@ mjs_element_get_property_className(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	exc = dom_element_get_attribute(el, corestring_dom_class, &classstr);
+	exc = dom_html_element_get_class_name(el, &classstr);
 
 	if (exc != DOM_NO_ERR) {
 		js_pushnull(J);
@@ -1581,7 +1581,7 @@ mjs_element_set_property_className(js_State *J)
 	dom_exception exc;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	assert(interpreter);
-	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+	dom_html_element *el = (dom_html_element *)(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushundefined(J);
@@ -1596,7 +1596,7 @@ mjs_element_set_property_className(js_State *J)
 	exc = dom_string_create((const uint8_t *)str, strlen(str), &classstr);
 
 	if (exc == DOM_NO_ERR && classstr) {
-		exc = dom_element_set_attribute(el, corestring_dom_class, classstr);
+		exc = dom_html_element_set_class_name(el, classstr);
 		interpreter->changed = 1;
 		dom_string_unref(classstr);
 	}

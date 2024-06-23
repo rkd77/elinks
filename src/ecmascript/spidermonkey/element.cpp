@@ -584,7 +584,7 @@ element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_html_element *el = (dom_html_element *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 	dom_string *classstr = NULL;
 	dom_exception exc;
 
@@ -592,7 +592,7 @@ element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setNull();
 		return true;
 	}
-	exc = dom_element_get_attribute(el, corestring_dom_class, &classstr);
+	exc = dom_html_element_get_class_name(el, &classstr);
 
 	if (exc != DOM_NO_ERR) {
 		args.rval().setNull();
@@ -2938,7 +2938,7 @@ element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
 
-	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_html_element *el = (dom_html_element *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
 	if (!el) {
 		return true;
@@ -2953,7 +2953,7 @@ element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	dom_exception exc = dom_string_create((const uint8_t *)str, len, &classstr);
 
 	if (exc == DOM_NO_ERR && classstr) {
-		exc = dom_element_set_attribute(el, corestring_dom_class, classstr);
+		exc = dom_html_element_set_class_name(el, classstr);
 		interpreter->changed = 1;
 		dom_string_unref(classstr);
 		debug_dump_xhtml(document->dom);

@@ -346,7 +346,7 @@ js_element_get_property_className(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 	JSValue r;
 
-	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_html_element *el = (dom_html_element *)(js_getopaque(this_val, js_element_class_id));
 	dom_string *classstr = NULL;
 	dom_exception exc;
 
@@ -354,7 +354,8 @@ js_element_get_property_className(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 	dom_node_ref(el);
-	exc = dom_element_get_attribute(el, corestring_dom_class, &classstr);
+
+	exc = dom_html_element_get_class_name(el, &classstr);
 
 	if (exc != DOM_NO_ERR) {
 		dom_node_unref(el);
@@ -1691,7 +1692,7 @@ js_element_set_property_className(JSContext *ctx, JSValueConst this_val, JSValue
 	dom_exception exc;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter);
-	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_html_element *el = (dom_html_element *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -1707,7 +1708,7 @@ js_element_set_property_className(JSContext *ctx, JSValueConst this_val, JSValue
 	exc = dom_string_create((const uint8_t *)str, len, &classstr);
 
 	if (exc == DOM_NO_ERR && classstr) {
-		exc = dom_element_set_attribute(el, corestring_dom_class, classstr);
+		exc = dom_html_element_set_class_name(el, classstr);
 		interpreter->changed = 1;
 		dom_string_unref(classstr);
 	}
