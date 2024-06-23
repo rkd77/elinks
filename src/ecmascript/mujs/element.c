@@ -2165,40 +2165,6 @@ el_add_child_element_common(xmlNode* child, xmlNode* node)
 #endif
 
 static void
-check_contains(dom_node *node, dom_node *searched, bool *result_set, bool *result)
-{
-	dom_nodelist *children = NULL;
-	dom_exception exc;
-	uint32_t size = 0;
-	uint32_t i;
-
-	if (*result_set) {
-		return;
-	}
-	exc = dom_node_get_child_nodes(node, &children);
-	if (exc == DOM_NO_ERR && children) {
-		exc = dom_nodelist_get_length(children, &size);
-
-		for (i = 0; i < size; i++) {
-			dom_node *item = NULL;
-			exc = dom_nodelist_item(children, i, &item);
-
-			if (exc == DOM_NO_ERR && item) {
-				if (item == searched) {
-					*result_set = true;
-					*result = true;
-					dom_node_unref(item);
-					return;
-				}
-				check_contains(item, searched, result_set, result);
-				dom_node_unref(item);
-			}
-		}
-		dom_nodelist_unref(children);
-	}
-}
-
-static void
 mjs_element_addEventListener(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -2563,17 +2529,28 @@ mjs_element_contains(js_State *J)
 		js_pushboolean(J, 0);
 		return;
 	}
+	dom_node_ref(el);
+	dom_node_ref(el2);
 
-	if (el == el2) {
-		js_pushboolean(J, 1);
-		return;
+	while (1) {
+		if (el == el2) {
+			dom_node_unref(el);
+			dom_node_unref(el2);
+			js_pushboolean(J, 1);
+			return;
+		}
+		dom_node *node = NULL;
+		dom_exception exc = dom_node_get_parent_node(el2, &node);
+
+		if (exc != DOM_NO_ERR || !node) {
+			dom_node_unref(el);
+			dom_node_unref(el2);
+			js_pushboolean(J, 0);
+			return;
+		}
+		dom_node_unref(el2);
+		el2 = node;
 	}
-
-	bool result_set = false;
-	bool result = false;
-
-	check_contains(el, el2, &result_set, &result);
-	js_pushboolean(J, result);
 }
 
 static void
