@@ -3821,40 +3821,6 @@ el_add_child_element_common(xmlNode* child, xmlNode* node)
 }
 #endif
 
-static void
-check_contains(dom_node *node, dom_node *searched, bool *result_set, bool *result)
-{
-	dom_nodelist *children = NULL;
-	dom_exception exc;
-	uint32_t size = 0;
-	uint32_t i;
-
-	if (*result_set) {
-		return;
-	}
-	exc = dom_node_get_child_nodes(node, &children);
-	if (exc == DOM_NO_ERR && children) {
-		exc = dom_nodelist_get_length(children, &size);
-
-		for (i = 0; i < size; i++) {
-			dom_node *item = NULL;
-			exc = dom_nodelist_item(children, i, &item);
-
-			if (exc == DOM_NO_ERR && item) {
-				if (item == searched) {
-					*result_set = true;
-					*result = true;
-					dom_node_unref(item);
-					return;
-				}
-				check_contains(item, searched, result_set, result);
-				dom_node_unref(item);
-			}
-		}
-		dom_nodelist_unref(children);
-	}
-}
-
 static bool
 element_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
@@ -4350,18 +4316,34 @@ element_contains(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		args.rval().setBoolean(false);
 		return true;
 	}
+	dom_node_ref(el);
 
-	if (el == el2) {
-		args.rval().setBoolean(true);
+	if (!el2) {
+		dom_node_unref(el);
+		args.rval().setBoolean(false);
 		return true;
 	}
-	bool result_set = false;
-	bool result = false;
+	dom_node_ref(el2);
 
-	check_contains(el, el2, &result_set, &result);
-	args.rval().setBoolean(result);
+	while (1) {
+		if (el == el2) {
+			dom_node_unref(el);
+			dom_node_unref(el2);
+			args.rval().setBoolean(true);
+			return true;
+		}
+		dom_node *node = NULL;
+		dom_exception exc = dom_node_get_parent_node(el2, &node);
 
-	return true;
+		if (exc != DOM_NO_ERR || !node) {
+			dom_node_unref(el);
+			dom_node_unref(el2);
+			args.rval().setBoolean(false);
+			return true;
+		}
+		dom_node_unref(el2);
+		el2 = node;
+	}
 }
 
 static bool
