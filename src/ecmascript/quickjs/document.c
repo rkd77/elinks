@@ -34,6 +34,7 @@
 #include "ecmascript/quickjs/document.h"
 #include "ecmascript/quickjs/element.h"
 #include "ecmascript/quickjs/nodelist.h"
+#include "ecmascript/quickjs/nodelist2.h"
 #include "ecmascript/quickjs/window.h"
 #include "session/session.h"
 #include "viewer/text/vs.h"
@@ -1700,21 +1701,22 @@ js_document_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JS
 		JS_FreeCString(ctx, selector);
 		return JS_NULL;
 	}
-	walk_tree_query_append((dom_node *)element, doc_root, selector, 0);
-	dom_node_unref(doc_root);
-	JS_FreeCString(ctx, selector);
+	LIST_OF(struct selector_node) *result_list = (LIST_OF(struct selector_node) *)mem_calloc(1, sizeof(*result_list));
 
-	dom_nodelist *nodes = NULL;
-	exc = dom_node_get_child_nodes(element, &nodes);
-	dom_node_unref(element);
-
-	if (exc != DOM_NO_ERR || !nodes) {
+	if (!result_list) {
 		dom_node_unref(doc);
+		dom_node_unref(doc_root);
+		JS_FreeCString(ctx, selector);
 		return JS_NULL;
 	}
+	init_list(*result_list);
+
+	walk_tree_query_append((dom_node *)element, doc_root, selector, 0, result_list);
+	dom_node_unref(doc_root);
+	JS_FreeCString(ctx, selector);
 	dom_node_unref(doc);
 
-	return getNodeList(ctx, nodes);
+	return getNodeList2(ctx, result_list);
 }
 
 #if 0
