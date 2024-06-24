@@ -608,7 +608,7 @@ xhr_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	if (!strchr(xhr->responseURL, '/')) {
+	if (xhr->responseURL[0] != '/') {
 		char *ref = get_uri_string(vs->uri, URI_DIR_LOCATION | URI_PATH);
 
 		if (ref) {

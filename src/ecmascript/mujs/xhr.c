@@ -416,7 +416,7 @@ mjs_xhr_open(js_State *J)
 		return;
 	}
 
-	if (!strchr(xhr->responseURL, '/')) {
+	if (xhr->responseURL[0] != '/') {
 		char *ref = get_uri_string(vs->uri, URI_DIR_LOCATION | URI_PATH);
 
 		if (ref) {

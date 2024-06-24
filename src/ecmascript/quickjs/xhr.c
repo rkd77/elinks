@@ -1058,7 +1058,7 @@ xhr_open(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 		struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 		struct view_state *vs = interpreter->vs;
 
-		if (!strchr(x->responseURL, '/')) {
+		if (x->responseURL[0] != '/') {
 			char *ref = get_uri_string(vs->uri, URI_DIR_LOCATION | URI_PATH);
 
 			if (ref) {
