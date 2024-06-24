@@ -5,6 +5,7 @@
 #include "ecmascript/libdom/dom.h"
 #include "main/module.h"
 #include "terminal/kbd.h"
+#include "util/lists.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -21,6 +22,12 @@ struct string;
 struct term_event;
 struct uri;
 struct view_state;
+
+struct selector_node {
+	LIST_HEAD_EL(struct selector_node);
+
+	void *node;
+};
 
 int ecmascript_get_interpreter_count(void);
 void ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter);
@@ -42,7 +49,7 @@ void ecmascript_detach_form_state(struct form_state *fs);
 void ecmascript_moved_form_state(struct form_state *fs);
 
 void *walk_tree_query(dom_node *node, const char *selector, int depth);
-void walk_tree_query_append(dom_node *root, dom_node *node, const char *selector, int depth);
+void walk_tree_query_append(dom_node *root, dom_node *node, const char *selector, int depth, LIST_OF(struct selector_node) *result_list);
 
 extern struct module ecmascript_module;
 

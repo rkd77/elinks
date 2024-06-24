@@ -559,7 +559,7 @@ walk_tree_query(dom_node *node, const char *selector, int depth)
 }
 
 void
-walk_tree_query_append(dom_node *root, dom_node *node, const char *selector, int depth)
+walk_tree_query_append(dom_node *root, dom_node *node, const char *selector, int depth, LIST_OF(struct selector_node) *result_list)
 {
 	dom_exception exc;
 	dom_node *child;
@@ -574,17 +574,11 @@ walk_tree_query_append(dom_node *root, dom_node *node, const char *selector, int
 	}
 
 	if (res = el_match_selector(selector, node)) {
-		dom_node *clone = NULL;
-		exc = dom_node_clone_node(res, false, &clone);
+		struct selector_node *sn = (struct selector_node *)mem_calloc(1, sizeof(*sn));
 
-		if (exc != DOM_NO_ERR || !clone) {
-		} else {
-			dom_node *result = NULL;
-			exc = dom_node_append_child(root, clone, &result);
-		}
-
-		if (exc != DOM_NO_ERR) {
-			return;
+		if (sn) {
+			sn->node = res;
+			add_to_list_end(*result_list, sn);
 		}
 	}
 	/* Get the node's first child */
@@ -601,7 +595,7 @@ walk_tree_query_append(dom_node *root, dom_node *node, const char *selector, int
 			dom_node *next_child;
 
 			/* Visit node's descendents */
-			walk_tree_query_append(root, child, selector, depth);
+			walk_tree_query_append(root, child, selector, depth, result_list);
 
 			/* Go to next sibling */
 			exc = dom_node_get_next_sibling(child, &next_child);
@@ -615,4 +609,3 @@ walk_tree_query_append(dom_node *root, dom_node *node, const char *selector, int
 		} while (child != NULL); /* No more children */
 	}
 }
-

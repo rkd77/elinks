@@ -41,6 +41,7 @@
 #include "ecmascript/spidermonkey/event.h"
 #include "ecmascript/spidermonkey/heartbeat.h"
 #include "ecmascript/spidermonkey/nodelist.h"
+#include "ecmascript/spidermonkey/nodelist2.h"
 #include "ecmascript/spidermonkey/util.h"
 #include "ecmascript/spidermonkey/window.h"
 #include "intl/libintl.h"
@@ -2181,19 +2182,21 @@ document_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setNull();
 		return true;
 	}
-	walk_tree_query_append((dom_node *)element, doc_root, selector, 0);
-	dom_node_unref(doc_root);
-	mem_free(selector);
+	LIST_OF(struct selector_node) *result_list = (LIST_OF(struct selector_node) *)mem_calloc(1, sizeof(*result_list));
 
-	dom_nodelist *nodes = NULL;
-	exc = dom_node_get_child_nodes(element, &nodes);
-	dom_node_unref(element);
-
-	if (exc != DOM_NO_ERR || !nodes) {
+	if (!result_list) {
+		dom_node_unref(doc_root);
+		mem_free(selector);
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *obj = getNodeList(ctx, nodes);
+	init_list(*result_list);
+
+	walk_tree_query_append((dom_node *)element, doc_root, selector, 0, result_list);
+	dom_node_unref(doc_root);
+	mem_free(selector);
+
+	JSObject *obj = getNodeList2(ctx, result_list);
 	args.rval().setObject(*obj);
 
 	return true;
