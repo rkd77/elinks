@@ -41,6 +41,7 @@
 #include "ecmascript/mujs/event.h"
 #include "ecmascript/mujs/keyboard.h"
 #include "ecmascript/mujs/nodelist.h"
+#include "ecmascript/mujs/nodelist2.h"
 #include "ecmascript/mujs/style.h"
 #include "ecmascript/mujs/window.h"
 #include "intl/libintl.h"
@@ -2987,17 +2988,15 @@ mjs_element_querySelectorAll(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	walk_tree_query_append((dom_node *)element, el, selector, 0);
+	LIST_OF(struct selector_node) *result_list = (LIST_OF(struct selector_node) *)mem_calloc(1, sizeof(*result_list));
 
-	dom_nodelist *nodes = NULL;
-	exc = dom_node_get_child_nodes(element, &nodes);
-	dom_node_unref(element);
-
-	if (exc != DOM_NO_ERR || !nodes) {
+	if (!result_list) {
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_nodelist(J, nodes);
+	init_list(*result_list);
+	walk_tree_query_append((dom_node *)element, el, selector, 0, result_list);
+	mjs_push_nodelist2(J, result_list);
 }
 
 static void
