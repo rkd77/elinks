@@ -104,6 +104,8 @@ static const unsigned char frame_simplify[FRAME_CHARS_END - FRAME_CHARS_BEGIN]
 	0xC5, '+' , '+' , '#' , 0xDB, 0xDB, 0xDB, 0xDB  /* 0xD8...0xDF */
 };
 
+static void dump_print(const char *option, struct string *url);
+
 /** Initialize dump_output::frame for the specified codepage.
  *
  * If the codepage does not support all the box-drawing characters
@@ -507,6 +509,7 @@ dump_formatted(int fd, struct download *download, struct cache_entry *cached)
 
 	init_vs(&vs, cached->uri, -1);
 
+
 	render_document(&vs, &formatted, &o);
 
 	out = dump_output_alloc(fd, NULL, o.cp);
@@ -545,8 +548,24 @@ dump_formatted(int fd, struct download *download, struct cache_entry *cached)
 #endif
 		}
 
-		if (!error)
+		if (!error) {
 			dump_references(formatted.document, fd, out->buf);
+		}
+
+		char *url = get_uri_string(cached->uri, URI_PUBLIC);
+
+		if (url) {
+			struct string urlstring;
+
+			if (init_string(&urlstring)) {
+				/* XXX: I think it ought to print footer at the end of
+				 * the whole dump (not only this file). Testing required.
+				* --pasky */
+				add_to_string(&urlstring, url);
+				dump_print("document.dump.footer", &urlstring);
+				done_string(&urlstring);
+			}
+		}
 
 		mem_free(out);
 	} /* if out */
@@ -774,10 +793,6 @@ dump_next(LIST_OF(struct string_list_item) *url_list)
 
 		dump_print("document.dump.header", &item->string);
 		dump_start(item->string.source);
-		/* XXX: I think it ought to print footer at the end of
-		 * the whole dump (not only this file). Testing required.
-		 * --pasky */
-		dump_print("document.dump.footer", &item->string);
 
 	} else {
 		free_string_list(&done_list);
