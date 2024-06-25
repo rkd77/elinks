@@ -104,7 +104,7 @@ static const unsigned char frame_simplify[FRAME_CHARS_END - FRAME_CHARS_BEGIN]
 	0xC5, '+' , '+' , '#' , 0xDB, 0xDB, 0xDB, 0xDB  /* 0xD8...0xDF */
 };
 
-static void dump_print(const char *option, struct string *url);
+static void dump_print(const char *option, const char *url);
 
 /** Initialize dump_output::frame for the specified codepage.
  *
@@ -551,22 +551,10 @@ dump_formatted(int fd, struct download *download, struct cache_entry *cached)
 		if (!error) {
 			dump_references(formatted.document, fd, out->buf);
 		}
-
 		char *url = get_uri_string(cached->uri, URI_PUBLIC);
 
-		if (url) {
-			struct string urlstring;
-
-			if (init_string(&urlstring)) {
-				/* XXX: I think it ought to print footer at the end of
-				 * the whole dump (not only this file). Testing required.
-				* --pasky */
-				add_to_string(&urlstring, url);
-				dump_print("document.dump.footer", &urlstring);
-				done_string(&urlstring);
-			}
-		}
-
+		dump_print("document.dump.footer", url);
+		mem_free_if(url);
 		mem_free(out);
 	} /* if out */
 
@@ -619,7 +607,7 @@ nextfrag:
 }
 
 static char *
-subst_url(char *str, struct string *url)
+subst_url(char *str, const char *url)
 {
 	struct string string;
 
@@ -663,7 +651,7 @@ subst_url(char *str, struct string *url)
 		str++;
 		switch (*str) {
 			case 'u':
-				if (url) add_string_to_string(&string, url);
+				if (url) add_to_string(&string, url);
 				break;
 		}
 
@@ -674,7 +662,7 @@ subst_url(char *str, struct string *url)
 }
 
 static void
-dump_print(const char *option, struct string *url)
+dump_print(const char *option, const char *url)
 {
 	char *str = get_opt_str(option, NULL);
 
@@ -791,7 +779,7 @@ dump_next(LIST_OF(struct string_list_item) *url_list)
 			first = 0;
 		}
 
-		dump_print("document.dump.header", &item->string);
+		dump_print("document.dump.header", item->string.source);
 		dump_start(item->string.source);
 
 	} else {
