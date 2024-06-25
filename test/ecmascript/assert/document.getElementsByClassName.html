@@ -13,7 +13,7 @@ First Name: <input name="fname" type="text" value="Doug">
 
 <script>
 function myFunction() {
-  var x = document.getElementsByClassName("test");//.item(1).outerHTML;
+  var x = document.getElementsByClassName("test").item(1).outerHTML;
   console.assert(x === '<button onclick="myFunction()" class="test">Try it</button>', x);
 }
 

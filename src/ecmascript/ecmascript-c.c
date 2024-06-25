@@ -609,3 +609,153 @@ walk_tree_query_append(dom_node *root, dom_node *node, const char *selector, int
 		} while (child != NULL); /* No more children */
 	}
 }
+
+static bool
+node_has_classes(struct dom_node *node, void *ctx)
+{
+	LIST_OF(struct class_string) *list = (LIST_OF(struct class_string) *)ctx;
+	struct class_string *st;
+
+	if (list_empty(*list)) {
+		return false;
+	}
+
+	foreach (st, *list) {
+		bool ret = false;
+		dom_exception exc = dom_element_has_class((struct dom_element *)node, st->name, &ret);
+
+		if (exc != DOM_NO_ERR || !ret) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+static LIST_OF(struct class_string) *
+prepare_strings(char *text)
+{
+	if (!text) {
+		return NULL;
+	}
+	LIST_OF(struct class_string) *list = (LIST_OF(struct class_string) *)mem_calloc(1, sizeof(*list));
+
+	if (!list) {
+		return NULL;
+	}
+	init_list(*list);
+	char *pos = text;
+
+	while (*pos) {
+		skip_space(pos);
+		if (*pos) {
+			char *begin = pos;
+
+			skip_nonspace(pos);
+			struct class_string *klass = (struct class_string *)mem_calloc(1, sizeof(*klass));
+
+			if (!klass) {
+				continue;
+			}
+			lwc_string *ls = NULL;
+			lwc_error err = lwc_intern_string(begin, pos - begin, &ls);
+
+			if (err == lwc_error_ok) {
+				klass->name = ls;
+				add_to_list_end(*list, klass);
+			} else {
+				mem_free(klass);
+			}
+		}
+	}
+
+	return list;
+}
+
+typedef bool (*dom_callback_is_in_collection)(struct dom_node *node, void *ctx);
+
+/**
+ * The html_collection structure
+ */
+struct el_dom_html_collection {
+	dom_callback_is_in_collection ic;
+	/**< The function pointer used to test
+	 * whether some node is an element of
+	 * this collection
+	 */
+	void *ctx; /**< Context for the callback */
+	struct dom_html_document *doc;  /**< The document created this
+                                     * collection
+                                     */
+	dom_node *root; /**< The root node of this collection */
+	uint32_t refcnt; /**< Reference counting */
+};
+
+/**
+ * Intialiase a dom_html_collection
+ *
+ * \param doc   The document
+ * \param col   The collection object to be initialised
+ * \param root  The root element of the collection
+ * \param ic    The callback function used to determin whether certain node
+ *              beint32_ts to the collection
+ * \return DOM_NO_ERR on success.
+ */
+static dom_exception
+el_dom_html_collection_initialise(dom_html_document *doc,
+                struct el_dom_html_collection *col,
+                dom_node *root,
+                dom_callback_is_in_collection ic, void *ctx)
+{
+	assert(doc != NULL);
+	assert(ic != NULL);
+	assert(root != NULL);
+
+	col->doc = doc;
+	dom_node_ref(doc);
+	col->root = root;
+	dom_node_ref(root);
+
+	col->ic = ic;
+	col->ctx = ctx;
+	col->refcnt = 1;
+
+	return DOM_NO_ERR;
+}
+
+static dom_exception
+el_dom_html_collection_create(dom_html_document *doc,
+                dom_node *root,
+                dom_callback_is_in_collection ic,
+                void *ctx,
+                el_dom_html_collection **col)
+{
+	*col = (el_dom_html_collection *)malloc(sizeof(struct el_dom_html_collection));
+
+	if (*col == NULL) {
+		return DOM_NO_MEM_ERR;
+	}
+
+	return el_dom_html_collection_initialise(doc, *col, root, ic, ctx);
+}
+
+void *
+get_elements_by_class_name(dom_html_document *doc, dom_node *node, char *classes)
+{
+	if (!node || !classes) {
+		return NULL;
+	}
+	LIST_OF(struct class_string) *list = prepare_strings(classes);
+
+	if (!list) {
+		return NULL;
+	}
+	el_dom_html_collection *col = NULL;
+	dom_exception exc = el_dom_html_collection_create(doc, node, node_has_classes, list, &col);
+
+	if (exc != DOM_NO_ERR || !col) {
+		return NULL;
+	}
+
+	return col;
+}

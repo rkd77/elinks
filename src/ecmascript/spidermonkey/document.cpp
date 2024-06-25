@@ -1243,7 +1243,7 @@ const spidermonkeyFunctionSpec document_funcs[] = {
 	{ "writeln",		document_writeln,	1 },
 	{ "replace",		document_replace,	2 },
 	{ "getElementById",	document_getElementById,	1 },
-//	{ "getElementsByClassName",	document_getElementsByClassName,	1 },
+	{ "getElementsByClassName",	document_getElementsByClassName,	1 },
 //	{ "getElementsByName",	document_getElementsByName,	1 },
 	{ "getElementsByTagName",	document_getElementsByTagName,	1 },
 	{ "querySelector",	document_querySelector,	1 },
@@ -1963,17 +1963,35 @@ document_getElementsByClassName(JSContext *ctx, unsigned int argc, JS::Value *vp
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	if (argc != 1) {
-		args.rval().setBoolean(false);
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	dom_html_document *doc = JS::GetMaybePtrFromReservedSlot<dom_html_document>(hobj, 0);
+
+	if (!doc) {
+		args.rval().setNull();
 		return true;
 	}
 
-	JS::Realm *comp = js::GetContextRealm(ctx);
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	if (argc != 1) {
+		args.rval().setNull();
+		return true;
+	}
+	char *classes = jsval_to_string(ctx, args[0]);
+	dom_html_collection *col = get_elements_by_class_name(doc, (dom_node *)doc, classes);
+	mem_free_if(classes);
 
-// TODO
-	args.rval().setNull();
+	if (!col) {
+		args.rval().setNull();
+		return true;
+	}
+	JSObject *obj = getCollection(ctx, col);
+	args.rval().setObject(*obj);
 
 	return true;
 }

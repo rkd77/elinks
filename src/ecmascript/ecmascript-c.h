@@ -29,6 +29,12 @@ struct selector_node {
 	void *node;
 };
 
+struct class_string {
+	LIST_HEAD_EL(struct class_string);
+
+	void *name;
+};
+
 int ecmascript_get_interpreter_count(void);
 void ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter);
 void toggle_ecmascript(struct session *ses);
@@ -50,6 +56,7 @@ void ecmascript_moved_form_state(struct form_state *fs);
 
 void *walk_tree_query(dom_node *node, const char *selector, int depth);
 void walk_tree_query_append(dom_node *root, dom_node *node, const char *selector, int depth, LIST_OF(struct selector_node) *result_list);
+void *get_elements_by_class_name(dom_html_document *doc, dom_node *node, char *classes);
 
 extern struct module ecmascript_module;
 
