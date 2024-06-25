@@ -728,9 +728,9 @@ el_dom_html_collection_create(dom_html_document *doc,
                 dom_node *root,
                 dom_callback_is_in_collection ic,
                 void *ctx,
-                el_dom_html_collection **col)
+                struct el_dom_html_collection **col)
 {
-	*col = (el_dom_html_collection *)malloc(sizeof(struct el_dom_html_collection));
+	*col = (struct el_dom_html_collection *)malloc(sizeof(struct el_dom_html_collection));
 
 	if (*col == NULL) {
 		return DOM_NO_MEM_ERR;
@@ -750,7 +750,7 @@ get_elements_by_class_name(dom_html_document *doc, dom_node *node, char *classes
 	if (!list) {
 		return NULL;
 	}
-	el_dom_html_collection *col = NULL;
+	struct el_dom_html_collection *col = NULL;
 	dom_exception exc = el_dom_html_collection_create(doc, node, node_has_classes, list, &col);
 
 	if (exc != DOM_NO_ERR || !col) {

@@ -27,6 +27,8 @@
 void *map_collections;
 void *map_rev_collections;
 
+JSClassID js_htmlCollection_class_id;
+
 static void *
 js_htmlCollection_GetOpaque(JSValueConst this_val)
 {
@@ -44,6 +46,20 @@ js_htmlCollection_SetOpaque(JSValueConst this_val, void *node)
 		attr_erase_from_map_rev(map_rev_collections, this_val);
 	} else {
 		attr_save_in_map_rev(map_rev_collections, this_val, node);
+	}
+}
+
+static
+void js_htmlColection_finalizer(JSRuntime *rt, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(val);
+	dom_html_collection *ns = (dom_html_collection *)(js_htmlCollection_GetOpaque(val));
+
+	if (ns) {
+		dom_html_collection_unref(ns);
 	}
 }
 
@@ -292,6 +308,11 @@ static const JSCFunctionListEntry js_htmlCollection_proto_funcs[] = {
 	JS_CFUNC_DEF("toString", 0, js_htmlCollection_toString)
 };
 
+static JSClassDef js_htmlCollection_class = {
+	"htmlCollection",
+	.finalizer = js_htmlColection_finalizer
+};
+
 JSValue
 getCollection(JSContext *ctx, void *node)
 {
@@ -311,12 +332,19 @@ getCollection(JSContext *ctx, void *node)
 
 		RETURN_JS(r);
 	}
-	JSValue htmlCollection_obj = JS_NewArray(ctx);
-	JS_SetPropertyFunctionList(ctx, htmlCollection_obj, js_htmlCollection_proto_funcs, countof(js_htmlCollection_proto_funcs));
-	js_htmlCollection_SetOpaque(htmlCollection_obj, node);
-	js_htmlCollection_set_items(ctx, htmlCollection_obj, node);
-	attr_save_in_map(map_collections, node, htmlCollection_obj);
-	JSValue rr = JS_DupValue(ctx, htmlCollection_obj);
+	/* nodelist class */
+	JS_NewClassID(&js_htmlCollection_class_id);
+	JS_NewClass(JS_GetRuntime(ctx), js_htmlCollection_class_id, &js_htmlCollection_class);
+	JSValue proto = JS_NewArray(ctx);
+	REF_JS(proto);
+
+	JS_SetPropertyFunctionList(ctx, proto, js_htmlCollection_proto_funcs, countof(js_htmlCollection_proto_funcs));
+	JS_SetClassProto(ctx, js_htmlCollection_class_id, proto);
+
+	js_htmlCollection_SetOpaque(proto, node);
+	js_htmlCollection_set_items(ctx, proto, node);
+	attr_save_in_map(map_collections, node, proto);
+	JSValue rr = JS_DupValue(ctx, proto);
 
 	RETURN_JS(rr);
 }

@@ -105,7 +105,6 @@ js_document_get_property_anchors(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 	JSValue rr = getCollection(ctx, anchors);
-	JS_FreeValue(ctx, rr);
 	dom_node_unref(doc);
 
 	RETURN_JS(rr);
@@ -509,7 +508,6 @@ js_document_get_property_images(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 	JSValue rr = getCollection(ctx, images);
-	JS_FreeValue(ctx, rr);
 	dom_node_unref(doc);
 
 	RETURN_JS(rr);
@@ -549,7 +547,6 @@ js_document_get_property_links(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 	JSValue rr = getCollection(ctx, links);
-	JS_FreeValue(ctx, rr);
 	dom_node_unref(doc);
 
 	RETURN_JS(rr);
@@ -1461,44 +1458,27 @@ js_document_getElementsByClassName(JSContext *ctx, JSValueConst this_val, int ar
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
+	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val, js_document_class_id);
 
-	if (argc != 1) {
-		return JS_FALSE;
-	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-
-// TODO
-	return JS_NULL;
-#if 0
-
-	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
-	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
-
-	const char *str;
-	size_t len;
-
-	str = JS_ToCStringLen(ctx, &len, argv[0]);
-
-	if (!str) {
-		return JS_EXCEPTION;
-	}
-	xmlpp::ustring id = str;
-	JS_FreeCString(ctx, str);
-
-	xmlpp::ustring xpath = "//*[@class=\"";
-	xpath += id;
-	xpath += "\"]";
-	xmlpp::Node::NodeSet *elements = new(std::nothrow) xmlpp::Node::NodeSet;
-
-	if (!elements) {
+	if (!doc) {
 		return JS_NULL;
 	}
-	*elements = root->find(xpath);
-	JSValue rr = getCollection(ctx, elements);
-	JS_FreeValue(ctx, rr);
 
-	RETURN_JS(rr);
-#endif
+	if (argc != 1) {
+		return JS_NULL;
+	}
+	const char *classes = JS_ToCString(ctx, argv[0]);
+	dom_html_collection *col = get_elements_by_class_name(doc, (dom_node *)doc, classes);
+
+	if (classes) {
+		JS_FreeCString(ctx, classes);
+	}
+	if (!col) {
+		return JS_NULL;
+	}
+	JSValue ret = getCollection(ctx, col);
+
+	RETURN_JS(ret);
 }
 
 static JSValue
@@ -1853,7 +1833,7 @@ static const JSCFunctionListEntry js_document_proto_funcs[] = {
 	JS_CFUNC_DEF("removeEventListener",	3, js_document_removeEventListener),
 	JS_CFUNC_DEF("replace",		2, js_document_replace),
 	JS_CFUNC_DEF("getElementById",	1, js_document_getElementById),
-//	JS_CFUNC_DEF("getElementsByClassName",	1, js_document_getElementsByClassName),
+	JS_CFUNC_DEF("getElementsByClassName",	1, js_document_getElementsByClassName),
 //	JS_CFUNC_DEF("getElementsByName",	1, js_document_getElementsByName),
 	JS_CFUNC_DEF("getElementsByTagName",	1, js_document_getElementsByTagName),
 	JS_CFUNC_DEF("querySelector",	1, js_document_querySelector),
