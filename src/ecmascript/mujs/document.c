@@ -1236,39 +1236,20 @@ mjs_document_getElementsByClassName(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
+	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
 
-	if (!document->dom) {
+	if (!doc) {
 		js_pushnull(J);
 		return;
 	}
-// TODO
-#if 0
-	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
-	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
+	const char *classes = js_tostring(J, 1);
+	dom_html_collection *col = get_elements_by_class_name(doc, (dom_node *)doc, classes);
 
-	const char *str = js_tostring(J, 1);
-
-	if (!str) {
-		js_error(J, "!str");
-		return;
-	}
-	xmlpp::ustring id = str;
-	xmlpp::ustring xpath = "//*[@class=\"";
-	xpath += id;
-	xpath += "\"]";
-	xmlpp::Node::NodeSet *elements = new(std::nothrow) xmlpp::Node::NodeSet;
-
-	if (!elements) {
+	if (!col) {
 		js_pushnull(J);
 		return;
 	}
-	*elements = root->find(xpath);
-	mjs_push_collection(J, elements);
-#endif
-	js_pushnull(J);
+	mjs_push_collection(J, col);
 }
 
 static void
@@ -1542,7 +1523,7 @@ mjs_document_init(js_State *J)
 		addmethod(J, "writeln",		mjs_document_writeln, 1);
 		addmethod(J, "replace",		mjs_document_replace, 2);
 		addmethod(J, "getElementById",	mjs_document_getElementById, 1);
-//		addmethod(J, "getElementsByClassName",	mjs_document_getElementsByClassName, 1);
+		addmethod(J, "getElementsByClassName",	mjs_document_getElementsByClassName, 1);
 //		addmethod(J, "getElementsByName",	mjs_document_getElementsByName, 1);
 		addmethod(J, "getElementsByTagName",	mjs_document_getElementsByTagName, 1);
 		addmethod(J, "querySelector",	mjs_document_querySelector, 1);
@@ -1668,7 +1649,7 @@ mjs_push_document(js_State *J, void *doc)
 		addmethod(J, "writeln",		mjs_document_writeln, 1);
 		addmethod(J, "replace",		mjs_document_replace, 2);
 		addmethod(J, "getElementById",	mjs_document_getElementById, 1);
-//		addmethod(J, "getElementsByClassName",	mjs_document_getElementsByClassName, 1);
+		addmethod(J, "getElementsByClassName",	mjs_document_getElementsByClassName, 1);
 //		addmethod(J, "getElementsByName",	mjs_document_getElementsByName, 1);
 		addmethod(J, "getElementsByTagName",	mjs_document_getElementsByTagName, 1);
 		addmethod(J, "querySelector",	mjs_document_querySelector, 1);
