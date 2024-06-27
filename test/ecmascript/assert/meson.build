@@ -28,6 +28,7 @@ took = [
 'element.attributes.html',
 'element.checked.html',
 'element.childElementCount.html',
+'element.classList.html',
 'element.className.html',
 'element.cloneNode.html',
 'element.closest.html',

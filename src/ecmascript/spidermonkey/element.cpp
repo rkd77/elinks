@@ -41,6 +41,7 @@
 #include "ecmascript/spidermonkey/nodelist.h"
 #include "ecmascript/spidermonkey/nodelist2.h"
 #include "ecmascript/spidermonkey/style.h"
+#include "ecmascript/spidermonkey/tokenlist.h"
 #include "ecmascript/spidermonkey/window.h"
 #include "intl/libintl.h"
 #include "main/select.h"
@@ -73,6 +74,7 @@ static bool element_set_property_checked(JSContext *ctx, unsigned int argc, JS::
 static bool element_get_property_children(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_childElementCount(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_childNodes(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_classList(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool element_get_property_clientHeight(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -165,6 +167,7 @@ JSPropertySpec element_props[] = {
 	JS_PSG("children",	element_get_property_children, JSPROP_ENUMERATE),
 	JS_PSG("childElementCount",	element_get_property_childElementCount, JSPROP_ENUMERATE),
 	JS_PSG("childNodes",	element_get_property_childNodes, JSPROP_ENUMERATE),
+	JS_PSG("classList",	element_get_property_classList, JSPROP_ENUMERATE),
 	JS_PSGS("className",	element_get_property_className, element_set_property_className, JSPROP_ENUMERATE),
 //	JS_PSG("clientHeight",	element_get_property_clientHeight, JSPROP_ENUMERATE),
 //	JS_PSG("clientLeft",	element_get_property_clientLeft, JSPROP_ENUMERATE),
@@ -543,6 +546,61 @@ element_get_property_childNodes(JSContext *ctx, unsigned int argc, JS::Value *vp
 	JSObject *obj = getNodeList(ctx, nodes);
 	args.rval().setObject(*obj);
 
+	return true;
+}
+
+static bool
+element_get_property_classList(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	vs = interpreter->vs;
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	dom_element *el = (dom_element *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+	dom_tokenlist *tl = NULL;
+	dom_exception exc = dom_tokenlist_create(el, corestring_dom_class, &tl);
+
+	if (exc != DOM_NO_ERR || !tl) {
+		args.rval().setNull();
+		return true;
+	}
+	JSObject *res = getTokenlist(ctx, tl);
+	args.rval().setObject(*res);
 	return true;
 }
 

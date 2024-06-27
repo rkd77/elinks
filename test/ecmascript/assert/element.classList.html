@@ -1,0 +1,24 @@
+<script>
+function aa()
+{
+	var div = document.createElement("div");
+	div.className = "foo";
+
+	// our starting state: <div class="foo"></div>
+	console.assert(div.outerHTML === '<div class="foo"></div>', 'class foo');
+	// use the classList API to remove and add classes
+	div.classList.remove("foo");
+	console.assert(div.outerHTML === '<div class=""></div>', 'empty class');
+	div.classList.add("anotherclass");
+	// <div class="anotherclass"></div>
+	console.assert(div.outerHTML === '<div class="anotherclass"></div>', 'anotherclass');
+	console.assert(div.classList.contains("anotherclass"), 'contains anotherclass');
+	console.assert(!div.classList.contains("foo"), 'not foo');
+	div.classList.toggle("foo");
+	console.assert(div.classList.contains("foo"), 'contains foo');
+}
+
+console.error('element.classList.html');
+aa();
+console.exit();
+</script>
