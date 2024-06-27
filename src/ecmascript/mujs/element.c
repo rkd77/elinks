@@ -43,6 +43,7 @@
 #include "ecmascript/mujs/nodelist.h"
 #include "ecmascript/mujs/nodelist2.h"
 #include "ecmascript/mujs/style.h"
+#include "ecmascript/mujs/tokenlist.h"
 #include "ecmascript/mujs/window.h"
 #include "intl/libintl.h"
 #include "main/select.h"
@@ -249,6 +250,30 @@ mjs_element_get_property_childNodes(js_State *J)
 		return;
 	}
 	mjs_push_nodelist(J, nodes);
+}
+
+static void
+mjs_element_get_property_classList(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_element *el = (dom_element *)(mjs_getprivate(J, 0));
+
+	if (!el) {
+		js_pushnull(J);
+		return;
+	}
+	dom_node_ref(el);
+	dom_tokenlist *tl = NULL;
+	dom_exception exc = dom_tokenlist_create(el, corestring_dom_class, &tl);
+	dom_node_unref(el);
+
+	if (exc != DOM_NO_ERR || !tl) {
+		js_pushnull(J);
+		return;
+	}
+	mjs_push_tokenlist(J, tl);
 }
 
 static void
@@ -3221,6 +3246,7 @@ mjs_push_element(js_State *J, void *node)
 		addproperty(J, "children",	mjs_element_get_property_children, NULL);
 		addproperty(J, "childElementCount",	mjs_element_get_property_childElementCount, NULL);
 		addproperty(J, "childNodes",	mjs_element_get_property_childNodes, NULL);
+		addproperty(J, "classList",	mjs_element_get_property_classList, NULL);
 		addproperty(J, "className",	mjs_element_get_property_className, mjs_element_set_property_className);
 //		addproperty(J, "clientHeight",	mjs_element_get_property_clientHeight, NULL);
 //		addproperty(J, "clientLeft", mjs_element_get_property_clientLeft, NULL);
