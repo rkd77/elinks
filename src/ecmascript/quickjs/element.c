@@ -37,6 +37,7 @@
 #include "ecmascript/quickjs/nodelist.h"
 #include "ecmascript/quickjs/nodelist2.h"
 #include "ecmascript/quickjs/style.h"
+#include "ecmascript/quickjs/tokenlist.h"
 #include "ecmascript/quickjs/window.h"
 #include "session/session.h"
 #include "terminal/event.h"
@@ -337,6 +338,32 @@ js_element_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 	dom_node_unref(el);
 
 	RETURN_JS(rr);
+}
+
+static JSValue
+js_element_get_property_classList(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	JSValue r;
+
+	dom_element *el = (dom_element *)(js_getopaque(this_val, js_element_class_id));
+
+	if (!el) {
+		return JS_NULL;
+	}
+	dom_node_ref(el);
+	dom_tokenlist *tl = NULL;
+	dom_exception exc = dom_tokenlist_create(el, corestring_dom_class, &tl);
+	dom_node_unref(el);
+
+	if (exc != DOM_NO_ERR || !tl) {
+		return JS_NULL;
+	}
+
+	return getTokenlist(ctx, tl);
 }
 
 static JSValue
@@ -3589,6 +3616,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("children",	js_element_get_property_children, NULL),
 	JS_CGETSET_DEF("childElementCount",	js_element_get_property_childElementCount, NULL),
 	JS_CGETSET_DEF("childNodes",	js_element_get_property_childNodes, NULL),
+	JS_CGETSET_DEF("classList",	js_element_get_property_classList, NULL),
 	JS_CGETSET_DEF("className",	js_element_get_property_className, js_element_set_property_className),
 //	JS_CGETSET_DEF("clientHeight",	js_element_get_property_clientHeight, NULL),
 //	JS_CGETSET_DEF("clientLeft",	js_element_get_property_clientLeft, NULL),

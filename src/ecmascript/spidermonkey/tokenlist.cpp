@@ -142,7 +142,7 @@ tokenlist_add(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	exc = dom_tokenlist_add(tl, kl);
 	dom_string_unref(kl);
 
-	if (exc != DOM_NO_ERR) {
+	if (exc == DOM_NO_ERR) {
 		interpreter->changed = true;
 	}
 	args.rval().setUndefined();
@@ -242,7 +242,7 @@ tokenlist_remove(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	exc = dom_tokenlist_remove(tl, kl);
 	dom_string_unref(kl);
 
-	if (exc != DOM_NO_ERR) {
+	if (exc == DOM_NO_ERR) {
 		interpreter->changed = true;
 	}
 	args.rval().setUndefined();
