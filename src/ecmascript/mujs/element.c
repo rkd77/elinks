@@ -81,6 +81,7 @@ struct mjs_element_private {
 
 static void element_event_handler(dom_event *event, void *pw);
 static void mjs_element_dispatchEvent(js_State *J);
+static void mjs_element_set_property_textContent(js_State *J);
 
 void *
 mjs_getprivate(js_State *J, int idx)
@@ -1808,27 +1809,7 @@ mjs_element_set_property_innerText(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-//TODO 
-#if 0
-	const char *val = js_tostring(J, 1);
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
-
-	if (!el) {
-		js_pushundefined(J);
-		return;
-	}
-	auto children = el->get_children();
-	auto it = children.begin();
-	auto end = children.end();
-
-	for (;it != end; ++it) {
-		xmlpp::Node::remove_node(*it);
-	}
-	el->add_child_text(val);
-	interpreter->changed = 1;
-#endif
-	js_pushundefined(J);
+	mjs_element_set_property_textContent(J);
 }
 
 static void

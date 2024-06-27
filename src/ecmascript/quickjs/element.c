@@ -64,6 +64,7 @@ struct js_element_private {
 };
 
 static void element_event_handler(dom_event *event, void *pw);
+static JSValue js_element_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSValue val);
 
 void *
 js_getopaque(JSValueConst obj, JSClassID class_id)
@@ -1944,36 +1945,7 @@ js_element_set_property_innerText(JSContext *ctx, JSValueConst this_val, JSValue
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	REF_JS(this_val);
-	REF_JS(val);
-
-// TODO
-#if 0
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
-
-	if (!el) {
-		return JS_UNDEFINED;
-	}
-	auto children = el->get_children();
-	auto it = children.begin();
-	auto end = children.end();
-
-	for (;it != end; ++it) {
-		xmlpp::Node::remove_node(*it);
-	}
-	size_t len;
-	const char *str = JS_ToCStringLen(ctx, &len, val);
-
-	if (!str) {
-		return JS_EXCEPTION;
-	}
-	el->add_child_text(str);
-	interpreter->changed = 1;
-	JS_FreeCString(ctx, str);
-#endif
-
-	return JS_UNDEFINED;
+	return js_element_set_property_textContent(ctx, this_val, val);
 }
 
 static JSValue

@@ -3260,64 +3260,13 @@ out:
 	return true;
 }
 
-
 static bool
 element_set_property_innerText(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JS::CallArgs args = CallArgsFromVp(argc, vp);
-	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-
-	JS::Realm *comp = js::GetContextRealm(ctx);
-
-	if (!comp) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-#if 0
-
-// TODO
-	struct view_state *vs = interpreter->vs;
-	if (!vs) {
-		return true;
-	}
-	struct document_view *doc_view = vs->doc_view;
-	struct document *document = doc_view->document;
-
-	dom_node *el = JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
-	if (!el) {
-		return true;
-	}
-
-	auto children = el->get_children();
-	auto it = children.begin();
-	auto end = children.end();
-	for (;it != end; ++it) {
-		xmlpp::Node::remove_node(*it);
-	}
-
-	char *text = jsval_to_string(ctx, args[0]);
-	el->add_child_text(text);
-	interpreter->changed = 1;
-	mem_free_if(text);
-	debug_dump_xhtml(document->dom);
-#endif
-
-	return true;
+	return element_set_property_textContent(ctx, argc, vp);
 }
 
 static bool
