@@ -33,6 +33,7 @@
 #include "ecmascript/spidermonkey/attr.h"
 #include "ecmascript/spidermonkey/attributes.h"
 #include "ecmascript/spidermonkey/collection.h"
+#include "ecmascript/spidermonkey/dataset.h"
 #include "ecmascript/spidermonkey/domrect.h"
 #include "ecmascript/spidermonkey/event.h"
 #include "ecmascript/spidermonkey/element.h"
@@ -77,6 +78,7 @@ static bool element_get_property_childNodes(JSContext *ctx, unsigned int argc, J
 static bool element_get_property_classList(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_dataset(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool element_get_property_clientHeight(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool element_get_property_clientLeft(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool element_get_property_clientTop(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -173,6 +175,7 @@ JSPropertySpec element_props[] = {
 //	JS_PSG("clientLeft",	element_get_property_clientLeft, JSPROP_ENUMERATE),
 //	JS_PSG("clientTop",	element_get_property_clientTop, JSPROP_ENUMERATE),
 //	JS_PSG("clientWidth",	element_get_property_clientWidth, JSPROP_ENUMERATE),
+	JS_PSG("dataset",	element_get_property_dataset, JSPROP_ENUMERATE),
 	JS_PSGS("dir",	element_get_property_dir, element_set_property_dir, JSPROP_ENUMERATE),
 	JS_PSG("firstChild",	element_get_property_firstChild, JSPROP_ENUMERATE),
 	JS_PSG("firstElementChild",	element_get_property_firstElementChild, JSPROP_ENUMERATE),
@@ -666,6 +669,27 @@ element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+
+static bool
+element_get_property_dataset(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+	JSObject *obj = getDataset(ctx, el);
+	args.rval().setObject(*obj);
+
+	return true;
+}
+
 
 #if 0 // it does not work yet
 static bool
@@ -4460,7 +4484,6 @@ element_getAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return true;
 	}
 	len = strlen(str);
-
 	exc = dom_string_create((const uint8_t *)str, len, &attr_name);
 	mem_free(str);
 
@@ -4468,7 +4491,6 @@ element_getAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		args.rval().setNull();
 		return true;
 	}
-
 	exc = dom_element_get_attribute(el, attr_name, &attr_value);
 	dom_string_unref(attr_name);
 

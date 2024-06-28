@@ -14,6 +14,10 @@ function myFunction() {
   console.assert(div.dataset.b === 'abc', 'abc');
   div.dataset.b = '123';
   console.assert(div.dataset.b === '123', '123');
+  console.assert(div.dataset.abc === undefined, 'undefined');
+
+  delete(div.dataset.b);
+  console.assert(div.dataset.b === undefined, 'undefined because deleted');
 }
 
 console.error('element.dataset.html');

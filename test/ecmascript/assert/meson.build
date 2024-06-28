@@ -33,6 +33,7 @@ took = [
 'element.cloneNode.html',
 'element.closest.html',
 'element.contains.html',
+'element.dataset.html',
 'element.dir.html',
 'element.eventListener.html',
 'element.firstChild.html',
