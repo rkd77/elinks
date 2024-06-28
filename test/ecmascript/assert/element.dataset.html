@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<div id="a" data-a="1" data-b="abc" data-cd="123"></div>
+
+<button onclick="myFunction()">Try it</button>
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var div = document.getElementById('a');
+  console.assert(div.dataset.b === 'abc', 'abc');
+  div.dataset.b = '123';
+  console.assert(div.dataset.b === '123', '123');
+}
+
+console.error('element.dataset.html');
+myFunction();
+console.exit();
+</script>
+
+</body>
+</html>
