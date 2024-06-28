@@ -11,6 +11,9 @@ function aa()
 {
 	var a = document.getElementById('blabla').getAttribute('rel');
 	console.assert(a === 'nofollow', a);
+	document.getElementById('blabla').removeAttribute('rel');
+	var a2 = document.getElementById('blabla').getAttribute('rel');
+	console.assert(a2 === null, 'removed');
 }
 
 function bb()
