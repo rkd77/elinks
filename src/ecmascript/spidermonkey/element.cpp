@@ -3802,6 +3802,7 @@ static bool element_matches(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_querySelector(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool element_removeAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_removeChild(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_replaceWith(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -3831,6 +3832,7 @@ const spidermonkeyFunctionSpec element_funcs[] = {
 	{ "querySelector",		element_querySelector,	1 },
 	{ "querySelectorAll",		element_querySelectorAll,	1 },
 	{ "remove",		element_remove,	0 },
+	{ "removeAttribute",	element_removeAttribute,	1 },
 	{ "removeChild",	element_removeChild,	1 },
 	{ "removeEventListener",	element_removeEventListener,	3 },
 	{ "replaceWith",	element_replaceWith,	1 },
@@ -5144,6 +5146,58 @@ element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	interpreter->changed = 1;
 	debug_dump_xhtml(document->dom);
 #endif
+	return true;
+}
+
+static bool
+element_removeAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp || argc != 1) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	args.rval().setUndefined();
+
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_exception exc;
+	dom_string *attr_name = NULL;
+
+	if (!el) {
+		return true;
+	}
+	size_t len;
+	char *str = jsval_to_string(ctx, args[0]);
+
+	if (!str) {
+		return true;
+	}
+	len = strlen(str);
+	exc = dom_string_create((const uint8_t *)str, len, &attr_name);
+	mem_free(str);
+
+	if (exc != DOM_NO_ERR || !attr_name) {
+		return true;
+	}
+	exc = dom_element_remove_attribute(el, attr_name);
+	dom_string_unref(attr_name);
+
 	return true;
 }
 
