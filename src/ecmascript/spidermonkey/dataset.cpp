@@ -159,6 +159,7 @@ dataset_obj_setProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleId id, J
 	done_string(&data);
 
 	if (exc != DOM_NO_ERR || !attr_name) {
+		mem_free(value);
 		return true;
 	}
 	dom_string *attr_value = NULL;

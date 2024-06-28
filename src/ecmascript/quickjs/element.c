@@ -29,6 +29,7 @@
 #include "ecmascript/quickjs/attr.h"
 #include "ecmascript/quickjs/attributes.h"
 #include "ecmascript/quickjs/collection.h"
+#include "ecmascript/quickjs/dataset.h"
 #include "ecmascript/quickjs/domrect.h"
 #include "ecmascript/quickjs/element.h"
 #include "ecmascript/quickjs/event.h"
@@ -532,6 +533,21 @@ js_element_get_property_clientWidth(JSContext *ctx, JSValueConst this_val)
 	return JS_NewInt32(ctx, dx);
 }
 #endif
+
+static JSValue
+js_element_get_property_dataset(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	dom_element *el = (dom_element *)(js_getopaque(this_val, js_element_class_id));
+
+	if (!el) {
+		return JS_NULL;
+	}
+	return getDataset(ctx, el);
+}
 
 static JSValue
 js_element_get_property_dir(JSContext *ctx, JSValueConst this_val)
@@ -3664,6 +3680,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 //	JS_CGETSET_DEF("clientLeft",	js_element_get_property_clientLeft, NULL),
 //	JS_CGETSET_DEF("clientTop",	js_element_get_property_clientTop, NULL),
 //	JS_CGETSET_DEF("clientWidth",	js_element_get_property_clientWidth, NULL),
+	JS_CGETSET_DEF("dataset",	js_element_get_property_dataset, NULL),
 	JS_CGETSET_DEF("dir",	js_element_get_property_dir, js_element_set_property_dir),
 	JS_CGETSET_DEF("firstChild",	js_element_get_property_firstChild, NULL),
 	JS_CGETSET_DEF("firstElementChild",	js_element_get_property_firstElementChild, NULL),
