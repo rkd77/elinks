@@ -3028,6 +3028,39 @@ mjs_element_remove(js_State *J)
 }
 
 static void
+mjs_element_removeAttribute(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+	dom_exception exc;
+	dom_string *attr_name = NULL;
+
+	if (!el) {
+		js_pushundefined(J);
+		return;
+	}
+	const char *str = js_tostring(J, 1);
+
+	if (!str) {
+		js_error(J, "out of memory");
+		return;
+	}
+	exc = dom_string_create((const uint8_t *)str, strlen(str), &attr_name);
+
+	if (exc != DOM_NO_ERR || !attr_name) {
+		js_pushundefined(J);
+		return;
+	}
+	exc = dom_element_remove_attribute(el, attr_name);
+	dom_string_unref(attr_name);
+
+	js_pushundefined(J);
+}
+
+
+static void
 mjs_element_removeChild(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -3235,6 +3268,7 @@ mjs_push_element(js_State *J, void *node)
 		addmethod(J, "querySelector",	mjs_element_querySelector, 1);
 		addmethod(J, "querySelectorAll",	mjs_element_querySelectorAll, 1);
 		addmethod(J, "remove",		mjs_element_remove, 0);
+		addmethod(J, "removeAttribute",	mjs_element_removeAttribute, 1);
 		addmethod(J, "removeChild",	mjs_element_removeChild, 1);
 		addmethod(J, "removeEventListener", mjs_element_removeEventListener, 3);
 		addmethod(J, "replaceWith", mjs_element_replaceWith, 1);
