@@ -3454,6 +3454,48 @@ js_element_remove(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst 
 }
 
 static JSValue
+js_element_removeAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	if (argc != 1) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return JS_UNDEFINED;
+	}
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_exception exc;
+	dom_string *attr_name = NULL;
+
+	if (!el) {
+		return JS_UNDEFINED;
+	}
+	dom_node_ref(el);
+	size_t len;
+	const char *str = JS_ToCStringLen(ctx, &len, argv[0]);
+
+	if (!str) {
+		dom_node_unref(el);
+		return JS_UNDEFINED;
+	}
+	exc = dom_string_create((const uint8_t *)str, len, &attr_name);
+	JS_FreeCString(ctx, str);
+
+	if (exc != DOM_NO_ERR || !attr_name) {
+		dom_node_unref(el);
+		return JS_UNDEFINED;
+	}
+	dom_element_remove_attribute(el, attr_name);
+	dom_string_unref(attr_name);
+
+	return JS_UNDEFINED;
+}
+
+static JSValue
 js_element_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -3675,6 +3717,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CFUNC_DEF("querySelector",1,		js_element_querySelector),
 	JS_CFUNC_DEF("querySelectorAll",1,		js_element_querySelectorAll),
 	JS_CFUNC_DEF("remove",	0,	js_element_remove),
+	JS_CFUNC_DEF("removeAttribute",	1,	js_element_removeAttribute),
 	JS_CFUNC_DEF("removeChild",1,	js_element_removeChild),
 	JS_CFUNC_DEF("removeEventListener",	3, js_element_removeEventListener),
 	JS_CFUNC_DEF("replaceWith",1,	js_element_replaceWith),
