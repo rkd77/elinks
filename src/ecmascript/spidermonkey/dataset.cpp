@@ -118,6 +118,16 @@ dataset_obj_setProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleId id, J
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
 	if (!id.isString()) {
 		return true;
 	}
@@ -162,6 +172,7 @@ dataset_obj_setProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleId id, J
 	exc = dom_element_set_attribute(el, attr_name, attr_value);
 	dom_string_unref(attr_name);
 	dom_string_unref(attr_value);
+	interpreter->changed = true;
 
 	return true;
 }
@@ -172,6 +183,15 @@ dataset_obj_deleteProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleId id
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	if (!id.isString()) {
 		return true;
 	}
@@ -201,6 +221,7 @@ dataset_obj_deleteProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleId id
 	dom_string *attr_value = NULL;
 	exc = dom_element_remove_attribute(el, attr_name);
 	dom_string_unref(attr_name);
+	interpreter->changed = true;
 
 	return true;
 }
