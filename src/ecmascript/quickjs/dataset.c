@@ -190,21 +190,6 @@ js_obj_set_property(JSContext *ctx, JSValueConst obj, JSAtom atom, JSValueConst 
 	return 1;
 }
 
-static JSValue
-js_dataset_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	REF_JS(this_val);
-
-	return JS_NewString(ctx, "[dataset object]");
-}
-
-static const JSCFunctionListEntry js_dataset_proto_funcs[] = {
-	JS_CFUNC_DEF("toString", 0, js_dataset_toString)
-};
-
 static JSClassExoticMethods exo = {
 	.delete_property = js_obj_delete_property,
 //	.has_property = js_obj_has_property,
@@ -235,7 +220,7 @@ getDataset(JSContext *ctx, void *node)
 	JSValue proto = JS_NewObjectClass(ctx, js_dataset_class_id);
 	REF_JS(proto);
 
-	JS_SetPropertyFunctionList(ctx, proto, js_dataset_proto_funcs, countof(js_dataset_proto_funcs));
+//	JS_SetPropertyFunctionList(ctx, proto, js_dataset_proto_funcs, countof(js_dataset_proto_funcs));
 	JS_SetClassProto(ctx, js_dataset_class_id, proto);
 	dom_node_ref(node);
 	JS_SetOpaque(proto, node);
