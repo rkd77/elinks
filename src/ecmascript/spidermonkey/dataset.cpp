@@ -129,18 +129,18 @@ dataset_obj_setProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleId id, J
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	if (!id.isString()) {
-		return true;
+		return result.failInvalidDescriptor();
 	}
 	char *property = jsid_to_string(ctx, id);
 
 	if (!property) {
-		return true;
+		return result.failInvalidDescriptor();
 	}
 	char *value = jsval_to_string(ctx, v);
 
 	if (!value) {
 		mem_free(property);
-		return true;
+		return result.failInvalidDescriptor();
 	}
 	dom_node *el = JS::GetMaybePtrFromReservedSlot<dom_node>(obj, 0);
 	struct string data;
@@ -148,7 +148,7 @@ dataset_obj_setProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleId id, J
 	if (!el ||!init_string(&data)) {
 		mem_free(property);
 		mem_free(value);
-		return true;
+		return result.failInvalidDescriptor();
 	}
 	camel_to_html(&data, property);
 	mem_free(property);
@@ -159,7 +159,7 @@ dataset_obj_setProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleId id, J
 
 	if (exc != DOM_NO_ERR || !attr_name) {
 		mem_free(value);
-		return true;
+		return result.failInvalidDescriptor();
 	}
 	dom_string *attr_value = NULL;
 	exc = dom_string_create(value, strlen(value), &attr_value);
@@ -167,14 +167,14 @@ dataset_obj_setProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleId id, J
 
 	if (exc != DOM_NO_ERR || !attr_value) {
 		dom_string_unref(attr_name);
-		return true;
+		return result.failInvalidDescriptor();
 	}
 	exc = dom_element_set_attribute(el, attr_name, attr_value);
 	dom_string_unref(attr_name);
 	dom_string_unref(attr_value);
 	interpreter->changed = true;
 
-	return true;
+	return result.succeed();
 }
 
 static bool
@@ -193,19 +193,19 @@ dataset_obj_deleteProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleId id
 	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	if (!id.isString()) {
-		return true;
+		return result.failCantDelete();
 	}
 	char *property = jsid_to_string(ctx, id);
 
 	if (!property) {
-		return true;
+		return result.failCantDelete();
 	}
 	dom_node *el = JS::GetMaybePtrFromReservedSlot<dom_node>(obj, 0);
 	struct string data;
 
 	if (!el ||!init_string(&data)) {
 		mem_free(property);
-		return true;
+		return result.failCantDelete();
 	}
 	camel_to_html(&data, property);
 	mem_free(property);
@@ -215,14 +215,14 @@ dataset_obj_deleteProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleId id
 	done_string(&data);
 
 	if (exc != DOM_NO_ERR || !attr_name) {
-		return true;
+		return result.failCantDelete();
 	}
 	dom_string *attr_value = NULL;
 	exc = dom_element_remove_attribute(el, attr_name);
 	dom_string_unref(attr_name);
 	interpreter->changed = true;
 
-	return true;
+	return result.succeed();
 }
 
 JSClassOps dataset_ops = {
