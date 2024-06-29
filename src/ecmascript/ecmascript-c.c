@@ -759,3 +759,18 @@ get_elements_by_class_name(dom_html_document *doc, dom_node *node, char *classes
 
 	return col;
 }
+
+void
+camel_to_html(struct string *result, const char *text)
+{
+	add_to_string(result, "data-");
+
+	for (; *text; text++) {
+		if (*text >= 'A' && *text <= 'Z') {
+			add_char_to_string(result, '-');
+			add_char_to_string(result, *text + 32);
+		} else {
+			add_char_to_string(result, *text);
+		}
+	}
+}

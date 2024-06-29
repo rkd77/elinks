@@ -58,6 +58,8 @@ void *walk_tree_query(dom_node *node, const char *selector, int depth);
 void walk_tree_query_append(dom_node *root, dom_node *node, const char *selector, int depth, LIST_OF(struct selector_node) *result_list);
 void *get_elements_by_class_name(dom_html_document *doc, dom_node *node, char *classes);
 
+void camel_to_html(struct string *result, const char *camel);
+
 extern struct module ecmascript_module;
 
 #ifdef __cplusplus

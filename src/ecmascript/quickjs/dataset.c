@@ -17,6 +17,7 @@
 
 #include "document/libdom/corestrings.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/ecmascript-c.h"
 #include "ecmascript/quickjs/mapa.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/dataset.h"
@@ -60,8 +61,7 @@ js_obj_delete_property(JSContext *ctx, JSValueConst obj, JSAtom prop)
 		JS_FreeCString(ctx, property);
 		return 0;
 	}
-	add_to_string(&data, "data-");
-	add_to_string(&data, property);
+	camel_to_html(&data, property);
 	JS_FreeCString(ctx, property);
 
 	dom_string *attr_name = NULL;
@@ -110,8 +110,7 @@ js_obj_get_property(JSContext *ctx, JSValueConst obj, JSAtom atom, JSValueConst 
 		JS_FreeCString(ctx, property);
 		return JS_UNDEFINED;
 	}
-	add_to_string(&data, "data-");
-	add_to_string(&data, property);
+	camel_to_html(&data, property);
 	JS_FreeCString(ctx, property);
 
 	dom_string *attr_name = NULL;
@@ -162,8 +161,7 @@ js_obj_set_property(JSContext *ctx, JSValueConst obj, JSAtom atom, JSValueConst 
 		JS_FreeCString(ctx, value);
 		return 0;
 	}
-	add_to_string(&data, "data-");
-	add_to_string(&data, property);
+	camel_to_html(&data, property);
 	JS_FreeCString(ctx, property);
 
 	dom_string *attr_name = NULL;

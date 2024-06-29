@@ -2,7 +2,7 @@
 <html>
 <body>
 
-<div id="a" data-a="1" data-b="abc" data-cd="123"></div>
+<div id="a" data-a="1" data-b="abc" data-abc-cd="1234"></div>
 
 <button onclick="myFunction()">Try it</button>
 
@@ -18,6 +18,13 @@ function myFunction() {
 
   delete(div.dataset.b);
   console.assert(div.dataset.b === undefined, 'undefined because deleted');
+
+  console.assert(div.dataset.abcCd === '1234', 'camelCase');
+  div.dataset.abcCd = '2345';
+  console.assert(div.dataset.abcCd === '2345', 'camelCase set');
+  delete(div.dataset.abcCd);
+  console.assert(div.dataset.abcCd === undefined, 'undefined after deletion');
+
 }
 
 console.error('element.dataset.html');

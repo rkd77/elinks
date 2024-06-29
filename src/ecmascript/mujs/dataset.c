@@ -17,6 +17,7 @@
 
 #include "document/libdom/corestrings.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/ecmascript-c.h"
 #include "ecmascript/mujs/mapa.h"
 #include "ecmascript/mujs.h"
 #include "ecmascript/mujs/dataset.h"
@@ -50,9 +51,7 @@ mjs_obj_dataset_has(js_State *J, void *p, const char *property)
 	if (!el ||!init_string(&data)) {
 		return 0;
 	}
-	add_to_string(&data, "data-");
-	add_to_string(&data, property);
-
+	camel_to_html(&data, property);
 	dom_string *attr_name = NULL;
 	dom_exception exc = dom_string_create(data.source, data.length, &attr_name);
 	done_string(&data);
@@ -95,9 +94,7 @@ mjs_obj_dataset_put(js_State *J, void *p, const char *property)
 	if (!el ||!init_string(&data)) {
 		return 0;
 	}
-	add_to_string(&data, "data-");
-	add_to_string(&data, property);
-
+	camel_to_html(&data, property);
 	dom_string *attr_name = NULL;
 	dom_exception exc = dom_string_create(data.source, data.length, &attr_name);
 	done_string(&data);
@@ -137,9 +134,7 @@ mjs_obj_dataset_del(js_State *J, void *p, const char *property)
 	if (!el ||!init_string(&data)) {
 		return 0;
 	}
-	add_to_string(&data, "data-");
-	add_to_string(&data, property);
-
+	camel_to_html(&data, property);
 	dom_string *attr_name = NULL;
 	dom_exception exc = dom_string_create(data.source, data.length, &attr_name);
 	done_string(&data);
