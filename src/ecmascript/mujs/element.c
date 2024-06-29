@@ -35,6 +35,7 @@
 #include "ecmascript/mujs/attr.h"
 #include "ecmascript/mujs/attributes.h"
 #include "ecmascript/mujs/collection.h"
+#include "ecmascript/mujs/dataset.h"
 #include "ecmascript/mujs/document.h"
 #include "ecmascript/mujs/domrect.h"
 #include "ecmascript/mujs/element.h"
@@ -449,6 +450,21 @@ mjs_element_get_property_clientWidth(js_State *J)
 	js_pushnumber(J, dx);
 }
 #endif
+
+static void
+mjs_element_get_property_dataset(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_element *el = (dom_element *)(mjs_getprivate(J, 0));
+
+	if (!el) {
+		js_pushnull(J);
+		return;
+	}
+	mjs_push_dataset(J, el);
+}
 
 static void
 mjs_element_get_property_dir(js_State *J)
@@ -3286,6 +3302,7 @@ mjs_push_element(js_State *J, void *node)
 //		addproperty(J, "clientLeft", mjs_element_get_property_clientLeft, NULL);
 //		addproperty(J, "clientTop", mjs_element_get_property_clientTop, NULL);
 //		addproperty(J, "clientWidth", mjs_element_get_property_clientWidth, NULL);
+		addproperty(J, "dataset",	mjs_element_get_property_dataset, NULL);
 		addproperty(J, "dir",	mjs_element_get_property_dir, mjs_element_set_property_dir);
 		addproperty(J, "firstChild",	mjs_element_get_property_firstChild, NULL);
 		addproperty(J, "firstElementChild",	mjs_element_get_property_firstElementChild, NULL);
