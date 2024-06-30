@@ -13,6 +13,7 @@
 
 #ifdef CONFIG_ECMASCRIPT_SMJS
 #include <jsapi.h>
+#include <jsfriendapi.h>
 #endif
 
 #ifdef CONFIG_QUICKJS
@@ -107,7 +108,7 @@ struct ecmascript_interpreter {
 	JSValueConst fun;
 #endif
 #ifdef CONFIG_ECMASCRIPT_SMJS
-	JS::RootedValue fun;
+	JS::Heap<JS::Value> *fun;
 #endif
 #ifdef CONFIG_MUJS
 	const char *fun;
@@ -126,7 +127,7 @@ struct ecmascript_timeout {
 #endif
 #ifdef CONFIG_ECMASCRIPT_SMJS
 	JSContext *ctx;
-	JS::RootedValue fun;
+	JS::Heap<JS::Value> *fun;
 #endif
 #ifdef CONFIG_MUJS
 	js_State *ctx;

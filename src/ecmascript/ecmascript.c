@@ -490,8 +490,12 @@ ecmascript_timeout_handler2(void *val)
 	assertm(interpreter->vs->doc_view != NULL,
 		"setTimeout: vs with no document (e_f %d)",
 		interpreter->vs->ecmascript_fragile);
+#ifdef CONFIG_ECMASCRIPT_SMJS
+	JS::RootedValue vfun((JSContext *)interpreter->backend_data, *(t->fun));
+	ecmascript_call_function(interpreter, vfun, NULL);
+#else
 	ecmascript_call_function(interpreter, t->fun, NULL);
-
+#endif
 	if (t->timeout_next > 0) {
 		install_timer(&t->tid, t->timeout_next, ecmascript_timeout_handler2, t);
 	} else {
@@ -578,7 +582,7 @@ ecmascript_set_timeout2(void *c, JS::HandleValue f, int timeout, int timeout_nex
 	t->ctx = ctx;
 	t->timeout_next = timeout_next;
 	JS::RootedValue fun((JSContext *)interpreter->backend_data, f);
-	t->fun = fun;
+	t->fun = new JS::Heap<JS::Value>(fun);
 	add_to_list(interpreter->timeouts, t);
 	install_timer(&t->tid, timeout, ecmascript_timeout_handler2, t);
 

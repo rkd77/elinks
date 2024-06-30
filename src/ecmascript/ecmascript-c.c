@@ -334,6 +334,9 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 		foreach (t, interpreter->timeouts) {
 			kill_timer(&t->tid);
 			done_string(&t->code);
+#ifdef CONFIG_ECMASCRIPT_SMJS
+			delete(t->fun);
+#endif
 #ifdef CONFIG_QUICKJS
 			if (!JS_IsNull(t->fun)) {
 				JS_FreeValue(t->ctx, t->fun);
