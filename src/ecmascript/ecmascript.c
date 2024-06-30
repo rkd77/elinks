@@ -254,6 +254,7 @@ ecmascript_get_interpreter(struct view_state *vs)
 	(void)init_string(&interpreter->code);
 	init_list(interpreter->writecode);
 	interpreter->current_writecode = (struct ecmascript_string_list_item *)interpreter->writecode.next;
+	init_list(interpreter->timeouts);
 	return interpreter;
 }
 
@@ -549,7 +550,7 @@ ecmascript_set_timeout(void *c, char *code, int timeout, int timeout_next)
 #ifdef CONFIG_QUICKJS
 	t->fun = JS_NULL;
 #endif
-	add_to_list(interpreter->vs->doc_view->document->timeouts, t);
+	add_to_list(interpreter->timeouts, t);
 	install_timer(&t->tid, timeout, ecmascript_timeout_handler, t);
 
 	return t;
@@ -578,7 +579,7 @@ ecmascript_set_timeout2(void *c, JS::HandleValue f, int timeout, int timeout_nex
 	t->timeout_next = timeout_next;
 	JS::RootedValue fun((JSContext *)interpreter->backend_data, f);
 	t->fun = fun;
-	add_to_list(interpreter->vs->doc_view->document->timeouts, t);
+	add_to_list(interpreter->timeouts, t);
 	install_timer(&t->tid, timeout, ecmascript_timeout_handler2, t);
 
 	return t;
@@ -605,7 +606,7 @@ ecmascript_set_timeout2q(void *c, JSValueConst fun, int timeout, int timeout_nex
 	t->ctx = ctx;
 	t->timeout_next = timeout_next;
 	t->fun = fun;
-	add_to_list(interpreter->vs->doc_view->document->timeouts, t);
+	add_to_list(interpreter->timeouts, t);
 	install_timer(&t->tid, timeout, ecmascript_timeout_handler2, t);
 
 	return t;
@@ -633,7 +634,7 @@ ecmascript_set_timeout2m(js_State *J, const char *handle, int timeout, int timeo
 	t->fun = handle;
 	t->timeout_next = timeout_next;
 
-	add_to_list(interpreter->vs->doc_view->document->timeouts, t);
+	add_to_list(interpreter->timeouts, t);
 	install_timer(&t->tid, timeout, ecmascript_timeout_handler2, t);
 
 	return t;

@@ -310,22 +310,6 @@ check_for_snippets(struct view_state *vs, struct document_options *options, stru
 }
 
 void
-kill_ecmascript_timeouts(struct document *document)
-{
-	struct ecmascript_timeout *t;
-
-	foreach(t, document->timeouts) {
-		kill_timer(&t->tid);
-		done_string(&t->code);
-#ifdef CONFIG_QUICKJS
-		if (!JS_IsNull(t->fun)) {
-			JS_FreeValue(t->ctx, t->fun);
-		}
-#endif
-	}
-}
-
-void
 ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 {
 	assert(interpreter);
@@ -344,10 +328,10 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 	done_string(&interpreter->code);
 	free_ecmascript_string_list(&interpreter->writecode);
 	/* Is it superfluous? */
-	if (interpreter->vs->doc_view) {
+	if (1) {
 		struct ecmascript_timeout *t;
 
-		foreach (t, interpreter->vs->doc_view->document->timeouts) {
+		foreach (t, interpreter->timeouts) {
 			kill_timer(&t->tid);
 			done_string(&t->code);
 #ifdef CONFIG_QUICKJS
@@ -356,7 +340,7 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 			}
 #endif
 		}
-		free_list(interpreter->vs->doc_view->document->timeouts);
+		free_list(interpreter->timeouts);
 	}
 	interpreter->vs->ecmascript = NULL;
 	interpreter->vs->ecmascript_fragile = 1;

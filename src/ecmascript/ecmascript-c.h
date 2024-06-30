@@ -43,7 +43,6 @@ void toggle_ecmascript(struct session *ses);
  * follows a link with this synstax. */
 void ecmascript_protocol_handler(struct session *ses, struct uri *uri);
 void check_for_snippets(struct view_state *vs, struct document_options *options, struct document *document);
-void kill_ecmascript_timeouts(struct document *document);
 
 void check_events_for_element(struct ecmascript_interpreter *interpreter, dom_node *element, struct term_event *ev);
 void ecmascript_reset_state(struct view_state *vs);

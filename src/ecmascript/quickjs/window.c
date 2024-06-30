@@ -98,13 +98,10 @@ js_window_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 		JS_MarkValue(rt, elwin->thisval, mark_func);
 		JS_MarkValue(rt, elwin->onmessage, mark_func);
 
-		if (elwin->interpreter->vs && elwin->interpreter->vs->doc_view) {
-			struct document *doc = elwin->interpreter->vs->doc_view->document;
-
+		if (elwin->interpreter) {
 			struct ecmascript_timeout *et;
 
-			foreach (et, doc->timeouts) {
-
+			foreach (et, elwin->interpreter->timeouts) {
 				JS_MarkValue(rt, et->fun, mark_func);
 			}
 		}

@@ -40,6 +40,7 @@ extern "C" {
 
 struct document;
 struct document_view;
+struct ecmascript_timeout;
 struct form_state;
 struct form_view;
 struct string;
@@ -87,6 +88,9 @@ struct ecmascript_interpreter {
 	 * is reloaded in another tab and then you just cause the current tab
 	 * to redraw. */
 	unsigned int onload_snippets_cache_id;
+
+	/** used by setTimeout */
+	LIST_OF(struct ecmascript_timeout) timeouts;
 #ifdef CONFIG_ECMASCRIPT_SMJS
 	JSAutoRealm *ar;
 	JS::Heap<JSObject*> *ac;
@@ -132,7 +136,6 @@ struct ecmascript_timeout {
 	timer_id_T tid;
 	int timeout_next;
 };
-
 
 struct delayed_goto {
 	/* It might look more convenient to pass doc_view around but it could

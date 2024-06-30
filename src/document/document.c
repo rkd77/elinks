@@ -213,7 +213,6 @@ init_document(struct cache_entry *cached, struct document_options *options)
 
 #ifdef CONFIG_ECMASCRIPT
 	init_list(document->onload_snippets);
-	init_list(document->timeouts);
 #endif
 
 #ifdef CONFIG_LIBSIXEL
@@ -357,8 +356,6 @@ reset_document(struct document *document)
 	free_ecmascript_string_list(&document->onload_snippets);
 	free_uri_list(&document->ecmascript_imports);
 	mem_free_set(&document->body_onkeypress, NULL);
-///	kill_timer(&document->timeout);
-///	free_document(document->dom);
 #endif
 
 	free_list(document->tags);
@@ -432,8 +429,6 @@ done_document(struct document *document)
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 	free_ecmascript_string_list(&document->onload_snippets);
 	free_uri_list(&document->ecmascript_imports);
-	kill_ecmascript_timeouts(document);
-	free_list(document->timeouts);
 	mem_free_if(document->body_onkeypress);
 #endif
 
@@ -474,10 +469,6 @@ release_document(struct document *document)
 	if (document->refresh) {
 		kill_document_refresh(document->refresh);
 	}
-#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
-//	kill_ecmascript_timeouts(document);
-//	free_list(document->timeouts);
-#endif
 	object_unlock(document);
 	move_document_to_top_of_format_cache(document);
 }

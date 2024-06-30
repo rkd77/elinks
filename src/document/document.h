@@ -231,8 +231,6 @@ struct document {
 	 * dependencies between the various entries so nothing gets removed
 	 * unneeded. */
 	struct uri_list ecmascript_imports;
-	/** used by setTimeout */
-	LIST_OF(struct ecmascript_timeout) timeouts;
 	int ecmascript_counter;
 	char *body_onkeypress;
 #endif
