@@ -69,6 +69,7 @@ took = [
 'element.textContent.html',
 #'event.html',
 'eventListener.html',
+'fetch.html',
 'keyboardEvent.html',
 'navigator.appCodeName.html',
 'nodelist.forEach.html',

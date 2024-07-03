@@ -345,6 +345,9 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 		}
 		free_list(interpreter->timeouts);
 	}
+#ifdef CONFIG_ECMASCRIPT_SMJS
+	//js::StopDrainingJobQueue((JSContext *)interpreter->backend_data);
+#endif
 	interpreter->vs->ecmascript = NULL;
 	interpreter->vs->ecmascript_fragile = 1;
 	mem_free(interpreter);

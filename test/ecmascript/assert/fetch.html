@@ -1,0 +1,22 @@
+<script>
+async function getData() {
+  const url = "hello.html";
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      console.error(`Response status: ${response.status}`);
+    }
+    const txt = await response.text();
+    return txt;
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+console.error("fetch.html");
+getData().then(text => {
+  console.assert(text === 'Hello', 'hello');
+  console.exit();
+});
+
+</script>

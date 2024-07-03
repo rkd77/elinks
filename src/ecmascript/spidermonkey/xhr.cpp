@@ -868,6 +868,7 @@ xhr_loading_callback(struct download *download, struct xhr *xhr)
 		if (!fragment) {
 			return;
 		}
+
 		if (cached->head) {
 			std::istringstream headers(cached->head);
 
@@ -920,6 +921,8 @@ xhr_loading_callback(struct download *download, struct xhr *xhr)
 			}
 			xhr->status = status;
 			mem_free_set(&xhr->statusText, stracpy(statusText.c_str()));
+		} else {
+			xhr->status = 200;
 		}
 		mem_free_set(&xhr->responseText, memacpy(fragment->data, fragment->length));
 		mem_free_set(&xhr->responseType, stracpy(""));

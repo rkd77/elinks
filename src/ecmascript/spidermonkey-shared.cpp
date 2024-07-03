@@ -41,6 +41,7 @@ spidermonkey_runtime_addref(void)
 			JS_ShutDown();
 			return 0;
 		}
+		js::UseInternalJobQueues(main_ctx);
 
 		if (!JS::InitSelfHostedCode(main_ctx)) {
 			JS_DestroyContext(main_ctx);

@@ -65,13 +65,18 @@
 #include "viewer/text/view.h"
 #include "viewer/text/vs.h"
 
+#include <jsapi.h>
 #include <js/CompilationAndEvaluation.h>
 #include <js/Printf.h>
 #include <js/SourceText.h>
 #include <js/Warnings.h>
+#include <js/Modules.h>
+
+#include <map>
 
 /*** Global methods */
 
+#include "ecmascript/fetch.h"
 
 /* TODO? Are there any which need to be implemented? */
 
@@ -145,6 +150,83 @@ spidermonkey_done(struct module *xxx)
 		spidermonkey_runtime_release();
 }
 
+static JSObject*
+CompileExampleModule(JSContext* cx, const char* filename, const char* code, size_t len)
+{
+	JS::CompileOptions options(cx);
+	options.setFileAndLine(filename, 1);
+
+	JS::SourceText<mozilla::Utf8Unit> source;
+
+	if (!len) {
+		len = strlen(code);
+	}
+
+	if (!source.init(cx, code, len, JS::SourceOwnership::Borrowed)) {
+		return nullptr;
+	}
+	// Compile the module source to bytecode.
+	//
+	// NOTE: This generates a JSObject instead of a JSScript. This contains
+	// additional metadata to resolve imports/exports. This object should not be
+	// exposed to other JS code or unexpected behaviour may occur.
+
+	return JS::CompileModule(cx, options, source);
+}
+
+// Maintain a registry of imported modules. The ResolveHook may be called
+// multiple times for the same specifier and we need to return the same compiled
+// module.
+//
+// NOTE: This example assumes only one JSContext/GlobalObject is used, but in
+// general the registry needs to be distinct for each GlobalObject.
+static std::map<std::u16string, JS::PersistentRootedObject> moduleRegistry;
+
+// Callback for embedding to provide modules for import statements. This example
+// hardcodes sources, but an embedding would normally load files here.
+static JSObject*
+ExampleResolveHook(JSContext* cx, JS::HandleValue modulePrivate, JS::HandleObject moduleRequest)
+{
+	// Extract module specifier string.
+	JS::Rooted<JSString*> specifierString(cx, JS::GetModuleRequestSpecifier(cx, moduleRequest));
+
+	if (!specifierString) {
+		return nullptr;
+	}
+	// Convert specifier to a std::u16char for simplicity.
+	JS::UniqueTwoByteChars specChars(JS_CopyStringCharsZ(cx, specifierString));
+
+	if (!specChars) {
+		return nullptr;
+	}
+	std::u16string filename(specChars.get());
+
+	// If we already resolved before, return same module.
+	auto search = moduleRegistry.find(filename);
+
+	if (search != moduleRegistry.end()) {
+		return search->second;
+	}
+	JS::RootedObject mod(cx);
+
+	if (filename == u"a") {
+		mod = CompileExampleModule(cx, "a", (const char *)fetch_js, (size_t)fetch_js_len);
+
+		if (!mod) {
+			return nullptr;
+		}
+	}
+	// Register result in table.
+
+	if (mod) {
+		moduleRegistry.emplace(filename, JS::PersistentRootedObject(cx, mod));
+		return mod;
+	}
+	JS_ReportErrorASCII(cx, "Cannot resolve import specifier");
+
+	return nullptr;
+}
+
 
 void *
 spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
@@ -176,6 +258,10 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	JS_AddInterruptCallback(ctx, heartbeat_callback);
 	JS::RealmOptions options;
 	JS::RootedObject global(ctx);
+	JS::RootedObject mod(ctx);
+	JS::CompileOptions copt(ctx);
+	JS::SourceText<mozilla::Utf8Unit> srcBuf;
+	JS::RootedValue rval(ctx);
 
 	JS::Heap<JSObject*> *window_obj = new JS::Heap<JSObject*>(JS_NewGlobalObject(ctx, &window_class, NULL, JS::FireOnNewGlobalHook, options));
 
@@ -354,10 +440,29 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 					urlSearchParams_funcs,
 					NULL, NULL, "URLSearchParams");
 
-	if (!url_obj) {
+	if (!urlSearchParams_obj) {
+		goto release_and_fail;
+	}
+#if 1
+	// Register a hook in order to provide modules
+	JS::SetModuleResolveHook(JS_GetRuntime(ctx), ExampleResolveHook);
+	mod = CompileExampleModule(ctx, "top", "import {fetch,Headers,Request,Response} from 'a';", 0);
+
+	if (!mod) {
 		goto release_and_fail;
 	}
 
+	// Resolve imports by loading and compiling additional scripts.
+	if (!JS::ModuleLink(ctx, mod)) {
+		goto release_and_fail;
+	}
+	// Result value, used for top-level await.
+
+	// Execute the module bytecode.
+	if (!JS::ModuleEvaluate(ctx, mod, &rval)) {
+		goto release_and_fail;
+	}
+#endif
 	JS::SetRealmPrivate(js::GetContextRealm(ctx), interpreter);
 
 	return ctx;
