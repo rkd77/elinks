@@ -2441,6 +2441,8 @@ getDocument(JSContext *ctx, void *doc)
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) document_props);
 	spidermonkey_DefineFunctions(ctx, el, document_funcs);
 
+	dom_node_ref(doc);
+
 	JS::SetReservedSlot(el, 0, JS::PrivateValue(doc));
 	JS::SetReservedSlot(el, 1, JS::PrivateValue(doc_private));
 
@@ -2465,6 +2467,8 @@ initDocument(JSContext *ctx, struct ecmascript_interpreter *interpreter, JSObjec
 
 	init_list(doc_private->listeners);
 	doc_private->ref_count = 1;
+
+	dom_node_ref(doc);
 	JS::SetReservedSlot(document_obj, 0, JS::PrivateValue(doc));
 	JS::SetReservedSlot(document_obj, 1, JS::PrivateValue(doc_private));
 
