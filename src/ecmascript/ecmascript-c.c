@@ -301,7 +301,9 @@ check_for_snippets(struct view_state *vs, struct document_options *options, stru
 					 &vs->ecmascript->onload_snippets,
 					 &vs->ecmascript->current_onload_snippet);
 
-			fire_onload(document->dom);
+			if (!vs->plain) {
+				fire_onload(document->dom);
+			}
 			check_for_rerender(vs->ecmascript, "process_snippets");
 
 			vs->ecmascript->onload_snippets_cache_id = 0;
