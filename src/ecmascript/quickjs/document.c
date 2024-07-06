@@ -2009,6 +2009,34 @@ getDocument(JSContext *ctx, void *doc)
 	RETURN_JS(document_obj);
 }
 
+JSValue
+getDocument2(JSContext *ctx, void *doc)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct js_document_private *doc_private = (struct js_document_private *)mem_calloc(1, sizeof(*doc_private));
+
+	if (!doc_private) {
+		return JS_NULL;
+	}
+	init_list(doc_private->listeners);
+
+	if (doc) {
+		dom_node_ref((dom_node *)doc);
+	}
+	doc_private->node = doc;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	doc_private->interpreter = interpreter;
+
+	JSValue document_obj = JS_NewObjectClass(ctx, js_document_class_id);
+	JS_SetPropertyFunctionList(ctx, document_obj, js_document_proto_funcs, countof(js_document_proto_funcs));
+	JS_SetOpaque(document_obj, doc_private);
+	doc_private->thisval = document_obj;
+
+	RETURN_JS(document_obj);
+}
+
 static void
 document_event_handler(dom_event *event, void *pw)
 {

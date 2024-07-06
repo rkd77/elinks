@@ -54,7 +54,7 @@ js_domparser_parseFromString(JSContext *ctx, JSValueConst this_val, int argc, JS
 		return JS_NULL;
 	}
 
-	return getDocument(ctx, doc);
+	return getDocument2(ctx, doc);
 }
 
 static JSValue

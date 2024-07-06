@@ -8,6 +8,7 @@ extern "C" {
 #endif
 
 JSValue getDocument(JSContext *ctx, void *doc);
+JSValue getDocument2(JSContext *ctx, void *doc);
 
 #ifdef __cplusplus
 }
