@@ -30,6 +30,7 @@
 #include "ecmascript/spidermonkey/console.h"
 #include "ecmascript/spidermonkey/customevent.h"
 #include "ecmascript/spidermonkey/document.h"
+#include "ecmascript/spidermonkey/domparser.h"
 #include "ecmascript/spidermonkey/event.h"
 #include "ecmascript/spidermonkey/form.h"
 #include "ecmascript/spidermonkey/heartbeat.h"
@@ -235,7 +236,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	JSObject *console_obj, *document_obj, /* *forms_obj,*/ *history_obj,
 	         *statusbar_obj, *menubar_obj, *navigator_obj, *localstorage_obj, *screen_obj,
 	         *xhr_obj, *event_obj, *keyboardEvent_obj, *messageEvent_obj, *customEvent_obj,
-	         *url_obj, *urlSearchParams_obj;
+	         *url_obj, *urlSearchParams_obj, *domparser_obj;
 
 	assert(interpreter);
 	if (!js_module_init_ok) return NULL;
@@ -443,6 +444,17 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!urlSearchParams_obj) {
 		goto release_and_fail;
 	}
+
+	domparser_obj = spidermonkey_InitClass(ctx, global, NULL,
+					&domparser_class, domparser_constructor, 0,
+					NULL,
+					domparser_funcs,
+					NULL, NULL, "DOMParser");
+
+	if (!domparser_obj) {
+		goto release_and_fail;
+	}
+
 #if 1
 	// Register a hook in order to provide modules
 	JS::SetModuleResolveHook(JS_GetRuntime(ctx), ExampleResolveHook);
