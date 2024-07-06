@@ -299,6 +299,15 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 		struct document *document = doc_view->document;
 		struct session *ses = doc_view->session;
 		struct cache_entry *cached = document->cached;
+#ifdef CONFIG_ECMASCRIPT_SMJS
+		if (interpreter->document_obj) {
+			dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(interpreter->document_obj, 0);
+
+			if (doc) {
+				document->dom = doc;
+			}
+		}
+#endif
 
 		if (!strcmp(text, "eval")) {
 			struct ecmascript_string_list_item *item;
