@@ -3027,19 +3027,29 @@ mjs_element_remove(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-// TODO
-#if 0
-
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+	dom_node *parent = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		js_pushundefined(J);
 		return;
 	}
-	xmlpp::Node::remove_node(el);
-	interpreter->changed = 1;
-#endif
+	exc = dom_node_get_parent_node(el, &parent);
+
+	if (exc != DOM_NO_ERR || !parent) {
+		js_pushundefined(J);
+		return;
+	}
+	dom_node *res = NULL;
+	exc = dom_node_remove_child(parent, el, &res);
+	dom_node_unref(parent);
+
+	if (exc == DOM_NO_ERR) {
+		dom_node_unref(res);
+		interpreter->changed = 1;
+	}
 	js_pushundefined(J);
 }
 
