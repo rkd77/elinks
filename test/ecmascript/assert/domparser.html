@@ -1,0 +1,6 @@
+<script>
+console.error('DOMParser.html');
+var a = new DOMParser().parseFromString("<html><body><div id='aa'>AAA</div></body></html>", "text/html");
+console.assert(a.getElementById('aa').innerText === 'AAA', 'AAA');
+console.exit();
+</script>

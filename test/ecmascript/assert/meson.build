@@ -24,6 +24,7 @@ took = [
 'document.links.html',
 'document.querySelectorAll.html',
 'document.querySelector.html',
+'domparser.html',
 'element.appendChild.html',
 'element.attributes.html',
 'element.checked.html',
