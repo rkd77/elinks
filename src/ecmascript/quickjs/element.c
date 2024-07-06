@@ -3444,27 +3444,27 @@ js_element_remove(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst 
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
-
-// TODO
-
-#if 0
-
-	if (argc != 0) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return JS_UNDEFINED;
-	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_node *parent = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		return JS_UNDEFINED;
 	}
+	exc = dom_node_get_parent_node(el, &parent);
 
-	xmlpp::Node::remove_node(el);
-	interpreter->changed = 1;
-#endif
+	if (exc != DOM_NO_ERR || !parent) {
+		return JS_UNDEFINED;
+	}
+	dom_node *res = NULL;
+	exc = dom_node_remove_child(parent, el, &res);
+	dom_node_unref(parent);
+
+	if (exc == DOM_NO_ERR) {
+		dom_node_unref(res);
+		interpreter->changed = 1;
+	}
 
 	return JS_UNDEFINED;
 }
