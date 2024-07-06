@@ -28,6 +28,7 @@
 #include "ecmascript/quickjs/console.h"
 #include "ecmascript/quickjs/customevent.h"
 #include "ecmascript/quickjs/document.h"
+#include "ecmascript/quickjs/domparser.h"
 #include "ecmascript/quickjs/element.h"
 #include "ecmascript/quickjs/event.h"
 #include "ecmascript/quickjs/heartbeat.h"
@@ -191,6 +192,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	js_customEvent_init(ctx);
 	js_url_init(ctx);
 	js_urlSearchParams_init(ctx);
+	js_domparser_init(ctx);
 
 	interpreter->document_obj = getDocument(ctx, document->dom);
 
