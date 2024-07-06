@@ -5144,10 +5144,12 @@ element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	if (exc != DOM_NO_ERR || !parent) {
 		return true;
 	}
-	exc = dom_node_remove_child(parent, el, NULL);
+	dom_node *res = NULL;
+	exc = dom_node_remove_child(parent, el, &res);
 	dom_node_unref(parent);
 
 	if (exc == DOM_NO_ERR) {
+		dom_node_unref(res);
 		interpreter->changed = 1;
 	}
 

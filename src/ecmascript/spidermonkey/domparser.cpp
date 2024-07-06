@@ -147,5 +147,13 @@ domparser_parseFromString(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setNull();
 		return true;
 	}
-	return getDocument(ctx, doc);
+	JSObject *obj = getDocument(ctx, doc);
+
+	if (!obj) {
+		args.rval().setNull();
+		return true;
+	}
+	args.rval().setObject(*obj);
+
+	return true;
 }
