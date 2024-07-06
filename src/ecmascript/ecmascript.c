@@ -308,7 +308,15 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 			}
 		}
 #endif
+#ifdef CONFIG_QUICKJS
+		if (1) {
+			dom_document *doc = js_doc_getopaque(interpreter->document_obj);
 
+			if (doc) {
+				document->dom = doc;
+			}
+		}
+#endif
 		if (!strcmp(text, "eval")) {
 			struct ecmascript_string_list_item *item;
 
