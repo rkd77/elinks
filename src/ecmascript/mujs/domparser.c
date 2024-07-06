@@ -39,7 +39,7 @@ mjs_domparser_parseFromString(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_document(J, doc);
+	mjs_push_document2(J, doc);
 }
 
 static void
@@ -69,5 +69,6 @@ mjs_domparser_init(js_State *J)
 	js_pushglobal(J);
 	js_newcconstructor(J, mjs_domparser_fun, mjs_domparser_constructor, "DOMParser", 0);
 	js_defglobal(J, "DOMParser", JS_DONTENUM);
+
 	return 0;
 }
