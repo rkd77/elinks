@@ -575,6 +575,35 @@ mjs_element_get_property_firstElementChild(js_State *J)
 }
 
 static void
+mjs_element_get_property_href(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+	dom_string *href = NULL;
+	dom_exception exc;
+
+	if (!el) {
+		js_pushnull(J);
+		return;
+	}
+	exc = dom_element_get_attribute(el, corestring_dom_href, &href);
+
+	if (exc != DOM_NO_ERR) {
+		js_pushnull(J);
+		return;
+	}
+	if (!href) {
+		js_pushstring(J, "");
+		return;
+	} else {
+		js_pushstring(J, dom_string_data(href));
+		dom_string_unref(href);
+	}
+}
+
+static void
 mjs_element_get_property_id(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1676,6 +1705,37 @@ mjs_element_set_property_dir(js_State *J)
 			interpreter->changed = 1;
 			dom_string_unref(dir);
 		}
+	}
+	js_pushundefined(J);
+}
+
+static void
+mjs_element_set_property_href(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_string *hrefstr = NULL;
+	dom_exception exc;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	assert(interpreter);
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+
+	if (!el) {
+		js_pushundefined(J);
+		return;
+	}
+	const char *str = js_tostring(J, 1);
+	if (!str) {
+		js_error(J, "out of memory");
+		return;
+	}
+	exc = dom_string_create((const uint8_t *)str, strlen(str), &hrefstr);
+
+	if (exc == DOM_NO_ERR && hrefstr) {
+		exc = dom_element_set_attribute(el, corestring_dom_href, hrefstr);
+		interpreter->changed = 1;
+		dom_string_unref(hrefstr);
 	}
 	js_pushundefined(J);
 }
@@ -3316,6 +3376,7 @@ mjs_push_element(js_State *J, void *node)
 		addproperty(J, "dir",	mjs_element_get_property_dir, mjs_element_set_property_dir);
 		addproperty(J, "firstChild",	mjs_element_get_property_firstChild, NULL);
 		addproperty(J, "firstElementChild",	mjs_element_get_property_firstElementChild, NULL);
+		addproperty(J, "href",	mjs_element_get_property_href, mjs_element_set_property_href);
 		addproperty(J, "id",	mjs_element_get_property_id, mjs_element_set_property_id);
 		addproperty(J, "innerHTML",	mjs_element_get_property_innerHtml, mjs_element_set_property_innerHtml);
 		addproperty(J, "innerText",	mjs_element_get_property_innerHtml, mjs_element_set_property_innerText);
