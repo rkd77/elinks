@@ -87,6 +87,8 @@ static bool element_get_property_dir(JSContext *ctx, unsigned int argc, JS::Valu
 static bool element_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_firstChild(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_firstElementChild(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_set_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -179,6 +181,7 @@ JSPropertySpec element_props[] = {
 	JS_PSGS("dir",	element_get_property_dir, element_set_property_dir, JSPROP_ENUMERATE),
 	JS_PSG("firstChild",	element_get_property_firstChild, JSPROP_ENUMERATE),
 	JS_PSG("firstElementChild",	element_get_property_firstElementChild, JSPROP_ENUMERATE),
+	JS_PSGS("href",	element_get_property_href, element_set_property_href, JSPROP_ENUMERATE),
 	JS_PSGS("id",	element_get_property_id, element_set_property_id, JSPROP_ENUMERATE),
 	JS_PSGS("innerHTML",	element_get_property_innerHtml, element_set_property_innerHtml, JSPROP_ENUMERATE),
 	JS_PSGS("innerText",	element_get_property_innerHtml, element_set_property_innerText, JSPROP_ENUMERATE),
@@ -1134,6 +1137,69 @@ element_get_property_firstElementChild(JSContext *ctx, unsigned int argc, JS::Va
 	}
 	dom_nodelist_unref(nodes);
 	args.rval().setNull();
+
+	return true;
+}
+
+static bool
+element_get_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	vs = interpreter->vs;
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_string *href = NULL;
+	dom_exception exc;
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+	exc = dom_element_get_attribute(el, corestring_dom_href, &href);
+
+	if (exc != DOM_NO_ERR) {
+		args.rval().setNull();
+		return true;
+	}
+	if (!href) {
+		args.rval().setString(JS_NewStringCopyZ(ctx, ""));
+	} else {
+		args.rval().setString(JS_NewStringCopyZ(ctx, dom_string_data(href)));
+		dom_string_unref(href);
+	}
 
 	return true;
 }
@@ -3105,6 +3171,69 @@ element_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 			dom_string_unref(dir);
 			debug_dump_xhtml(document->dom);
 		}
+	}
+	mem_free(str);
+
+	return true;
+}
+
+static bool
+element_set_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	args.rval().setUndefined();
+
+	struct view_state *vs = interpreter->vs;
+	if (!vs) {
+		return true;
+	}
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
+
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+
+	if (!el) {
+		return true;
+	}
+	char *str = jsval_to_string(ctx, args[0]);
+
+	if (!str) {
+		return false;
+	}
+	size_t len = strlen(str);
+	dom_string *hrefstr = NULL;
+	dom_exception exc = dom_string_create((const uint8_t *)str, len, &hrefstr);
+
+	if (exc == DOM_NO_ERR && hrefstr) {
+		exc = dom_element_set_attribute(el, corestring_dom_href, hrefstr);
+		interpreter->changed = 1;
+		dom_string_unref(hrefstr);
+		debug_dump_xhtml(document->dom);
 	}
 	mem_free(str);
 
