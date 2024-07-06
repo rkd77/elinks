@@ -5129,23 +5129,28 @@ element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
-// TODO
-#if 0
-	struct view_state *vs = interpreter->vs;
-	struct document_view *doc_view = vs->doc_view;
-	struct document *document = doc_view->document;
-
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	args.rval().setUndefined();
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_node *parent = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		return true;
 	}
+	exc = dom_node_get_parent_node(el, &parent);
 
-	xmlpp::Node::remove_node(el);
-	interpreter->changed = 1;
-	debug_dump_xhtml(document->dom);
-#endif
+	if (exc != DOM_NO_ERR || !parent) {
+		return true;
+	}
+	exc = dom_node_remove_child(parent, el, NULL);
+	dom_node_unref(parent);
+
+	if (exc == DOM_NO_ERR) {
+		interpreter->changed = 1;
+	}
+
 	return true;
 }
 
