@@ -28,6 +28,7 @@
 #include "ecmascript/mujs/console.h"
 #include "ecmascript/mujs/customevent.h"
 #include "ecmascript/mujs/document.h"
+#include "ecmascript/mujs/domparser.h"
 #include "ecmascript/mujs/element.h"
 #include "ecmascript/mujs/event.h"
 #include "ecmascript/mujs/history.h"
@@ -148,6 +149,7 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	mjs_messageEvent_init(J);
 	mjs_customEvent_init(J);
 	mjs_url_init(J);
+	mjs_domparser_init(J);
 
 	return J;
 #if 0

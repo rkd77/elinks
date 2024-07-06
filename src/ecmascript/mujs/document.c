@@ -1692,6 +1692,9 @@ mjs_push_document(js_State *J, void *doc)
 	doc_private->node = doc;
 	doc_private->ref_count = 1;
 	doc_private->thisval = js_ref(J);
+	if (doc) {
+		dom_node_ref((dom_node *)doc);
+	}
 }
 
 static void
