@@ -671,6 +671,40 @@ js_element_get_property_firstElementChild(JSContext *ctx, JSValueConst this_val)
 }
 
 static JSValue
+js_element_get_property_href(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_string *href = NULL;
+	dom_exception exc;
+	JSValue r;
+
+	if (!el) {
+		return JS_NULL;
+	}
+	dom_node_ref(el);
+	exc = dom_element_get_attribute(el, corestring_dom_id, &href);
+
+	if (exc != DOM_NO_ERR) {
+		dom_node_unref(el);
+		return JS_NULL;
+	}
+	if (!href) {
+		r = JS_NewString(ctx, "");
+	} else {
+		r = JS_NewStringLen(ctx, dom_string_data(href), dom_string_length(href));
+		dom_string_unref(href);
+	}
+	dom_node_unref(el);
+
+	RETURN_JS(r);
+}
+
+static JSValue
 js_element_get_property_id(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1796,6 +1830,44 @@ js_element_set_property_dir(JSContext *ctx, JSValueConst this_val, JSValue val)
 			interpreter->changed = 1;
 			dom_string_unref(dir);
 		}
+	}
+	JS_FreeCString(ctx, str);
+	dom_node_unref(el);
+
+	return JS_UNDEFINED;
+}
+
+static JSValue
+js_element_set_property_href(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	REF_JS(val);
+	dom_string *hrefstr = NULL;
+	dom_exception exc;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	assert(interpreter);
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+
+	if (!el) {
+		return JS_UNDEFINED;
+	}
+	dom_node_ref(el);
+	size_t len;
+	const char *str = JS_ToCStringLen(ctx, &len, val);
+
+	if (!str) {
+		dom_node_unref(el);
+		return JS_EXCEPTION;
+	}
+	exc = dom_string_create((const uint8_t *)str, len, &hrefstr);
+
+	if (exc == DOM_NO_ERR && hrefstr) {
+		exc = dom_element_set_attribute(el, corestring_dom_id, hrefstr);
+		interpreter->changed = 1;
+		dom_string_unref(hrefstr);
 	}
 	JS_FreeCString(ctx, str);
 	dom_node_unref(el);
@@ -3684,6 +3756,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("dir",	js_element_get_property_dir, js_element_set_property_dir),
 	JS_CGETSET_DEF("firstChild",	js_element_get_property_firstChild, NULL),
 	JS_CGETSET_DEF("firstElementChild",	js_element_get_property_firstElementChild, NULL),
+	JS_CGETSET_DEF("href",	js_element_get_property_href, js_element_set_property_href),
 	JS_CGETSET_DEF("id",	js_element_get_property_id, js_element_set_property_id),
 	JS_CGETSET_DEF("innerHTML",	js_element_get_property_innerHtml, js_element_set_property_innerHtml),
 	JS_CGETSET_DEF("innerText",	js_element_get_property_innerHtml, js_element_set_property_innerText),
