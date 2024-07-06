@@ -1,0 +1,9 @@
+<html><body><div id="div"><p id="demo">aaa</p>BBB</div>
+<script>
+console.error("element.remove.html");
+document.getElementById('demo').remove();
+console.assert(document.getElementById('div').outerHTML === '<div id="div">BBB</div>', document.getElementById('div').outerHTML);
+console.exit();
+</script>
+</body>
+</html>

@@ -66,6 +66,7 @@ took = [
 'element.previousSibling.html',
 'element.querySelectorAll.html',
 'element.querySelector.html',
+'element.remove.html',
 'element.setAttribute.html',
 'element.textContent.html',
 #'event.html',
