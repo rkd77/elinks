@@ -30,6 +30,7 @@
 #else
 #ifdef CONFIG_QUICKJS
 #include "ecmascript/quickjs.h"
+#include "ecmascript/quickjs/document.h"
 #else
 #include "ecmascript/spidermonkey.h"
 #endif
@@ -309,7 +310,7 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 		}
 #endif
 #ifdef CONFIG_QUICKJS
-		if (1) {
+		if (JS_IsObject(interpreter->document_obj)) {
 			dom_document *doc = js_doc_getopaque(interpreter->document_obj);
 
 			if (doc) {
@@ -637,7 +638,7 @@ ecmascript_set_timeout2q(void *c, JSValueConst fun, int timeout, int timeout_nex
 	t->interpreter = interpreter;
 	t->ctx = ctx;
 	t->timeout_next = timeout_next;
-	t->fun = fun;
+	t->fun = JS_DupValue(ctx, fun);
 	add_to_list(interpreter->timeouts, t);
 	install_timer(&t->tid, timeout, ecmascript_timeout_handler2, t);
 

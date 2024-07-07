@@ -346,6 +346,14 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 #endif
 		}
 		free_list(interpreter->timeouts);
+#ifdef CONFIG_QUICKJS
+		if (!JS_IsNull(interpreter->location_obj)) {
+			//JS_FreeValue(t->ctx, interpreter->location_obj);
+		}
+		if (!JS_IsNull(interpreter->document_obj)) {
+			//JS_FreeValue(t->ctx, interpreter->document_obj);
+		}
+#endif
 	}
 #ifdef CONFIG_ECMASCRIPT_SMJS
 	//js::StopDrainingJobQueue((JSContext *)interpreter->backend_data);

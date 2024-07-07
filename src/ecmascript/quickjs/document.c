@@ -82,6 +82,25 @@ js_doc_getopaque(JSValueConst obj)
 	return res->node;
 }
 
+static void
+js_document_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(val);
+
+	struct js_document_private *doc_private = (struct js_document_private *)JS_GetOpaque(val, js_document_class_id);
+
+	if (doc_private) {
+		struct document_listener *l;
+
+		foreach(l, doc_private->listeners) {
+			JS_MarkValue(rt, l->fun, mark_func);
+		}
+	}
+}
+
 static JSValue
 js_document_get_property_anchors(JSContext *ctx, JSValueConst this_val)
 {
@@ -1069,7 +1088,7 @@ js_document_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JS
 	if (!n) {
 		return JS_UNDEFINED;
 	}
-	n->fun = fun;
+	n->fun = JS_DupValue(ctx, fun);
 	n->typ = method;
 	add_to_list_end(doc_private->listeners, n);
 	dom_exception exc;
@@ -1851,6 +1870,7 @@ js_document_finalizer(JSRuntime *rt, JSValue val)
 
 		foreach(l, doc_private->listeners) {
 			mem_free_set(&l->typ, NULL);
+			JS_FreeValueRT(rt, l->fun);
 		}
 		free_list(doc_private->listeners);
 		if (doc_private->node) {
@@ -1862,7 +1882,8 @@ js_document_finalizer(JSRuntime *rt, JSValue val)
 
 static JSClassDef js_document_class = {
 	"document",
-	js_document_finalizer
+	.finalizer = js_document_finalizer,
+	.gc_mark = js_document_mark
 };
 
 static JSValue
