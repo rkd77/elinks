@@ -285,6 +285,21 @@ run_jobs(void *data)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)data;
 	js::RunJobs((JSContext *)interpreter->backend_data);
 #endif
+
+#ifdef CONFIG_QUICKJS
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)data;
+	JSContext *ctx = (JSContext *)interpreter->backend_data;
+	JSContext *ctx1;
+	int err;
+	/* execute the pending jobs */
+	for(;;) {
+		err = JS_ExecutePendingJob(JS_GetRuntime(ctx), &ctx1);
+
+		if (err <= 0) {
+			break;
+		}
+	}
+#endif
 }
 
 void
