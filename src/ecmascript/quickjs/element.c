@@ -687,7 +687,7 @@ js_element_get_property_href(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 	dom_node_ref(el);
-	exc = dom_element_get_attribute(el, corestring_dom_id, &href);
+	exc = dom_element_get_attribute(el, corestring_dom_href, &href);
 
 	if (exc != DOM_NO_ERR) {
 		dom_node_unref(el);
@@ -1865,7 +1865,7 @@ js_element_set_property_href(JSContext *ctx, JSValueConst this_val, JSValue val)
 	exc = dom_string_create((const uint8_t *)str, len, &hrefstr);
 
 	if (exc == DOM_NO_ERR && hrefstr) {
-		exc = dom_element_set_attribute(el, corestring_dom_id, hrefstr);
+		exc = dom_element_set_attribute(el, corestring_dom_href, hrefstr);
 		interpreter->changed = 1;
 		dom_string_unref(hrefstr);
 	}
