@@ -253,14 +253,14 @@ js_window_setInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
-	int64_t timeout = 0;
+	int timeout = 0;
 	JSValueConst func;
 
 	if (argc != 2) {
 		return JS_UNDEFINED;
 	}
 
-	if (JS_ToInt64(ctx, &timeout, argv[1])) {
+	if (JS_ToInt32(ctx, &timeout, argv[1])) {
 		return JS_EXCEPTION;
 	}
 
@@ -271,7 +271,7 @@ js_window_setInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 	func = argv[0];
 
 	if (JS_IsFunction(ctx, func)) {
-		struct ecmascript_timeout *id = ecmascript_set_timeout2q(ctx, JS_DupValue(ctx, func), timeout, timeout);
+		struct ecmascript_timeout *id = ecmascript_set_timeout2q(ctx, func, timeout, timeout);
 
 		return JS_NewInt64(ctx, (int64_t)(id));
 	}
@@ -304,7 +304,7 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
-	int64_t timeout = 0;
+	int timeout = 0;
 	JSValueConst func;
 
 	if (argc < 1) {
@@ -312,7 +312,7 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 	}
 
 	if (argc > 1) {
-		if (JS_ToInt64(ctx, &timeout, argv[1])) {
+		if (JS_ToInt32(ctx, &timeout, argv[1])) {
 			return JS_EXCEPTION;
 		}
 	}
@@ -324,7 +324,7 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 	func = argv[0];
 
 	if (JS_IsFunction(ctx, func)) {
-		struct ecmascript_timeout *id = ecmascript_set_timeout2q(ctx, JS_DupValue(ctx, func), timeout, -1);
+		struct ecmascript_timeout *id = ecmascript_set_timeout2q(ctx, func, timeout, -1);
 
 		return JS_NewInt64(ctx, (int64_t)(id));
 	}
