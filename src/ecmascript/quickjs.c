@@ -66,6 +66,8 @@
 #include "viewer/text/view.h"
 #include "viewer/text/vs.h"
 
+#include "ecmascript/fetch.h"
+
 /*** Global methods */
 
 static void
@@ -132,6 +134,88 @@ quickjs_done(struct module *xxx)
 //		spidermonkey_runtime_release();
 }
 
+int
+el_js_module_set_import_meta(JSContext *ctx, JSValueConst func_val, JS_BOOL use_realpath, JS_BOOL is_main)
+{
+	JSModuleDef *m;
+	//char buf[PATH_MAX + 16];
+	JSValue meta_obj;
+	//JSAtom module_name_atom;
+	//const char *module_name;
+
+	assert(JS_VALUE_GET_TAG(func_val) == JS_TAG_MODULE);
+	m = JS_VALUE_GET_PTR(func_val);
+
+#if 0
+	module_name_atom = JS_GetModuleName(ctx, m);
+	module_name = JS_AtomToCString(ctx, module_name_atom);
+	JS_FreeAtom(ctx, module_name_atom);
+
+	if (!module_name) {
+		return -1;
+	}
+
+	if (!strchr(module_name, ':')) {
+		strcpy(buf, "file://");
+#if !defined(_WIN32)
+		/* realpath() cannot be used with modules compiled with qjsc
+		 because the corresponding module source code is not
+		 necessarily present */
+
+		if (use_realpath) {
+			char *res = realpath(module_name, buf + strlen(buf));
+
+			if (!res) {
+				JS_ThrowTypeError(ctx, "realpath failure");
+				JS_FreeCString(ctx, module_name);
+				return -1;
+			}
+		} else
+#endif
+		{
+			pstrcat(buf, sizeof(buf), module_name);
+		}
+	} else {
+		pstrcpy(buf, sizeof(buf), module_name);
+	}
+	JS_FreeCString(ctx, module_name);
+#endif // 0
+
+	meta_obj = JS_GetImportMeta(ctx, m);
+
+	if (JS_IsException(meta_obj)) {
+		return -1;
+	}
+#if 0
+	JS_DefinePropertyValueStr(ctx, meta_obj, "url", JS_NewString(ctx, buf), JS_PROP_C_W_E);
+	JS_DefinePropertyValueStr(ctx, meta_obj, "main", JS_NewBool(ctx, is_main), JS_PROP_C_W_E);
+#endif
+	JS_FreeValue(ctx, meta_obj);
+
+	return 0;
+}
+
+JSModuleDef *
+el_js_module_loader(JSContext *ctx, const char *module_name, void *opaque)
+{
+	JSModuleDef *m = NULL;
+
+	if (!strcmp(module_name, "a")) {
+		/* compile the module */
+		JSValue func_val = JS_Eval(ctx, (char *)fetch_js, fetch_js_len, module_name, JS_EVAL_TYPE_MODULE);
+
+		if (JS_IsException(func_val)) {
+			return NULL;
+		}
+		/* XXX: could propagate the exception */
+		el_js_module_set_import_meta(ctx, func_val, 1, 0);
+		/* the module is already referenced, so we must free it */
+		m = JS_VALUE_GET_PTR(func_val);
+		JS_FreeValue(ctx, func_val);
+	}
+	return m;
+}
+
 void *
 quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 {
@@ -195,6 +279,14 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	js_domparser_init(ctx);
 
 	interpreter->document_obj = getDocument(ctx, document->dom);
+
+	JS_SetModuleLoaderFunc(interpreter->rt, NULL, el_js_module_loader, NULL);
+	JSModuleDef *m = el_js_module_loader(ctx, "a", NULL);
+
+	JSValue r = JS_Eval(ctx, "import {fetch,Headers,Request,Response} from 'a';", sizeof("import {fetch,Headers,Request,Response} from 'a';") - 1,
+	"top", 0);
+
+	JS_FreeValue(ctx, r);
 
 	return ctx;
 }

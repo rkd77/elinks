@@ -409,6 +409,8 @@ x_loading_callback(struct download *download, struct Xhr *x)
 		}
 		if (cached->head) {
 			process_xhr_headers(cached->head, x);
+		} else {
+			x->status = 200;
 		}
 		mem_free_set(&x->response_text, memacpy(fragment->data, fragment->length));
 		if (x->ready_state != XHR_RSTATE_DONE) {
