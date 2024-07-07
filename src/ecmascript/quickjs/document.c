@@ -2074,6 +2074,10 @@ document_event_handler(dom_event *event, void *pw)
 	}
 
 	if (!strcmp("DOMContentLoaded", dom_string_data(typ))) {
+		if (doc_private->state == COMPLETE) {
+			dom_string_unref(typ);
+			return;
+		}
 		doc_private->state = COMPLETE;
 	}
 //	interpreter->heartbeat = add_heartbeat(interpreter);
