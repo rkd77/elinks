@@ -45,6 +45,7 @@ took = [
 'element.hasAttribute.html',
 'element.hasAttributes.html',
 'element.hasChildNodes.html',
+'element.href.html',
 'element.id.html',
 'element.innerHTML.html',
 'element.insertBefore.html',

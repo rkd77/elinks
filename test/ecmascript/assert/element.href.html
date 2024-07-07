@@ -1,0 +1,11 @@
+<html>
+<body>
+<a id="b">BBB</a>
+<script>
+console.error("element.href.html");
+document.getElementById('b').href='/';
+console.assert(document.getElementById('b').outerHTML === '<a id="b" href="/">BBB</a>', document.getElementById('b').outerHTML);
+console.exit();
+</script>
+</body>
+</html>
