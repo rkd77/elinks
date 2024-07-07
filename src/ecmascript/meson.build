@@ -1,8 +1,11 @@
 #INCLUDES += $(SPIDERMONKEY_CFLAGS)
 
-if conf_data.get('CONFIG_ECMASCRIPT_SMJS')
+if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS')
 	xxd = find_program('xxd')
 	run_command([xxd, '-i', 'fetch.js', 'fetch.h'])
+endif
+
+if conf_data.get('CONFIG_ECMASCRIPT_SMJS')
 	srcs += files('ecmascript.cpp', 'ecmascript-c.cpp', 'localstorage-db.c', 'spidermonkey.cpp', 'timer.c')
 	subdir('spidermonkey')
 endif
