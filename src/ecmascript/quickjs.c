@@ -208,7 +208,7 @@ el_js_module_loader(JSContext *ctx, const char *module_name, void *opaque)
 			return NULL;
 		}
 		/* XXX: could propagate the exception */
-		el_js_module_set_import_meta(ctx, func_val, 1, 0);
+		//el_js_module_set_import_meta(ctx, func_val, 1, 0);
 		/* the module is already referenced, so we must free it */
 		m = JS_VALUE_GET_PTR(func_val);
 		JS_FreeValue(ctx, func_val);
