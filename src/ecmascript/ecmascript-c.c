@@ -774,3 +774,184 @@ camel_to_html(struct string *result, const char *text)
 		}
 	}
 }
+
+static bool
+el_dump_node_element_attribute(struct string *buf, dom_node *node)
+{
+	dom_exception exc;
+	dom_string *attr = NULL;
+	dom_string *attr_value = NULL;
+
+	exc = dom_attr_get_name((struct dom_attr *)node, &attr);
+
+	if (exc != DOM_NO_ERR) {
+//		fprintf(stderr, "Exception raised for dom_string_create\n");
+		return false;
+	}
+
+	/* Get attribute's value */
+	exc = dom_attr_get_value((struct dom_attr *)node, &attr_value);
+	if (exc != DOM_NO_ERR) {
+//		fprintf(stderr, "Exception raised for element_get_attribute\n");
+		dom_string_unref(attr);
+		return false;
+	} else if (attr_value == NULL) {
+		/* Element lacks required attribute */
+		dom_string_unref(attr);
+		return true;
+	}
+
+	add_char_to_string(buf, ' ');
+	add_bytes_to_string(buf, dom_string_data(attr), dom_string_byte_length(attr));
+	add_to_string(buf, "=\"");
+	add_bytes_to_string(buf, dom_string_data(attr_value), dom_string_byte_length(attr_value));
+	add_char_to_string(buf, '"');
+
+	/* Finished with the attr dom_string */
+	dom_string_unref(attr);
+	dom_string_unref(attr_value);
+
+	return true;
+}
+
+
+static bool
+el_dump_element(struct string *buf, dom_node *node, bool toSortAttrs)
+{
+// TODO toSortAttrs
+	dom_exception exc;
+	dom_string *node_name = NULL;
+	dom_node_type type;
+	dom_namednodemap *attrs;
+
+	/* Only interested in element nodes */
+	exc = dom_node_get_node_type(node, &type);
+
+	if (exc != DOM_NO_ERR) {
+//		fprintf(stderr, "Exception raised for node_get_node_type\n");
+		return false;
+	} else {
+		if (type == DOM_TEXT_NODE) {
+			dom_string *str;
+
+			exc = dom_node_get_text_content(node, &str);
+
+			if (exc == DOM_NO_ERR && str != NULL) {
+				int length = dom_string_byte_length(str);
+				const char *string_text = dom_string_data(str);
+
+				if (!((length == 1) && (*string_text == '\n'))) {
+					add_bytes_to_string(buf, string_text, length);
+				}
+				dom_string_unref(str);
+			}
+			return true;
+		}
+		if (type != DOM_ELEMENT_NODE) {
+			/* Nothing to print */
+			return true;
+		}
+	}
+
+	/* Get element name */
+	exc = dom_node_get_node_name(node, &node_name);
+	if (exc != DOM_NO_ERR) {
+//		fprintf(stderr, "Exception raised for get_node_name\n");
+		return false;
+	}
+
+	add_char_to_string(buf, '<');
+	//save_in_map(mapa, node, buf->length);
+
+	/* Get string data and print element name */
+	add_lowercase_to_string(buf, dom_string_data(node_name), dom_string_byte_length(node_name));
+
+	exc = dom_node_get_attributes(node, &attrs);
+
+	if (exc == DOM_NO_ERR) {
+		dom_ulong length;
+
+		exc = dom_namednodemap_get_length(attrs, &length);
+
+		if (exc == DOM_NO_ERR) {
+			int i;
+
+			for (i = 0; i < length; ++i) {
+				dom_node *attr;
+
+				exc = dom_namednodemap_item(attrs, i, &attr);
+
+				if (exc == DOM_NO_ERR) {
+					el_dump_node_element_attribute(buf, attr);
+					dom_node_unref(attr);
+				}
+			}
+		}
+		dom_node_unref(attrs);
+	}
+	add_char_to_string(buf, '>');
+
+	/* Finished with the node_name dom_string */
+	dom_string_unref(node_name);
+
+	return true;
+}
+
+void
+ecmascript_walk_tree(struct string *buf, void *nod, bool start, bool toSortAttrs)
+{
+	dom_node *node = (dom_node *)(nod);
+	dom_nodelist *children = NULL;
+	dom_node_type type;
+	dom_exception exc;
+	uint32_t size = 0;
+
+	if (!start) {
+		exc = dom_node_get_node_type(node, &type);
+
+		if (exc == DOM_NO_ERR && type == DOM_TEXT_NODE) {
+			dom_string *content = NULL;
+			exc = dom_node_get_text_content(node, &content);
+
+			if (exc == DOM_NO_ERR && content) {
+				add_bytes_to_string(buf, dom_string_data(content), dom_string_length(content));
+				dom_string_unref(content);
+			}
+		} else if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
+			el_dump_element(buf, node, toSortAttrs);
+		}
+	}
+	exc = dom_node_get_child_nodes(node, &children);
+
+	if (exc == DOM_NO_ERR && children) {
+		exc = dom_nodelist_get_length(children, &size);
+		uint32_t i;
+
+		for (i = 0; i < size; i++) {
+			dom_node *item = NULL;
+			exc = dom_nodelist_item(children, i, &item);
+
+			if (exc == DOM_NO_ERR && item) {
+				ecmascript_walk_tree(buf, item, false, toSortAttrs);
+				dom_node_unref(item);
+			}
+		}
+		dom_nodelist_unref(children);
+	}
+
+	if (!start) {
+		exc = dom_node_get_node_type(node, &type);
+
+		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
+			dom_string *node_name = NULL;
+			exc = dom_node_get_node_name(node, &node_name);
+
+			if (exc == DOM_NO_ERR && node_name) {
+				add_to_string(buf, "</");
+				add_lowercase_to_string(buf, dom_string_data(node_name), dom_string_length(node_name));
+				add_char_to_string(buf, '>');
+				dom_string_unref(node_name);
+			}
+		}
+	}
+}
