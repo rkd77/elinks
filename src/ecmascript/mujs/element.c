@@ -2116,7 +2116,7 @@ mjs_element_set_property_textContent(js_State *J)
 		return;
 	}
 	exc = dom_node_set_text_content(el, content);
-	dom_string_unref(&content);
+	dom_string_unref(content);
 
 	js_pushundefined(J);
 }
