@@ -78,11 +78,13 @@ js_getopaque(JSValueConst obj, JSClassID class_id)
 	if (!res) {
 		return NULL;
 	}
+#if 0
 	void *v = attr_find_in_map_void(map_privates, res->node);
 
 	if (!v) {
 		return NULL;
 	}
+#endif
 
 	return res->node;
 }
@@ -1753,7 +1755,7 @@ js_element_get_property_textContent(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 	JSValue ret = JS_NewStringLen(ctx, dom_string_data(content), dom_string_length(content));
-	dom_string_unref(&content);
+	dom_string_unref(content);
 	dom_node_unref(el);
 
 	RETURN_JS(ret);
@@ -2279,7 +2281,7 @@ js_element_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSVal
 		return JS_EXCEPTION;
 	}
 	exc = dom_node_set_text_content(el, content);
-	dom_string_unref(&content);
+	dom_string_unref(content);
 	dom_node_unref(el);
 
 	return JS_UNDEFINED;
