@@ -2309,7 +2309,7 @@ js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSV
 		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
-	n->fun = fun;
+	n->fun = JS_DupValue(ctx, fun);
 	n->typ = method;
 	add_to_list_end(el_private->listeners, n);
 	dom_exception exc;
@@ -2405,6 +2405,7 @@ js_element_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, 
 			dom_string_unref(typ);
 
 			del_from_list(l);
+			JS_FreeValue(ctx, l->fun);
 			mem_free_set(&l->typ, NULL);
 			mem_free(l);
 			mem_free(method);
@@ -3628,8 +3629,10 @@ void js_element_finalizer(JSRuntime *rt, JSValue val)
 
 		foreach(l, el_private->listeners) {
 			mem_free_set(&l->typ, NULL);
+			JS_FreeValueRT(rt, l->fun);
 		}
 		free_list(el_private->listeners);
+		JS_FreeValueRT(rt, el_private->thisval);
 
 		attr_erase_from_map(map_elements, el_private->node);
 		mem_free(el_private);
@@ -3661,7 +3664,7 @@ js_element_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 static JSClassDef js_element_class = {
 	"Element",
 	.finalizer = js_element_finalizer,
-	//.gc_mark = js_element_mark,
+	.gc_mark = js_element_mark,
 };
 
 int
@@ -3718,6 +3721,7 @@ getElement(JSContext *ctx, void *node)
 	}
 	init_list(el_private->listeners);
 	el_private->node = node;
+	dom_node_ref((dom_node *)node);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	el_private->interpreter = interpreter;
 
@@ -3738,7 +3742,7 @@ getElement(JSContext *ctx, void *node)
 				     (void *) &old_node_data);
 
 	JSValue rr = JS_DupValue(ctx, element_obj);
-	el_private->thisval = rr;
+	el_private->thisval = JS_DupValue(ctx, rr);
 	RETURN_JS(rr);
 }
 
