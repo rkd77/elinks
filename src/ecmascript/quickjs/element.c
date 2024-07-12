@@ -1460,43 +1460,6 @@ js_element_get_property_value(JSContext *ctx, JSValueConst this_val)
 	RETURN_JS(r);
 }
 
-static void
-walk_tree_content(struct string *buf, dom_node *node)
-{
-	dom_node_type type;
-	dom_nodelist *children = NULL;
-	dom_exception exc;
-
-	exc = dom_node_get_node_type(node, &type);
-
-	if (exc != DOM_NO_ERR && type == DOM_TEXT_NODE) {
-		dom_string *content = NULL;
-		exc = dom_node_get_text_content(node, &content);
-
-		if (exc == DOM_NO_ERR && content) {
-			add_bytes_to_string(buf, dom_string_data(content), dom_string_length(content));
-			dom_string_unref(content);
-		}
-	}
-	exc = dom_node_get_child_nodes(node, &children);
-
-	if (exc == DOM_NO_ERR && children) {
-		uint32_t i, size;
-		exc = dom_nodelist_get_length(children, &size);
-
-		for (i = 0; i < size; i++) {
-			dom_node *item = NULL;
-			exc = dom_nodelist_item(children, i, &item);
-
-			if (exc == DOM_NO_ERR && item) {
-				walk_tree_content(buf, item);
-				dom_node_unref(item);
-			}
-		}
-		dom_nodelist_unref(children);
-	}
-}
-
 static JSValue
 js_element_get_property_innerHtml(JSContext *ctx, JSValueConst this_val)
 {
