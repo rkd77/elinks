@@ -89,9 +89,9 @@ check_number(struct dialog_data *dlg_data, struct widget_data *widget_data)
 widget_handler_status_T
 check_nonempty(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
-	char *p;
+	unsigned char *p;
 
-	for (p = widget_data->cdata; *p; p++)
+	for (p = (unsigned char *)widget_data->cdata; *p; p++)
 		if (*p > ' ')
 			return EVENT_PROCESSED;
 
