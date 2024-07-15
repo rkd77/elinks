@@ -105,7 +105,7 @@ js_domparser_init(JSContext *ctx)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSValue proto, obj;
+	JSValue proto;
 
 	/* DOMParser class */
 	JS_NewClassID(&js_domparser_class_id);
@@ -117,8 +117,8 @@ js_domparser_init(JSContext *ctx)
 	JS_SetClassProto(ctx, js_domparser_class_id, proto);
 
 	/* DOMParser object */
-	obj = JS_NewGlobalCConstructor(ctx, "DOMParser", js_domparser_constructor, 1, proto);
-	REF_JS(obj);
+	(void)JS_NewGlobalCConstructor(ctx, "DOMParser", js_domparser_constructor, 1, proto);
+	//REF_JS(obj);
 
 	return 0;
 }

@@ -76,6 +76,7 @@ js_nodeList2_SetOpaque(JSValueConst this_val, void *node)
 	}
 }
 
+#if 0
 static JSValue
 js_nodeList2_get_property_length(JSContext *ctx, JSValueConst this_val)
 {
@@ -88,6 +89,7 @@ js_nodeList2_get_property_length(JSContext *ctx, JSValueConst this_val)
 
 	return JS_NewInt32(ctx, size);
 }
+#endif
 
 static JSValue
 js_nodeList2_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)

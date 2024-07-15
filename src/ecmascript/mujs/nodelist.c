@@ -109,6 +109,7 @@ mjs_nodeList_finalizer(js_State *J, void *node)
 	attr_erase_from_map(map_nodelist, node);
 }
 
+#if 0
 static void
 mjs_nodeList_get_property_length(js_State *J)
 {
@@ -132,6 +133,7 @@ mjs_nodeList_get_property_length(js_State *J)
 
 	js_pushnumber(J, length);
 }
+#endif
 
 void
 mjs_push_nodelist(js_State *J, void *node)

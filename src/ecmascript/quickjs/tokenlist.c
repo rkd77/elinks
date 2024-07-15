@@ -60,7 +60,7 @@ js_tokenlist_add(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *
 		return JS_UNDEFINED;
 	}
 	dom_string *kl = NULL;
-	dom_exception exc = dom_string_create(klass, size, &kl);
+	dom_exception exc = dom_string_create((const uint8_t *)klass, size, &kl);
 	JS_FreeCString(ctx, klass);
 
 	if (exc != DOM_NO_ERR || !kl) {
@@ -95,7 +95,7 @@ js_tokenlist_contains(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 		return JS_UNDEFINED;
 	}
 	dom_string *kl = NULL;
-	dom_exception exc = dom_string_create(klass, size, &kl);
+	dom_exception exc = dom_string_create((const uint8_t *)klass, size, &kl);
 	JS_FreeCString(ctx, klass);
 
 	if (exc != DOM_NO_ERR || !kl) {
@@ -133,7 +133,7 @@ js_tokenlist_remove(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 	}
 
 	dom_string *kl = NULL;
-	dom_exception exc = dom_string_create(klass, size, &kl);
+	dom_exception exc = dom_string_create((const uint8_t *)klass, size, &kl);
 	JS_FreeCString(ctx, klass);
 
 	if (exc != DOM_NO_ERR || !kl) {
@@ -169,7 +169,7 @@ js_tokenlist_toggle(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 		return JS_UNDEFINED;
 	}
 	dom_string *kl = NULL;
-	dom_exception exc = dom_string_create(klass, size, &kl);
+	dom_exception exc = dom_string_create((const uint8_t *)klass, size, &kl);
 	JS_FreeCString(ctx, klass);
 
 	if (exc != DOM_NO_ERR || !kl) {
@@ -228,7 +228,7 @@ getTokenlist(JSContext *ctx, void *node)
 
 	if (!initialized) {
 		JS_NewClassID(&js_tokenlist_class_id);
-		//JS_NewClass(JS_GetRuntime(ctx), js_tokenlist_class_id, &js_tokenlist_class);
+		JS_NewClass(JS_GetRuntime(ctx), js_tokenlist_class_id, &js_tokenlist_class);
 		initialized = 1;
 	}
 	JSValue proto = JS_NewObjectClass(ctx, js_tokenlist_class_id);

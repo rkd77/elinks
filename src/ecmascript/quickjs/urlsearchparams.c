@@ -109,7 +109,7 @@ parse_text(JSContext *ctx, JSValue map, char *str)
 		argv[0] = JS_NewString(ctx, key);
 		argv[1] = JS_NewString(ctx, value);
 		JSValue set = JS_GetPropertyStr(ctx, map, "set");
-		JSValue ret = JS_Call(ctx, set, map, 2, argv);
+		(void)JS_Call(ctx, set, map, 2, argv);
 		JS_FreeValue(ctx, set);
 		JS_FreeValue(ctx, argv[0]);
 		JS_FreeValue(ctx, argv[1]);
@@ -478,7 +478,7 @@ js_urlSearchParams_init(JSContext *ctx)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSValue proto, obj;
+	JSValue proto;
 
 	/* urlSearchParams class */
 	JS_NewClassID(&js_urlSearchParams_class_id);
@@ -490,8 +490,8 @@ js_urlSearchParams_init(JSContext *ctx)
 	JS_SetClassProto(ctx, js_urlSearchParams_class_id, proto);
 
 	/* url object */
-	obj = JS_NewGlobalCConstructor(ctx, "URLSearchParams", js_urlSearchParams_constructor, 1, proto);
-	REF_JS(obj);
+	(void)JS_NewGlobalCConstructor(ctx, "URLSearchParams", js_urlSearchParams_constructor, 1, proto);
+	//REF_JS(obj);
 
 	return 0;
 }

@@ -519,7 +519,7 @@ walk_tree_query(dom_node *node, const char *selector, int depth)
 		return NULL;
 	}
 
-	if (res = el_match_selector(selector, node)) {
+	if ((res = el_match_selector(selector, node))) {
 		/* There was an error; return */
 		return res;
 	}
@@ -573,7 +573,7 @@ walk_tree_query_append(dom_node *root, dom_node *node, const char *selector, int
 		return;
 	}
 
-	if (res = el_match_selector(selector, node)) {
+	if ((res = el_match_selector(selector, node))) {
 		struct selector_node *sn = (struct selector_node *)mem_calloc(1, sizeof(*sn));
 
 		if (sn) {
@@ -633,7 +633,7 @@ node_has_classes(struct dom_node *node, void *ctx)
 }
 
 static LIST_OF(struct class_string) *
-prepare_strings(char *text)
+prepare_strings(const char *text)
 {
 	if (!text) {
 		return NULL;
@@ -644,7 +644,7 @@ prepare_strings(char *text)
 		return NULL;
 	}
 	init_list(*list);
-	char *pos = text;
+	char *pos = (char *)text;
 
 	while (*pos) {
 		skip_space(pos);
@@ -740,7 +740,7 @@ el_dom_html_collection_create(dom_html_document *doc,
 }
 
 void *
-get_elements_by_class_name(dom_html_document *doc, dom_node *node, char *classes)
+get_elements_by_class_name(dom_html_document *doc, dom_node *node, const char *classes)
 {
 	if (!node || !classes) {
 		return NULL;

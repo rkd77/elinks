@@ -126,7 +126,6 @@ js_element_get_property_checked(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	JSValue r;
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
@@ -194,7 +193,6 @@ js_element_set_property_checked(JSContext *ctx, JSValueConst this_val, JSValue v
 #endif
 	REF_JS(this_val);
 
-	JSValue r;
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
@@ -350,7 +348,6 @@ js_element_get_property_classList(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
-	JSValue r;
 
 	dom_element *el = (dom_element *)(js_getopaque(this_val, js_element_class_id));
 
@@ -2041,7 +2038,6 @@ js_element_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSVal
 	REF_JS(this_val);
 	REF_JS(val);
 
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -2116,7 +2112,6 @@ js_element_set_property_value(JSContext *ctx, JSValueConst this_val, JSValue val
 #endif
 	REF_JS(this_val);
 
-	JSValue r;
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
@@ -2241,7 +2236,7 @@ js_element_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 		dom_event_ref(event);
 	}
 	bool result = false;
-	dom_exception exc = dom_event_target_dispatch_event(el, event, &result);
+	(void)dom_event_target_dispatch_event(el, event, &result);
 
 	if (event) {
 		dom_event_unref(event);
@@ -2325,7 +2320,7 @@ js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSV
 		}
 	}
 	dom_string *typ = NULL;
-	exc = dom_string_create(method, strlen(method), &typ);
+	exc = dom_string_create((const uint8_t *)method, strlen(method), &typ);
 
 	if (exc != DOM_NO_ERR || !typ) {
 		goto ex;
@@ -2396,7 +2391,7 @@ js_element_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, 
 
 		if (JS_VALUE_GET_PTR(l->fun) == JS_VALUE_GET_PTR(fun)) {
 			dom_string *typ = NULL;
-			dom_exception exc = dom_string_create(method, strlen(method), &typ);
+			dom_exception exc = dom_string_create((const uint8_t *)method, strlen(method), &typ);
 
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
@@ -2564,6 +2559,7 @@ js_element_cloneNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 	return getElement(ctx, clone);
 }
 
+#if 0
 static bool
 isAncestor(dom_node *el, dom_node *node)
 {
@@ -2587,7 +2583,7 @@ isAncestor(dom_node *el, dom_node *node)
 
 	return false;
 }
-
+#endif
 
 static JSValue
 js_element_closest(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)

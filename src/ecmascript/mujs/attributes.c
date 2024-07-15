@@ -83,6 +83,7 @@ next:
 	js_setlength(J, -1, num_attrs);
 }
 
+#if 0
 static void
 mjs_attributes_get_property_length(js_State *J)
 {
@@ -115,6 +116,7 @@ mjs_attributes_get_property_length(js_State *J)
 	}
 	js_pushnumber(J, num_attrs);
 }
+#endif
 
 static void
 mjs_push_attributes_item2(js_State *J, int idx)

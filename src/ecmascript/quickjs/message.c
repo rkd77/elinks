@@ -417,7 +417,7 @@ js_messageEvent_init(JSContext *ctx)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSValue proto, obj;
+	JSValue proto;
 
 	/* Event class */
 	JS_NewClassID(&js_messageEvent_class_id);
@@ -429,8 +429,8 @@ js_messageEvent_init(JSContext *ctx)
 	JS_SetClassProto(ctx, js_messageEvent_class_id, proto);
 
 	/* Event object */
-	obj = JS_NewGlobalCConstructor(ctx, "MessageEvent", js_messageEvent_constructor, 1, proto);
-	REF_JS(obj);
+	(void)JS_NewGlobalCConstructor(ctx, "MessageEvent", js_messageEvent_constructor, 1, proto);
+	//REF_JS(obj);
 
 //	JS_SetPropertyFunctionList(ctx, obj, js_messageEvent_class_funcs, countof(js_messageEvent_class_funcs));
 

@@ -31,6 +31,7 @@ mjs_CSSStyleDeclaration_get_property_length(js_State *J)
 	js_pushnumber(J, 3); // fake
 }
 
+#if 0
 static void
 mjs_push_CSSStyleDeclaration_item2(js_State *J, int idx)
 {
@@ -39,6 +40,7 @@ mjs_push_CSSStyleDeclaration_item2(js_State *J, int idx)
 #endif
 	js_pushstring(J, "0"); // fake
 }
+#endif
 
 static void
 mjs_CSSStyleDeclaration_getPropertyValue(js_State *J)
@@ -58,6 +60,7 @@ mjs_CSSStyleDeclaration_item(js_State *J)
 	js_pushstring(J, "0"); // fake
 }
 
+#if 0
 static void
 mjs_push_CSSStyleDeclaration_namedItem2(js_State *J, const char *str)
 {
@@ -66,6 +69,7 @@ mjs_push_CSSStyleDeclaration_namedItem2(js_State *J, const char *str)
 #endif
 	js_pushstring(J, "0"); // fake
 }
+#endif
 
 static void
 mjs_CSSStyleDeclaration_namedItem(js_State *J)

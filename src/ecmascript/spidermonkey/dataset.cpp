@@ -93,7 +93,7 @@ dataset_obj_getProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleValue re
 	mem_free(property);
 
 	dom_string *attr_name = NULL;
-	dom_exception exc = dom_string_create(data.source, data.length, &attr_name);
+	dom_exception exc = dom_string_create((const uint8_t *)data.source, data.length, &attr_name);
 	done_string(&data);
 
 	if (exc != DOM_NO_ERR || !attr_name) {
@@ -154,7 +154,7 @@ dataset_obj_setProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleId id, J
 	mem_free(property);
 
 	dom_string *attr_name = NULL;
-	dom_exception exc = dom_string_create(data.source, data.length, &attr_name);
+	dom_exception exc = dom_string_create((const uint8_t *)data.source, data.length, &attr_name);
 	done_string(&data);
 
 	if (exc != DOM_NO_ERR || !attr_name) {
@@ -162,7 +162,7 @@ dataset_obj_setProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleId id, J
 		return result.failInvalidDescriptor();
 	}
 	dom_string *attr_value = NULL;
-	exc = dom_string_create(value, strlen(value), &attr_value);
+	exc = dom_string_create((const uint8_t *)value, strlen(value), &attr_value);
 	mem_free(value);
 
 	if (exc != DOM_NO_ERR || !attr_value) {
@@ -211,13 +211,12 @@ dataset_obj_deleteProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleId id
 	mem_free(property);
 
 	dom_string *attr_name = NULL;
-	dom_exception exc = dom_string_create(data.source, data.length, &attr_name);
+	dom_exception exc = dom_string_create((const uint8_t *)data.source, data.length, &attr_name);
 	done_string(&data);
 
 	if (exc != DOM_NO_ERR || !attr_name) {
 		return result.failCantDelete();
 	}
-	dom_string *attr_value = NULL;
 	exc = dom_element_remove_attribute(el, attr_name);
 	dom_string_unref(attr_name);
 	interpreter->changed = true;
@@ -254,10 +253,6 @@ JSClass dataset_class = {
 
 static const spidermonkeyFunctionSpec dataset_funcs[] = {
 	{ NULL }
-};
-
-static JSPropertySpec dataset_props[] = {
-	JS_PS_END
 };
 
 JSObject *

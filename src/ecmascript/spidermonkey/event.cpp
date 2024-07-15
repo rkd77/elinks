@@ -201,7 +201,7 @@ event_get_property_bubbles(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	bool bubbles = false;
-	dom_exception exc = dom_event_get_bubbles(event, &bubbles);
+	(void)dom_event_get_bubbles(event, &bubbles);
 	args.rval().setBoolean(bubbles);
 
 	return true;
@@ -229,7 +229,7 @@ event_get_property_cancelable(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	bool cancelable = false;
-	dom_exception exc = dom_event_get_cancelable(event, &cancelable);
+	(void)dom_event_get_cancelable(event, &cancelable);
 	args.rval().setBoolean(cancelable);
 
 	return true;
@@ -285,7 +285,7 @@ event_get_property_defaultPrevented(JSContext *ctx, unsigned int argc, JS::Value
 		return false;
 	}
 	bool prevented = false;
-	dom_exception exc = dom_event_is_default_prevented(event, &prevented);
+	(void)dom_event_is_default_prevented(event, &prevented);
 	args.rval().setBoolean(prevented);
 
 	return true;

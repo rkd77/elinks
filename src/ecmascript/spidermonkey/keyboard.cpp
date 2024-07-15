@@ -24,6 +24,7 @@
 #include "document/html/frames.h"
 #include "document/document.h"
 #include "document/forms.h"
+#include "document/libdom/corestrings.h"
 #include "document/libdom/doc.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
@@ -75,9 +76,6 @@ static bool keyboardEvent_get_property_target(JSContext *ctx, unsigned int argc,
 static bool keyboardEvent_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 static bool keyboardEvent_preventDefault(JSContext *ctx, unsigned int argc, JS::Value *vp);
-
-
-static term_event_key_T keyCode;
 
 static void
 keyboardEvent_finalize(JS::GCContext *op, JSObject *keyb_obj)
@@ -142,7 +140,7 @@ keyboardEvent_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
 		char *t = jsval_to_string(ctx, args[0]);
 
 		if (t) {
-			exc = dom_string_create(t, strlen(t), &typ);
+			exc = dom_string_create((const uint8_t *)t, strlen(t), &typ);
 			mem_free(t);
 		}
 	}
@@ -168,7 +166,7 @@ keyboardEvent_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
 			char *k = jsval_to_string(ctx, v);
 
 			if (k) {
-				exc = dom_string_create(k, strlen(k), &key);
+				exc = dom_string_create((const uint8_t *)k, strlen(k), &key);
 				mem_free(k);
 			}
 		}
@@ -176,7 +174,7 @@ keyboardEvent_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
 			char *c = jsval_to_string(ctx, v);
 
 			if (c) {
-				exc = dom_string_create(c, strlen(c), &code);
+				exc = dom_string_create((const uint8_t *)c, strlen(c), &code);
 				mem_free(c);
 			}
 		}
@@ -235,7 +233,7 @@ keyboardEvent_get_property_bubbles(JSContext *ctx, unsigned int argc, JS::Value 
 		return false;
 	}
 	bool bubbles = false;
-	dom_exception exc = dom_event_get_bubbles(event, &bubbles);
+	(void)dom_event_get_bubbles(event, &bubbles);
 	args.rval().setBoolean(bubbles);
 
 	return true;
@@ -263,7 +261,7 @@ keyboardEvent_get_property_cancelable(JSContext *ctx, unsigned int argc, JS::Val
 		return false;
 	}
 	bool cancelable = false;
-	dom_exception exc = dom_event_get_cancelable(event, &cancelable);
+	(void)dom_event_get_cancelable(event, &cancelable);
 	args.rval().setBoolean(cancelable);
 
 	return true;
@@ -319,7 +317,7 @@ keyboardEvent_get_property_defaultPrevented(JSContext *ctx, unsigned int argc, J
 		return false;
 	}
 	bool prevented = false;
-	dom_exception exc = dom_event_is_default_prevented(event, &prevented);
+	(void)dom_event_is_default_prevented(event, &prevented);
 	args.rval().setBoolean(prevented);
 
 	return true;
@@ -540,23 +538,15 @@ get_keyboardEvent(JSContext *ctx, struct term_event *ev)
 		return NULL;
 	}
 	term_event_key_T keyCode = get_kbd_key(ev);
-
 	dom_string *dom_key = NULL;
 	convert_key_to_dom_string(keyCode, &dom_key);
-
-	dom_string *keydown = NULL;
-	exc = dom_string_create("keydown", strlen("keydown"), &keydown);
-
-	exc = dom_keyboard_event_init(keyb, keydown, false, false,
+	exc = dom_keyboard_event_init(keyb, corestring_dom_keydown, false, false,
 		NULL, dom_key, NULL, DOM_KEY_LOCATION_STANDARD,
 		false, false, false, false,
 		false, false);
 
 	if (dom_key) {
 		dom_string_unref(dom_key);
-	}
-	if (keydown) {
-		dom_string_unref(keydown);
 	}
 //	keyb->keyCode = keyCode;
 	JS::SetReservedSlot(k, 0, JS::PrivateValue(keyb));

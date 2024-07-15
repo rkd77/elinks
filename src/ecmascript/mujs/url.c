@@ -568,12 +568,14 @@ mjs_url_constructor(js_State *J)
 		return;
 	}
 	const char *urlstring = js_tostring(J, 1);
+	char *us = null_or_stracpy(urlstring);
 
-	if (!urlstring) {
+	if (!us) {
 		js_error(J, "out of memory");
 		return;
 	}
-	int ret = parse_uri(&url->uri, urlstring);
+	int ret = parse_uri(&url->uri, us);
+	mem_free(us);
 
 	if (ret != URI_ERRNO_OK) {
 		js_error(J, "error");

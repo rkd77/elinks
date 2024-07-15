@@ -1876,9 +1876,6 @@ mjs_element_set_property_textContent(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	dom_string *titlestr = NULL;
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	assert(interpreter);
 	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
 
 	if (!el) {
@@ -2098,7 +2095,7 @@ mjs_element_addEventListener(js_State *J)
 		}
 	}
 	dom_string *typ = NULL;
-	exc = dom_string_create(method, strlen(method), &typ);
+	exc = dom_string_create((const uint8_t *)method, strlen(method), &typ);
 
 	if (exc != DOM_NO_ERR || !typ) {
 		goto ex;
@@ -2158,7 +2155,7 @@ mjs_element_removeEventListener(js_State *J)
 		}
 		if (l->fun == fun) {
 			dom_string *typ = NULL;
-			dom_exception exc = dom_string_create(method, strlen(method), &typ);
+			dom_exception exc = dom_string_create((const uint8_t *)method, strlen(method), &typ);
 
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
@@ -3255,7 +3252,7 @@ mjs_element_dispatchEvent(js_State *J)
 		return;
 	}
 	bool result = false;
-	dom_exception exc = dom_event_target_dispatch_event(el, event, &result);
+	(void)dom_event_target_dispatch_event(el, event, &result);
 	js_pushboolean(J, result);
 }
 

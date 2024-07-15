@@ -55,8 +55,6 @@
 #include <string>
 
 static bool nodeList2_item(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool nodeList2_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
-
 static void nodeList2_finalize(JS::GCContext *op, JSObject *obj)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -108,8 +106,6 @@ nodeList2_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-
-	struct view_state *vs;
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
@@ -118,9 +114,6 @@ nodeList2_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */

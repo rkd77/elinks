@@ -111,7 +111,6 @@ mjs_document_get_property_anchors(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
 
 	if (!doc) {
@@ -165,7 +164,6 @@ mjs_document_get_property_body(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
 
 	if (!doc) {
@@ -266,7 +264,6 @@ mjs_document_get_property_charset(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 // TODO
 	js_pushstring(J, "utf-8");
 }
@@ -277,7 +274,6 @@ mjs_document_get_property_childNodes(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
 
 	if (!doc) {
@@ -317,7 +313,6 @@ mjs_document_get_property_doctype(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
 
 	if (!doc) {
@@ -335,7 +330,6 @@ mjs_document_get_property_documentElement(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
 
 	if (!doc) {
@@ -416,7 +410,6 @@ mjs_document_get_property_forms(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
 
 	if (!doc) {
@@ -471,7 +464,6 @@ mjs_document_get_property_images(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
 
 	if (!doc) {
@@ -503,7 +495,6 @@ mjs_document_get_property_links(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
 
 	if (!doc) {
@@ -983,7 +974,7 @@ mjs_document_addEventListener(js_State *J)
 		}
 	}
 	dom_string *typ = NULL;
-	exc = dom_string_create(method, strlen(method), &typ);
+	exc = dom_string_create((const uint8_t *)method, strlen(method), &typ);
 
 	if (exc != DOM_NO_ERR || !typ) {
 		goto ex;
@@ -1043,7 +1034,7 @@ mjs_document_removeEventListener(js_State *J)
 		}
 		if (l->fun == fun) {
 			dom_string *typ = NULL;
-			dom_exception exc = dom_string_create(method, strlen(method), &typ);
+			dom_exception exc = dom_string_create((const uint8_t *)method, strlen(method), &typ);
 
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
@@ -1071,7 +1062,6 @@ mjs_document_createComment(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
 
 	if (!doc) {
@@ -1109,7 +1099,6 @@ mjs_document_createDocumentFragment(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
 
 	if (!doc) {
@@ -1132,7 +1121,6 @@ mjs_document_createElement(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
 	dom_string *tag_name = NULL;
 	dom_exception exc;
@@ -1165,7 +1153,6 @@ mjs_document_createTextNode(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
 	dom_string *data = NULL;
 	dom_exception exc;
@@ -1198,7 +1185,6 @@ mjs_document_getElementById(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
 
 	if (!doc) {
@@ -1236,7 +1222,7 @@ mjs_document_getElementsByClassName(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
+	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
 
 	if (!doc) {
 		js_pushnull(J);
@@ -1252,6 +1238,7 @@ mjs_document_getElementsByClassName(js_State *J)
 	mjs_push_collection(J, col);
 }
 
+#if 0
 static void
 mjs_document_getElementsByName(js_State *J)
 {
@@ -1294,6 +1281,7 @@ mjs_document_getElementsByName(js_State *J)
 #endif
 	js_pushnull(J);
 }
+#endif
 
 static void
 mjs_document_getElementsByTagName(js_State *J)
@@ -1301,7 +1289,6 @@ mjs_document_getElementsByTagName(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
 
 	if (!doc) {
@@ -1339,7 +1326,6 @@ mjs_document_querySelector(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
 
 	if (!doc) {
@@ -1377,7 +1363,6 @@ mjs_document_querySelectorAll(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
 
 	if (!doc) {
@@ -1789,7 +1774,7 @@ mjs_document_dispatchEvent(js_State *J)
 		return;
 	}
 	bool result = false;
-	dom_exception exc = dom_event_target_dispatch_event(doc, event, &result);
+	(void)dom_event_target_dispatch_event(doc, event, &result);
 	js_pushboolean(J, result);
 }
 
@@ -1802,7 +1787,6 @@ document_event_handler(dom_event *event, void *pw)
 	struct mjs_document_private *doc_private = (struct mjs_document_private *)pw;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)doc_private->interpreter;
 	js_State *J = (js_State *)interpreter->backend_data;
-	dom_document *doc = (dom_document *)doc_private->node;
 
 	if (!event) {
 		return;

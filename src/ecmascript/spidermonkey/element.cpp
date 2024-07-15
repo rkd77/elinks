@@ -3513,9 +3513,6 @@ element_set_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *v
 #endif
 		return false;
 	}
-
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
@@ -3531,7 +3528,7 @@ element_set_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *v
 		args.rval().setUndefined();
 		return true;
 	}
-	const char *str = jsval_to_string(ctx, args[0]);
+	char *str = jsval_to_string(ctx, args[0]);
 
 	if (!str) {
 		return false;
@@ -3840,7 +3837,7 @@ element_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		}
 	}
 	dom_string *typ = NULL;
-	exc = dom_string_create(method, strlen(method), &typ);
+	exc = dom_string_create((const uint8_t *)method, strlen(method), &typ);
 
 	if (exc != DOM_NO_ERR || !typ) {
 		goto ex;
@@ -3914,7 +3911,7 @@ element_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		if (*(l->fun) == fun) {
 
 			dom_string *typ = NULL;
-			dom_exception exc = dom_string_create(method, strlen(method), &typ);
+			dom_exception exc = dom_string_create((const uint8_t *)method, strlen(method), &typ);
 
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
@@ -5431,9 +5428,9 @@ element_dispatchEvent(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	JS::RootedObject eve(ctx, &args[0].toObject());
 	dom_event *event = (dom_event *)JS::GetMaybePtrFromReservedSlot<dom_event>(eve, 0);
 	bool result = false;
-	dom_exception exc = dom_event_target_dispatch_event(element, event, &result);
-
+	(void)dom_event_target_dispatch_event(element, event, &result);
 	args.rval().setBoolean(result);
+
 	return true;
 }
 
@@ -5446,11 +5443,8 @@ element_event_handler(dom_event *event, void *pw)
 	struct element_private *el_private = (struct element_private *)pw;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)el_private->interpreter;
 	JSContext *ctx = (JSContext *)interpreter->backend_data;
-	dom_node *element = (dom_node *)el_private->node;
-
 	JSAutoRealm ar(ctx, (JSObject *)interpreter->ac->get());
 	JS::RootedValue r_val(ctx);
-	interpreter->heartbeat = add_heartbeat(interpreter);
 
 	if (!event) {
 		return;
@@ -5461,6 +5455,7 @@ element_event_handler(dom_event *event, void *pw)
 	if (exc != DOM_NO_ERR || !typ) {
 		return;
 	}
+	interpreter->heartbeat = add_heartbeat(interpreter);
 	JSObject *obj_ev = getEvent(ctx, event);
 	interpreter->heartbeat = add_heartbeat(interpreter);
 

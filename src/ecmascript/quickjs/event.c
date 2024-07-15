@@ -73,7 +73,7 @@ js_event_get_property_bubbles(JSContext *ctx, JSValueConst this_val)
 	}
 	dom_event_ref(event);
 	bool bubbles = false;
-	dom_exception exc = dom_event_get_bubbles(event, &bubbles);
+	(void)dom_event_get_bubbles(event, &bubbles);
 	JSValue r = JS_NewBool(ctx, bubbles);
 	dom_event_unref(event);
 
@@ -95,7 +95,7 @@ js_event_get_property_cancelable(JSContext *ctx, JSValueConst this_val)
 	}
 	dom_event_ref(event);
 	bool cancelable = false;
-	dom_exception exc = dom_event_get_cancelable(event, &cancelable);
+	(void)dom_event_get_cancelable(event, &cancelable);
 	JSValue r = JS_NewBool(ctx, cancelable);
 	dom_event_unref(event);
 
@@ -137,7 +137,7 @@ js_event_get_property_defaultPrevented(JSContext *ctx, JSValueConst this_val)
 	}
 	dom_event_ref(event);
 	bool prevented = false;
-	dom_exception exc = dom_event_is_default_prevented(event, &prevented);
+	(void)dom_event_is_default_prevented(event, &prevented);
 	JSValue r = JS_NewBool(ctx, prevented);
 	dom_event_unref(event);
 
@@ -250,7 +250,7 @@ js_event_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueC
 		str = JS_ToCStringLen(ctx, &len, argv[0]);
 
 		if (str) {
-			exc = dom_string_create(str, len, &typ);
+			exc = dom_string_create((const uint8_t *)str, len, &typ);
 			JS_FreeCString(ctx, str);
 		}
 	}
@@ -309,7 +309,7 @@ js_event_init(JSContext *ctx)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSValue proto, obj;
+	JSValue proto;
 
 	/* Event class */
 	JS_NewClassID(&js_event_class_id);
@@ -321,8 +321,8 @@ js_event_init(JSContext *ctx)
 	JS_SetClassProto(ctx, js_event_class_id, proto);
 
 	/* Event object */
-	obj = JS_NewGlobalCConstructor(ctx, "Event", js_event_constructor, 1, proto);
-	REF_JS(obj);
+	(void)JS_NewGlobalCConstructor(ctx, "Event", js_event_constructor, 1, proto);
+	//REF_JS(obj);
 
 //	JS_SetPropertyFunctionList(ctx, obj, js_event_class_funcs, countof(js_event_class_funcs));
 

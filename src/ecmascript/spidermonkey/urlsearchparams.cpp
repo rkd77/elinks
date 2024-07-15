@@ -64,9 +64,6 @@ struct eljs_urlSearchParams {
 	JS::Heap<JSObject *> map;
 };
 
-static bool url_get_property_hash(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool url_set_property_hash(JSContext *ctx, unsigned int argc, JS::Value *vp);
-
 static void
 urlSearchParams_finalize(JS::GCContext *op, JSObject *u_obj)
 {
@@ -463,7 +460,7 @@ urlSearchParams_set(JSContext *ctx, unsigned int argc, JS::Value *rval)
 }
 
 static struct string result;
-static char *prepend;
+static const char *prepend;
 
 static bool
 map_foreach_callback(JSContext *ctx, unsigned int argc, JS::Value *rval)

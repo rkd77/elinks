@@ -107,16 +107,6 @@ CSSStyleDeclaration_get_property_length(JSContext *ctx, unsigned int argc, JS::V
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-
-	struct view_state *vs;
-	JS::Realm *comp = js::GetContextRealm(ctx);
-
-	if (!comp) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
 	args.rval().setInt32(3); // fake
 
 	return true;

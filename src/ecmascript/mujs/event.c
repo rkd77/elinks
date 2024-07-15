@@ -56,7 +56,7 @@ mjs_push_event(js_State *J, void *eve)
 		addproperty(J, "cancelable", mjs_event_get_property_cancelable, NULL);
 //		addproperty(J, "composed", mjs_event_get_property_composed, NULL);
 		addproperty(J, "defaultPrevented", mjs_event_get_property_defaultPrevented, NULL);
-		addproperty(J, "target", mjs_event_get_property_type, NULL);
+		addproperty(J, "target", mjs_event_get_property_target, NULL);
 		addproperty(J, "type", mjs_event_get_property_type, NULL);
 	}
 }
@@ -74,7 +74,7 @@ mjs_event_get_property_bubbles(js_State *J)
 		return;
 	}
 	bool bubbles = false;
-	dom_exception exc = dom_event_get_bubbles(event, &bubbles);
+	(void)dom_event_get_bubbles(event, &bubbles);
 	js_pushboolean(J, bubbles);
 }
 
@@ -91,7 +91,7 @@ mjs_event_get_property_cancelable(js_State *J)
 		return;
 	}
 	bool cancelable = false;
-	dom_exception exc = dom_event_get_cancelable(event, &cancelable);
+	(void)dom_event_get_cancelable(event, &cancelable);
 	js_pushboolean(J, cancelable);
 }
 
@@ -125,7 +125,7 @@ mjs_event_get_property_defaultPrevented(js_State *J)
 		return;
 	}
 	bool prevented = false;
-	dom_exception exc = dom_event_is_default_prevented(event, &prevented);
+	(void)dom_event_is_default_prevented(event, &prevented);
 	js_pushboolean(J, prevented);
 }
 
@@ -216,7 +216,7 @@ mjs_event_constructor(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (str) {
-		exc = dom_string_create(str, strlen(str), &typ);
+		exc = dom_string_create((const uint8_t *)str, strlen(str), &typ);
 	}
 	js_getproperty(J, 2, "bubbles");
 	bool bubbles = js_toboolean(J, -1);

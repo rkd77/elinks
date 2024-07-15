@@ -26,7 +26,7 @@ static void mjs_keyboardEvent_get_property_keyCode(js_State *J);
 
 static void mjs_keyboardEvent_get_property_bubbles(js_State *J);
 static void mjs_keyboardEvent_get_property_cancelable(js_State *J);
-static void mjs_keyboardEvent_get_property_composed(js_State *J);
+//static void mjs_keyboardEvent_get_property_composed(js_State *J);
 static void mjs_keyboardEvent_get_property_defaultPrevented(js_State *J);
 static void mjs_keyboardEvent_get_property_target(js_State *J);
 static void mjs_keyboardEvent_get_property_type(js_State *J);
@@ -59,7 +59,7 @@ mjs_push_keyboardEvent(js_State *J, struct term_event *ev, const char *type_)
 	dom_string *typ = NULL;
 	const char *t = type_ ?: "keydown";
 
-	exc = dom_string_create(t, strlen(t), &typ);
+	exc = dom_string_create((const uint8_t *)t, strlen(t), &typ);
 	dom_string *dom_key = NULL;
 	convert_key_to_dom_string(keyCode, &dom_key);
 
@@ -100,7 +100,7 @@ mjs_keyboardEvent_get_property_bubbles(js_State *J)
 		return;
 	}
 	bool bubbles = false;
-	dom_exception exc = dom_event_get_bubbles(event, &bubbles);
+	(void)dom_event_get_bubbles(event, &bubbles);
 	js_pushboolean(J, bubbles);
 }
 
@@ -117,7 +117,7 @@ mjs_keyboardEvent_get_property_cancelable(js_State *J)
 		return;
 	}
 	bool cancelable = false;
-	dom_exception exc = dom_event_get_cancelable(event, &cancelable);
+	(void)dom_event_get_cancelable(event, &cancelable);
 	js_pushboolean(J, cancelable);
 }
 
@@ -151,7 +151,7 @@ mjs_keyboardEvent_get_property_defaultPrevented(js_State *J)
 		return;
 	}
 	bool prevented = false;
-	dom_exception exc = dom_event_is_default_prevented(event, &prevented);
+	(void)dom_event_is_default_prevented(event, &prevented);
 	js_pushboolean(J, prevented);
 }
 
@@ -313,7 +313,7 @@ mjs_keyboardEvent_constructor(js_State *J)
 	const char *t = js_tostring(J, 1);
 
 	if (t) {
-		exc = dom_string_create(t, strlen(t), &typ);
+		exc = dom_string_create((const uint8_t *)t, strlen(t), &typ);
 	}
 	bool bubbles = false;
 	bool cancelable = false;
@@ -333,7 +333,7 @@ mjs_keyboardEvent_constructor(js_State *J)
 	js_pop(J, 1);
 
 	if (c) {
-		exc = dom_string_create(c, strlen(c), &code);
+		exc = dom_string_create((const uint8_t *)c, strlen(c), &code);
 	}
 
 	js_getproperty(J, 2, "key");
@@ -341,7 +341,7 @@ mjs_keyboardEvent_constructor(js_State *J)
 	js_pop(J, 1);
 
 	if (k) {
-		exc = dom_string_create(k, strlen(k), &key);
+		exc = dom_string_create((const uint8_t *)k, strlen(k), &key);
 	}
 	exc = dom_keyboard_event_init(event, typ, bubbles, cancelable, NULL/*view*/,
 		key, code, DOM_KEY_LOCATION_STANDARD,

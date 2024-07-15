@@ -73,7 +73,7 @@ js_html_document_user_data_handler(dom_node_operation operation,
 }
 
 void *
-document_parse_text(const char *charset, char *data, size_t length)
+document_parse_text(const char *charset, const char *data, size_t length)
 {
 	dom_hubbub_parser *parser = NULL;
 	dom_hubbub_error error;
@@ -294,7 +294,7 @@ static const char *__keys_names[] = {
 	NULL
 };
 
-static enum {
+enum {
 	KEYB_ENTER,
 	KEYB_ARROW_LEFT,
 	KEYB_ARROW_RIGHT,
@@ -332,7 +332,7 @@ keybstrings_init(void)
 	int i;
 
 	for (i = 0; i < KEYB_COUNT; i++) {
-		dom_exception err = lwc_intern_string(__keys_names[i], strlen(__keys_names[i]), &keyb_lwc[i]);
+		lwc_error err = lwc_intern_string(__keys_names[i], strlen(__keys_names[i]), &keyb_lwc[i]);
 
 		if (err != lwc_error_ok) {
 			return;
@@ -434,7 +434,7 @@ convert_dom_string_to_keycode(dom_string *dom_key)
 		return 123;
 	default:
 	{
-		char *utf8 = dom_string_data(dom_key);
+		char *utf8 = (char *)dom_string_data(dom_key);
 		char *end = utf8 + dom_string_length(dom_key);
 		return utf8_to_unicode(&utf8, end);
 	}

@@ -62,7 +62,7 @@
 
 static bool customEvent_get_property_bubbles(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool customEvent_get_property_cancelable(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool customEvent_get_property_composed(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool customEvent_get_property_composed(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool customEvent_get_property_defaultPrevented(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool customEvent_get_property_detail(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool customEvent_get_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -134,7 +134,7 @@ customEvent_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
 	}
 	dom_custom_event *event = NULL;
 	dom_string *CustomEventStr = NULL;
-	dom_exception exc = dom_string_create("CustomEvent", sizeof("CustomEvent") - 1, &CustomEventStr);
+	dom_exception exc = dom_string_create((const uint8_t *)"CustomEvent", sizeof("CustomEvent") - 1, &CustomEventStr);
 
 	if (exc != DOM_NO_ERR || !CustomEventStr) {
 		return false;
@@ -225,7 +225,7 @@ customEvent_get_property_bubbles(JSContext *ctx, unsigned int argc, JS::Value *v
 		return false;
 	}
 	bool bubbles = false;
-	dom_exception exc = dom_event_get_bubbles(event, &bubbles);
+	(void)dom_event_get_bubbles(event, &bubbles);
 	args.rval().setBoolean(bubbles);
 
 	return true;
@@ -253,7 +253,7 @@ customEvent_get_property_cancelable(JSContext *ctx, unsigned int argc, JS::Value
 		return false;
 	}
 	bool cancelable = false;
-	dom_exception exc = dom_event_get_cancelable(event, &cancelable);
+	(void)dom_event_get_cancelable(event, &cancelable);
 	args.rval().setBoolean(cancelable);
 
 	return true;
@@ -309,7 +309,7 @@ customEvent_get_property_defaultPrevented(JSContext *ctx, unsigned int argc, JS:
 		return false;
 	}
 	bool prevented = false;
-	dom_exception exc = dom_event_is_default_prevented(event, &prevented);
+	(void)dom_event_is_default_prevented(event, &prevented);
 	args.rval().setBoolean(prevented);
 
 	return true;

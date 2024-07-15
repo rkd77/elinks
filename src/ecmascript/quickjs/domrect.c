@@ -375,7 +375,7 @@ getDomRect(JSContext *ctx)
 #endif
 	struct eljs_domrect *d = mem_calloc(1, sizeof(*d));
 
-	JSValue proto, obj;
+	JSValue proto;
 
 	{
 		static int initialised;

@@ -132,7 +132,7 @@ tokenlist_add(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 	dom_string *kl = NULL;
-	dom_exception exc = dom_string_create(klass, strlen(klass), &kl);
+	dom_exception exc = dom_string_create((const uint8_t *)klass, strlen(klass), &kl);
 	mem_free(klass);
 
 	if (exc != DOM_NO_ERR || !kl) {
@@ -167,7 +167,6 @@ tokenlist_contains(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	dom_tokenlist *tl = JS::GetMaybePtrFromReservedSlot<dom_tokenlist>(hobj, 0);
 
 	if (!tl || argc < 1) {
@@ -181,7 +180,7 @@ tokenlist_contains(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 	dom_string *kl = NULL;
-	dom_exception exc = dom_string_create(klass, strlen(klass), &kl);
+	dom_exception exc = dom_string_create((const uint8_t *)klass, strlen(klass), &kl);
 	mem_free(klass);
 
 	if (exc != DOM_NO_ERR || !kl) {
@@ -232,7 +231,7 @@ tokenlist_remove(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 	dom_string *kl = NULL;
-	dom_exception exc = dom_string_create(klass, strlen(klass), &kl);
+	dom_exception exc = dom_string_create((const uint8_t *)klass, strlen(klass), &kl);
 	mem_free(klass);
 
 	if (exc != DOM_NO_ERR || !kl) {
@@ -281,7 +280,7 @@ tokenlist_toggle(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 	dom_string *kl = NULL;
-	dom_exception exc = dom_string_create(klass, strlen(klass), &kl);
+	dom_exception exc = dom_string_create((const uint8_t *)klass, strlen(klass), &kl);
 	mem_free(klass);
 
 	if (exc != DOM_NO_ERR || !kl) {

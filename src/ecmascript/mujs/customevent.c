@@ -38,7 +38,7 @@ mjs_customEvent_finalizer(js_State *J, void *val)
 
 	if (event) {
 		const char *detail = NULL;
-		dom_exception exc = dom_custom_event_get_detail(event, &detail);
+		(void)dom_custom_event_get_detail(event, &detail);
 
 		if (detail) {
 			js_unref(J, detail);
@@ -66,7 +66,7 @@ mjs_push_customEvent(js_State *J, char *type_)
 	}
 	dom_custom_event *event = NULL;
 	dom_string *CustomEventStr = NULL;
-	dom_exception exc = dom_string_create("CustomEvent", sizeof("CustomEvent") - 1, &CustomEventStr);
+	dom_exception exc = dom_string_create((const uint8_t *)"CustomEvent", sizeof("CustomEvent") - 1, &CustomEventStr);
 
 	if (exc != DOM_NO_ERR || !CustomEventStr) {
 		js_error(J, "error");
@@ -121,7 +121,7 @@ mjs_customEvent_get_property_bubbles(js_State *J)
 		return;
 	}
 	bool bubbles = false;
-	dom_exception exc = dom_event_get_bubbles(event, &bubbles);
+	(void)dom_event_get_bubbles(event, &bubbles);
 	js_pushboolean(J, bubbles);
 }
 
@@ -138,7 +138,7 @@ mjs_customEvent_get_property_cancelable(js_State *J)
 		return;
 	}
 	bool cancelable = false;
-	dom_exception exc = dom_event_get_cancelable(event, &cancelable);
+	(void)dom_event_get_cancelable(event, &cancelable);
 	js_pushboolean(J, cancelable);
 }
 
@@ -172,7 +172,7 @@ mjs_customEvent_get_property_defaultPrevented(js_State *J)
 		return;
 	}
 	bool prevented = false;
-	dom_exception exc = dom_event_is_default_prevented(event, &prevented);
+	(void)dom_event_is_default_prevented(event, &prevented);
 	js_pushboolean(J, prevented);
 }
 
@@ -290,7 +290,7 @@ mjs_customEvent_constructor(js_State *J)
 	}
 	dom_custom_event *event = NULL;
 	dom_string *CustomEventStr = NULL;
-	dom_exception exc = dom_string_create("CustomEvent", sizeof("CustomEvent") - 1, &CustomEventStr);
+	dom_exception exc = dom_string_create((const uint8_t *)"CustomEvent", sizeof("CustomEvent") - 1, &CustomEventStr);
 
 	if (exc != DOM_NO_ERR || !CustomEventStr) {
 		js_error(J, "error");

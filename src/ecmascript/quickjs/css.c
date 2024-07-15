@@ -27,6 +27,7 @@
 void *map_csses;
 void *map_rev_csses;
 
+#if 0
 static void *
 js_CSSStyleDeclaration_GetOpaque(JSValueConst this_val)
 {
@@ -34,7 +35,9 @@ js_CSSStyleDeclaration_GetOpaque(JSValueConst this_val)
 
 	return attr_find_in_map_rev(map_rev_csses, this_val);
 }
+#endif
 
+#if 0
 static void
 js_CSSStyleDeclaration_SetOpaque(JSValueConst this_val, void *node)
 {
@@ -46,6 +49,7 @@ js_CSSStyleDeclaration_SetOpaque(JSValueConst this_val, void *node)
 		attr_save_in_map_rev(map_rev_csses, this_val, node);
 	}
 }
+#endif
 
 static JSValue
 js_CSSStyleDeclaration_get_property_length(JSContext *ctx, JSValueConst this_val)
@@ -69,6 +73,7 @@ js_CSSStyleDeclaration_getPropertyValue(JSContext *ctx, JSValueConst this_val, i
 	return JS_UNDEFINED;
 }
 
+#if 0
 static JSValue
 js_CSSStyleDeclaration_item2(JSContext *ctx, JSValueConst this_val, int idx)
 {
@@ -79,6 +84,7 @@ js_CSSStyleDeclaration_item2(JSContext *ctx, JSValueConst this_val, int idx)
 
 	return JS_NewString(ctx, "0"); // fake
 }
+#endif
 
 static JSValue
 js_CSSStyleDeclaration_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
@@ -94,6 +100,7 @@ js_CSSStyleDeclaration_item(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	return JS_NewString(ctx, "0"); // fake
 }
 
+#if 0
 static JSValue
 js_CSSStyleDeclaration_namedItem2(JSContext *ctx, JSValueConst this_val, const char *str)
 {
@@ -103,6 +110,7 @@ js_CSSStyleDeclaration_namedItem2(JSContext *ctx, JSValueConst this_val, const c
 	REF_JS(this_val);
 	return JS_NewString(ctx, "0"); // fake
 }
+#endif
 
 static JSValue
 js_CSSStyleDeclaration_namedItem(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)

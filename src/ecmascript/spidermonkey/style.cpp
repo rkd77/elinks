@@ -627,7 +627,6 @@ style_get_property_cssText(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 	dom_exception exc;
 	dom_string *style = NULL;
-	char *res = NULL;
 
 	if (!el) {
 		args.rval().setNull();

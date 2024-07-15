@@ -65,20 +65,20 @@ js_obj_delete_property(JSContext *ctx, JSValueConst obj, JSAtom prop)
 	JS_FreeCString(ctx, property);
 
 	dom_string *attr_name = NULL;
-	dom_exception exc = dom_string_create(data.source, data.length, &attr_name);
+	dom_exception exc = dom_string_create((const uint8_t *)data.source, data.length, &attr_name);
 	done_string(&data);
 
 	if (exc != DOM_NO_ERR || !attr_name) {
 		return 0;
 	}
-	dom_string *attr_value = NULL;
-	exc = dom_element_remove_attribute(el, attr_name);
+	(void)dom_element_remove_attribute(el, attr_name);
 	dom_string_unref(attr_name);
 	interpreter->changed = true;
 
 	return 1;
 }
 
+#if 0
 /* The following methods can be emulated with the previous ones,
    so they are usually not needed */
 /* return < 0 if exception or TRUE/FALSE */
@@ -91,6 +91,7 @@ js_obj_has_property(JSContext *ctx, JSValueConst obj, JSAtom atom)
 	fprintf(stderr, "has_property\n");
 	return 1;
 }
+#endif
 
 static JSValue
 js_obj_get_property(JSContext *ctx, JSValueConst obj, JSAtom atom, JSValueConst receiver)
@@ -114,7 +115,7 @@ js_obj_get_property(JSContext *ctx, JSValueConst obj, JSAtom atom, JSValueConst 
 	JS_FreeCString(ctx, property);
 
 	dom_string *attr_name = NULL;
-	dom_exception exc = dom_string_create(data.source, data.length, &attr_name);
+	dom_exception exc = dom_string_create((const uint8_t *)data.source, data.length, &attr_name);
 	done_string(&data);
 
 	if (exc != DOM_NO_ERR || !attr_name) {
@@ -165,7 +166,7 @@ js_obj_set_property(JSContext *ctx, JSValueConst obj, JSAtom atom, JSValueConst 
 	JS_FreeCString(ctx, property);
 
 	dom_string *attr_name = NULL;
-	dom_exception exc = dom_string_create(data.source, data.length, &attr_name);
+	dom_exception exc = dom_string_create((const uint8_t *)data.source, data.length, &attr_name);
 	done_string(&data);
 
 	if (exc != DOM_NO_ERR || !attr_name) {
@@ -173,7 +174,7 @@ js_obj_set_property(JSContext *ctx, JSValueConst obj, JSAtom atom, JSValueConst 
 		return 0;
 	}
 	dom_string *attr_value = NULL;
-	exc = dom_string_create(value, strlen(value), &attr_value);
+	exc = dom_string_create((const uint8_t *)value, strlen(value), &attr_value);
 	JS_FreeCString(ctx, value);
 
 	if (exc != DOM_NO_ERR || !attr_value) {

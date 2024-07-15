@@ -281,7 +281,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	interpreter->document_obj = getDocument(ctx, document->dom);
 
 	JS_SetModuleLoaderFunc(interpreter->rt, NULL, el_js_module_loader, NULL);
-	JSModuleDef *m = el_js_module_loader(ctx, "a", NULL);
+	(void)el_js_module_loader(ctx, "a", NULL);
 
 	JSValue r = JS_Eval(ctx, "import {fetch,Headers,Request,Response} from 'a';", sizeof("import {fetch,Headers,Request,Response} from 'a';") - 1,
 	"top", 0);

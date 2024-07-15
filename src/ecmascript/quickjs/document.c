@@ -109,7 +109,6 @@ js_document_get_property_anchors(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
 
 	if (!doc) {
@@ -171,7 +170,6 @@ js_document_get_property_body(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
 
 	if (!doc) {
@@ -288,7 +286,6 @@ js_document_get_property_charset(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 // TODO
 	JSValue r = JS_NewStringLen(ctx, "utf-8", strlen("utf-8"));
 
@@ -303,7 +300,6 @@ js_document_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
 
 	if (!doc) {
@@ -373,7 +369,6 @@ js_document_get_property_documentElement(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
 
 	if (!doc) {
@@ -466,7 +461,6 @@ js_document_get_property_forms(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
 
 	if (!doc) {
@@ -496,7 +490,6 @@ js_document_get_property_head(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 // TODO
 	return JS_NULL;
 
@@ -511,7 +504,6 @@ js_document_get_property_images(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
 
 	if (!doc) {
@@ -551,7 +543,6 @@ js_document_get_property_links(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
 
 	if (!doc) {
@@ -733,7 +724,6 @@ js_document_get_property_scripts(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 // TODO
 	//dom_html_document *doc = (dom_html_document *)document->dom;
 
@@ -1103,7 +1093,7 @@ js_document_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JS
 		}
 	}
 	dom_string *typ = NULL;
-	exc = dom_string_create(method, strlen(method), &typ);
+	exc = dom_string_create((const uint8_t *)method, strlen(method), &typ);
 
 	if (exc != DOM_NO_ERR || !typ) {
 		goto ex;
@@ -1154,7 +1144,7 @@ js_document_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 		dom_event_ref(event);
 	}
 	bool result = false;
-	dom_exception exc = dom_event_target_dispatch_event(doc, event, &result);
+	(void)dom_event_target_dispatch_event(doc, event, &result);
 
 	if (event) {
 		dom_event_unref(event);
@@ -1209,7 +1199,7 @@ js_document_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc,
 
 		if (JS_VALUE_GET_PTR(l->fun) == JS_VALUE_GET_PTR(fun)) {
 			dom_string *typ = NULL;
-			dom_exception exc = dom_string_create(method, strlen(method), &typ);
+			dom_exception exc = dom_string_create((const uint8_t *)method, strlen(method), &typ);
 
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
@@ -1243,7 +1233,6 @@ js_document_createComment(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	if (argc != 1) {
 		return JS_FALSE;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
 
 	if (!doc) {
@@ -1293,7 +1282,6 @@ js_document_createDocumentFragment(JSContext *ctx, JSValueConst this_val, int ar
 	if (argc != 0) {
 		return JS_FALSE;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_document *doc = (struct dom_document *)js_doc_getopaque(this_val);
 
 	if (!doc) {
@@ -1324,7 +1312,6 @@ js_document_createElement(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	if (argc != 1) {
 		return JS_FALSE;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_document *doc = (struct dom_document *)js_doc_getopaque(this_val);
 
 	if (!doc) {
@@ -1374,7 +1361,6 @@ js_document_createTextNode(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 	if (argc != 1) {
 		return JS_FALSE;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_document *doc = (struct dom_document *)js_doc_getopaque(this_val);
 
 	if (!doc) {
@@ -1424,7 +1410,6 @@ js_document_getElementById(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 	if (argc != 1) {
 		return JS_FALSE;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
 
 	if (!doc) {
@@ -1493,6 +1478,7 @@ js_document_getElementsByClassName(JSContext *ctx, JSValueConst this_val, int ar
 	RETURN_JS(ret);
 }
 
+#if 0
 static JSValue
 js_document_getElementsByName(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
@@ -1539,6 +1525,7 @@ js_document_getElementsByName(JSContext *ctx, JSValueConst this_val, int argc, J
 	RETURN_JS(rr);
 #endif
 }
+#endif
 
 static JSValue
 js_document_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
@@ -1551,7 +1538,6 @@ js_document_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc
 	if (argc != 1) {
 		return JS_FALSE;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_document *doc = (struct dom_document *)js_doc_getopaque(this_val);
 
 	if (!doc) {
@@ -1602,7 +1588,6 @@ js_document_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	if (argc != 1) {
 		return JS_FALSE;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
 
 	if (!doc) {
@@ -1650,7 +1635,6 @@ js_document_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JS
 	if (argc != 1) {
 		return JS_FALSE;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
 
 	if (!doc) {
@@ -2060,7 +2044,6 @@ document_event_handler(dom_event *event, void *pw)
 	struct js_document_private *doc_private = (struct js_document_private *)pw;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)doc_private->interpreter;
 	JSContext *ctx = (JSContext *)interpreter->backend_data;
-	dom_document *doc = (dom_document *)doc_private->node;
 
 	if (!event) {
 		return;

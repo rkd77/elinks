@@ -42,7 +42,7 @@ mjs_tokenlist_add(js_State *J)
 		return;
 	}
 	dom_string *kl = NULL;
-	dom_exception exc = dom_string_create(klass, strlen(klass), &kl);
+	dom_exception exc = dom_string_create((const uint8_t *)klass, strlen(klass), &kl);
 
 	if (exc != DOM_NO_ERR || !kl) {
 		js_pushundefined(J);
@@ -63,7 +63,6 @@ mjs_tokenlist_contains(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_tokenlist *tl = (dom_tokenlist *)(js_touserdata(J, 0, "tokenlist"));
 
 	if (!tl) {
@@ -77,7 +76,7 @@ mjs_tokenlist_contains(js_State *J)
 		return;
 	}
 	dom_string *kl = NULL;
-	dom_exception exc = dom_string_create(klass, strlen(klass), &kl);
+	dom_exception exc = dom_string_create((const uint8_t *)klass, strlen(klass), &kl);
 
 	if (exc != DOM_NO_ERR || !kl) {
 		js_pushundefined(J);
@@ -114,7 +113,7 @@ mjs_tokenlist_remove(js_State *J)
 		return;
 	}
 	dom_string *kl = NULL;
-	dom_exception exc = dom_string_create(klass, strlen(klass), &kl);
+	dom_exception exc = dom_string_create((const uint8_t *)klass, strlen(klass), &kl);
 
 	if (exc != DOM_NO_ERR || !kl) {
 		js_pushundefined(J);
@@ -149,7 +148,7 @@ mjs_tokenlist_toggle(js_State *J)
 		return;
 	}
 	dom_string *kl = NULL;
-	dom_exception exc = dom_string_create(klass, strlen(klass), &kl);
+	dom_exception exc = dom_string_create((const uint8_t *)klass, strlen(klass), &kl);
 
 	if (exc != DOM_NO_ERR || !kl) {
 		js_pushundefined(J);

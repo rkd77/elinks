@@ -12,6 +12,7 @@
 
 #include "ecmascript/libdom/dom.h"
 
+#include "document/libdom/corestrings.h"
 #include "document/libdom/doc.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs.h"
@@ -30,7 +31,7 @@ static JSValue js_keyboardEvent_get_property_keyCode(JSContext *ctx, JSValueCons
 
 static JSValue js_keyboardEvent_get_property_bubbles(JSContext *ctx, JSValueConst this_val);
 static JSValue js_keyboardEvent_get_property_cancelable(JSContext *ctx, JSValueConst this_val);
-static JSValue js_keyboardEvent_get_property_composed(JSContext *ctx, JSValueConst this_val);
+//static JSValue js_keyboardEvent_get_property_composed(JSContext *ctx, JSValueConst this_val);
 static JSValue js_keyboardEvent_get_property_defaultPrevented(JSContext *ctx, JSValueConst this_val);
 static JSValue js_keyboardEvent_get_property_target(JSContext *ctx, JSValueConst this_val);
 static JSValue js_keyboardEvent_get_property_type(JSContext *ctx, JSValueConst this_val);
@@ -81,7 +82,7 @@ js_keyboardEvent_get_property_bubbles(JSContext *ctx, JSValueConst this_val)
 	}
 	dom_event_ref(event);
 	bool bubbles = false;
-	dom_exception exc = dom_event_get_bubbles(event, &bubbles);
+	(void)dom_event_get_bubbles(event, &bubbles);
 	JSValue r = JS_NewBool(ctx, bubbles);
 	dom_event_unref(event);
 
@@ -102,7 +103,7 @@ js_keyboardEvent_get_property_cancelable(JSContext *ctx, JSValueConst this_val)
 	}
 	dom_event_ref(event);
 	bool cancelable = false;
-	dom_exception exc = dom_event_get_cancelable(event, &cancelable);
+	(void)dom_event_get_cancelable(event, &cancelable);
 	JSValue r = JS_NewBool(ctx, cancelable);
 	dom_event_unref(event);
 
@@ -143,7 +144,7 @@ js_keyboardEvent_get_property_defaultPrevented(JSContext *ctx, JSValueConst this
 	}
 	dom_event_ref(event);
 	bool prevented = false;
-	dom_exception exc = dom_event_is_default_prevented(event, &prevented);
+	(void)dom_event_is_default_prevented(event, &prevented);
 	JSValue r = JS_NewBool(ctx, prevented);
 	dom_event_unref(event);
 
@@ -333,16 +334,12 @@ get_keyboardEvent(JSContext *ctx, struct term_event *ev)
 	dom_string *dom_key = NULL;
 	convert_key_to_dom_string(keyCode, &dom_key);
 
-	dom_string *keydown = NULL;
-	exc = dom_string_create("keydown", strlen("keydown"), &keydown);
-
-	exc = dom_keyboard_event_init(event, keydown, false, false,
+	exc = dom_keyboard_event_init(event, corestring_dom_keydown, false, false,
 		NULL, dom_key, NULL, DOM_KEY_LOCATION_STANDARD,
 		false, false, false, false,
 		false, false);
 
 	if (dom_key) dom_string_unref(dom_key);
-	if (keydown) dom_string_unref(keydown);
 
 	JSValue keyb_obj = JS_NewObjectClass(ctx, js_keyboardEvent_class_id);
 	JS_SetPropertyFunctionList(ctx, keyb_obj, js_keyboardEvent_proto_funcs, countof(js_keyboardEvent_proto_funcs));
@@ -377,10 +374,10 @@ js_keyboardEvent_constructor(JSContext *ctx, JSValueConst new_target, int argc, 
 	size_t len;
 
 	if (argc > 0) {
-		char *t = JS_ToCStringLen(ctx, &len, argv[0]);
+		const char *t = JS_ToCStringLen(ctx, &len, argv[0]);
 
 		if (t) {
-			exc = dom_string_create(t, strlen(t), &typ);
+			exc = dom_string_create((const uint8_t *)t, strlen(t), &typ);
 			JS_FreeCString(ctx, t);
 		}
 	}
@@ -399,7 +396,7 @@ js_keyboardEvent_constructor(JSContext *ctx, JSValueConst new_target, int argc, 
 		const char *k = JS_ToCStringLen(ctx, &len, r);
 
 		if (k) {
-			exc = dom_string_create(k, strlen(k), &key);
+			exc = dom_string_create((const uint8_t *)k, strlen(k), &key);
 			JS_FreeCString(ctx, k);
 			JS_FreeValue(ctx, r);
 		}
@@ -407,7 +404,7 @@ js_keyboardEvent_constructor(JSContext *ctx, JSValueConst new_target, int argc, 
 		const char *c = JS_ToCStringLen(ctx, &len, r);
 
 		if (c) {
-			exc = dom_string_create(c, strlen(c), &code);
+			exc = dom_string_create((const uint8_t *)c, strlen(c), &code);
 			JS_FreeCString(ctx, c);
 			JS_FreeValue(ctx, r);
 		}
@@ -459,7 +456,7 @@ js_keyboardEvent_init(JSContext *ctx)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSValue proto, obj;
+	JSValue proto;
 
 	/* Event class */
 	JS_NewClassID(&js_keyboardEvent_class_id);
@@ -471,8 +468,8 @@ js_keyboardEvent_init(JSContext *ctx)
 	JS_SetClassProto(ctx, js_keyboardEvent_class_id, proto);
 
 	/* Event object */
-	obj = JS_NewGlobalCConstructor(ctx, "KeyboardEvent", js_keyboardEvent_constructor, 1, proto);
-	REF_JS(obj);
+	(void)JS_NewGlobalCConstructor(ctx, "KeyboardEvent", js_keyboardEvent_constructor, 1, proto);
+	//REF_JS(obj);
 
 //	JS_SetPropertyFunctionList(ctx, obj, js_keyboardEvent_class_funcs, countof(js_keyboardEvent_class_funcs));
 

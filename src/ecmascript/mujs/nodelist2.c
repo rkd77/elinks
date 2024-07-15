@@ -28,8 +28,6 @@ mjs_push_nodeList2_item2(js_State *J, int idx)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	LIST_OF(struct selector_node) *sni = (LIST_OF(struct selector_node) *)(js_touserdata(J, 0, "nodelist2"));
-	dom_node *element = NULL;
-	dom_exception err;
 
 	if (!sni) {
 		js_pushundefined(J);
@@ -100,6 +98,7 @@ mjs_nodeList2_finalizer(js_State *J, void *node)
 	attr_erase_from_map(map_nodelist2, node);
 }
 
+#if 0
 static void
 mjs_nodeList2_get_property_length(js_State *J)
 {
@@ -116,6 +115,7 @@ mjs_nodeList2_get_property_length(js_State *J)
 	length = list_size(sni);
 	js_pushnumber(J, length);
 }
+#endif
 
 void
 mjs_push_nodelist2(js_State *J, void *nodes)

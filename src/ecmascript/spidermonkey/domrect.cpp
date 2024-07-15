@@ -540,7 +540,7 @@ domRect_set_property_y(JSContext *ctx, unsigned int argc, JS::Value *vp)
 JSObject *
 getDomRect(JSContext *ctx)
 {
-	struct eljs_domrect *d = mem_calloc(1, sizeof(*d));
+	struct eljs_domrect *d = (struct eljs_domrect *)mem_calloc(1, sizeof(*d));
 
 	if (!d) {
 		return NULL;

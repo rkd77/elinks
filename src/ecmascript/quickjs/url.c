@@ -726,7 +726,7 @@ js_url_init(JSContext *ctx)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSValue proto, obj;
+	JSValue proto;
 
 	/* url class */
 	JS_NewClassID(&js_url_class_id);
@@ -738,8 +738,8 @@ js_url_init(JSContext *ctx)
 	JS_SetClassProto(ctx, js_url_class_id, proto);
 
 	/* url object */
-	obj = JS_NewGlobalCConstructor(ctx, "URL", js_url_constructor, 1, proto);
-	REF_JS(obj);
+	(void)JS_NewGlobalCConstructor(ctx, "URL", js_url_constructor, 1, proto);
+	//REF_JS(obj);
 
 	return 0;
 }
