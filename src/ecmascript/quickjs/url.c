@@ -71,7 +71,9 @@ void js_url_finalizer(JSRuntime *rt, JSValue val)
 	struct eljs_url *url = (struct eljs_url *)JS_GetOpaque(val, js_url_class_id);
 
 	if (url) {
+		char *uristring = url->uri.string;
 		done_uri(&url->uri);
+		mem_free_if(uristring);
 		mem_free_if(url->hash);
 		mem_free_if(url->host);
 		mem_free_if(url->pathname);

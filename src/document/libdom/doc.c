@@ -67,6 +67,7 @@ js_html_document_user_data_handler(dom_node_operation operation,
 		/* This is the only path I expect */
 		break;
 	default:
+		break;
 		//NSLOG(netsurf, INFO, "User data operation not handled.");
 		//assert(0);
 	}
