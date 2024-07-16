@@ -550,6 +550,9 @@ ecmascript_timeout_handler2(void *val)
 #ifdef CONFIG_QUICKJS
 		JS_FreeValue(t->ctx, t->fun);
 #endif
+#ifdef CONFIG_ECMASCRIPT_SMJS
+		delete(t->fun);
+#endif
 #ifdef CONFIG_MUJS
 //	js_unref(t->ctx, t->fun);
 #endif
