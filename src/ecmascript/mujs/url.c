@@ -34,7 +34,9 @@ mjs_url_finalizer(js_State *J, void *val)
 	struct eljs_url *url = (struct eljs_url *)val;
 
 	if (url) {
+		char *uristring = url->uri.string;
 		done_uri(&url->uri);
+		mem_free_if(uristring);
 		mem_free_if(url->hash);
 		mem_free_if(url->host);
 		mem_free_if(url->pathname);
@@ -575,7 +577,6 @@ mjs_url_constructor(js_State *J)
 		return;
 	}
 	int ret = parse_uri(&url->uri, us);
-	mem_free(us);
 
 	if (ret != URI_ERRNO_OK) {
 		js_error(J, "error");
