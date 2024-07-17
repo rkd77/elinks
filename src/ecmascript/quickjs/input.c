@@ -1488,7 +1488,7 @@ quickjs_detach_form_state(struct form_state *fs)
 	JSValue jsinput = fs->ecmascript_obj;
 
 	if (!JS_IsNull(jsinput)) {
-		attr_erase_from_map(map_inputs, (void *)fs);
+		attr_erase_from_map_str(map_inputs, (void *)fs);
 		JS_SetOpaque(jsinput, NULL);
 		fs->ecmascript_obj = JS_NULL;
 	}
@@ -1504,7 +1504,7 @@ quickjs_moved_form_state(struct form_state *fs)
 	REF_JS(jsinput);
 
 	if (!JS_IsNull(jsinput)) {
-		attr_erase_from_map(map_inputs, (void *)fs);
+		attr_erase_from_map_str(map_inputs, (void *)fs);
 		JS_SetOpaque(jsinput, fs);
 		attr_save_in_map(map_inputs, (void *)fs, jsinput);
 	}
@@ -1518,7 +1518,7 @@ void js_input_finalizer(JSRuntime *rt, JSValue val)
 	struct form_state *fs = (struct form_state *)JS_GetOpaque(val, js_input_class_id);
 
 	if (fs) {
-		attr_erase_from_map(map_inputs, (void *)fs);
+		attr_erase_from_map_str(map_inputs, (void *)fs);
 	}
 }
 

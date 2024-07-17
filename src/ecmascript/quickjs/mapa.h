@@ -70,6 +70,7 @@ JSValue attr_find_in_map(void *m, void *node);
 void *attr_find_in_map_void(void *m, void *node);
 
 void attr_erase_from_map(void *m, void *node);
+void attr_erase_from_map_str(void *m, void *node);
 
 void attr_save_in_map_rev(void *m, JSValueConst value, void *node);
 //void attr_clear_map_rev(void *m);

@@ -34,7 +34,8 @@ attr_save_in_map(void *m, void *node, JSValueConst value)
 	}
 }
 
-void attr_save_in_map_void(void *m, void *node, void *value)
+void
+attr_save_in_map_void(void *m, void *node, void *value)
 {
 	struct hash *hash = (struct hash *)m;
 
@@ -318,6 +319,28 @@ attr_erase_from_map(void *m, void *node)
 		}
 	}
 }
+
+void
+attr_erase_from_map_str(void *m, void *node)
+{
+	struct hash *hash = (struct hash *)m;
+
+	if (hash) {
+		char *key = memacpy((const char *)&node, sizeof(node));
+
+		if (key) {
+			struct hash_item *item = get_hash_item(hash, key, sizeof(node));
+
+			if (item) {
+				mem_free_set(&item->key, NULL);
+				mem_free_set(&item->value, NULL);
+				del_hash_item(hash, item);
+			}
+			mem_free(key);
+		}
+	}
+}
+
 
 void
 attr_save_in_map_rev(void *m, JSValueConst value, void *node)

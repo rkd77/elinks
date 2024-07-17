@@ -125,7 +125,7 @@ void js_attr_finalizer(JSRuntime *rt, JSValue val)
 	REF_JS(val);
 	dom_attr *node = (dom_attr *)JS_GetOpaque(val, js_attr_class_id);
 
-	attr_erase_from_map(map_attrs, node);
+	attr_erase_from_map_str(map_attrs, node);
 
 	if (node) {
 		dom_node_unref(node);

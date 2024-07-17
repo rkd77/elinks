@@ -3630,7 +3630,7 @@ void js_element_finalizer(JSRuntime *rt, JSValue val)
 		free_list(el_private->listeners);
 		JS_FreeValueRT(rt, el_private->thisval);
 
-		attr_erase_from_map(map_elements, el_private->node);
+		attr_erase_from_map_str(map_elements, el_private->node);
 		mem_free(el_private);
 	}
 }

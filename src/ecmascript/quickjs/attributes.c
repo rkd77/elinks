@@ -25,6 +25,8 @@
 void *map_attributes;
 void *map_rev_attributes;
 
+JSClassID js_attributes_class_id;
+
 static void *
 js_attributes_GetOpaque(JSValueConst this_val)
 {
@@ -273,22 +275,19 @@ static const JSCFunctionListEntry js_attributes_proto_funcs[] = {
 	JS_CFUNC_DEF("toString", 0, js_attributes_toString)
 };
 
-#if 0
 static void
 js_attributes_finalizer(JSRuntime *rt, JSValue val)
 {
 	void *node = js_attributes_GetOpaque(val);
 
-	js_attributes_SetOpaque(val, nullptr);
-	map_attributes.erase(node);
+	js_attributes_SetOpaque(val, NULL);
+	attr_erase_from_map_str(map_attributes, node);
 }
 
 static JSClassDef js_attributes_class = {
 	"attributes",
 	js_attributes_finalizer
 };
-
-#endif
 
 JSValue
 getAttributes(JSContext *ctx, void *node)
@@ -300,6 +299,9 @@ getAttributes(JSContext *ctx, void *node)
 	static int initialized;
 	/* create the element class */
 	if (!initialized) {
+		/* create the element class */
+		JS_NewClassID(&js_attributes_class_id);
+		JS_NewClass(JS_GetRuntime(ctx), js_attributes_class_id, &js_attributes_class);
 		initialized = 1;
 	}
 	second = attr_find_in_map(map_attributes, node);
@@ -310,6 +312,7 @@ getAttributes(JSContext *ctx, void *node)
 		RETURN_JS(r);
 	}
 	JSValue attributes_obj = JS_NewArray(ctx);
+	JS_SetClassProto(ctx, js_attributes_class_id, JS_DupValue(ctx, attributes_obj));
 	JS_SetPropertyFunctionList(ctx, attributes_obj, js_attributes_proto_funcs, countof(js_attributes_proto_funcs));
 
 	js_attributes_SetOpaque(attributes_obj, node);
