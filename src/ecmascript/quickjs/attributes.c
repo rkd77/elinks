@@ -278,10 +278,14 @@ static const JSCFunctionListEntry js_attributes_proto_funcs[] = {
 static void
 js_attributes_finalizer(JSRuntime *rt, JSValue val)
 {
-	void *node = js_attributes_GetOpaque(val);
+	void *attrs = js_attributes_GetOpaque(val);
 
 	js_attributes_SetOpaque(val, NULL);
-	attr_erase_from_map_str(map_attributes, node);
+	attr_erase_from_map_str(map_attributes, attrs);
+
+	if (attrs) {
+		dom_namednodemap_unref(attrs);
+	}
 }
 
 static JSClassDef js_attributes_class = {
