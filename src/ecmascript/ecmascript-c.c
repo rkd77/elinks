@@ -822,7 +822,7 @@ el_dump_element(struct string *buf, dom_node *node, bool toSortAttrs)
 	dom_exception exc;
 	dom_string *node_name = NULL;
 	dom_node_type type;
-	dom_namednodemap *attrs;
+	dom_namednodemap *attrs = NULL;
 
 	/* Only interested in element nodes */
 	exc = dom_node_get_node_type(node, &type);
@@ -887,7 +887,9 @@ el_dump_element(struct string *buf, dom_node *node, bool toSortAttrs)
 				}
 			}
 		}
-		dom_node_unref(attrs);
+	}
+	if (attrs) {
+		dom_namednodemap_unref(attrs);
 	}
 	add_char_to_string(buf, '>');
 
