@@ -1897,7 +1897,7 @@ js_doctype_finalizer(JSRuntime *rt, JSValue val)
 	REF_JS(val);
 
 	dom_node *node = (dom_node *)JS_GetOpaque(val, js_doctype_class_id);
-	attr_erase_from_map(map_doctypes, node);
+	attr_erase_from_map_str(map_doctypes, node);
 
 	if (node) {
 		dom_node_unref(node);
