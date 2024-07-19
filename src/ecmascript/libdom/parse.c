@@ -21,7 +21,7 @@
 void
 el_insert_before(struct document *document, void *element, struct string *source)
 {
-	dom_document *doc = (dom_document *)document->dom;
+	dom_html_document *doc = (dom_html_document *)document->dom;
 	dom_node *node = (dom_node *)element;
 	dom_string *text = NULL;
 	dom_exception exc = dom_string_create((const unsigned char *)source->source, source->length, &text);

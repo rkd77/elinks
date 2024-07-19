@@ -317,7 +317,7 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 		struct cache_entry *cached = document->cached;
 #ifdef CONFIG_ECMASCRIPT_SMJS
 		if (interpreter->document_obj) {
-			dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>((JSObject *)interpreter->document_obj, 0);
+			dom_html_document *doc = JS::GetMaybePtrFromReservedSlot<dom_html_document>((JSObject *)interpreter->document_obj, 0);
 
 			if (doc) {
 				document->dom = doc;
@@ -326,7 +326,7 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 #endif
 #ifdef CONFIG_QUICKJS
 		if (JS_IsObject(interpreter->document_obj)) {
-			dom_document *doc = js_doc_getopaque(interpreter->document_obj);
+			dom_html_document *doc = js_doc_getopaque(interpreter->document_obj);
 
 			if (doc) {
 				document->dom = doc;

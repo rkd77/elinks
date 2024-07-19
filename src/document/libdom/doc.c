@@ -79,11 +79,11 @@ document_parse_text(const char *charset, const char *data, size_t length)
 	dom_hubbub_parser *parser = NULL;
 	dom_hubbub_error error;
 	dom_hubbub_parser_params params;
-	dom_document *doc;
+	dom_document *doc = NULL;
 
 	params.enc = charset;
 	params.fix_enc = true;
-	params.enable_script = false;
+	params.enable_script = true;
 	params.msg = NULL;
 	params.script = NULL;
 	params.ctx = NULL;
@@ -118,7 +118,6 @@ document_parse_text(const char *charset, const char *data, size_t length)
 	return doc;
 }
 
-
 void *
 document_parse(struct document *document, struct string *source)
 {
@@ -136,7 +135,7 @@ free_document(void *doc)
 	if (!doc) {
 		return;
 	}
-	dom_node *ddd = (dom_node *)doc;
+	dom_html_document *ddd = (dom_html_document *)doc;
 	dom_node_unref(ddd);
 }
 

@@ -3620,6 +3620,9 @@ void js_element_finalizer(JSRuntime *rt, JSValue val)
 		}
 
 		if (el) {
+			void *old_node_data = NULL;
+			dom_node_set_user_data(el, corestring_dom___ns_key_html_content_data, NULL, js_html_document_user_data_handler,
+				(void *) &old_node_data);
 			dom_node_unref(el);
 		}
 
@@ -3717,7 +3720,6 @@ getElement(JSContext *ctx, void *node)
 	}
 	init_list(el_private->listeners);
 	el_private->node = node;
-	dom_node_ref((dom_node *)node);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	el_private->interpreter = interpreter;
 

@@ -347,7 +347,7 @@ js_document_get_property_doctype(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	dom_document *doc = (struct dom_document *)js_doc_getopaque(this_val);
+	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
 
 	if (!doc) {
 		return JS_NULL;
@@ -1042,7 +1042,7 @@ js_document_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JS
 	if (!doc_private) {
 		return JS_NULL;
 	}
-	dom_document *doc = doc_private->node;
+	dom_html_document *doc = doc_private->node;
 
 	if (argc < 2) {
 		return JS_UNDEFINED;
@@ -1126,7 +1126,7 @@ js_document_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	if (!doc_private) {
 		return JS_FALSE;
 	}
-	dom_document *doc = doc_private->node;
+	dom_html_document *doc = doc_private->node;
 
 	if (!doc) {
 		return JS_FALSE;
@@ -1167,7 +1167,7 @@ js_document_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc,
 	if (!doc_private) {
 		return JS_NULL;
 	}
-	dom_document *doc = (dom_document *)doc_private->node;
+	dom_html_document *doc = (dom_html_document *)doc_private->node;
 	dom_node_ref(doc);
 
 	if (argc < 2) {
@@ -1282,7 +1282,7 @@ js_document_createDocumentFragment(JSContext *ctx, JSValueConst this_val, int ar
 	if (argc != 0) {
 		return JS_FALSE;
 	}
-	dom_document *doc = (struct dom_document *)js_doc_getopaque(this_val);
+	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
 
 	if (!doc) {
 		return JS_NULL;
@@ -1312,7 +1312,7 @@ js_document_createElement(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	if (argc != 1) {
 		return JS_FALSE;
 	}
-	dom_document *doc = (struct dom_document *)js_doc_getopaque(this_val);
+	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
 
 	if (!doc) {
 		return JS_NULL;
@@ -1361,7 +1361,7 @@ js_document_createTextNode(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 	if (argc != 1) {
 		return JS_FALSE;
 	}
-	dom_document *doc = (struct dom_document *)js_doc_getopaque(this_val);
+	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
 
 	if (!doc) {
 		return JS_NULL;
@@ -1538,7 +1538,7 @@ js_document_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc
 	if (argc != 1) {
 		return JS_FALSE;
 	}
-	dom_document *doc = (struct dom_document *)js_doc_getopaque(this_val);
+	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
 
 	if (!doc) {
 		return JS_NULL;

@@ -483,7 +483,7 @@ void
 debug_dump_xhtml(void *d)
 {
 #ifdef ECMASCRIPT_DEBUG
-	dom_document *doc = (dom_document *)d;
+	dom_html_document *doc = (dom_html_document *)d;
 
 	if (!doc) {
 		return;
@@ -525,7 +525,7 @@ void
 dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
 {
 	dom_exception exc; /* returned by libdom functions */
-	dom_document *doc = NULL; /* document, loaded into libdom */
+	dom_html_document *doc = NULL; /* document, loaded into libdom */
 	dom_node *root = NULL; /* root element of document */
 	void *mapa = NULL;
 	void *mapa_rev = NULL;
@@ -652,7 +652,7 @@ void
 walk2(struct document *document)
 {
 	dom_exception exc; /* returned by libdom functions */
-	dom_document *doc = NULL; /* document, loaded into libdom */
+	dom_html_document *doc = NULL; /* document, loaded into libdom */
 	dom_node *root = NULL; /* root element of document */
 
 	if (!document->dom) {
@@ -799,7 +799,7 @@ void
 try_to_color(struct terminal *term, struct el_box *box, struct document *document, int vx, int vy)
 {
 	dom_exception exc; /* returned by libdom functions */
-	dom_document *doc = NULL; /* document, loaded into libdom */
+	dom_html_document *doc = NULL; /* document, loaded into libdom */
 	dom_node *root = NULL; /* root element of document */
 
 	if (!document->dom) {

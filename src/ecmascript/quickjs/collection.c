@@ -59,6 +59,7 @@ void js_htmlColection_finalizer(JSRuntime *rt, JSValue val)
 	dom_html_collection *ns = (dom_html_collection *)(js_htmlCollection_GetOpaque(val));
 
 	if (ns) {
+		attr_erase_from_map_str(map_collections, ns);
 		dom_html_collection_unref(ns);
 	}
 }
