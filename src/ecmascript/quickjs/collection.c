@@ -34,7 +34,9 @@ js_htmlCollection_GetOpaque(JSValueConst this_val)
 {
 	REF_JS(this_val);
 
-	return attr_find_in_map_rev(map_rev_collections, this_val);
+	return JS_GetOpaque(this_val, js_htmlCollection_class_id);
+
+//	return attr_find_in_map_rev(map_rev_collections, this_val);
 }
 
 static void
@@ -42,11 +44,14 @@ js_htmlCollection_SetOpaque(JSValueConst this_val, void *node)
 {
 	REF_JS(this_val);
 
+	JS_SetOpaque(this_val, node);
+#if 0
 	if (!node) {
 		attr_erase_from_map_rev(map_rev_collections, this_val);
 	} else {
 		attr_save_in_map_rev(map_rev_collections, this_val, node);
 	}
+#endif
 }
 
 static
@@ -59,7 +64,7 @@ void js_htmlColection_finalizer(JSRuntime *rt, JSValue val)
 	dom_html_collection *ns = (dom_html_collection *)(js_htmlCollection_GetOpaque(val));
 
 	if (ns) {
-		attr_erase_from_map_str(map_collections, ns);
+		//attr_erase_from_map_str(map_collections, ns);
 		dom_html_collection_unref(ns);
 	}
 }
@@ -321,30 +326,30 @@ getCollection(JSContext *ctx, void *node)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	static int initialized;
-	JSValue second;
+//	JSValue second;
 
 	if (!initialized) {
+		/* collection class */
+		JS_NewClassID(&js_htmlCollection_class_id);
+		JS_NewClass(JS_GetRuntime(ctx), js_htmlCollection_class_id, &js_htmlCollection_class);
 		initialized = 1;
 	}
-	second = attr_find_in_map(map_collections, node);
+//	second = attr_find_in_map(map_collections, node);
 
-	if (!JS_IsNull(second)) {
-		JSValue r = JS_DupValue(ctx, second);
-
-		RETURN_JS(r);
-	}
-	/* nodelist class */
-	JS_NewClassID(&js_htmlCollection_class_id);
-	JS_NewClass(JS_GetRuntime(ctx), js_htmlCollection_class_id, &js_htmlCollection_class);
-	JSValue proto = JS_NewArray(ctx);
+//	if (!JS_IsNull(second)) {
+//		JSValue r = JS_DupValue(ctx, second);
+//
+//		RETURN_JS(r);
+//	}
+	JSValue proto = JS_NewObjectClass(ctx, js_htmlCollection_class_id);
 	REF_JS(proto);
 
 	JS_SetPropertyFunctionList(ctx, proto, js_htmlCollection_proto_funcs, countof(js_htmlCollection_proto_funcs));
 	JS_SetClassProto(ctx, js_htmlCollection_class_id, proto);
 
 	js_htmlCollection_SetOpaque(proto, node);
-	js_htmlCollection_set_items(ctx, proto, node);
-	attr_save_in_map(map_collections, node, proto);
+//	js_htmlCollection_set_items(ctx, proto, node);
+//	attr_save_in_map(map_collections, node, proto);
 	JSValue rr = JS_DupValue(ctx, proto);
 
 	RETURN_JS(rr);

@@ -114,16 +114,16 @@ js_document_get_property_anchors(JSContext *ctx, JSValueConst this_val)
 	if (!doc) {
 		return JS_NULL;
 	}
-	dom_node_ref(doc);
+	//dom_node_ref(doc);
 	dom_html_collection *anchors = NULL;
 	dom_exception exc = dom_html_document_get_anchors(doc, &anchors);
 
 	if (exc != DOM_NO_ERR || !anchors) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_NULL;
 	}
 	JSValue rr = getCollection(ctx, anchors);
-	dom_node_unref(doc);
+	//dom_node_unref(doc);
 
 	RETURN_JS(rr);
 }
@@ -175,16 +175,16 @@ js_document_get_property_body(JSContext *ctx, JSValueConst this_val)
 	if (!doc) {
 		return JS_NULL;
 	}
-	dom_node_ref(doc);
+	//dom_node_ref(doc);
 
 	dom_html_element *body = NULL;
 	dom_exception exc = dom_html_document_get_body(doc, &body);
 
 	if (exc != DOM_NO_ERR || !body) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_NULL;
 	}
-	dom_node_unref(doc);
+	//dom_node_unref(doc);
 
 	return getElement(ctx, body);
 }
@@ -305,13 +305,13 @@ js_document_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 	if (!doc) {
 		return JS_NULL;
 	}
-	dom_node_ref(doc);
+	//dom_node_ref(doc);
 
 	dom_element *root = NULL;
 	dom_exception exc = dom_document_get_document_element(doc, &root);
 
 	if (exc != DOM_NO_ERR || !root) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_NULL;
 	}
 	dom_nodelist *nodes = NULL;
@@ -319,10 +319,10 @@ js_document_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 	dom_node_unref(root);
 
 	if (exc != DOM_NO_ERR || !nodes) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_NULL;
 	}
-	dom_node_unref(doc);
+	//dom_node_unref(doc);
 
 	return getNodeList(ctx, nodes);
 }
@@ -352,11 +352,11 @@ js_document_get_property_doctype(JSContext *ctx, JSValueConst this_val)
 	if (!doc) {
 		return JS_NULL;
 	}
-	dom_node_ref(doc);
+	//dom_node_ref(doc);
 
 	dom_document_type *dtd;
 	dom_document_get_doctype(doc, &dtd);
-	dom_node_unref(doc);
+	//dom_node_unref(doc);
 
 	return getDoctype(ctx, dtd);
 }
@@ -374,16 +374,16 @@ js_document_get_property_documentElement(JSContext *ctx, JSValueConst this_val)
 	if (!doc) {
 		return JS_NULL;
 	}
-	dom_node_ref(doc);
+	//dom_node_ref(doc);
 
 	dom_html_element *root = NULL;
 	dom_exception exc = dom_document_get_document_element(doc, &root);
 
 	if (exc != DOM_NO_ERR || !root) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_NULL;
 	}
-	dom_node_unref(doc);
+	//dom_node_unref(doc);
 
 	return getElement(ctx, root);
 }
@@ -466,18 +466,18 @@ js_document_get_property_forms(JSContext *ctx, JSValueConst this_val)
 	if (!doc) {
 		return JS_NULL;
 	}
-	dom_node_ref(doc);
+	//dom_node_ref(doc);
 
 	dom_html_collection *forms = NULL;
 	dom_exception exc = dom_html_document_get_forms(doc, &forms);
 
 	if (exc != DOM_NO_ERR || !forms) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_NULL;
 	}
 	JSValue rr = getForms(ctx, forms);
 	JS_FreeValue(ctx, rr);
-	dom_node_unref(doc);
+	//dom_node_unref(doc);
 
 	RETURN_JS(rr);
 }
@@ -509,17 +509,17 @@ js_document_get_property_images(JSContext *ctx, JSValueConst this_val)
 	if (!doc) {
 		return JS_NULL;
 	}
-	dom_node_ref(doc);
+	//dom_node_ref(doc);
 
 	dom_html_collection *images = NULL;
 	dom_exception exc = dom_html_document_get_images(doc, &images);
 
 	if (exc != DOM_NO_ERR || !images) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_NULL;
 	}
 	JSValue rr = getCollection(ctx, images);
-	dom_node_unref(doc);
+	//dom_node_unref(doc);
 
 	RETURN_JS(rr);
 }
@@ -548,16 +548,16 @@ js_document_get_property_links(JSContext *ctx, JSValueConst this_val)
 	if (!doc) {
 		return JS_NULL;
 	}
-	dom_node_ref(doc);
+	//dom_node_ref(doc);
 	dom_html_collection *links = NULL;
 	dom_exception exc = dom_html_document_get_links(doc, &links);
 
 	if (exc != DOM_NO_ERR || !links) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_NULL;
 	}
 	JSValue rr = getCollection(ctx, links);
-	dom_node_unref(doc);
+	//dom_node_unref(doc);
 
 	RETURN_JS(rr);
 }
@@ -1131,10 +1131,10 @@ js_document_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	if (!doc) {
 		return JS_FALSE;
 	}
-	dom_node_ref(doc);
+	//dom_node_ref(doc);
 
 	if (argc < 1) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_FALSE;
 	}
 	JSValue eve = argv[0];
@@ -1149,7 +1149,7 @@ js_document_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	if (event) {
 		dom_event_unref(event);
 	}
-	dom_node_unref(doc);
+	//dom_node_unref(doc);
 
 	return JS_NewBool(ctx, result);
 }
@@ -1168,10 +1168,10 @@ js_document_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc,
 		return JS_NULL;
 	}
 	dom_html_document *doc = (dom_html_document *)doc_private->node;
-	dom_node_ref(doc);
+	//dom_node_ref(doc);
 
 	if (argc < 2) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_UNDEFINED;
 	}
 	const char *str;
@@ -1179,14 +1179,14 @@ js_document_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc,
 	str = JS_ToCStringLen(ctx, &len, argv[0]);
 
 	if (!str) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_EXCEPTION;
 	}
 	char *method = stracpy(str);
 	JS_FreeCString(ctx, str);
 
 	if (!method) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_EXCEPTION;
 	}
 	JSValue fun = argv[1];
@@ -1211,13 +1211,13 @@ js_document_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc,
 			mem_free_set(&l->typ, NULL);
 			mem_free(l);
 			mem_free(method);
-			dom_node_unref(doc);
+			//dom_node_unref(doc);
 
 			return JS_UNDEFINED;
 		}
 	}
 	mem_free(method);
-	dom_node_unref(doc);
+	//dom_node_unref(doc);
 
 	return JS_UNDEFINED;
 }
@@ -1238,7 +1238,7 @@ js_document_createComment(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	if (!doc) {
 		return JS_NULL;
 	}
-	dom_node_ref(doc);
+	//dom_node_ref(doc);
 
 	dom_string *data = NULL;
 	dom_exception exc;
@@ -1248,14 +1248,14 @@ js_document_createComment(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	str = JS_ToCStringLen(ctx, &len, argv[0]);
 
 	if (!str) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_EXCEPTION;
 	}
 	exc = dom_string_create((const uint8_t *)str, len, &data);
 	JS_FreeCString(ctx, str);
 
 	if (exc != DOM_NO_ERR || !data) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_NULL;
 	}
 	dom_comment *comment = NULL;
@@ -1263,10 +1263,10 @@ js_document_createComment(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	dom_string_unref(data);
 
 	if (exc != DOM_NO_ERR || !comment) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_NULL;
 	}
-	dom_node_unref(doc);
+	//dom_node_unref(doc);
 
 	return getElement(ctx, comment);
 }
@@ -1287,16 +1287,16 @@ js_document_createDocumentFragment(JSContext *ctx, JSValueConst this_val, int ar
 	if (!doc) {
 		return JS_NULL;
 	}
-	dom_node_ref(doc);
+	//dom_node_ref(doc);
 
 	dom_document_fragment *fragment = NULL;
 	dom_exception exc = dom_document_create_document_fragment(doc, &fragment);
 
 	if (exc != DOM_NO_ERR || !fragment) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_NULL;
 	}
-	dom_node_unref(doc);
+	//dom_node_unref(doc);
 
 	return getElement(ctx, fragment);
 }
@@ -1317,7 +1317,7 @@ js_document_createElement(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	if (!doc) {
 		return JS_NULL;
 	}
-	dom_node_ref(doc);
+	//dom_node_ref(doc);
 
 	dom_string *tag_name = NULL;
 	dom_exception exc;
@@ -1327,14 +1327,14 @@ js_document_createElement(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	str = JS_ToCStringLen(ctx, &len, argv[0]);
 
 	if (!str) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_EXCEPTION;
 	}
 	exc = dom_string_create((const uint8_t *)str, len, &tag_name);
 	JS_FreeCString(ctx, str);
 
 	if (exc != DOM_NO_ERR || !tag_name) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_NULL;
 	}
 	dom_element *element = NULL;
@@ -1342,10 +1342,10 @@ js_document_createElement(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	dom_string_unref(tag_name);
 
 	if (exc != DOM_NO_ERR || !element) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_NULL;
 	}
-	dom_node_unref(doc);
+	//dom_node_unref(doc);
 
 	return getElement(ctx, element);
 }
@@ -1366,7 +1366,7 @@ js_document_createTextNode(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 	if (!doc) {
 		return JS_NULL;
 	}
-	dom_node_ref(doc);
+	//dom_node_ref(doc);
 
 	dom_string *data = NULL;
 	dom_exception exc;
@@ -1376,14 +1376,14 @@ js_document_createTextNode(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 	str = JS_ToCStringLen(ctx, &len, argv[0]);
 
 	if (!str) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_EXCEPTION;
 	}
 	exc = dom_string_create((const uint8_t *)str, len, &data);
 	JS_FreeCString(ctx, str);
 
 	if (exc != DOM_NO_ERR || !data) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_NULL;
 	}
 	dom_text *text_node = NULL;
@@ -1391,10 +1391,10 @@ js_document_createTextNode(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 	dom_string_unref(data);
 
 	if (exc != DOM_NO_ERR || !text_node) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_NULL;
 	}
-	dom_node_unref(doc);
+	//dom_node_unref(doc);
 
 	return getElement(ctx, text_node);
 }
@@ -1415,7 +1415,7 @@ js_document_getElementById(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 	if (!doc) {
 		return JS_NULL;
 	}
-	dom_node_ref(doc);
+	//dom_node_ref(doc);
 
 	dom_string *id = NULL;
 	dom_exception exc;
@@ -1425,14 +1425,14 @@ js_document_getElementById(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 	str = JS_ToCStringLen(ctx, &len, argv[0]);
 
 	if (!str) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_EXCEPTION;
 	}
 	exc = dom_string_create((const uint8_t *)str, len, &id);
 	JS_FreeCString(ctx, str);
 
 	if (exc != DOM_NO_ERR || !id) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_NULL;
 	}
 	dom_element *element = NULL;
@@ -1440,10 +1440,10 @@ js_document_getElementById(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 	dom_string_unref(id);
 
 	if (exc != DOM_NO_ERR || !element) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_NULL;
 	}
-	dom_node_unref(doc);
+	//dom_node_unref(doc);
 
 	return getElement(ctx, element);
 }
@@ -1543,7 +1543,7 @@ js_document_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc
 	if (!doc) {
 		return JS_NULL;
 	}
-	dom_node_ref(doc);
+	//dom_node_ref(doc);
 
 	dom_string *tagname = NULL;
 	dom_exception exc;
@@ -1553,14 +1553,14 @@ js_document_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc
 	str = JS_ToCStringLen(ctx, &len, argv[0]);
 
 	if (!str) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_EXCEPTION;
 	}
 	exc = dom_string_create((const uint8_t *)str, len, &tagname);
 	JS_FreeCString(ctx, str);
 
 	if (exc != DOM_NO_ERR || !tagname) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_NULL;
 	}
 	dom_nodelist *nodes = NULL;
@@ -1568,11 +1568,11 @@ js_document_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc
 	dom_string_unref(tagname);
 
 	if (exc != DOM_NO_ERR || !nodes) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_NULL;
 	}
 	JSValue rr = getNodeList(ctx, nodes);
-	dom_node_unref(doc);
+	//dom_node_unref(doc);
 
 	RETURN_JS(rr);
 }
@@ -1593,21 +1593,21 @@ js_document_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	if (!doc) {
 		return JS_NULL;
 	}
-	dom_node_ref(doc);
+	//dom_node_ref(doc);
 
 	dom_node *root = NULL; /* root element of document */
 	/* Get root element */
 	dom_exception exc = dom_document_get_document_element(doc, &root);
 
 	if (exc != DOM_NO_ERR) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_NULL;
 	}
 	size_t len;
 	const char *selector = JS_ToCStringLen(ctx, &len, argv[0]);
 
 	if (!selector) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		dom_node_unref(root);
 		return JS_NULL;
 	}
@@ -1616,10 +1616,10 @@ js_document_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	dom_node_unref(root);
 
 	if (!ret) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_NULL;
 	}
-	dom_node_unref(doc);
+	//dom_node_unref(doc);
 
 	return getElement(ctx, ret);
 }
@@ -1640,20 +1640,20 @@ js_document_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JS
 	if (!doc) {
 		return JS_NULL;
 	}
-	dom_node_ref(doc);
+	//dom_node_ref(doc);
 	dom_node *doc_root = NULL; /* root element of document */
 	/* Get root element */
 	dom_exception exc = dom_document_get_document_element(doc, &doc_root);
 
 	if (exc != DOM_NO_ERR) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		return JS_NULL;
 	}
 	size_t len;
 	const char *selector = JS_ToCStringLen(ctx, &len, argv[0]);
 
 	if (!selector) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		dom_node_unref(doc_root);
 		return JS_NULL;
 	}
@@ -1662,7 +1662,7 @@ js_document_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JS
 	exc = dom_string_create((const uint8_t *)"B", 1, &tag_name);
 
 	if (exc != DOM_NO_ERR || !tag_name) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		dom_node_unref(doc_root);
 		JS_FreeCString(ctx, selector);
 		return JS_NULL;
@@ -1672,7 +1672,7 @@ js_document_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JS
 	dom_string_unref(tag_name);
 
 	if (exc != DOM_NO_ERR || !element) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		dom_node_unref(doc_root);
 		JS_FreeCString(ctx, selector);
 		return JS_NULL;
@@ -1680,7 +1680,7 @@ js_document_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JS
 	LIST_OF(struct selector_node) *result_list = (LIST_OF(struct selector_node) *)mem_calloc(1, sizeof(*result_list));
 
 	if (!result_list) {
-		dom_node_unref(doc);
+		//dom_node_unref(doc);
 		dom_node_unref(doc_root);
 		JS_FreeCString(ctx, selector);
 		return JS_NULL;
@@ -1690,7 +1690,7 @@ js_document_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JS
 	walk_tree_query_append((dom_node *)element, doc_root, selector, 0, result_list);
 	dom_node_unref(doc_root);
 	JS_FreeCString(ctx, selector);
-	dom_node_unref(doc);
+	//dom_node_unref(doc);
 
 	return getNodeList2(ctx, result_list);
 }
