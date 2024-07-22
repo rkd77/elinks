@@ -672,6 +672,28 @@ prepare_strings(const char *text)
 	return list;
 }
 
+void
+free_el_dom_collection(void *ctx)
+{
+	if (!ctx) {
+		return;
+	}
+	LIST_OF(struct class_string) *list = (LIST_OF(struct class_string) *)ctx;
+	struct class_string *st;
+
+	foreach (st, *list) {
+		lwc_string *ls = (lwc_string *)st->name;
+
+		if (ls) {
+			lwc_string_unref(ls);
+		}
+	}
+	free_list(*list);
+	mem_free(list);
+}
+
+
+#if 0
 typedef bool (*dom_callback_is_in_collection)(struct dom_node *node, void *ctx);
 
 /**
@@ -690,6 +712,7 @@ struct el_dom_html_collection {
 	dom_node *root; /**< The root node of this collection */
 	uint32_t refcnt; /**< Reference counting */
 };
+#endif
 
 /**
  * Intialiase a dom_html_collection

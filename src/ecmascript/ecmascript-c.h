@@ -35,6 +35,25 @@ struct class_string {
 	void *name;
 };
 
+typedef bool (*dom_callback_is_in_collection)(struct dom_node *node, void *ctx);
+
+/**
+ * The html_collection structure
+ */
+struct el_dom_html_collection {
+	dom_callback_is_in_collection ic;
+	/**< The function pointer used to test
+	 * whether some node is an element of
+	 * this collection
+	 */
+	void *ctx; /**< Context for the callback */
+	struct dom_html_document *doc;  /**< The document created this
+                                     * collection
+                                     */
+	dom_node *root; /**< The root node of this collection */
+	uint32_t refcnt; /**< Reference counting */
+};
+
 int ecmascript_get_interpreter_count(void);
 void ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter);
 void toggle_ecmascript(struct session *ses);
@@ -59,6 +78,8 @@ void *get_elements_by_class_name(dom_html_document *doc, dom_node *node, const c
 
 void camel_to_html(struct string *result, const char *camel);
 void ecmascript_walk_tree(struct string *buf, void *nod, bool start, bool toSortAttrs);
+
+void free_el_dom_collection(void *ctx);
 
 extern struct module ecmascript_module;
 

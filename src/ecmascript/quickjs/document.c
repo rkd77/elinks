@@ -1465,7 +1465,7 @@ js_document_getElementsByClassName(JSContext *ctx, JSValueConst this_val, int ar
 		return JS_NULL;
 	}
 	const char *classes = JS_ToCString(ctx, argv[0]);
-	dom_html_collection *col = get_elements_by_class_name(doc, (dom_node *)doc, classes);
+	struct el_dom_html_collection *col = get_elements_by_class_name(doc, (dom_node *)doc, classes);
 
 	if (classes) {
 		JS_FreeCString(ctx, classes);
@@ -1473,7 +1473,7 @@ js_document_getElementsByClassName(JSContext *ctx, JSValueConst this_val, int ar
 	if (!col) {
 		return JS_NULL;
 	}
-	JSValue ret = getCollection(ctx, col);
+	JSValue ret = getCollection2(ctx, col);
 
 	RETURN_JS(ret);
 }
