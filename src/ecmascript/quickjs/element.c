@@ -2842,6 +2842,7 @@ js_element_getAttributeNode(JSContext *ctx, JSValueConst this_val, int argc, JSV
 		return JS_NULL;
 	}
 	exc = dom_element_get_attribute_node(el, attr_name, &attr);
+	dom_string_unref(attr_name);
 
 	if (exc != DOM_NO_ERR || !attr) {
 		//dom_node_unref(el);
