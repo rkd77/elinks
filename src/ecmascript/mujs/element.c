@@ -2835,21 +2835,6 @@ mjs_element_querySelectorAll(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	dom_string *tag_name = NULL;
-	dom_exception exc = dom_string_create((const uint8_t *)"B", 1, &tag_name);
-
-	if (exc != DOM_NO_ERR || !tag_name) {
-		js_pushnull(J);
-		return;
-	}
-	dom_element *element = NULL;
-	exc = dom_document_create_element(document->dom, tag_name, &element);
-	dom_string_unref(tag_name);
-
-	if (exc != DOM_NO_ERR || !element) {
-		js_pushnull(J);
-		return;
-	}
 	LIST_OF(struct selector_node) *result_list = (LIST_OF(struct selector_node) *)mem_calloc(1, sizeof(*result_list));
 
 	if (!result_list) {
@@ -2857,7 +2842,7 @@ mjs_element_querySelectorAll(js_State *J)
 		return;
 	}
 	init_list(*result_list);
-	walk_tree_query_append((dom_node *)element, el, selector, 0, result_list);
+	walk_tree_query_append(el, selector, 0, result_list);
 	mjs_push_nodelist2(J, result_list);
 }
 

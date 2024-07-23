@@ -559,7 +559,7 @@ walk_tree_query(dom_node *node, const char *selector, int depth)
 }
 
 void
-walk_tree_query_append(dom_node *root, dom_node *node, const char *selector, int depth, LIST_OF(struct selector_node) *result_list)
+walk_tree_query_append(dom_node *node, const char *selector, int depth, LIST_OF(struct selector_node) *result_list)
 {
 	dom_exception exc;
 	dom_node *child;
@@ -595,7 +595,7 @@ walk_tree_query_append(dom_node *root, dom_node *node, const char *selector, int
 			dom_node *next_child;
 
 			/* Visit node's descendents */
-			walk_tree_query_append(root, child, selector, depth, result_list);
+			walk_tree_query_append(child, selector, depth, result_list);
 
 			/* Go to next sibling */
 			exc = dom_node_get_next_sibling(child, &next_child);

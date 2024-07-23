@@ -4982,23 +4982,6 @@ element_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setNull();
 		return true;
 	}
-	dom_string *tag_name = NULL;
-	dom_exception exc = dom_string_create((const uint8_t *)"B", 1, &tag_name);
-
-	if (exc != DOM_NO_ERR || !tag_name) {
-		mem_free(selector);
-		args.rval().setNull();
-		return true;
-	}
-	dom_element *element = NULL;
-	exc = dom_document_create_element(document->dom, tag_name, &element);
-	dom_string_unref(tag_name);
-
-	if (exc != DOM_NO_ERR || !element) {
-		mem_free(selector);
-		args.rval().setNull();
-		return true;
-	}
 	LIST_OF(struct selector_node) *result_list = (LIST_OF(struct selector_node) *)mem_calloc(1, sizeof(*result_list));
 
 	if (!result_list) {
@@ -5007,7 +4990,7 @@ element_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 	init_list(*result_list);
-	walk_tree_query_append((dom_node *)element, el, selector, 0, result_list);
+	walk_tree_query_append(el, selector, 0, result_list);
 	mem_free(selector);
 	JSObject *obj = getNodeList2(ctx, result_list);
 	args.rval().setObject(*obj);
