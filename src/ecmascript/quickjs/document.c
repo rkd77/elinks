@@ -1692,7 +1692,11 @@ js_document_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JS
 	JS_FreeCString(ctx, selector);
 	//dom_node_unref(doc);
 
-	return getNodeList2(ctx, result_list);
+	JSValue rr = getNodeList2(ctx, result_list);
+	free_list(*result_list);
+	mem_free(result_list);
+
+	return rr;
 }
 
 #if 0

@@ -56,26 +56,6 @@ static JSClassID js_nodelist2_class_id;
 void *map_nodelist2;
 void *map_rev_nodelist2;
 
-static void *
-js_nodeList2_GetOpaque(JSValueConst this_val)
-{
-	REF_JS(this_val);
-
-	return attr_find_in_map_rev(map_rev_nodelist2, this_val);
-}
-
-static void
-js_nodeList2_SetOpaque(JSValueConst this_val, void *node)
-{
-	REF_JS(this_val);
-
-	if (!node) {
-		attr_erase_from_map_rev(map_rev_nodelist2, this_val);
-	} else {
-		attr_save_in_map_rev(map_rev_nodelist2, this_val, node);
-	}
-}
-
 #if 0
 static JSValue
 js_nodeList2_get_property_length(JSContext *ctx, JSValueConst this_val)
@@ -102,25 +82,10 @@ js_nodeList2_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst 
 	if (argc != 1) {
 		return JS_UNDEFINED;
 	}
-	int index;
-	JS_ToInt32(ctx, &index, argv[0]);
-	LIST_OF(struct selector_node) *sni = (LIST_OF(struct selector_node) *)(js_nodeList2_GetOpaque(this_val));
-	int counter = 0;
-	struct selector_node *sn = NULL;
+	uint32_t index;
+	JS_ToUint32(ctx, &index, argv[0]);
 
-	foreach (sn, *sni) {
-		if (counter == index) {
-			break;
-		}
-		counter++;
-	}
-
-	if (!sn || !sn->node) {
-		return JS_NULL;
-	}
-	JSValue ret = getElement(ctx, sn->node);
-
-	return ret;
+	return JS_GetPropertyUint32(ctx, this_val, index);
 }
 
 static JSValue
@@ -160,9 +125,6 @@ getNodeList2(JSContext *ctx, void *nodes)
 
 	JS_SetPropertyFunctionList(ctx, proto, js_nodeList2_proto_funcs, countof(js_nodeList2_proto_funcs));
 	JS_SetClassProto(ctx, js_nodelist2_class_id, proto);
-
-	attr_save_in_map(map_nodelist2, nodes, proto);
-	js_nodeList2_SetOpaque(proto, nodes);
 
 	LIST_OF(struct selector_node) *sni = (LIST_OF(struct selector_node) *)nodes;
 
