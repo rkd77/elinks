@@ -132,6 +132,7 @@ getNodeList2(JSContext *ctx, void *nodes)
 	int i = 0;
 
 	foreach (sn, *sni) {
+		dom_node_ref((dom_node *)(sn->node));
 		JSValue obj = getElement(ctx, sn->node);
 		REF_JS(obj);
 
