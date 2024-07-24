@@ -1275,8 +1275,9 @@ js_element_get_property_previousElementSibling(JSContext *ctx, JSValueConst this
 		exc = dom_node_get_node_type(prev, &type);
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
-			//dom_node_unref(el);
-			return getElement(ctx, prev);
+			JSValue rr = getElement(ctx, prev);
+			dom_node_unref(prev);
+			return rr;
 		}
 		prev_prev = prev;
 		node = prev;
