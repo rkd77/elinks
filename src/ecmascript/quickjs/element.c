@@ -659,8 +659,9 @@ js_element_get_property_firstElementChild(JSContext *ctx, JSValueConst this_val)
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
 			dom_nodelist_unref(nodes);
-			//dom_node_unref(el);
-			return getElement(ctx, child);
+			JSValue rr = getElement(ctx, child);
+			dom_node_unref(child);
+			return rr;
 		}
 		dom_node_unref(child);
 	}
