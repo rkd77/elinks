@@ -185,8 +185,10 @@ js_document_get_property_body(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 	//dom_node_unref(doc);
+	JSValue rr = getElement(ctx, body);
+	dom_node_unref(body);
 
-	return getElement(ctx, body);
+	return rr;
 }
 
 static JSValue
