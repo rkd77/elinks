@@ -608,9 +608,10 @@ js_element_get_property_firstChild(JSContext *ctx, JSValueConst this_val)
 		//dom_node_unref(el);
 		return JS_NULL;
 	}
-	//dom_node_unref(el);
+	JSValue rr = getElement(ctx, node);
+	dom_node_unref(node);
 
-	return getElement(ctx, node);
+	return rr;
 }
 
 static JSValue
