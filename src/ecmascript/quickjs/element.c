@@ -2459,8 +2459,10 @@ js_element_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	if (exc == DOM_NO_ERR && res) {
 		interpreter->changed = 1;
 		//dom_node_unref(el);
+		JSValue rr = getElement(ctx, res);
+		dom_node_unref(res);
 
-		return getElement(ctx, res);
+		return rr;
 	}
 	//dom_node_unref(el);
 
@@ -2567,8 +2569,10 @@ js_element_cloneNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 		return JS_NULL;
 	}
 	//dom_node_unref(el);
+	JSValue rr = getElement(ctx, clone);
+	dom_node_unref(clone);
 
-	return getElement(ctx, clone);
+	return rr;
 }
 
 #if 0
