@@ -794,9 +794,10 @@ js_element_get_property_lastChild(JSContext *ctx, JSValueConst this_val)
 		//dom_node_unref(el);
 		return JS_NULL;
 	}
-	//dom_node_unref(el);
+	JSValue rr = getElement(ctx, last_child);
+	dom_node_unref(last_child);
 
-	return getElement(ctx, last_child);
+	return rr;
 }
 
 static JSValue
@@ -843,8 +844,9 @@ js_element_get_property_lastElementChild(JSContext *ctx, JSValueConst this_val)
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
 			dom_nodelist_unref(nodes);
-			//dom_node_unref(el);
-			return getElement(ctx, child);
+			JSValue rr = getElement(ctx, child);
+			dom_node_unref(child);
+			return rr;
 		}
 		dom_node_unref(child);
 	}
@@ -887,8 +889,9 @@ js_element_get_property_nextElementSibling(JSContext *ctx, JSValueConst this_val
 		exc = dom_node_get_node_type(next, &type);
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
-			//dom_node_unref(el);
-			return getElement(ctx, next);
+			JSValue rr = getElement(ctx, next);
+			dom_node_unref(next);
+			return rr;
 		}
 		prev_next = next;
 		node = next;
@@ -1010,8 +1013,10 @@ js_element_get_property_nextSibling(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 	//dom_node_unref(el);
+	JSValue rr = getElement(ctx, node);
+	dom_node_unref(node);
 
-	return getElement(ctx, node);
+	return rr;
 }
 
 #if 0
