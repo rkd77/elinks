@@ -1350,8 +1350,10 @@ js_document_createElement(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 		return JS_NULL;
 	}
 	//dom_node_unref(doc);
+	JSValue rr = getElement(ctx, element);
+	dom_node_unref(element);
 
-	return getElement(ctx, element);
+	return rr;
 }
 
 static JSValue
