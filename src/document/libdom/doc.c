@@ -136,7 +136,10 @@ free_document(void *doc)
 		return;
 	}
 	dom_html_document *ddd = (dom_html_document *)doc;
-	dom_node_unref(ddd);
+
+	if (((dom_node *)ddd)->refcnt > 0) {
+		dom_node_unref(ddd);
+	}
 }
 
 void

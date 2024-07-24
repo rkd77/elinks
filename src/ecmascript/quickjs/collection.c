@@ -348,6 +348,10 @@ getCollection(JSContext *ctx, void *node)
 	JS_SetClassProto(ctx, js_htmlCollection_class_id, proto);
 
 	js_htmlCollection_SetOpaque(proto, node);
+
+	///dom_html_collection_ref((dom_html_collection *)node);
+
+
 //	js_htmlCollection_set_items(ctx, proto, node);
 //	attr_save_in_map(map_collections, node, proto);
 	JSValue rr = JS_DupValue(ctx, proto);

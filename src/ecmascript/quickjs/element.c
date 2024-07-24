@@ -3719,6 +3719,7 @@ getElement(JSContext *ctx, void *node)
 
 	JS_SetPropertyFunctionList(ctx, element_obj, js_element_proto_funcs, countof(js_element_proto_funcs));
 	JS_SetClassProto(ctx, js_element_class_id, element_obj);
+	dom_node_ref((dom_node *)node);
 	JS_SetOpaque(element_obj, el_private);
 
 	attr_save_in_map(map_elements, node, element_obj);

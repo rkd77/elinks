@@ -38,12 +38,12 @@ js_style(JSContext *ctx, JSValueConst this_val, const char *property)
 	if (!el) {
 		return JS_NULL;
 	}
-	dom_node_ref(el);
+	//dom_node_ref(el);
 	exc = dom_element_get_attribute(el, corestring_dom_style, &style);
 
 	if (exc != DOM_NO_ERR) {
 		r = JS_NewString(ctx, "");
-		dom_node_unref(el);
+		//dom_node_unref(el);
 		RETURN_JS(r);
 	}
 
@@ -53,7 +53,7 @@ js_style(JSContext *ctx, JSValueConst this_val, const char *property)
 		if (style) {
 			dom_string_unref(style);
 		}
-		dom_node_unref(el);
+		//dom_node_unref(el);
 		RETURN_JS(r);
 	}
 
@@ -62,12 +62,12 @@ js_style(JSContext *ctx, JSValueConst this_val, const char *property)
 
 	if (!res) {
 		r = JS_NewString(ctx, "");
-		dom_node_unref(el);
+		//dom_node_unref(el);
 		RETURN_JS(r);
 	}
 	r = JS_NewString(ctx, res);
 	mem_free(res);
-	dom_node_unref(el);
+	//dom_node_unref(el);
 
 	RETURN_JS(r);
 }
@@ -86,18 +86,18 @@ js_style_get_property_cssText(JSContext *ctx, JSValueConst this_val)
 	if (!el) {
 		return JS_NULL;
 	}
-	dom_node_ref(el);
+	//dom_node_ref(el);
 	exc = dom_element_get_attribute(el, corestring_dom_style, &style);
 
 	if (exc != DOM_NO_ERR || !style) {
 		r = JS_NewString(ctx, "");
-		dom_node_unref(el);
+		//dom_node_unref(el);
 
 		RETURN_JS(r);
 	}
 	r = JS_NewString(ctx, dom_string_data(style));
 	dom_string_unref(style);
-	dom_node_unref(el);
+	//dom_node_unref(el);
 
 	RETURN_JS(r);
 }
@@ -120,17 +120,17 @@ js_set_style(JSContext *ctx, JSValueConst this_val, JSValue val, const char *pro
 	if (!el) {
 		return JS_NULL;
 	}
-	dom_node_ref(el);
+	//dom_node_ref(el);
 	value = JS_ToCStringLen(ctx, &len, val);
 
 	if (!value) {
-		dom_node_unref(el);
+		//dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	exc = dom_element_get_attribute(el, corestring_dom_style, &style);
 
 	if (exc != DOM_NO_ERR) {
-		dom_node_unref(el);
+		//dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 
@@ -153,7 +153,7 @@ js_set_style(JSContext *ctx, JSValueConst this_val, JSValue val, const char *pro
 		dom_string_unref(stylestr);
 	}
 	mem_free(res);
-	dom_node_unref(el);
+	//dom_node_unref(el);
 
 	return JS_UNDEFINED;
 }
@@ -172,31 +172,31 @@ js_style_set_property_cssText(JSContext *ctx, JSValueConst this_val, JSValue val
 	if (!el) {
 		return JS_UNDEFINED;
 	}
-	dom_node_ref(el);
+	//dom_node_ref(el);
 	const char *value;
 	size_t len;
 
 	if (!el) {
-		dom_node_unref(el);
+		//dom_node_unref(el);
 		return JS_NULL;
 	}
 	value = JS_ToCStringLen(ctx, &len, val);
 
 	if (!value) {
-		dom_node_unref(el);
+		//dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	void *css = set_elstyle(value);
 	JS_FreeCString(ctx, value);
 
 	if (!css) {
-		dom_node_unref(el);
+		//dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	res = get_elstyle(css);
 
 	if (!res) {
-		dom_node_unref(el);
+		//dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	dom_string *stylestr = NULL;
@@ -208,7 +208,7 @@ js_style_set_property_cssText(JSContext *ctx, JSValueConst this_val, JSValue val
 		dom_string_unref(stylestr);
 	}
 	mem_free(res);
-	dom_node_unref(el);
+	//dom_node_unref(el);
 
 	return JS_UNDEFINED;
 }
