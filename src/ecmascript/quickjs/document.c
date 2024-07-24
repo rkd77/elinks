@@ -1444,8 +1444,10 @@ js_document_getElementById(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 		return JS_NULL;
 	}
 	//dom_node_unref(doc);
+	JSValue rr = getElement(ctx, element);
+	dom_node_unref(element);
 
-	return getElement(ctx, element);
+	return rr;
 }
 
 static JSValue
@@ -2004,9 +2006,9 @@ getDocument2(JSContext *ctx, void *doc)
 	}
 	init_list(doc_private->listeners);
 
-	if (doc) {
-		dom_node_ref((dom_node *)doc);
-	}
+//	if (doc) {
+//		dom_node_ref((dom_node *)doc);
+//	}
 	doc_private->node = doc;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	doc_private->interpreter = interpreter;

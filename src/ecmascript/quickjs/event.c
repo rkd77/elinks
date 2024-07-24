@@ -157,7 +157,7 @@ js_event_get_property_target(JSContext *ctx, JSValueConst this_val)
 	if (!event) {
 		return JS_NULL;
 	}
-	dom_event_ref(event);
+	//dom_event_ref(event);
 	dom_event_target *target = NULL;
 	dom_exception exc = dom_event_get_target(event, &target);
 
@@ -166,7 +166,7 @@ js_event_get_property_target(JSContext *ctx, JSValueConst this_val)
 	}
 	JSValue r = getElement(ctx, target);
 	dom_node_unref(target);
-	dom_event_unref(event);
+	//dom_event_unref(event);
 
 	RETURN_JS(r);
 }
