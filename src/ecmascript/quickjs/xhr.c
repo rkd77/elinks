@@ -321,6 +321,7 @@ xhr_finalizer(JSRuntime *rt, JSValue val)
 		}
 		mem_free_if(x->responseURL);
 		mem_free_if(x->status_text);
+		mem_free_if(x->response_text);
 
 		struct xhr_listener *l;
 
