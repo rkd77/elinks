@@ -3240,8 +3240,10 @@ js_element_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 		return JS_NULL;
 	}
 	//dom_node_unref(el);
+	JSValue rr = getElement(ctx, ret);
+	dom_node_unref((dom_node *)ret);
 
-	return getElement(ctx, ret);
+	return rr;
 }
 
 static JSValue
