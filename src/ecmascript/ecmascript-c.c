@@ -509,7 +509,7 @@ void *
 walk_tree_query(dom_node *node, const char *selector, int depth)
 {
 	dom_exception exc;
-	dom_node *child;
+	dom_node *child = NULL;
 	void *res = NULL;
 	dom_node_type typ;
 
@@ -534,7 +534,7 @@ walk_tree_query(dom_node *node, const char *selector, int depth)
 
 		/* Loop though all node's children */
 		do {
-			dom_node *next_child;
+			dom_node *next_child = NULL;
 
 			/* Visit node's descendents */
 			res = walk_tree_query(child, selector, depth);
