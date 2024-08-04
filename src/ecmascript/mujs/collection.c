@@ -229,7 +229,10 @@ mjs_htmlCollection_toString(js_State *J)
 static void
 mjs_htmlCollection_finalizer(js_State *J, void *node)
 {
-	attr_erase_from_map(map_collections, node);
+	if (node) {
+		dom_html_collection_unref((dom_html_collection *)node);
+	}
+	//attr_erase_from_map(map_collections, node);
 }
 
 void
@@ -247,5 +250,5 @@ mjs_push_collection(js_State *J, void *node)
 		addproperty(J, "length", mjs_htmlCollection_get_property_length, NULL);
 		mjs_htmlCollection_set_items(J, node);
 	}
-	attr_save_in_map(map_collections, node, node);
+	//attr_save_in_map(map_collections, node, node);
 }

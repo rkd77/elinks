@@ -3035,6 +3035,7 @@ mjs_element_finalizer(js_State *J, void *priv)
 		if (attr_find_in_map(map_elements, el_private) && --el_private->ref_count <= 0) {
 			attr_erase_from_map(map_elements, el_private);
 			attr_erase_from_map(map_privates, el_private->node);
+			dom_node *node = (dom_node *)(el_private->node);
 
 			struct ele_listener *l;
 
@@ -3047,7 +3048,10 @@ mjs_element_finalizer(js_State *J, void *priv)
 				if (l->fun) js_unref(J, l->fun);
 			}
 			free_list(el_private->listeners);
-			dom_node_unref(el_private->node);
+
+			if (node->refcnt > 0) {
+				dom_node_unref(node);
+			}
 			if (el_private->thisval) {
 				js_unref(J, el_private->thisval);
 			}
