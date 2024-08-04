@@ -520,6 +520,7 @@ mjs_element_get_property_firstChild(js_State *J)
 		return;
 	}
 	mjs_push_element(J, node);
+	dom_node_unref(node);
 }
 
 static void
@@ -566,6 +567,7 @@ mjs_element_get_property_firstElementChild(js_State *J)
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
 			dom_nodelist_unref(nodes);
 			mjs_push_element(J, child);
+			dom_node_unref(child);
 			return;
 		}
 		dom_node_unref(child);
@@ -681,6 +683,7 @@ mjs_element_get_property_lastChild(js_State *J)
 		return;
 	}
 	mjs_push_element(J, last_child);
+	dom_node_unref(last_child);
 }
 
 static void
@@ -726,6 +729,7 @@ mjs_element_get_property_lastElementChild(js_State *J)
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
 			dom_nodelist_unref(nodes);
 			mjs_push_element(J, child);
+			dom_node_unref(child);
 			return;
 		}
 		dom_node_unref(child);
@@ -767,6 +771,7 @@ mjs_element_get_property_nextElementSibling(js_State *J)
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
 			mjs_push_element(J, next);
+			dom_node_unref(next);
 			return;
 		}
 		prev_next = next;
@@ -867,6 +872,7 @@ mjs_element_get_property_nextSibling(js_State *J)
 		return;
 	}
 	mjs_push_element(J, node);
+	dom_node_unref(node);
 }
 
 #if 0
@@ -966,6 +972,7 @@ mjs_element_get_property_offsetParent(js_State *J)
 		return;
 	}
 	mjs_push_element(J, node);
+	dom_node_unref(node);
 }
 
 #if 0
@@ -1076,6 +1083,7 @@ mjs_element_get_property_parentElement(js_State *J)
 		return;
 	}
 	mjs_push_element(J, node);
+	dom_node_unref(node);
 }
 
 static void
@@ -1099,6 +1107,7 @@ mjs_element_get_property_parentNode(js_State *J)
 		return;
 	}
 	mjs_push_element(J, node);
+	dom_node_unref(node);
 }
 
 static void
@@ -1134,6 +1143,7 @@ mjs_element_get_property_previousElementSibling(js_State *J)
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
 			mjs_push_element(J, prev);
+			dom_node_unref(prev);
 			return;
 		}
 		prev_prev = prev;
@@ -1163,6 +1173,7 @@ mjs_element_get_property_previousSibling(js_State *J)
 		return;
 	}
 	mjs_push_element(J, node);
+	dom_node_unref(node);
 }
 
 static void
@@ -2198,6 +2209,7 @@ mjs_element_appendChild(js_State *J)
 	if (exc == DOM_NO_ERR && res) {
 		interpreter->changed = 1;
 		mjs_push_element(J, res);
+		dom_node_unref(res);
 		return;
 	}
 	js_pushnull(J);
@@ -2290,6 +2302,7 @@ mjs_element_cloneNode(js_State *J)
 		return;
 	}
 	mjs_push_element(J, clone);
+	dom_node_unref(clone);
 }
 
 #if 0
@@ -2372,6 +2385,7 @@ mjs_element_closest(js_State *J)
 		return;
 	}
 	mjs_push_element(J, res);
+	dom_node_unref(res);
 }
 
 static void
@@ -2707,6 +2721,7 @@ mjs_element_insertBefore(js_State *J)
 	}
 	interpreter->changed = 1;
 	mjs_push_element(J, spare);
+	dom_node_unref(spare);
 }
 
 static void
@@ -2808,6 +2823,7 @@ mjs_element_querySelector(js_State *J)
 		return;
 	}
 	mjs_push_element(J, ret);
+	dom_node_unref(ret);
 }
 
 static void
@@ -2928,6 +2944,7 @@ mjs_element_removeChild(js_State *J)
 	if (exc == DOM_NO_ERR && spare) {
 		interpreter->changed = 1;
 		mjs_push_element(J, spare);
+		dom_node_unref(spare);
 		return;
 	}
 	js_pushnull(J);
@@ -3049,7 +3066,7 @@ mjs_element_finalizer(js_State *J, void *priv)
 			}
 			free_list(el_private->listeners);
 
-			if (node->refcnt > 0) {
+			if (node && (node->refcnt > 0)) {
 				dom_node_unref(node);
 			}
 			if (el_private->thisval) {
@@ -3067,6 +3084,7 @@ mjs_push_element(js_State *J, void *node)
 {
 	struct mjs_element_private *el_private = NULL;
 
+#if 0
 	void *second = attr_find_in_map(map_privates, node);
 
 	if (second) {
@@ -3078,6 +3096,7 @@ mjs_push_element(js_State *J, void *node)
 			el_private->ref_count++;
 		}
 	}
+#endif
 
 	if (!el_private) {
 		el_private = (struct mjs_element_private *)mem_calloc(1, sizeof(*el_private));
@@ -3091,6 +3110,7 @@ mjs_push_element(js_State *J, void *node)
 		el_private->interpreter = interpreter;
 		el_private->node = node;
 		el_private->ref_count = 1;
+		dom_node_ref((dom_node *)node);
 
 		attr_save_in_map(map_privates, node, el_private);
 		attr_save_in_map(map_elements, el_private, node);

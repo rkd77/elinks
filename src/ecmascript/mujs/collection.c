@@ -190,6 +190,7 @@ mjs_htmlCollection_set_items(js_State *J, void *node)
 			continue;
 		}
 		mjs_push_element(J, element);
+		dom_node_unref(element);
 		js_setindex(J, -2, counter);
 		err = dom_element_get_attribute(element, corestring_dom_id, &name);
 
@@ -204,6 +205,7 @@ mjs_htmlCollection_set_items(js_State *J, void *node)
 					goto next;
 				}
 				mjs_push_element(J, element);
+				dom_node_unref(element);
 				js_setproperty(J, -2, dom_string_data(name));
 				js_endtry(J);
 			}
@@ -213,7 +215,6 @@ next:
 		if (name) {
 			dom_string_unref(name);
 		}
-		dom_node_unref(element);
 	}
 }
 

@@ -178,6 +178,7 @@ mjs_document_get_property_body(js_State *J)
 		return;
 	}
 	mjs_push_element(J, body);
+	dom_node_unref(body);
 }
 
 static void
@@ -344,6 +345,7 @@ mjs_document_get_property_documentElement(js_State *J)
 		return;
 	}
 	mjs_push_element(J, root);
+	dom_node_unref(root);
 }
 
 static void
@@ -1091,6 +1093,7 @@ mjs_document_createComment(js_State *J)
 		return;
 	}
 	mjs_push_element(J, comment);
+	dom_node_unref(comment);
 }
 
 static void
@@ -1113,6 +1116,7 @@ mjs_document_createDocumentFragment(js_State *J)
 		return;
 	}
 	mjs_push_element(J, fragment);
+	dom_node_unref(fragment);
 }
 
 static void
@@ -1145,6 +1149,7 @@ mjs_document_createElement(js_State *J)
 		return;
 	}
 	mjs_push_element(J, element);
+	dom_node_unref(element);
 }
 
 static void
@@ -1177,6 +1182,7 @@ mjs_document_createTextNode(js_State *J)
 		return;
 	}
 	mjs_push_element(J, text_node);
+	dom_node_unref(text_node);
 }
 
 static void
@@ -1214,6 +1220,7 @@ mjs_document_getElementById(js_State *J)
 		return;
 	}
 	mjs_push_element(J, element);
+	dom_node_unref(element);
 }
 
 static void
@@ -1355,6 +1362,7 @@ mjs_document_querySelector(js_State *J)
 		return;
 	}
 	mjs_push_element(J, ret);
+	dom_node_unref(ret);
 }
 
 static void
