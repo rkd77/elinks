@@ -2529,6 +2529,7 @@ mjs_element_getAttributeNode(js_State *J)
 		return;
 	}
 	exc = dom_element_get_attribute_node(el, attr_name, &attr);
+	dom_string_unref(attr_name);
 
 	if (exc != DOM_NO_ERR || !attr) {
 		js_pushnull(J);
