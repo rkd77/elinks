@@ -1236,13 +1236,13 @@ mjs_document_getElementsByClassName(js_State *J)
 		return;
 	}
 	const char *classes = js_tostring(J, 1);
-	dom_html_collection *col = get_elements_by_class_name(doc, (dom_node *)doc, classes);
+	struct el_dom_html_collection *col = get_elements_by_class_name(doc, (dom_node *)doc, classes);
 
 	if (!col) {
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_collection(J, col);
+	mjs_push_collection2(J, col);
 }
 
 #if 0

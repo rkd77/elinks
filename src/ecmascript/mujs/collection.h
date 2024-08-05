@@ -8,6 +8,7 @@ extern "C" {
 #endif
 
 void mjs_push_collection(js_State *J, void *node);
+void mjs_push_collection2(js_State *J, void *node);
 
 #ifdef __cplusplus
 }
