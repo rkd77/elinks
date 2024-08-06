@@ -1554,6 +1554,10 @@ static void
 mjs_doctype_finalizer(js_State *J, void *node)
 {
 	attr_erase_from_map(map_doctypes, node);
+
+	if (node) {
+		dom_node_unref((dom_node *)node);
+	}
 }
 
 static void
