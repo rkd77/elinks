@@ -784,7 +784,7 @@ get_elements_by_class_name(dom_html_document *doc, dom_node *node, const char *c
 }
 
 void
-camel_to_html(struct string *result, const char *text)
+camel_to_html(const char *text, struct string *result)
 {
 	add_to_string(result, "data-");
 

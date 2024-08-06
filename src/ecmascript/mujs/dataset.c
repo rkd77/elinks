@@ -51,7 +51,7 @@ mjs_obj_dataset_has(js_State *J, void *p, const char *property)
 	if (!el ||!init_string(&data)) {
 		return 0;
 	}
-	camel_to_html(&data, property);
+	camel_to_html(property, &data);
 	dom_string *attr_name = NULL;
 	dom_exception exc = dom_string_create((const uint8_t *)data.source, data.length, &attr_name);
 	done_string(&data);
@@ -94,7 +94,7 @@ mjs_obj_dataset_put(js_State *J, void *p, const char *property)
 	if (!el ||!init_string(&data)) {
 		return 0;
 	}
-	camel_to_html(&data, property);
+	camel_to_html(property, &data);
 	dom_string *attr_name = NULL;
 	dom_exception exc = dom_string_create((const uint8_t *)data.source, data.length, &attr_name);
 	done_string(&data);
@@ -134,7 +134,7 @@ mjs_obj_dataset_del(js_State *J, void *p, const char *property)
 	if (!el ||!init_string(&data)) {
 		return 0;
 	}
-	camel_to_html(&data, property);
+	camel_to_html(property, &data);
 	dom_string *attr_name = NULL;
 	dom_exception exc = dom_string_create((const uint8_t *)data.source, data.length, &attr_name);
 	done_string(&data);

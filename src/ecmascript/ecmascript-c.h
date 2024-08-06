@@ -76,7 +76,7 @@ void *walk_tree_query(dom_node *node, const char *selector, int depth);
 void walk_tree_query_append(dom_node *node, const char *selector, int depth, LIST_OF(struct selector_node) *result_list);
 void *get_elements_by_class_name(dom_html_document *doc, dom_node *node, const char *classes);
 
-void camel_to_html(struct string *result, const char *camel);
+void camel_to_html(const char *camel, struct string *result);
 void ecmascript_walk_tree(struct string *buf, void *nod, bool start, bool toSortAttrs);
 
 void free_el_dom_collection(void *ctx);

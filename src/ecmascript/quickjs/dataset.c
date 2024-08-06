@@ -61,7 +61,7 @@ js_obj_delete_property(JSContext *ctx, JSValueConst obj, JSAtom prop)
 		JS_FreeCString(ctx, property);
 		return 0;
 	}
-	camel_to_html(&data, property);
+	camel_to_html(property, &data);
 	JS_FreeCString(ctx, property);
 
 	dom_string *attr_name = NULL;
@@ -111,7 +111,7 @@ js_obj_get_property(JSContext *ctx, JSValueConst obj, JSAtom atom, JSValueConst 
 		JS_FreeCString(ctx, property);
 		return JS_UNDEFINED;
 	}
-	camel_to_html(&data, property);
+	camel_to_html(property, &data);
 	JS_FreeCString(ctx, property);
 
 	dom_string *attr_name = NULL;
@@ -162,7 +162,7 @@ js_obj_set_property(JSContext *ctx, JSValueConst obj, JSAtom atom, JSValueConst 
 		JS_FreeCString(ctx, value);
 		return 0;
 	}
-	camel_to_html(&data, property);
+	camel_to_html(property, &data);
 	JS_FreeCString(ctx, property);
 
 	dom_string *attr_name = NULL;

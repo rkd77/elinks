@@ -89,7 +89,7 @@ dataset_obj_getProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleValue re
 		mem_free(property);
 		return true;
 	}
-	camel_to_html(&data, property);
+	camel_to_html(property, &data);
 	mem_free(property);
 
 	dom_string *attr_name = NULL;
@@ -150,7 +150,7 @@ dataset_obj_setProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleId id, J
 		mem_free(value);
 		return result.failInvalidDescriptor();
 	}
-	camel_to_html(&data, property);
+	camel_to_html(property, &data);
 	mem_free(property);
 
 	dom_string *attr_name = NULL;
@@ -207,7 +207,7 @@ dataset_obj_deleteProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleId id
 		mem_free(property);
 		return result.failCantDelete();
 	}
-	camel_to_html(&data, property);
+	camel_to_html(property, &data);
 	mem_free(property);
 
 	dom_string *attr_name = NULL;
