@@ -147,11 +147,11 @@ js_nodeList_set_items(JSContext *ctx, JSValue this_val, void *node)
 	if (!nl) {
 		return;
 	}
-	dom_nodelist_ref(nl);
+	//dom_nodelist_ref(nl);
 	err = dom_nodelist_get_length(nl, &length);
 
 	if (err != DOM_NO_ERR) {
-		dom_nodelist_unref(nl);
+		//dom_nodelist_unref(nl);
 		return;
 	}
 
@@ -174,7 +174,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
 		dom_node_unref(element);
 	}
-	dom_nodelist_unref(nl);
+	//dom_nodelist_unref(nl);
 }
 
 static JSValue
