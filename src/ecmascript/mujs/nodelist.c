@@ -22,8 +22,8 @@
 #include "ecmascript/mujs/nodelist.h"
 #include "ecmascript/mujs/window.h"
 
-void *map_nodelist;
-void *map_rev_nodelist;
+//void *map_nodelist;
+//void *map_rev_nodelist;
 
 static void
 mjs_push_nodeList_item2(js_State *J, int idx)
@@ -112,7 +112,11 @@ mjs_nodeList_toString(js_State *J)
 static void
 mjs_nodeList_finalizer(js_State *J, void *node)
 {
-	attr_erase_from_map(map_nodelist, node);
+	//attr_erase_from_map(map_nodelist, node);
+
+	if (node) {
+		dom_nodelist_unref((dom_nodelist *)node);
+	}
 }
 
 #if 0
@@ -147,6 +151,7 @@ mjs_push_nodelist(js_State *J, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	dom_nodelist_ref((dom_nodelist *)node);
 	js_newarray(J);
 	{
 		js_newuserdata(J, "nodelist", node, mjs_nodeList_finalizer);
@@ -155,5 +160,5 @@ mjs_push_nodelist(js_State *J, void *node)
 		addmethod(J, "toString", mjs_nodeList_toString, 0);
 		mjs_nodeList_set_items(J, node);
 	}
-	attr_save_in_map(map_nodelist, node, node);
+	//attr_save_in_map(map_nodelist, node, node);
 }

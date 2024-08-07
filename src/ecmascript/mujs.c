@@ -90,8 +90,8 @@ mujs_init(struct module *xxx)
 	map_forms = attr_create_new_map();
 	map_rev_forms = attr_create_new_map();
 	map_inputs = attr_create_new_map();
-	map_nodelist = attr_create_new_map();
-	map_rev_nodelist = attr_create_new_map();
+	//map_nodelist = attr_create_new_map();
+	//map_rev_nodelist = attr_create_new_map();
 	//js_module_init_ok = spidermonkey_runtime_addref();
 }
 
@@ -113,8 +113,8 @@ mujs_done(struct module *xxx)
 	attr_delete_map(map_forms);
 	attr_delete_map(map_rev_forms);
 	attr_delete_map(map_inputs);
-	attr_delete_map(map_nodelist);
-	attr_delete_map(map_rev_nodelist);
+	//attr_delete_map(map_nodelist);
+	//attr_delete_map(map_rev_nodelist);
 
 //	if (js_module_init_ok)
 //		spidermonkey_runtime_release();
@@ -214,6 +214,8 @@ mujs_put_interpreter(struct ecmascript_interpreter *interpreter)
 	assert(interpreter);
 	js_State *J = (js_State *)interpreter->backend_data;
 #ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before js_gc: %s:%d\n", __FUNCTION__, __LINE__);
+	js_gc(J, 0);
 fprintf(stderr, "Before js_freestate: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
 	js_freestate(J);

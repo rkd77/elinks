@@ -1349,6 +1349,7 @@ mjs_document_getElementsByTagName(js_State *J)
 		return;
 	}
 	mjs_push_nodelist(J, nodes);
+	dom_nodelist_unref(nodes);
 }
 
 static void
