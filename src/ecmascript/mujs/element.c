@@ -202,6 +202,7 @@ mjs_element_get_property_children(js_State *J)
 		return;
 	}
 	mjs_push_nodelist(J, nodes);
+	dom_nodelist_unref(nodes);
 }
 
 static void
@@ -251,6 +252,7 @@ mjs_element_get_property_childNodes(js_State *J)
 		return;
 	}
 	mjs_push_nodelist(J, nodes);
+	dom_nodelist_unref(nodes);
 }
 
 static void

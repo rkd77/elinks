@@ -303,6 +303,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		return;
 	}
 	mjs_push_nodelist(J, nodes);
+	dom_nodelist_unref(nodes);
 }
 
 static void
