@@ -186,6 +186,9 @@ js_document_get_property_body(JSContext *ctx, JSValueConst this_val)
 	}
 	//dom_node_unref(doc);
 	JSValue rr = getElement(ctx, body);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(body);
 
 	return rr;
@@ -318,6 +321,9 @@ js_document_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 	}
 	dom_nodelist *nodes = NULL;
 	exc = dom_node_get_child_nodes(root, &nodes);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(root);
 
 	if (exc != DOM_NO_ERR || !nodes) {
@@ -387,6 +393,9 @@ js_document_get_property_documentElement(JSContext *ctx, JSValueConst this_val)
 	}
 	//dom_node_unref(doc);
 	JSValue rr = getElement(ctx, root);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(root);
 
 	return rr;
@@ -1351,6 +1360,9 @@ js_document_createElement(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	}
 	//dom_node_unref(doc);
 	JSValue rr = getElement(ctx, element);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(element);
 
 	return rr;
@@ -1451,6 +1463,9 @@ js_document_getElementById(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 	}
 	//dom_node_unref(doc);
 	JSValue rr = getElement(ctx, element);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(element);
 
 	return rr;
@@ -1616,11 +1631,17 @@ js_document_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 
 	if (!selector) {
 		//dom_node_unref(doc);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(root);
 		return JS_NULL;
 	}
 	void *ret = walk_tree_query(root, selector, 0);
 	JS_FreeCString(ctx, selector);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(root);
 
 	if (!ret) {
@@ -1662,6 +1683,9 @@ js_document_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JS
 
 	if (!selector) {
 		//dom_node_unref(doc);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(doc_root);
 		return JS_NULL;
 	}
@@ -1669,6 +1693,9 @@ js_document_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JS
 
 	if (!result_list) {
 		//dom_node_unref(doc);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(doc_root);
 		JS_FreeCString(ctx, selector);
 		return JS_NULL;
@@ -1676,6 +1703,9 @@ js_document_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JS
 	init_list(*result_list);
 
 	walk_tree_query_append(doc_root, selector, 0, result_list);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(doc_root);
 	JS_FreeCString(ctx, selector);
 	//dom_node_unref(doc);
@@ -1850,6 +1880,9 @@ js_document_finalizer(JSRuntime *rt, JSValue val)
 		}
 		free_list(doc_private->listeners);
 		if (doc_private->node) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 			dom_node_unref((dom_node *)doc_private->node);
 		}
 		mem_free(doc_private);
@@ -1892,6 +1925,9 @@ js_doctype_finalizer(JSRuntime *rt, JSValue val)
 	attr_erase_from_map_str(map_doctypes, node);
 
 	if (node) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(node);
 	}
 }
@@ -1969,6 +2005,9 @@ getDocument(JSContext *ctx, void *doc)
 	init_list(doc_private->listeners);
 
 	if (doc) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_ref((dom_node *)doc);
 	}
 	doc_private->node = doc;

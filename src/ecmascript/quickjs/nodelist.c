@@ -105,6 +105,9 @@ js_nodeList_item2(JSContext *ctx, JSValueConst this_val, int idx)
 		return JS_UNDEFINED;
 	}
 	ret = getElement(ctx, element);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(element);
 	dom_nodelist_unref(nl);
 
@@ -166,6 +169,9 @@ js_nodeList_set_items(JSContext *ctx, JSValue this_val, void *node)
 
 		JS_SetPropertyUint32(ctx, this_val, i, JS_DupValue(ctx, obj));
 		JS_FreeValue(ctx, obj);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(element);
 	}
 	dom_nodelist_unref(nl);

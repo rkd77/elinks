@@ -47,6 +47,9 @@ mjs_push_nodeList_item2(js_State *J, int idx)
 		return;
 	}
 	mjs_push_element(J, element);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(element);
 }
 
@@ -89,6 +92,9 @@ mjs_nodeList_set_items(js_State *J, void *node)
 		}
 		mjs_push_element(J, element);
 		js_setindex(J, -2, i);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(element);
 	}
 	js_setlength(J, -1, length);

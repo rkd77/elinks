@@ -178,6 +178,9 @@ mjs_document_get_property_body(js_State *J)
 		return;
 	}
 	mjs_push_element(J, body);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(body);
 }
 
@@ -290,6 +293,9 @@ mjs_document_get_property_childNodes(js_State *J)
 	}
 	dom_nodelist *nodes = NULL;
 	exc = dom_node_get_child_nodes(root, &nodes);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(root);
 
 	if (exc != DOM_NO_ERR || !nodes) {
@@ -345,6 +351,9 @@ mjs_document_get_property_documentElement(js_State *J)
 		return;
 	}
 	mjs_push_element(J, root);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(root);
 }
 
@@ -1093,6 +1102,9 @@ mjs_document_createComment(js_State *J)
 		return;
 	}
 	mjs_push_element(J, comment);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(comment);
 }
 
@@ -1116,6 +1128,9 @@ mjs_document_createDocumentFragment(js_State *J)
 		return;
 	}
 	mjs_push_element(J, fragment);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(fragment);
 }
 
@@ -1149,6 +1164,9 @@ mjs_document_createElement(js_State *J)
 		return;
 	}
 	mjs_push_element(J, element);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(element);
 }
 
@@ -1182,6 +1200,9 @@ mjs_document_createTextNode(js_State *J)
 		return;
 	}
 	mjs_push_element(J, text_node);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(text_node);
 }
 
@@ -1220,6 +1241,9 @@ mjs_document_getElementById(js_State *J)
 		return;
 	}
 	mjs_push_element(J, element);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(element);
 }
 
@@ -1350,11 +1374,17 @@ mjs_document_querySelector(js_State *J)
 	const char *selector = js_tostring(J, 1);
 
 	if (!selector) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(root);
 		js_pushnull(J);
 		return;
 	}
 	void *ret = walk_tree_query(root, selector, 0);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(root);
 
 	if (!ret) {
@@ -1362,6 +1392,9 @@ mjs_document_querySelector(js_State *J)
 		return;
 	}
 	mjs_push_element(J, ret);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(ret);
 }
 
@@ -1388,6 +1421,9 @@ mjs_document_querySelectorAll(js_State *J)
 	const char *selector = js_tostring(J, 1);
 
 	if (!selector) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(doc_root);
 		js_pushnull(J);
 		return;
@@ -1395,12 +1431,18 @@ mjs_document_querySelectorAll(js_State *J)
 	LIST_OF(struct selector_node) *result_list = (LIST_OF(struct selector_node) *)mem_calloc(1, sizeof(*result_list));
 
 	if (!result_list) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(doc_root);
 		js_pushnull(J);
 		return;
 	}
 	init_list(*result_list);
 	walk_tree_query_append(doc_root, selector, 0, result_list);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(doc_root);
 	mjs_push_nodelist2(J, result_list);
 }
@@ -1556,6 +1598,9 @@ mjs_doctype_finalizer(js_State *J, void *node)
 	attr_erase_from_map(map_doctypes, node);
 
 	if (node) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref((dom_node *)node);
 	}
 }
@@ -1595,6 +1640,9 @@ mjs_doc_private_finalizer(js_State *J, void *priv)
 		}
 		free_list(doc_private->listeners);
 		if (doc_private->node) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 			dom_node_unref(doc_private->node);
 		}
 		if (doc_private->thisval) {
@@ -1672,6 +1720,9 @@ mjs_push_document(js_State *J, void *doc)
 	doc_private->ref_count = 1;
 	doc_private->thisval = js_ref(J);
 	if (doc) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_ref((dom_node *)doc);
 	}
 }
@@ -1744,6 +1795,9 @@ mjs_push_document2(js_State *J, void *doc)
 	doc_private->ref_count = 1;
 	//doc_private->thisval = js_ref(J);
 	if (doc) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_ref((dom_node *)doc);
 	}
 }

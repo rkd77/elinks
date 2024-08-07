@@ -147,7 +147,6 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	mjs_localstorage_init(J);
 	mjs_element_init(J);
 	mjs_location_init(J);
-	mjs_push_document(J, document->dom);
 	mjs_xhr_init(J);
 	mjs_event_init(J);
 	mjs_keyboardEvent_init(J);
@@ -155,6 +154,8 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	mjs_customEvent_init(J);
 	mjs_url_init(J);
 	mjs_domparser_init(J);
+
+	mjs_push_document(J, document->dom);
 
 	return J;
 #if 0
