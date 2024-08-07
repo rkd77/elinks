@@ -302,7 +302,9 @@ quickjs_put_interpreter(struct ecmascript_interpreter *interpreter)
 	assert(interpreter);
 
 	ctx = (JSContext *)interpreter->backend_data;
-
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before JS_FreeContext: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	JS_FreeContext(ctx);
 	JS_FreeRuntime(interpreter->rt);
 	interpreter->backend_data = NULL;

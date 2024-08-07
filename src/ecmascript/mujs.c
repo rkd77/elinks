@@ -213,19 +213,11 @@ mujs_put_interpreter(struct ecmascript_interpreter *interpreter)
 {
 	assert(interpreter);
 	js_State *J = (js_State *)interpreter->backend_data;
-
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before js_freestate: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	js_freestate(J);
 	interpreter->backend_data = NULL;
-#if 0
-	JSContext *ctx;
-
-	assert(interpreter);
-
-	ctx = (JSContext *)interpreter->backend_data;
-	JS_FreeContext(ctx);
-	interpreter->backend_data = nullptr;
-	interpreter->ac = nullptr;
-#endif
 }
 
 #if 0
