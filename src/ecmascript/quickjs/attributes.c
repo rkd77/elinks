@@ -98,6 +98,9 @@ next:
 		if (name) {
 			dom_string_unref(name);
 		}
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(attr);
 		JS_FreeValue(ctx, obj);
 	}
@@ -166,6 +169,9 @@ js_attributes_item2(JSContext *ctx, JSValueConst this_val, int idx)
 		return JS_UNDEFINED;
 	}
 	ret = getAttr(ctx, attr);
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(attr);
 	dom_namednodemap_unref(attrs);
 
@@ -224,6 +230,9 @@ js_attributes_namedItem2(JSContext *ctx, JSValueConst this_val, const char *str)
 		return JS_UNDEFINED;
 	}
 	obj = getAttr(ctx, attr);
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(attr);
 	dom_namednodemap_unref(attrs);
 

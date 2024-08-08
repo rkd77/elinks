@@ -37,6 +37,9 @@ js_dataset_finalizer(JSRuntime *rt, JSValue val)
 	dom_node *el = (dom_node *)(JS_GetOpaque(val, js_dataset_class_id));
 
 	if (el) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(el);
 	}
 }
@@ -221,6 +224,9 @@ getDataset(JSContext *ctx, void *node)
 
 //	JS_SetPropertyFunctionList(ctx, proto, js_dataset_proto_funcs, countof(js_dataset_proto_funcs));
 	JS_SetClassProto(ctx, js_dataset_class_id, proto);
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_ref(node);
 	JS_SetOpaque(proto, node);
 	JSValue rr = JS_DupValue(ctx, proto);

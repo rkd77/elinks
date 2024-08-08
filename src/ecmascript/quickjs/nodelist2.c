@@ -132,6 +132,9 @@ getNodeList2(JSContext *ctx, void *nodes)
 	int i = 0;
 
 	foreach (sn, *sni) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_ref((dom_node *)(sn->node));
 		JSValue obj = getElement(ctx, sn->node);
 		REF_JS(obj);

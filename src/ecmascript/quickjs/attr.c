@@ -128,6 +128,9 @@ void js_attr_finalizer(JSRuntime *rt, JSValue val)
 	attr_erase_from_map_str(map_attrs, node);
 
 	if (node) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(node);
 	}
 }

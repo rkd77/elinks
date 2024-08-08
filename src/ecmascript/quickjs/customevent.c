@@ -205,6 +205,9 @@ js_customEvent_get_property_target(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 	JSValue r = getElement(ctx, target);
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(target);
 	dom_event_unref(event);
 

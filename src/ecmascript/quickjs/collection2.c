@@ -121,6 +121,9 @@ js_htmlCollection2_item2(JSContext *ctx, JSValueConst this_val, int idx)
 		return JS_UNDEFINED;
 	}
 	ret = getElement(ctx, node);
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(node);
 	dom_html_collection_unref(ns);
 
@@ -189,6 +192,9 @@ js_htmlCollection2_namedItem2(JSContext *ctx, JSValueConst this_val, const char 
 				JSValue ret = getElement(ctx, element);
 				dom_string_unref(val);
 				dom_string_unref(name);
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 				dom_node_unref(element);
 				dom_html_collection_unref(ns);
 
@@ -203,6 +209,9 @@ js_htmlCollection2_namedItem2(JSContext *ctx, JSValueConst this_val, const char 
 				JSValue ret = getElement(ctx, element);
 				dom_string_unref(val);
 				dom_string_unref(name);
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 				dom_node_unref(element);
 				dom_html_collection_unref(ns);
 
@@ -210,6 +219,9 @@ js_htmlCollection2_namedItem2(JSContext *ctx, JSValueConst this_val, const char 
 			}
 			dom_string_unref(val);
 		}
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(element);
 	}
 	dom_string_unref(name);
@@ -296,6 +308,9 @@ js_htmlCollection2_set_items(JSContext *ctx, JSValue this_val, void *node)
 		if (name) {
 			dom_string_unref(name);
 		}
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(element);
 	}
 	dom_html_collection_unref(ns);
