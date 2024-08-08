@@ -32,6 +32,9 @@ mjs_dataset_finalizer(js_State *J, void *node)
 	dom_node *el = (dom_node *)(node);
 
 	if (el) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(el);
 	}
 }
@@ -154,6 +157,9 @@ mjs_push_dataset(js_State *J, void *node)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
 	dom_node_ref(node);
 

@@ -66,6 +66,9 @@ mjs_push_htmlCollection_item2(js_State *J, int idx)
 		return;
 	}
 	mjs_push_element(J, node);
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(node);
 }
 
@@ -125,6 +128,9 @@ mjs_push_htmlCollection_namedItem2(js_State *J, const char *str)
 				mjs_push_element(J, element);
 				dom_string_unref(val);
 				dom_string_unref(name);
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 				dom_node_unref(element);
 
 				return;
@@ -139,12 +145,18 @@ mjs_push_htmlCollection_namedItem2(js_State *J, const char *str)
 				mjs_push_element(J, element);
 				dom_string_unref(val);
 				dom_string_unref(name);
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 				dom_node_unref(element);
 
 				return;
 			}
 			dom_string_unref(val);
 		}
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(element);
 	}
 	dom_string_unref(name);
@@ -190,6 +202,9 @@ mjs_htmlCollection_set_items(js_State *J, void *node)
 			continue;
 		}
 		mjs_push_element(J, element);
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(element);
 		js_setindex(J, -2, counter);
 		err = dom_element_get_attribute(element, corestring_dom_id, &name);
@@ -205,6 +220,9 @@ mjs_htmlCollection_set_items(js_State *J, void *node)
 					goto next;
 				}
 				mjs_push_element(J, element);
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 				dom_node_unref(element);
 				js_setproperty(J, -2, dom_string_data(name));
 				js_endtry(J);

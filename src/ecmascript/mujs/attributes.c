@@ -78,6 +78,9 @@ next:
 		if (name) {
 			dom_string_unref(name);
 		}
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(attr);
 	}
 	js_setlength(J, -1, num_attrs);
@@ -141,6 +144,9 @@ mjs_push_attributes_item2(js_State *J, int idx)
 		return;
 	}
 	mjs_push_attr(J, attr);
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(attr);
 	js_pushundefined(J);
 }
@@ -187,6 +193,9 @@ mjs_push_attributes_namedItem2(js_State *J, const char *str)
 		return;
 	}
 	mjs_push_attr(J, attr);
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(attr);
 }
 

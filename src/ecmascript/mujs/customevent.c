@@ -218,6 +218,9 @@ mjs_customEvent_get_property_target(js_State *J)
 		return;
 	}
 	mjs_push_element(J, target);
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(target);
 }
 
