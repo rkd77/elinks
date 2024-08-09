@@ -223,6 +223,13 @@ static void
 mjs_attributes_finalizer(js_State *J, void *node)
 {
 	attr_erase_from_map(map_attributes, node);
+
+	if (node) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%d\n", __FUNCTION__, __LINE__);
+#endif
+		dom_namednodemap_unref((dom_namednodemap *)node);
+	}
 }
 
 void
