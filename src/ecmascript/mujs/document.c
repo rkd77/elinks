@@ -1796,12 +1796,12 @@ mjs_push_document2(js_State *J, void *doc)
 	doc_private->node = doc;
 	doc_private->ref_count = 1;
 	//doc_private->thisval = js_ref(J);
-	if (doc) {
-#ifdef ECMASCRIPT_DEBUG
-fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
-#endif
-		dom_node_ref((dom_node *)doc);
-	}
+//	if (doc) {
+//#ifdef ECMASCRIPT_DEBUG
+//fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+//#endif
+//		dom_node_ref((dom_node *)doc);
+//	}
 }
 
 
