@@ -69,7 +69,7 @@ void js_htmlColection2_finalizer(JSRuntime *rt, JSValue val)
 		if (ns->refcnt > 0) {
 			free_el_dom_collection(ns->ctx);
 			ns->ctx = NULL;
-			dom_html_collection_unref(ns);
+			dom_html_collection_unref((dom_html_collection *)ns);
 		}
 	}
 }
@@ -87,13 +87,13 @@ js_htmlCollection2_get_property_length(JSContext *ctx, JSValueConst this_val)
 	if (!ns) {
 		return JS_NewInt32(ctx, 0);
 	}
-	dom_html_collection_ref(ns);
+	dom_html_collection_ref((dom_html_collection *)ns);
 
-	if (dom_html_collection_get_length(ns, &size) != DOM_NO_ERR) {
-		dom_html_collection_unref(ns);
+	if (dom_html_collection_get_length((dom_html_collection *)ns, &size) != DOM_NO_ERR) {
+		dom_html_collection_unref((dom_html_collection *)ns);
 		return JS_NewInt32(ctx, 0);
 	}
-	dom_html_collection_unref(ns);
+	dom_html_collection_unref((dom_html_collection *)ns);
 
 	return JS_NewInt32(ctx, size);
 }
@@ -113,11 +113,11 @@ js_htmlCollection2_item2(JSContext *ctx, JSValueConst this_val, int idx)
 	if (!ns) {
 		return JS_UNDEFINED;
 	}
-	dom_html_collection_ref(ns);
-	err = dom_html_collection_item(ns, idx, &node);
+	dom_html_collection_ref((dom_html_collection *)ns);
+	err = dom_html_collection_item((dom_html_collection *)ns, idx, &node);
 
 	if (err != DOM_NO_ERR) {
-		dom_html_collection_unref(ns);
+		dom_html_collection_unref((dom_html_collection *)ns);
 		return JS_UNDEFINED;
 	}
 	ret = getElement(ctx, node);
@@ -125,7 +125,7 @@ js_htmlCollection2_item2(JSContext *ctx, JSValueConst this_val, int idx)
 	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
 	dom_node_unref(node);
-	dom_html_collection_unref(ns);
+	dom_html_collection_unref((dom_html_collection *)ns);
 
 	return ret;
 }
@@ -163,16 +163,16 @@ js_htmlCollection2_namedItem2(JSContext *ctx, JSValueConst this_val, const char 
 	if (!ns) {
 		return JS_UNDEFINED;
 	}
-	dom_html_collection_ref(ns);
+	dom_html_collection_ref((dom_html_collection *)ns);
 
-	if (dom_html_collection_get_length(ns, &size) != DOM_NO_ERR) {
-		dom_html_collection_unref(ns);
+	if (dom_html_collection_get_length((dom_html_collection *)ns, &size) != DOM_NO_ERR) {
+		dom_html_collection_unref((dom_html_collection *)ns);
 		return JS_UNDEFINED;
 	}
 	err = dom_string_create((const uint8_t*)str, strlen(str), &name);
 
 	if (err != DOM_NO_ERR) {
-		dom_html_collection_unref(ns);
+		dom_html_collection_unref((dom_html_collection *)ns);
 		return JS_UNDEFINED;
 	}
 
@@ -180,7 +180,7 @@ js_htmlCollection2_namedItem2(JSContext *ctx, JSValueConst this_val, const char 
 		dom_node *element = NULL;
 		dom_string *val = NULL;
 
-		err = dom_html_collection_item(ns, i, &element);
+		err = dom_html_collection_item((dom_html_collection *)ns, i, &element);
 
 		if (err != DOM_NO_ERR || !element) {
 			continue;
@@ -196,7 +196,7 @@ js_htmlCollection2_namedItem2(JSContext *ctx, JSValueConst this_val, const char 
 	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
 				dom_node_unref(element);
-				dom_html_collection_unref(ns);
+				dom_html_collection_unref((dom_html_collection *)ns);
 
 				return ret;
 			}
@@ -213,7 +213,7 @@ js_htmlCollection2_namedItem2(JSContext *ctx, JSValueConst this_val, const char 
 	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
 				dom_node_unref(element);
-				dom_html_collection_unref(ns);
+				dom_html_collection_unref((dom_html_collection *)ns);
 
 				return ret;
 			}
@@ -225,7 +225,7 @@ js_htmlCollection2_namedItem2(JSContext *ctx, JSValueConst this_val, const char 
 		dom_node_unref(element);
 	}
 	dom_string_unref(name);
-	dom_html_collection_unref(ns);
+	dom_html_collection_unref((dom_html_collection *)ns);
 
 	return JS_UNDEFINED;
 }
@@ -273,17 +273,17 @@ js_htmlCollection2_set_items(JSContext *ctx, JSValue this_val, void *node)
 	if (!ns) {
 		return;
 	}
-	dom_html_collection_ref(ns);
+	dom_html_collection_ref((dom_html_collection *)ns);
 
-	if (dom_html_collection_get_length(ns, &size) != DOM_NO_ERR) {
-		dom_html_collection_unref(ns);
+	if (dom_html_collection_get_length((dom_html_collection *)ns, &size) != DOM_NO_ERR) {
+		dom_html_collection_unref((dom_html_collection *)ns);
 		return;
 	}
 
 	for (i = 0; i < size; i++) {
 		dom_node *element = NULL;
 		dom_string *name = NULL;
-		err = dom_html_collection_item(ns, i, &element);
+		err = dom_html_collection_item((dom_html_collection *)ns, i, &element);
 
 		if (err != DOM_NO_ERR || !element) {
 			continue;
@@ -313,7 +313,7 @@ js_htmlCollection2_set_items(JSContext *ctx, JSValue this_val, void *node)
 #endif
 		dom_node_unref(element);
 	}
-	dom_html_collection_unref(ns);
+	dom_html_collection_unref((dom_html_collection *)ns);
 }
 
 static JSValue
