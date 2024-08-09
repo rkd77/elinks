@@ -36,7 +36,7 @@ mjs_htmlCollection2_get_property_length(js_State *J)
 		js_pushnumber(J, 0);
 		return;
 	}
-	if (dom_html_collection_get_length(ns, &size) != DOM_NO_ERR) {
+	if (dom_html_collection_get_length((dom_html_collection *)ns, &size) != DOM_NO_ERR) {
 		js_pushnumber(J, 0);
 		return;
 	}
@@ -57,7 +57,7 @@ mjs_push_htmlCollection2_item2(js_State *J, int idx)
 		js_pushundefined(J);
 		return;
 	}
-	err = dom_html_collection_item(ns, idx, &node);
+	err = dom_html_collection_item((dom_html_collection *)ns, idx, &node);
 
 	if (err != DOM_NO_ERR) {
 		js_pushundefined(J);
@@ -97,7 +97,7 @@ mjs_push_htmlCollection2_namedItem2(js_State *J, const char *str)
 		return;
 	}
 
-	if (dom_html_collection_get_length(ns, &size) != DOM_NO_ERR) {
+	if (dom_html_collection_get_length((dom_html_collection *)ns, &size) != DOM_NO_ERR) {
 		js_pushundefined(J);
 		return;
 	}
@@ -113,7 +113,7 @@ mjs_push_htmlCollection2_namedItem2(js_State *J, const char *str)
 		dom_node *element = NULL;
 		dom_string *val = NULL;
 
-		err = dom_html_collection_item(ns, i, &element);
+		err = dom_html_collection_item((dom_html_collection *)ns, i, &element);
 
 		if (err != DOM_NO_ERR || !element) {
 			continue;
@@ -186,17 +186,17 @@ mjs_htmlCollection2_set_items(js_State *J, void *node)
 	if (!ns) {
 		return;
 	}
-	dom_html_collection_ref(ns);
+	dom_html_collection_ref((dom_html_collection *)ns);
 
-	if (dom_html_collection_get_length(ns, &size) != DOM_NO_ERR) {
-		dom_html_collection_unref(ns);
+	if (dom_html_collection_get_length((dom_html_collection *)ns, &size) != DOM_NO_ERR) {
+		dom_html_collection_unref((dom_html_collection *)ns);
 		return;
 	}
 
 	for (i = 0; i < size; i++) {
 		dom_node *element = NULL;
 		dom_string *name = NULL;
-		err = dom_html_collection_item(ns, i, &element);
+		err = dom_html_collection_item((dom_html_collection *)ns, i, &element);
 
 		if (err != DOM_NO_ERR || !element) {
 			continue;
@@ -234,7 +234,7 @@ next:
 			dom_string_unref(name);
 		}
 	}
-	dom_html_collection_unref(ns);
+	dom_html_collection_unref((dom_html_collection *)ns);
 }
 
 static void
@@ -256,7 +256,7 @@ mjs_htmlCollection2_finalizer(js_State *J, void *node)
 		if (ns->refcnt > 0) {
 			free_el_dom_collection(ns->ctx);
 			ns->ctx = NULL;
-			dom_html_collection_unref(ns);
+			dom_html_collection_unref((dom_html_collection *)ns);
 		}
 	}
 }
