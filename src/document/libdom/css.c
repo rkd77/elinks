@@ -229,7 +229,8 @@ static css_select_handler selection_handler = {
 
 
 /* Handler for libcss_node_data, stored as libdom node user data */
-static void nscss_dom_user_data_handler(dom_node_operation operation,
+static void
+nscss_dom_user_data_handler(dom_node_operation operation,
 		dom_string *key, void *data, struct dom_node *src,
 		struct dom_node *dst)
 {
@@ -529,6 +530,7 @@ css_error named_parent_node(void *pw, void *node,
 {
 	dom_element_named_parent_node(node, qname->name,
 			(struct dom_element **)parent);
+	dom_node_unref(*parent);
 
 	return CSS_OK;
 }
@@ -563,6 +565,9 @@ css_error named_sibling_node(void *pw, void *node,
 
 		err = dom_node_get_node_type(n, &type);
 		if (err != DOM_NO_ERR) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 			dom_node_unref(n);
 			return CSS_OK;
 		}
@@ -572,10 +577,16 @@ css_error named_sibling_node(void *pw, void *node,
 
 		err = dom_node_get_previous_sibling(n, &prev);
 		if (err != DOM_NO_ERR) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 			dom_node_unref(n);
 			return CSS_OK;
 		}
 
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(n);
 		n = prev;
 	}
@@ -585,10 +596,16 @@ css_error named_sibling_node(void *pw, void *node,
 
 		err = dom_node_get_node_name(n, &name);
 		if (err != DOM_NO_ERR) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 			dom_node_unref(n);
 			return CSS_OK;
 		}
 
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(n);
 
 		if (dom_string_caseless_lwc_isequal(name, qname->name)) {
@@ -631,6 +648,9 @@ css_error named_generic_sibling_node(void *pw, void *node,
 
 		err = dom_node_get_node_type(n, &type);
 		if (err != DOM_NO_ERR) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 			dom_node_unref(n);
 			return CSS_OK;
 		}
@@ -638,6 +658,9 @@ css_error named_generic_sibling_node(void *pw, void *node,
 		if (type == DOM_ELEMENT_NODE) {
 			err = dom_node_get_node_name(n, &name);
 			if (err != DOM_NO_ERR) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 				dom_node_unref(n);
 				return CSS_OK;
 			}
@@ -645,6 +668,9 @@ css_error named_generic_sibling_node(void *pw, void *node,
 			if (dom_string_caseless_lwc_isequal(name,
 					qname->name)) {
 				dom_string_unref(name);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 				dom_node_unref(n);
 				*sibling = n;
 				break;
@@ -654,10 +680,16 @@ css_error named_generic_sibling_node(void *pw, void *node,
 
 		err = dom_node_get_previous_sibling(n, &prev);
 		if (err != DOM_NO_ERR) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 			dom_node_unref(n);
 			return CSS_OK;
 		}
 
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(n);
 		n = prev;
 	}
@@ -678,6 +710,7 @@ css_error named_generic_sibling_node(void *pw, void *node,
 css_error parent_node(void *pw, void *node, void **parent)
 {
 	dom_element_parent_node(node, (struct dom_element **)parent);
+	dom_node_unref(*parent);
 
 	return CSS_OK;
 }
@@ -710,6 +743,9 @@ css_error sibling_node(void *pw, void *node, void **sibling)
 
 		err = dom_node_get_node_type(n, &type);
 		if (err != DOM_NO_ERR) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 			dom_node_unref(n);
 			return CSS_OK;
 		}
@@ -719,16 +755,25 @@ css_error sibling_node(void *pw, void *node, void **sibling)
 
 		err = dom_node_get_previous_sibling(n, &prev);
 		if (err != DOM_NO_ERR) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 			dom_node_unref(n);
 			return CSS_OK;
 		}
 
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(n);
 		n = prev;
 	}
 
 	if (n != NULL) {
 		/** \todo Sort out reference counting */
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(n);
 
 		*sibling = n;
@@ -1281,7 +1326,9 @@ css_error node_is_root(void *pw, void *node, bool *match)
 
 	if (parent != NULL) {
 		err = dom_node_get_node_type(parent, &type);
-
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(parent);
 
 		if (err != DOM_NO_ERR)
@@ -1362,6 +1409,9 @@ css_error node_count_siblings(void *pw, void *n, bool same_name,
 	}
 
 	if (after) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node *node = dom_node_ref(n);
 		dom_node *next;
 
@@ -1369,13 +1419,18 @@ css_error node_count_siblings(void *pw, void *n, bool same_name,
 			exc = dom_node_get_next_sibling(node, &next);
 			if ((exc != DOM_NO_ERR))
 				break;
-
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 			dom_node_unref(node);
 			node = next;
 
 			cnt += node_count_siblings_check(node, same_name, node_name);
 		} while (node != NULL);
 	} else {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node *node = dom_node_ref(n);
 		dom_node *next;
 
@@ -1383,7 +1438,9 @@ css_error node_count_siblings(void *pw, void *n, bool same_name,
 			exc = dom_node_get_previous_sibling(node, &next);
 			if ((exc != DOM_NO_ERR))
 				break;
-
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 			dom_node_unref(node);
 			node = next;
 
@@ -1426,6 +1483,9 @@ css_error node_is_empty(void *pw, void *node, bool *match)
 		dom_node_type ntype;
 		err = dom_node_get_node_type(n, &ntype);
 		if (err != DOM_NO_ERR) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 			dom_node_unref(n);
 			return CSS_BADPARM;
 		}
@@ -1433,15 +1493,24 @@ css_error node_is_empty(void *pw, void *node, bool *match)
 		if (ntype == DOM_ELEMENT_NODE ||
 		    ntype == DOM_TEXT_NODE) {
 			*match = false;
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 			dom_node_unref(n);
 			break;
 		}
 
 		err = dom_node_get_next_sibling(n, &next);
 		if (err != DOM_NO_ERR) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 			dom_node_unref(n);
 			return CSS_BADPARM;
 		}
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(n);
 		n = next;
 	}
@@ -1747,7 +1816,8 @@ css_error ua_default_for_property(void *pw, uint32_t property, css_hint *hint)
 	return CSS_OK;
 }
 
-css_error set_libcss_node_data(void *pw, void *node, void *libcss_node_data)
+css_error
+set_libcss_node_data(void *pw, void *node, void *libcss_node_data)
 {
 	dom_node *n = node;
 	dom_exception err;
@@ -1766,7 +1836,8 @@ css_error set_libcss_node_data(void *pw, void *node, void *libcss_node_data)
 	return CSS_OK;
 }
 
-css_error get_libcss_node_data(void *pw, void *node, void **libcss_node_data)
+css_error
+get_libcss_node_data(void *pw, void *node, void **libcss_node_data)
 {
 	dom_node *n = node;
 	dom_exception err;
@@ -2100,6 +2171,9 @@ select_css(struct html_context *html_context, struct html_element *html_element)
 	bool is_root = (root == el);
 
 	if (root) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(root);
 	}
 
@@ -2259,6 +2333,9 @@ parse_css(struct html_context *html_context, char *name)
 		dom_node_type ntype;
 		err = dom_node_get_node_type(n, &ntype);
 		if (err != DOM_NO_ERR) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 			dom_node_unref(n);
 			goto end;
 		}
@@ -2280,9 +2357,15 @@ parse_css(struct html_context *html_context, char *name)
 
 		err = dom_node_get_next_sibling(n, &next);
 		if (err != DOM_NO_ERR) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 			dom_node_unref(n);
 			goto end;
 		}
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		dom_node_unref(n);
 		n = next;
 	}
@@ -2385,10 +2468,11 @@ el_match_selector(const char *selector, void *node)
 		goto empty;
 	}
 	code = css_stylesheet_data_done(sheet);
+
 	if (code != CSS_OK) {
 		goto empty;
 	}
-	code = css_stylesheet_size(sheet, &size);
+	//code = css_stylesheet_size(sheet, &size);
 
 	/* prepare a selection context containing the stylesheet */
 	code = css_select_ctx_create(&select_ctx);
@@ -2401,17 +2485,16 @@ el_match_selector(const char *selector, void *node)
 	if (code != CSS_OK) {
 		goto empty;
 	}
-	code = css_select_ctx_count_sheets(select_ctx, &count);
-
-	if (code != CSS_OK) {
-		goto empty;
-	}
+//	code = css_select_ctx_count_sheets(select_ctx, &count);
+//
+//	if (code != CSS_OK) {
+//		goto empty;
+//	}
 	code = css_select_style(select_ctx, node, &unit_len_ctx, &media, NULL, &selection_handler, 0, &style);
 
 	if (code != CSS_OK) {
 		goto empty;
 	}
-
 	color_type = css_computed_color(style->styles[CSS_PSEUDO_ELEMENT_NONE], &color_shade);
 
 	if (color_type && color_shade == 0xff123456) {
@@ -2419,12 +2502,16 @@ el_match_selector(const char *selector, void *node)
 	}
 
 empty:
+	css_libcss_node_data_handler(&selection_handler, CSS_NODE_DELETED, NULL, node, NULL, NULL);
+
 	if (style) {
 		css_select_results_destroy(style);
 	}
+
 	if (select_ctx) {
 		css_select_ctx_destroy(select_ctx);
 	}
+
 	if (sheet) {
 		css_stylesheet_destroy(sheet);
 	}
