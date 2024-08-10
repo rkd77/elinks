@@ -2798,7 +2798,13 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	if (!res) {
 		return JS_NULL;
 	}
-	return getElement(ctx, res);
+	JSValue ret = getElement(ctx, res);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
+	dom_node_unref(res);
+
+	return ret;
 }
 
 static JSValue
@@ -3341,7 +3347,6 @@ js_element_matches(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	}
 	void *res = el_match_selector(selector, el);
 	JS_FreeCString(ctx, selector);
-	//dom_node_unref(el);
 
 	return JS_NewBool(ctx, res != NULL);
 }
