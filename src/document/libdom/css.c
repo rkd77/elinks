@@ -510,6 +510,10 @@ css_error named_ancestor_node(void *pw, void *node,
 {
 	dom_element_named_ancestor_node(node, qname->name,
 			(struct dom_element **)ancestor);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
+	dom_node_unref(*ancestor);
 
 	return CSS_OK;
 }
@@ -530,6 +534,9 @@ css_error named_parent_node(void *pw, void *node,
 {
 	dom_element_named_parent_node(node, qname->name,
 			(struct dom_element **)parent);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(*parent);
 
 	return CSS_OK;
@@ -710,6 +717,9 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 css_error parent_node(void *pw, void *node, void **parent)
 {
 	dom_element_parent_node(node, (struct dom_element **)parent);
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_node_unref(*parent);
 
 	return CSS_OK;
@@ -2502,7 +2512,6 @@ el_match_selector(const char *selector, void *node)
 	}
 
 empty:
-	css_libcss_node_data_handler(&selection_handler, CSS_NODE_DELETED, NULL, node, NULL, NULL);
 
 	if (style) {
 		css_select_results_destroy(style);
