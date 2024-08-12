@@ -2750,6 +2750,9 @@ js_element_closest(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	}
 	dom_node *root = NULL; /* root element of document */
 	/* Get root element */
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 	dom_exception exc = dom_document_get_document_element(document->dom, &root);
 
 	if (exc != DOM_NO_ERR || !root) {
@@ -2757,13 +2760,11 @@ js_element_closest(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 		return JS_NULL;
 	}
 
-	dom_node *el_copy = el;
-
-	if (el_copy) {
+	if (el) {
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-		dom_node_ref(el_copy);
+		dom_node_ref(el);
 	}
 
 	while (el) {
@@ -2776,10 +2777,17 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 			break;
 		}
 		dom_node *node = NULL;
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
 		exc = dom_node_get_parent_node(el, &node);
 		if (exc != DOM_NO_ERR || !node) {
 			break;
 		}
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
+		dom_node_unref(el);
 		el = node;
 	}
 	JS_FreeCString(ctx, selector);
@@ -2788,11 +2796,11 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
 	dom_node_unref(root);
 
-	if (el_copy) {
+	if (el) {
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-		dom_node_unref(el_copy);
+		dom_node_unref(el);
 	}
 
 	if (!res) {
