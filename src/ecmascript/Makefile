@@ -27,3 +27,5 @@ endif
 OBJS-$(CONFIG_ANY_SPIDERMONKEY) += spidermonkey-shared.obj
 
 include $(top_srcdir)/Makefile.lib
+
+$(shell xxd -i fetch.js fetch.h)
