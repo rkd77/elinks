@@ -2493,6 +2493,13 @@ mjs_element_closest(js_State *J)
 		return;
 	}
 
+	if (el) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
+		dom_node_ref(el);
+	}
+
 	while (el) {
 		res = el_match_selector(selector, el);
 
@@ -2504,15 +2511,27 @@ mjs_element_closest(js_State *J)
 		}
 		dom_node *node = NULL;
 		exc = dom_node_get_parent_node(el, &node);
+
 		if (exc != DOM_NO_ERR || !node) {
 			break;
 		}
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
+		dom_node_unref(el);
 		el = node;
 	}
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
 	dom_node_unref(root);
+
+	if (el) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
+		dom_node_unref(el);
+	}
 
 	if (!res) {
 		js_pushnull(J);
