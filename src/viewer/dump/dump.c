@@ -504,7 +504,9 @@ dump_formatted(int fd, struct download *download, struct cache_entry *cached)
 	o.dump = 1;
 
 #ifdef CONFIG_SCRIPTING
-	maybe_pre_format_html(cached, NULL);
+	if (get_opt_bool("document.dump.scripting_enabled", NULL)) {
+		maybe_pre_format_html(cached, NULL);
+	}
 #endif
 
 	init_vs(&vs, cached->uri, -1);

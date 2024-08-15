@@ -790,6 +790,10 @@ static union option_info config_options_info[] = {
 		N_("Whether to print references (URIs) of document links "
 		"in dump output.")),
 
+	INIT_OPT_BOOL("document.dump", N_("Scripting enabled"),
+		"scripting_enabled", OPT_ZERO, 1,
+		N_("Whether to call scripting pre_format_hooks when dump.")),
+
 	INIT_OPT_BOOL("document.dump", N_("Terminal hyperlinks"),
 		"terminal_hyperlinks", OPT_ZERO, 0,
 		N_("Whether to add terminal hyperlinks to dump output. See #198 in github.")),
