@@ -792,7 +792,7 @@ static union option_info config_options_info[] = {
 
 	INIT_OPT_BOOL("document.dump", N_("Scripting enabled"),
 		"scripting_enabled", OPT_ZERO, 1,
-		N_("Whether to call scripting pre_format_hooks when dump.")),
+		N_("Whether to call scripting pre_format_hooks by taking a dump.")),
 
 	INIT_OPT_BOOL("document.dump", N_("Terminal hyperlinks"),
 		"terminal_hyperlinks", OPT_ZERO, 0,
