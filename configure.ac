@@ -2050,7 +2050,7 @@ if test "x$ac_cv_c_compiler_gnu" = "xyes"; then
       # difference.
       CFLAGS="$CFLAGS -fno-strict-aliasing"
       ;;
-    10|10.*|11|11.*|12|12.*)
+    10|10.*|11|11.*|12|12.*|13|13.*|14|14.*)
       # gettext
       CFLAGS="$CFLAGS -fno-strict-aliasing -Wno-builtin-declaration-mismatch -Wno-array-bounds"
       ;;
