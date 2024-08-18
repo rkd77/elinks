@@ -583,7 +583,10 @@ endif
 if conf_data.get('CONFIG_SCRIPTING_LUA')
     luadeps = dependency(luapkg, static: st, required: false)
     if not luadeps.found()
-        luadeps = compiler.find_library(luapkg, static: st)
+        luadeps = compiler.find_library(luapkg, static: st, required: false)
+    endif
+    if not luadeps.found() and conf_data.get('CONFIG_OS_DOS')
+        luadeps = compiler.find_library(luapkg, dirs: ['/home/elinks/lib'], static: st)
     endif
     deps += luadeps
 endif
@@ -691,7 +694,7 @@ if conf_data.get('CONFIG_LIBSIXEL')
 endif
 
 if conf_data.get('CONFIG_OS_DOS')
-    wattdeps = compiler.find_library('watt', static: st)
+    wattdeps = compiler.find_library('watt', dirs: ['/home/elinks/lib'], static: st)
     deps += wattdeps
 else
     wattdeps = []
@@ -1062,6 +1065,9 @@ endif
 
 iconvdeps = compiler.find_library('iconv', static: st, required: false)
 if iconvdeps.found()
+    deps += iconvdeps
+elif conf_data.get('CONFIG_OS_DOS')
+    iconvdeps = compiler.find_library('libiconv', dirs: ['/home/elinks/lib'], static: st)
     deps += iconvdeps
 endif
 
