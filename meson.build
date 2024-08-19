@@ -583,7 +583,7 @@ endif
 if conf_data.get('CONFIG_SCRIPTING_LUA')
     luadeps = dependency(luapkg, static: st, required: false)
     if not luadeps.found()
-        luadeps = compiler.find_library(luapkg, static: st, required: false)
+        luadeps = compiler.find_library(luapkg, static: st, required: not conf_data.get('CONFIG_OS_DOS'))
     endif
     if not luadeps.found() and conf_data.get('CONFIG_OS_DOS')
         luadeps = compiler.find_library(luapkg, dirs: ['/home/elinks/lib'], static: st)
