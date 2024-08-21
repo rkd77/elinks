@@ -594,7 +594,10 @@ endif
 if conf_data.get('CONFIG_XBEL_BOOKMARKS')
     expatdeps = dependency('expat', static: st, required: false)
     if not expatdeps.found()
-        expatdeps = compiler.find_library('expat', static: st)
+        expatdeps = compiler.find_library('expat', static: st, required: not conf_data.get('CONFIG_OS_DOS'))
+    endif
+    if not expatdeps.found() and conf_data.get('CONFIG_OS_DOS')
+        expatdeps = compiler.find_library('expat', dirs: ['/home/elinks/lib'], static: st)
     endif
     deps += expatdeps
 endif
