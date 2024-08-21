@@ -112,6 +112,7 @@ ADD mes_static.sh /root/elinks/mes_static.sh
 RUN cd /root/elinks; \
 ./mes_static.sh;
 
+RUN apk add xxd
 ADD mes_static_js.sh /root/elinks/mes_static_js.sh
 RUN cd /root/elinks; \
 ./mes_static_js.sh;
