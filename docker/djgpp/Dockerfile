@@ -101,5 +101,6 @@ ADD mes_djgpp.sh /home/elinks/elinks/
 RUN runuser -u elinks bash /home/elinks/elinks/mes_djgpp.sh
 
 # js
+RUN dnf install -y xxd
 ADD mes_djgpp_js.sh /home/elinks/elinks/mes_djgpp_js.sh
 RUN runuser -u elinks bash /home/elinks/elinks/mes_djgpp_js.sh
