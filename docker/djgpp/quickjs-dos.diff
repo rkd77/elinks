@@ -475,31 +475,22 @@ diff -Nru quickjs-2021-03-27/Makefile.dos quickjs-2021-03-27.new/Makefile.dos
 +#	$(CC) $(LDFLAGS) -shared -o $@ $^ $(LIBS)
 +
 +-include $(wildcard $(OBJDIR)/*.d)
-diff -Nru quickjs-2021-03-27/qjs.c quickjs-2021-03-27.new/qjs.c
---- quickjs-2021-03-27/qjs.c	2021-03-27 10:00:32.000000000 +0000
-+++ quickjs-2021-03-27.new/qjs.c	2022-06-08 20:45:35.293672769 +0000
-@@ -146,7 +146,7 @@
+diff -up quickjs-2024-01-13/qjs.c.djgpp quickjs-2024-01-13/qjs.c
+--- quickjs-2024-01-13/qjs.c.djgpp	2024-08-21 13:29:26.360220594 +0000
++++ quickjs-2024-01-13/qjs.c	2024-08-21 13:12:30.671515118 +0000
+@@ -146,7 +146,7 @@ static size_t js_trace_malloc_usable_siz
      return malloc_size(ptr);
  #elif defined(_WIN32)
-     return _msize(ptr);
+     return _msize((void *)ptr);
 -#elif defined(EMSCRIPTEN)
 +#elif defined(EMSCRIPTEN) || defined(__DJGPP)
      return 0;
  #elif defined(__linux__)
-     return malloc_usable_size(ptr);
-@@ -268,7 +268,7 @@
-     malloc_size,
- #elif defined(_WIN32)
-     (size_t (*)(const void *))_msize,
--#elif defined(EMSCRIPTEN)
-+#elif defined(EMSCRIPTEN) || defined(__DJGPP)
-     NULL,
- #elif defined(__linux__)
-     (size_t (*)(const void *))malloc_usable_size,
-diff -Nru quickjs-2021-03-27/quickjs-libc.c quickjs-2021-03-27.new/quickjs-libc.c
---- quickjs-2021-03-27/quickjs-libc.c	2021-03-27 10:00:32.000000000 +0000
-+++ quickjs-2021-03-27.new/quickjs-libc.c	2022-06-08 21:11:56.383291877 +0000
-@@ -59,7 +59,7 @@
+     return malloc_usable_size((void *)ptr);
+diff -up quickjs-2024-01-13/quickjs-libc.c.djgpp quickjs-2024-01-13/quickjs-libc.c
+--- quickjs-2024-01-13/quickjs-libc.c.djgpp	2024-01-13 10:20:39.000000000 +0000
++++ quickjs-2024-01-13/quickjs-libc.c	2024-08-21 13:14:45.092458496 +0000
+@@ -59,7 +59,7 @@ typedef sig_t sighandler_t;
  
  #if !defined(_WIN32)
  /* enable the os.Worker API. IT relies on POSIX threads */
@@ -508,7 +499,7 @@ diff -Nru quickjs-2021-03-27/quickjs-libc.c quickjs-2021-03-27.new/quickjs-libc.
  #endif
  
  #ifdef USE_WORKER
-@@ -691,6 +691,7 @@
+@@ -691,6 +691,7 @@ static JSValue js_std_getenviron(JSConte
      obj = JS_NewObject(ctx);
      if (JS_IsException(obj))
          return JS_EXCEPTION;
@@ -516,7 +507,7 @@ diff -Nru quickjs-2021-03-27/quickjs-libc.c quickjs-2021-03-27.new/quickjs-libc.
      envp = environ;
      for(idx = 0; envp[idx] != NULL; idx++) {
          name = envp[idx];
-@@ -708,6 +709,7 @@
+@@ -708,6 +709,7 @@ static JSValue js_std_getenviron(JSConte
          if (ret < 0)
              goto fail;
      }
@@ -524,7 +515,7 @@ diff -Nru quickjs-2021-03-27/quickjs-libc.c quickjs-2021-03-27.new/quickjs-libc.
      return obj;
   fail:
      JS_FreeValue(ctx, obj);
-@@ -1912,7 +1914,7 @@
+@@ -1918,7 +1920,7 @@ static void os_signal_handler(int sig_nu
      os_pending_signals |= ((uint64_t)1 << sig_num);
  }
  
@@ -533,7 +524,7 @@ diff -Nru quickjs-2021-03-27/quickjs-libc.c quickjs-2021-03-27.new/quickjs-libc.
  typedef void (*sighandler_t)(int sig_num);
  #endif
  
-@@ -2467,7 +2469,7 @@
+@@ -2525,7 +2527,7 @@ static JSValue js_os_readdir(JSContext *
      return make_obj_error(ctx, obj, err);
  }
  
@@ -542,7 +533,7 @@ diff -Nru quickjs-2021-03-27/quickjs-libc.c quickjs-2021-03-27.new/quickjs-libc.
  static int64_t timespec_to_ms(const struct timespec *tv)
  {
      return (int64_t)tv->tv_sec * 1000 + (tv->tv_nsec / 1000000);
-@@ -2527,12 +2529,12 @@
+@@ -2585,12 +2587,12 @@ static JSValue js_os_stat(JSContext *ctx
          JS_DefinePropertyValueStr(ctx, obj, "size",
                                    JS_NewInt64(ctx, st.st_size),
                                    JS_PROP_C_W_E);
@@ -557,7 +548,7 @@ diff -Nru quickjs-2021-03-27/quickjs-libc.c quickjs-2021-03-27.new/quickjs-libc.
          JS_DefinePropertyValueStr(ctx, obj, "atime",
                                    JS_NewInt64(ctx, (int64_t)st.st_atime * 1000),
                                    JS_PROP_C_W_E);
-@@ -2619,11 +2621,11 @@
+@@ -2677,11 +2679,11 @@ static JSValue js_os_sleep(JSContext *ct
          return JS_EXCEPTION;
      if (delay < 0)
          delay = 0;
@@ -571,7 +562,7 @@ diff -Nru quickjs-2021-03-27/quickjs-libc.c quickjs-2021-03-27.new/quickjs-libc.
          ret = 0;
      }
  #else
-@@ -2839,7 +2841,7 @@
+@@ -2897,7 +2899,7 @@ static JSValue js_os_exec(JSContext *ctx
      JSValueConst options, args = argv[0];
      JSValue val, ret_val;
      const char **exec_argv, *file = NULL, *str, *cwd = NULL;
@@ -580,7 +571,7 @@ diff -Nru quickjs-2021-03-27/quickjs-libc.c quickjs-2021-03-27.new/quickjs-libc.
      uint32_t exec_argc, i;
      int ret, pid, status;
      BOOL block_flag = TRUE, use_path = TRUE;
-@@ -3015,6 +3017,7 @@
+@@ -3073,6 +3075,7 @@ static JSValue js_os_exec(JSContext *ctx
      for(i = 0; i < exec_argc; i++)
          JS_FreeCString(ctx, exec_argv[i]);
      js_free(ctx, exec_argv);
@@ -588,7 +579,7 @@ diff -Nru quickjs-2021-03-27/quickjs-libc.c quickjs-2021-03-27.new/quickjs-libc.
      if (envp != environ) {
          char **p;
          p = envp;
-@@ -3024,6 +3027,7 @@
+@@ -3082,6 +3085,7 @@ static JSValue js_os_exec(JSContext *ctx
          }
          js_free(ctx, envp);
      }
@@ -596,7 +587,7 @@ diff -Nru quickjs-2021-03-27/quickjs-libc.c quickjs-2021-03-27.new/quickjs-libc.
      return ret_val;
   exception:
      ret_val = JS_EXCEPTION;
-@@ -3608,7 +3612,7 @@
+@@ -3677,7 +3681,7 @@ static const JSCFunctionListEntry js_os_
      OS_FLAG(SIGILL),
      OS_FLAG(SIGSEGV),
      OS_FLAG(SIGTERM),
@@ -605,7 +596,7 @@ diff -Nru quickjs-2021-03-27/quickjs-libc.c quickjs-2021-03-27.new/quickjs-libc.
      OS_FLAG(SIGQUIT),
      OS_FLAG(SIGPIPE),
      OS_FLAG(SIGALRM),
-@@ -3635,7 +3639,7 @@
+@@ -3706,7 +3710,7 @@ static const JSCFunctionListEntry js_os_
      OS_FLAG(S_IFDIR),
      OS_FLAG(S_IFBLK),
      OS_FLAG(S_IFREG),
@@ -614,7 +605,7 @@ diff -Nru quickjs-2021-03-27/quickjs-libc.c quickjs-2021-03-27.new/quickjs-libc.
      OS_FLAG(S_IFSOCK),
      OS_FLAG(S_IFLNK),
      OS_FLAG(S_ISGID),
-@@ -3645,7 +3649,7 @@
+@@ -3716,7 +3720,7 @@ static const JSCFunctionListEntry js_os_
      JS_CFUNC_DEF("utimes", 3, js_os_utimes ),
      JS_CFUNC_DEF("sleep", 1, js_os_sleep ),
      JS_CFUNC_DEF("realpath", 1, js_os_realpath ),
@@ -623,9 +614,9 @@ diff -Nru quickjs-2021-03-27/quickjs-libc.c quickjs-2021-03-27.new/quickjs-libc.
      JS_CFUNC_MAGIC_DEF("lstat", 1, js_os_stat, 1 ),
      JS_CFUNC_DEF("symlink", 2, js_os_symlink ),
      JS_CFUNC_DEF("readlink", 1, js_os_readlink ),
-diff -Nru quickjs-2021-03-27/quickjs.c quickjs-2021-03-27.new/quickjs.c
---- quickjs-2021-03-27/quickjs.c	2021-03-27 10:00:32.000000000 +0000
-+++ quickjs-2021-03-27.new/quickjs.c	2022-06-08 21:18:48.730614538 +0000
+diff -up quickjs-2024-01-13/quickjs.c.djgpp quickjs-2024-01-13/quickjs.c
+--- quickjs-2024-01-13/quickjs.c.djgpp	2024-01-13 10:20:39.000000000 +0000
++++ quickjs-2024-01-13/quickjs.c	2024-08-21 13:18:39.088740789 +0000
 @@ -30,7 +30,7 @@
  #include <assert.h>
  #include <sys/time.h>
@@ -635,7 +626,7 @@ diff -Nru quickjs-2021-03-27/quickjs.c quickjs-2021-03-27.new/quickjs.c
  #include <math.h>
  #if defined(__APPLE__)
  #include <malloc/malloc.h>
-@@ -70,7 +70,7 @@
+@@ -68,7 +68,7 @@
  /* define to include Atomics.* operations which depend on the OS
     threads */
  #if !defined(EMSCRIPTEN)
@@ -644,25 +635,16 @@ diff -Nru quickjs-2021-03-27/quickjs.c quickjs-2021-03-27.new/quickjs.c
  #endif
  
  #if !defined(EMSCRIPTEN)
-@@ -1680,7 +1680,7 @@
+@@ -1699,7 +1699,7 @@ static size_t js_def_malloc_usable_size(
      return malloc_size(ptr);
  #elif defined(_WIN32)
-     return _msize(ptr);
+     return _msize((void *)ptr);
 -#elif defined(EMSCRIPTEN)
 +#elif defined(EMSCRIPTEN) || defined(__DJGPP)
      return 0;
  #elif defined(__linux__)
-     return malloc_usable_size(ptr);
-@@ -1754,7 +1754,7 @@
-     malloc_size,
- #elif defined(_WIN32)
-     (size_t (*)(const void *))_msize,
--#elif defined(EMSCRIPTEN)
-+#elif defined(EMSCRIPTEN) || defined(__DJGPP__)
-     NULL,
- #elif defined(__linux__)
-     (size_t (*)(const void *))malloc_usable_size,
-@@ -11299,12 +11299,19 @@
+     return malloc_usable_size((void *)ptr);
+@@ -11338,12 +11338,19 @@ static char *i64toa(char *buf_end, int64
      return q;
  }
  
@@ -684,7 +666,7 @@ diff -Nru quickjs-2021-03-27/quickjs.c quickjs-2021-03-27.new/quickjs.c
      snprintf(buf1, buf1_size, "%+.*e", n_digits - 1, d);
      if (rounding_mode != FE_TONEAREST)
          fesetround(FE_TONEAREST);
-@@ -39795,6 +39802,10 @@
+@@ -40844,6 +40851,10 @@ static JSValue js_number_isSafeInteger(J
      return JS_NewBool(ctx, is_safe_integer(d));
  }
  
@@ -695,7 +677,7 @@ diff -Nru quickjs-2021-03-27/quickjs.c quickjs-2021-03-27.new/quickjs.c
  static const JSCFunctionListEntry js_number_funcs[] = {
      /* global ParseInt and parseFloat should be defined already or delayed */
      JS_ALIAS_BASE_DEF("parseInt", "parseInt", 0 ),
-@@ -39806,8 +39817,8 @@
+@@ -40855,8 +40866,8 @@ static const JSCFunctionListEntry js_num
      JS_PROP_DOUBLE_DEF("MAX_VALUE", 1.7976931348623157e+308, 0 ),
      JS_PROP_DOUBLE_DEF("MIN_VALUE", 5e-324, 0 ),
      JS_PROP_DOUBLE_DEF("NaN", NAN, 0 ),
@@ -706,7 +688,7 @@ diff -Nru quickjs-2021-03-27/quickjs.c quickjs-2021-03-27.new/quickjs.c
      JS_PROP_DOUBLE_DEF("EPSILON", 2.220446049250313e-16, 0 ), /* ES6 */
      JS_PROP_DOUBLE_DEF("MAX_SAFE_INTEGER", 9007199254740991.0, 0 ), /* ES6 */
      JS_PROP_DOUBLE_DEF("MIN_SAFE_INTEGER", -9007199254740991.0, 0 ), /* ES6 */
-@@ -41697,6 +41708,19 @@
+@@ -42901,6 +42912,19 @@ void JS_AddIntrinsicStringNormalize(JSCo
  
  /* Math */
  
@@ -726,7 +708,7 @@ diff -Nru quickjs-2021-03-27/quickjs.c quickjs-2021-03-27.new/quickjs.c
  /* precondition: a and b are not NaN */
  static double js_fmin(double a, double b)
  {
-@@ -41707,7 +41731,7 @@
+@@ -42911,7 +42935,7 @@ static double js_fmin(double a, double b
          a1.u64 |= b1.u64;
          return a1.d;
      } else {
@@ -735,7 +717,7 @@ diff -Nru quickjs-2021-03-27/quickjs.c quickjs-2021-03-27.new/quickjs.c
      }
  }
  
-@@ -41721,7 +41745,7 @@
+@@ -42925,7 +42949,7 @@ static double js_fmax(double a, double b
          a1.u64 &= b1.u64;
          return a1.d;
      } else {
