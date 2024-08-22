@@ -345,7 +345,7 @@ mjs_window_clearInterval(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	const char *text = js_tostring(J, 1);
-	int64_t number = atoll(text);
+	uintptr_t number = (uintptr_t)atoll(text);
 	struct ecmascript_timeout *t = (struct ecmascript_timeout *)(number);
 
 	if (t && found_in_map_timer(t->tid)) {
@@ -364,7 +364,7 @@ mjs_window_clearTimeout(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	const char *text = js_tostring(J, 1);
-	int64_t number = atoll(text);
+	uintptr_t number = (uintptr_t)atoll(text);
 	struct ecmascript_timeout *t = (struct ecmascript_timeout *)(number);
 
 	if (t && found_in_map_timer(t->tid)) {
@@ -542,7 +542,7 @@ mjs_window_setInterval(js_State *J)
 		if (code2) {
 			struct ecmascript_timeout *id = ecmascript_set_timeout(J, code2, timeout, timeout);
 			char res[32];
-			snprintf(res, 31, "%" PRId64, (int64_t)id);
+			snprintf(res, 31, "%" PRIuPTR, (uintptr_t)id);
 			js_pushstring(J, res);
 			return;
 		}
@@ -551,7 +551,7 @@ mjs_window_setInterval(js_State *J)
 		const char *handle = js_ref(J);
 		struct ecmascript_timeout *id = ecmascript_set_timeout2m(J, handle, timeout, timeout);
 		char res[32];
-		snprintf(res, 31, "%" PRId64, (int64_t)id);
+		snprintf(res, 31, "%" PRIuPTR, (uintptr_t)id);
 		js_pushstring(J, res);
 		return;
 	}
@@ -585,7 +585,7 @@ mjs_window_setTimeout(js_State *J)
 		if (code2) {
 			struct ecmascript_timeout *id = ecmascript_set_timeout(J, code2, timeout, -1);
 			char res[32];
-			snprintf(res, 31, "%" PRId64, (int64_t)id);
+			snprintf(res, 31, "%" PRIuPTR, (uintptr_t)id);
 			js_pushstring(J, res);
 			return;
 		}
@@ -594,7 +594,7 @@ mjs_window_setTimeout(js_State *J)
 		const char *handle = js_ref(J);
 		struct ecmascript_timeout *id = ecmascript_set_timeout2m(J, handle, timeout, -1);
 		char res[32];
-		snprintf(res, 31, "%" PRId64, (int64_t)id);
+		snprintf(res, 31, "%" PRIuPTR, (uintptr_t)id);
 		js_pushstring(J, res);
 		return;
 	}
