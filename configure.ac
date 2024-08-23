@@ -296,6 +296,8 @@ AC_CHECK_SIZEOF(long, 4)
 test "x$HAVE_LONG_LONG" = xyes && AC_CHECK_SIZEOF(long long, 8)
 test "x$HAVE_OFF_T" = xyes && AC_CHECK_SIZEOF(off_t, 4)
 
+AC_CHECK_SIZEOF(intptr_t, 8, [#include <stdint.h> ])
+
 # Check for variadic macros
 EL_CHECK_CODE([variadic macros], HAVE_VARIADIC_MACROS,
 		[#include <stdio.h>
