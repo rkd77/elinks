@@ -821,6 +821,9 @@
 /* The size of `short', as computed by sizeof. */
 #define SIZEOF_SHORT @SIZEOF_SHORT@
 
+/* The size of `intptr_t`, as computed by sizeof. */
+#define SIZEOF_INTPTR_T @SIZEOF_INTPTR_T@
+
 /* If using the C implementation of alloca, define if you know the
    direction of stack growth for your system; otherwise it will be
    automatically deduced at runtime.
