@@ -2135,6 +2135,10 @@ select_css(struct html_context *html_context, struct html_element *html_element)
 		return;
 	}
 
+	if (!style->styles[CSS_PSEUDO_ELEMENT_NONE]) {
+		goto end;
+	}
+
 	color_type = css_computed_color(
 		style->styles[CSS_PSEUDO_ELEMENT_NONE],
 		&color_shade);
@@ -2199,6 +2203,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		apply_text_align(html_context, html_element, text_align);
 	}
 
+end:
 	code = css_select_results_destroy(style);
 	if (code != CSS_OK) {
 		fprintf(stderr, "css_computed_style_destroy code=%d\n", code);
