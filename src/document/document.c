@@ -439,7 +439,7 @@ done_document(struct document *document)
 	if (document->element_map) {
 		void *mapa = document->element_map;
 
-		delete_map(&mapa);
+		delete_map(mapa);
 	}
 
 	if (document->element_map_rev) {

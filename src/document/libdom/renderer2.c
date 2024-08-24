@@ -557,7 +557,7 @@ dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
 		mapa = document->element_map;
 
 		if (mapa) {
-			delete_map(&mapa);
+			delete_map(mapa);
 		}
 		mapa = create_new_element_map();
 		document->element_map = (void *)mapa;
