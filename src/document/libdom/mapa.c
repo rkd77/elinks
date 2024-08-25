@@ -143,7 +143,7 @@ find_in_map(void *m, int offset)
 	struct el_mapa *mapa = (struct el_mapa *)m;
 
 	if (!mapa) {
-		return;
+		return NULL;
 	}
 	struct el_node_elem key = { .offset = offset, .node = NULL };
 	struct el_node_elem *item = (struct el_node_elem *)bsearch(&key, mapa->table, mapa->size, sizeof(*item), compare);
