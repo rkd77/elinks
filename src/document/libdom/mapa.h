@@ -31,6 +31,8 @@ void *find_in_map2(void *m, int offset);
 
 int find_offset(void *m, void *node);
 
+void sort_nodes(void *m);
+
 #ifdef __cplusplus
 }
 #endif

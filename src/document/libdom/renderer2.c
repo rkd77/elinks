@@ -564,7 +564,7 @@ dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
 		mapa_rev = document->element_map_rev;
 
 		if (mapa_rev) {
-			delete_map_rev(&mapa_rev);
+			delete_map(mapa_rev);
 		}
 		mapa_rev = create_new_element_map_rev();
 		document->element_map_rev = (void *)mapa_rev;
@@ -575,6 +575,7 @@ dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
 			//dom_node_unref(doc);
 			return;
 		}
+		sort_nodes(mapa_rev);
 		dom_node_unref(root);
 
 		if (parse) {

@@ -53,6 +53,12 @@ save_in_map2(void *m, void *node, int length)
 void
 save_offset_in_map(void *m, void *node, int offset)
 {
+	save_in_map(m, node, offset);
+}
+
+void
+save_offset_in_map2(void *m, void *node, int offset)
+{
 	struct hash *mapa = (struct hash *)m;
 
 	if (mapa) {
@@ -94,7 +100,7 @@ create_new_element_map2(void)
 void *
 create_new_element_map_rev(void)
 {
-	return (void *)init_hash8();
+	return create_new_element_map();
 }
 
 void
@@ -120,7 +126,6 @@ delete_map2(void *m)
 	}
 	free_hash(m);
 }
-
 
 void
 delete_map_rev(void *m)
@@ -179,9 +184,45 @@ find_in_map2(void *m, int offset)
 	return item->value;
 }
 
+static int
+compare_nodes(const void *a, const void *b)
+{
+	void *nodea = ((struct el_node_elem *)a)->node;
+	void *nodeb = ((struct el_node_elem *)b)->node;
+
+	return nodea - nodeb;
+}
 
 int
 find_offset(void *m, void *node)
+{
+	struct el_mapa *mapa = (struct el_mapa *)m;
+
+	if (!mapa) {
+		return -1;
+	}
+	struct el_node_elem key = { .offset = -1, .node = node };
+	struct el_node_elem *item = (struct el_node_elem *)bsearch(&key, mapa->table, mapa->size, sizeof(*item), compare_nodes);
+
+	if (!item) {
+		return -1;
+	}
+	return item->offset;
+}
+
+void
+sort_nodes(void *m)
+{
+	struct el_mapa *mapa = (struct el_mapa *)m;
+
+	if (!mapa) {
+		return;
+	}
+	qsort(mapa->table, mapa->size, sizeof(struct el_node_elem), compare_nodes);
+}
+
+int
+find_offset2(void *m, void *node)
 {
 	struct hash *mapa = (struct hash *)m;
 	struct hash_item *item;

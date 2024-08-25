@@ -437,15 +437,11 @@ done_document(struct document *document)
 	free_document(document->dom);
 
 	if (document->element_map) {
-		void *mapa = document->element_map;
-
-		delete_map(mapa);
+		delete_map(document->element_map);
 	}
 
 	if (document->element_map_rev) {
-		void *mapa = document->element_map_rev;
-
-		delete_map_rev(&mapa);
+		delete_map(document->element_map_rev);
 	}
 #endif
 	free_list(document->tags);
