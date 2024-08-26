@@ -44,7 +44,10 @@ report_scripting_error(struct module *module, struct session *ses,
 		if (term == NULL) {
 			usrerror(gettext("[%s error] %s"),
 				 gettext(module->name), msg);
-			sleep(3);
+
+			if (get_opt_bool("document.scripting.sleep_on_error", NULL)) {
+				sleep(3);
+			}
 			return;
 		}
 
@@ -66,6 +69,17 @@ report_scripting_error(struct module *module, struct session *ses,
 }
 #endif
 
+static union option_info scripting_options[] = {
+	INIT_OPT_TREE("document", N_("Scripting"),
+		"scripting", OPT_ZERO,
+		N_("Document scripting options.")),
+
+	INIT_OPT_BOOL("document.scripting", N_("Sleep on errors"),
+		"sleep_on_error", OPT_ZERO, 1,
+		N_("In case of errors in scripts an error message is shown. If this option is enabled ELinks also sleeps for 3 seconds.")),
+
+	NULL_OPTION_INFO,
+};
 
 static struct module *scripting_modules[] = {
 #ifdef CONFIG_SCRIPTING_LUA
@@ -91,7 +105,7 @@ static struct module *scripting_modules[] = {
 
 struct module scripting_module = struct_module(
 	/* name: */		N_("Scripting"),
-	/* options: */		NULL,
+	/* options: */		scripting_options,
 	/* events: */		NULL,
 	/* submodules: */	scripting_modules,
 	/* data: */		NULL,
