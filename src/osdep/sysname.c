@@ -63,7 +63,8 @@ get_system_name(void)
 	}
 #endif
 
+#if 0
 	if (got_it_from_uname_command()) return;
-
+#endif
 	safe_strncpy(system_name, SYSTEM_NAME, sizeof(system_name));
 }
