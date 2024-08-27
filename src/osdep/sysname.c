@@ -20,6 +20,7 @@
 char system_name[MAX_STR_LEN];
 
 #ifdef HAVE_POPEN
+#if 0
 static int
 got_it_from_uname_command(void)
 {
@@ -46,6 +47,7 @@ got_it_from_uname_command(void)
 
 	return 0;
 }
+#endif
 #else
 #define got_it_from_uname_command() 0
 #endif
