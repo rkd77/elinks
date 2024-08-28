@@ -30,37 +30,6 @@
 #include "util/secsave.h"
 #include "util/string.h"
 
-
-#ifdef CONFIG_OS_WIN32
-static int
-win_mkstemp(char *template_name)
-{
-	int i, j, fd, len, index;
-
-	static const char letters[] = "abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ0123456789";
-
-	if (template_name == NULL || (len = strlen(template_name)) < 6
-	    || memcmp(template_name + (len - 6), "XXXXXX", 6)) {
-		errno = EINVAL;
-		return -1;
-	}
-
-	for (index = len - 6; index > 0 && template_name[index - 1] == 'X'; index--);
-
-	for (i = 0; i >= 0; i++) {
-		for (j = index; j < len; j++) {
-			template_name[j] = letters[rand() % 62];
-		}
-		fd = _sopen(template_name,
-		    _O_RDWR | _O_CREAT | _O_EXCL | _O_BINARY,
-		    _SH_DENYRW, _S_IREAD | _S_IWRITE);
-		if (fd != -1) return fd;
-		if (fd == -1 && errno != EEXIST) return -1;
-	}
-	return -1;
-}
-#endif
-
 /* If infofiles.secure_save is set:
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  *
@@ -195,12 +164,9 @@ secure_open_umask(char *file_name)
 			goto free_file_name;
 		}
 
-#ifdef CONFIG_OS_WIN32
-		fd = win_mkstemp(randname);
-#else
 		/* No need to use safe_mkstemp() here. --Zas */
 		fd = mkstemp(randname);
-#endif
+
 		if (fd == -1) {
 			secsave_errno = SS_ERR_MKSTEMP;
 			mem_free(randname);

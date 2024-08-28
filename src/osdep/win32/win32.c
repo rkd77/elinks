@@ -27,6 +27,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <locale.h>
+#include <share.h>
+#include <sys/stat.h>
 
 #include "elinks.h"
 
@@ -279,19 +281,32 @@ gettimeofday(struct timeval* p, void* tz)
 	return 0;
 }
 
-
 int
-mkstemp(char *template_)
+mkstemp(char *template_name)
 {
-	char pathname[MAX_PATH];
+	int i, j, fd, len, index;
 
- 	/* Get the directory for temp files */
-	GetTempPath(MAX_PATH, pathname);
+	static const char letters[] = "abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ0123456789";
 
-	/* Create a temporary file. */
-	GetTempFileName(pathname, "ABC", 0, template_);
+	if (template_name == NULL || (len = strlen(template_name)) < 6
+	    || memcmp(template_name + (len - 6), "XXXXXX", 6)) {
+		errno = EINVAL;
+		return -1;
+	}
 
-	return open(template_, O_WRONLY | O_BINARY | O_EXCL);
+	for (index = len - 6; index > 0 && template_name[index - 1] == 'X'; index--);
+
+	for (i = 0; i >= 0; i++) {
+		for (j = index; j < len; j++) {
+			template_name[j] = letters[rand() % 62];
+		}
+		fd = _sopen(template_name,
+		    _O_RDWR | _O_CREAT | _O_EXCL | _O_BINARY,
+		    _SH_DENYRW, _S_IREAD | _S_IWRITE);
+		if (fd != -1) return fd;
+		if (fd == -1 && errno != EEXIST) return -1;
+	}
+	return -1;
 }
 
 int
