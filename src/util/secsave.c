@@ -16,11 +16,6 @@
 #include <unistd.h>
 #endif
 
-#ifdef CONFIG_OS_WIN32
-#include <share.h>
-#include <fcntl.h>
-#endif
-
 #include "elinks.h"
 
 #include "config/options.h"
