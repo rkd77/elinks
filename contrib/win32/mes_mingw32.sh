@@ -10,7 +10,7 @@ PKG_CONFIG_PATH="$HOME/lib32/pkgconfig" \
 -D256-colors=false \
 -Dapidoc=false \
 -Dbacktrace=false \
--Dbittorrent=false \
+-Dbittorrent=true \
 -Dbrotli=true \
 -Dbzlib=false \
 -Dcgi=false \
@@ -65,7 +65,7 @@ PKG_CONFIG_PATH="$HOME/lib32/pkgconfig" \
 -Dutf-8=false \
 -Dwithdebug=false \
 -Dx=false \
--Dxbel=false \
+-Dxbel=true \
 -Dzlib=true \
 -Dzstd=true || exit 4
 
@@ -78,12 +78,12 @@ rm -rf $HOME/ELINKS32
 mkdir -p $HOME/ELINKS32/src
 mkdir -p $HOME/ELINKS32/po
 
-install builddir32/src/elinks.exe $HOME/ELINKS32/src/
+install builddir32/src/elinks.exe $HOME/ELINKS32/src/elinks-lite.exe
 
 cd builddir32/po
 for i in *; do cp -v $i/LC_MESSAGES/elinks.mo $HOME/ELINKS32/po/$i.gmo; done
 cd -
 
 cd $HOME/ELINKS32/src
-for i in $(ntldd.exe -R elinks.exe | grep \\\\mingw32\\\\bin | cut -d'>' -f2 | cut -d' ' -f2); do cp -v $i . ; done
+for i in $(ntldd.exe -R elinks-lite.exe | grep \\\\mingw32\\\\bin | cut -d'>' -f2 | cut -d' ' -f2); do cp -v $i . ; done
 cd -
