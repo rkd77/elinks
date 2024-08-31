@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+function myFunction() {
+  var x = document.location.href;
+  console.assert(x.endsWith('document.location.href.html'), 'location.href');
+}
+
+console.error('document.location.href.html');
+myFunction();
+console.exit();
+</script>
+</body>
+</html>

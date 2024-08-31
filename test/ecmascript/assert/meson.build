@@ -22,6 +22,7 @@ took = [
 'document.getElementsByTagName.html',
 'document.images.html',
 'document.links.html',
+'document.location.href.html',
 'document.querySelectorAll.html',
 'document.querySelector.html',
 'domparser.html',

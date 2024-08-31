@@ -524,6 +524,26 @@ mjs_document_get_property_links(js_State *J)
 }
 
 static void
+mjs_document_get_property_location(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	mjs_push_location(J);
+}
+
+static void mjs_document_set_property_url(js_State *J);
+
+static void
+mjs_document_set_property_location(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	mjs_document_set_property_url(J);
+}
+
+static void
 mjs_document_get_property_nodeType(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1570,6 +1590,7 @@ mjs_document_init(js_State *J)
 		addproperty(J, "implementation", mjs_document_get_property_implementation, NULL);
 		addproperty(J, "inputEncoding", mjs_document_get_property_charset, NULL);
 		addproperty(J, "links", mjs_document_get_property_links, NULL);
+		addproperty(J, "location", mjs_document_get_property_location, mjs_document_set_property_location);
 		addproperty(J, "nodeType", mjs_document_get_property_nodeType, NULL);
 		addproperty(J, "referrer", mjs_document_get_property_referrer, NULL);
 		addproperty(J, "readyState", mjs_document_get_property_readyState, NULL);
@@ -1578,7 +1599,6 @@ mjs_document_init(js_State *J)
 		addproperty(J, "URL", mjs_document_get_property_url, mjs_document_set_property_url);
 	}
 	js_defglobal(J, "document", JS_DONTENUM);
-//	js_dostring(J, "document.location = location; window.document = document;");
 
 	return 0;
 }
@@ -1706,6 +1726,7 @@ mjs_push_document(js_State *J, void *doc)
 		addproperty(J, "implementation", mjs_document_get_property_implementation, NULL);
 		addproperty(J, "inputEncoding", mjs_document_get_property_charset, NULL);
 		addproperty(J, "links", mjs_document_get_property_links, NULL);
+		addproperty(J, "location", mjs_document_get_property_location, mjs_document_set_property_location);
 		addproperty(J, "nodeType", mjs_document_get_property_nodeType, NULL);
 		addproperty(J, "readyState", mjs_document_get_property_readyState, NULL);
 		addproperty(J, "referrer", mjs_document_get_property_referrer, NULL);
@@ -1781,6 +1802,7 @@ mjs_push_document2(js_State *J, void *doc)
 		addproperty(J, "implementation", mjs_document_get_property_implementation, NULL);
 		addproperty(J, "inputEncoding", mjs_document_get_property_charset, NULL);
 		addproperty(J, "links", mjs_document_get_property_links, NULL);
+		addproperty(J, "location", mjs_document_get_property_location, mjs_document_set_property_location);
 		addproperty(J, "nodeType", mjs_document_get_property_nodeType, NULL);
 		addproperty(J, "readyState", mjs_document_get_property_readyState, NULL);
 		addproperty(J, "referrer", mjs_document_get_property_referrer, NULL);
