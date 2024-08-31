@@ -273,7 +273,7 @@ js_window_setInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 	if (JS_IsFunction(ctx, func)) {
 		struct ecmascript_timeout *id = ecmascript_set_timeout2q(ctx, func, timeout, timeout);
 
-#if SIZEOF_UINTPTR_T == 4
+#if SIZEOF_INTPTR_T == 4
 		return JS_NewInt32(ctx, (intptr_t)(id));
 #else
 		return JS_NewInt64(ctx, (intptr_t)(id));
@@ -292,7 +292,7 @@ js_window_setInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 		if (code2) {
 			struct ecmascript_timeout *id = ecmascript_set_timeout(ctx, code2, timeout, timeout);
 
-#if SIZEOF_UINTPTR_T == 4
+#if SIZEOF_INTPTR_T == 4
 			return JS_NewInt32(ctx, (intptr_t)(id));
 #else
 			return JS_NewInt64(ctx, (intptr_t)(id));
@@ -333,7 +333,7 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 
 	if (JS_IsFunction(ctx, func)) {
 		struct ecmascript_timeout *id = ecmascript_set_timeout2q(ctx, func, timeout, -1);
-#if SIZEOF_UINTPTR_T == 4
+#if SIZEOF_INTPTR_T == 4
 		return JS_NewInt32(ctx, (intptr_t)(id));
 #else
 		return JS_NewInt64(ctx, (intptr_t)(id));
@@ -351,7 +351,7 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 
 		if (code2) {
 			struct ecmascript_timeout *id = ecmascript_set_timeout(ctx, code2, timeout, -1);
-#if SIZEOF_UINTPTR_T == 4
+#if SIZEOF_INTPTR_T == 4
 			return JS_NewInt32(ctx, (intptr_t)(id));
 #else
 			return JS_NewInt64(ctx, (intptr_t)(id));
@@ -376,7 +376,7 @@ js_window_clearInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	}
 	intptr_t number;
 
-#if SIZEOF_UINTPTR_T == 4
+#if SIZEOF_INTPTR_T == 4
 	if (JS_ToInt32(ctx, &number, argv[0])) {
 		return JS_UNDEFINED;
 	}
@@ -412,7 +412,7 @@ js_window_clearTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	}
 	intptr_t number;
 
-#if SIZEOF_UINTPTR_T == 4
+#if SIZEOF_INTPTR_T == 4
 	if (JS_ToInt32(ctx, &number, argv[0])) {
 		return JS_UNDEFINED;
 	}
