@@ -675,6 +675,14 @@ do_action(struct session *ses, main_action_T action_id, int verbose)
 			close_all_tabs_but_current(ses);
 			break;
 
+		case ACT_MAIN_REOPEN_LAST_CLOSED_TAB:
+			if (term->closed_tab_uri) {
+				open_uri_in_new_tab(ses, term->closed_tab_uri, 0, 1);
+				done_uri(term->closed_tab_uri);
+				term->closed_tab_uri = NULL;
+			}
+			break;
+
 		case ACT_MAIN_TAB_EXTERNAL_COMMAND:
 			status = pass_uri_to_command(ses, doc_view,
 			                             PASS_URI_TAB);

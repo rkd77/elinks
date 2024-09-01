@@ -15,6 +15,7 @@
 #include "intl/libintl.h"
 #include "main/select.h"
 #include "protocol/uri.h"
+#include "session/location.h"
 #include "session/session.h"
 #include "terminal/screen.h"
 #include "terminal/tab.h"
@@ -186,6 +187,14 @@ really_close_tab(void *ses_)
 	struct session *ses = (struct session *)ses_;
 	struct terminal *term = ses->tab->term;
 	struct window *current_tab = get_current_tab(term);
+	struct uri *uri = have_location(ses) ? cur_loc(ses)->vs.uri : ses->loading_uri;
+
+	if (uri) {
+		if (term->closed_tab_uri) {
+			done_uri(term->closed_tab_uri);
+		}
+		term->closed_tab_uri = get_uri_reference(uri);
+	}
 
 	if (ses->tab == current_tab) {
 		int tabs_count = number_of_tabs(term);

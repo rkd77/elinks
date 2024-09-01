@@ -286,6 +286,11 @@ destroy_terminal(struct terminal *term)
 	}
 
 	object_unlock(term->spec);
+
+	if (term->closed_tab_uri) {
+		done_uri(term->closed_tab_uri);
+	}
+
 	mem_free(term);
 	check_if_no_terminal();
 }

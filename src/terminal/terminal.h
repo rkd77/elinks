@@ -2,6 +2,7 @@
 #define EL__TERMINAL_TERMINAL_H
 
 #include "config/options.h"
+#include "protocol/uri.h"
 #include "terminal/event.h"
 #include "util/lists.h"
 
@@ -182,6 +183,8 @@ struct terminal {
 #endif
 	int cell_width;
 	int cell_height;
+
+	struct uri *closed_tab_uri;
 };
 
 #define do_not_ignore_next_mouse_event(term) \
