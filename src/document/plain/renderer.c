@@ -975,7 +975,7 @@ fixup_tables(struct plain_renderer *renderer)
 			case '-':
 				if (prev_char == BORDER_SHLINE || prev_char == BORDER_SCROSS || prev_char == '+' || prev_char == '|'
 				|| prev_char == BORDER_SULCORNER || prev_char == BORDER_SDLCORNER || prev_char == BORDER_SRTEE
-				|| prev_char == BORDER_SUTEE || prev_char == BORDER_SDTEE) {
+				|| prev_char == BORDER_SUTEE || prev_char == BORDER_SDTEE || next_char == '-') {
 					line->ch.chars[x].data = BORDER_SHLINE;
 					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
 				}
