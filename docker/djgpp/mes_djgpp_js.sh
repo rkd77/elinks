@@ -74,4 +74,16 @@ i586-pc-msdosdjgpp-strip /tmp/builddir2/src/elinks.exe
 
 upx /tmp/builddir2/src/elinks.exe
 
+# prepare zip
+rm -rf $HOME/ELINKS
+
+mkdir -p $HOME/ELINKS/src
+mkdir -p $HOME/ELINKS/po
+
+install /tmp/builddir2/src/elinks.exe $HOME/ELINKS/src/elinks.exe
+
+cd /tmp/builddir2/po
+for i in *; do cp -v $i/LC_MESSAGES/elinks.mo $HOME/ELINKS/po/$i.gmo; done
+cd -
+
 #cp -a /tmp/builddir2/src/elinks.exe ~/.dosemu/drive_c/ELINKS/src/
