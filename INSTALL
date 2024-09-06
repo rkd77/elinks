@@ -24,13 +24,6 @@ ECMAScript (that's JavaScript) support.
 
 	$ git pull
 
-  Note that if you obtained the sources directly from GIT, you NEED to run
-./autogen.sh!  (It should be enough to do it once - however, if you have build
-problems, try running this first.) Also, you obviously need GNU make and
-autoconf installed on your system (for the supported versions of autoconf,
-see AC_PREREQ in configure.ac).  Otherwise, you have to use the nightly GIT
-snapshot - you don't need to do this there.
-
 
 ##########
 
@@ -48,28 +41,12 @@ submit the newer version.
 
   Unix - just doing:
 
-	 $ ./autogen.sh
-	 $ ./configure
-	 $ make
+	 $ meson setup build
+	 $ meson compile -C build
 
-	 should be enough.  However, in some FreeBSD 3 distributions you have to
-	 set CFLAGS=-aout before running ./configure.  Also, you may want to
-	 adjust some (well, plenty of) compile-time options through ./configure
-	 - do ./configure --help and it'll print out a list of them. You can
-	 finetune what's going to be included in the binary in the features.conf
-	 file, and some really detailed tuning can be performed in src/setup.h.
+	 should be enough.
 
-	 Also, a nice idea is to compile ELinks outside of the source tree (note
-	 that this might not quite work right now, but we're working on fixing
-	 it). Make another directory and run path_to_source_tree/configure from
-	 it. Typically, it looks like:
-
-	 $ mkdir ../elinks-build
-	 $ cd ../elinks-build
-	 $ ../elinks/configure
-	 $ make
-
-  OS/2 - you can use ./configure.
+  OS/2 - you can use ./autogen.sh && ./configure.
 
 	 The only supported compiler is EMX, you probably won't be able to
 	 compile it with anything else.
@@ -97,11 +74,11 @@ Detailed discussion of reducing the executable size can be found in
 
   Ok, now let's install it:
 
-  Unix - # make install
+  Unix - # meson install -C build
 
   OS/2 -
-	Copy file links.exe somewhere to your path or create CMD file that runs
-	links.
+	Copy file elinks.exe somewhere to your path or create CMD file that runs
+	elinks.
 
 	 WARNING: EMX has a nasty limit on open files.  Links will work badly or
 	 won't work with the default settings.  Set the variable EMXOPT=-h100
@@ -128,7 +105,7 @@ they like to have everything legally perfect (like the Debian people ;-).
 
   As a semi-solution to this problem, GNUTLS support was introduced; if you want
 to distribute ELinks executables with HTTPS support, compile ELinks with the
---with-gnutls configure option (assuming that you have GNUTLS 1.2.0 installed;
+-Dgnutls=true meson option (assuming that you have GNUTLS 1.2.0 installed;
 we can't say about later versions since GNUTLS people seem to have strange taste
 wrt. backwards compatibility).
 
