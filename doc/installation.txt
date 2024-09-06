@@ -10,7 +10,9 @@ Building and Installing ELinks
 The quick guide for the impatient. Issue the following commands from the
 ELinks source directory:
 
-	$ ./configure && make && make install
+	$ meson setup build
+	$ meson compile -C build
+	$ sudo meson install -C build
 
 However you might consider to tweek a few compile time options before building
 ELinks. You might also want to take a look at what libraries and programs are
@@ -19,10 +21,8 @@ required or recommended that you install.
 Requirements
 ~~~~~~~~~~~~
 
-To successfully install ELinks all that is required is GNU make
-(version 3.78 or later) and a C compiler. If you want to install
-directly from GIT it is also required that automake and autoconf
-is installed on your system.
+To successfully install ELinks all that is required is meson
+(version 1.0.1 or later) and a C compiler.
 
 Recommended Libraries and Programs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
