@@ -310,7 +310,7 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 #endif
 	run_jobs(interpreter);
 
-	if (interpreter->changed && !program.testjs) {
+	if (interpreter->changed) {
 		struct document_view *doc_view = interpreter->vs->doc_view;
 		struct document *document = doc_view->document;
 		struct session *ses = doc_view->session;
