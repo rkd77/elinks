@@ -1841,6 +1841,12 @@ set_libcss_node_data(void *pw, void *node, void *libcss_node_data)
 	if (err != DOM_NO_ERR) {
 		return CSS_NOMEM;
 	}
+
+	if (old_node_data) {
+		err = css_libcss_node_data_handler(&selection_handler,
+				CSS_NODE_DELETED,
+				NULL, node, NULL, old_node_data);
+	}
 	//assert(old_node_data == NULL);
 
 	return CSS_OK;
