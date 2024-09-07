@@ -156,7 +156,7 @@ install_timer(timer_id_T *id, milliseconds_T delay, void (*func)(void *), void *
 {
 	struct timer *new_timer, *timer;
 
-	assert(id && delay > 0);
+	assert(id && delay >= 0);
 
 #ifdef USE_LIBEVENT
 	char *q = (char *)mem_alloc(sizeof_struct_event + sizeof(struct timer));
