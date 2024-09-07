@@ -947,7 +947,7 @@ do_event_loop(int flags)
 select_handler_T
 get_handler(int fd, enum select_handler_type tp)
 {
-	if (fd >= w_max) {
+	if (fd >= w_max || fd < 0) {
 		return NULL;
 	}
 
@@ -964,7 +964,7 @@ get_handler(int fd, enum select_handler_type tp)
 void *
 get_handler_data(int fd)
 {
-	if (fd >= w_max) {
+	if (fd >= w_max || fd < 0) {
 		return NULL;
 	}
 
@@ -975,6 +975,9 @@ void
 set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
 	     select_handler_T error_func, void *data)
 {
+	if (fd < 0) {
+		return;
+	}
 #ifndef CONFIG_OS_WIN32
 	assertm(fd >= 0 && fd < FD_SETSIZE,
 		"set_handlers: handle %d >= FD_SETSIZE %d",
