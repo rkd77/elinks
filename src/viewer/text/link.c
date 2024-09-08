@@ -1064,7 +1064,9 @@ goto_link(struct session *ses, struct document_view *doc_view, struct link *link
 	} else
 		uri = get_link_uri(ses, doc_view, link);
 
-	if (!uri) return NULL;
+	// todo fix anchor links again
+	// if uri->fragmentlen goto anchor
+	if (!uri || compare_uri(uri,doc_view->vs->uri,URI_BASE)) return NULL;
 
 	if (link->type == LINK_MAP) {
 		/* TODO: Test reload? */
