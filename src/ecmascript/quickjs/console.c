@@ -84,6 +84,7 @@ js_console_log_common(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 		if (!str) {
 			return JS_EXCEPTION;
 		}
+		LOG_JS("%s",str);
 		FILE *f = fopen(log_filename, "a");
 
 		if (f)
