@@ -13,7 +13,7 @@ extern "C" {
 
 struct elinks_object {
 	int refcount;
-#ifdef CONFIG_DEBUG
+#ifdef CONFIG_DEBUG_OBJ
 	char *name;
 #endif
 };
@@ -28,7 +28,7 @@ struct object_head {
 
 #ifdef DEBUG_REFCOUNT
 #include "util/error.h"
-#ifdef CONFIG_DEBUG
+#ifdef CONFIG_DEBUG_OBJ
 #define object_lock_debug(obj, info) \
 	DBG("object %s[%p] lock %s to %d", (obj)->object.name, obj,	\
 	    info, (obj)->object.refcount)
@@ -40,7 +40,7 @@ struct object_head {
 #define object_lock_debug(obj, info)
 #endif /* DEBUG_REFCOUNT */
 
-#ifdef CONFIG_DEBUG
+#ifdef CONFIG_DEBUG_OBJ
 #include "util/error.h"
 #define object_sanity_check(obj)					\
 	do {								\

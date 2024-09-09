@@ -152,7 +152,7 @@ int elinks_isspace(int c);
 
 
 /** String debugging using magic number, it may catch some errors. */
-#ifdef CONFIG_DEBUG
+#ifdef CONFIG_DEBUG_STRING
 #define DEBUG_STRING
 #endif
 
