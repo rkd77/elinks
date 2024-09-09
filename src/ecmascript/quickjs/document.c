@@ -29,6 +29,7 @@
 #include "ecmascript/quickjs/event.h"
 #include "ecmascript/quickjs/form.h"
 #include "ecmascript/quickjs/forms.h"
+#include "ecmascript/quickjs/fragment.h"
 #include "ecmascript/quickjs/implementation.h"
 #include "ecmascript/quickjs/location.h"
 #include "ecmascript/quickjs/document.h"
@@ -1311,7 +1312,7 @@ js_document_createDocumentFragment(JSContext *ctx, JSValueConst this_val, int ar
 	}
 	//dom_node_unref(doc);
 
-	return getElement(ctx, fragment);
+	return getDocumentFragment(ctx, fragment);
 }
 
 static JSValue
