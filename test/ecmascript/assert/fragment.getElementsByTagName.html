@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<body id="body">
+
+<button onclick="myFunction()">Try it</button>
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var fr = document.createDocumentFragment();
+  console.assert(fr.getElementsByTagName === undefined, 'undefined');
+}
+
+console.error('fragment.getElementByTagName.html');
+myFunction();
+console.exit();
+</script>
+
+</body>
+</html>

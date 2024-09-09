@@ -53,13 +53,8 @@
 JSClassID js_fragment_class_id;
 
 struct js_fragment_private {
-	//LIST_OF(struct element_listener) listeners;
-	struct ecmascript_interpreter *interpreter;
-	JSValue thisval;
-	//dom_event_listener *listener;
 	void *node;
 };
-
 
 static JSValue js_fragment_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSValue val);
 
@@ -3785,7 +3780,6 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 				dom_node_unref(el);
 			}
 		}
-		JS_FreeValueRT(rt, el_private->thisval);
 		mem_free(el_private);
 	}
 }
@@ -3801,14 +3795,13 @@ js_fragment_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 	struct js_fragment_private *el_private = (struct js_fragment_private *)js_getopaque_fragment(val, js_fragment_class_id);
 
 	if (el_private) {
-		JS_MarkValue(rt, el_private->thisval, mark_func);
 	}
 }
 
 static JSClassDef js_fragment_class = {
 	"DocumentFragment",
 	.finalizer = js_fragment_finalizer,
-	.gc_mark = js_fragment_mark,
+//	.gc_mark = js_fragment_mark,
 };
 
 int
@@ -3847,8 +3840,6 @@ getDocumentFragment(JSContext *ctx, void *node)
 		return JS_NULL;
 	}
 	el_private->node = node;
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	el_private->interpreter = interpreter;
 
 	JSValue fragment_obj = JS_NewObjectClass(ctx, js_fragment_class_id);
 	REF_JS(fragment_obj);
@@ -3862,6 +3853,5 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	JS_SetOpaque(fragment_obj, el_private);
 
 	JSValue rr = JS_DupValue(ctx, fragment_obj);
-	el_private->thisval = JS_DupValue(ctx, rr);
 	RETURN_JS(rr);
 }
