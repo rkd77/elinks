@@ -645,7 +645,20 @@ fire_generic_dom_event(void *t, void *tar, int bubbles, int cancelable)
 int
 fire_onload(void *doc)
 {
-	return fire_generic_dom_event(corestring_dom_DOMContentLoaded, doc, false, false);
+	dom_node *root = NULL;
+
+	if (!doc) {
+		return false;
+	}
+	dom_exception exc = dom_document_get_document_element(doc, &root);
+
+	if (exc != DOM_NO_ERR || !root) {
+		return false;
+	}
+	int res = fire_generic_dom_event(corestring_dom_DOMContentLoaded, root, false, false);
+	dom_node_unref(root);
+
+	return res;
 }
 
 #if 0
