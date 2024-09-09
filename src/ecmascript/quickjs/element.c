@@ -2051,6 +2051,7 @@ js_element_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSVal
 		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
+	LOG_JS("%s",str);
 	dom_string *content = NULL;
 	dom_exception exc = dom_string_create((const uint8_t *)str, len, &content);
 	JS_FreeCString(ctx, str);

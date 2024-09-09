@@ -70,6 +70,7 @@ check_document_fragment(struct session *ses, struct document_view *doc_view)
 
 	/* Omit the leading '#' when calling find_tag. */
 	vy = find_tag(document, fragment.source + 1, fragment.length - 1);
+	LOG_JS("%s %d", fragment.source,vy);
 	if (vy == -1) {
 		struct cache_entry *cached = document->cached;
 

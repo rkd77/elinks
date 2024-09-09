@@ -197,6 +197,8 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 	vs->doc_view = doc_view;
 
 	cached = find_in_cache(vs->uri);
+	
+	//LOG_JS("%s", vs->uri->data);
 	if (!cached) {
 		INTERNAL("document %s to format not found", struri(vs->uri));
 		return;

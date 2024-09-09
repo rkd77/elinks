@@ -862,6 +862,7 @@ request_additional_file(struct session *ses, const char *name, struct uri *uri, 
 	ftl->pri = pri;
 	ftl->ses = ses;
 
+	/* LOG_JS("%s", ftl->uri->data); */
 	add_to_list(ses->more_files, ftl);
 
 	return ftl;
@@ -892,7 +893,7 @@ process_file_requests(struct session *ses)
 				continue;
 
 			ftl->req_sent = 1;
-
+			LOG_JS("%s", ftl->uri->data);
 			load_additional_file(ftl, CACHE_MODE_NORMAL);
 			more = 1;
 		}
