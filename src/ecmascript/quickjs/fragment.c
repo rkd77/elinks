@@ -79,6 +79,7 @@ js_getopaque_fragment(JSValueConst obj, JSClassID class_id)
 	return res->node;
 }
 
+#if 0
 static JSValue
 js_fragment_get_property_attributes(JSContext *ctx, JSValueConst this_val)
 {
@@ -107,7 +108,9 @@ js_fragment_get_property_attributes(JSContext *ctx, JSValueConst this_val)
 
 	RETURN_JS(rr);
 }
+#endif
 
+#if 0
 static JSValue
 js_fragment_get_property_checked(JSContext *ctx, JSValueConst this_val)
 {
@@ -174,7 +177,9 @@ js_fragment_get_property_checked(JSContext *ctx, JSValueConst this_val)
 
 	return JS_NewBool(ctx, fs->state);
 }
+#endif
 
+#if 0
 static JSValue
 js_fragment_set_property_checked(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
@@ -244,6 +249,7 @@ js_fragment_set_property_checked(JSContext *ctx, JSValueConst this_val, JSValue 
 
 	return JS_UNDEFINED;
 }
+#endif
 
 static JSValue
 js_fragment_get_property_children(JSContext *ctx, JSValueConst this_val)
@@ -331,6 +337,7 @@ js_fragment_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 	RETURN_JS(rr);
 }
 
+#if 0
 static JSValue
 js_fragment_get_property_classList(JSContext *ctx, JSValueConst this_val)
 {
@@ -355,7 +362,9 @@ js_fragment_get_property_classList(JSContext *ctx, JSValueConst this_val)
 
 	return getTokenlist(ctx, tl);
 }
+#endif
 
+#if 0
 static JSValue
 js_fragment_get_property_className(JSContext *ctx, JSValueConst this_val)
 {
@@ -390,6 +399,7 @@ js_fragment_get_property_className(JSContext *ctx, JSValueConst this_val)
 
 	RETURN_JS(r);
 }
+#endif
 
 #if 0
 static JSValue
@@ -523,6 +533,7 @@ js_fragment_get_property_clientWidth(JSContext *ctx, JSValueConst this_val)
 }
 #endif
 
+#if 0
 static JSValue
 js_fragment_get_property_dataset(JSContext *ctx, JSValueConst this_val)
 {
@@ -537,7 +548,9 @@ js_fragment_get_property_dataset(JSContext *ctx, JSValueConst this_val)
 	}
 	return getDataset(ctx, el);
 }
+#endif
 
+#if 0
 static JSValue
 js_fragment_get_property_dir(JSContext *ctx, JSValueConst this_val)
 {
@@ -575,6 +588,7 @@ js_fragment_get_property_dir(JSContext *ctx, JSValueConst this_val)
 
 	RETURN_JS(r);
 }
+#endif
 
 static JSValue
 js_fragment_get_property_firstChild(JSContext *ctx, JSValueConst this_val)
@@ -670,6 +684,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	return JS_NULL;
 }
 
+#if 0
 static JSValue
 js_fragment_get_property_href(JSContext *ctx, JSValueConst this_val)
 {
@@ -703,6 +718,7 @@ js_fragment_get_property_href(JSContext *ctx, JSValueConst this_val)
 
 	RETURN_JS(r);
 }
+#endif
 
 static JSValue
 js_fragment_get_property_id(JSContext *ctx, JSValueConst this_val)
@@ -738,6 +754,7 @@ js_fragment_get_property_id(JSContext *ctx, JSValueConst this_val)
 	RETURN_JS(r);
 }
 
+#if 0
 static JSValue
 js_fragment_get_property_lang(JSContext *ctx, JSValueConst this_val)
 {
@@ -771,6 +788,7 @@ js_fragment_get_property_lang(JSContext *ctx, JSValueConst this_val)
 
 	RETURN_JS(r);
 }
+#endif
 
 static JSValue
 js_fragment_get_property_lastChild(JSContext *ctx, JSValueConst this_val)
@@ -865,6 +883,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	return JS_NULL;
 }
 
+#if 0
 static JSValue
 js_fragment_get_property_nextElementSibling(JSContext *ctx, JSValueConst this_val)
 {
@@ -914,6 +933,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 
 	return JS_NULL;
 }
+#endif
 
 static JSValue
 js_fragment_get_property_nodeName(JSContext *ctx, JSValueConst this_val)
@@ -1005,6 +1025,7 @@ js_fragment_get_property_nodeValue(JSContext *ctx, JSValueConst this_val)
 	RETURN_JS(r);
 }
 
+#if 0
 static JSValue
 js_fragment_get_property_nextSibling(JSContext *ctx, JSValueConst this_val)
 {
@@ -1036,6 +1057,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 
 	return rr;
 }
+#endif
 
 #if 0
 static JSValue
@@ -1108,6 +1130,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 }
 #endif
 
+#if 0
 static JSValue
 js_fragment_get_property_offsetParent(JSContext *ctx, JSValueConst this_val)
 {
@@ -1133,6 +1156,7 @@ js_fragment_get_property_offsetParent(JSContext *ctx, JSValueConst this_val)
 
 	return getElement(ctx, node);
 }
+#endif
 
 #if 0
 static JSValue
@@ -1362,6 +1386,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	return rr;
 }
 
+#if 0
 static JSValue
 js_fragment_get_property_style(JSContext *ctx, JSValueConst this_val)
 {
@@ -1377,8 +1402,9 @@ js_fragment_get_property_style(JSContext *ctx, JSValueConst this_val)
 
 	return getStyle(ctx, el);
 }
+#endif
 
-
+#if 0
 static JSValue
 js_fragment_get_property_tagName(JSContext *ctx, JSValueConst this_val)
 {
@@ -1407,7 +1433,9 @@ js_fragment_get_property_tagName(JSContext *ctx, JSValueConst this_val)
 
 	RETURN_JS(r);
 }
+#endif
 
+#if 0
 static JSValue
 js_fragment_get_property_title(JSContext *ctx, JSValueConst this_val)
 {
@@ -1441,7 +1469,9 @@ js_fragment_get_property_title(JSContext *ctx, JSValueConst this_val)
 
 	RETURN_JS(r);
 }
+#endif
 
+#if 0
 static JSValue
 js_fragment_get_property_value(JSContext *ctx, JSValueConst this_val)
 {
@@ -1506,7 +1536,9 @@ js_fragment_get_property_value(JSContext *ctx, JSValueConst this_val)
 
 	RETURN_JS(r);
 }
+#endif
 
+#if 0
 static JSValue
 js_fragment_get_property_innerHtml(JSContext *ctx, JSValueConst this_val)
 {
@@ -1534,7 +1566,9 @@ js_fragment_get_property_innerHtml(JSContext *ctx, JSValueConst this_val)
 
 	RETURN_JS(ret);
 }
+#endif
 
+#if 0
 static JSValue
 js_fragment_get_property_outerHtml(JSContext *ctx, JSValueConst this_val)
 {
@@ -1562,6 +1596,7 @@ js_fragment_get_property_outerHtml(JSContext *ctx, JSValueConst this_val)
 
 	RETURN_JS(ret);
 }
+#endif
 
 static JSValue
 js_fragment_get_property_textContent(JSContext *ctx, JSValueConst this_val)
@@ -1591,6 +1626,7 @@ js_fragment_get_property_textContent(JSContext *ctx, JSValueConst this_val)
 	RETURN_JS(ret);
 }
 
+#if 0
 static JSValue
 js_fragment_set_property_className(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
@@ -1628,7 +1664,9 @@ js_fragment_set_property_className(JSContext *ctx, JSValueConst this_val, JSValu
 
 	return JS_UNDEFINED;
 }
+#endif
 
+#if 0
 static JSValue
 js_fragment_set_property_dir(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
@@ -1668,7 +1706,9 @@ js_fragment_set_property_dir(JSContext *ctx, JSValueConst this_val, JSValue val)
 
 	return JS_UNDEFINED;
 }
+#endif
 
+#if 0
 static JSValue
 js_fragment_set_property_href(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
@@ -1706,6 +1746,7 @@ js_fragment_set_property_href(JSContext *ctx, JSValueConst this_val, JSValue val
 
 	return JS_UNDEFINED;
 }
+#endif
 
 static JSValue
 js_fragment_set_property_id(JSContext *ctx, JSValueConst this_val, JSValue val)
@@ -1745,6 +1786,7 @@ js_fragment_set_property_id(JSContext *ctx, JSValueConst this_val, JSValue val)
 	return JS_UNDEFINED;
 }
 
+#if 0
 static JSValue
 js_fragment_set_property_innerHtml(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
@@ -1915,7 +1957,9 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 
 	return JS_UNDEFINED;
 }
+#endif
 
+#if 0
 static JSValue
 js_fragment_set_property_innerText(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
@@ -1924,7 +1968,9 @@ js_fragment_set_property_innerText(JSContext *ctx, JSValueConst this_val, JSValu
 #endif
 	return js_fragment_set_property_textContent(ctx, this_val, val);
 }
+#endif
 
+#if 0
 static JSValue
 js_fragment_set_property_lang(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
@@ -1963,7 +2009,9 @@ js_fragment_set_property_lang(JSContext *ctx, JSValueConst this_val, JSValue val
 
 	return JS_UNDEFINED;
 }
+#endif
 
+#if 0
 static JSValue
 js_fragment_set_property_outerHtml(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
@@ -2141,6 +2189,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 
 	return JS_UNDEFINED;
 }
+#endif
 
 static JSValue
 js_fragment_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSValue val)
@@ -2179,6 +2228,7 @@ js_fragment_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSVa
 	return JS_UNDEFINED;
 }
 
+#if 0
 static JSValue
 js_fragment_set_property_title(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
@@ -2216,7 +2266,9 @@ js_fragment_set_property_title(JSContext *ctx, JSValueConst this_val, JSValue va
 
 	return JS_UNDEFINED;
 }
+#endif
 
+#if 0
 static JSValue
 js_fragment_set_property_value(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
@@ -2301,6 +2353,7 @@ js_fragment_set_property_value(JSContext *ctx, JSValueConst this_val, JSValue va
 
 	return JS_UNDEFINED;
 }
+#endif
 
 #if 0
 // Common part of all add_child_element*() methods.
@@ -2317,6 +2370,7 @@ el_add_child_element_common(xmlNode* child, xmlNode* node)
 }
 #endif
 
+#if 0
 static JSValue
 js_fragment_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
@@ -2358,6 +2412,7 @@ js_fragment_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 
 	return JS_NewBool(ctx, result);
 }
+#endif
 
 #if 0
 static JSValue
@@ -2575,6 +2630,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	return JS_EXCEPTION;
 }
 
+#if 0
 /* @element_funcs{"blur"} */
 static JSValue
 js_fragment_blur(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
@@ -2588,7 +2644,9 @@ js_fragment_blur(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *
 	 * selected.  So we do nothing for now. (That was easy.) */
 	return JS_UNDEFINED;
 }
+#endif
 
+#if 0
 static JSValue
 js_fragment_click(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
@@ -2643,6 +2701,7 @@ js_fragment_click(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst 
 
 	return JS_UNDEFINED;
 }
+#endif
 
 static JSValue
 js_fragment_cloneNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
@@ -2713,6 +2772,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 }
 #endif
 
+#if 0
 static JSValue
 js_fragment_closest(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
@@ -2806,6 +2866,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 
 	return ret;
 }
+#endif
 
 static JSValue
 js_fragment_contains(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
@@ -2866,6 +2927,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	}
 }
 
+#if 0
 static JSValue
 js_fragment_focus(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
@@ -2912,7 +2974,9 @@ js_fragment_focus(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst 
 
 	return JS_UNDEFINED;
 }
+#endif
 
+#if 0
 static JSValue
 js_fragment_getAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
@@ -2966,7 +3030,9 @@ js_fragment_getAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 
 	RETURN_JS(r);
 }
+#endif
 
+#if 0
 static JSValue
 js_fragment_getAttributeNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
@@ -3015,7 +3081,9 @@ js_fragment_getAttributeNode(JSContext *ctx, JSValueConst this_val, int argc, JS
 
 	return getAttr(ctx, attr);
 }
+#endif
 
+#if 0
 static JSValue
 js_fragment_getBoundingClientRect(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
@@ -3028,7 +3096,9 @@ js_fragment_getBoundingClientRect(JSContext *ctx, JSValueConst this_val, int arg
 
 	RETURN_JS(rect);
 }
+#endif
 
+#if 0
 static JSValue
 js_fragment_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
@@ -3079,7 +3149,9 @@ js_fragment_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc
 
 	RETURN_JS(rr);
 }
+#endif
 
+#if 0
 static JSValue
 js_fragment_hasAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
@@ -3129,7 +3201,9 @@ js_fragment_hasAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 
 	return JS_NewBool(ctx, res);
 }
+#endif
 
+#if 0
 static JSValue
 js_fragment_hasAttributes(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
@@ -3162,6 +3236,7 @@ js_fragment_hasAttributes(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 
 	return JS_NewBool(ctx, res);
 }
+#endif
 
 static JSValue
 js_fragment_hasChildNodes(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
@@ -3321,6 +3396,7 @@ js_fragment_isSameNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	return JS_NewBool(ctx, res);
 }
 
+#if 0
 static JSValue
 js_fragment_matches(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
@@ -3350,6 +3426,7 @@ js_fragment_matches(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 
 	return JS_NewBool(ctx, res != NULL);
 }
+#endif
 
 static JSValue
 js_fragment_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
@@ -3484,6 +3561,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	return JS_UNDEFINED;
 }
 
+#if 0
 static JSValue
 js_fragment_removeAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
@@ -3525,6 +3603,7 @@ js_fragment_removeAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSV
 
 	return JS_UNDEFINED;
 }
+#endif
 
 static JSValue
 js_fragment_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
@@ -3598,6 +3677,7 @@ js_fragment_replaceWith(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	return JS_UNDEFINED;
 }
 
+#if 0
 static JSValue
 js_fragment_setAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
@@ -3671,6 +3751,7 @@ js_fragment_setAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 
 	return JS_UNDEFINED;
 }
+#endif
 
 static JSValue
 js_fragment_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
@@ -3688,7 +3769,7 @@ static const JSCFunctionListEntry js_fragment_proto_funcs[] = {
 ////	JS_CGETSET_DEF("checked",	js_fragment_get_property_checked, js_fragment_set_property_checked),
 	JS_CGETSET_DEF("children",	js_fragment_get_property_children, NULL),
 	JS_CGETSET_DEF("childElementCount",	js_fragment_get_property_childElementCount, NULL),
-////	JS_CGETSET_DEF("childNodes",	js_fragment_get_property_childNodes, NULL),
+	JS_CGETSET_DEF("childNodes",	js_fragment_get_property_childNodes, NULL),
 ////	JS_CGETSET_DEF("classList",	js_fragment_get_property_classList, NULL),
 ////	JS_CGETSET_DEF("className",	js_fragment_get_property_className, js_fragment_set_property_className),
 //	JS_CGETSET_DEF("clientHeight",	js_fragment_get_property_clientHeight, NULL),
@@ -3784,6 +3865,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	}
 }
 
+#if 0
 static void
 js_fragment_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 {
@@ -3797,6 +3879,7 @@ js_fragment_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 	if (el_private) {
 	}
 }
+#endif
 
 static JSClassDef js_fragment_class = {
 	"DocumentFragment",
