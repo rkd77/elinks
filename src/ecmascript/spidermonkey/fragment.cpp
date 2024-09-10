@@ -70,60 +70,60 @@
 #include <map>
 #include <string>
 
-static bool fragment_get_property_attributes(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_get_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_set_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_get_property_attributes(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_get_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_set_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool fragment_get_property_children(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool fragment_get_property_childElementCount(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool fragment_get_property_childNodes(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_get_property_classList(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_get_property_dataset(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_get_property_classList(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_get_property_dataset(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool fragment_get_property_clientHeight(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool fragment_get_property_clientLeft(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool fragment_get_property_clientTop(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool fragment_get_property_clientWidth(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_get_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_get_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool fragment_get_property_firstChild(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool fragment_get_property_firstElementChild(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_get_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_set_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_get_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_set_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool fragment_get_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool fragment_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_get_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_set_property_innerText(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_get_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_set_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_get_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_set_property_innerText(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_get_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_set_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool fragment_get_property_lastChild(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool fragment_get_property_lastElementChild(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_get_property_nextElementSibling(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_get_property_nextSibling(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_get_property_nextElementSibling(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_get_property_nextSibling(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool fragment_get_property_nodeName(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool fragment_get_property_nodeType(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool fragment_get_property_nodeValue(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool fragment_get_property_offsetHeight(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool fragment_get_property_offsetLeft(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_get_property_offsetParent(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_get_property_offsetParent(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool fragment_get_property_offsetTop(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool fragment_get_property_offsetWidth(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_set_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_set_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool fragment_get_property_ownerDocument(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool fragment_get_property_parentElement(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool fragment_get_property_parentNode(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool fragment_get_property_previousElementSibling(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool fragment_get_property_previousSibling(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_get_property_style(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_get_property_tagName(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_get_property_style(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_get_property_tagName(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool fragment_get_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool fragment_set_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool fragment_set_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool fragment_set_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 struct fragment_private {
 	dom_node *node;
@@ -133,7 +133,7 @@ static std::map<void *, struct fragment_private *> map_privates;
 
 static void fragment_finalize(JS::GCContext *op, JSObject *obj);
 
-static void fragment_event_handler(dom_event *event, void *pw);
+//static void fragment_event_handler(dom_event *event, void *pw);
 
 JSClassOps fragment_ops = {
 	nullptr,  // addProperty
@@ -221,6 +221,7 @@ static void fragment_finalize(JS::GCContext *op, JSObject *obj)
 
 }
 
+#if 0
 static bool
 fragment_get_property_attributes(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -280,7 +281,9 @@ fragment_get_property_attributes(JSContext *ctx, unsigned int argc, JS::Value *v
 
 	return true;
 }
+#endif
 
+#if 0
 static bool
 fragment_get_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -348,7 +351,7 @@ fragment_get_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
-
+#endif
 
 static bool
 fragment_get_property_children(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -529,6 +532,7 @@ fragment_get_property_childNodes(JSContext *ctx, unsigned int argc, JS::Value *v
 	return true;
 }
 
+#if 0
 static bool
 fragment_get_property_classList(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -583,7 +587,9 @@ fragment_get_property_classList(JSContext *ctx, unsigned int argc, JS::Value *vp
 	args.rval().setObject(*res);
 	return true;
 }
+#endif
 
+#if 0
 static bool
 fragment_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -646,7 +652,9 @@ fragment_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp
 
 	return true;
 }
+#endif
 
+#if 0
 static bool
 fragment_get_property_dataset(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -666,6 +674,7 @@ fragment_get_property_dataset(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+#endif
 
 
 #if 0 // it does not work yet
@@ -899,6 +908,7 @@ fragment_get_property_clientWidth(JSContext *ctx, unsigned int argc, JS::Value *
 }
 #endif
 
+#if 0
 static bool
 fragment_get_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -965,6 +975,7 @@ fragment_get_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+#endif
 
 static bool
 fragment_get_property_firstChild(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -1117,6 +1128,7 @@ fragment_get_property_firstElementChild(JSContext *ctx, unsigned int argc, JS::V
 	return true;
 }
 
+#if 0
 static bool
 fragment_get_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -1179,6 +1191,7 @@ fragment_get_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+#endif
 
 static bool
 fragment_get_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -1243,6 +1256,7 @@ fragment_get_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return true;
 }
 
+#if 0
 static bool
 fragment_get_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -1305,6 +1319,7 @@ fragment_get_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+#endif
 
 static bool
 fragment_get_property_lastChild(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -1455,6 +1470,7 @@ fragment_get_property_lastElementChild(JSContext *ctx, unsigned int argc, JS::Va
 	return true;
 }
 
+#if 0
 static bool
 fragment_get_property_nextElementSibling(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -1532,6 +1548,7 @@ fragment_get_property_nextElementSibling(JSContext *ctx, unsigned int argc, JS::
 
 	return true;
 }
+#endif
 
 static bool
 fragment_get_property_nodeName(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -1709,6 +1726,7 @@ fragment_get_property_nodeValue(JSContext *ctx, unsigned int argc, JS::Value *vp
 	return true;
 }
 
+#if 0
 static bool
 fragment_get_property_nextSibling(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -1768,6 +1786,7 @@ fragment_get_property_nextSibling(JSContext *ctx, unsigned int argc, JS::Value *
 
 	return true;
 }
+#endif
 
 #if 0
 static bool
@@ -1876,6 +1895,7 @@ fragment_get_property_offsetLeft(JSContext *ctx, unsigned int argc, JS::Value *v
 }
 #endif
 
+#if 0
 static bool
 fragment_get_property_offsetParent(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -1935,6 +1955,7 @@ fragment_get_property_offsetParent(JSContext *ctx, unsigned int argc, JS::Value 
 
 	return true;
 }
+#endif
 
 #if 0
 static bool
@@ -2344,6 +2365,7 @@ fragment_get_property_previousSibling(JSContext *ctx, unsigned int argc, JS::Val
 	return true;
 }
 
+#if 0
 static bool
 fragment_get_property_style(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -2382,8 +2404,9 @@ fragment_get_property_style(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+#endif
 
-
+#if 0
 static bool
 fragment_get_property_tagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -2441,7 +2464,9 @@ fragment_get_property_tagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+#endif
 
+#if 0
 static bool
 fragment_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -2503,7 +2528,9 @@ fragment_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+#endif
 
+#if 0
 static bool
 fragment_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -2571,7 +2598,9 @@ fragment_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+#endif
 
+#if 0
 static bool
 fragment_get_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -2628,7 +2657,9 @@ fragment_get_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp
 
 	return true;
 }
+#endif
 
+#if 0
 static bool
 fragment_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -2685,6 +2716,7 @@ fragment_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp
 
 	return true;
 }
+#endif
 
 static bool
 fragment_get_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -2743,6 +2775,7 @@ fragment_get_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *
 	return true;
 }
 
+#if 0
 static bool
 fragment_set_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -2815,8 +2848,9 @@ fragment_set_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+#endif
 
-
+#if 0
 static bool
 fragment_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -2879,7 +2913,9 @@ fragment_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp
 
 	return true;
 }
+#endif
 
+#if 0
 static bool
 fragment_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -2944,7 +2980,9 @@ fragment_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+#endif
 
+#if 0
 static bool
 fragment_set_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -3007,7 +3045,7 @@ fragment_set_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
-
+#endif
 
 static bool
 fragment_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -3072,6 +3110,7 @@ fragment_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return true;
 }
 
+#if 0
 static bool
 fragment_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -3238,7 +3277,9 @@ out:
 
 	return true;
 }
+#endif
 
+#if 0
 static bool
 fragment_set_property_innerText(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -3247,7 +3288,9 @@ fragment_set_property_innerText(JSContext *ctx, unsigned int argc, JS::Value *vp
 #endif
 	return fragment_set_property_textContent(ctx, argc, vp);
 }
+#endif
 
+#if 0
 static bool
 fragment_set_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -3311,7 +3354,9 @@ fragment_set_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+#endif
 
+#if 0
 static bool
 fragment_set_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -3480,6 +3525,7 @@ out:
 
 	return true;
 }
+#endif
 
 static bool
 fragment_set_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -3532,6 +3578,7 @@ fragment_set_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *
 	return true;
 }
 
+#if 0
 static bool
 fragment_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -3596,7 +3643,9 @@ fragment_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+#endif
 
+#if 0
 static bool
 fragment_set_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -3671,36 +3720,36 @@ fragment_set_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+#endif
 
-
-static bool fragment_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
+//static bool fragment_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool fragment_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool fragment_blur(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool fragment_click(JSContext *ctx, unsigned int argc, JS::Value *rval);
+//static bool fragment_blur(JSContext *ctx, unsigned int argc, JS::Value *rval);
+//static bool fragment_click(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool fragment_cloneNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool fragment_closest(JSContext *ctx, unsigned int argc, JS::Value *rval);
+//static bool fragment_closest(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool fragment_contains(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool fragment_dispatchEvent(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool fragment_focus(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool fragment_getAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool fragment_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool fragment_getBoundingClientRect(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool fragment_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool fragment_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool fragment_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *rval);
+//static bool fragment_dispatchEvent(JSContext *ctx, unsigned int argc, JS::Value *rval);
+//static bool fragment_focus(JSContext *ctx, unsigned int argc, JS::Value *rval);
+//static bool fragment_getAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
+//static bool fragment_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
+//static bool fragment_getBoundingClientRect(JSContext *ctx, unsigned int argc, JS::Value *rval);
+//static bool fragment_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *rval);
+//static bool fragment_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
+//static bool fragment_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool fragment_hasChildNodes(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool fragment_insertBefore(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool fragment_isEqualNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool fragment_isSameNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool fragment_matches(JSContext *ctx, unsigned int argc, JS::Value *rval);
+//static bool fragment_matches(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool fragment_querySelector(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool fragment_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool fragment_remove(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool fragment_removeAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
+//static bool fragment_removeAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool fragment_removeChild(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool fragment_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
+//static bool fragment_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool fragment_replaceWith(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool fragment_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
+//static bool fragment_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec fragment_funcs[] = {
 ////	{ "addEventListener",	fragment_addEventListener,	3 },
@@ -3981,6 +4030,7 @@ fragment_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	return true;
 }
 
+#if 0
 /* @fragment_funcs{"blur"} */
 static bool
 fragment_blur(JSContext *ctx, unsigned int argc, JS::Value *rval)
@@ -3992,7 +4042,9 @@ fragment_blur(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	 * selected.  So we do nothing for now. (That was easy.) */
 	return true;
 }
+#endif
 
+#if 0
 static bool
 fragment_click(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
@@ -4064,6 +4116,7 @@ fragment_click(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	return true;
 }
+#endif
 
 static bool
 fragment_cloneNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
@@ -4135,6 +4188,8 @@ isAncestor(dom_node *el, dom_node *node)
 	return false;
 }
 #endif
+
+#if 0
 static bool
 fragment_closest(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -4235,6 +4290,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 
 	return true;
 }
+#endif
 
 static bool
 fragment_contains(JSContext *ctx, unsigned int argc, JS::Value *rval)
@@ -4303,6 +4359,7 @@ fragment_contains(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 }
 
+#if 0
 static bool
 fragment_focus(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
@@ -4366,7 +4423,9 @@ fragment_focus(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	return true;
 }
+#endif
 
+#if 0
 static bool
 fragment_getAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
@@ -4428,7 +4487,9 @@ fragment_getAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	return true;
 }
+#endif
 
+#if 0
 static bool
 fragment_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
@@ -4489,7 +4550,9 @@ fragment_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	return true;
 }
+#endif
 
+#if 0
 static bool
 fragment_getBoundingClientRect(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
@@ -4523,7 +4586,9 @@ fragment_getBoundingClientRect(JSContext *ctx, unsigned int argc, JS::Value *rva
 
 	return true;
 }
+#endif
 
+#if 0
 static bool
 fragment_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -4573,7 +4638,9 @@ fragment_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+#endif
 
+#if 0
 static bool
 fragment_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
@@ -4635,7 +4702,9 @@ fragment_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	return true;
 }
+#endif
 
+#if 0
 static bool
 fragment_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
@@ -4676,6 +4745,7 @@ fragment_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	return true;
 }
+#endif
 
 static bool
 fragment_hasChildNodes(JSContext *ctx, unsigned int argc, JS::Value *rval)
@@ -4873,6 +4943,7 @@ fragment_isSameNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	return true;
 }
 
+#if 0
 static bool
 fragment_matches(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -4911,6 +4982,7 @@ fragment_matches(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	args.rval().setBoolean(res != NULL);
 	return true;
 }
+#endif
 
 static bool
 fragment_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -5065,6 +5137,7 @@ fragment_remove(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	return true;
 }
 
+#if 0
 static bool
 fragment_removeAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
@@ -5116,6 +5189,7 @@ fragment_removeAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	return true;
 }
+#endif
 
 static bool
 fragment_removeChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
@@ -5220,6 +5294,7 @@ fragment_replaceWith(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	return true;
 }
 
+#if 0
 static bool
 fragment_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
@@ -5301,6 +5376,7 @@ fragment_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	return true;
 }
+#endif
 
 JSObject *
 getDocumentFragment(JSContext *ctx, void *node)
