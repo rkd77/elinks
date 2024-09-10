@@ -39,6 +39,7 @@
 #include "ecmascript/spidermonkey/document.h"
 #include "ecmascript/spidermonkey/element.h"
 #include "ecmascript/spidermonkey/event.h"
+#include "ecmascript/spidermonkey/fragment.h"
 #include "ecmascript/spidermonkey/heartbeat.h"
 #include "ecmascript/spidermonkey/nodelist.h"
 #include "ecmascript/spidermonkey/nodelist2.h"
@@ -1626,7 +1627,7 @@ document_createDocumentFragment(JSContext *ctx, unsigned int argc, JS::Value *vp
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *obj = getElement(ctx, fragment);
+	JSObject *obj = getDocumentFragment(ctx, fragment);
 	args.rval().setObject(*obj);
 
 	return true;
