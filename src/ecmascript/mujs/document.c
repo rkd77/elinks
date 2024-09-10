@@ -36,6 +36,7 @@
 #include "ecmascript/mujs/event.h"
 #include "ecmascript/mujs/form.h"
 #include "ecmascript/mujs/forms.h"
+#include "ecmascript/mujs/fragment.h"
 #include "ecmascript/mujs/implementation.h"
 #include "ecmascript/mujs/location.h"
 #include "ecmascript/mujs/document.h"
@@ -1148,7 +1149,7 @@ mjs_document_createDocumentFragment(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_element(J, fragment);
+	mjs_push_fragment(J, fragment);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
