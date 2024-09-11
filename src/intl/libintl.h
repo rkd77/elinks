@@ -13,8 +13,6 @@ extern "C" {
 extern struct module gettext_module;
 
 #ifdef CONFIG_GETTEXT
-extern int _nl_msg_cat_cntr;
-
 #include <libintl.h>
 
 extern int current_charset;

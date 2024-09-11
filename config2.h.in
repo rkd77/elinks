@@ -545,6 +545,9 @@
 /* Define to 1 if you have the <net/if.h> header file. */
 #mesondefine HAVE_NET_IF_H
 
+/* Define to 1 if gettext has _nl_msg_cat_cntr */
+#mesondefine HAVE_NL_MSG_CAT_CNTR
+
 /* Define if you have off_t */
 #mesondefine HAVE_OFF_T
 

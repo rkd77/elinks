@@ -1117,6 +1117,16 @@ if compiler.compiles('int a; typeof(a) b;', name: 'typeof')
     conf_data.set('HAVE_TYPEOF', 1)
 endif
 
+if conf_data.get('CONFIG_GETTEXT') and conf_data.get('CONFIG_NLS')
+    code = '''#include <libintl.h>
+    extern int _nl_msg_cat_cntr;
+    void main() { _nl_msg_cat_cntr = 1; }
+    '''
+    if compiler.links(code, name: 'test')
+        conf_data.set('HAVE_NL_MSG_CAT_CNTR', 1)
+    endif
+endif
+
 if compiler.compiles('''#include <unistd.h>
 int func(void) { return sysconf(_SC_PAGE_SIZE); }
 ''', name: '_SC_PAGE_SIZE')
