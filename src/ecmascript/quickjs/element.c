@@ -3834,7 +3834,6 @@ js_element_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 	}
 }
 
-
 static JSClassDef js_element_class = {
 	"Element",
 	.finalizer = js_element_finalizer,
