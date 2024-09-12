@@ -125,15 +125,25 @@ static bool fragment_set_property_textContent(JSContext *ctx, unsigned int argc,
 //static bool fragment_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool fragment_set_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
-struct fragment_private {
-	dom_node *node;
+struct fragment_listener {
+	LIST_HEAD_EL(struct fragment_listener);
+	char *typ;
+	JS::Heap<JS::Value> *fun;
 };
 
-static std::map<void *, struct fragment_private *> map_privates;
+struct fragment_private {
+	LIST_OF(struct fragment_listener) listeners;
+	struct ecmascript_interpreter *interpreter;
+	JS::Heap<JSObject *> thisval;
+	dom_event_listener *listener;
+	dom_node *node;
+	int ref_count;
+};
+
+//static std::map<void *, struct fragment_private *> map_privates;
 
 static void fragment_finalize(JS::GCContext *op, JSObject *obj);
-
-//static void fragment_event_handler(dom_event *event, void *pw);
+static void fragment_event_handler(dom_event *event, void *pw);
 
 JSClassOps fragment_ops = {
 	nullptr,  // addProperty
@@ -209,16 +219,30 @@ static void fragment_finalize(JS::GCContext *op, JSObject *obj)
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(obj, 0);
 	struct fragment_private *el_private = JS::GetMaybePtrFromReservedSlot<struct fragment_private>(obj, 1);
 
+	if (el_private) {
+		if (--el_private->ref_count <= 0) {
+			//map_privates.erase(el);
+
+			if (el_private->listener) {
+				dom_event_listener_unref(el_private->listener);
+			}
+
+			struct fragment_listener *l;
+
+			foreach(l, el_private->listeners) {
+				mem_free_set(&l->typ, NULL);
+				delete (l->fun);
+			}
+			free_list(el_private->listeners);
+			mem_free(el_private);
+			JS::SetReservedSlot(obj, 1, JS::UndefinedValue());
+		}
+	}
+
 	if (el) {
 		dom_node_unref(el);
 		JS::SetReservedSlot(obj, 0, JS::UndefinedValue());
 	}
-
-	if (el_private) {
-		JS::SetReservedSlot(obj, 1, JS::UndefinedValue());
-		mem_free(el_private);
-	}
-
 }
 
 #if 0
@@ -3722,64 +3746,34 @@ fragment_set_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 #endif
 
-//static bool fragment_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool fragment_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool fragment_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval);
-//static bool fragment_blur(JSContext *ctx, unsigned int argc, JS::Value *rval);
-//static bool fragment_click(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool fragment_cloneNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
-//static bool fragment_closest(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool fragment_contains(JSContext *ctx, unsigned int argc, JS::Value *rval);
-//static bool fragment_dispatchEvent(JSContext *ctx, unsigned int argc, JS::Value *rval);
-//static bool fragment_focus(JSContext *ctx, unsigned int argc, JS::Value *rval);
-//static bool fragment_getAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
-//static bool fragment_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
-//static bool fragment_getBoundingClientRect(JSContext *ctx, unsigned int argc, JS::Value *rval);
-//static bool fragment_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *rval);
-//static bool fragment_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
-//static bool fragment_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool fragment_dispatchEvent(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool fragment_hasChildNodes(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool fragment_insertBefore(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool fragment_isEqualNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool fragment_isSameNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
-//static bool fragment_matches(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool fragment_querySelector(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool fragment_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool fragment_remove(JSContext *ctx, unsigned int argc, JS::Value *rval);
-//static bool fragment_removeAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool fragment_removeChild(JSContext *ctx, unsigned int argc, JS::Value *rval);
-//static bool fragment_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool fragment_replaceWith(JSContext *ctx, unsigned int argc, JS::Value *rval);
-//static bool fragment_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool fragment_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec fragment_funcs[] = {
-////	{ "addEventListener",	fragment_addEventListener,	3 },
+	{ "addEventListener",	fragment_addEventListener,	3 },
 	{ "appendChild",	fragment_appendChild,	1 },
-////	{ "blur",	fragment_blur,		0 },
-////	{ "click",	fragment_click,		0 },
 	{ "cloneNode",	fragment_cloneNode,	1 },
-////	{ "closest",	fragment_closest,	1 },
 	{ "contains",	fragment_contains,	1 },
-////	{ "dispatchEvent", fragment_dispatchEvent,	1 },
-////	{ "focus",	fragment_focus,		0 },
-////	{ "getAttribute",	fragment_getAttribute,	1 },
-////	{ "getAttributeNode",	fragment_getAttributeNode,	1 },
-////	{ "getBoundingClientRect",	fragment_getBoundingClientRect, 	0 },
-////	{ "getElementsByTagName",	fragment_getElementsByTagName,	1 },
-////	{ "hasAttribute",		fragment_hasAttribute,	1 },
-////	{ "hasAttributes",		fragment_hasAttributes,	0 },
+	{ "dispatchEvent", fragment_dispatchEvent,	1 },
 	{ "hasChildNodes",		fragment_hasChildNodes,	0 },
 	{ "insertBefore",		fragment_insertBefore,	2 },
 	{ "isEqualNode",		fragment_isEqualNode,	1 },
 	{ "isSameNode",			fragment_isSameNode,	1 },
-////	{ "matches",		fragment_matches,	1 },
 	{ "querySelector",		fragment_querySelector,	1 },
 	{ "querySelectorAll",		fragment_querySelectorAll,	1 },
-	{ "remove",		fragment_remove,	0 },
-////	{ "removeAttribute",	fragment_removeAttribute,	1 },
 	{ "removeChild",	fragment_removeChild,	1 },
-////	{ "removeEventListener",	fragment_removeEventListener,	3 },
-	{ "replaceWith",	fragment_replaceWith,	1 },
-////	{ "setAttribute",	fragment_setAttribute,	2 },
+	{ "removeEventListener",	fragment_removeEventListener,	3 },
 	{ NULL }
 };
 
@@ -3798,7 +3792,6 @@ el_add_child_fragment_common(xmlNode* child, xmlNode* node)
 }
 #endif
 
-#if 0
 static bool
 fragment_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
@@ -3838,7 +3831,7 @@ fragment_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 	char *method = jsval_to_string(ctx, args[0]);
 	JS::RootedValue fun(ctx, args[1]);
-	struct ele_listener *l;
+	struct fragment_listener *l;
 
 	foreach(l, el_private->listeners) {
 		if (strcmp(l->typ, method)) {
@@ -3850,7 +3843,7 @@ fragment_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			return true;
 		}
 	}
-	struct ele_listener *n = (struct ele_listener *)mem_calloc(1, sizeof(*n));
+	struct fragment_listener *n = (struct fragment_listener *)mem_calloc(1, sizeof(*n));
 
 	if (!n) {
 		args.rval().setUndefined();
@@ -3937,7 +3930,7 @@ fragment_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 	JS::RootedValue fun(ctx, args[1]);
 
-	struct ele_listener *l;
+	struct fragment_listener *l;
 
 	foreach(l, el_private->listeners) {
 		if (strcmp(l->typ, method)) {
@@ -3967,7 +3960,6 @@ fragment_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	args.rval().setUndefined();
 	return true;
 }
-#endif
 
 static bool
 fragment_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
@@ -4030,93 +4022,6 @@ fragment_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	return true;
 }
 
-#if 0
-/* @fragment_funcs{"blur"} */
-static bool
-fragment_blur(JSContext *ctx, unsigned int argc, JS::Value *rval)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	/* We are a text-mode browser and there *always* has to be something
-	 * selected.  So we do nothing for now. (That was easy.) */
-	return true;
-}
-#endif
-
-#if 0
-static bool
-fragment_click(JSContext *ctx, unsigned int argc, JS::Value *rval)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JS::Realm *comp = js::GetContextRealm(ctx);
-
-	if (!comp) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	JS::CallArgs args = CallArgsFromVp(argc, rval);
-	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-
-	if (!JS_InstanceOf(ctx, hobj, &fragment_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-	args.rval().setUndefined();
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct view_state *vs = interpreter->vs;
-
-	if (!vs) {
-		return true;
-	}
-
-	struct document_view *doc_view = vs->doc_view;
-
-	if (!doc_view) {
-		return true;
-	}
-
-	struct document *doc = doc_view->document;
-
-	if (!doc) {
-		return true;
-	}
-	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
-
-	if (!el) {
-		return true;
-	}
-	int offset = find_offset(doc->element_map_rev, el);
-
-	if (offset < 0) {
-		return true;
-	}
-
-	int linknum = get_link_number_by_offset(doc, offset);
-
-	if (linknum < 0) {
-		return true;
-	}
-	struct session *ses = doc_view->session;
-
-	jump_to_link_number(ses, doc_view, linknum);
-
-	if (enter(ses, doc_view, 0) == FRAME_EVENT_REFRESH) {
-		refresh_view(ses, doc_view, 0);
-	} else {
-		print_screen_status(ses);
-	}
-
-	return true;
-}
-#endif
 
 static bool
 fragment_cloneNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
@@ -4189,108 +4094,6 @@ isAncestor(dom_node *el, dom_node *node)
 }
 #endif
 
-#if 0
-static bool
-fragment_closest(JSContext *ctx, unsigned int argc, JS::Value *vp)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JS::CallArgs args = CallArgsFromVp(argc, vp);
-
-	if (argc != 1) {
-		args.rval().setBoolean(false);
-		return true;
-	}
-
-	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	if (!JS_InstanceOf(ctx, hobj, &fragment_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-	char *selector = jsval_to_string(ctx, args[0]);
-	if (!selector) {
-		args.rval().setNull();
-		return true;
-	}
-
-	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
-	void *res = NULL;
-
-	JS::Realm *comp = js::GetContextRealm(ctx);
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		args.rval().setNull();
-		return true;
-	}
-	dom_node *root = NULL; /* root element of document */
-	/* Get root element */
-	dom_exception exc = dom_document_get_document_element(document->dom, &root);
-
-	if (exc != DOM_NO_ERR || !root) {
-		args.rval().setNull();
-		return true;
-	}
-
-	if (el) {
-#ifdef ECMASCRIPT_DEBUG
-fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
-#endif
-		dom_node_ref(el);
-	}
-
-	while (el) {
-		res = el_match_selector(selector, el);
-
-		if (res) {
-			break;
-		}
-		if (el == root) {
-			break;
-		}
-		dom_node *node = NULL;
-#ifdef ECMASCRIPT_DEBUG
-fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
-#endif
-		exc = dom_node_get_parent_node(el, &node);
-		if (exc != DOM_NO_ERR || !node) {
-			break;
-		}
-#ifdef ECMASCRIPT_DEBUG
-fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
-#endif
-		dom_node_unref(el);
-		el = node;
-	}
-	mem_free(selector);
-#ifdef ECMASCRIPT_DEBUG
-fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
-#endif
-	dom_node_unref(root);
-
-	if (el) {
-#ifdef ECMASCRIPT_DEBUG
-fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
-#endif
-		dom_node_unref(el);
-	}
-
-	if (!res) {
-		args.rval().setNull();
-		return true;
-	}
-	JSObject *ret = getElement(ctx, res);
-	dom_node_unref(res);
-	args.rval().setObject(*ret);
-
-	return true;
-}
-#endif
 
 static bool
 fragment_contains(JSContext *ctx, unsigned int argc, JS::Value *rval)
@@ -4359,393 +4162,6 @@ fragment_contains(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 }
 
-#if 0
-static bool
-fragment_focus(JSContext *ctx, unsigned int argc, JS::Value *rval)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JS::Realm *comp = js::GetContextRealm(ctx);
-
-	if (!comp) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	JS::CallArgs args = CallArgsFromVp(argc, rval);
-	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-
-	if (!JS_InstanceOf(ctx, hobj, &fragment_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-	args.rval().setUndefined();
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct view_state *vs = interpreter->vs;
-
-	if (!vs) {
-		return true;
-	}
-
-	struct document_view *doc_view = vs->doc_view;
-
-	if (!doc_view) {
-		return true;
-	}
-
-	struct document *doc = doc_view->document;
-
-	if (!doc) {
-		return true;
-	}
-	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
-
-	if (!el) {
-		return true;
-	}
-	int offset = find_offset(doc->element_map_rev, el);
-
-	if (offset < 0) {
-		return true;
-	}
-
-	int linknum = get_link_number_by_offset(doc, offset);
-
-	if (linknum < 0) {
-		return true;
-	}
-	jump_to_link_number(doc_view->session, doc_view, linknum);
-
-	return true;
-}
-#endif
-
-#if 0
-static bool
-fragment_getAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JS::Realm *comp = js::GetContextRealm(ctx);
-
-	if (!comp || argc != 1) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	JS::CallArgs args = CallArgsFromVp(argc, rval);
-	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-
-	if (!JS_InstanceOf(ctx, hobj, &fragment_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
-	dom_exception exc;
-	dom_string *attr_name = NULL;
-	dom_string *attr_value = NULL;
-
-	if (!el) {
-		args.rval().setBoolean(false);
-		return true;
-	}
-	size_t len;
-	char *str = jsval_to_string(ctx, args[0]);
-
-	if (!str) {
-		args.rval().setNull();
-		return true;
-	}
-	len = strlen(str);
-	exc = dom_string_create((const uint8_t *)str, len, &attr_name);
-	mem_free(str);
-
-	if (exc != DOM_NO_ERR || !attr_name) {
-		args.rval().setNull();
-		return true;
-	}
-	exc = dom_element_get_attribute(el, attr_name, &attr_value);
-	dom_string_unref(attr_name);
-
-	if (exc != DOM_NO_ERR || !attr_value) {
-		args.rval().setNull();
-		return true;
-	}
-	args.rval().setString(JS_NewStringCopyZ(ctx, dom_string_data(attr_value)));
-	dom_string_unref(attr_value);
-
-	return true;
-}
-#endif
-
-#if 0
-static bool
-fragment_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JS::Realm *comp = js::GetContextRealm(ctx);
-
-	if (!comp || argc != 1) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	JS::CallArgs args = CallArgsFromVp(argc, rval);
-	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-
-	if (!JS_InstanceOf(ctx, hobj, &fragment_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
-	dom_exception exc;
-	dom_string *attr_name = NULL;
-	dom_attr *attr = NULL;
-
-	if (!el) {
-		args.rval().setUndefined();
-		return true;
-	}
-	size_t len;
-	char *str = jsval_to_string(ctx, args[0]);
-
-	if (!str) {
-		args.rval().setNull();
-		return true;
-	}
-	len = strlen(str);
-	exc = dom_string_create((const uint8_t *)str, len, &attr_name);
-	mem_free(str);
-
-	if (exc != DOM_NO_ERR || !attr_name) {
-		args.rval().setNull();
-		return true;
-	}
-	exc = dom_element_get_attribute_node(el, attr_name, &attr);
-	dom_string_unref(attr_name);
-
-	if (exc != DOM_NO_ERR || !attr) {
-		args.rval().setNull();
-		return true;
-	}
-	JSObject *obj = getAttr(ctx, attr);
-	args.rval().setObject(*obj);
-
-	return true;
-}
-#endif
-
-#if 0
-static bool
-fragment_getBoundingClientRect(JSContext *ctx, unsigned int argc, JS::Value *rval)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JS::Realm *comp = js::GetContextRealm(ctx);
-
-	if (!comp) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-	JS::CallArgs args = CallArgsFromVp(argc, rval);
-	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-
-	if (!JS_InstanceOf(ctx, hobj, &fragment_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-	JSObject *drect = getDomRect(ctx);
-
-	if (!drect) {
-		args.rval().setNull();
-		return true;
-	}
-	args.rval().setObject(*drect);
-
-	return true;
-}
-#endif
-
-#if 0
-static bool
-fragment_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JS::CallArgs args = CallArgsFromVp(argc, vp);
-	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-
-	if (argc != 1) {
-		args.rval().setBoolean(false);
-		return true;
-	}
-	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
-
-	if (!el) {
-		args.rval().setUndefined();
-		return true;
-	}
-	char *str = jsval_to_string(ctx, args[0]);
-	size_t len;
-
-	if (!str) {
-		return false;
-	}
-	len = strlen(str);
-	dom_nodelist *nlist = NULL;
-	dom_exception exc;
-	dom_string *tagname = NULL;
-
-	exc = dom_string_create((const uint8_t *)str, len, &tagname);
-	mem_free(str);
-
-	if (exc != DOM_NO_ERR || !tagname) {
-		args.rval().setNull();
-		return true;
-	}
-	exc = dom_element_get_elements_by_tag_name(el, tagname, &nlist);
-	dom_string_unref(tagname);
-
-	if (exc != DOM_NO_ERR || !nlist) {
-		args.rval().setNull();
-		return true;
-	}
-	JSObject *obj = getNodeList(ctx, nlist);
-	args.rval().setObject(*obj);
-
-	return true;
-}
-#endif
-
-#if 0
-static bool
-fragment_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JS::Realm *comp = js::GetContextRealm(ctx);
-
-	if (!comp || argc != 1) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	JS::CallArgs args = CallArgsFromVp(argc, rval);
-	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-
-	if (!JS_InstanceOf(ctx, hobj, &fragment_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
-
-	if (!el) {
-		args.rval().setBoolean(false);
-		return true;
-	}
-	size_t slen;
-	char *s = jsval_to_string(ctx, args[0]);
-
-	if (!s) {
-		args.rval().setBoolean(false);
-		return true;
-	}
-	slen = strlen(s);
-	dom_string *attr_name = NULL;
-	dom_exception exc;
-	bool res;
-	exc = dom_string_create((const uint8_t *)s, slen, &attr_name);
-	mem_free(s);
-
-	if (exc != DOM_NO_ERR) {
-		args.rval().setNull();
-		return true;
-	}
-
-	exc = dom_element_has_attribute(el, attr_name, &res);
-	dom_string_unref(attr_name);
-
-	if (exc != DOM_NO_ERR) {
-		args.rval().setNull();
-		return true;
-	}
-	args.rval().setBoolean(res);
-
-	return true;
-}
-#endif
-
-#if 0
-static bool
-fragment_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *rval)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JS::Realm *comp = js::GetContextRealm(ctx);
-
-	if (!comp || argc != 0) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	JS::CallArgs args = CallArgsFromVp(argc, rval);
-	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-
-	if (!JS_InstanceOf(ctx, hobj, &fragment_class, NULL)) {
-		args.rval().setBoolean(false);
-		return true;
-	}
-	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
-	dom_exception exc;
-	bool res;
-
-	if (!el) {
-		args.rval().setBoolean(false);
-		return true;
-	}
-	exc = dom_node_has_attributes(el, &res);
-
-	if (exc != DOM_NO_ERR) {
-		args.rval().setBoolean(false);
-		return true;
-	}
-	args.rval().setBoolean(res);
-
-	return true;
-}
-#endif
 
 static bool
 fragment_hasChildNodes(JSContext *ctx, unsigned int argc, JS::Value *rval)
@@ -4943,47 +4359,6 @@ fragment_isSameNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	return true;
 }
 
-#if 0
-static bool
-fragment_matches(JSContext *ctx, unsigned int argc, JS::Value *vp)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JS::CallArgs args = CallArgsFromVp(argc, vp);
-
-	if (argc != 1) {
-		args.rval().setBoolean(false);
-		return true;
-	}
-
-	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	if (!JS_InstanceOf(ctx, hobj, &fragment_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
-
-	if (!el) {
-		args.rval().setBoolean(false);
-		return true;
-	}
-	char *selector = jsval_to_string(ctx, args[0]);
-
-	if (!selector) {
-		args.rval().setBoolean(false);
-		return true;
-	}
-	void *res = el_match_selector(selector, el);
-	mem_free(selector);
-
-	args.rval().setBoolean(res != NULL);
-	return true;
-}
-#endif
-
 static bool
 fragment_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -5088,110 +4463,6 @@ fragment_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 static bool
-fragment_remove(JSContext *ctx, unsigned int argc, JS::Value *rval)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JS::Realm *comp = js::GetContextRealm(ctx);
-
-	if (!comp || argc != 0) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-	JS::CallArgs args = CallArgsFromVp(argc, rval);
-	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-
-	if (!JS_InstanceOf(ctx, hobj, &fragment_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-
-	args.rval().setUndefined();
-	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
-	dom_node *parent = NULL;
-	dom_exception exc;
-
-	if (!el) {
-		return true;
-	}
-	exc = dom_node_get_parent_node(el, &parent);
-
-	if (exc != DOM_NO_ERR || !parent) {
-		return true;
-	}
-	dom_node *res = NULL;
-	exc = dom_node_remove_child(parent, el, &res);
-	dom_node_unref(parent);
-
-	if (exc == DOM_NO_ERR) {
-		dom_node_unref(res);
-		interpreter->changed = 1;
-	}
-
-	return true;
-}
-
-#if 0
-static bool
-fragment_removeAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JS::Realm *comp = js::GetContextRealm(ctx);
-
-	if (!comp || argc != 1) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	JS::CallArgs args = CallArgsFromVp(argc, rval);
-	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-
-	if (!JS_InstanceOf(ctx, hobj, &fragment_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-	args.rval().setUndefined();
-
-	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
-	dom_exception exc;
-	dom_string *attr_name = NULL;
-
-	if (!el) {
-		return true;
-	}
-	size_t len;
-	char *str = jsval_to_string(ctx, args[0]);
-
-	if (!str) {
-		return true;
-	}
-	len = strlen(str);
-	exc = dom_string_create((const uint8_t *)str, len, &attr_name);
-	mem_free(str);
-
-	if (exc != DOM_NO_ERR || !attr_name) {
-		return true;
-	}
-	exc = dom_element_remove_attribute(el, attr_name);
-	dom_string_unref(attr_name);
-
-	return true;
-}
-#endif
-
-static bool
 fragment_removeChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -5245,139 +4516,6 @@ fragment_removeChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	return true;
 }
 
-static bool
-fragment_replaceWith(JSContext *ctx, unsigned int argc, JS::Value *rval)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JS::Realm *comp = js::GetContextRealm(ctx);
-
-	if (!comp || argc < 1) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-	JS::CallArgs args = CallArgsFromVp(argc, rval);
-	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-
-	if (!JS_InstanceOf(ctx, hobj, &fragment_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-// TODO
-#if 0
-	struct view_state *vs = interpreter->vs;
-	struct document_view *doc_view = vs->doc_view;
-	struct document *document = doc_view->document;
-
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
-
-	if (!el || !args[0].isObject()) {
-		args.rval().setUndefined();
-		return true;
-	}
-
-	JS::RootedObject replacement(ctx, &args[0].toObject());
-	xmlpp::Node *rep = JS::GetMaybePtrFromReservedSlot<xmlpp::Node>(replacement, 0);
-	auto n = xmlAddPrevSibling(el->cobj(), rep->cobj());
-	xmlpp::Node::create_wrapper(n);
-	xmlpp::Node::remove_node(el);
-	interpreter->changed = 1;
-	args.rval().setUndefined();
-	debug_dump_xhtml(document->dom);
-#endif
-	return true;
-}
-
-#if 0
-static bool
-fragment_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JS::Realm *comp = js::GetContextRealm(ctx);
-
-	if (!comp || argc != 2) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	JS::CallArgs args = CallArgsFromVp(argc, rval);
-	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct view_state *vs = interpreter->vs;
-	struct document_view *doc_view = vs->doc_view;
-	struct document *document = doc_view->document;
-
-	if (!JS_InstanceOf(ctx, hobj, &fragment_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-	args.rval().setUndefined();
-	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
-
-	if (!el) {
-		return true;
-	}
-	char *attr;
-	char *value;
-	size_t attr_len, value_len;
-	attr = jsval_to_string(ctx, args[0]);
-
-	if (!attr) {
-		return false;
-	}
-	value = jsval_to_string(ctx, args[1]);
-
-	if (!value) {
-		mem_free(attr);
-		return false;
-	}
-	attr_len = strlen(attr);
-	value_len = strlen(value);
-
-	dom_exception exc;
-	dom_string *attr_str = NULL, *value_str = NULL;
-
-	exc = dom_string_create((const uint8_t *)attr, attr_len, &attr_str);
-	mem_free(attr);
-
-	if (exc != DOM_NO_ERR || !attr_str) {
-		mem_free(value);
-		return false;
-	}
-	exc = dom_string_create((const uint8_t *)value, value_len, &value_str);
-	mem_free(value);
-	if (exc != DOM_NO_ERR) {
-		dom_string_unref(attr_str);
-		return false;
-	}
-
-	exc = dom_element_set_attribute(el,
-			attr_str, value_str);
-	dom_string_unref(attr_str);
-	dom_string_unref(value_str);
-	if (exc != DOM_NO_ERR) {
-		return true;
-	}
-	interpreter->changed = 1;
-	debug_dump_xhtml(document->dom);
-
-	return true;
-}
-#endif
-
 JSObject *
 getDocumentFragment(JSContext *ctx, void *node)
 {
@@ -5386,6 +4524,8 @@ getDocumentFragment(JSContext *ctx, void *node)
 	if (!el_private) {
 		return NULL;
 	}
+	init_list(el_private->listeners);
+	el_private->ref_count = 1;
 	el_private->node = (dom_node *)node;
 
 	JSObject *el = JS_NewObject(ctx, &fragment_class);
@@ -5394,6 +4534,10 @@ getDocumentFragment(JSContext *ctx, void *node)
 		mem_free(el_private);
 		return NULL;
 	}
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	el_private->interpreter = interpreter;
+
 	JS::RootedObject r_el(ctx, el);
 
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) fragment_props);
@@ -5402,6 +4546,7 @@ getDocumentFragment(JSContext *ctx, void *node)
 	JS::SetReservedSlot(el, 0, JS::PrivateValue(node));
 	JS::SetReservedSlot(el, 1, JS::PrivateValue(el_private));
 
+	el_private->thisval = r_el;
 	dom_node_ref((dom_node *)node);
 
 	return el;
@@ -5424,7 +4569,7 @@ check_fragment_event(void *interp, void *elem, const char *event_name, struct te
 	JS::RootedValue r_val(ctx);
 	interpreter->heartbeat = add_heartbeat(interpreter);
 
-	struct ele_listener *l;
+	struct fragment_listener *l;
 
 	foreach(l, el_private->listeners) {
 		if (strcmp(l->typ, event_name)) {
@@ -5451,7 +4596,6 @@ check_fragment_event(void *interp, void *elem, const char *event_name, struct te
 }
 #endif
 
-#if 0
 static bool
 fragment_dispatchEvent(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
@@ -5495,9 +4639,7 @@ fragment_dispatchEvent(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	return true;
 }
-#endif
 
-#if 0
 static void
 fragment_event_handler(dom_event *event, void *pw)
 {
@@ -5523,7 +4665,7 @@ fragment_event_handler(dom_event *event, void *pw)
 	JSObject *obj_ev = getEvent(ctx, event);
 	interpreter->heartbeat = add_heartbeat(interpreter);
 
-	struct ele_listener *l, *next;
+	struct fragment_listener *l, *next;
 
 	foreachsafe(l, next, el_private->listeners) {
 		if (strcmp(l->typ, dom_string_data(typ))) {
@@ -5540,4 +4682,3 @@ fragment_event_handler(dom_event *event, void *pw)
 	check_for_rerender(interpreter, dom_string_data(typ));
 	dom_string_unref(typ);
 }
-#endif
