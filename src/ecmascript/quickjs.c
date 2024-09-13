@@ -39,6 +39,7 @@
 #include "ecmascript/quickjs/mapa.h"
 #include "ecmascript/quickjs/message.h"
 #include "ecmascript/quickjs/navigator.h"
+#include "ecmascript/quickjs/node.h"
 #include "ecmascript/quickjs/screen.h"
 #include "ecmascript/quickjs/unibar.h"
 #include "ecmascript/quickjs/url.h"
@@ -277,6 +278,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	js_url_init(ctx);
 	js_urlSearchParams_init(ctx);
 	js_domparser_init(ctx);
+	js_node_init(ctx);
 
 	interpreter->document_obj = getDocument(ctx, document->dom);
 
