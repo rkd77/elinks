@@ -78,7 +78,7 @@ JSClassOps node_ops = {
 };
 
 JSClass node_class = {
-	"NULL",
+	"Node",
 	JSCLASS_HAS_RESERVED_SLOTS(0),
 	&node_ops
 };
