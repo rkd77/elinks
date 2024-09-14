@@ -77,6 +77,7 @@ took = [
 'fragment.getElementsByTagName.html',
 'keyboardEvent.html',
 'navigator.appCodeName.html',
+'node.nodeType.html',
 'nodelist.forEach.html',
 'window.setTimeout.html',
 'URL.html',
