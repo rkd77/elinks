@@ -43,6 +43,7 @@
 #include "ecmascript/mujs/mapa.h"
 #include "ecmascript/mujs/message.h"
 #include "ecmascript/mujs/navigator.h"
+#include "ecmascript/mujs/node.h"
 #include "ecmascript/mujs/screen.h"
 #include "ecmascript/mujs/unibar.h"
 #include "ecmascript/mujs/url.h"
@@ -154,6 +155,7 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	mjs_customEvent_init(J);
 	mjs_url_init(J);
 	mjs_domparser_init(J);
+	mjs_node_init(J);
 
 	mjs_push_document(J, document->dom);
 
