@@ -36,6 +36,7 @@
 #include "ecmascript/quickjs/element.h"
 #include "ecmascript/quickjs/nodelist.h"
 #include "ecmascript/quickjs/nodelist2.h"
+#include "ecmascript/quickjs/text.h"
 #include "ecmascript/quickjs/window.h"
 #include "session/session.h"
 #include "viewer/text/vs.h"
@@ -81,6 +82,12 @@ js_doc_getopaque(JSValueConst obj)
 	}
 
 	return res->node;
+}
+
+void *
+document_get_node(JSValueConst obj)
+{
+	return js_doc_getopaque(obj);
 }
 
 static void
@@ -1415,7 +1422,7 @@ js_document_createTextNode(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 	}
 	//dom_node_unref(doc);
 
-	return getElement(ctx, text_node);
+	return getText(ctx, text_node);
 }
 
 static JSValue

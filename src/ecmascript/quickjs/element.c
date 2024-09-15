@@ -30,14 +30,17 @@
 #include "ecmascript/quickjs/attributes.h"
 #include "ecmascript/quickjs/collection.h"
 #include "ecmascript/quickjs/dataset.h"
+#include "ecmascript/quickjs/document.h"
 #include "ecmascript/quickjs/domrect.h"
 #include "ecmascript/quickjs/element.h"
 #include "ecmascript/quickjs/event.h"
+#include "ecmascript/quickjs/fragment.h"
 #include "ecmascript/quickjs/heartbeat.h"
 #include "ecmascript/quickjs/keyboard.h"
 #include "ecmascript/quickjs/nodelist.h"
 #include "ecmascript/quickjs/nodelist2.h"
 #include "ecmascript/quickjs/style.h"
+#include "ecmascript/quickjs/text.h"
 #include "ecmascript/quickjs/tokenlist.h"
 #include "ecmascript/quickjs/window.h"
 #include "session/session.h"
@@ -87,6 +90,28 @@ js_getopaque(JSValueConst obj, JSClassID class_id)
 #endif
 
 	return res->node;
+}
+
+void *
+js_getopaque_any(JSValueConst obj)
+{
+	REF_JS(obj);
+	struct js_element_private *res = (struct js_element_private *)JS_GetOpaque(obj, js_element_class_id);
+
+	if (res) {
+		return res->node;
+	}
+	void *n = document_get_node(obj);
+
+	if (n) {
+		return n;
+	}
+	n = fragment_get_node(obj);
+
+	if (n) {
+		return n;
+	}
+	return text_get_node(obj);
 }
 
 static JSValue
@@ -1013,6 +1038,42 @@ js_element_get_property_nodeValue(JSContext *ctx, JSValueConst this_val)
 	//dom_node_unref(node);
 
 	RETURN_JS(r);
+}
+
+static JSValue
+js_element_set_property_nodeValue(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	dom_node *node = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	JSValue r;
+
+	if (!node) {
+		return JS_UNDEFINED;
+	}
+	size_t len;
+	const char *str = JS_ToCStringLen(ctx, &len, val);
+
+	if (!str) {
+		//dom_node_unref(el);
+		return JS_EXCEPTION;
+	}
+	dom_string *value = NULL;
+	dom_exception exc = dom_string_create((const uint8_t *)str, len, &value);
+	JS_FreeCString(ctx, str);
+
+	if (exc != DOM_NO_ERR || !value) {
+		//dom_node_unref(el);
+		return JS_UNDEFINED;
+	}
+	exc = dom_node_set_node_value(node, value);
+	dom_string_unref(value);
+	//dom_node_unref(el);
+
+	return JS_UNDEFINED;
 }
 
 static JSValue
@@ -2559,7 +2620,7 @@ js_element_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 		return JS_EXCEPTION;
 	}
 	//dom_node_ref(el);
-	dom_node *el2 = (dom_node *)(js_getopaque(argv[0], js_element_class_id));
+	dom_node *el2 = (dom_node *)js_getopaque_any(argv[0]);
 
 	if (!el2) {
 		//dom_node_unref(el);
@@ -3718,7 +3779,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("nextSibling",	js_element_get_property_nextSibling, NULL),
 	JS_CGETSET_DEF("nodeName",	js_element_get_property_nodeName, NULL), // Node
 	JS_CGETSET_DEF("nodeType",	js_element_get_property_nodeType, NULL), // Node
-	JS_CGETSET_DEF("nodeValue",	js_element_get_property_nodeValue, NULL), // Node
+	JS_CGETSET_DEF("nodeValue",	js_element_get_property_nodeValue, js_element_set_property_nodeValue), // Node
 //	JS_CGETSET_DEF("offsetHeight",	js_element_get_property_offsetHeight, NULL),
 //	JS_CGETSET_DEF("offsetLeft",	js_element_get_property_offsetLeft, NULL),
 	JS_CGETSET_DEF("offsetParent",	js_element_get_property_offsetParent, NULL),

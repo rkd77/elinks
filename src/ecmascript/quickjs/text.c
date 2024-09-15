@@ -1,4 +1,4 @@
-/* The QuickJS html DocumentFragment objects implementation. */
+/* The QuickJS html Text objects implementation. */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -33,12 +33,12 @@
 #include "ecmascript/quickjs/domrect.h"
 #include "ecmascript/quickjs/element.h"
 #include "ecmascript/quickjs/event.h"
-#include "ecmascript/quickjs/fragment.h"
 #include "ecmascript/quickjs/heartbeat.h"
 #include "ecmascript/quickjs/keyboard.h"
 #include "ecmascript/quickjs/nodelist.h"
 #include "ecmascript/quickjs/nodelist2.h"
 #include "ecmascript/quickjs/style.h"
+#include "ecmascript/quickjs/text.h"
 #include "ecmascript/quickjs/tokenlist.h"
 #include "ecmascript/quickjs/window.h"
 #include "session/session.h"
@@ -50,30 +50,31 @@
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
-JSClassID js_fragment_class_id;
+JSClassID js_text_class_id;
 
-struct fragment_listener {
-	LIST_HEAD_EL(struct fragment_listener);
+struct text_listener {
+	LIST_HEAD_EL(struct text_listener);
 	char *typ;
 	JSValue fun;
 };
 
-struct js_fragment_private {
-	LIST_OF(struct fragment_listener) listeners;
+struct js_text_private {
+	LIST_OF(struct text_listener) listeners;
 	struct ecmascript_interpreter *interpreter;
 	JSValue thisval;
 	dom_event_listener *listener;
 	void *node;
 };
 
-static void fragment_event_handler(dom_event *event, void *pw);
-static JSValue js_fragment_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSValue val);
+static void text_event_handler(dom_event *event, void *pw);
+static JSValue js_text_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSValue val);
 
 void *
-js_getopaque_fragment(JSValueConst obj, JSClassID class_id)
+js_getopaque_text(JSValueConst obj, JSClassID class_id)
 {
-	REF_JS(obj);
-	struct js_fragment_private *res = (struct js_fragment_private *)JS_GetOpaque(obj, class_id);
+	//REF_JS(obj);
+
+	struct js_text_private *res = (struct js_text_private *)JS_GetOpaque(obj, class_id);
 
 	if (!res) {
 		return NULL;
@@ -85,25 +86,24 @@ js_getopaque_fragment(JSValueConst obj, JSClassID class_id)
 		return NULL;
 	}
 #endif
-
 	return res->node;
 }
 
 void *
-fragment_get_node(JSValueConst obj)
+text_get_node(JSValueConst obj)
 {
-	return js_getopaque_fragment(obj, js_fragment_class_id);
+	return js_getopaque_text(obj, js_text_class_id);
 }
 
 static JSValue
-js_fragment_get_property_children(JSContext *ctx, JSValueConst this_val)
+js_text_get_property_children(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
 
-	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *el = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 
@@ -124,14 +124,14 @@ js_fragment_get_property_children(JSContext *ctx, JSValueConst this_val)
 }
 
 static JSValue
-js_fragment_get_property_childElementCount(JSContext *ctx, JSValueConst this_val)
+js_text_get_property_childElementCount(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
 
-	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *el = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 	uint32_t res = 0;
@@ -154,14 +154,14 @@ js_fragment_get_property_childElementCount(JSContext *ctx, JSValueConst this_val
 }
 
 static JSValue
-js_fragment_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
+js_text_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
 
-	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *el = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 
@@ -184,7 +184,7 @@ js_fragment_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 
 
 static JSValue
-js_fragment_get_property_firstChild(JSContext *ctx, JSValueConst this_val)
+js_text_get_property_firstChild(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -193,7 +193,7 @@ js_fragment_get_property_firstChild(JSContext *ctx, JSValueConst this_val)
 	dom_node *node = NULL;
 	dom_exception exc;
 
-	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *el = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -215,14 +215,14 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 }
 
 static JSValue
-js_fragment_get_property_firstElementChild(JSContext *ctx, JSValueConst this_val)
+js_text_get_property_firstElementChild(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
 
-	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *el = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 	uint32_t size = 0;
@@ -279,14 +279,14 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 
 
 static JSValue
-js_fragment_get_property_lastChild(JSContext *ctx, JSValueConst this_val)
+js_text_get_property_lastChild(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
 
-	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *el = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 	dom_node *last_child = NULL;
 	dom_exception exc;
 
@@ -310,14 +310,14 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 }
 
 static JSValue
-js_fragment_get_property_lastElementChild(JSContext *ctx, JSValueConst this_val)
+js_text_get_property_lastElementChild(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
 
-	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *el = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 	uint32_t size = 0;
@@ -373,14 +373,14 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 
 #if 0
 static JSValue
-js_fragment_get_property_nextElementSibling(JSContext *ctx, JSValueConst this_val)
+js_text_get_property_nextElementSibling(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
 
-	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *el = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 	dom_node *node;
 	dom_node *prev_next = NULL;
 
@@ -424,14 +424,14 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
 
 static JSValue
-js_fragment_get_property_nodeName(JSContext *ctx, JSValueConst this_val)
+js_text_get_property_nodeName(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
 
-	dom_node *node = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *node = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 	dom_string *name = NULL;
 	dom_exception exc;
 	JSValue r;
@@ -457,14 +457,14 @@ js_fragment_get_property_nodeName(JSContext *ctx, JSValueConst this_val)
 }
 
 static JSValue
-js_fragment_get_property_nodeType(JSContext *ctx, JSValueConst this_val)
+js_text_get_property_nodeType(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
 
-	dom_node *node = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *node = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 	dom_node_type type;
 	dom_exception exc;
 
@@ -484,14 +484,14 @@ js_fragment_get_property_nodeType(JSContext *ctx, JSValueConst this_val)
 }
 
 static JSValue
-js_fragment_get_property_nodeValue(JSContext *ctx, JSValueConst this_val)
+js_text_get_property_nodeValue(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
 
-	dom_node *node = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *node = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 	dom_string *content = NULL;
 	dom_exception exc;
 	JSValue r;
@@ -514,14 +514,50 @@ js_fragment_get_property_nodeValue(JSContext *ctx, JSValueConst this_val)
 }
 
 static JSValue
-js_fragment_get_property_nextSibling(JSContext *ctx, JSValueConst this_val)
+js_text_set_property_nodeValue(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
 
-	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *node = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
+	JSValue r;
+
+	if (!node) {
+		return JS_UNDEFINED;
+	}
+	size_t len;
+	const char *str = JS_ToCStringLen(ctx, &len, val);
+
+	if (!str) {
+		//dom_node_unref(el);
+		return JS_EXCEPTION;
+	}
+	dom_string *value = NULL;
+	dom_exception exc = dom_string_create((const uint8_t *)str, len, &value);
+	JS_FreeCString(ctx, str);
+
+	if (exc != DOM_NO_ERR || !value) {
+		//dom_node_unref(el);
+		return JS_UNDEFINED;
+	}
+	exc = dom_node_set_node_value(node, value);
+	dom_string_unref(value);
+	//dom_node_unref(el);
+
+	return JS_UNDEFINED;
+}
+
+static JSValue
+js_text_get_property_nextSibling(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	dom_node *el = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 	dom_node *node = NULL;
 	dom_exception exc;
 
@@ -548,7 +584,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 
 
 static JSValue
-js_fragment_get_property_ownerDocument(JSContext *ctx, JSValueConst this_val)
+js_text_get_property_ownerDocument(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -562,14 +598,14 @@ js_fragment_get_property_ownerDocument(JSContext *ctx, JSValueConst this_val)
 }
 
 static JSValue
-js_fragment_get_property_parentElement(JSContext *ctx, JSValueConst this_val)
+js_text_get_property_parentElement(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
 
-	dom_node *el = (dom_node *)js_getopaque_fragment(this_val, js_fragment_class_id);
+	dom_node *el = (dom_node *)js_getopaque_text(this_val, js_text_class_id);
 	dom_node *node = NULL;
 	dom_exception exc;
 
@@ -593,13 +629,13 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 }
 
 static JSValue
-js_fragment_get_property_parentNode(JSContext *ctx, JSValueConst this_val)
+js_text_get_property_parentNode(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
-	dom_node *el = (dom_node *)js_getopaque_fragment(this_val, js_fragment_class_id);
+	dom_node *el = (dom_node *)js_getopaque_text(this_val, js_text_class_id);
 	dom_node *node = NULL;
 	dom_exception exc;
 
@@ -624,14 +660,14 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 
 #if 0
 static JSValue
-js_fragment_get_property_previousElementSibling(JSContext *ctx, JSValueConst this_val)
+js_text_get_property_previousElementSibling(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
 
-	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *el = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 	dom_node *node;
 	dom_node *prev_prev = NULL;
 
@@ -676,13 +712,13 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
 
 static JSValue
-js_fragment_get_property_previousSibling(JSContext *ctx, JSValueConst this_val)
+js_text_get_property_previousSibling(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
-	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *el = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 	dom_node *node = NULL;
 	dom_exception exc;
 
@@ -706,16 +742,15 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	return rr;
 }
 
-
 static JSValue
-js_fragment_get_property_textContent(JSContext *ctx, JSValueConst this_val)
+js_text_get_property_textContent(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
 
-	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *el = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -735,9 +770,8 @@ js_fragment_get_property_textContent(JSContext *ctx, JSValueConst this_val)
 	RETURN_JS(ret);
 }
 
-
 static JSValue
-js_fragment_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSValue val)
+js_text_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -745,7 +779,7 @@ js_fragment_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSVa
 	REF_JS(this_val);
 	REF_JS(val);
 
-	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *el = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -790,14 +824,14 @@ el_add_child_element_common(xmlNode* child, xmlNode* node)
 #endif
 
 static JSValue
-js_fragment_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+js_text_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
 
-	struct js_fragment_private *el_private = (struct js_fragment_private *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	struct js_text_private *el_private = (struct js_text_private *)(js_getopaque_text(this_val, js_text_class_id));
 
 	if (!el_private) {
 		return JS_FALSE;
@@ -815,7 +849,7 @@ js_fragment_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	}
 	JSValue eve = argv[0];
 //	JS_DupValue(ctx, eve);
-	dom_event *event = (dom_event *)(js_getopaque_fragment(eve, js_event_class_id));
+	dom_event *event = (dom_event *)(js_getopaque_text(eve, js_event_class_id));
 
 	if (event) {
 		dom_event_ref(event);
@@ -832,14 +866,14 @@ js_fragment_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 }
 
 static JSValue
-js_fragment_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+js_text_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
 
-	struct js_fragment_private *el_private = (struct js_fragment_private *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	struct js_text_private *el_private = (struct js_text_private *)(js_getopaque_text(this_val, js_text_class_id));
 
 	if (!el_private) {
 		return JS_NULL;
@@ -871,7 +905,7 @@ js_fragment_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JS
 		return JS_EXCEPTION;
 	}
 	JSValue fun = argv[1];
-	struct fragment_listener *l;
+	struct text_listener *l;
 
 	foreach(l, el_private->listeners) {
 		if (strcmp(l->typ, method)) {
@@ -883,7 +917,7 @@ js_fragment_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JS
 			return JS_UNDEFINED;
 		}
 	}
-	struct fragment_listener *n = (struct fragment_listener *)mem_calloc(1, sizeof(*n));
+	struct text_listener *n = (struct text_listener *)mem_calloc(1, sizeof(*n));
 
 	if (!n) {
 		//dom_node_unref(el);
@@ -897,7 +931,7 @@ js_fragment_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JS
 	if (el_private->listener) {
 		dom_event_listener_ref(el_private->listener);
 	} else {
-		exc = dom_event_listener_create(fragment_event_handler, el_private, &el_private->listener);
+		exc = dom_event_listener_create(text_event_handler, el_private, &el_private->listener);
 
 		if (exc != DOM_NO_ERR || !el_private->listener) {
 			//dom_node_unref(el);
@@ -927,14 +961,14 @@ ex:
 }
 
 static JSValue
-js_fragment_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+js_text_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
 
-	struct js_fragment_private *el_private = (struct js_fragment_private *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	struct js_text_private *el_private = (struct js_text_private *)(js_getopaque_text(this_val, js_text_class_id));
 
 	if (!el_private) {
 		return JS_NULL;
@@ -967,7 +1001,7 @@ js_fragment_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc,
 	}
 	JSValue fun = argv[1];
 
-	struct fragment_listener *l;
+	struct text_listener *l;
 
 	foreach(l, el_private->listeners) {
 		if (strcmp(l->typ, method)) {
@@ -1001,7 +1035,7 @@ js_fragment_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc,
 }
 
 static JSValue
-js_fragment_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+js_text_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -1009,7 +1043,7 @@ js_fragment_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	REF_JS(this_val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *el = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 	dom_node *res = NULL;
 	dom_exception exc;
 
@@ -1021,7 +1055,7 @@ js_fragment_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 		return JS_EXCEPTION;
 	}
 	//dom_node_ref(el);
-	dom_node *el2 = (dom_node *)(js_getopaque_fragment(argv[0], js_fragment_class_id));
+	dom_node *el2 = (dom_node *)(js_getopaque_text(argv[0], js_text_class_id));
 
 	if (!el2) {
 		//dom_node_unref(el);
@@ -1046,7 +1080,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 }
 
 static JSValue
-js_fragment_cloneNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+js_text_cloneNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -1059,7 +1093,7 @@ js_fragment_cloneNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 #endif
 		return JS_NULL;
 	}
-	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *el = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -1115,7 +1149,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
 
 static JSValue
-js_fragment_contains(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+js_text_contains(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -1128,13 +1162,13 @@ js_fragment_contains(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 #endif
 		return JS_UNDEFINED;
 	}
-	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *el = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 
 	if (!el) {
 		return JS_FALSE;
 	}
 	//dom_node_ref(el);
-	dom_node *el2 = (dom_node *)(js_getopaque_fragment(argv[0], js_fragment_class_id));
+	dom_node *el2 = (dom_node *)(js_getopaque_text(argv[0], js_text_class_id));
 
 	if (!el2) {
 		//dom_node_unref(el);
@@ -1174,7 +1208,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 }
 
 static JSValue
-js_fragment_hasChildNodes(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+js_text_hasChildNodes(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -1187,7 +1221,7 @@ js_fragment_hasChildNodes(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 #endif
 		return JS_UNDEFINED;
 	}
-	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *el = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 	dom_exception exc;
 	bool res;
 
@@ -1207,7 +1241,7 @@ js_fragment_hasChildNodes(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 }
 
 static JSValue
-js_fragment_insertBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+js_text_insertBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -1221,7 +1255,7 @@ js_fragment_insertBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 		return JS_UNDEFINED;
 	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *el = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -1231,14 +1265,14 @@ js_fragment_insertBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 	JSValue next_sibling1 = argv[1];
 	JSValue child1 = argv[0];
 
-	dom_node *next_sibling = (dom_node *)(js_getopaque_fragment(next_sibling1, js_fragment_class_id));
+	dom_node *next_sibling = (dom_node *)(js_getopaque_text(next_sibling1, js_text_class_id));
 
 	if (!next_sibling) {
 		//dom_node_unref(el);
 		return JS_NULL;
 	}
 
-	dom_node *child = (dom_node *)(js_getopaque_fragment(child1, js_fragment_class_id));
+	dom_node *child = (dom_node *)(js_getopaque_text(child1, js_text_class_id));
 
 	dom_exception err;
 	dom_node *spare;
@@ -1255,7 +1289,7 @@ js_fragment_insertBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 }
 
 static JSValue
-js_fragment_isEqualNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+js_text_isEqualNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -1268,7 +1302,7 @@ js_fragment_isEqualNode(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 #endif
 		return JS_UNDEFINED;
 	}
-	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *el = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 
 	if (!el) {
 		return JS_FALSE;
@@ -1276,7 +1310,7 @@ js_fragment_isEqualNode(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	//dom_node_ref(el);
 
 	JSValue node = argv[0];
-	dom_node *el2 = (dom_node *)(js_getopaque_fragment(node, js_fragment_class_id));
+	dom_node *el2 = (dom_node *)(js_getopaque_text(node, js_text_class_id));
 
 	struct string first;
 	struct string second;
@@ -1304,7 +1338,7 @@ js_fragment_isEqualNode(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 }
 
 static JSValue
-js_fragment_isSameNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+js_text_isSameNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -1317,14 +1351,14 @@ js_fragment_isSameNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 #endif
 		return JS_UNDEFINED;
 	}
-	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *el = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 
 	if (!el) {
 		return JS_FALSE;
 	}
 	//dom_node_ref(el);
 	JSValue node = argv[0];
-	dom_node *el2 = (dom_node *)(js_getopaque_fragment(node, js_fragment_class_id));
+	dom_node *el2 = (dom_node *)(js_getopaque_text(node, js_text_class_id));
 	bool res = (el == el2);
 	//dom_node_unref(el);
 
@@ -1332,102 +1366,7 @@ js_fragment_isSameNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 }
 
 static JSValue
-js_fragment_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	REF_JS(this_val);
-
-	if (argc != 1) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return JS_UNDEFINED;
-	}
-	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
-
-	if (!el) {
-		return JS_NULL;
-	}
-	//dom_node_ref(el);
-	size_t len;
-	const char *selector = JS_ToCStringLen(ctx, &len, argv[0]);
-
-	if (!selector) {
-		//dom_node_unref(el);
-		return JS_NULL;
-	}
-	void *ret = walk_tree_query(el, selector, 0);
-	JS_FreeCString(ctx, selector);
-
-	if (!ret) {
-		//dom_node_unref(el);
-		return JS_NULL;
-	}
-	//dom_node_unref(el);
-	JSValue rr = getElement(ctx, ret);
-#ifdef ECMASCRIPT_DEBUG
-fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
-#endif
-	dom_node_unref((dom_node *)ret);
-
-	return rr;
-}
-
-static JSValue
-js_fragment_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	REF_JS(this_val);
-
-	if (argc != 1) {
-		return JS_FALSE;
-	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		return JS_NULL;
-	}
-	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
-
-	if (!el) {
-		return JS_NULL;
-	}
-	//dom_node_ref(el);
-
-	size_t len;
-	const char *selector = JS_ToCStringLen(ctx, &len, argv[0]);
-
-	if (!selector) {
-		//dom_node_unref(el);
-		return JS_NULL;
-	}
-	LIST_OF(struct selector_node) *result_list = (LIST_OF(struct selector_node) *)mem_calloc(1, sizeof(*result_list));
-
-	if (!result_list) {
-		JS_FreeCString(ctx, selector);
-		//dom_node_unref(el);
-		return JS_NULL;
-	}
-	init_list(*result_list);
-	walk_tree_query_append(el, selector, 0, result_list);
-	JS_FreeCString(ctx, selector);
-	//dom_node_unref(el);
-
-	JSValue rr = getNodeList2(ctx, result_list);
-	free_list(*result_list);
-	mem_free(result_list);
-
-	return rr;
-}
-
-static JSValue
-js_fragment_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+js_text_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -1441,14 +1380,14 @@ js_fragment_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 		return JS_UNDEFINED;
 	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	dom_node *el = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 
 	if (!el || !JS_IsObject(argv[0])) {
 		return JS_NULL;
 	}
 	//dom_node_ref(el);
 	JSValue node = argv[0];
-	dom_node *el2 = (dom_node *)(js_getopaque_fragment(node, js_fragment_class_id));
+	dom_node *el2 = (dom_node *)(js_getopaque_text(node, js_text_class_id));
 	dom_exception exc;
 	dom_node *spare;
 	exc = dom_node_remove_child(el, el2, &spare);
@@ -1466,64 +1405,61 @@ js_fragment_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 
 
 static JSValue
-js_fragment_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+js_text_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
 
-	return JS_NewString(ctx, "[element object]");
+	return JS_NewString(ctx, "[text object]");
 }
 
-static const JSCFunctionListEntry js_fragment_proto_funcs[] = {
-	JS_CGETSET_DEF("children",	js_fragment_get_property_children, NULL),
-	JS_CGETSET_DEF("childElementCount",	js_fragment_get_property_childElementCount, NULL),
-	JS_CGETSET_DEF("childNodes",	js_fragment_get_property_childNodes, NULL),
-	JS_CGETSET_DEF("firstChild",	js_fragment_get_property_firstChild, NULL),
-	JS_CGETSET_DEF("firstElementChild",	js_fragment_get_property_firstElementChild, NULL),
-	JS_CGETSET_DEF("lastChild",	js_fragment_get_property_lastChild, NULL),
-	JS_CGETSET_DEF("lastElementChild",	js_fragment_get_property_lastElementChild, NULL),
-	JS_CGETSET_DEF("nextSibling",	js_fragment_get_property_nextSibling, NULL),
-	JS_CGETSET_DEF("nodeName",	js_fragment_get_property_nodeName, NULL), // Node
-	JS_CGETSET_DEF("nodeType",	js_fragment_get_property_nodeType, NULL), // Node
-	JS_CGETSET_DEF("nodeValue",	js_fragment_get_property_nodeValue, NULL), // Node
-	JS_CGETSET_DEF("ownerDocument",	js_fragment_get_property_ownerDocument, NULL), // Node
-	JS_CGETSET_DEF("parentElement",	js_fragment_get_property_parentElement, NULL), // Node
-	JS_CGETSET_DEF("parentNode",	js_fragment_get_property_parentNode, NULL), // Node
-////	JS_CGETSET_DEF("previousElementSibling",	js_fragment_get_property_previousElementSibling, NULL),
-	JS_CGETSET_DEF("previousSibling",	js_fragment_get_property_previousSibling, NULL), // Node
-	JS_CGETSET_DEF("textContent",	js_fragment_get_property_textContent, js_fragment_set_property_textContent), // Node
+static const JSCFunctionListEntry js_text_proto_funcs[] = {
+	JS_CGETSET_DEF("children",	js_text_get_property_children, NULL),
+	JS_CGETSET_DEF("childElementCount",	js_text_get_property_childElementCount, NULL),
+	JS_CGETSET_DEF("childNodes",	js_text_get_property_childNodes, NULL),
+	JS_CGETSET_DEF("firstChild",	js_text_get_property_firstChild, NULL),
+	JS_CGETSET_DEF("firstElementChild",	js_text_get_property_firstElementChild, NULL),
+	JS_CGETSET_DEF("lastChild",	js_text_get_property_lastChild, NULL),
+	JS_CGETSET_DEF("lastElementChild",	js_text_get_property_lastElementChild, NULL),
+	JS_CGETSET_DEF("nextSibling",	js_text_get_property_nextSibling, NULL),
+	JS_CGETSET_DEF("nodeName",	js_text_get_property_nodeName, NULL), // Node
+	JS_CGETSET_DEF("nodeType",	js_text_get_property_nodeType, NULL), // Node
+	JS_CGETSET_DEF("nodeValue",	js_text_get_property_nodeValue, js_text_set_property_nodeValue), // Node
+	JS_CGETSET_DEF("ownerDocument",	js_text_get_property_ownerDocument, NULL), // Node
+	JS_CGETSET_DEF("parentElement",	js_text_get_property_parentElement, NULL), // Node
+	JS_CGETSET_DEF("parentNode",	js_text_get_property_parentNode, NULL), // Node
+////	JS_CGETSET_DEF("previousElementSibling",	js_text_get_property_previousElementSibling, NULL),
+	JS_CGETSET_DEF("previousSibling",	js_text_get_property_previousSibling, NULL), // Node
+	JS_CGETSET_DEF("textContent",	js_text_get_property_textContent, js_text_set_property_textContent), // Node
 
-	JS_CFUNC_DEF("addEventListener",	3, js_fragment_addEventListener),
-	JS_CFUNC_DEF("appendChild",	1, js_fragment_appendChild), // Node
-	JS_CFUNC_DEF("cloneNode",	1, js_fragment_cloneNode), // Node
-	JS_CFUNC_DEF("contains",	1, js_fragment_contains), // Node
-	JS_CFUNC_DEF("dispatchEvent",	1, js_fragment_dispatchEvent),
-	JS_CFUNC_DEF("hasChildNodes",	0,	js_fragment_hasChildNodes), // Node
-	JS_CFUNC_DEF("insertBefore",	2,	js_fragment_insertBefore), // Node
-	JS_CFUNC_DEF("isEqualNode",	1, js_fragment_isEqualNode), // Node
-	JS_CFUNC_DEF("isSameNode",	1,		js_fragment_isSameNode), // Node
-	JS_CFUNC_DEF("querySelector",1,		js_fragment_querySelector),
-	JS_CFUNC_DEF("querySelectorAll",1,		js_fragment_querySelectorAll),
-	JS_CFUNC_DEF("removeChild",1,	js_fragment_removeChild), // Node
-	JS_CFUNC_DEF("removeEventListener",	3, js_fragment_removeEventListener),
-	JS_CFUNC_DEF("toString", 0, js_fragment_toString)
+	JS_CFUNC_DEF("addEventListener",	3, js_text_addEventListener),
+	JS_CFUNC_DEF("appendChild",	1, js_text_appendChild), // Node
+	JS_CFUNC_DEF("cloneNode",	1, js_text_cloneNode), // Node
+	JS_CFUNC_DEF("contains",	1, js_text_contains), // Node
+	JS_CFUNC_DEF("dispatchEvent",	1, js_text_dispatchEvent),
+	JS_CFUNC_DEF("hasChildNodes",	0,	js_text_hasChildNodes), // Node
+	JS_CFUNC_DEF("insertBefore",	2,	js_text_insertBefore), // Node
+	JS_CFUNC_DEF("isEqualNode",	1, js_text_isEqualNode), // Node
+	JS_CFUNC_DEF("isSameNode",	1,		js_text_isSameNode), // Node
+	JS_CFUNC_DEF("removeChild",1,	js_text_removeChild), // Node
+	JS_CFUNC_DEF("removeEventListener",	3, js_text_removeEventListener),
+	JS_CFUNC_DEF("toString", 0, js_text_toString)
 };
 
-
 static
-void js_fragment_finalizer(JSRuntime *rt, JSValue val)
+void js_text_finalizer(JSRuntime *rt, JSValue val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(val);
 
-	struct js_fragment_private *el_private = (struct js_fragment_private *)JS_GetOpaque(val, js_fragment_class_id);
+	struct js_text_private *el_private = (struct js_text_private *)JS_GetOpaque(val, js_text_class_id);
 
 	if (el_private) {
-		struct fragment_listener *l;
+		struct text_listener *l;
 		dom_node *el = (dom_node *)el_private->node;
 
 		if (el_private->listener) {
@@ -1531,9 +1467,6 @@ void js_fragment_finalizer(JSRuntime *rt, JSValue val)
 		}
 
 		if (el) {
-//			void *old_node_data = NULL;
-//			dom_node_set_user_data(el, corestring_dom___ns_key_html_content_data, NULL, js_html_document_user_data_handler,
-//				(void *) &old_node_data);
 
 			if (el->refcnt > 0) {
 #ifdef ECMASCRIPT_DEBUG
@@ -1555,19 +1488,19 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 }
 
 static void
-js_fragment_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
+js_text_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(val);
 
-	struct js_fragment_private *el_private = (struct js_fragment_private *)JS_GetOpaque(val, js_fragment_class_id);
+	struct js_text_private *el_private = (struct js_text_private *)JS_GetOpaque(val, js_text_class_id);
 
 	if (el_private) {
 		JS_MarkValue(rt, el_private->thisval, mark_func);
 
-		struct fragment_listener *l;
+		struct text_listener *l;
 
 		foreach(l, el_private->listeners) {
 			JS_MarkValue(rt, l->fun, mark_func);
@@ -1575,20 +1508,20 @@ js_fragment_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 	}
 }
 
-static JSClassDef js_fragment_class = {
-	"DocumentFragment",
-	.finalizer = js_fragment_finalizer,
-	.gc_mark = js_fragment_mark,
+static JSClassDef js_text_class = {
+	"Text",
+	.finalizer = js_text_finalizer,
+	.gc_mark = js_text_mark,
 };
 
 int
-js_fragment_init(JSContext *ctx)
+js_text_init(JSContext *ctx)
 {
 	JSValue element_proto;
 
 	/* create the element class */
-	JS_NewClassID(&js_fragment_class_id);
-	JS_NewClass(JS_GetRuntime(ctx), js_fragment_class_id, &js_fragment_class);
+	JS_NewClassID(&js_text_class_id);
+	JS_NewClass(JS_GetRuntime(ctx), js_text_class_id, &js_text_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);
 	REF_JS(global_obj);
@@ -1596,9 +1529,9 @@ js_fragment_init(JSContext *ctx)
 	element_proto = JS_NewObject(ctx);
 	REF_JS(element_proto);
 
-	JS_SetPropertyFunctionList(ctx, element_proto, js_fragment_proto_funcs, countof(js_fragment_proto_funcs));
-	JS_SetClassProto(ctx, js_fragment_class_id, element_proto);
-	JS_SetPropertyStr(ctx, global_obj, "DocumentFragment", JS_DupValue(ctx, element_proto));
+	JS_SetPropertyFunctionList(ctx, element_proto, js_text_proto_funcs, countof(js_text_proto_funcs));
+	JS_SetClassProto(ctx, js_text_class_id, element_proto);
+	JS_SetPropertyStr(ctx, global_obj, "Text", JS_DupValue(ctx, element_proto));
 
 	JS_FreeValue(ctx, global_obj);
 
@@ -1606,44 +1539,43 @@ js_fragment_init(JSContext *ctx)
 }
 
 JSValue
-getDocumentFragment(JSContext *ctx, void *node)
+getText(JSContext *ctx, void *node)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct js_fragment_private *el_private = (struct js_fragment_private *)mem_calloc(1, sizeof(*el_private));
+	struct js_text_private *el_private = (struct js_text_private *)mem_calloc(1, sizeof(*el_private));
 
 	if (!el_private) {
 		return JS_NULL;
 	}
-	init_list(el_private->listeners);
 	el_private->node = node;
+	init_list(el_private->listeners);
 
-	JS_NewClassID(&js_fragment_class_id);
-	JS_NewClass(JS_GetRuntime(ctx), js_fragment_class_id, &js_fragment_class);
+	JS_NewClassID(&js_text_class_id);
+	JS_NewClass(JS_GetRuntime(ctx), js_text_class_id, &js_text_class);
+	JSValue text_obj = JS_NewObjectClass(ctx, js_text_class_id);
+	REF_JS(text_obj);
 
-	JSValue fragment_obj = JS_NewObjectClass(ctx, js_fragment_class_id);
-	REF_JS(fragment_obj);
-
-	JS_SetPropertyFunctionList(ctx, fragment_obj, js_fragment_proto_funcs, countof(js_fragment_proto_funcs));
-	JS_SetClassProto(ctx, js_fragment_class_id, fragment_obj);
+	JS_SetPropertyFunctionList(ctx, text_obj, js_text_proto_funcs, countof(js_text_proto_funcs));
+	JS_SetClassProto(ctx, js_text_class_id, text_obj);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
 	dom_node_ref((dom_node *)node);
-	JS_SetOpaque(fragment_obj, el_private);
+	JS_SetOpaque(text_obj, el_private);
 
-	JSValue rr = JS_DupValue(ctx, fragment_obj);
+	JSValue rr = JS_DupValue(ctx, text_obj);
 	RETURN_JS(rr);
 }
 
 static void
-fragment_event_handler(dom_event *event, void *pw)
+text_event_handler(dom_event *event, void *pw)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct js_fragment_private *el_private = (struct js_fragment_private *)pw;
+	struct js_text_private *el_private = (struct js_text_private *)pw;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)el_private->interpreter;
 	JSContext *ctx = (JSContext *)interpreter->backend_data;
 	//dom_node *el = (dom_node *)el_private->node;
@@ -1662,7 +1594,7 @@ fragment_event_handler(dom_event *event, void *pw)
 	}
 //	interpreter->heartbeat = add_heartbeat(interpreter);
 
-	struct fragment_listener *l, *next;
+	struct text_listener *l, *next;
 
 	foreachsafe(l, next, el_private->listeners) {
 		if (strcmp(l->typ, dom_string_data(typ))) {
