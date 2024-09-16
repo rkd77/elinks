@@ -43,6 +43,7 @@
 #include "ecmascript/spidermonkey/heartbeat.h"
 #include "ecmascript/spidermonkey/nodelist.h"
 #include "ecmascript/spidermonkey/nodelist2.h"
+#include "ecmascript/spidermonkey/text.h"
 #include "ecmascript/spidermonkey/util.h"
 #include "ecmascript/spidermonkey/window.h"
 #include "intl/libintl.h"
@@ -1834,7 +1835,7 @@ document_createTextNode(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *obj = getElement(ctx, text_node);
+	JSObject *obj = getText(ctx, text_node);
 	args.rval().setObject(*obj);
 
 	return true;
