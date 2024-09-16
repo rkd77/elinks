@@ -43,6 +43,7 @@
 #include "ecmascript/mujs/element.h"
 #include "ecmascript/mujs/nodelist.h"
 #include "ecmascript/mujs/nodelist2.h"
+#include "ecmascript/mujs/text.h"
 #include "ecmascript/mujs/window.h"
 #include "intl/libintl.h"
 #include "main/select.h"
@@ -1221,7 +1222,7 @@ mjs_document_createTextNode(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_element(J, text_node);
+	mjs_push_text(J, text_node);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif

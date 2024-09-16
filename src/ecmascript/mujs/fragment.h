@@ -7,6 +7,7 @@
 extern "C" {
 #endif
 
+void *mjs_getprivate_fragment(js_State *J, int idx);
 void mjs_push_fragment(js_State *J, void *node);
 
 #ifdef __cplusplus

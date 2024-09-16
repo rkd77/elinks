@@ -40,10 +40,12 @@
 #include "ecmascript/mujs/domrect.h"
 #include "ecmascript/mujs/element.h"
 #include "ecmascript/mujs/event.h"
+#include "ecmascript/mujs/fragment.h"
 #include "ecmascript/mujs/keyboard.h"
 #include "ecmascript/mujs/nodelist.h"
 #include "ecmascript/mujs/nodelist2.h"
 #include "ecmascript/mujs/style.h"
+#include "ecmascript/mujs/text.h"
 #include "ecmascript/mujs/tokenlist.h"
 #include "ecmascript/mujs/window.h"
 #include "intl/libintl.h"
@@ -95,6 +97,24 @@ mjs_getprivate(js_State *J, int idx)
 	}
 
 	return priv->node;
+}
+
+void *
+mjs_getprivate_any(js_State *J, int idx)
+{
+	if (js_isuserdata(J, idx, "element")) {
+		return mjs_getprivate(J, idx);
+	}
+
+	if (js_isuserdata(J, idx, "fragment")) {
+		return mjs_getprivate_fragment(J, idx);
+	}
+
+	if (js_isuserdata(J, idx, "text")) {
+		return mjs_getprivate_text(J, idx);
+	}
+
+	return NULL;
 }
 
 static void
@@ -2325,7 +2345,7 @@ mjs_element_appendChild(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	dom_node *el2 = (dom_node *)(mjs_getprivate(J, 1));
+	dom_node *el2 = (dom_node *)(mjs_getprivate_any(J, 1));
 	exc = dom_node_append_child(el, el2, &res);
 
 	if (exc == DOM_NO_ERR && res) {
@@ -2877,24 +2897,21 @@ mjs_element_insertBefore(js_State *J)
 	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
 
 	if (!el) {
-		js_pushundefined(J);
+		js_error(J, "error");
 		return;
 	}
-	dom_node *next_sibling = (dom_node *)(mjs_getprivate(J, 2));
+	dom_node *next_sibling = (dom_node *)(mjs_getprivate_any(J, 2));
+	dom_node *child = (dom_node *)(mjs_getprivate_any(J, 1));
 
-	if (!next_sibling) {
-		js_pushnull(J);
+	if (!child) {
+		js_error(J, "error");
 		return;
 	}
+	dom_node *spare = NULL;
+	dom_exception err = dom_node_insert_before(el, child, next_sibling, &spare);
 
-	dom_node *child = (dom_node *)(mjs_getprivate(J, 1));
-
-	dom_exception err;
-	dom_node *spare;
-
-	err = dom_node_insert_before(el, child, next_sibling, &spare);
-	if (err != DOM_NO_ERR) {
-		js_pushundefined(J);
+	if (err != DOM_NO_ERR || !spare) {
+		js_error(J, "error");
 		return;
 	}
 	interpreter->changed = 1;
