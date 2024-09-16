@@ -1947,34 +1947,34 @@ fragment_insertBefore(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	if (!JS_InstanceOf(ctx, hobj, &fragment_class, NULL)) {
-		args.rval().setBoolean(false);
-		return true;
+		return false;
 	}
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
 	if (!el) {
-		args.rval().setUndefined();
-		return true;
+		return false;
 	}
-	JS::RootedObject next_sibling1(ctx, &args[1].toObject());
-	JS::RootedObject child1(ctx, &args[0].toObject());
+	dom_node *next_sibling = NULL;
+	dom_node *child = NULL;
 
-	dom_node *next_sibling = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(next_sibling1, 0);
-
-	if (!next_sibling) {
-		args.rval().setNull();
-		return true;
+	if (!args[1].isNull()) {
+		JS::RootedObject next_sibling1(ctx, &args[1].toObject());
+		next_sibling = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(next_sibling1, 0);
 	}
 
-	dom_node *child = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(child1, 0);
+	if (!args[0].isNull()) {
+		JS::RootedObject child1(ctx, &args[0].toObject());
+		child = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(child1, 0);
+	}
 
-	dom_exception err;
-	dom_node *spare;
+	if (!child) {
+		return false;
+	}
+	dom_node *spare = NULL;
+	dom_exception err = dom_node_insert_before(el, child, next_sibling, &spare);
 
-	err = dom_node_insert_before(el, child, next_sibling, &spare);
-	if (err != DOM_NO_ERR) {
-		args.rval().setUndefined();
-		return true;
+	if (err != DOM_NO_ERR || !spare) {
+		return false;
 	}
 	JSObject *obj = getElement(ctx, spare);
 	dom_node_unref(spare);
