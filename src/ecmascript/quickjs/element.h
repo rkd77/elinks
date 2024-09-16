@@ -11,7 +11,7 @@ struct term_event;
 
 extern JSClassID js_element_class_id;
 void *js_getopaque(JSValueConst obj, JSClassID class_id);
-
+void *js_getopaque_any(JSValueConst obj);
 
 JSValue getElement(JSContext *ctx, void *node);
 
