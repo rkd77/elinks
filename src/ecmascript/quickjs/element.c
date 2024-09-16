@@ -3283,34 +3283,43 @@ js_element_insertBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
-		return JS_UNDEFINED;
+		return JS_EXCEPTION;
 	}
 	//dom_node_ref(el);
 
 	JSValue next_sibling1 = argv[1];
 	JSValue child1 = argv[0];
 
-	dom_node *next_sibling = (dom_node *)(js_getopaque(next_sibling1, js_element_class_id));
+	dom_node *next_sibling = NULL;
+	dom_node *child = NULL;
 
-	if (!next_sibling) {
-		//dom_node_unref(el);
-		return JS_NULL;
+	if (!JS_IsNull(next_sibling1)) {
+		next_sibling = (dom_node *)(js_getopaque_any(next_sibling1));
 	}
 
-	dom_node *child = (dom_node *)(js_getopaque(child1, js_element_class_id));
+	if (!JS_IsNull(child1)) {
+		child = (dom_node *)(js_getopaque_any(child1));
+	}
+
+	if (!child) {
+		return JS_EXCEPTION;
+	}
 
 	dom_exception err;
-	dom_node *spare;
+	dom_node *spare = NULL;
 
 	err = dom_node_insert_before(el, child, next_sibling, &spare);
-	if (err != DOM_NO_ERR) {
+	if (err != DOM_NO_ERR || !spare) {
 		//dom_node_unref(el);
-		return JS_UNDEFINED;
+		return JS_EXCEPTION;
 	}
 	interpreter->changed = 1;
 	//dom_node_unref(el);
 
-	return getElement(ctx, spare);
+	JSValue rr = getElement(ctx, spare);
+	dom_node_unref(spare);
+
+	return rr;
 }
 
 static JSValue

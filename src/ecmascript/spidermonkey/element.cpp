@@ -4784,6 +4784,11 @@ element_insertBefore(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		JS::RootedObject child1(ctx, &args[0].toObject());
 		child = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(child1, 0);
 	}
+
+	if (!child) {
+		return false;
+	}
+
 	dom_exception err;
 	dom_node *spare = NULL;
 
