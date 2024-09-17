@@ -1340,11 +1340,14 @@ js_fragment_isSameNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
 
 	if (!el) {
-		return JS_FALSE;
+		return JS_EXCEPTION;
 	}
 	//dom_node_ref(el);
-	JSValue node = argv[0];
-	dom_node *el2 = (dom_node *)(js_getopaque_fragment(node, js_fragment_class_id));
+	dom_node *el2 = NULL;
+
+	if (!JS_IsNull(argv[0])) {
+		el2 = (dom_node *)(js_getopaque_fragment(argv[0], js_fragment_class_id));
+	}
 	bool res = (el == el2);
 	//dom_node_unref(el);
 
