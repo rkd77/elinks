@@ -3347,12 +3347,18 @@ js_element_isEqualNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
-		return JS_FALSE;
+		return JS_EXCEPTION;
 	}
+	dom_node *el2 = NULL;
 	//dom_node_ref(el);
 
-	JSValue node = argv[0];
-	dom_node *el2 = (dom_node *)(js_getopaque(node, js_element_class_id));
+	if (!JS_IsNull(argv[0])) {
+		el2 = (dom_node *)(js_getopaque(argv[0], js_element_class_id));
+	}
+
+	if (!el2) {
+		return JS_EXCEPTION;
+	}
 
 	struct string first;
 	struct string second;

@@ -1285,12 +1285,18 @@ js_fragment_isEqualNode(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
 
 	if (!el) {
-		return JS_FALSE;
+		return JS_EXCEPTION;
 	}
 	//dom_node_ref(el);
+	dom_node *el2 = NULL;
 
-	JSValue node = argv[0];
-	dom_node *el2 = (dom_node *)(js_getopaque_fragment(node, js_fragment_class_id));
+	if (!JS_IsNull(argv[0])) {
+		el2 = (dom_node *)(js_getopaque_fragment(argv[0], js_fragment_class_id));
+	}
+
+	if (!el2) {
+		return JS_EXCEPTION;
+	}
 
 	struct string first;
 	struct string second;
