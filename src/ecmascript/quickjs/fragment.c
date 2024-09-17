@@ -1135,14 +1135,18 @@ js_fragment_contains(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 	dom_node *el = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
 
 	if (!el) {
-		return JS_FALSE;
+		return JS_EXCEPTION;
 	}
+	dom_node *el2 = NULL;
+
+	if (!JS_IsNull(argv[0])) {
 	//dom_node_ref(el);
-	dom_node *el2 = (dom_node *)(js_getopaque_fragment(argv[0], js_fragment_class_id));
+		el2 = (dom_node *)(js_getopaque_fragment(argv[0], js_fragment_class_id));
+	}
 
 	if (!el2) {
 		//dom_node_unref(el);
-		return JS_FALSE;
+		return JS_EXCEPTION;
 	}
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);

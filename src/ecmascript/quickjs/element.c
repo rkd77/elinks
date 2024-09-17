@@ -2897,14 +2897,18 @@ js_element_contains(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
-		return JS_FALSE;
+		return JS_EXCEPTION;
 	}
 	//dom_node_ref(el);
-	dom_node *el2 = (dom_node *)(js_getopaque(argv[0], js_element_class_id));
+	dom_node *el2 = NULL;
+
+	if (!JS_IsNull(argv[0])) {
+		el2 = (dom_node *)(js_getopaque(argv[0], js_element_class_id));
+	}
 
 	if (!el2) {
 		//dom_node_unref(el);
-		return JS_FALSE;
+		return JS_EXCEPTION;
 	}
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
