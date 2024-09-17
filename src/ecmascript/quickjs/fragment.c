@@ -1014,14 +1014,18 @@ js_fragment_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	dom_exception exc;
 
 	if (argc != 1) {
-		return JS_NULL;
+		return JS_EXCEPTION;
 	}
 
 	if (!el) {
 		return JS_EXCEPTION;
 	}
 	//dom_node_ref(el);
-	dom_node *el2 = (dom_node *)(js_getopaque_fragment(argv[0], js_fragment_class_id));
+	dom_node *el2 = NULL;
+
+	if (!JS_IsNull(argv[0])) {
+		el2 = (dom_node *)(js_getopaque_fragment(argv[0], js_fragment_class_id));
+	}
 
 	if (!el2) {
 		//dom_node_unref(el);

@@ -2613,14 +2613,18 @@ js_element_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	dom_exception exc;
 
 	if (argc != 1) {
-		return JS_NULL;
+		return JS_EXCEPTION;
 	}
 
 	if (!el) {
 		return JS_EXCEPTION;
 	}
 	//dom_node_ref(el);
-	dom_node *el2 = (dom_node *)js_getopaque_any(argv[0]);
+	dom_node *el2 = NULL;
+
+	if (!JS_IsNull(argv[0])) {
+		el2 = (dom_node *)js_getopaque_any(argv[0]);
+	}
 
 	if (!el2) {
 		//dom_node_unref(el);
