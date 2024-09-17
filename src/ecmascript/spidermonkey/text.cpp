@@ -1773,24 +1773,27 @@ text_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
-
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 	dom_node *res = NULL;
-	dom_exception exc;
 
 	if (argc != 1) {
-		args.rval().setNull();
-		return true;
+		return false;
 	}
 
 	if (!el) {
-		args.rval().setNull();
-		return true;
+		return false;
 	}
-	JS::RootedObject node(ctx, &args[0].toObject());
+	dom_node *el2 = NULL;
 
-	dom_node *el2 = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(node, 0);
-	exc = dom_node_append_child(el, el2, &res);
+	if (!args[0].isNull()) {
+		JS::RootedObject node(ctx, &args[0].toObject());
+		el2 = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(node, 0);
+	}
+
+	if (!el2) {
+		return false;
+	}
+	dom_exception exc = dom_node_append_child(el, el2, &res);
 
 	if (exc == DOM_NO_ERR && res) {
 		interpreter->changed = 1;
@@ -1800,9 +1803,8 @@ text_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		debug_dump_xhtml(document->dom);
 		return true;
 	}
-	args.rval().setNull();
 
-	return true;
+	return false;
 }
 
 
