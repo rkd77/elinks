@@ -2935,10 +2935,15 @@ mjs_element_isEqualNode(js_State *J)
 	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
 
 	if (!el) {
-		js_pushboolean(J, 0);
+		js_error(J, "error");
 		return;
 	}
 	dom_node *el2 = (dom_node *)(mjs_getprivate(J, 1));
+
+	if (!el2) {
+		js_error(J, "error");
+		return;
+	}
 
 	struct string first;
 	struct string second;
