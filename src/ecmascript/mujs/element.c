@@ -2339,14 +2339,18 @@ mjs_element_appendChild(js_State *J)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
 	dom_node *res = NULL;
-	dom_exception exc;
 
 	if (!el) {
-		js_pushnull(J);
+		js_error(J, "error");
 		return;
 	}
 	dom_node *el2 = (dom_node *)(mjs_getprivate_any(J, 1));
-	exc = dom_node_append_child(el, el2, &res);
+
+	if (!el2) {
+		js_error(J, "error");
+		return;
+	}
+	dom_exception exc = dom_node_append_child(el, el2, &res);
 
 	if (exc == DOM_NO_ERR && res) {
 		interpreter->changed = 1;
@@ -2357,7 +2361,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		dom_node_unref(res);
 		return;
 	}
-	js_pushnull(J);
+	js_error(J, "error");
 }
 
 /* @element_funcs{"blur"} */
