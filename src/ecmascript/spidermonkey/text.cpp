@@ -2074,11 +2074,18 @@ text_isEqualNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
 	if (!el) {
-		args.rval().setBoolean(false);
-		return true;
+		return false;
 	}
-	JS::RootedObject node(ctx, &args[0].toObject());
-	dom_node *el2 = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(node, 0);
+	dom_node *el2 = NULL;
+
+	if (!args[0].isNull()) {
+		JS::RootedObject node(ctx, &args[0].toObject());
+		el2 = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(node, 0);
+	}
+
+	if (!el2) {
+		return false;
+	}
 
 	struct string first;
 	struct string second;
