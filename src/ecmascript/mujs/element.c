@@ -904,6 +904,37 @@ mjs_element_get_property_nodeValue(js_State *J)
 }
 
 static void
+mjs_element_set_property_nodeValue(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *node = (dom_node *)(mjs_getprivate(J, 0));
+
+	if (!node) {
+		js_error(J, "error");
+		return;
+	}
+	const char *str = js_tostring(J, 1);
+
+	if (!str) {
+		js_error(J, "out of memory");
+		return;
+	}
+	dom_string *value = NULL;
+	dom_exception exc = dom_string_create((const uint8_t *)str, strlen(str), &value);
+
+	if (exc != DOM_NO_ERR || !value) {
+		js_pushundefined(J);
+		return;
+	}
+	exc = dom_node_set_node_value(node, value);
+	dom_string_unref(value);
+
+	js_pushundefined(J);
+}
+
+static void
 mjs_element_get_property_nextSibling(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -3402,7 +3433,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		addproperty(J, "nextSibling",	mjs_element_get_property_nextSibling, NULL);
 		addproperty(J, "nodeName",	mjs_element_get_property_nodeName, NULL);
 		addproperty(J, "nodeType",	mjs_element_get_property_nodeType, NULL);
-		addproperty(J, "nodeValue",	mjs_element_get_property_nodeValue, NULL);
+		addproperty(J, "nodeValue",	mjs_element_get_property_nodeValue, mjs_element_set_property_nodeValue);
 //		addproperty(J, "offsetHeight",	mjs_element_get_property_offsetHeight, NULL);
 //		addproperty(J, "offsetLeft",	mjs_element_get_property_offsetLeft, NULL);
 		addproperty(J, "offsetParent",	mjs_element_get_property_offsetParent, NULL);

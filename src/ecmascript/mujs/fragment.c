@@ -465,6 +465,37 @@ mjs_fragment_get_property_nodeValue(js_State *J)
 }
 
 static void
+mjs_fragment_set_property_nodeValue(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *node = (dom_node *)(mjs_getprivate_fragment(J, 0));
+
+	if (!node) {
+		js_error(J, "error");
+		return;
+	}
+	const char *str = js_tostring(J, 1);
+
+	if (!str) {
+		js_error(J, "out of memory");
+		return;
+	}
+	dom_string *value = NULL;
+	dom_exception exc = dom_string_create((const uint8_t *)str, strlen(str), &value);
+
+	if (exc != DOM_NO_ERR || !value) {
+		js_pushundefined(J);
+		return;
+	}
+	exc = dom_node_set_node_value(node, value);
+	dom_string_unref(value);
+
+	js_pushundefined(J);
+}
+
+static void
 mjs_fragment_get_property_nextSibling(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1306,7 +1337,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		addproperty(J, "nextSibling",	mjs_fragment_get_property_nextSibling, NULL);
 		addproperty(J, "nodeName",	mjs_fragment_get_property_nodeName, NULL);
 		addproperty(J, "nodeType",	mjs_fragment_get_property_nodeType, NULL);
-		addproperty(J, "nodeValue",	mjs_fragment_get_property_nodeValue, NULL);
+		addproperty(J, "nodeValue",	mjs_fragment_get_property_nodeValue, mjs_fragment_set_property_nodeValue);
 		addproperty(J, "ownerDocument",	mjs_fragment_get_property_ownerDocument, NULL);
 		addproperty(J, "parentElement",	mjs_fragment_get_property_parentElement, NULL);
 		addproperty(J, "parentNode",	mjs_fragment_get_property_parentNode, NULL);
