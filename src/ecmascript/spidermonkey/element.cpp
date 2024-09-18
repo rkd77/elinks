@@ -103,6 +103,7 @@ static bool element_get_property_nextSibling(JSContext *ctx, unsigned int argc, 
 static bool element_get_property_nodeName(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_nodeType(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_nodeValue(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_set_property_nodeValue(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool element_get_property_offsetHeight(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool element_get_property_offsetLeft(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_offsetParent(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -192,7 +193,7 @@ JSPropertySpec element_props[] = {
 	JS_PSG("nextSibling",	element_get_property_nextSibling, JSPROP_ENUMERATE),
 	JS_PSG("nodeName",	element_get_property_nodeName, JSPROP_ENUMERATE),
 	JS_PSG("nodeType",	element_get_property_nodeType, JSPROP_ENUMERATE),
-	JS_PSG("nodeValue",	element_get_property_nodeValue, JSPROP_ENUMERATE),
+	JS_PSGS("nodeValue",	element_get_property_nodeValue, element_set_property_nodeValue, JSPROP_ENUMERATE),
 //	JS_PSG("offsetHeight",	element_get_property_offsetHeight, JSPROP_ENUMERATE),
 //	JS_PSG("offsetLeft",	element_get_property_offsetLeft, JSPROP_ENUMERATE),
 	JS_PSG("offsetParent",	element_get_property_offsetParent, JSPROP_ENUMERATE),
@@ -1731,6 +1732,69 @@ element_get_property_nodeValue(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 	args.rval().setString(JS_NewStringCopyZ(ctx, dom_string_data(content)));
 	dom_string_unref(content);
+
+	return true;
+}
+
+static bool
+element_set_property_nodeValue(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	vs = interpreter->vs;
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	dom_node *node = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	args.rval().setUndefined();
+
+	if (!node) {
+		return true;
+	}
+	char *str = jsval_to_string(ctx, args[0]);
+
+	if (!str) {
+		return false;
+	}
+	dom_string *value = NULL;
+	dom_exception exc = dom_string_create((const uint8_t *)str, strlen(str), &value);
+	mem_free(str);
+
+	if (exc != DOM_NO_ERR || !value) {
+		return true;
+	}
+	exc = dom_node_set_node_value(node, value);
+	dom_string_unref(value);
+	interpreter->changed = true;
 
 	return true;
 }
