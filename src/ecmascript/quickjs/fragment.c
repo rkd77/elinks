@@ -514,6 +514,42 @@ js_fragment_get_property_nodeValue(JSContext *ctx, JSValueConst this_val)
 }
 
 static JSValue
+js_fragment_set_property_nodeValue(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	dom_node *node = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
+	JSValue r;
+
+	if (!node) {
+		return JS_UNDEFINED;
+	}
+	size_t len;
+	const char *str = JS_ToCStringLen(ctx, &len, val);
+
+	if (!str) {
+		//dom_node_unref(el);
+		return JS_EXCEPTION;
+	}
+	dom_string *value = NULL;
+	dom_exception exc = dom_string_create((const uint8_t *)str, len, &value);
+	JS_FreeCString(ctx, str);
+
+	if (exc != DOM_NO_ERR || !value) {
+		//dom_node_unref(el);
+		return JS_UNDEFINED;
+	}
+	exc = dom_node_set_node_value(node, value);
+	dom_string_unref(value);
+	//dom_node_unref(el);
+
+	return JS_UNDEFINED;
+}
+
+static JSValue
 js_fragment_get_property_nextSibling(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1510,7 +1546,7 @@ static const JSCFunctionListEntry js_fragment_proto_funcs[] = {
 	JS_CGETSET_DEF("nextSibling",	js_fragment_get_property_nextSibling, NULL),
 	JS_CGETSET_DEF("nodeName",	js_fragment_get_property_nodeName, NULL), // Node
 	JS_CGETSET_DEF("nodeType",	js_fragment_get_property_nodeType, NULL), // Node
-	JS_CGETSET_DEF("nodeValue",	js_fragment_get_property_nodeValue, NULL), // Node
+	JS_CGETSET_DEF("nodeValue",	js_fragment_get_property_nodeValue, js_fragment_set_property_nodeValue), // Node
 	JS_CGETSET_DEF("ownerDocument",	js_fragment_get_property_ownerDocument, NULL), // Node
 	JS_CGETSET_DEF("parentElement",	js_fragment_get_property_parentElement, NULL), // Node
 	JS_CGETSET_DEF("parentNode",	js_fragment_get_property_parentNode, NULL), // Node
