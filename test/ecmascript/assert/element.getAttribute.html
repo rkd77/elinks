@@ -20,6 +20,8 @@ function bb()
 {
 	var b = document.getElementById('ble').getAttribute('href');
 	console.assert(b === null, b);
+	var c = document.getElementById('ble').getAttribute(null);
+	console.assert(c === null, c);
 }
 
 console.error('element.getAttribute.html');
