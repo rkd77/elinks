@@ -182,7 +182,7 @@ CompileExampleModule(JSContext* cx, const char* filename, const char* code, size
 //
 // NOTE: This example assumes only one JSContext/GlobalObject is used, but in
 // general the registry needs to be distinct for each GlobalObject.
-static std::map<std::u16string, JS::PersistentRootedObject> moduleRegistry;
+std::map<JSObject *, JS::PersistentRootedObject> moduleRegistry;
 
 // Callback for embedding to provide modules for import statements. This example
 // hardcodes sources, but an embedding would normally load files here.
@@ -202,9 +202,10 @@ ExampleResolveHook(JSContext* cx, JS::HandleValue modulePrivate, JS::HandleObjec
 		return nullptr;
 	}
 	std::u16string filename(specChars.get());
+	JSObject *global = JS::CurrentGlobalOrNull(cx);
 
 	// If we already resolved before, return same module.
-	auto search = moduleRegistry.find(filename);
+	auto search = moduleRegistry.find(global);
 
 	if (search != moduleRegistry.end()) {
 		return search->second;
@@ -221,7 +222,7 @@ ExampleResolveHook(JSContext* cx, JS::HandleValue modulePrivate, JS::HandleObjec
 	// Register result in table.
 
 	if (mod) {
-		moduleRegistry.emplace(filename, JS::PersistentRootedObject(cx, mod));
+		moduleRegistry[global] = JS::PersistentRootedObject(cx, mod);
 		return mod;
 	}
 	JS_ReportErrorASCII(cx, "Cannot resolve import specifier");
@@ -465,7 +466,6 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!node_obj) {
 		goto release_and_fail;
 	}
-
 
 #if 1
 	// Register a hook in order to provide modules

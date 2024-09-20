@@ -54,6 +54,7 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
+#include <map>
 
 static bool window_get_property_closed(JSContext *cx, unsigned int argc, JS::Value *vp);
 static bool window_get_property_event(JSContext *cx, unsigned int argc, JS::Value *vp);
@@ -87,6 +88,8 @@ struct el_message {
 	struct el_window *elwin;
 };
 
+extern std::map<JSObject *, JS::PersistentRootedObject> moduleRegistry;
+
 static void
 window_finalize(JS::GCContext *op, JSObject *obj)
 {
@@ -104,6 +107,7 @@ window_finalize(JS::GCContext *op, JSObject *obj)
 		free_list(elwin->listeners);
 		mem_free(elwin);
 	}
+	moduleRegistry.erase(obj);
 }
 
 JSClassOps window_ops = {
