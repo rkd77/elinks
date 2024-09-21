@@ -875,7 +875,7 @@ document_set_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	char *url = jsval_to_string(ctx, args[0]);
 
 	if (url) {
-		location_goto(doc_view, url);
+		location_goto(doc_view, url, 0);
 		mem_free(url);
 	}
 
@@ -1131,7 +1131,7 @@ document_set_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	doc_view = vs->doc_view;
 	char *url = jsval_to_string(ctx, args[0]);
 	if (url) {
-		location_goto(doc_view, url);
+		location_goto(doc_view, url, 0);
 		mem_free(url);
 	}
 

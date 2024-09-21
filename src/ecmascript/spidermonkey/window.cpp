@@ -174,9 +174,6 @@ find_child_frame(struct document_view *doc_view, struct frame_desc *tframe)
 }
 #endif
 
-
-void location_goto(struct document_view *doc_view, char *url);
-
 static bool window_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_alert(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_clearInterval(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -998,7 +995,7 @@ window_set_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	char *url = jsval_to_string(ctx, args[0]);
 
 	if (url) {
-		location_goto(doc_view, url);
+		location_goto(doc_view, url, 0);
 		mem_free(url);
 	}
 

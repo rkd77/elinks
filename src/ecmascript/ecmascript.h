@@ -143,6 +143,7 @@ struct delayed_goto {
 	 * disappear during wild dances inside of frames or so. */
 	struct view_state *vs;
 	struct uri *uri;
+	unsigned int reload:1;
 };
 
 /* Why is the interpreter bound to {struct view_state} instead of {struct
@@ -190,8 +191,8 @@ void check_for_rerender(struct ecmascript_interpreter *interpreter, const char* 
 
 void toggle_ecmascript(struct session *ses);
 
-void location_goto(struct document_view *doc_view, char *url);
-void location_goto_const(struct document_view *doc_view, const char *url);
+void location_goto(struct document_view *doc_view, char *url, int reload);
+void location_goto_const(struct document_view *doc_view, const char *url, int reload);
 
 extern char *console_error_filename;
 extern char *console_log_filename;

@@ -1004,7 +1004,7 @@ location_assign(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	if (!url) {
 		return false;
 	}
-	location_goto(doc_view, url);
+	location_goto(doc_view, url, 0);
 	mem_free(url);
 
 	return true;
@@ -1050,7 +1050,7 @@ location_reload(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 	doc_view = vs->doc_view;
-	location_goto_const(doc_view, "");
+	location_goto_const(doc_view, struri(doc_view->document->uri), 1);
 
 	return true;
 }
@@ -1114,7 +1114,7 @@ location_replace(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			del_from_history(&ses->history, loc);
 		}
 	}
-	location_goto(doc_view, url);
+	location_goto(doc_view, url, 0);
 	mem_free(url);
 
 	return true;
@@ -1144,7 +1144,7 @@ location_goto_common(JSContext *ctx, struct document_view *doc_view, JS::HandleV
 	char *url = jsval_to_string(ctx, val);
 
 	if (url) {
-		location_goto(doc_view, url);
+		location_goto(doc_view, url, 0);
 		mem_free(url);
 	}
 }

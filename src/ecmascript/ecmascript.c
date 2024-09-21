@@ -754,25 +754,25 @@ delayed_goto(void *data)
 	if (deg->vs->doc_view) {
 		goto_uri_frame(deg->vs->doc_view->session, deg->uri,
 		               deg->vs->doc_view->name,
-			       CACHE_MODE_NORMAL);
+		               deg->reload ? CACHE_MODE_FORCE_RELOAD : CACHE_MODE_NORMAL);
 	}
 	done_uri(deg->uri);
 	mem_free(deg);
 }
 
 void
-location_goto_const(struct document_view *doc_view, const char *url)
+location_goto_const(struct document_view *doc_view, const char *url, int reload)
 {
 	char *url2 = stracpy(url);
 
 	if (url2) {
-		location_goto(doc_view, url2);
+		location_goto(doc_view, url2, reload);
 		mem_free(url2);
 	}
 }
 
 void
-location_goto(struct document_view *doc_view, char *url)
+location_goto(struct document_view *doc_view, char *url, int reload)
 {
 	char *new_abs_url;
 	struct uri *new_uri;
@@ -796,6 +796,7 @@ location_goto(struct document_view *doc_view, char *url)
 	assert(doc_view->vs);
 	deg->vs = doc_view->vs;
 	deg->uri = new_uri;
+	deg->reload = reload;
 	/* It does not seem to be very safe inside of frames to
 	 * call goto_uri() right away. */
 	register_bottom_half(delayed_goto, deg);

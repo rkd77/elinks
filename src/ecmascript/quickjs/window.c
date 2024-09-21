@@ -573,7 +573,7 @@ js_window_set_property_location(JSContext *ctx, JSValueConst this_val, JSValue v
 		return JS_EXCEPTION;
 	}
 
-	location_goto_const(doc_view, url);
+	location_goto_const(doc_view, url, 0);
 	JS_FreeCString(ctx, url);
 
 	return JS_UNDEFINED;

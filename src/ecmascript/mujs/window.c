@@ -204,7 +204,7 @@ mjs_window_set_property_location(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	location_goto_const(doc_view, url);
+	location_goto_const(doc_view, url, 0);
 	js_pushundefined(J);
 }
 

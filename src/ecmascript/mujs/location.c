@@ -10,6 +10,7 @@
 
 #include "elinks.h"
 
+#include "document/document.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/mujs.h"
@@ -319,7 +320,7 @@ mjs_location_set_property_hash(js_State *J)
 		js_error(J, "!str");
 		return;
 	}
-	location_goto_const(vs->doc_view, str);
+	location_goto_const(vs->doc_view, str, 0);
 	js_pushundefined(J);
 }
 
@@ -345,7 +346,7 @@ mjs_location_set_property_host(js_State *J)
 		js_error(J, "!str");
 		return;
 	}
-	location_goto_const(vs->doc_view, str);
+	location_goto_const(vs->doc_view, str, 0);
 	js_pushundefined(J);
 }
 
@@ -371,7 +372,7 @@ mjs_location_set_property_hostname(js_State *J)
 		js_error(J, "!str");
 		return;
 	}
-	location_goto_const(vs->doc_view, str);
+	location_goto_const(vs->doc_view, str, 0);
 	js_pushundefined(J);
 }
 
@@ -397,7 +398,7 @@ mjs_location_set_property_href(js_State *J)
 		js_error(J, "!str");
 		return;
 	}
-	location_goto_const(vs->doc_view, str);
+	location_goto_const(vs->doc_view, str, 0);
 	js_pushundefined(J);
 }
 
@@ -423,7 +424,7 @@ mjs_location_set_property_pathname(js_State *J)
 		js_error(J, "!str");
 		return;
 	}
-	location_goto_const(vs->doc_view, str);
+	location_goto_const(vs->doc_view, str, 0);
 	js_pushundefined(J);
 }
 
@@ -449,7 +450,7 @@ mjs_location_set_property_port(js_State *J)
 		js_error(J, "!str");
 		return;
 	}
-	location_goto_const(vs->doc_view, str);
+	location_goto_const(vs->doc_view, str, 0);
 	js_pushundefined(J);
 }
 
@@ -475,7 +476,7 @@ mjs_location_set_property_protocol(js_State *J)
 		js_error(J, "!str");
 		return;
 	}
-	location_goto_const(vs->doc_view, str);
+	location_goto_const(vs->doc_view, str, 0);
 	js_pushundefined(J);
 }
 
@@ -501,7 +502,7 @@ mjs_location_set_property_search(js_State *J)
 		js_error(J, "!str");
 		return;
 	}
-	location_goto_const(vs->doc_view, str);
+	location_goto_const(vs->doc_view, str, 0);
 	js_pushundefined(J);
 }
 
@@ -528,7 +529,7 @@ mjs_location_assign(js_State *J)
 		js_error(J, "out of memory");
 		return;
 	}
-	location_goto_const(vs->doc_view, url);
+	location_goto_const(vs->doc_view, url, 0);
 	js_pushundefined(J);
 }
 
@@ -548,7 +549,7 @@ mjs_location_reload(js_State *J)
 		js_error(J, "!vs");
 		return;
 	}
-	location_goto_const(vs->doc_view, "");
+	location_goto_const(vs->doc_view, struri(vs->doc_view->document->uri), 1);
 	js_pushundefined(J);
 }
 
@@ -584,7 +585,7 @@ mjs_location_replace(js_State *J)
 			del_from_history(&ses->history, loc);
 		}
 	}
-	location_goto_const(vs->doc_view, url);
+	location_goto_const(vs->doc_view, url, 0);
 	js_pushundefined(J);
 }
 
