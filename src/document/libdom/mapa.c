@@ -5,6 +5,7 @@
 #endif
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "elinks.h"
 
