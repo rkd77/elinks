@@ -108,7 +108,6 @@ typedef struct _SockInfo
 
 GlobalInfo g;
 
-
 #define mycase(code) \
 	case code: s = __STRING(code)
 
@@ -544,15 +543,13 @@ multi_timer_cb_select(CURLM *multi, long timeout_ms, GlobalInfo *g)
 	//fprintf(stderr, "multi_timer_cb: Setting timeout to %ld ms\n", timeout_ms);
 
 	/*
-	 * if timeout_ms is -1, just delete the timer
+	 * if timeout_ms is -1, just let the timer to expire.
 	 *
 	 * For all other values of timeout_ms, this should set or *update* the timer
 	 * to the new value
 	 */
 
-	if (timeout_ms == -1) {
-		kill_timer(&g->tim);
-	} else { /* includes timeout zero */
+	if (timeout_ms != -1) {
 		install_timer(&g->tim, timeout_ms, timer_cb_select, g);
 	}
 
