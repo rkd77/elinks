@@ -40,6 +40,7 @@
 #include "config/options.h"
 #include "intl/libintl.h"
 #include "main/select.h"
+#include "main/main.h"
 #include "main/module.h"
 #include "network/connection.h"
 #include "network/progress.h"
@@ -116,8 +117,10 @@ done_http_curl(struct connection *conn)
 	if (!http || !http->easy) {
 		return;
 	}
-	curl_multi_remove_handle(g.multi, http->easy);
-	curl_easy_cleanup(http->easy);
+	if (!program.terminate) {
+		curl_multi_remove_handle(g.multi, http->easy);
+		curl_easy_cleanup(http->easy);
+	}
 	done_string(&http->headers);
 	done_string(&http->post_headers);
 	mem_free_if(http->post_buffer);

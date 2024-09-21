@@ -37,6 +37,7 @@
 #include "config/options.h"
 #include "intl/libintl.h"
 #include "main/select.h"
+#include "main/main.h"
 #include "main/module.h"
 #include "network/connection.h"
 #include "network/progress.h"
@@ -383,8 +384,11 @@ done_ftpes(struct connection *conn)
 	if (!ftp || !ftp->easy) {
 		return;
 	}
-	curl_multi_remove_handle(g.multi, ftp->easy);
-	curl_easy_cleanup(ftp->easy);
+
+	if (!program.terminate) {
+		curl_multi_remove_handle(g.multi, ftp->easy);
+		curl_easy_cleanup(ftp->easy);
+	}
 }
 
 static void
