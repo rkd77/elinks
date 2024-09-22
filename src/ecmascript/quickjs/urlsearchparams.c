@@ -56,6 +56,11 @@ struct eljs_urlSearchParams {
 	JSValue map;
 };
 
+static struct string result;
+static char *prepend;
+
+static JSValue map_foreach_callback(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv);
+
 static
 void js_urlSearchParams_finalizer(JSRuntime *rt, JSValue val)
 {
@@ -139,25 +144,77 @@ js_urlSearchParams_constructor(JSContext *ctx, JSValueConst new_target, int argc
 	}
 
 	if (argc > 0) {
-		const char *str;
-		size_t len;
+		if (JS_IsArray(ctx, argv[0])) {
+			u->map = JS_Eval(ctx, "new Map();", strlen("new Map();"), "", JS_EVAL_TYPE_GLOBAL);
+			JSValue l = JS_GetPropertyStr(ctx, argv[0], "length");
 
-		str = JS_ToCStringLen(ctx, &len, argv[0]);
+			uint32_t len = 0;
+			JS_ToUint32(ctx, &len, l);
+			JS_FreeValue(ctx, l);
 
-		if (!str) {
-			JS_FreeValue(ctx, obj);
-			return JS_EXCEPTION;
+			for (int i = 0; i < len; i++) {
+				JSValue val = JS_GetPropertyUint32(ctx, argv[0], i);
+				JSValue l2 = JS_GetPropertyStr(ctx, val, "length");
+
+				uint32_t len2 = 0;
+				JS_ToUint32(ctx, &len2, l2);
+				JS_FreeValue(ctx, l2);
+
+				if (len2 != 2) {
+					JS_FreeValue(ctx, val);
+					continue;
+				}
+				JSValue argv[2];
+				argv[0] = JS_GetPropertyUint32(ctx, val, 0);
+				argv[1] = JS_GetPropertyUint32(ctx, val, 1);
+				JS_FreeValue(ctx, val);
+
+				JSValue set = JS_GetPropertyStr(ctx, u->map, "set");
+				(void)JS_Call(ctx, set, u->map, 2, argv);
+				JS_FreeValue(ctx, set);
+				JS_FreeValue(ctx, argv[0]);
+				JS_FreeValue(ctx, argv[1]);
+				JS_FreeValue(ctx, u->map);
+			}
+		} else if (JS_IsObject(argv[0])) {
+			u->map = JS_Eval(ctx, "new Map();", strlen("new Map();"), "", JS_EVAL_TYPE_GLOBAL);
+
+			JSPropertyEnum *ptab = NULL;
+			uint32_t plen = 0;
+			JS_GetOwnPropertyNames(ctx, &ptab, &plen, argv[0], JS_GPN_STRING_MASK);
+
+			for (int i = 0; i < plen; i++) {
+				JSValue vv[2];
+				vv[0] = JS_AtomToValue(ctx, ptab[i].atom);
+				vv[1] = JS_GetProperty(ctx, argv[0], ptab[i].atom);
+				JSValue set = JS_GetPropertyStr(ctx, u->map, "set");
+				(void)JS_Call(ctx, set, u->map, 2, vv);
+				JS_FreeValue(ctx, set);
+				JS_FreeValue(ctx, vv[0]);
+				JS_FreeValue(ctx, vv[1]);
+				JS_FreeValue(ctx, u->map);
+			}
+			if (ptab) {
+				free(ptab);
+			}
+		} else {
+			size_t len;
+			const char *str = JS_ToCStringLen(ctx, &len, argv[0]);
+
+			if (!str) {
+				JS_FreeValue(ctx, obj);
+				return JS_EXCEPTION;
+			}
+			char *urlstring = memacpy(str, len);
+			JS_FreeCString(ctx, str);
+
+			if (!urlstring) {
+				return JS_EXCEPTION;
+			}
+			u->map = JS_Eval(ctx, "new Map();", strlen("new Map();"), "", JS_EVAL_TYPE_GLOBAL);
+			parse_text(ctx, u->map, urlstring);
+			mem_free(urlstring);
 		}
-
-		char *urlstring = memacpy(str, len);
-		JS_FreeCString(ctx, str);
-
-		if (!urlstring) {
-			return JS_EXCEPTION;
-		}
-		u->map = JS_Eval(ctx, "new Map();", strlen("new Map();"), "", JS_EVAL_TYPE_GLOBAL);
-		parse_text(ctx, u->map, urlstring);
-		mem_free(urlstring);
 	}
 	JS_SetOpaque(obj, u);
 
@@ -379,15 +436,11 @@ js_urlSearchParams_set(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	return JS_UNDEFINED;
 }
 
-static struct string result;
-static char *prepend;
-
 static JSValue
 map_foreach_callback(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 	const char *val = JS_ToCString(ctx, argv[0]);
 	const char *key = JS_ToCString(ctx, argv[1]);
-
 	add_to_string(&result, prepend);
 
 	if (key) {
