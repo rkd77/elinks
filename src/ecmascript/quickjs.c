@@ -73,12 +73,50 @@
 
 /*** Global methods */
 
+static char quickjs_version[32];
+
 static void
-quickjs_init(struct module *xxx)
+quickjs_get_version(void)
+{
+	char *ptr = NULL;
+	size_t size = 0;
+	FILE *f = open_memstream(&ptr, &size);
+
+	if (f) {
+		JSMemoryUsage stats = {0};
+		JS_DumpMemoryUsage(f, &stats, NULL);
+		fclose(f);
+
+		struct string str;
+
+		if (init_string(&str)) {
+			char text[16] = {0};
+			char *digit = ptr;
+
+			for (int i = 0; i < size; i++, digit++) {
+				if (isdigit(*digit)) {
+					break;
+				}
+			}
+			sscanf(digit, "%15s version", text);
+			add_to_string(&str, "QuickJS ");
+			add_to_string(&str, text);
+			strncpy(quickjs_version, str.source, 31);
+			done_string(&str);
+		}
+		free(ptr);
+	}
+}
+
+static void
+quickjs_init(struct module *module)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	quickjs_get_version();
+	module->name = quickjs_version;
+
 	map_attrs = attr_create_new_attrs_map();
 	map_attributes = attr_create_new_attributes_map();
 	map_rev_attributes = attr_create_new_attributes_map_rev();
