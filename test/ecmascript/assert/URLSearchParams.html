@@ -11,5 +11,22 @@ console.assert(param.has('cc'), 'cc');
 console.assert(param.has('bar', '2'), 'bar=2');
 console.assert(param.get('bar') === '2', 'bar = 2');
 console.assert(param.toString() === 'foo=1&bar=2&cc=3', 'without ?');
+
+var params3 = new URLSearchParams([
+  ["foo", "a1"],
+  ["bar", "a2"],
+  ["baz", "a3"],
+]);
+console.assert(params3.get('bar') === 'a2', 'bar = a2');
+
+var params4 = new URLSearchParams({
+  foo : "c1",
+  bar : "c2",
+  baz : "c3",
+});
+console.assert(params4.get('bar') === 'c2', params4.get('bar'));
+
+
+
 console.exit();
 </script>

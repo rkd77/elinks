@@ -11,9 +11,11 @@
 #include "elinks.h"
 
 #include "ecmascript/spidermonkey/util.h"
+#include <js/Array.h>
 #include <js/BigInt.h>
 #include <js/Conversions.h>
 #include <js/MapAndSet.h>
+#include <js/PropertyAndElement.h>
 
 #include "bfu/dialog.h"
 #include "cache/cache.h"
@@ -146,17 +148,72 @@ urlSearchParams_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
 		return false;
 	}
 	JS::SetReservedSlot(newObj, 0, JS::PrivateValue(u));
+	JS::RootedObject r(ctx, JS::NewMapObject(ctx));
 
 	if (argc > 0) {
-		char *urlstring = jsval_to_string(ctx, args[0]);
+		if (args[0].isObject()) {
+			JS::RootedObject ar(ctx, &args[0].toObject());
+			uint32_t len = 0;
+			JS::GetArrayLength(ctx, ar, &len);
 
-		if (!urlstring) {
-			return false;
+			if (len > 0) {
+				for (int i = 0; i < len; i++) {
+					JS::RootedValue val(ctx);
+
+					if (!JS_GetElement(ctx, ar, i, &val)) {
+						continue;
+					}
+					JS::RootedObject ar2(ctx, &val.toObject());
+					uint32_t len2 = 0;
+					JS::GetArrayLength(ctx, ar2, &len2);
+
+					if (len2 != 2) {
+						continue;
+					}
+					JS::RootedValue k(ctx);
+					JS::RootedValue v(ctx);
+
+					if (!JS_GetElement(ctx, ar2, 0, &k)) {
+						continue;
+					}
+
+					if (!JS_GetElement(ctx, ar2, 1, &v)) {
+						continue;
+					}
+					JS::MapSet(ctx, r, k, v);
+				}
+				u->map = r;
+			} else {
+				JS::Rooted<JS::IdVector> props(ctx, JS::IdVector(ctx));
+				JS_Enumerate(ctx, ar, &props);
+				uint32_t len = props.length();
+
+				for (int i = 0; i < len; i++) {
+					JS::RootedValue v(ctx);
+					JS::RootedString rst(ctx, props[i].toString());
+					JS::UniqueChars utf8chars = JS_EncodeStringToUTF8(ctx, rst);
+					char *name = utf8chars.get();
+
+					if (name) {
+						if (!JS_GetProperty(ctx, ar, name, &v)) {
+							continue;
+						}
+						JS::RootedValue k(ctx, JS::StringValue(props[i].toString()));
+						JS::MapSet(ctx, r, k, v);
+					}
+				}
+				u->map = r;
+			}
+		} else {
+			char *urlstring = jsval_to_string(ctx, args[0]);
+
+			if (!urlstring) {
+				return false;
+			}
+			parse_text(ctx, r, urlstring);
+			u->map = r;
+			mem_free(urlstring);
 		}
-		JS::RootedObject r(ctx, JS::NewMapObject(ctx));
-		u->map = r;
-		parse_text(ctx, r, urlstring);
-		mem_free(urlstring);
 	}
 	args.rval().setObject(*newObj);
 
