@@ -2392,7 +2392,7 @@ html_special(struct html_context *html_context, html_special_type_T c, ...)
 #ifdef CONFIG_ECMASCRIPT
 			if (document) {
 				struct uri *uri = va_arg(l, struct uri *);
-
+/* LOG_JS("%s", uri->data); */
 				add_to_uri_list(&document->ecmascript_imports, uri);
 			}
 #endif

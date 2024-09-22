@@ -305,12 +305,10 @@ run_jobs(void *data)
 void
 check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %s %d\n", __FILE__, __FUNCTION__, text, interpreter->changed);
-#endif
+	LOG_JS("%s %d", text, interpreter->changed);
 	run_jobs(interpreter);
 
-	if (interpreter->changed && !program.testjs) {
+	if (interpreter->changed) {
 		struct document_view *doc_view = interpreter->vs->doc_view;
 		struct document *document = doc_view->document;
 		struct session *ses = doc_view->session;

@@ -383,6 +383,7 @@ check_events_for_element(struct ecmascript_interpreter *ecmascript, dom_node *el
 void
 ecmascript_reset_state(struct view_state *vs)
 {
+	LOG_JS("");
 	struct form_view *fv;
 	int i;
 

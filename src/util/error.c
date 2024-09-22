@@ -52,6 +52,7 @@ er(int bell, int shall_sleep, const char *fmt, va_list params)
 
 int errline;
 const char *errfile;
+const char *errfun;
 
 void
 elinks_debug(const char *fmt, ...)
@@ -110,13 +111,13 @@ elinks_internal(const char *fmt, ...)
 	va_start(params, fmt);
 
 	snprintf(errbuf, sizeof(errbuf),
-		 "\033[1mINTERNAL ERROR\033[0m at %s:%d: %s",
-		 errfile, errline, fmt);
+		 "\033[1mINTERNAL ERROR\033[0m at %s %d %s: %s",
+		 errfile, errline, errfun, fmt);
 
 	er(1, 1, errbuf, params);
 
 	va_end(params);
-#ifdef CONFIG_DEBUG
+#ifdef CONFIG_DEBUG_DUMP
 	force_dump();
 #endif
 }
@@ -191,25 +192,26 @@ done_log(void)
 		       loctime);
 	errbuf[len] = '\0';
 
-	fprintf(log_file, "[%-5s %-15s %4s]: Log stopped at %s\n\n\n",
+	fprintf(log_file, "[%-5s %-15s %4s]: Log stopped at %s\n",
 		"", "", "", errbuf);
 
 	fclose(log_file);
 }
 
 void
-elinks_log(char *msg, char *file, int line,
+elinks_log(char *msg, char *file, int line,char*fun,
 	   const char *fmt, ...)
 {
 	static char *log_files = NULL;
 	static char *log_msg = NULL;
 	char errbuf[4096];
+	char tbuf[32];
 	va_list params;
+	time_t curtime = time(NULL);
+	struct tm *loctime = localtime(&curtime);
 
 	if (!log_file) {
 		char *log_name;
-		time_t curtime = time(NULL);
-		struct tm *loctime = localtime(&curtime);
 		int len;
 
 		log_files = getenv("ELINKS_FILES");
@@ -223,8 +225,7 @@ elinks_log(char *msg, char *file, int line,
 			       loctime);
 		errbuf[len] = '\0';
 
-		fprintf(log_file, "\n\n[%-5s %-15s %4s]: Log started at %s\n",
-			"type", "file", "line", errbuf);
+		fprintf(log_file, "Log started at %s\n",errbuf);
 
 		atexit(done_log);
 	}
@@ -237,8 +238,9 @@ elinks_log(char *msg, char *file, int line,
 
 	va_start(params, fmt);
 
-	snprintf(errbuf, sizeof(errbuf), "[%-5s %-15s %4d]: %s",
-		 msg, file, line,  fmt);
+	strftime(tbuf, sizeof(tbuf), "%T", loctime);
+	snprintf(errbuf, sizeof(errbuf), "[%s %s %s %d %s]: %s",
+		 tbuf, msg, file, line, fun, fmt);
 
 	vfprintf(log_file, errbuf, params);
 	fputc('\n', log_file);

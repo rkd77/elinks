@@ -13,10 +13,14 @@
 extern "C" {
 #endif
 
+#include "main/main.h"
+
 /* This errfile thing is needed, as we don't have var-arg macros in standart,
  * only as gcc extension :(. */
 extern int errline;
 extern const char *errfile;
+extern const char *errfun;
+
 
 /** @c DBG(format_string) is used for printing of debugging information. It
  * should not be used anywhere in the official codebase (although it is often
@@ -48,7 +52,7 @@ void elinks_error(const char *fmt, ...);
  * run. It tries to draw user's attention to the error and dumps core if ELinks
  * is running in the CONFIG_DEBUG mode. */
 #undef INTERNAL
-#define INTERNAL errfile = __FILE__, errline = __LINE__, elinks_internal
+#define INTERNAL errfile = __FILE__, errline = __LINE__, errfun = __FUNCTION__, elinks_internal
 void elinks_internal(const char *fmt, ...);
 
 
@@ -74,26 +78,31 @@ void usrerror(const char *fmt, ...);
  * </dl>
  */
 void
-elinks_log(char *msg, char *file, int line,
+elinks_log(char *msg, char *file, int line,char*,
 	   const char *fmt, ...);
+
+#undef LOG_JS
+#define LOG_JS(args...) \
+if (program.testjs)\
+	elinks_log("js", __FILE__, __LINE__,__FUNCTION__, args)
 
 #undef LOG_ERR
 #define LOG_ERR(args...) \
-	elinks_log("error", __FILE__, __LINE__, args)
+	elinks_log("error", __FILE__, __LINE__,__FUNCTION__, args)
 
 #undef LOG_WARN
 #define LOG_WARN(args...) \
-	elinks_log("warn", __FILE__, __LINE__, args)
+	elinks_log("warn", __FILE__, __LINE__,__FUBCTION__, args)
 
 #undef LOG_INFO
 #define LOG_INFO(args...) \
-	elinks_log("info", __FILE__, __LINE__, args)
+	elinks_log("info", __FILE__, __LINE__,__FUNCTION__, args)
 
 #undef LOG_DBG
 #define LOG_DBG(args...) \
-	elinks_log("debug", __FILE__, __LINE__, args)
+	elinks_log("debug", __FILE__, __LINE__,__FUNCTION__, args)
 
-#endif
+#endif // CONFIG_DEBUG
 #endif
 
 
@@ -104,7 +113,7 @@ elinks_log(char *msg, char *file, int line,
  * recovery path, see below ::if_assert_failed. */
 
 #undef assert
-#ifdef CONFIG_FASTMEM
+#ifndef CONFIG_ASSERT
 #define assert(x) /* We don't do anything in CONFIG_FASTMEM mode. */
 #else
 #define assert(x) \
@@ -123,7 +132,7 @@ do { if (!assert_failed && (assert_failed = !(x))) { \
 
 #undef assertm
 #ifdef HAVE_VARIADIC_MACROS
-#ifdef CONFIG_FASTMEM
+#ifndef CONFIG_ASSERT
 #define assertm(x,m...) /* We don't do anything in CONFIG_FASTMEM mode. */
 #else
 #define assertm(x,m...) \
@@ -132,7 +141,7 @@ do { if (!assert_failed && (assert_failed = !(x))) { \
 } } while (0)
 #endif
 #else /* HAVE_VARIADIC_MACROS */
-#ifdef CONFIG_FASTMEM
+#ifndef CONFIG_ASSERT
 #define assertm elinks_assertm
 #else
 #define assertm errfile = __FILE__, errline = __LINE__, elinks_assertm
@@ -144,11 +153,11 @@ do { if (!assert_failed && (assert_failed = !(x))) { \
  * expression is int (and that's completely fine, I do *NOT* want to see any
  * stinking assert((int) pointer) ! ;-)), so CONFIG_DEBUG (-Werror) and
  * !HAVE_VARIADIC_MACROS won't play well together. Hrm. --pasky */
-#ifdef CONFIG_FASTMEM
+#ifndef CONFIG_ASSERT
 static inline
 #endif
 void elinks_assertm(int x, const char *fmt, ...)
-#ifdef CONFIG_FASTMEM
+#ifndef CONFIG_ASSERT
 {
 	/* We don't do anything in CONFIG_FASTMEM mode. Let's hope that the compiler
 	 * will at least optimize out the @x computation. */
@@ -187,7 +196,7 @@ void elinks_assertm(int x, const char *fmt, ...)
 extern int assert_failed;
 
 #undef if_assert_failed
-#ifdef CONFIG_FASTMEM
+#ifndef CONFIG_ASSERT
 #define if_assert_failed if (0) /* This should be optimalized away. */
 #else
 #define if_assert_failed if (assert_failed && !(assert_failed = 0))

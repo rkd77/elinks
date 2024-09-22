@@ -14,7 +14,7 @@ inline int operator<(JSValueConst a, JSValueConst b)
 extern "C" {
 #endif
 
-#ifdef ECMASCRIPT_DEBUG
+#ifdef ECMASCRIPT_DEBUG_OBJ
 
 #define RETURN_JS(obj) \
 	fprintf(stderr, "%s:%d obj=%p\n", __FILE__, __LINE__, JS_VALUE_GET_PTR(obj)); \

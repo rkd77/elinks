@@ -103,6 +103,7 @@ get_cache_entry_loading_count(void)
 struct cache_entry *
 find_in_cache(struct uri *uri)
 {
+	//LOG_JS("%s", uri->data);
 	struct cache_entry *cached;
 	int proxy = (uri->protocol == PROTOCOL_PROXY);
 

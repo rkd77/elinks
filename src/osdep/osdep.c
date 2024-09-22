@@ -885,7 +885,7 @@ int
 get_output_handle(void)
 {
 	if (program.testjs) {
-		return open("/dev/null", O_WRONLY);
+	//	return open("/dev/null", O_WRONLY);
 	}
 
 	return 1;

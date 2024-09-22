@@ -656,7 +656,7 @@ follow_url(struct session *ses, struct uri *uri, char *target,
 
 	uristring = uri && !uri->post ? get_uri_string(uri, URI_BASE_FRAGMENT)
 	                              : NULL;
-
+	LOG_JS("%s", uristring);
 	/* Do nothing if we do not have a URI or if it is a POST request
 	 * because scripts can corrupt POST requests leading to bad
 	 * things happening later on. */

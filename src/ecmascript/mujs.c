@@ -192,7 +192,7 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	interpreter->backend_data = ctx;
 	JS_SetContextOpaque(ctx, interpreter);
 
-//	JS::SetWarningReporter(ctx, error_reporter);
+	JS::SetWarningReporter(ctx, error_reporter);
 
 	JS_SetInterruptHandler(rt, js_heartbeat_callback, interpreter);
 //	JS::RealmOptions options;
@@ -274,7 +274,7 @@ mujs_eval(struct ecmascript_interpreter *interpreter,
                   struct string *code, struct string *ret)
 {
 	assert(interpreter);
-
+	LOG_JS("%.100s...", code->source);
 	js_State *J = (js_State *)interpreter->backend_data;
 	interpreter->ret = ret;
 	js_dostring(J, code->source);

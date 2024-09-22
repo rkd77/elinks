@@ -415,12 +415,10 @@ error_reporter(struct ecmascript_interpreter *interpreter, JSContext *ctx)
 	set_led_value(ses->status.ecmascript_led, 'J');
 #endif
 
-	if (!get_opt_bool("ecmascript.error_reporting", ses)) {
-		return;
-	}
-
 	if (init_string(&f)) {
 		js_dump_error(ctx, &f);
+		LOG_JS("%s", f);
+		if (!get_opt_bool("ecmascript.error_reporting", ses)) return;
 
 		if (!init_string(&msg)) {
 			done_string(&f);
@@ -445,6 +443,7 @@ quickjs_eval(struct ecmascript_interpreter *interpreter,
 //	if (!js_module_init_ok) {
 //		return;
 //	}
+	LOG_JS("%.100s...", code->source);
 	ctx = (JSContext *)interpreter->backend_data;
 	interpreter->heartbeat = add_heartbeat(interpreter);
 	interpreter->ret = ret;

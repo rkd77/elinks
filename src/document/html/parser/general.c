@@ -264,7 +264,10 @@ html_script(struct html_context *html_context, char *a,
 	if (type) {
 		pos = type;
 
-		if (!c_strncasecmp(type, "text/", 5)) {
+		if (!c_strcasecmp(type, "module")){
+			mem_free(type);
+			goto lang;
+		} else if (!c_strncasecmp(type, "text/", 5)) {
 			pos += 5;
 
 		} else if (!c_strncasecmp(type, "application/", 12)) {
@@ -273,6 +276,7 @@ html_script(struct html_context *html_context, char *a,
 		} else {
 			mem_free(type);
 not_processed:
+			LOG_JS("skipping %s", get_attr_val(a, "src", html_context->doc_cp));
 			/* Permit nested scripts and retreat. */
 			html_top->invisible++;
 			return;
@@ -297,7 +301,7 @@ not_processed:
 
 		mem_free(type);
 	}
-
+lang:
 	/* Check that the script content is ecmascript. The value of the
 	 * language attribute can be JavaScript with optional version digits
 	 * postfixed (like: ``JavaScript1.1'').

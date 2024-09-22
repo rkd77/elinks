@@ -11,7 +11,7 @@ struct memory_list {
 };
 
 #undef DEBUG_MEMLIST
-#ifdef CONFIG_DEBUG
+#ifdef CONFIG_DEBUG_MEMLIST
 #define DEBUG_MEMLIST
 #endif
 
