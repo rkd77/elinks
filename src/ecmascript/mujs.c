@@ -73,9 +73,14 @@
 /*** Global methods */
 
 
+static char mujs_version[32];
+
 static void
-mujs_init(struct module *xxx)
+mujs_init(struct module *module)
 {
+	snprintf(mujs_version, 31, "MuJS %d.%d.%d", JS_VERSION_MAJOR, JS_VERSION_MINOR, JS_VERSION_PATCH);
+	module->name = mujs_version;
+
 	map_attrs = attr_create_new_map();
 	map_attributes = attr_create_new_map();
 	map_rev_attributes = attr_create_new_map();
