@@ -5,11 +5,11 @@
 extern "C" {
 #endif
 
-char *base64_encode(char *);
-char *base64_decode(const char *);
+unsigned char *base64_encode(unsigned char *);
+unsigned char *base64_decode(const unsigned char *);
 
-char *base64_encode_bin(char *, int, int *);
-char *base64_decode_bin(const char *, int, int *);
+unsigned char *base64_encode_bin(unsigned char *, int, int *);
+unsigned char *base64_decode_bin(const unsigned char *, int, int *);
 
 #ifdef __cplusplus
 }
