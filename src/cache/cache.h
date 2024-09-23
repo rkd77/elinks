@@ -73,6 +73,7 @@ struct cache_entry {
 	 * an entry with this set to 1 in wild nature ;-). */
 	unsigned int gc_target:1;	/* The GC touch of death */
 	unsigned int cgi:1;		/* Is a CGI output? */
+	unsigned int integrity_valid:1; /* Was integrity checked and valid */
 
 	cache_mode_T cache_mode;	/* Reload condition */
 };
@@ -154,6 +155,8 @@ unsigned longlong get_cache_size(void);
 int get_cache_entry_count(void);
 int get_cache_entry_used_count(void);
 int get_cache_entry_loading_count(void);
+
+int validate_cache_integrity(struct cache_entry *cached, const char *integrity);
 
 #ifdef __cplusplus
 }

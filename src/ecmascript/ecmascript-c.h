@@ -81,6 +81,9 @@ void ecmascript_walk_tree(struct string *buf, void *nod, bool start, bool toSort
 
 void free_el_dom_collection(void *ctx);
 
+void save_integrity_in_map(struct uri *uri, char *integrity);
+char *get_integrity_from_map(struct uri *uri);
+
 extern struct module ecmascript_module;
 
 #ifdef __cplusplus

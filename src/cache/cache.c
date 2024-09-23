@@ -6,6 +6,10 @@
 
 #include <string.h>
 
+#ifdef CONFIG_OPENSSL
+#include <openssl/sha.h>
+#endif
+
 #include "elinks.h"
 
 #include "bfu/dialog.h"
@@ -21,6 +25,7 @@
 #ifdef CONFIG_SCRIPTING_SPIDERMONKEY
 # include "scripting/smjs/smjs.h"
 #endif
+#include "util/base64.h"
 #include "util/error.h"
 #include "util/memory.h"
 #include "util/string.h"
@@ -926,3 +931,133 @@ shrinked_enough:
 	}
 #endif
 }
+
+#ifdef CONFIG_OPENSSL
+static int
+check_sha512(const void *data, size_t len, const char *checksum)
+{
+	unsigned char digest[SHA512_DIGEST_LENGTH] = {0};
+	SHA512_CTX ctx;
+	SHA512_Init(&ctx);
+	SHA512_Update(&ctx, data, len);
+	SHA512_Final(digest, &ctx);
+
+	int outlen = 0;
+	unsigned char *b64 = base64_encode_bin(digest, SHA512_DIGEST_LENGTH, &outlen);
+	int res = 0;
+
+	if (b64) {
+		res = !memcmp(b64, checksum, outlen);
+		mem_free(b64);
+	}
+	return res;
+}
+
+static int
+check_sha384(const void *data, size_t len, const char *checksum)
+{
+	unsigned char digest[SHA384_DIGEST_LENGTH] = {0};
+	SHA512_CTX ctx;
+	SHA384_Init(&ctx);
+	SHA384_Update(&ctx, data, len);
+	SHA384_Final(digest, &ctx);
+
+	int outlen = 0;
+	unsigned char *b64 = base64_encode_bin(digest, SHA384_DIGEST_LENGTH, &outlen);
+	int res = 0;
+
+	if (b64) {
+		res = !memcmp(b64, checksum, outlen);
+		mem_free(b64);
+	}
+	return res;
+}
+
+static int
+check_sha256(const void *data, size_t len, const char *checksum)
+{
+	unsigned char digest[SHA256_DIGEST_LENGTH] = {0};
+	SHA256_CTX ctx;
+	SHA256_Init(&ctx);
+	SHA256_Update(&ctx, data, len);
+	SHA256_Final(digest, &ctx);
+
+	int outlen = 0;
+	unsigned char *b64 = base64_encode_bin(digest, SHA256_DIGEST_LENGTH, &outlen);
+	int res = 0;
+
+	if (b64) {
+		res = !memcmp(b64, checksum, outlen);
+		mem_free(b64);
+	}
+	return res;
+}
+
+enum alg {
+	EL_SHA512 = 1,
+	EL_SHA384 = 2,
+	EL_SHA256 = 3
+};
+
+int
+validate_cache_integrity(struct cache_entry *cached, const char *integrity)
+{
+	struct fragment *frag = get_cache_fragment(cached);
+	const char *ch = integrity;
+	int ret = 1;
+
+	if (!frag) {
+		return 0;
+	}
+	while (1) {
+		int alg = 0;
+		skip_space(ch);
+
+		if (!ch) {
+			return ret;
+		}
+
+		if (!strncmp("sha512-", ch, 7)) {
+			alg = EL_SHA512;
+			ch += 7;
+		} else if (!strncmp("sha384-", ch, 7)) {
+			alg = EL_SHA384;
+			ch += 7;
+		} else if (!strncmp("sha256-", ch, 7)) {
+			alg = EL_SHA256;
+			ch += 7;
+		} else {
+			return ret;
+		}
+
+		switch (alg) {
+		case EL_SHA512:
+			ret = check_sha512(frag->data, (size_t)frag->length, ch);
+			break;
+		case EL_SHA384:
+			ret = check_sha384(frag->data, (size_t)frag->length, ch);
+			break;
+		case EL_SHA256:
+			ret = check_sha256(frag->data, (size_t)frag->length, ch);
+			break;
+		default:
+			return ret;
+		}
+		if (ret) {
+			return ret;
+		}
+		skip_nonspace(ch);
+	}
+}
+#else
+int
+validate_cache_integrity(struct cache_entry *cached, const char *integrity)
+{
+	struct fragment *frag = get_cache_fragment(cached);
+
+	if (!frag) {
+		return 0;
+	}
+	return 1;
+}
+#endif

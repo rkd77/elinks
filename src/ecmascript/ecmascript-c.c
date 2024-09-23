@@ -39,8 +39,34 @@
 #include "viewer/text/form.h"
 #include "viewer/text/view.h"
 
+#ifdef CONFIG_ECMASCRIPT_SMJS
+#include <map>
+std::map<struct uri *, char *> map_integrity;
+#endif
+
 extern int interpreter_count;
 extern int ecmascript_enabled;
+
+void
+save_integrity_in_map(struct uri *uri, char *integrity)
+{
+#ifdef CONFIG_ECMASCRIPT_SMJS
+	map_integrity[uri] = null_or_stracpy(integrity);
+#endif
+}
+
+char *
+get_integrity_from_map(struct uri *uri)
+{
+#ifdef CONFIG_ECMASCRIPT_SMJS
+	auto e = map_integrity.find(uri);
+
+	if (e != map_integrity.end()) {
+		return e->second;
+	}
+#endif
+	return NULL;
+}
 
 int
 ecmascript_get_interpreter_count(void)
@@ -198,6 +224,19 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 		if (!uri) continue;
 
 		cached = get_redirected_cache_entry(uri);
+
+#ifdef CONFIG_ECMASCRIPT_SMJS
+		if (cached) {
+			char *integrity = get_integrity_from_map(uri);
+
+			if (integrity) {
+				if (!validate_cache_integrity(cached, integrity)) {
+					cached = NULL;
+					fprintf(stderr, "Integrity failed for %s\n", struri(uri));
+				}
+			}
+		}
+#endif
 		done_uri(uri);
 
 		if (!cached) {

@@ -40,6 +40,11 @@
 #include "document/options.h"
 #include "document/refresh.h"
 #include "document/renderer.h"
+
+#ifdef CONFIG_ECMASCRIPT_SMJS
+#include "ecmascript/ecmascript-c.h"
+#endif
+
 #include "intl/charsets.h"
 #include "osdep/types.h"
 #include "protocol/uri.h"
@@ -2392,8 +2397,13 @@ html_special(struct html_context *html_context, html_special_type_T c, ...)
 #ifdef CONFIG_ECMASCRIPT
 			if (document) {
 				struct uri *uri = va_arg(l, struct uri *);
+				char *integrity = va_arg(l, char *);
 
 				add_to_uri_list(&document->ecmascript_imports, uri);
+
+				if (uri && integrity) {
+					save_integrity_in_map(uri, integrity);
+				}
 			}
 #endif
 			break;

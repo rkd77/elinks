@@ -336,8 +336,10 @@ not_processed:
 		uri = get_uri(import_url, URI_BASE);
 		if (!uri) goto imported;
 
+		char *integrity = get_attr_val(a, "integrity", html_context->doc_cp);
 		/* Request the imported script as part of the document ... */
-		html_context->special_f(html_context, SP_SCRIPT, uri);
+		html_context->special_f(html_context, SP_SCRIPT, uri, integrity);
+		mem_free_if(integrity);
 		done_uri(uri);
 
 		/* Create URL reference onload snippet. */
