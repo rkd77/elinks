@@ -22,7 +22,7 @@
 #include "document/css/css.h"
 #include "document/document.h"
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_MUJS) || defined(CONFIG_QUICKJS)
-#include "ecmascript/ecmascript-c.h"
+#include "js/ecmascript-c.h"
 #endif
 #include "formhist/formhist.h"
 #include "globhist/globhist.h"

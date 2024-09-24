@@ -9,7 +9,7 @@
 #include "elinks.h"
 
 #include "config/home.h"
-#include "ecmascript/spidermonkey-shared.h"
+#include "js/spidermonkey-shared.h"
 #include <js/Printf.h>
 #include "intl/charsets.h"
 #include "main/module.h"

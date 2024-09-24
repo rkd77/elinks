@@ -7,7 +7,7 @@
 #include "elinks.h"
 
 #include "bookmarks/bookmarks.h"
-#include "ecmascript/spidermonkey-shared.h"
+#include "js/spidermonkey-shared.h"
 #include "intl/charsets.h"
 #include "main/event.h"
 #include "scripting/smjs/core.h"

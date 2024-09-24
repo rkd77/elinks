@@ -14,7 +14,7 @@
 #include "elinks.h"
 
 #ifdef CONFIG_LIBDOM
-#include "ecmascript/libdom/dom.h"
+#include "js/libdom/dom.h"
 #include <dom/dom.h>
 #include <dom/bindings/hubbub/parser.h>
 #endif
@@ -36,7 +36,7 @@
 
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 #include "document/libdom/mapa.h"
-#include "ecmascript/ecmascript-c.h"
+#include "js/ecmascript-c.h"
 #endif
 
 #include "intl/charsets.h"

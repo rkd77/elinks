@@ -7,7 +7,7 @@
 #include "elinks.h"
 
 #include "cache/cache.h"
-#include "ecmascript/spidermonkey-shared.h"
+#include "js/spidermonkey-shared.h"
 #include "protocol/uri.h"
 #include "main/event.h"
 #include "main/module.h"

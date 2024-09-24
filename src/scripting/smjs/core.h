@@ -1,7 +1,7 @@
 #ifndef EL__SCRIPTING_SMJS_CORE_H
 #define EL__SCRIPTING_SMJS_CORE_H
 
-#include "ecmascript/spidermonkey-shared.h"
+#include "js/spidermonkey-shared.h"
 
 struct module;
 struct session;

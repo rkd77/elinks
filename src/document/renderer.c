@@ -28,7 +28,7 @@
 #include "document/renderer.h"
 #include "document/view.h"
 #ifdef CONFIG_ECMASCRIPT
-#include "ecmascript/ecmascript-c.h"
+#include "js/ecmascript-c.h"
 #endif
 #include "encoding/encoding.h"
 #include "intl/charsets.h"

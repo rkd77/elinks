@@ -6,7 +6,7 @@
 
 #include "elinks.h"
 
-#include "ecmascript/spidermonkey-shared.h"
+#include "js/spidermonkey-shared.h"
 #include "scripting/scripting.h"
 #include "scripting/smjs/core.h"
 #include "scripting/smjs/global_object.h"

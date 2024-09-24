@@ -7,7 +7,7 @@
 #include "elinks.h"
 
 #include "globhist/globhist.h"
-#include "ecmascript/spidermonkey-shared.h"
+#include "js/spidermonkey-shared.h"
 #include "scripting/smjs/core.h"
 #include "scripting/smjs/elinks_object.h"
 #include "util/memory.h"

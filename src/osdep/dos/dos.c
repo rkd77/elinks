@@ -25,7 +25,7 @@
 #include <unistd.h>
 #include <values.h>
 #ifdef CONFIG_QUICKJS
-#include "ecmascript/quickjs/heartbeat.h"
+#include "js/quickjs/heartbeat.h"
 #endif
 #include "intl/libintl.h"
 #include "main/main.h"

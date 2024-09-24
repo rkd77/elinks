@@ -7,7 +7,7 @@
 #include "elinks.h"
 
 #include "config/kbdbind.h"
-#include "ecmascript/spidermonkey-shared.h"
+#include "js/spidermonkey-shared.h"
 #include "intl/libintl.h"
 #include "scripting/smjs/core.h"
 #include "scripting/smjs/elinks_object.h"

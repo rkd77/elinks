@@ -10,8 +10,8 @@
 
 #include "bfu/msgbox.h"
 #include "config/home.h"
-#include "ecmascript/spidermonkey-shared.h"
-#include "ecmascript/spidermonkey/util.h"
+#include "js/spidermonkey-shared.h"
+#include "js/spidermonkey/util.h"
 #include "intl/libintl.h"
 #include "protocol/uri.h"
 #include "scripting/scripting.h"

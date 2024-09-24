@@ -13,7 +13,7 @@
 #include "document/document.h"
 #include "document/view.h"
 #ifdef CONFIG_ECMASCRIPT
-#include "ecmascript/ecmascript-c.h"
+#include "js/ecmascript-c.h"
 #endif
 #include "protocol/uri.h"
 #ifdef CONFIG_SCRIPTING_SPIDERMONKEY

@@ -6,7 +6,7 @@
 
 #include "elinks.h"
 
-#include "ecmascript/spidermonkey-shared.h"
+#include "js/spidermonkey-shared.h"
 #include "network/connection.h"
 #include "protocol/uri.h"
 #include "protocol/protocol.h"

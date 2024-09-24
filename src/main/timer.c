@@ -34,7 +34,7 @@
 #include "util/time.h"
 
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
-#include "ecmascript/timer.h"
+#include "js/timer.h"
 #endif
 
 /* @timers.next points to the timer with the smallest interval,

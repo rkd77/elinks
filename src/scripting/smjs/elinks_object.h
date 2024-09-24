@@ -1,7 +1,7 @@
 #ifndef EL__SCRIPTING_SMJS_ELINKS_OBJECT_H
 #define EL__SCRIPTING_SMJS_ELINKS_OBJECT_H
 
-#include "ecmascript/spidermonkey-shared.h"
+#include "js/spidermonkey-shared.h"
 
 /* This is the all-powerful elinks object through which all client scripts
  * will interface with ELinks. */

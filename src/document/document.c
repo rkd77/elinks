@@ -63,7 +63,7 @@
 #include "document/renderer.h"
 
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
-#include "ecmascript/ecmascript-c.h"
+#include "js/ecmascript-c.h"
 #endif
 
 #ifdef CONFIG_LIBDOM

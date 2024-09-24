@@ -8,7 +8,7 @@
 
 #include "elinks.h"
 
-#include "ecmascript/spidermonkey/util.h"
+#include "js/spidermonkey/util.h"
 #include "scripting/smjs/core.h"
 #include "scripting/smjs/elinks_object.h"
 #include "scripting/smjs/session_object.h"

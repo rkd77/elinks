@@ -20,7 +20,7 @@
 #include "document/libdom/mapa.h"
 #include "document/libdom/renderer2.h"
 #include "document/view.h"
-#include "ecmascript/libdom/parse.h"
+#include "js/libdom/parse.h"
 #include "util/hash.h"
 #include "util/string.h"
 

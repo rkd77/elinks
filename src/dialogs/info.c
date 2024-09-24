@@ -24,7 +24,7 @@
 #include "dialogs/info.h"
 #include "document/renderer.h"
 #ifdef CONFIG_ECMASCRIPT_SMJS
-#include "ecmascript/ecmascript-c.h"
+#include "js/ecmascript-c.h"
 #endif
 #include "intl/libintl.h"
 #include "main/select.h"

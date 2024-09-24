@@ -20,7 +20,7 @@
 #include "document/libdom/doc.h"
 
 #ifdef CONFIG_QUICKJS
-#include "ecmascript/quickjs/mapa.h"
+#include "js/quickjs/mapa.h"
 #endif
 
 #include "intl/charsets.h"

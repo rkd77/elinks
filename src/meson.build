@@ -8,7 +8,7 @@ if conf_data.get('CONFIG_DOM')
 	subdir('dom')
 endif
 if conf_data.get('CONFIG_ECMASCRIPT')
-	subdir('ecmascript')
+	subdir('js')
 endif
 if conf_data.get('CONFIG_FORMHIST')
 	subdir('formhist')

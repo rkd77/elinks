@@ -17,7 +17,7 @@
 #include "document/libdom/mapa.h"
 #include "document/libdom/renderer.h"
 #include "document/plain/renderer.h"
-#include "ecmascript/libdom/parse.h"
+#include "js/libdom/parse.h"
 
 static bool
 dump_dom_element_closing(struct string *buf, dom_node *node)

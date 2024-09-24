@@ -10,7 +10,7 @@
 
 #include "elinks.h"
 
-#include "ecmascript/spidermonkey/util.h"
+#include "js/spidermonkey/util.h"
 #include "main/select.h"
 #include "protocol/uri.h"
 #include "scripting/smjs/core.h"

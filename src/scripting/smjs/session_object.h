@@ -1,7 +1,7 @@
 #ifndef EL__SCRIPTING_SMJS_SESSION_OBJECT_H
 #define EL__SCRIPTING_SMJS_SESSION_OBJECT_H
 
-#include "ecmascript/spidermonkey-shared.h"
+#include "js/spidermonkey-shared.h"
 
 struct session;
 struct terminal;
