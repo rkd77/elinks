@@ -1,5 +1,5 @@
-#ifndef EL__ECMASCRIPT_MUJS_XHR_H
-#define EL__ECMASCRIPT_MUJS_XHR_H
+#ifndef EL__JS_MUJS_XHR_H
+#define EL__JS_MUJS_XHR_H
 
 #include <mujs.h>
 #include "session/download.h"

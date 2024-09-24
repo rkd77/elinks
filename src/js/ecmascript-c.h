@@ -1,5 +1,5 @@
-#ifndef EL__ECMASCRIPT_ECMASCRIPT_C_H
-#define EL__ECMASCRIPT_ECMASCRIPT_C_H
+#ifndef EL__JS_ECMASCRIPT_C_H
+#define EL__JS_ECMASCRIPT_C_H
 
 #include "document/document.h"
 #include "js/libdom/dom.h"

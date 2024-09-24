@@ -1,5 +1,5 @@
-#ifndef EL__ECMASCRIPT_QUICKJS_LOCATION_H
-#define EL__ECMASCRIPT_QUICKJS_LOCATION_H
+#ifndef EL__JS_QUICKJS_LOCATION_H
+#define EL__JS_QUICKJS_LOCATION_H
 
 #include <quickjs/quickjs.h>
 

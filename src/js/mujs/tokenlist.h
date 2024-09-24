@@ -1,5 +1,5 @@
-#ifndef EL__ECMASCRIPT_MUJS_TOKENLIST_H
-#define EL__ECMASCRIPT_MUJS_TOKENLIST_H
+#ifndef EL__JS_MUJS_TOKENLIST_H
+#define EL__JS_MUJS_TOKENLIST_H
 
 #include <mujs.h>
 

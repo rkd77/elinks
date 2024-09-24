@@ -1,5 +1,5 @@
-#ifndef EL__ECMASCRIPT_MUJS_EVENT_H
-#define EL__ECMASCRIPT_MUJS_EVENT_H
+#ifndef EL__JS_MUJS_EVENT_H
+#define EL__JS_MUJS_EVENT_H
 
 #include <mujs.h>
 

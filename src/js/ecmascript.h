@@ -1,5 +1,5 @@
-#ifndef EL__ECMASCRIPT_ECMASCRIPT_H
-#define EL__ECMASCRIPT_ECMASCRIPT_H
+#ifndef EL__JS_ECMASCRIPT_H
+#define EL__JS_ECMASCRIPT_H
 
 /* This is a trivial ECMAScript driver. All your base are belong to pasky. */
 /* In the future you will get DOM, a complete ECMAScript interface and free

@@ -1,6 +1,6 @@
 
-#ifndef EL__ECMASCRIPT_SPIDERMONKEY_UNIBAR_H
-#define EL__ECMASCRIPT_SPIDERMONKEY_UNIBAR_H
+#ifndef EL__JS_SPIDERMONKEY_UNIBAR_H
+#define EL__JS_SPIDERMONKEY_UNIBAR_H
 
 #include "js/spidermonkey/util.h"
 

@@ -1,5 +1,5 @@
-#ifndef EL__ECMASCRIPT_SPIDERMONKEY_SHARED_H
-#define EL__ECMASCRIPT_SPIDERMONKEY_SHARED_H
+#ifndef EL__JS_SPIDERMONKEY_SHARED_H
+#define EL__JS_SPIDERMONKEY_SHARED_H
 
 #include <jsapi.h>
 #include <jsfriendapi.h>

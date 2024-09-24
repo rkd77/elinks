@@ -1,5 +1,5 @@
-#ifndef EL__ECMASCRIPT_SPIDERMONKEY_FORM_H
-#define EL__ECMASCRIPT_SPIDERMONKEY_FORM_H
+#ifndef EL__JS_SPIDERMONKEY_FORM_H
+#define EL__JS_SPIDERMONKEY_FORM_H
 
 #include "js/spidermonkey/util.h"
 

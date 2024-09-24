@@ -1,5 +1,5 @@
-#ifndef EL__ECMASCRIPT_QUICKJS_ELEMENT_H
-#define EL__ECMASCRIPT_QUICKJS_ELEMENT_H
+#ifndef EL__JS_QUICKJS_ELEMENT_H
+#define EL__JS_QUICKJS_ELEMENT_H
 
 #include <quickjs/quickjs.h>
 

@@ -1,5 +1,5 @@
-#ifndef EL__ECMASCRIPT_QUICKJS_XHR_H
-#define EL__ECMASCRIPT_QUICKJS_XHR_H
+#ifndef EL__JS_QUICKJS_XHR_H
+#define EL__JS_QUICKJS_XHR_H
 
 #include <quickjs/quickjs.h>
 #include "session/download.h"

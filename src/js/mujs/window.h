@@ -1,5 +1,5 @@
-#ifndef EL__ECMASCRIPT_MUJS_WINDOW_H
-#define EL__ECMASCRIPT_MUJS_WINDOW_H
+#ifndef EL__JS_MUJS_WINDOW_H
+#define EL__JS_MUJS_WINDOW_H
 
 #include <mujs.h>
 

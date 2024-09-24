@@ -1,5 +1,5 @@
-#ifndef EL__ECMASCRIPT_LOCALSTORAGE_DB_H
-#define EL__ECMASCRIPT_LOCALSTORAGE_DB_H
+#ifndef EL__JS_LOCALSTORAGE_DB_H
+#define EL__JS_LOCALSTORAGE_DB_H
 
 #include <sqlite3.h>
 #include <stdio.h>

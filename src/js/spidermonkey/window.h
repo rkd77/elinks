@@ -1,6 +1,6 @@
 
-#ifndef EL__ECMASCRIPT_SPIDERMONKEY_WINDOW_H
-#define EL__ECMASCRIPT_SPIDERMONKEY_WINDOW_H
+#ifndef EL__JS_SPIDERMONKEY_WINDOW_H
+#define EL__JS_SPIDERMONKEY_WINDOW_H
 
 #include "js/spidermonkey/util.h"
 

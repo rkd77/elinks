@@ -1,5 +1,5 @@
-#ifndef EL__ECMASCRIPT_SPIDERMONKEY_NODE_H
-#define EL__ECMASCRIPT_SPIDERMONKEY_NODE_H
+#ifndef EL__JS_SPIDERMONKEY_NODE_H
+#define EL__JS_SPIDERMONKEY_NODE_H
 
 #include "js/spidermonkey/util.h"
 

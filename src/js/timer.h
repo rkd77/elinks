@@ -1,5 +1,5 @@
-#ifndef EL__ECMASCRIPT_TIMER_H
-#define EL__ECMASCRIPT_TIMER_H
+#ifndef EL__JS_TIMER_H
+#define EL__JS_TIMER_H
 
 #include <stdbool.h>
 

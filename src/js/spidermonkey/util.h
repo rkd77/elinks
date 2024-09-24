@@ -1,5 +1,5 @@
-#ifndef EL__ECMASCRIPT_SPIDERMONKEY_UTIL_H
-#define EL__ECMASCRIPT_SPIDERMONKEY_UTIL_H
+#ifndef EL__JS_SPIDERMONKEY_UTIL_H
+#define EL__JS_SPIDERMONKEY_UTIL_H
 
 #include "js/spidermonkey-shared.h"
 #include "util/memory.h"

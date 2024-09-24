@@ -1,5 +1,5 @@
-#ifndef EL__ECMASCRIPT_MUJS_HISTORY_H
-#define EL__ECMASCRIPT_MUJS_HISTORY_H
+#ifndef EL__JS_MUJS_HISTORY_H
+#define EL__JS_MUJS_HISTORY_H
 
 #include <mujs.h>
 
