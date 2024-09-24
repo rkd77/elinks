@@ -39,34 +39,8 @@
 #include "viewer/text/form.h"
 #include "viewer/text/view.h"
 
-#ifdef CONFIG_ECMASCRIPT_SMJS
-#include <map>
-std::map<struct uri *, char *> map_integrity;
-#endif
-
 extern int interpreter_count;
 extern int ecmascript_enabled;
-
-void
-save_integrity_in_map(struct uri *uri, char *integrity)
-{
-#ifdef CONFIG_ECMASCRIPT_SMJS
-	map_integrity[uri] = null_or_stracpy(integrity);
-#endif
-}
-
-char *
-get_integrity_from_map(struct uri *uri)
-{
-#ifdef CONFIG_ECMASCRIPT_SMJS
-	auto e = map_integrity.find(uri);
-
-	if (e != map_integrity.end()) {
-		return e->second;
-	}
-#endif
-	return NULL;
-}
 
 int
 ecmascript_get_interpreter_count(void)
@@ -203,9 +177,11 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 	     (*current) = (*current)->next) {
 		struct string *string = &(*current)->string;
 		char *uristring;
+		char *null_char;
 		struct uri *uri;
 		struct cache_entry *cached;
 		struct fragment *fragment;
+		size_t len;
 
 		if (string->length == 0)
 			continue;
@@ -217,7 +193,14 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 		}
 
 		/* Eval external <script src="reference"></script> snippet */
-		uristring = string->source + 1;
+		null_char = strchr(string->source + 1, '\0');
+
+		if (!null_char) {
+			continue;
+		}
+		len = null_char - string->source - 1;
+
+		uristring = null_char + 1;
 		if (!*uristring) continue;
 
 		uri = get_uri(uristring, URI_BASE);
@@ -225,18 +208,17 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 
 		cached = get_redirected_cache_entry(uri);
 
-#ifdef CONFIG_ECMASCRIPT_SMJS
 		if (cached) {
-			char *integrity = get_integrity_from_map(uri);
+			char *integrity = len > 0 ? memacpy(string->source + 1, len) : NULL;
 
 			if (integrity) {
 				if (!validate_cache_integrity(cached, integrity)) {
 					cached = NULL;
 					fprintf(stderr, "Integrity failed for %s\n", struri(uri));
 				}
+				mem_free(integrity);
 			}
 		}
-#endif
 		done_uri(uri);
 
 		if (!cached) {

@@ -322,6 +322,7 @@ not_processed:
 
 		char *import_url;
 		struct uri *uri;
+		struct string tmp;
 
 		if (!get_opt_bool("ecmascript.enable", NULL)) {
 			mem_free(src);
@@ -336,16 +337,26 @@ not_processed:
 		uri = get_uri(import_url, URI_BASE);
 		if (!uri) goto imported;
 
-		char *integrity = get_attr_val(a, "integrity", html_context->doc_cp);
 		/* Request the imported script as part of the document ... */
-		html_context->special_f(html_context, SP_SCRIPT, uri, integrity);
-		mem_free_if(integrity);
+		html_context->special_f(html_context, SP_SCRIPT, uri);
 		done_uri(uri);
 
-		/* Create URL reference onload snippet. */
-		insert_in_string(&import_url, 0, "^", 1);
-		add_to_ecmascript_string_list(&html_context->part->document->onload_snippets,
-		                   import_url, -1, html_top->name - html_context->part->document->text.source);
+		if (init_string(&tmp)) {
+			char *integrity = get_attr_val(a, "integrity", html_context->doc_cp);
+
+			add_char_to_string(&tmp, '^');
+
+			if (integrity) {
+				add_to_string(&tmp, integrity);
+				mem_free(integrity);
+			}
+			add_char_to_string(&tmp, '\0');
+			add_to_string(&tmp, import_url);
+			/* Create URL reference onload snippet. */
+			add_to_ecmascript_string_list(&html_context->part->document->onload_snippets,
+				tmp.source, tmp.length, html_top->name - html_context->part->document->text.source);
+			done_string(&tmp);
+		}
 
 imported:
 		/* Retreat. Do not permit nested scripts, tho'. */
