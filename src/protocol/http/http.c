@@ -814,7 +814,7 @@ http_send_header(struct socket *socket)
 
 				proxy_data = straconcat(user, ":", passwd, (char *) NULL);
 				if (proxy_data) {
-					char *proxy_64 = base64_encode(proxy_data);
+					char *proxy_64 = (char*)base64_encode((unsigned char*)proxy_data);
 
 					if (proxy_64) {
 						add_to_string(&header, "Proxy-Authorization: Basic ");
@@ -1032,7 +1032,7 @@ http_send_header(struct socket *socket)
 			id = straconcat(entry->user, ":", entry->password,
 					(char *) NULL);
 			if (id) {
-				char *base64 = base64_encode(id);
+				char *base64 = (char*)base64_encode((unsigned char*)id);
 
 				mem_free_set(&id, base64);
 			}

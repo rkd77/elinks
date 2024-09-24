@@ -137,7 +137,7 @@ data_protocol_handler(struct connection *conn)
 
 	datalen = uri->datalen - (data_start - uri->data);
 	if (base64) {
-		char *decoded = base64_decode_bin(data_start, datalen, &decodedlen);
+		char *decoded = (char*)base64_decode_bin((const unsigned char*)data_start, datalen, &decodedlen);
 
 		if (!decoded) {
 			abort_connection(conn, connection_state(S_OUT_OF_MEM));
