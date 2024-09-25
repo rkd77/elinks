@@ -187,7 +187,7 @@ cont:
 
 			if (form->dontsave) continue;
 
-			enc_value = *value ? base64_decode(value)
+			enc_value = *value ? (char*)base64_decode((unsigned char*)value)
 					   : stracpy(value);
 			if (!enc_value) goto fail;
 
@@ -253,7 +253,7 @@ save_formhist_to_file(void)
 				 * $ cat ~/.config/elinks/formhist
 				 * we don't want someone behind our back to read our
 				 * password (androids don't count). */
-				encvalue = base64_encode(sv->value);
+				encvalue = (char*)base64_encode((unsigned char*)sv->value);
 			} else {
 				encvalue = stracpy("");
 			}

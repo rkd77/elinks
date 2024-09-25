@@ -2423,8 +2423,8 @@ el_match_selector(const char *selector, void *node)
 {
 	struct string text;
 	css_error code;
-	size_t size;
-	uint32_t count;
+	//size_t size;
+	//uint32_t count;
 	css_stylesheet_params params;
 	css_stylesheet *sheet = NULL;
 	css_select_ctx *select_ctx = NULL;

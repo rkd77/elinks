@@ -950,7 +950,7 @@ check_sha(const char *name, const unsigned char *data, size_t len, const char *c
 	mdctx = EVP_MD_CTX_new();
 	EVP_DigestInit_ex(mdctx, md, NULL);
 	EVP_DigestUpdate(mdctx, data, len);
-	EVP_DigestFinal_ex(mdctx, md_value, &md_len);
+	EVP_DigestFinal_ex(mdctx, md_value, (unsigned int*)&md_len);
 	EVP_MD_CTX_free(mdctx);
 	int outlen = 0;
 	unsigned char *b64 = base64_encode_bin(md_value, md_len, &outlen);
@@ -983,13 +983,13 @@ validate_cache_integrity(struct cache_entry *cached, const char *integrity)
 
 		if (!strncmp("sha512-", ch, 7)) {
 			ch += 7;
-			ret = check_sha("sha512", frag->data, frag->length, ch);
+			ret = check_sha("sha512", (const unsigned char*)frag->data, frag->length, ch);
 		} else if (!strncmp("sha384-", ch, 7)) {
 			ch += 7;
-			ret = check_sha("sha384", frag->data, frag->length, ch);
+			ret = check_sha("sha384", (const unsigned char*)frag->data, frag->length, ch);
 		} else if (!strncmp("sha256-", ch, 7)) {
 			ch += 7;
-			ret = check_sha("sha256", frag->data, frag->length, ch);
+			ret = check_sha("sha256", (const unsigned char*)frag->data, frag->length, ch);
 		}
 		if (ret) {
 			return ret;
