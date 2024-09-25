@@ -319,6 +319,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	js_urlSearchParams_init(ctx);
 	js_domparser_init(ctx);
 	js_node_init(ctx);
+	js_fragment_init(ctx);
 
 	interpreter->document_obj = getDocument(ctx, document->dom);
 

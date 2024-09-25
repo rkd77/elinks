@@ -1060,7 +1060,7 @@ js_fragment_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	dom_node *el2 = NULL;
 
 	if (!JS_IsNull(argv[0])) {
-		el2 = (dom_node *)(js_getopaque_fragment(argv[0], js_fragment_class_id));
+		el2 = (dom_node *)(js_getopaque_any(argv[0]));
 	}
 
 	if (!el2) {
@@ -1532,7 +1532,7 @@ js_fragment_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 #endif
 	REF_JS(this_val);
 
-	return JS_NewString(ctx, "[element object]");
+	return JS_NewString(ctx, "[fragment object]");
 }
 
 static const JSCFunctionListEntry js_fragment_proto_funcs[] = {
@@ -1643,21 +1643,21 @@ static JSClassDef js_fragment_class = {
 int
 js_fragment_init(JSContext *ctx)
 {
-	JSValue element_proto;
+	JSValue fragment_proto;
 
-	/* create the element class */
+	/* create the fragment class */
 	JS_NewClassID(&js_fragment_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_fragment_class_id, &js_fragment_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);
 	REF_JS(global_obj);
 
-	element_proto = JS_NewObject(ctx);
-	REF_JS(element_proto);
+	fragment_proto = JS_NewObject(ctx);
+	REF_JS(fragment_proto);
 
-	JS_SetPropertyFunctionList(ctx, element_proto, js_fragment_proto_funcs, countof(js_fragment_proto_funcs));
-	JS_SetClassProto(ctx, js_fragment_class_id, element_proto);
-	JS_SetPropertyStr(ctx, global_obj, "DocumentFragment", JS_DupValue(ctx, element_proto));
+	JS_SetPropertyFunctionList(ctx, fragment_proto, js_fragment_proto_funcs, countof(js_fragment_proto_funcs));
+	JS_SetClassProto(ctx, js_fragment_class_id, fragment_proto);
+	JS_SetPropertyStr(ctx, global_obj, "DocumentFragment", JS_DupValue(ctx, fragment_proto));
 
 	JS_FreeValue(ctx, global_obj);
 
@@ -1677,9 +1677,6 @@ getDocumentFragment(JSContext *ctx, void *node)
 	}
 	init_list(el_private->listeners);
 	el_private->node = node;
-
-	JS_NewClassID(&js_fragment_class_id);
-	JS_NewClass(JS_GetRuntime(ctx), js_fragment_class_id, &js_fragment_class);
 
 	JSValue fragment_obj = JS_NewObjectClass(ctx, js_fragment_class_id);
 	REF_JS(fragment_obj);
