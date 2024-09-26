@@ -351,5 +351,6 @@ struct module uri_rewrite_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		NULL,
-	/* done: */		NULL
+	/* done: */		NULL,
+	/* getname: */	NULL
 );

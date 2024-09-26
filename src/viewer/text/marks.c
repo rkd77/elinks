@@ -161,5 +161,6 @@ struct module viewer_marks_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		NULL,
-	/* done: */		done_marks
+	/* done: */		done_marks,
+	/* getname: */	NULL
 );

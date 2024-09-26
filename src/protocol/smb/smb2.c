@@ -52,7 +52,8 @@ struct module smb_protocol_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_smb,
-	/* done: */		NULL
+	/* done: */		NULL,
+	/* getname: */	NULL
 );
 
 static FILE *header_out, *data_out;

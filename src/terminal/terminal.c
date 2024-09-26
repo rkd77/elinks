@@ -601,5 +601,6 @@ struct module terminal_module = struct_module(
 	/* submodules: */	terminal_submodules,
 	/* data: */		NULL,
 	/* init: */		NULL,
-	/* done: */		NULL
+	/* done: */		NULL,
+	/* getname: */	NULL
 );

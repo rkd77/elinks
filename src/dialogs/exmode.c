@@ -211,5 +211,6 @@ struct module exmode_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_exmode,
-	/* done: */		done_exmode
+	/* done: */		done_exmode,
+	/* getname: */	NULL
 );

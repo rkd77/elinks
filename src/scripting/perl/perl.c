@@ -19,5 +19,6 @@ struct module perl_scripting_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_perl,
-	/* done: */		cleanup_perl
+	/* done: */		cleanup_perl,
+	/* getname: */	NULL
 );

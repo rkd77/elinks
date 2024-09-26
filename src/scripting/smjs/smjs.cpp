@@ -19,5 +19,6 @@ struct module smjs_scripting_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_smjs,
-	/* done: */		cleanup_smjs
+	/* done: */		cleanup_smjs,
+	/* getname: */	NULL
 );

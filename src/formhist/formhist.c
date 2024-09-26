@@ -458,5 +458,6 @@ struct module forms_history_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		NULL,
-	/* done: */		done_form_history
+	/* done: */		done_form_history,
+	/* getname: */	NULL
 );

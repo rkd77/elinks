@@ -42,7 +42,8 @@ struct program {
 		/* submodules: */	NULL,		\
 		/* data: */		NULL,		\
 		/* init: */		NULL,		\
-		/* done: */		NULL		\
+		/* done: */		NULL,		\
+		/* getname: */	NULL	\
 	)
 STUB_MODULE(auth_module);
 STUB_MODULE(bittorrent_protocol_module);

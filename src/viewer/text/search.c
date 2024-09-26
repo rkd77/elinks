@@ -2035,5 +2035,6 @@ struct module search_history_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_search_history,
-	/* done: */		done_search_history
+	/* done: */		done_search_history,
+	/* getname: */	NULL
 );

@@ -809,5 +809,6 @@ struct module ecmascript_module = struct_module(
 	/* submodules: */	ecmascript_modules,
 	/* data: */		NULL,
 	/* init: */		init_ecmascript_module,
-	/* done: */		done_ecmascript_module
+	/* done: */		done_ecmascript_module,
+	/* getname: */	NULL
 );

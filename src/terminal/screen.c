@@ -1699,5 +1699,6 @@ struct module terminal_screen_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		NULL,
-	/* done: */		done_screen_drivers
+	/* done: */		done_screen_drivers,
+	/* getname: */	NULL
 );

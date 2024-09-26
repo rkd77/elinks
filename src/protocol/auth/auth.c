@@ -335,5 +335,6 @@ struct module auth_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		NULL,
-	/* done: */		done_auth
+	/* done: */		done_auth,
+	/* getname: */	NULL
 );

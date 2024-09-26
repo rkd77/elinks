@@ -263,7 +263,8 @@ struct module http_protocol_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		NULL,
-	/* done: */		done_http
+	/* done: */		done_http,
+	/* getname: */	NULL
 );
 
 

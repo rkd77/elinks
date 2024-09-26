@@ -283,5 +283,6 @@ struct module mimetypes_mime_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_mimetypes,
-	/* done: */		done_mimetypes
+	/* done: */		done_mimetypes,
+	/* getname: */	NULL
 );

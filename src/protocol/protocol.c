@@ -356,5 +356,6 @@ struct module protocol_module = struct_module(
 	/* submodules: */	protocol_submodules,
 	/* data: */		NULL,
 	/* init: */		NULL,
-	/* done: */		NULL
+	/* done: */		NULL,
+	/* getname: */	NULL
 );

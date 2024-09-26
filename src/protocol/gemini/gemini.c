@@ -51,7 +51,8 @@ struct module gemini_protocol_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		NULL,
-	/* done: */		done_gemini
+	/* done: */		done_gemini,
+	/* getname: */	NULL
 );
 
 static void

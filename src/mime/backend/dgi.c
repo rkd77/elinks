@@ -456,5 +456,6 @@ struct module dgi_mime_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_dgi,
-	/* done: */		done_dgi
+	/* done: */		done_dgi,
+	/* getname: */	NULL
 );

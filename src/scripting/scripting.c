@@ -110,5 +110,6 @@ struct module scripting_module = struct_module(
 	/* submodules: */	scripting_modules,
 	/* data: */		NULL,
 	/* init: */		NULL,
-	/* done: */		NULL
+	/* done: */		NULL,
+	/* getname: */	NULL
 );

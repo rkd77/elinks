@@ -19,5 +19,6 @@ struct module ruby_scripting_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_ruby,
-	/* done: */		NULL
+	/* done: */		NULL,
+	/* getname: */	NULL
 );

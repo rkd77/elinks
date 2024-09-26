@@ -39,10 +39,13 @@ struct module {
 
 	/* This function should shutdown the module. */
 	void (*done)(struct module *module);
+
+	/* This function return name and version of the module if set. */
+	const char *(*getname)(struct module *module);
 };
 
-#define struct_module(name, options, hooks, submods, data, init, done) \
-	{ name, options, hooks, submods, data, init, done }
+#define struct_module(name, options, hooks, submods, data, init, done, getname) \
+	{ name, options, hooks, submods, data, init, done, getname }
 
 #define foreach_module(module, modules, i)			\
 	for (i = 0, module = modules ? modules[i] : NULL;	\

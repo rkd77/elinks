@@ -186,7 +186,8 @@ struct module bookmarks_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_bookmarks,
-	/* done: */		done_bookmarks
+	/* done: */		done_bookmarks,
+	/* getname: */	NULL
 );
 
 

@@ -238,7 +238,8 @@ static struct module openssl_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_openssl,
-	/* done: */		done_openssl
+	/* done: */		done_openssl,
+	/* getname: */	NULL
 );
 
 #elif defined(CONFIG_GNUTLS)
@@ -385,7 +386,8 @@ static struct module gnutls_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_gnutls,
-	/* done: */		done_gnutls
+	/* done: */		done_gnutls,
+	/* getname: */	NULL
 );
 
 #endif /* USE_OPENSSL or CONFIG_GNUTLS */
@@ -414,7 +416,8 @@ struct module ssl_module = struct_module(
 	/* submodules: */	ssl_modules,
 	/* data: */		NULL,
 	/* init: */		NULL,
-	/* done: */		NULL
+	/* done: */		NULL,
+	/* getname: */	NULL
 );
 
 int

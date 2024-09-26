@@ -452,5 +452,6 @@ struct module mujs_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		mujs_init,
-	/* done: */		mujs_done
+	/* done: */		mujs_done,
+	/* getname: */	NULL
 );

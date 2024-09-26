@@ -85,5 +85,6 @@ struct module periodic_saving_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_timer,
-	/* done: */		done_timer
+	/* done: */		done_timer,
+	/* getname: */	NULL
 );

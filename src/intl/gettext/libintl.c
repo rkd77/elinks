@@ -244,6 +244,7 @@ struct module gettext_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_gettext,
-	/* done: */		done_gettext
+	/* done: */		done_gettext,
+	/* getname: */	NULL
 );
 

@@ -21,5 +21,6 @@ struct module python_scripting_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_python,
-	/* done: */		cleanup_python
+	/* done: */		cleanup_python,
+	/* getname: */	NULL
 );

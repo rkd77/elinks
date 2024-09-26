@@ -719,5 +719,6 @@ struct module document_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_documents,
-	/* done: */		done_documents
+	/* done: */		done_documents,
+	/* getname: */	NULL
 );

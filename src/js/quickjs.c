@@ -562,5 +562,6 @@ struct module quickjs_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		quickjs_init,
-	/* done: */		quickjs_done
+	/* done: */		quickjs_done,
+	/* getname: */	NULL
 );

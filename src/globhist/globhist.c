@@ -454,5 +454,6 @@ struct module global_history_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_global_history,
-	/* done: */		done_global_history
+	/* done: */		done_global_history,
+	/* getname: */	NULL
 );

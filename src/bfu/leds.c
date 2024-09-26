@@ -555,5 +555,6 @@ struct module leds_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_leds,
-	/* done: */		done_leds
+	/* done: */		done_leds,
+	/* getname: */	NULL
 );

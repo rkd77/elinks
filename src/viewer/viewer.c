@@ -28,5 +28,6 @@ struct module viewer_module = struct_module(
 	/* submodules: */	viewer_submodules,
 	/* data: */		NULL,
 	/* init: */		NULL,
-	/* done: */		NULL
+	/* done: */		NULL,
+	/* getname: */	NULL
 );

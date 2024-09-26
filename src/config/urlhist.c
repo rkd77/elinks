@@ -64,5 +64,6 @@ struct module goto_url_history_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_url_history,
-	/* done: */		done_url_history
+	/* done: */		done_url_history,
+	/* getname: */	NULL
 );

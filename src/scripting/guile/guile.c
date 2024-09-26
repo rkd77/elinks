@@ -19,5 +19,6 @@ struct module guile_scripting_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_guile,
-	/* done: */		NULL
+	/* done: */		NULL,
+	/* getname: */	NULL
 );

@@ -706,5 +706,6 @@ struct module spidermonkey_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		spidermonkey_init,
-	/* done: */		spidermonkey_done
+	/* done: */		spidermonkey_done,
+	/* getname: */	NULL
 );

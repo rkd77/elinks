@@ -788,7 +788,8 @@ struct module mailcap_mime_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_mailcap,
-	/* done: */		done_mailcap
+	/* done: */		done_mailcap,
+	/* getname: */	NULL
 );
 
 #ifdef TEST_MAILCAP

@@ -248,5 +248,6 @@ struct module css_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_css,
-	/* done: */		done_css
+	/* done: */		done_css,
+	/* getname: */	NULL
 );

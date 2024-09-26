@@ -1002,5 +1002,6 @@ struct module kbdbind_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_keymaps,
-	/* done: */		free_keymaps
+	/* done: */		free_keymaps,
+	/* getname: */	NULL
 );

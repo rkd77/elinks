@@ -930,5 +930,6 @@ struct module cookies_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_cookies,
-	/* done: */		done_cookies
+	/* done: */		done_cookies,
+	/* getname: */	NULL
 );

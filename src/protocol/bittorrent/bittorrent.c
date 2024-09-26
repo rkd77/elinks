@@ -346,5 +346,6 @@ struct module bittorrent_protocol_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		NULL,
-	/* done: */		done_bittorrent
+	/* done: */		done_bittorrent,
+	/* getname: */	NULL
 );

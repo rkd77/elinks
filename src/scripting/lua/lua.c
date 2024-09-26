@@ -19,5 +19,6 @@ struct module lua_scripting_module = struct_module(
 	/* submodules: */	NULL,
 	/* data: */		NULL,
 	/* init: */		init_lua,
-	/* done: */		cleanup_lua
+	/* done: */		cleanup_lua,
+	/* getname: */	NULL
 );
