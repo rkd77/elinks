@@ -11,6 +11,15 @@
 #include "scripting/lua/core.h"
 #include "scripting/lua/hooks.h"
 
+static const char *
+get_name_lua(struct module *xxx)
+{
+	static char elluaversion[32];
+	strncpy(elluaversion, LUA_RELEASE, 31);
+
+	return elluaversion;
+}
+
 
 struct module lua_scripting_module = struct_module(
 	/* name: */		N_("Lua"),
@@ -20,5 +29,5 @@ struct module lua_scripting_module = struct_module(
 	/* data: */		NULL,
 	/* init: */		init_lua,
 	/* done: */		cleanup_lua,
-	/* getname: */	NULL
+	/* getname: */	get_name_lua
 );

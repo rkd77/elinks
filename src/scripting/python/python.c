@@ -14,6 +14,15 @@
 #include "scripting/python/hooks.h"
 
 
+static const char *
+get_name_python(struct module *xxx)
+{
+	static char elpythonversion[32];
+	snprintf(elpythonversion, 31, "Python %s", PY_VERSION);
+
+	return elpythonversion;
+}
+
 struct module python_scripting_module = struct_module(
 	/* name: */		N_("Python"),
 	/* options: */		NULL,
@@ -22,5 +31,5 @@ struct module python_scripting_module = struct_module(
 	/* data: */		NULL,
 	/* init: */		init_python,
 	/* done: */		cleanup_python,
-	/* getname: */	NULL
+	/* getname: */	get_name_python
 );

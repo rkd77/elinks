@@ -11,6 +11,14 @@
 #include "scripting/perl/core.h"
 #include "scripting/perl/hooks.h"
 
+static const char *
+get_name_perl(struct module *xxx)
+{
+	static char elperlversion[32];
+	snprintf(elperlversion, 31, "Perl %s", PERL_VERSION_STRING);
+
+	return elperlversion;
+}
 
 struct module perl_scripting_module = struct_module(
 	/* name: */		N_("Perl"),
@@ -20,5 +28,5 @@ struct module perl_scripting_module = struct_module(
 	/* data: */		NULL,
 	/* init: */		init_perl,
 	/* done: */		cleanup_perl,
-	/* getname: */	NULL
+	/* getname: */	get_name_perl
 );

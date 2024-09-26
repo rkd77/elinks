@@ -11,6 +11,14 @@
 #include "scripting/ruby/core.h"
 #include "scripting/ruby/hooks.h"
 
+static const char *
+get_name_ruby(struct module *xxx)
+{
+	static char elrubyversion[32];
+	snprintf(elrubyversion, 31, "Ruby %s", ruby_version);
+
+	return elrubyversion;
+}
 
 struct module ruby_scripting_module = struct_module(
 	/* name: */		N_("Ruby"),
@@ -20,5 +28,5 @@ struct module ruby_scripting_module = struct_module(
 	/* data: */		NULL,
 	/* init: */		init_ruby,
 	/* done: */		NULL,
-	/* getname: */	NULL
+	/* getname: */	get_name_ruby
 );

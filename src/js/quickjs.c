@@ -73,10 +73,8 @@
 
 /*** Global methods */
 
-static char quickjs_version[32];
-
 static void
-quickjs_get_version(void)
+quickjs_get_version(char *quickjs_version)
 {
 	char *ptr = NULL;
 	size_t size = 0;
@@ -108,15 +106,22 @@ quickjs_get_version(void)
 	}
 }
 
+static const char *
+get_name_quickjs(struct module *xxx)
+{
+	static char quickjs_version[32];
+
+	quickjs_get_version(quickjs_version);
+
+	return quickjs_version;
+}
+
 static void
 quickjs_init(struct module *module)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	quickjs_get_version();
-	module->name = quickjs_version;
-
 	map_attrs = attr_create_new_attrs_map();
 	map_attributes = attr_create_new_attributes_map();
 	map_rev_attributes = attr_create_new_attributes_map_rev();
@@ -563,5 +568,5 @@ struct module quickjs_module = struct_module(
 	/* data: */		NULL,
 	/* init: */		quickjs_init,
 	/* done: */		quickjs_done,
-	/* getname: */	NULL
+	/* getname: */	get_name_quickjs
 );

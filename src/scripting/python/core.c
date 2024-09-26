@@ -380,7 +380,6 @@ python_error:
 	return NULL;
 }
 
-static char elpythonversion[32];
 
 void
 init_python(struct module *module)
@@ -390,8 +389,6 @@ init_python(struct module *module)
 	}
 	PyImport_AppendInittab("elinks", PyInit_elinks);
 	Py_Initialize();
-	snprintf(elpythonversion, 31, "Python %s", PY_VERSION);
-	module->name = elpythonversion;
 
 	if (!hooks_module_exists()) {
 		return;

@@ -59,13 +59,14 @@
 #if defined(CONFIG_FTP) || defined(CONFIG_SFTP)
 
 #ifdef CONFIG_FTP
-static char el_curlversion[256];
 
-static void
-init_ftpes(struct module *module)
+static const char *
+get_name_ftpes(struct module *module)
 {
+	static char el_curlversion[256];
 	snprintf(el_curlversion, 255, "FTPES(%s)", curl_version());
-	module->name = el_curlversion;
+
+	return el_curlversion;
 }
 
 struct module ftpes_protocol_module = struct_module(
@@ -74,9 +75,9 @@ struct module ftpes_protocol_module = struct_module(
 	/* hooks: */		NULL,
 	/* submodules: */	NULL,
 	/* data: */		NULL,
-	/* init: */		init_ftpes,
+	/* init: */		NULL,
 	/* done: */		NULL,
-	/* getname: */	NULL
+	/* getname: */	get_name_ftpes
 );
 #endif
 

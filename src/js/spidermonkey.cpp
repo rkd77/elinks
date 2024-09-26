@@ -134,14 +134,9 @@ reported:
 	JS_ClearPendingException(ctx);
 }
 
-static char spidermonkey_version[32];
-
 static void
 spidermonkey_init(struct module *module)
 {
-	snprintf(spidermonkey_version, 31, "mozjs %s", JS_GetImplementationVersion());
-	module->name = spidermonkey_version;
-
 	js_module_init_ok = spidermonkey_runtime_addref();
 }
 
@@ -150,6 +145,15 @@ spidermonkey_done(struct module *xxx)
 {
 	if (js_module_init_ok)
 		spidermonkey_runtime_release();
+}
+
+static const char *
+get_name_spidermonkey(struct module *module)
+{
+	static char spidermonkey_version[32];
+
+	snprintf(spidermonkey_version, 31, "mozjs %s", JS_GetImplementationVersion());
+	return spidermonkey_version;
 }
 
 static JSObject*
@@ -707,5 +711,5 @@ struct module spidermonkey_module = struct_module(
 	/* data: */		NULL,
 	/* init: */		spidermonkey_init,
 	/* done: */		spidermonkey_done,
-	/* getname: */	NULL
+	/* getname: */	get_name_spidermonkey
 );

@@ -54,7 +54,11 @@ add_module_to_string(struct string *string, struct module *module,
 	struct module *submodule;
 	int i;
 
-	if (module->name) add_to_string(string, _(module->name, term));
+	if (module->getname) {
+		add_to_string(string, module->getname(module));
+	} else if (module->name) {
+		add_to_string(string, _(module->name, term));
+	}
 
 	if (!module->submodules) return;
 

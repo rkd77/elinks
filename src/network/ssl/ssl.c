@@ -85,7 +85,6 @@ socket_SSL_ex_data_dup(CRYPTO_EX_DATA *to, const CRYPTO_EX_DATA *from,
 		return 1;	/* allow SSL_dup() */
 }
 
-static char opensslversion[64];
 
 #ifdef CONFIG_OS_DOS
 
@@ -170,8 +169,15 @@ init_openssl(struct module *module)
 						      NULL,
 						      socket_SSL_ex_data_dup,
 						      NULL);
+}
+
+static const char *
+get_name_openssl(struct module *xxx)
+{
+	static char opensslversion[64];
 	strncpy(opensslversion, SSLeay_version(OPENSSL_VERSION), 63);
-	module->name = opensslversion;
+
+	return opensslversion;
 }
 
 static void
@@ -239,7 +245,7 @@ static struct module openssl_module = struct_module(
 	/* data: */		NULL,
 	/* init: */		init_openssl,
 	/* done: */		done_openssl,
-	/* getname: */	NULL
+	/* getname: */	get_name_openssl
 );
 
 #elif defined(CONFIG_GNUTLS)
@@ -259,8 +265,6 @@ const static int cipher_priority[16] = {
 };
 const static int cert_type_priority[16] = { GNUTLS_CRT_X509, GNUTLS_CRT_OPENPGP, 0 };
 #endif
-
-static char gnutlsversion[64];
 
 static void
 init_gnutls(struct module *module)
@@ -309,9 +313,15 @@ init_gnutls(struct module *module)
 				client_cert, client_cert, GNUTLS_X509_FMT_PEM);
 		}
 	}
+}
 
+static const char *
+get_name_gnutls(struct module *xxx)
+{
+	static char gnutlsversion[64];
 	snprintf(gnutlsversion, 63, "GnuTLS %s", gnutls_check_version(NULL));
-	module->name = gnutlsversion;
+
+	return gnutlsversion;
 }
 
 static void
@@ -387,7 +397,7 @@ static struct module gnutls_module = struct_module(
 	/* data: */		NULL,
 	/* init: */		init_gnutls,
 	/* done: */		done_gnutls,
-	/* getname: */	NULL
+	/* getname: */	get_name_gnutls
 );
 
 #endif /* USE_OPENSSL or CONFIG_GNUTLS */

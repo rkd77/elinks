@@ -36,13 +36,14 @@
 #include "util/memory.h"
 #include "util/string.h"
 
-static char elsmbversion[32];
 
 static void
-init_smb(struct module *module)
+get_name_smb(struct module *module)
 {
+	static char elsmbversion[32];
 	snprintf(elsmbversion, 31, "SMB(%s)", smbc_version());
-	module->name = elsmbversion;
+
+	return elsmbversion;
 }
 
 struct module smb_protocol_module = struct_module(
@@ -51,9 +52,9 @@ struct module smb_protocol_module = struct_module(
 	/* hooks: */		NULL,
 	/* submodules: */	NULL,
 	/* data: */		NULL,
-	/* init: */		init_smb,
+	/* init: */		NULL,
 	/* done: */		NULL,
-	/* getname: */	NULL
+	/* getname: */	get_name_smb
 );
 
 static FILE *header_out, *data_out;

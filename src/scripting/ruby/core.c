@@ -219,9 +219,6 @@ init_erb_module(void)
 	rb_define_module_function(erb_module, "p", (VALUE (*)(ANYARGS))erb_stdout_p, -1);
 }
 
-
-static char elrubyversion[32];
-
 void
 init_ruby(struct module *module)
 {
@@ -240,9 +237,6 @@ init_ruby(struct module *module)
 
 	/* Set up the ELinks module interface. */
 	init_erb_module();
-
-	snprintf(elrubyversion, 31, "Ruby %s", ruby_version);
-	module->name = elrubyversion;
 
 	if (xdg_config_home) {
 		path = straconcat(xdg_config_home, RUBY_HOOKS_FILENAME,

@@ -11,6 +11,14 @@
 #include "scripting/guile/core.h"
 #include "scripting/guile/hooks.h"
 
+static const char *
+get_name_guile(struct module *xxx)
+{
+	static char elguileversion[32];
+	snprintf(elguileversion, 31, "Guile %s", scm_to_locale_string(scm_version()));
+
+	return elguileversion;
+}
 
 struct module guile_scripting_module = struct_module(
 	/* name: */		N_("Guile"),
@@ -20,5 +28,5 @@ struct module guile_scripting_module = struct_module(
 	/* data: */		NULL,
 	/* init: */		init_guile,
 	/* done: */		NULL,
-	/* getname: */	NULL
+	/* getname: */	get_name_guile
 );
