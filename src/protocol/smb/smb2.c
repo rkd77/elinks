@@ -37,7 +37,7 @@
 #include "util/string.h"
 
 
-static void
+static const char *
 get_name_smb(struct module *module)
 {
 	static char elsmbversion[32];
