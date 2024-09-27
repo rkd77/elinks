@@ -897,7 +897,7 @@ mjs_fragment_appendChild(js_State *J)
 		js_error(J, "error");
 		return;
 	}
-	dom_node *el2 = (dom_node *)(mjs_getprivate_fragment(J, 1));
+	dom_node *el2 = (dom_node *)(mjs_getprivate_any(J, 1));
 
 	if (!el2) {
 		js_error(J, "error");

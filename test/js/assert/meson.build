@@ -74,6 +74,7 @@ took = [
 #'event.html',
 'eventListener.html',
 'fetch.html',
+'fragment.appendChild.html',
 'fragment.getElementsByTagName.html',
 'keyboardEvent.html',
 'navigator.appCodeName.html',
