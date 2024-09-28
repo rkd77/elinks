@@ -840,6 +840,10 @@ union option_info cmdline_options_info[] = {
 
 	INIT_OPT_COMMAND("", NULL, "confdir", OPT_HIDDEN, redir_cmd, NULL),
 
+	INIT_OPT_CMDALIAS("", N_("Set mode of displaying colors in documents"),
+		"color-mode", OPT_ALIAS, "document.colors.use_document_colors",
+		N_("Possible values 0, 1 or 2.")),
+
 	INIT_OPT_STRING("", N_("Name of directory with configuration file"),
 		"config-dir", OPT_ZERO, "",
 		N_("Path of the directory ELinks will read and write its "
