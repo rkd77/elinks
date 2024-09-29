@@ -76,6 +76,7 @@ took = [
 'fetch.html',
 'fragment.appendChild.html',
 'fragment.getElementsByTagName.html',
+'fragment.hasChildNodes.html',
 'keyboardEvent.html',
 'navigator.appCodeName.html',
 'node.nodeType.html',

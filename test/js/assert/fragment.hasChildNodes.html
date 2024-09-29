@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<ul id="myList">
+  <li>Coffee</li>
+  <li>Tea</li>
+</ul>
+
+<script>
+function myFunction() {
+  var ab = document.createDocumentFragment();
+  console.assert(!ab.hasChildNodes(), 'no child nodes');
+  var bc = document.createElement('li');
+  ab.appendChild(bc);
+  console.assert(ab.hasChildNodes(), 'has child nodes');
+}
+
+console.error('fragment.hasChildNodes.html');
+myFunction();
+console.exit();
+</script>
+
+</body>
+</html>
