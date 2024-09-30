@@ -134,9 +134,9 @@ js_CSSStyleDeclaration_set_items(JSContext *ctx, JSValue this_val, void *node)
 #endif
 	REF_JS(this_val);
 
-	JS_DefinePropertyValueStr(ctx, this_val, "marginTop", JS_NewString(ctx, "0"), 0);
-	JS_DefinePropertyValueStr(ctx, this_val, "marginLeft", JS_NewString(ctx, "0"), 0);
-	JS_DefinePropertyValueStr(ctx, this_val, "marginRight", JS_NewString(ctx, "0"), 0);
+	JS_DefinePropertyValueStr(ctx, this_val, "marginTop", JS_NewString(ctx, "0"), JS_PROP_ENUMERABLE);
+	JS_DefinePropertyValueStr(ctx, this_val, "marginLeft", JS_NewString(ctx, "0"), JS_PROP_ENUMERABLE);
+	JS_DefinePropertyValueStr(ctx, this_val, "marginRight", JS_NewString(ctx, "0"), JS_PROP_ENUMERABLE);
 }
 
 static JSValue

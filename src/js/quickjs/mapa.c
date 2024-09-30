@@ -597,6 +597,7 @@ get_output_header(const char *header_name, struct Xhr *x)
 }
 
 const char *good[] = { "background",
+	"background-clip",
 	"background-color",
 	"color",
 	"display",

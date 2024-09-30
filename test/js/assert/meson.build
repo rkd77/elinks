@@ -81,6 +81,7 @@ took = [
 'navigator.appCodeName.html',
 'node.nodeType.html',
 'nodelist.forEach.html',
+'style.backgroundClip.html',
 'window.setTimeout.html',
 'URL.html',
 'URLSearchParams.html'
