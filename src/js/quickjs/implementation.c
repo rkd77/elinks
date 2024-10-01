@@ -62,7 +62,7 @@ js_implementation_createHTMLDocument(JSContext *ctx, JSValueConst this_val, int 
 	done_string(&str);
 	JS_FreeCString(ctx, title);
 
-	JSValue rr = JS_DupValue(ctx, getDocument(ctx, docu));
+	JSValue rr = JS_DupValue(ctx, getDocument2(ctx, docu));
 
 	RETURN_JS(rr);
 }
