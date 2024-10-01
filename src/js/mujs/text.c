@@ -471,6 +471,7 @@ mjs_text_set_property_nodeValue(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_node *node = (dom_node *)(mjs_getprivate_text(J, 0));
 
 	if (!node) {
@@ -492,6 +493,7 @@ mjs_text_set_property_nodeValue(js_State *J)
 	}
 	exc = dom_node_set_node_value(node, value);
 	dom_string_unref(value);
+	interpreter->changed = true;
 
 	js_pushundefined(J);
 }

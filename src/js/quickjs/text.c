@@ -520,7 +520,7 @@ js_text_set_property_nodeValue(JSContext *ctx, JSValueConst this_val, JSValue va
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
-
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_node *node = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
 	JSValue r;
 
@@ -545,6 +545,7 @@ js_text_set_property_nodeValue(JSContext *ctx, JSValueConst this_val, JSValue va
 	exc = dom_node_set_node_value(node, value);
 	dom_string_unref(value);
 	//dom_node_unref(el);
+	interpreter->changed = true;
 
 	return JS_UNDEFINED;
 }
