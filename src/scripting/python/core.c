@@ -143,7 +143,7 @@ hooks_module_exists(void)
 
 	result = PyObject_CallMethod(imp_module, "find_spec", "s", "hooks");
 	if (result) {
-		found_hooks = 1;
+		found_hooks = (result != Py_None);
 		goto end;
 	} else if (PyErr_ExceptionMatches(PyExc_ImportError)) {
 		PyErr_Clear();
