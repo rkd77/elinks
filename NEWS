@@ -5,8 +5,8 @@ You can see the complete list of recent changes, bugfixes and new features
 in the https://github.com/rkd77/felinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
-ELinks 0.17.1
--------------
+ELinks 0.17.1.1
+---------------
 
 Released on 2024-10-05
 
@@ -20,6 +20,7 @@ Released on 2024-10-05
 * cast to unsigned char * in inpfield #315
 * fix suspend in session master when fork_on_start #296
 * remove 300ms startup delay and optimize fork_on_start #297
+* missing <sys/cdefs.h> on systems with musl libc #306
 
 
 ELinks 0.17.0
