@@ -5,6 +5,24 @@ You can see the complete list of recent changes, bugfixes and new features
 in the https://github.com/rkd77/felinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
+ELinks 0.17.1.1
+---------------
+
+Released on 2024-10-05
+
+* bump requirements: libCSS to 0.9.2 and libdom to 0.4.2
+* revert "[head] addcrlf". #281
+* main, article and nav elements #282
+* bashism in configure.ac #285
+* eliminate GNUism in sed #305
+* python module imp is deprecated #313
+* fix hooks.py detection #333
+* cast to unsigned char * in inpfield #315
+* fix suspend in session master when fork_on_start #296
+* remove 300ms startup delay and optimize fork_on_start #297
+* missing <sys/cdefs.h> on systems with musl libc #306
+
+
 ELinks 0.17.0
 -------------
 
