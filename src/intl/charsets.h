@@ -33,15 +33,6 @@ typedef uint32_t unicode_val_T;
  * for the second cell of a double-cell character.  */
 #define UCS_NO_CHAR ((unicode_val_T) 0xFFFFFFFD)
 
-#ifdef CONFIG_COMBINE
-#define UCS_END_COMBINED ((unicode_val_T) 0xFFFFFFFC)
-
-#define UCS_BEGIN_COMBINED ((unicode_val_T) (UCS_END_COMBINED - (unicode_val_T) 10000))
-
-/* Base character and up to 5 combining characters. */
-#define UCS_MAX_LENGTH_COMBINED 6
-#endif /* CONFIG_COMBINE */
-
 /* If ELinks should display a double-cell character but there is only
  * one cell available, it displays this character instead.  This must
  * be a single-cell character but need not be unique.  Possible values
@@ -167,14 +158,6 @@ int strlen_utf8(char **);
 #endif /* CONFIG_UTF8 */
 unicode_val_T utf8_to_unicode(char **, const char *);
 unicode_val_T cp_to_unicode(int, char **, const char *);
-
-#ifdef CONFIG_COMBINE
-extern unicode_val_T last_combined;
-extern unicode_val_T **combined;
-extern struct hash *combined_hash;
-unicode_val_T get_combined(unicode_val_T *, int);
-void free_combined();
-#endif /* CONFIG_COMBINE */
 
 unicode_val_T cp2u(int, unsigned char);
 const char *cp2utf8(int, int);

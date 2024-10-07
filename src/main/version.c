@@ -185,9 +185,6 @@ get_dyn_full_version(struct terminal *term, int more)
 #ifdef CONFIG_UTF8
 		comma, "UTF-8",
 #endif
-#ifdef CONFIG_COMBINE
-		comma, _("Combining characters", term),
-#endif
 #ifdef CONFIG_LIBEV
 		comma, (event_enabled ? _("libev", term) : _("libev (disabled)", term)), "(", get_libevent_version(), ")",
 #endif

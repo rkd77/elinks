@@ -8,15 +8,6 @@
 #include <stdint.h>
 #endif
 
-/* Our current implementation of combining characters requires
- * wcwidth().  Therefore the configure script should have disabled
- * CONFIG_COMBINE if wcwidth() doesn't exist.  */
-#ifdef CONFIG_COMBINE
-#ifndef _XOPEN_SOURCE
-#define _XOPEN_SOURCE 500	/* for wcwidth */
-#endif
-#endif
-
 #include <ctype.h>
 #include <stdarg.h>
 #include <string.h>
@@ -378,108 +369,6 @@ expand_lines(struct html_context *html_context, struct part *part,
 	}
 }
 
-/* document.comb_x and document.comb_y exist only when CONFIG_COMBINE
- * is defined.  assert() does nothing if CONFIG_FASTMEM is defined.  */
-#if defined(CONFIG_COMBINE) && !defined(CONFIG_FASTMEM)
-/** Assert that path->document->comb_x and part->document->comb_y
- * refer to an allocated struct screen_char, or comb_x is -1.
- *
- * The CONFIG_COMBINE variant of set_hline() can update the
- * screen_char.data at these coordinates.  Sometimes, the coordinates
- * have not been valid, and the update has corrupted memory.  These
- * assertions should catch that bug if it happens again.
- *
- * @post This function can leave ::assert_failed set, so the caller
- * should use ::if_assert_failed, perhaps with discard_comb_x_y().  */
-static void
-assert_comb_x_y_ok(const struct document *document)
-{
-	assert(document);
-	if (document->comb_x != -1) {
-		assert(document->comb_y >= 0);
-		assert(document->comb_y < document->height);
-		assert(document->comb_x >= 0);
-		assert(document->comb_x < document->data[document->comb_y].length);
-	}
-}
-#else
-# define assert_comb_x_y_ok(document) ((void) 0)
-#endif
-
-#ifdef CONFIG_COMBINE
-/** Discard any combining characters that have not yet been combined
- * with to the previous base character.  */
-void
-discard_comb_x_y(struct document *document)
-{
-	document->comb_x = -1;
-	document->comb_y = -1;
-	document->combi_length = 0;
-}
-#endif
-
-#ifdef CONFIG_COMBINE
-static void
-move_comb_x_y(struct part *part, int xf, int yf, int xt, int yt)
-{
-	if (part->document->comb_x != -1
-	    && part->document->comb_y == Y(yf)
-	    && part->document->comb_x >= X(xf)) {
-		if (yt >= 0) {
-			part->document->comb_x += xt - xf;
-			part->document->comb_y += yt - yf;
-		} else
-			discard_comb_x_y(part->document);
-	}
-}
-#else
-# define move_comb_x_y(part, xf, yf, xt, yt) ((void) 0)
-#endif
-
-#ifdef CONFIG_COMBINE
-static void
-set_comb_x_y(struct part *part, int x, int y)
-{
-	struct document *document = part->document;
-
-	document->comb_x = X(x);
-	document->comb_y = Y(y);
-	assert_comb_x_y_ok(document);
-	if_assert_failed discard_comb_x_y(document);
-}
-#else
-# define set_comb_x_y(part, x, y) ((void) 0)
-#endif
-
-#ifdef CONFIG_COMBINE
-static void
-put_combined(struct part *part, int x)
-{
-	struct document *document = part->document;
-
-	if (document->combi_length) {
-		if (document->comb_x != -1) {
-			unicode_val_T prev = get_combined(document->combi, document->combi_length + 1);
-
-			assert_comb_x_y_ok(document);
-			if_assert_failed prev = UCS_NO_CHAR;
-
-			/* Make sure the combined character is not considered as
-			 * a space. */
-			if (x)
-				part->spaces[x - 1] = 0;
-
-			if (prev != UCS_NO_CHAR)
-				document->data[document->comb_y]
-					.ch.chars[document->comb_x].data = prev;
-		}
-		document->combi_length = 0;
-	}
-}
-#else
-# define put_combined(part, x) ((void) 0)
-#endif
-
 #ifdef CONFIG_UTF8
 /* First possibly do the format change and then find out what coordinates
  * to use since sub- or superscript might change them */
@@ -522,9 +411,6 @@ set_hline(struct html_context *html_context, const char *chars, int charslen,
 
 	if (part->document) {
 		struct document *const document = part->document;
-
-		assert_comb_x_y_ok(document);
-		if_assert_failed discard_comb_x_y(document);
 
 		/* Reallocate LINE(y).chars[] to large enough.  The
 		 * last parameter of realloc_line is the index of the
@@ -583,10 +469,7 @@ set_hline(struct html_context *html_context, const char *chars, int charslen,
 					goto good_char;
 				} else {
 					/* Still not full char */
-					assert_comb_x_y_ok(document);
 					LINE(y).length = orig_length;
-					assert_comb_x_y_ok(document);
-					if_assert_failed discard_comb_x_y(document);
 					return 0;
 				}
 			}
@@ -627,38 +510,6 @@ good_char:
 				    && html_context->options->wrap_nbsp)
 					data = UCS_SPACE;
 
-#ifdef CONFIG_COMBINE
-				if (wcwidth((wchar_t)data)) {
-					put_combined(part, x);
-					document->combi[0] = data;
-				} else {
-					if (part->cx == x) {
-						if (X(x)) {
-							/* Isolated combining 
-							 * character not on the 
-							 * first column: combine 
-							 * it with whatever is 
-							 * printed at its left. */
-							document->combi[0] = POS(x - 1, y).data;
-							set_comb_x_y(part, x - 1, y);
-						} else {
-							/* Isolated combining 
-							 * character on the
-							 * first column: use
-							 * UCS_NO_BREAK_SPACE as
-							 * the base character.
-							 * */
-							document->combi[0] = UCS_NO_BREAK_SPACE;
-							set_comb_x_y(part, x, y);
-							schar->data = UCS_SPACE;
-							copy_screen_chars(&POS(x++, y), schar, 1);
-						}
-					}
-					if (document->combi_length < (UCS_MAX_LENGTH_COMBINED - 1))
-						document->combi[++document->combi_length] = data;
-					continue;
-				}
-#endif /* CONFIG_COMBINE */
 				part->spaces[x] = (data == UCS_SPACE);
 
 #ifdef CONFIG_CODEPOINT
@@ -674,10 +525,6 @@ good_char:
 				} else
 #endif
 
-#ifdef CONFIG_COMBINE
-				if (unicode_to_cell(data) == 0)
-					continue;
-#endif
 				if (unicode_to_cell(data) == 2) {
 					schar->data = (unicode_val_T)data;
 					part->char_width[x] = 2;
@@ -689,14 +536,8 @@ good_char:
 					part->char_width[x] = unicode_to_cell(data);
 					schar->data = (unicode_val_T)data;
 				}
-
-				set_comb_x_y(part, x, y);
-
 				copy_screen_chars(&POS(x++, y), schar, 1);
 			} /* while chars < end */
-
-			/* Display any trailing combining characters. */
-			put_combined(part, x);
 		} else { /* not UTF-8 */
 			for (; charslen > 0; charslen--, x++, chars++) {
 				part->char_width[x] = 1;
@@ -724,10 +565,7 @@ good_char:
 		 * which is the number of bytes, not the number of cells.
 		 * Change the length to the correct size, but don't let it
 		 * get smaller than it was on entry to this function.  */
-		assert_comb_x_y_ok(document);
 		LINE(y).length = int_max(orig_length, X(x));
-		assert_comb_x_y_ok(document);
-		if_assert_failed discard_comb_x_y(document);
 		len = x - x2;
 	} else { /* part->document == NULL */
 		if (utf8) {
@@ -737,13 +575,10 @@ good_char:
 				unicode_val_T data;
 
 				data = utf8_to_unicode((char **)&chars, end);
-#ifdef CONFIG_COMBINE
-				if (data == UCS_SOFT_HYPHEN
-				    || (data != UCS_NO_CHAR && wcwidth((wchar_t)data) == 0))
-#else
-				if (data == UCS_SOFT_HYPHEN)
-#endif
+
+				if (data == UCS_SOFT_HYPHEN) {
 					continue;
+				}
 
 				if (data == UCS_NO_BREAK_SPACE
 				    && html_context->options->wrap_nbsp)
@@ -983,11 +818,7 @@ move_chars(struct html_context *html_context, int x, int y, int nx, int ny)
 
 	copy_chars(html_context, nx, ny, LEN(y) - x, &POS(x, y));
 
-	assert_comb_x_y_ok(part->document);
-	move_comb_x_y(part, x, y, nx, ny);
 	LINE(y).length = X(x);
-	assert_comb_x_y_ok(part->document);
-	if_assert_failed discard_comb_x_y(part->document);
 	move_links(html_context, x, y, nx, ny);
 
 	if (par_elformat.blockquote_level && !html_context->table_level) {
@@ -1019,18 +850,11 @@ shift_chars(struct html_context *html_context, int y, int shift)
 
 	copy_screen_chars(a, &POS(0, y), len);
 
-	assert_comb_x_y_ok(part->document);
-	if_assert_failed discard_comb_x_y(part->document);
-
 	clear_hchars(html_context, 0, y, shift, a);
 	copy_chars(html_context, shift, y, len, a);
 	fmem_free(a);
 
 	move_links(html_context, 0, y, shift, y);
-	move_comb_x_y(part, 0, y, shift, y);
-
-	assert_comb_x_y_ok(part->document);
-	if_assert_failed discard_comb_x_y(part->document);
 }
 
 static inline void
@@ -1046,15 +870,8 @@ del_chars(struct html_context *html_context, int x, int y)
 	assert(part && part->document && part->document->data);
 	if_assert_failed return;
 
-	assert_comb_x_y_ok(part->document);
-	if_assert_failed discard_comb_x_y(part->document);
-
 	LINE(y).length = X(x);
-	move_comb_x_y(part, x, y, -1, -1);
 	move_links(html_context, x, y, -1, -1);
-
-	assert_comb_x_y_ok(part->document);
-	if_assert_failed discard_comb_x_y(part->document);
 }
 
 #if TABLE_LINE_PADDING < 0
@@ -1379,7 +1196,6 @@ justify_line(struct html_context *html_context, int y)
 			 * link.  */
 			new_spaces = new_start - prev_end - 1;
 			if (word && new_spaces) {
-				move_comb_x_y(part, prev_end + 1, y, new_start, y);
 				move_links(html_context, prev_end + 1, y, new_start, y);
 				insert_spaces_in_link(part,
 						      new_start, y, new_spaces);

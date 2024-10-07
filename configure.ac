@@ -1790,9 +1790,6 @@ EL_ARG_ENABLE(CONFIG_SMALL, small, [Small binary],
 EL_ARG_ENABLE(CONFIG_UTF8, utf-8, [UTF-8],
 	      [  --disable-utf-8         disable UTF-8 support])
 
-EL_ARG_DEPEND(CONFIG_COMBINE, combining, [CONFIG_UTF8:yes HAVE_WCWIDTH:yes], [Combining characters],
-	      [  --enable-combining      support Unicode combining characters (experimental)])
-
 EL_ARG_ENABLE(CONFIG_REPRODUCIBLE, reproducible, [Reproducible builds],
 	      [  --enable-reproducible   enable reproducible build])
 

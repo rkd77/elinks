@@ -332,9 +332,6 @@ terminate_all_subsystems(void)
 	done_event();
 	terminate_select();
 	terminate_osdep();
-#ifdef CONFIG_COMBINE
-	free_combined();
-#endif
 #ifdef CONFIG_LIBDOM
 	free_libdom();
 #endif

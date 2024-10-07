@@ -34,9 +34,6 @@
 /* Define if you want: codepoint lookup */
 #mesondefine CONFIG_CODEPOINT
 
-/* Define if you want: Combining characters support */
-#mesondefine CONFIG_COMBINE
-
 /* Define if you want: Cookies support */
 #mesondefine CONFIG_COOKIES
 

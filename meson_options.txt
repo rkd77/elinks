@@ -37,7 +37,6 @@ option('fastmem', type: 'boolean', value: false, description: 'direct use of sys
 option('own-libc', type: 'boolean', value: false, description: 'force use of internal functions instead of those of system libc')
 option('small', type: 'boolean', value: false, description: 'reduce binary size as far as possible (but see the bottom of doc/small.txt!)')
 option('utf-8', type: 'boolean', value: true, description: 'UTF-8 support')
-option('combining', type: 'boolean', value: false, description: 'support Unicode combining characters (experimental)')
 
 option('xterm', type: 'boolean', value: false, description: 'how to invoke the X terminal emulator')
 option('gpm', type: 'boolean', value: true, description: 'gpm (mouse) support')

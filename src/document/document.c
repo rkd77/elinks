@@ -219,10 +219,6 @@ init_document(struct cache_entry *cached, struct document_options *options)
 	init_list(document->images);
 #endif
 
-#ifdef CONFIG_COMBINE
-	document->comb_x = -1;
-	document->comb_y = -1;
-#endif
 	object_nolock(document, "document");
 	object_lock(document);
 
@@ -365,10 +361,6 @@ reset_document(struct document *document)
 	mem_free_set(&document->slines1, NULL);
 	mem_free_set(&document->slines2, NULL);
 	mem_free_set(&document->search_points, NULL);
-
-#ifdef CONFIG_COMBINE
-	discard_comb_x_y(document);
-#endif
 }
 
 void

@@ -66,7 +66,6 @@ conf_data.set('CONFIG_FASTMEM', get_option('fastmem'))
 conf_data.set('CONFIG_OWN_LIBC', get_option('own-libc'))
 conf_data.set('CONFIG_SMALL', get_option('small'))
 conf_data.set('CONFIG_UTF8', get_option('utf-8'))
-conf_data.set('CONFIG_COMBINE', get_option('combining'))
 
 conf_data.set('CONFIG_XTERM', get_option('xterm'))
 conf_data.set('CONFIG_GPM', get_option('gpm'))

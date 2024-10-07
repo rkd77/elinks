@@ -271,10 +271,8 @@ struct screen_driver_opt {
 	unsigned int utf8_cp:1;
 #endif /* CONFIG_UTF8 */
 
-#ifdef CONFIG_COMBINE
 	/* Whether the terminal supports combining characters. */
 	unsigned int combine:1;
-#endif /* CONFIG_COMBINE */
 
 #ifdef CONFIG_TERMINFO
 	/* Whether use terminfo. */
@@ -321,9 +319,7 @@ static const struct screen_driver_opt dumb_screen_driver_opt = {
 #ifdef CONFIG_UTF8
 	/* utf8_cp: */		0,
 #endif /* CONFIG_UTF8 */
-#ifdef CONFIG_COMBINE
 	/* combine */		0,
-#endif /* CONFIG_COMBINE */
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
 #endif
@@ -348,9 +344,7 @@ static const struct screen_driver_opt vt100_screen_driver_opt = {
 #ifdef CONFIG_UTF8
 	/* utf8_cp: */		0,
 #endif /* CONFIG_UTF8 */
-#ifdef CONFIG_COMBINE
 	/* combine */		0,
-#endif /* CONFIG_COMBINE */
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
 #endif
@@ -375,9 +369,7 @@ static const struct screen_driver_opt linux_screen_driver_opt = {
 #ifdef CONFIG_UTF8
 	/* utf8_cp: */		0,
 #endif /* CONFIG_UTF8 */
-#ifdef CONFIG_COMBINE
 	/* combine */		0,
-#endif /* CONFIG_COMBINE */
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
 #endif
@@ -402,9 +394,7 @@ static const struct screen_driver_opt koi8_screen_driver_opt = {
 #ifdef CONFIG_UTF8
 	/* utf8_cp: */		0,
 #endif /* CONFIG_UTF8 */
-#ifdef CONFIG_COMBINE
 	/* combine */		0,
-#endif /* CONFIG_COMBINE */
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
 #endif
@@ -429,9 +419,7 @@ static const struct screen_driver_opt freebsd_screen_driver_opt = {
 #ifdef CONFIG_UTF8
 	/* utf8_cp: */		0,
 #endif /* CONFIG_UTF8 */
-#ifdef CONFIG_COMBINE
 	/* combine */		0,
-#endif /* CONFIG_COMBINE */
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
 #endif
@@ -456,9 +444,7 @@ static const struct screen_driver_opt fbterm_screen_driver_opt = {
 #ifdef CONFIG_UTF8
 	/* utf8_cp: */		0,
 #endif /* CONFIG_UTF8 */
-#ifdef CONFIG_COMBINE
 	/* combine */		0,
-#endif /* CONFIG_COMBINE */
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
 #endif
@@ -510,9 +496,7 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 	 * function need not carefully restore options one by one.  */
 	copy_struct(&driver->opt, screen_driver_opts[driver->type]);
 
-#ifdef CONFIG_COMBINE
 	driver->opt.combine = get_opt_bool_tree(term_spec, "combine", NULL);
-#endif /* CONFIG_COMBINE */
 
 #ifdef CONFIG_LIBSIXEL
 	driver->opt.sixel = get_opt_bool_tree(term_spec, "sixel", NULL);
@@ -858,23 +842,7 @@ add_char_data(struct string *screen, struct screen_driver *driver,
 		}
 		if (data == UCS_NO_CHAR)
 			return;
-#ifdef CONFIG_COMBINE
-		if (data >= UCS_BEGIN_COMBINED && data <= last_combined) {
-			unicode_val_T *text = combined[data - UCS_BEGIN_COMBINED];
 
-			if (driver->opt.combine) {
-				/* XTerm */
-				while (*text != UCS_END_COMBINED) {
-					add_to_string(screen, encode_utf8(*text));
-					text++;
-				}
-				return;
-			} else {
-				/* Others */
-				data = *text;
-			}
-		}
-#endif /* CONFIG_COMBINE */
 		if (!isscreensafe_ucs(data))
 			data = UCS_SPACE;
 		add_to_string(screen, encode_utf8(data));
