@@ -505,7 +505,7 @@ endif
 
 mozjsdeps = []
 if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_SCRIPTING_SPIDERMONKEY')
-    mozjsdeps = dependency('mozjs-115', static: st)
+    mozjsdeps = dependency('mozjs-128', static: st)
     deps += mozjsdeps
 endif
 
