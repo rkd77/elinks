@@ -35,7 +35,7 @@ spidermonkey_runtime_addref(void)
 			return 0;
 		}
 
-		main_ctx = JS_NewContext(64 * 1024 * 1024);
+		main_ctx = JS_NewContext(128 * 1024 * 1024);
 
 		if (!main_ctx) {
 			JS_ShutDown();
