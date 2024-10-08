@@ -287,8 +287,8 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
 
-	JS_SetMemoryLimit(interpreter->rt, 64 * 1024 * 1024);
-	JS_SetGCThreshold(interpreter->rt, 16 * 1024 * 1024);
+	JS_SetMemoryLimit(interpreter->rt, 128 * 1024 * 1024);
+	JS_SetGCThreshold(interpreter->rt, 32 * 1024 * 1024);
 
 	ctx = JS_NewContext(interpreter->rt);
 
