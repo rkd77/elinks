@@ -7,8 +7,10 @@
 
 #include "elinks.h"
 
+#include "config/options.h"
 #include "js/spidermonkey-shared.h"
 #include <js/Initialization.h>
+
 
 /** A JSContext that can be used in JS_SetPrivate and JS_GetPrivate
 - * when no better one is available.  This context has no global
@@ -35,7 +37,7 @@ spidermonkey_runtime_addref(void)
 			return 0;
 		}
 
-		main_ctx = JS_NewContext(128 * 1024 * 1024);
+		main_ctx = JS_NewContext(get_opt_long("ecmascript.spidermonkey.memory_limit", NULL));
 
 		if (!main_ctx) {
 			JS_ShutDown();

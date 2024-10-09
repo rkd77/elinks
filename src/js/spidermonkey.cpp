@@ -703,9 +703,21 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 	return result;
 }
 
+static union option_info spidermonkey_options[] = {
+	INIT_OPT_TREE("ecmascript", N_("Spidermonkey"),
+		"spidermonkey", OPT_ZERO,
+		N_("Options specific to Spidermonkey.")),
+
+	INIT_OPT_LONG("ecmascript.spidermonkey", N_("Memory limit"),
+		"memory_limit", OPT_ZERO, 0, LONG_MAX, 128 * 1024 * 1024,
+		N_("Runtime memory limit in bytes.")),
+
+	NULL_OPTION_INFO,
+};
+
 struct module spidermonkey_module = struct_module(
 	/* name: */		N_("SpiderMonkey"),
-	/* options: */		NULL,
+	/* options: */		spidermonkey_options,
 	/* events: */		NULL,
 	/* submodules: */	NULL,
 	/* data: */		NULL,
