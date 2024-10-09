@@ -97,7 +97,6 @@ enum termopt {
 	TERM_OPT_UNDERLINE,
 	TERM_OPT_ITALIC,
 	TERM_OPT_STRIKE,
-	TERM_OPT_COMBINE,
 #ifdef CONFIG_LIBSIXEL
 	TERM_OPT_SIXEL,
 #endif
@@ -115,7 +114,6 @@ static struct option_resolver resolvers[] = {
 	{ TERM_OPT_UNDERLINE,	 "underline"	},
 	{ TERM_OPT_ITALIC,	 "italic"	},
 	{ TERM_OPT_STRIKE,	 "strike"	},
-	{ TERM_OPT_COMBINE,	 "combine"	},
 #ifdef CONFIG_LIBSIXEL
 	{ TERM_OPT_SIXEL,	 "sixel"	},
 #endif
@@ -242,7 +240,6 @@ terminal_options(struct terminal *term, void *xxx, struct session *ses)
 	add_dlg_checkbox(dlg, _("Underline", term), &values[TERM_OPT_UNDERLINE].number);
 	add_dlg_checkbox(dlg, _("Strikethrough", term), &values[TERM_OPT_STRIKE].number);
 	add_dlg_checkbox(dlg, _("UTF-8 I/O", term), &values[TERM_OPT_UTF_8_IO].number);
-	add_dlg_checkbox(dlg, _("Combining characters", term), &values[TERM_OPT_COMBINE].number);
 #ifdef CONFIG_LIBSIXEL
 	add_dlg_checkbox(dlg, _("Sixel", term), &values[TERM_OPT_SIXEL].number);
 #endif

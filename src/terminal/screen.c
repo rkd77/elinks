@@ -271,9 +271,6 @@ struct screen_driver_opt {
 	unsigned int utf8_cp:1;
 #endif /* CONFIG_UTF8 */
 
-	/* Whether the terminal supports combining characters. */
-	unsigned int combine:1;
-
 #ifdef CONFIG_TERMINFO
 	/* Whether use terminfo. */
 	unsigned int terminfo:1;
@@ -319,7 +316,6 @@ static const struct screen_driver_opt dumb_screen_driver_opt = {
 #ifdef CONFIG_UTF8
 	/* utf8_cp: */		0,
 #endif /* CONFIG_UTF8 */
-	/* combine */		0,
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
 #endif
@@ -344,7 +340,6 @@ static const struct screen_driver_opt vt100_screen_driver_opt = {
 #ifdef CONFIG_UTF8
 	/* utf8_cp: */		0,
 #endif /* CONFIG_UTF8 */
-	/* combine */		0,
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
 #endif
@@ -369,7 +364,6 @@ static const struct screen_driver_opt linux_screen_driver_opt = {
 #ifdef CONFIG_UTF8
 	/* utf8_cp: */		0,
 #endif /* CONFIG_UTF8 */
-	/* combine */		0,
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
 #endif
@@ -394,7 +388,6 @@ static const struct screen_driver_opt koi8_screen_driver_opt = {
 #ifdef CONFIG_UTF8
 	/* utf8_cp: */		0,
 #endif /* CONFIG_UTF8 */
-	/* combine */		0,
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
 #endif
@@ -419,7 +412,6 @@ static const struct screen_driver_opt freebsd_screen_driver_opt = {
 #ifdef CONFIG_UTF8
 	/* utf8_cp: */		0,
 #endif /* CONFIG_UTF8 */
-	/* combine */		0,
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
 #endif
@@ -444,7 +436,6 @@ static const struct screen_driver_opt fbterm_screen_driver_opt = {
 #ifdef CONFIG_UTF8
 	/* utf8_cp: */		0,
 #endif /* CONFIG_UTF8 */
-	/* combine */		0,
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
 #endif
@@ -495,8 +486,6 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 	/* Copy all the original options from constants, so that this
 	 * function need not carefully restore options one by one.  */
 	copy_struct(&driver->opt, screen_driver_opts[driver->type]);
-
-	driver->opt.combine = get_opt_bool_tree(term_spec, "combine", NULL);
 
 #ifdef CONFIG_LIBSIXEL
 	driver->opt.sixel = get_opt_bool_tree(term_spec, "sixel", NULL);
