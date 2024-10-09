@@ -287,8 +287,8 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
 
-	JS_SetMemoryLimit(interpreter->rt, 128 * 1024 * 1024);
-	JS_SetGCThreshold(interpreter->rt, 32 * 1024 * 1024);
+	JS_SetMemoryLimit(interpreter->rt, get_opt_long("ecmascript.quickjs.memory_limit", NULL));
+	JS_SetGCThreshold(interpreter->rt, get_opt_long("ecmascript.quickjs.gc_threshold", NULL));
 
 	ctx = JS_NewContext(interpreter->rt);
 
@@ -560,9 +560,25 @@ quickjs_eval_boolback(struct ecmascript_interpreter *interpreter,
 	return ret;
 }
 
+static union option_info quickjs_options[] = {
+	INIT_OPT_TREE("ecmascript", N_("QuickJS"),
+		"quickjs", OPT_ZERO,
+		N_("Options specific to QuickJS.")),
+
+	INIT_OPT_LONG("ecmascript.quickjs", N_("GC threshold"),
+		"gc_threshold", OPT_ZERO, 0, LONG_MAX, 32 * 1024 * 1024,
+		N_("GC threshold in bytes.")),
+
+	INIT_OPT_LONG("ecmascript.quickjs", N_("Memory limit"),
+		"memory_limit", OPT_ZERO, 0, LONG_MAX, 128 * 1024 * 1024,
+		N_("Runtime memory limit in bytes per context.")),
+
+	NULL_OPTION_INFO,
+};
+
 struct module quickjs_module = struct_module(
 	/* name: */		N_("QuickJS"),
-	/* options: */		NULL,
+	/* options: */		quickjs_options,
 	/* events: */		NULL,
 	/* submodules: */	NULL,
 	/* data: */		NULL,
