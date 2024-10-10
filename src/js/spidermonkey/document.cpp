@@ -31,6 +31,7 @@
 #include "js/ecmascript.h"
 #include "js/ecmascript-c.h"
 #include "js/libdom/parse.h"
+#include "js/spidermonkey.h"
 #include "js/spidermonkey/collection.h"
 #include "js/spidermonkey/form.h"
 #include "js/spidermonkey/forms.h"
@@ -1742,6 +1743,11 @@ document_event_handler(dom_event *event, void *pw)
 #endif
 	struct document_private *doc_private = (struct document_private *)pw;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)doc_private->interpreter;
+
+	if (interps.find((void *)interpreter) == interps.end()) {
+		return;
+	}
+
 	JSContext *ctx = (JSContext *)interpreter->backend_data;
 	JSAutoRealm ar(ctx, (JSObject *)interpreter->ac->get());
 	JS::RootedValue r_val(ctx);

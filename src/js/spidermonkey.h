@@ -2,6 +2,7 @@
 #define EL__JS_SPIDERMONKEY_H
 
 #include <jsapi.h>
+#include <map>
 
 struct ecmascript_interpreter;
 struct form_view;
@@ -22,4 +23,7 @@ int spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter, struc
 void spidermonkey_call_function(struct ecmascript_interpreter *interpreter, JS::HandleValue fun, struct string *ret);
 
 extern struct module spidermonkey_module;
+
+extern std::map<void *, bool> interps;
+
 #endif

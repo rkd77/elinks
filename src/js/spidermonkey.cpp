@@ -84,6 +84,8 @@
 
 static int js_module_init_ok;
 
+std::map<void *, bool> interps;
+
 static void
 error_reporter(JSContext *ctx, JSErrorReport *report)
 {
@@ -267,6 +269,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!ctx) {
 		return nullptr;
 	}
+	interps[(void *)interpreter] = true;
 
 	interpreter->backend_data = ctx;
 	struct view_state *vs = interpreter->vs;
@@ -528,6 +531,8 @@ spidermonkey_put_interpreter(struct ecmascript_interpreter *interpreter)
 	interpreter->ac = nullptr;
 	interpreter->ar = nullptr;
 	done_heartbeat(interpreter->heartbeat);
+
+	interps.erase((void *)interpreter);
 }
 
 void
