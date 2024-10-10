@@ -134,9 +134,24 @@ reported:
 	JS_ClearPendingException(ctx);
 }
 
+static int
+change_hook_spidermonkey(struct session *ses, struct option *current, struct option *changed)
+{
+	spidermonkey_memory_limit = get_opt_long("ecmascript.spidermonkey.memory_limit", ses);
+
+	return 0;
+}
+
 static void
 spidermonkey_init(struct module *module)
 {
+	static const struct change_hook_info spidermonkey_change_hooks[] = {
+		{ "ecmascript.spidermonkey.memory_limit", change_hook_spidermonkey },
+		{ NULL,	NULL },
+	};
+	register_change_hooks(spidermonkey_change_hooks);
+	spidermonkey_memory_limit = get_opt_long("ecmascript.spidermonkey.memory_limit", NULL);
+
 	js_module_init_ok = spidermonkey_runtime_addref();
 }
 

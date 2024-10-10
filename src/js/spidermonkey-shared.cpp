@@ -7,7 +7,6 @@
 
 #include "elinks.h"
 
-#include "config/options.h"
 #include "js/spidermonkey-shared.h"
 #include <js/Initialization.h>
 
@@ -28,6 +27,9 @@ static int spidermonkey_runtime_refcount;
  *
  * @return 1 if successful or 0 on error.  If this succeeds, the
  * caller must eventually call spidermonkey_runtime_release().  */
+
+long spidermonkey_memory_limit;
+
 int
 spidermonkey_runtime_addref(void)
 {
@@ -37,7 +39,7 @@ spidermonkey_runtime_addref(void)
 			return 0;
 		}
 
-		main_ctx = JS_NewContext(get_opt_long("ecmascript.spidermonkey.memory_limit", NULL));
+		main_ctx = JS_NewContext(spidermonkey_memory_limit);
 
 		if (!main_ctx) {
 			JS_ShutDown();
