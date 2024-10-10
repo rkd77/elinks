@@ -71,6 +71,8 @@
 
 #include "js/fetch.h"
 
+static JSRuntime *quickjs_runtime;
+
 /*** Global methods */
 
 static void
@@ -173,6 +175,12 @@ quickjs_init(struct module *module)
 
 	map_csses = attr_create_new_csses_map();
 	map_rev_csses = attr_create_new_csses_map_rev();
+
+#ifdef CONFIG_DEBUG
+	quickjs_runtime = JS_NewRuntime2(&el_quickjs_mf, NULL);
+#else
+	quickjs_runtime = JS_NewRuntime();
+#endif
 }
 
 static void
@@ -205,6 +213,9 @@ quickjs_done(struct module *xxx)
 	attr_delete_map(map_csses);
 	attr_delete_map_rev(map_rev_csses);
 
+	if (quickjs_runtime) {
+		JS_FreeRuntime(quickjs_runtime);
+	}
 //	if (js_module_init_ok)
 //		spidermonkey_runtime_release();
 }
@@ -291,6 +302,7 @@ el_js_module_loader(JSContext *ctx, const char *module_name, void *opaque)
 	return m;
 }
 
+
 void *
 quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 {
@@ -304,11 +316,8 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	assert(interpreter);
 //	if (!js_module_init_ok) return NULL;
 
-#ifdef CONFIG_DEBUG
-	interpreter->rt = JS_NewRuntime2(&el_quickjs_mf, NULL);
-#else
-	interpreter->rt = JS_NewRuntime();
-#endif
+	interpreter->rt = quickjs_runtime;
+
 	if (!interpreter->rt) {
 		return NULL;
 	}
@@ -322,7 +331,6 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	ctx = JS_NewContext(interpreter->rt);
 
 	if (!ctx) {
-		JS_FreeRuntime(interpreter->rt);
 		return NULL;
 	}
 
@@ -383,7 +391,6 @@ quickjs_put_interpreter(struct ecmascript_interpreter *interpreter)
 fprintf(stderr, "Before JS_FreeContext: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
 	JS_FreeContext(ctx);
-	JS_FreeRuntime(interpreter->rt);
 	interpreter->backend_data = NULL;
 }
 
