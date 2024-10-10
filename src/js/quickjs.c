@@ -73,6 +73,7 @@
 
 static JSRuntime *quickjs_runtime;
 
+void *map_interp;
 /*** Global methods */
 
 static void
@@ -181,6 +182,7 @@ quickjs_init(struct module *module)
 #else
 	quickjs_runtime = JS_NewRuntime();
 #endif
+	map_interp = interp_new_map();
 }
 
 static void
@@ -212,6 +214,7 @@ quickjs_done(struct module *xxx)
 
 	attr_delete_map(map_csses);
 	attr_delete_map_rev(map_rev_csses);
+	interp_delete_map(map_interp);
 
 	if (quickjs_runtime) {
 		JS_FreeRuntime(quickjs_runtime);
@@ -333,6 +336,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!ctx) {
 		return NULL;
 	}
+	interp_save_in_map(map_interp, interpreter);
 
 	interpreter->backend_data = ctx;
 	JS_SetContextOpaque(ctx, interpreter);
@@ -392,6 +396,7 @@ fprintf(stderr, "Before JS_FreeContext: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
 	JS_FreeContext(ctx);
 	interpreter->backend_data = NULL;
+	interp_erase_from_map(map_interp, interpreter);
 }
 
 static void

@@ -156,6 +156,84 @@ attr_create_new_csses_map_rev(void)
 	return (void *)init_hash8();
 }
 
+void *
+interp_new_map(void)
+{
+	return (void *)init_hash8();
+}
+
+bool
+interp_find_in_map(void *m, void *interpreter)
+{
+	struct hash *hash = (struct hash *)m;
+
+	if (hash) {
+		char *key = memacpy((const char *)&interpreter, sizeof(interpreter));
+
+		if (key) {
+			struct hash_item *item = get_hash_item(hash, key, sizeof(interpreter));
+
+			mem_free(key);
+
+			if (item) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+void
+interp_save_in_map(void *m, void *interpreter)
+{
+	struct hash *hash = (struct hash *)m;
+	void *value = (void *)1;
+
+	char *key = memacpy((const char *)&interpreter, sizeof(interpreter));
+
+	if (key) {
+		add_hash_item(hash, key, sizeof(value), value);
+	}
+}
+
+void
+interp_erase_from_map(void *m, void *interpreter)
+{
+	struct hash *hash = (struct hash *)m;
+
+	if (hash) {
+		char *key = memacpy((const char *)&interpreter, sizeof(interpreter));
+
+		if (key) {
+			struct hash_item *item = get_hash_item(hash, key, sizeof(interpreter));
+
+			if (item) {
+				mem_free_set(&item->key, NULL);
+				//mem_free_set(&item->value, NULL);
+				del_hash_item(hash, item);
+			}
+			mem_free(key);
+		}
+	}
+}
+
+void
+interp_delete_map(void *m)
+{
+	struct hash *hash = (struct hash *)m;
+
+	if (hash) {
+		struct hash_item *item;
+		int i;
+
+		foreach_hash_item (item, *hash, i) {
+			mem_free_set(&item->key, NULL);
+			//mem_free_set(&item->value, NULL);
+		}
+		free_hash(&hash);
+	}
+}
 
 #if 0
 struct classcomp {

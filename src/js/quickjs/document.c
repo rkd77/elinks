@@ -2082,6 +2082,10 @@ document_event_handler(dom_event *event, void *pw)
 #endif
 	struct js_document_private *doc_private = (struct js_document_private *)pw;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)doc_private->interpreter;
+
+	if (!interp_find_in_map(map_interp, interpreter)) {
+		return;
+	}
 	JSContext *ctx = (JSContext *)interpreter->backend_data;
 
 	if (!event) {

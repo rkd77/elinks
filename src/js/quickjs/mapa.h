@@ -30,8 +30,16 @@ extern void *map_form_elements_rev;
 extern void *map_csses;
 extern void *map_rev_csses;
 
+extern void *map_interp;
+
 void attr_save_in_map(void *m, void *node, JSValueConst value);
 void attr_save_in_map_void(void *m, void *node, void *value);
+
+void *interp_new_map(void);
+bool interp_find_in_map(void *m, void *interpreter);
+void interp_save_in_map(void *m, void *interpreter);
+void interp_erase_from_map(void *m, void *interpreter);
+void interp_delete_map(void *m);
 
 void *attr_create_new_attrs_map(void);
 void *attr_create_new_attributes_map(void);
