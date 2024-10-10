@@ -116,12 +116,41 @@ get_name_quickjs(struct module *xxx)
 	return quickjs_version;
 }
 
+static long quickjs_memory_limit;
+static long quickjs_gc_threshold;
+
+static int
+change_hook_quickjs_memory_limit(struct session *ses, struct option *current, struct option *changed)
+{
+	quickjs_memory_limit = get_opt_long("ecmascript.quickjs.memory_limit", ses);
+
+	return 0;
+}
+
+static int
+change_hook_quickjs_gc_threshold(struct session *ses, struct option *current, struct option *changed)
+{
+	quickjs_gc_threshold = get_opt_long("ecmascript.quickjs.gc_threshold", ses);
+
+	return 0;
+}
+
 static void
 quickjs_init(struct module *module)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+
+	static const struct change_hook_info quickjs_change_hooks[] = {
+		{ "ecmascript.quickjs.gc_threshold", change_hook_quickjs_gc_threshold },
+		{ "ecmascript.quickjs.memory_limit", change_hook_quickjs_memory_limit },
+		{ NULL,	NULL },
+	};
+	register_change_hooks(quickjs_change_hooks);
+	quickjs_gc_threshold = get_opt_long("ecmascript.quickjs.gc_threshold", NULL);
+	quickjs_memory_limit = get_opt_long("ecmascript.quickjs.memory_limit", NULL);
+
 	map_attrs = attr_create_new_attrs_map();
 	map_attributes = attr_create_new_attributes_map();
 	map_rev_attributes = attr_create_new_attributes_map_rev();
@@ -287,8 +316,8 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
 
-	JS_SetMemoryLimit(interpreter->rt, get_opt_long("ecmascript.quickjs.memory_limit", NULL));
-	JS_SetGCThreshold(interpreter->rt, get_opt_long("ecmascript.quickjs.gc_threshold", NULL));
+	JS_SetMemoryLimit(interpreter->rt, quickjs_memory_limit);
+	JS_SetGCThreshold(interpreter->rt, quickjs_gc_threshold);
 
 	ctx = JS_NewContext(interpreter->rt);
 
