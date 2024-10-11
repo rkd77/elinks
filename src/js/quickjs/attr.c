@@ -125,8 +125,6 @@ void js_attr_finalizer(JSRuntime *rt, JSValue val)
 	REF_JS(val);
 	dom_attr *node = (dom_attr *)JS_GetOpaque(val, js_attr_class_id);
 
-	attr_erase_from_map_str(map_attrs, node);
-
 	if (node) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
@@ -146,7 +144,6 @@ getAttr(JSContext *ctx, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSValue second = JS_NULL;
 	static int initialized;
 	/* create the element class */
 	if (!initialized) {
@@ -154,21 +151,11 @@ getAttr(JSContext *ctx, void *node)
 		JS_NewClass(JS_GetRuntime(ctx), js_attr_class_id, &js_attr_class);
 		initialized = 1;
 	}
-	second = attr_find_in_map(map_attrs, node);
-
-	if (!JS_IsNull(second)) {
-		JSValue r = JS_DupValue(ctx, second);
-
-		RETURN_JS(r);
-	}
-
 	JSValue attr_obj = JS_NewObjectClass(ctx, js_attr_class_id);
 
 	JS_SetPropertyFunctionList(ctx, attr_obj, js_attr_proto_funcs, countof(js_attr_proto_funcs));
 	JS_SetClassProto(ctx, js_attr_class_id, attr_obj);
 	JS_SetOpaque(attr_obj, node);
-
-	attr_save_in_map(map_attrs, node, attr_obj);
 
 	JSValue rr = JS_DupValue(ctx, attr_obj);
 

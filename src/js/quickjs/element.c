@@ -3092,7 +3092,10 @@ js_element_getAttributeNode(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	}
 	//dom_node_unref(el);
 
-	return getAttr(ctx, attr);
+	JSValue ret = getAttr(ctx, attr);
+	JS_FreeValue(ctx, ret);
+
+	return ret;
 }
 
 static JSValue

@@ -217,7 +217,7 @@ quickjs_done(struct module *xxx)
 	interp_delete_map(map_interp);
 
 	if (quickjs_runtime) {
-		//JS_FreeRuntime(quickjs_runtime);
+		JS_FreeRuntime(quickjs_runtime);
 	}
 //	if (js_module_init_ok)
 //		spidermonkey_runtime_release();

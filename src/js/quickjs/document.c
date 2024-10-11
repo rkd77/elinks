@@ -1922,7 +1922,6 @@ static const JSCFunctionListEntry js_doctype_proto_funcs[] = {
 };
 
 void *map_doctypes;
-//static std::map<void *, JSValueConst> map_doctypes;
 
 static void
 js_doctype_finalizer(JSRuntime *rt, JSValue val)
@@ -1930,7 +1929,6 @@ js_doctype_finalizer(JSRuntime *rt, JSValue val)
 	REF_JS(val);
 
 	dom_node *node = (dom_node *)JS_GetOpaque(val, js_doctype_class_id);
-	attr_erase_from_map_str(map_doctypes, node);
 
 	if (node) {
 #ifdef ECMASCRIPT_DEBUG
@@ -1975,7 +1973,6 @@ getDoctype(JSContext *ctx, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSValue second;
 	static int initialized;
 	/* create the element class */
 	if (!initialized) {
@@ -1983,17 +1980,10 @@ getDoctype(JSContext *ctx, void *node)
 		JS_NewClass(JS_GetRuntime(ctx), js_doctype_class_id, &js_doctype_class);
 		initialized = 1;
 	}
-	second = attr_find_in_map(map_doctypes, node);
-
-	if (!JS_IsNull(second)) {
-		JSValue r = JS_DupValue(ctx, second);
-		RETURN_JS(r);
-	}
 	JSValue doctype_obj = JS_NewObjectClass(ctx, js_doctype_class_id);
 	JS_SetPropertyFunctionList(ctx, doctype_obj, js_doctype_proto_funcs, countof(js_doctype_proto_funcs));
 	JS_SetClassProto(ctx, js_doctype_class_id, doctype_obj);
 	JS_SetOpaque(doctype_obj, node);
-	attr_save_in_map(map_doctypes, node, doctype_obj);
 
 	JSValue rr = JS_DupValue(ctx, doctype_obj);
 	RETURN_JS(rr);
