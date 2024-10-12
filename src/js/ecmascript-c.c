@@ -208,13 +208,15 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 
 		cached = get_redirected_cache_entry(uri);
 
-		if (cached && get_opt_bool("ecmascript.check_integrity", NULL)) {
+		if (cached) {
 			char *integrity = len > 0 ? memacpy(string->source + 1, len) : NULL;
 
 			if (integrity) {
-				if (!validate_cache_integrity(cached, integrity)) {
+				if (get_opt_bool("ecmascript.check_integrity", NULL) && !validate_cache_integrity(cached, integrity)) {
 					cached = NULL;
 					fprintf(stderr, "Integrity failed for %s\n", struri(uri));
+				} else {
+					string->source[1] = '\0';
 				}
 				mem_free(integrity);
 			}
