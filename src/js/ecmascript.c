@@ -72,6 +72,18 @@ static union option_info ecmascript_options[] = {
 		"ecmascript", OPT_ZERO,
 		N_("ECMAScript options.")),
 
+	INIT_OPT_BOOL("ecmascript", N_("Allow XHR requests to local files"),
+		"allow_xhr_file", OPT_ZERO, 0,
+		N_("Whether to allow XHR requests to local files.")),
+
+	INIT_OPT_BOOL("ecmascript", N_("Pop-up window blocking"),
+		"block_window_opening", OPT_ZERO, 0,
+		N_("Whether to disallow scripts to open new windows or tabs.")),
+
+	INIT_OPT_BOOL("ecmascript", N_("Check integrity"),
+		"check_integrity", OPT_ZERO, 1,
+		N_("Whether to check integrity. It can have negative impact on performance.")),
+
 	INIT_OPT_BOOL("ecmascript", N_("Enable"),
 		"enable", OPT_ZERO, 0,
 		N_("Whether to run those scripts inside of documents.")),
@@ -92,14 +104,6 @@ static union option_info ecmascript_options[] = {
 	INIT_OPT_INT("ecmascript", N_("Maximum execution time"),
 		"max_exec_time", OPT_ZERO, 1, 3600, 5,
 		N_("Maximum execution time in seconds for a script.")),
-
-	INIT_OPT_BOOL("ecmascript", N_("Pop-up window blocking"),
-		"block_window_opening", OPT_ZERO, 0,
-		N_("Whether to disallow scripts to open new windows or tabs.")),
-
-	INIT_OPT_BOOL("ecmascript", N_("Allow XHR requests to local files"),
-		"allow_xhr_file", OPT_ZERO, 0,
-		N_("Whether to allow XHR requests to local files.")),
 
 	NULL_OPTION_INFO,
 };

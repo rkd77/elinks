@@ -208,7 +208,7 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 
 		cached = get_redirected_cache_entry(uri);
 
-		if (cached) {
+		if (cached && get_opt_bool("ecmascript.check_integrity", NULL)) {
 			char *integrity = len > 0 ? memacpy(string->source + 1, len) : NULL;
 
 			if (integrity) {
