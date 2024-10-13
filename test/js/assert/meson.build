@@ -75,6 +75,7 @@ took = [
 'eventListener.html',
 'fetch.html',
 'fragment.appendChild.html',
+'fragment.firstChild.html',
 'fragment.getElementsByTagName.html',
 'fragment.hasChildNodes.html',
 'keyboardEvent.html',

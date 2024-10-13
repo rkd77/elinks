@@ -1,0 +1,25 @@
+<html>
+<body>
+<a href="/home">BBB</a>
+<b dir="ltr" id="aaaa" class="a b c">bbb</b>
+<a dir="rtl" id="blabla" href="/"><b id="b1">AAA</b><u dir="auto" id="ble" title="test">UUU</u>AAAAAAA
+</a>
+<a id="bb" dir="blalalala" href="/">BB</a>
+<script>
+function aa()
+{
+	var d = document.createDocumentFragment();
+	var e = document.createElement('b');
+	e.id = 'aaa';
+	d.appendChild(e);
+	var x = d.firstChild.id;
+	console.assert(x === 'aaa', 'aaa');
+}
+
+console.error('fragment.firstChild.html');
+aa();
+console.exit();
+</script>
+<button onclick="return aa()">Click me!</button>
+</body>
+</html>
