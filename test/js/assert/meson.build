@@ -19,6 +19,7 @@ took = [
 'document.documentURI.html',
 'document.domain.html',
 'document.getElementsByClassName.html',
+'document.getElementsByClassName_2.html',
 'document.getElementsByTagName.html',
 'document.images.html',
 'document.links.html',
