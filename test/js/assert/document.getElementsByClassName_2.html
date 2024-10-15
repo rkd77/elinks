@@ -16,8 +16,7 @@ First Name: <input name="fname" type="text" value="Doug">
 function myFunction() {
   var col = document.getElementsByClassName("test");
   var counter = 0;
-
-  [...col].forEach(e => { counter++;});
+  [...col].forEach(e => { counter++; });
 
   console.assert(counter == 3, '3');
 }

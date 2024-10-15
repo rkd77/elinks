@@ -29,6 +29,11 @@ void *map_rev_collections;
 
 JSClassID js_htmlCollection_class_id;
 
+struct js_col {
+	JSValue arr;
+	void *node;
+};
+
 static void *
 js_htmlCollection_GetOpaque(JSValueConst this_val)
 {
@@ -54,19 +59,40 @@ js_htmlCollection_SetOpaque(JSValueConst this_val, void *node)
 #endif
 }
 
-static
-void js_htmlColection_finalizer(JSRuntime *rt, JSValue val)
+static void
+js_htmlColection_finalizer(JSRuntime *rt, JSValue val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(val);
-	dom_html_collection *ns = (dom_html_collection *)(js_htmlCollection_GetOpaque(val));
+	struct js_col *col_private = (struct js_col *)js_htmlCollection_GetOpaque(val);
+
+	if (!col_private) {
+		return;
+	}
+	dom_html_collection *ns = (dom_html_collection *)(col_private->node);
 
 	if (ns) {
-		//attr_erase_from_map_str(map_collections, ns);
 		dom_html_collection_unref(ns);
 	}
+	mem_free(col_private);
+}
+
+static void
+js_htmlCollection_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(val);
+
+	struct js_col *col_private = (struct js_col *)js_htmlCollection_GetOpaque(val);
+
+	if (!col_private) {
+		return;
+	}
+	JS_MarkValue(rt, col_private->arr, mark_func);
 }
 
 static JSValue
@@ -76,7 +102,12 @@ js_htmlCollection_get_property_length(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
-	dom_html_collection *ns = (dom_html_collection *)(js_htmlCollection_GetOpaque(this_val));
+	struct js_col *col_private = (struct js_col *)js_htmlCollection_GetOpaque(this_val);
+
+	if (!col_private) {
+		return JS_NULL;
+	}
+	dom_html_collection *ns = (dom_html_collection *)(col_private->node);
 	uint32_t size;
 
 	if (!ns) {
@@ -100,7 +131,12 @@ js_htmlCollection_item2(JSContext *ctx, JSValueConst this_val, int idx)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
-	dom_html_collection *ns = (dom_html_collection *)(js_htmlCollection_GetOpaque(this_val));
+	struct js_col *col_private = (struct js_col *)js_htmlCollection_GetOpaque(this_val);
+
+	if (!col_private) {
+		return JS_NULL;
+	}
+	dom_html_collection *ns = (dom_html_collection *)(col_private->node);
 	dom_node *node;
 	dom_exception err;
 	JSValue ret;
@@ -150,7 +186,12 @@ js_htmlCollection_namedItem2(JSContext *ctx, JSValueConst this_val, const char *
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
-	dom_html_collection *ns = (dom_html_collection *)(js_htmlCollection_GetOpaque(this_val));
+	struct js_col *col_private = (struct js_col *)js_htmlCollection_GetOpaque(this_val);
+
+	if (!col_private) {
+		return JS_NULL;
+	}
+	dom_html_collection *ns = (dom_html_collection *)(col_private->node);
 	dom_exception err;
 	dom_string *name;
 	uint32_t size, i;
@@ -262,7 +303,7 @@ js_htmlCollection_set_items(JSContext *ctx, JSValue this_val, void *node)
 
 	int counter = 0;
 	uint32_t size, i;
-	dom_html_collection *ns = (dom_html_collection *)(js_htmlCollection_GetOpaque(this_val));
+	dom_html_collection *ns = (dom_html_collection *)(node);
 	dom_exception err;
 
 	if (!ns) {
@@ -286,7 +327,8 @@ js_htmlCollection_set_items(JSContext *ctx, JSValue this_val, void *node)
 		JSValue obj = getElement(ctx, element);
 
 		REF_JS(obj);
-		JS_SetPropertyUint32(ctx, this_val, counter, JS_DupValue(ctx, obj));
+
+		JS_SetPropertyUint32(ctx, this_val, i, JS_DupValue(ctx, obj));
 		err = dom_element_get_attribute(element, corestring_dom_id, &name);
 
 		if (err != DOM_NO_ERR || !name) {
@@ -329,9 +371,61 @@ static const JSCFunctionListEntry js_htmlCollection_proto_funcs[] = {
 	JS_CFUNC_DEF("toString", 0, js_htmlCollection_toString)
 };
 
+static int
+js_obj_delete_property(JSContext *ctx, JSValueConst obj, JSAtom prop)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct js_col *col_private = (struct js_col *)js_htmlCollection_GetOpaque(obj);
+
+	if (!col_private) {
+		return -1;
+	}
+	return JS_DeleteProperty(ctx, col_private->arr, prop, 0);
+}
+
+static JSValue
+js_obj_get_property(JSContext *ctx, JSValueConst obj, JSAtom prop, JSValueConst receiver)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct js_col *col_private = (struct js_col *)js_htmlCollection_GetOpaque(obj);
+
+	if (!col_private) {
+		return JS_NULL;
+	}
+	return JS_GetProperty(ctx, col_private->arr, prop);
+}
+
+/* return < 0 if exception or TRUE/FALSE */
+static int
+js_obj_set_property(JSContext *ctx, JSValueConst obj, JSAtom prop, JSValueConst val, JSValueConst receiver, int flags)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct js_col *col_private = (struct js_col *)js_htmlCollection_GetOpaque(obj);
+
+	if (!col_private) {
+		return -1;
+	}
+	return JS_SetProperty(ctx, col_private->arr, prop, val);
+}
+
+static JSClassExoticMethods exo = {
+	.delete_property = js_obj_delete_property,
+//	.has_property = js_obj_has_property,
+	.get_property = js_obj_get_property,
+	.set_property = js_obj_set_property
+};
+
 static JSClassDef js_htmlCollection_class = {
 	"htmlCollection",
-	.finalizer = js_htmlColection_finalizer
+	.finalizer = js_htmlColection_finalizer,
+	.gc_mark = js_htmlCollection_mark,
+	.exotic = &exo
 };
 
 JSValue
@@ -341,7 +435,6 @@ getCollection(JSContext *ctx, void *node)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	static int initialized;
-//	JSValue second;
 
 	if (!initialized) {
 		/* collection class */
@@ -349,27 +442,25 @@ getCollection(JSContext *ctx, void *node)
 		JS_NewClass(JS_GetRuntime(ctx), js_htmlCollection_class_id, &js_htmlCollection_class);
 		initialized = 1;
 	}
-//	second = attr_find_in_map(map_collections, node);
+	struct js_col *col_private = calloc(1, sizeof(*col_private));
 
-//	if (!JS_IsNull(second)) {
-//		JSValue r = JS_DupValue(ctx, second);
-//
-//		RETURN_JS(r);
-//	}
-	JSValue proto = JS_NewObjectClass(ctx, js_htmlCollection_class_id);
-	REF_JS(proto);
-
-	JS_SetPropertyFunctionList(ctx, proto, js_htmlCollection_proto_funcs, countof(js_htmlCollection_proto_funcs));
-	JS_SetClassProto(ctx, js_htmlCollection_class_id, proto);
-
-	js_htmlCollection_SetOpaque(proto, node);
-
-	///dom_html_collection_ref((dom_html_collection *)node);
-
-
+	if (!col_private) {
+		return JS_NULL;
+	}
+	JSValue proto = JS_NewArray(ctx);
 	js_htmlCollection_set_items(ctx, proto, node);
-//	attr_save_in_map(map_collections, node, proto);
-	JSValue rr = JS_DupValue(ctx, proto);
+
+	JSValue col_obj = JS_NewObjectClass(ctx, js_htmlCollection_class_id);
+	REF_JS(col_obj);
+
+	JS_SetPropertyFunctionList(ctx, col_obj, js_htmlCollection_proto_funcs, countof(js_htmlCollection_proto_funcs));
+	JS_SetClassProto(ctx, js_htmlCollection_class_id, col_obj);
+
+	col_private->arr = JS_DupValue(ctx, proto);
+	JS_FreeValue(ctx, proto);
+	col_private->node = node;
+	JS_SetOpaque(col_obj, col_private);
+	JSValue rr = JS_DupValue(ctx, col_obj);
 
 	RETURN_JS(rr);
 }
