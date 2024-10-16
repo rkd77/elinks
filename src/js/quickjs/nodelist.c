@@ -26,6 +26,11 @@
 
 static JSClassID js_nodelist_class_id;
 
+struct js_nodelist {
+	JSValue arr;
+	void *node;
+};
+
 void *map_nodelist;
 void *map_rev_nodelist;
 
@@ -33,26 +38,46 @@ void *map_rev_nodelist;
 //static std::map<JSValueConst, void *> map_rev_nodelist;
 
 static void *
-js_nodeList_GetOpaque(JSValueConst this_val)
+js_nodelist_GetOpaque(JSValueConst this_val)
 {
 	REF_JS(this_val);
 
-	return attr_find_in_map_rev(map_rev_nodelist, this_val);
+	return JS_GetOpaque(this_val, js_nodelist_class_id);
 }
 
 static void
-js_nodeList_SetOpaque(JSValueConst this_val, void *node)
+js_nodelist_finalizer(JSRuntime *rt, JSValue val)
 {
-	REF_JS(this_val);
+	REF_JS(val);
+	struct js_nodelist *nodelist_private = (struct js_nodelist *)js_nodelist_GetOpaque(val);
 
-	if (!node) {
-		attr_erase_from_map_rev(map_rev_nodelist, this_val);
-	} else {
-		attr_save_in_map_rev(map_rev_nodelist, this_val, node);
+	if (!nodelist_private) {
+		return;
 	}
+	dom_nodelist *nl = (dom_nodelist *)(nodelist_private->node);
+
+	if (nl) {
+		dom_nodelist_unref(nl);
+	}
+	mem_free(nodelist_private);
 }
 
-#if 0
+static void
+js_nodelist_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(val);
+
+	struct js_nodelist *nodelist_private = (struct js_nodelist *)js_nodelist_GetOpaque(val);
+
+	if (!nodelist_private) {
+		return;
+	}
+	JS_MarkValue(rt, nodelist_private->arr, mark_func);
+}
+
 static JSValue
 js_nodeList_get_property_length(JSContext *ctx, JSValueConst this_val)
 {
@@ -60,8 +85,12 @@ js_nodeList_get_property_length(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
+	struct js_nodelist *nodelist_private = (struct js_nodelist *)js_nodelist_GetOpaque(this_val);
 
-	dom_nodelist *nl = (dom_nodelist *)(js_nodeList_GetOpaque(this_val));
+	if (!nodelist_private) {
+		return JS_NULL;
+	}
+	dom_nodelist *nl = (dom_nodelist *)(nodelist_private->node);
 	dom_exception err;
 	uint32_t size;
 
@@ -79,7 +108,6 @@ js_nodeList_get_property_length(JSContext *ctx, JSValueConst this_val)
 
 	return JS_NewInt32(ctx, size);
 }
-#endif
 
 static JSValue
 js_nodeList_item2(JSContext *ctx, JSValueConst this_val, int idx)
@@ -88,8 +116,12 @@ js_nodeList_item2(JSContext *ctx, JSValueConst this_val, int idx)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
+	struct js_nodelist *nodelist_private = (struct js_nodelist *)js_nodelist_GetOpaque(this_val);
 
-	dom_nodelist *nl = (dom_nodelist *)(js_nodeList_GetOpaque(this_val));
+	if (!nodelist_private) {
+		return JS_NULL;
+	}
+	dom_nodelist *nl = (dom_nodelist *)(nodelist_private->node);
 	dom_node *element = NULL;
 	dom_exception err;
 	JSValue ret;
@@ -188,14 +220,68 @@ js_nodeList_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 	return JS_NewString(ctx, "[nodeList object]");
 }
 
-static const JSCFunctionListEntry js_nodeList_proto_funcs[] = {
-//	JS_CGETSET_DEF("length", js_nodeList_get_property_length, NULL),
+static const JSCFunctionListEntry js_nodelist_proto_funcs[] = {
+	JS_CGETSET_DEF("length", js_nodeList_get_property_length, NULL),
 	JS_CFUNC_DEF("item", 1, js_nodeList_item),
 	JS_CFUNC_DEF("toString", 0, js_nodeList_toString)
 };
 
+static int
+js_obj_delete_property(JSContext *ctx, JSValueConst obj, JSAtom prop)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct js_nodelist *nodelist_private = (struct js_nodelist *)js_nodelist_GetOpaque(obj);
+
+	if (!nodelist_private) {
+		return -1;
+	}
+	return JS_DeleteProperty(ctx, nodelist_private->arr, prop, 0);
+}
+
+static JSValue
+js_obj_get_property(JSContext *ctx, JSValueConst obj, JSAtom prop, JSValueConst receiver)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct js_nodelist *nodelist_private = (struct js_nodelist *)js_nodelist_GetOpaque(obj);
+
+	if (!nodelist_private) {
+		return JS_NULL;
+	}
+	return JS_GetProperty(ctx, nodelist_private->arr, prop);
+}
+
+/* return < 0 if exception or TRUE/FALSE */
+static int
+js_obj_set_property(JSContext *ctx, JSValueConst obj, JSAtom prop, JSValueConst val, JSValueConst receiver, int flags)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct js_nodelist *nodelist_private = (struct js_nodelist *)js_nodelist_GetOpaque(obj);
+
+	if (!nodelist_private) {
+		return -1;
+	}
+	return JS_SetProperty(ctx, nodelist_private->arr, prop, val);
+}
+
+
+static JSClassExoticMethods exo = {
+	.delete_property = js_obj_delete_property,
+//	.has_property = js_obj_has_property,
+	.get_property = js_obj_get_property,
+	.set_property = js_obj_set_property
+};
+
 static JSClassDef js_nodelist_class = {
 	"nodelist",
+	.finalizer = js_nodelist_finalizer,
+	.gc_mark = js_nodelist_mark,
+	.exotic = &exo
 };
 
 JSValue
@@ -207,18 +293,33 @@ getNodeList(JSContext *ctx, void *node)
 	JSValue proto;
 
 	/* nodelist class */
-	JS_NewClassID(&js_nodelist_class_id);
-	JS_NewClass(JS_GetRuntime(ctx), js_nodelist_class_id, &js_nodelist_class);
+	static int initialized;
+
+	if (!initialized) {
+		JS_NewClassID(&js_nodelist_class_id);
+		JS_NewClass(JS_GetRuntime(ctx), js_nodelist_class_id, &js_nodelist_class);
+		initialized = 1;
+	}
+	struct js_nodelist *nodelist_private = calloc(1, sizeof(*nodelist_private));
+
+	if (!nodelist_private) {
+		return JS_NULL;
+	}
 	proto = JS_NewArray(ctx);
+	js_nodeList_set_items(ctx, proto, node);
 	REF_JS(proto);
 
-	JS_SetPropertyFunctionList(ctx, proto, js_nodeList_proto_funcs, countof(js_nodeList_proto_funcs));
-	JS_SetClassProto(ctx, js_nodelist_class_id, proto);
+	JSValue nodelist_obj = JS_NewObjectClass(ctx, js_nodelist_class_id);
+	REF_JS(nodelist_obj);
 
-	attr_save_in_map(map_nodelist, node, proto);
-	js_nodeList_SetOpaque(proto, node);
-	js_nodeList_set_items(ctx, proto, node);
+	JS_SetPropertyFunctionList(ctx, nodelist_obj, js_nodelist_proto_funcs, countof(js_nodelist_proto_funcs));
+	JS_SetClassProto(ctx, js_nodelist_class_id, nodelist_obj);
 
-	JSValue rr = JS_DupValue(ctx, proto);
+	nodelist_private->arr = JS_DupValue(ctx, proto);
+	JS_FreeValue(ctx, proto);
+	nodelist_private->node = node;
+	JS_SetOpaque(nodelist_obj, nodelist_private);
+	JSValue rr = JS_DupValue(ctx, nodelist_obj);
+
 	RETURN_JS(rr);
 }
