@@ -14,6 +14,7 @@
 
 #include "js/spidermonkey/util.h"
 #include <jsfriendapi.h>
+#include <js/Array.h>
 
 #include "bfu/dialog.h"
 #include "cache/cache.h"
@@ -52,11 +53,10 @@
 #include <algorithm>
 #include <string>
 
-
-static bool htmlCollection_item(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool htmlCollection_namedItem(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool htmlCollection_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
-static bool htmlCollection_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::MutableHandleValue hvp);
+static bool htmlCollection2_item(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool htmlCollection2_namedItem(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool htmlCollection2_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
+static bool htmlCollection2_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::MutableHandleValue hvp);
 
 static void htmlCollection_finalize(JS::GCContext *op, JSObject *obj)
 {
@@ -70,6 +70,87 @@ static void htmlCollection_finalize(JS::GCContext *op, JSObject *obj)
 	}
 }
 
+static void htmlCollection2_finalize(JS::GCContext *op, JSObject *obj)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_html_collection *ns = JS::GetMaybePtrFromReservedSlot<dom_html_collection>(obj, 0);
+
+	if (ns) {
+		dom_html_collection_unref(ns);
+	}
+}
+
+static bool
+col_obj_getProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleValue receiver, JS::HandleId id, JS::MutableHandleValue vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	if (id.isString()) {
+		char *property = jsid_to_string(ctx, id);
+
+		if (property) {
+			if (!strcmp(property, "item") || !strcmp(property, "namedItem")) {
+				mem_free(property);
+				JSObject *col = &(JS::GetReservedSlot(obj, 1).toObject());
+
+				if (!col) {
+					vp.setUndefined();
+					return true;
+				}
+				JS::RootedObject r_col(ctx, col);
+
+				return JS_GetPropertyById(ctx, r_col, id, vp);
+			}
+			mem_free(property);
+		}
+	}
+	JSObject *arr = &(JS::GetReservedSlot(obj, 2).toObject());
+
+	if (!arr) {
+		vp.setUndefined();
+		return true;
+	}
+	JS::RootedObject r_arr(ctx, arr);
+
+	return JS_GetPropertyById(ctx, r_arr, id, vp);
+}
+
+static bool
+col_obj_setProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleId id, JS::HandleValue v, JS::HandleValue receiver, JS::ObjectOpResult& result)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JSObject *arr = &(JS::GetReservedSlot(obj, 2).toObject());
+
+	if (!arr) {
+		return true;
+	}
+	JS::RootedObject r_arr(ctx, arr);
+	(void)JS_SetPropertyById(ctx, r_arr, id, v);
+
+	return result.succeed();
+}
+
+static bool
+col_obj_deleteProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleId id, JS::ObjectOpResult& result)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JSObject *arr = &(JS::GetReservedSlot(obj, 2).toObject());
+
+	if (!arr) {
+		return true;
+	}
+	JS::RootedObject r_arr(ctx, arr);
+	(void)JS_DeletePropertyById(ctx, r_arr, id);
+
+	return result.succeed();
+}
 
 JSClassOps htmlCollection_ops = {
 	nullptr,  // addProperty
@@ -84,27 +165,53 @@ JSClassOps htmlCollection_ops = {
 	JS_GlobalObjectTraceHook
 };
 
-JSClass htmlCollection_class = {
-	"htmlCollection",
-	JSCLASS_HAS_RESERVED_SLOTS(1),
-	&htmlCollection_ops
+JSClassOps htmlCollection2_ops = {
+	nullptr,  // addProperty
+	nullptr,  // deleteProperty
+	nullptr,  // enumerate
+	nullptr,  // newEnumerate
+	nullptr,  // resolve
+	nullptr,  // mayResolve
+	htmlCollection2_finalize, // finalize
+	nullptr,  // call
+	nullptr,  // construct
+	JS_GlobalObjectTraceHook
 };
 
-static const spidermonkeyFunctionSpec htmlCollection_funcs[] = {
-	{ "item",		htmlCollection_item,		1 },
-	{ "namedItem",		htmlCollection_namedItem,	1 },
+js::ObjectOps col_obj_ops = {
+	.getProperty = col_obj_getProperty,
+	.setProperty = col_obj_setProperty,
+	.deleteProperty = col_obj_deleteProperty
+};
+
+JSClass htmlCollection_class = {
+	"htmlCollection",
+	JSCLASS_HAS_RESERVED_SLOTS(3),
+	&htmlCollection_ops,
+	.oOps = &col_obj_ops
+};
+
+JSClass htmlCollection2_class = {
+	"htmlCollection2",
+	JSCLASS_HAS_RESERVED_SLOTS(1),
+	&htmlCollection2_ops
+};
+
+static const spidermonkeyFunctionSpec htmlCollection2_funcs[] = {
+	{ "item",		htmlCollection2_item,		1 },
+	{ "namedItem",		htmlCollection2_namedItem,	1 },
 	{ NULL }
 };
 
-static bool htmlCollection_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool htmlCollection2_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
-static JSPropertySpec htmlCollection_props[] = {
-	JS_PSG("length",	htmlCollection_get_property_length, JSPROP_ENUMERATE),
+static JSPropertySpec htmlCollection2_props[] = {
+	JS_PSG("length",	htmlCollection2_get_property_length, JSPROP_ENUMERATE),
 	JS_PS_END
 };
 
 static bool
-htmlCollection_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
+htmlCollection2_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -127,12 +234,12 @@ htmlCollection_get_property_length(JSContext *ctx, unsigned int argc, JS::Value 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &htmlCollection_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
+//	if (!JS_InstanceOf(ctx, hobj, &htmlCollection2_class, NULL)) {
+//#ifdef ECMASCRIPT_DEBUG
+//	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+//#endif
+//		return false;
+//	}
 
 	vs = interpreter->vs;
 	if (!vs) {
@@ -159,7 +266,7 @@ htmlCollection_get_property_length(JSContext *ctx, unsigned int argc, JS::Value 
 }
 
 static bool
-htmlCollection_item(JSContext *ctx, unsigned int argc, JS::Value *vp)
+htmlCollection2_item(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -170,14 +277,14 @@ htmlCollection_item(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedValue rval(ctx, val);
 
 	int index = args[0].toInt32();
-	bool ret = htmlCollection_item2(ctx, hobj, index, &rval);
+	bool ret = htmlCollection2_item2(ctx, hobj, index, &rval);
 	args.rval().set(rval);
 
 	return ret;
 }
 
 static bool
-htmlCollection_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
+htmlCollection2_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -189,7 +296,7 @@ htmlCollection_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	char *str = jsval_to_string(ctx, args[0]);
 	rval.setNull();
-	bool ret = htmlCollection_namedItem2(ctx, hobj, str, &rval);
+	bool ret = htmlCollection2_namedItem2(ctx, hobj, str, &rval);
 	args.rval().set(rval);
 
 	mem_free_if(str);
@@ -198,7 +305,7 @@ htmlCollection_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 static bool
-htmlCollection_item2(JSContext *ctx, JS::HandleObject hobj, int idx, JS::MutableHandleValue hvp)
+htmlCollection2_item2(JSContext *ctx, JS::HandleObject hobj, int idx, JS::MutableHandleValue hvp)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -211,16 +318,13 @@ htmlCollection_item2(JSContext *ctx, JS::HandleObject hobj, int idx, JS::Mutable
 #endif
 		return false;
 	}
-
-	if (!JS_InstanceOf(ctx, hobj, &htmlCollection_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
+//	if (!JS_InstanceOf(ctx, hobj, &htmlCollection_class, NULL)) {
+//#ifdef ECMASCRIPT_DEBUG
+//	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+//#endif
+//		return false;
+//	}
 	hvp.setUndefined();
-
 	dom_html_collection *ns = JS::GetMaybePtrFromReservedSlot<dom_html_collection>(hobj, 0);
 	dom_node *node;
 	dom_exception err;
@@ -241,7 +345,7 @@ htmlCollection_item2(JSContext *ctx, JS::HandleObject hobj, int idx, JS::Mutable
 }
 
 static bool
-htmlCollection_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::MutableHandleValue hvp)
+htmlCollection2_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::MutableHandleValue hvp)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -255,12 +359,12 @@ htmlCollection_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::
 		return false;
 	}
 
-	if (!JS_InstanceOf(ctx, hobj, &htmlCollection_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
+//	if (!JS_InstanceOf(ctx, hobj, &htmlCollection2_class, NULL)) {
+//#ifdef ECMASCRIPT_DEBUG
+//	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+//#endif
+//		return false;
+//	}
 	hvp.setUndefined();
 
 	dom_html_collection *ns = JS::GetMaybePtrFromReservedSlot<dom_html_collection>(hobj, 0);
@@ -345,19 +449,9 @@ htmlCollection_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 #endif
 		return false;
 	}
-
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &htmlCollection_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
 	int counter = 0;
 	uint32_t size, i;
-	dom_html_collection *ns = JS::GetMaybePtrFromReservedSlot<dom_html_collection>(hobj, 0);
+	dom_html_collection *ns = (dom_html_collection *)node;
 	dom_exception err;
 
 	if (!ns) {
@@ -406,26 +500,45 @@ htmlCollection_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 	return true;
 }
 
-
 JSObject *
 getCollection(JSContext *ctx, void *node)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	dom_html_collection *ns = (dom_html_collection *)node;
+	uint32_t size;
+
+	if (!ns) {
+		return NULL;
+	}
+
+	if (dom_html_collection_get_length(ns, &size) != DOM_NO_ERR) {
+		return NULL;
+	}
+	JSObject *arr = JS::NewArrayObject(ctx, size);
+	JS::RootedObject r_arr(ctx, arr);
+	htmlCollection_set_items(ctx, r_arr, node);
+	JSObject *col = JS_NewObject(ctx, &htmlCollection2_class);
+
+	if (!col) {
+		return NULL;
+	}
+	JS::RootedObject r_col(ctx, col);
+	JS_DefineProperties(ctx, r_col, (JSPropertySpec *) htmlCollection2_props);
+	spidermonkey_DefineFunctions(ctx, col, htmlCollection2_funcs);
+	JS::SetReservedSlot(col, 0, JS::PrivateValue(node));
+
 	JSObject *el = JS_NewObject(ctx, &htmlCollection_class);
 
 	if (!el) {
 		return NULL;
 	}
-
 	JS::RootedObject r_el(ctx, el);
-
-	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) htmlCollection_props);
-	spidermonkey_DefineFunctions(ctx, el, htmlCollection_funcs);
-
+	dom_html_collection_ref(ns);
 	JS::SetReservedSlot(el, 0, JS::PrivateValue(node));
-	htmlCollection_set_items(ctx, r_el, node);
+	JS::SetReservedSlot(el, 1, JS::ObjectValue(*col));
+	JS::SetReservedSlot(el, 2, JS::ObjectValue(*arr));
 
 	return el;
 }
