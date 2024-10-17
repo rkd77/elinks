@@ -53,6 +53,12 @@
 #include <algorithm>
 #include <string>
 
+enum {
+	SLOT_NODE = 0,
+	SLOT_ITEM_NAMEDITEM,
+	SLOT_ARRAY
+};
+
 static bool htmlCollection2_item(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool htmlCollection2_namedItem(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool htmlCollection2_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
@@ -63,7 +69,7 @@ static void htmlCollection_finalize(JS::GCContext *op, JSObject *obj)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	dom_html_collection *ns = JS::GetMaybePtrFromReservedSlot<dom_html_collection>(obj, 0);
+	dom_html_collection *ns = JS::GetMaybePtrFromReservedSlot<dom_html_collection>(obj, SLOT_NODE);
 
 	if (ns) {
 		dom_html_collection_unref(ns);
@@ -75,7 +81,7 @@ static void htmlCollection2_finalize(JS::GCContext *op, JSObject *obj)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	dom_html_collection *ns = JS::GetMaybePtrFromReservedSlot<dom_html_collection>(obj, 0);
+	dom_html_collection *ns = JS::GetMaybePtrFromReservedSlot<dom_html_collection>(obj, SLOT_NODE);
 
 	if (ns) {
 		dom_html_collection_unref(ns);
@@ -94,7 +100,7 @@ col_obj_getProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleValue receiv
 		if (property) {
 			if (!strcmp(property, "item") || !strcmp(property, "namedItem")) {
 				mem_free(property);
-				JSObject *col = &(JS::GetReservedSlot(obj, 1).toObject());
+				JSObject *col = &(JS::GetReservedSlot(obj, SLOT_ITEM_NAMEDITEM).toObject());
 
 				if (!col) {
 					vp.setUndefined();
@@ -107,7 +113,7 @@ col_obj_getProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleValue receiv
 			mem_free(property);
 		}
 	}
-	JSObject *arr = &(JS::GetReservedSlot(obj, 2).toObject());
+	JSObject *arr = &(JS::GetReservedSlot(obj, SLOT_ARRAY).toObject());
 
 	if (!arr) {
 		vp.setUndefined();
@@ -124,7 +130,7 @@ col_obj_setProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleId id, JS::H
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSObject *arr = &(JS::GetReservedSlot(obj, 2).toObject());
+	JSObject *arr = &(JS::GetReservedSlot(obj, SLOT_ARRAY).toObject());
 
 	if (!arr) {
 		return true;
@@ -141,7 +147,7 @@ col_obj_deleteProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleId id, JS
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSObject *arr = &(JS::GetReservedSlot(obj, 2).toObject());
+	JSObject *arr = &(JS::GetReservedSlot(obj, SLOT_ARRAY).toObject());
 
 	if (!arr) {
 		return true;
@@ -248,7 +254,7 @@ htmlCollection2_get_property_length(JSContext *ctx, unsigned int argc, JS::Value
 #endif
 		return false;
 	}
-	dom_html_collection *ns = JS::GetMaybePtrFromReservedSlot<dom_html_collection>(hobj, 0);
+	dom_html_collection *ns = JS::GetMaybePtrFromReservedSlot<dom_html_collection>(hobj, SLOT_NODE);
 	uint32_t size;
 
 	if (!ns) {
@@ -325,7 +331,7 @@ htmlCollection2_item2(JSContext *ctx, JS::HandleObject hobj, int idx, JS::Mutabl
 //		return false;
 //	}
 	hvp.setUndefined();
-	dom_html_collection *ns = JS::GetMaybePtrFromReservedSlot<dom_html_collection>(hobj, 0);
+	dom_html_collection *ns = JS::GetMaybePtrFromReservedSlot<dom_html_collection>(hobj, SLOT_NODE);
 	dom_node *node;
 	dom_exception err;
 
@@ -367,7 +373,7 @@ htmlCollection2_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS:
 //	}
 	hvp.setUndefined();
 
-	dom_html_collection *ns = JS::GetMaybePtrFromReservedSlot<dom_html_collection>(hobj, 0);
+	dom_html_collection *ns = JS::GetMaybePtrFromReservedSlot<dom_html_collection>(hobj, SLOT_NODE);
 	dom_exception err;
 	dom_string *name;
 	uint32_t size, i;
@@ -527,7 +533,7 @@ getCollection(JSContext *ctx, void *node)
 	JS::RootedObject r_col(ctx, col);
 	JS_DefineProperties(ctx, r_col, (JSPropertySpec *) htmlCollection2_props);
 	spidermonkey_DefineFunctions(ctx, col, htmlCollection2_funcs);
-	JS::SetReservedSlot(col, 0, JS::PrivateValue(node));
+	JS::SetReservedSlot(col, SLOT_NODE, JS::PrivateValue(node));
 
 	JSObject *el = JS_NewObject(ctx, &htmlCollection_class);
 
@@ -536,9 +542,9 @@ getCollection(JSContext *ctx, void *node)
 	}
 	JS::RootedObject r_el(ctx, el);
 	dom_html_collection_ref(ns);
-	JS::SetReservedSlot(el, 0, JS::PrivateValue(node));
-	JS::SetReservedSlot(el, 1, JS::ObjectValue(*col));
-	JS::SetReservedSlot(el, 2, JS::ObjectValue(*arr));
+	JS::SetReservedSlot(el, SLOT_NODE, JS::PrivateValue(node));
+	JS::SetReservedSlot(el, SLOT_ITEM_NAMEDITEM, JS::ObjectValue(*col));
+	JS::SetReservedSlot(el, SLOT_ARRAY, JS::ObjectValue(*arr));
 
 	return el;
 }
