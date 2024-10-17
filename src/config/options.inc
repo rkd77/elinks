@@ -615,10 +615,8 @@ static union option_info config_options_info[] = {
 		N_("Memory cache options.")),
 
 	INIT_OPT_LONG("document.cache.memory", N_("Size"),
-		"size", OPT_ZERO, 0, LONG_MAX, 1048576,
+		"size", OPT_ZERO, 0, LONG_MAX, 10485760,
 		N_("Memory cache size (in bytes).")),
-
-
 
 	INIT_OPT_TREE("document", N_("Charset"),
 		"codepage", OPT_ZERO,
