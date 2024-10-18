@@ -26,6 +26,7 @@
 #include "document/document.h"
 #include "document/forms.h"
 #include "document/libdom/doc.h"
+#include "document/libdom/mapa.h"
 #include "document/view.h"
 #include "js/ecmascript.h"
 #include "js/ecmascript-c.h"
@@ -306,6 +307,40 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	}
 	mjs_push_nodelist(J, nodes);
 	dom_nodelist_unref(nodes);
+}
+
+static void
+mjs_document_get_property_currentScript(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document = doc_view->document;
+	void *mapa = (void *)document->element_map;
+
+	if (mapa) {
+		dom_node *elem = (dom_node *)find_in_map(mapa, interpreter->element_offset);
+
+		if (elem) {
+			dom_string *tag_name = NULL;
+			dom_exception exc = dom_node_get_node_name(elem, &tag_name);
+
+			if (exc != DOM_NO_ERR || !tag_name) {
+				js_pushnull(J);
+				return;
+			}
+			bool isScript = !strcmp("SCRIPT", dom_string_data(tag_name));
+			dom_string_unref(tag_name);
+
+			if (isScript) {
+				mjs_push_element(J, elem);
+				return;
+			}
+		}
+	}
+	js_pushnull(J);
 }
 
 static void
@@ -1717,6 +1752,7 @@ mjs_push_document(js_State *J, void *doc)
 		addproperty(J, "charset", mjs_document_get_property_charset, NULL);
 		addproperty(J, "characterSet", mjs_document_get_property_charset, NULL);
 		addproperty(J, "childNodes", mjs_document_get_property_childNodes, NULL);
+		addproperty(J, "currentScript", mjs_document_get_property_currentScript, NULL);
 		addproperty(J, "defaultView", mjs_document_get_property_defaultView, NULL);
 		addproperty(J, "doctype", mjs_document_get_property_doctype, NULL);
 		addproperty(J, "documentElement", mjs_document_get_property_documentElement, NULL);
@@ -1793,6 +1829,7 @@ mjs_push_document2(js_State *J, void *doc)
 		addproperty(J, "charset", mjs_document_get_property_charset, NULL);
 		addproperty(J, "characterSet", mjs_document_get_property_charset, NULL);
 		addproperty(J, "childNodes", mjs_document_get_property_childNodes, NULL);
+		addproperty(J, "currentScript", mjs_document_get_property_currentScript, NULL);
 		addproperty(J, "defaultView", mjs_document_get_property_defaultView, NULL);
 		addproperty(J, "doctype", mjs_document_get_property_doctype, NULL);
 		addproperty(J, "documentElement", mjs_document_get_property_documentElement, NULL);
