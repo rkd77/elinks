@@ -25,6 +25,7 @@
 #include "document/document.h"
 #include "document/forms.h"
 #include "document/libdom/doc.h"
+#include "document/libdom/mapa.h"
 #include "document/libdom/renderer2.h"
 #include "document/view.h"
 #include "js/css2xpath.h"
@@ -429,6 +430,69 @@ document_get_property_childNodes(JSContext *ctx, unsigned int argc, JS::Value *v
 
 	return true;
 }
+
+static bool
+document_get_property_currentScript(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	struct view_state *vs;
+	struct document_view *doc_view;
+	struct document *document;
+
+	vs = interpreter->vs;
+
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	doc_view = vs->doc_view;
+	document = doc_view->document;
+
+	void *mapa = (void *)document->element_map;
+
+	if (mapa) {
+		dom_node *elem = (dom_node *)find_in_map(mapa, interpreter->element_offset);
+
+		if (elem) {
+			dom_string *tag_name = NULL;
+			dom_exception exc = dom_node_get_node_name(elem, &tag_name);
+
+			if (exc != DOM_NO_ERR || !tag_name) {
+				args.rval().setNull();
+				return true;
+			}
+			bool isScript = !strcmp("SCRIPT", dom_string_data(tag_name));
+			dom_string_unref(tag_name);
+
+			if (isScript) {
+				JSObject *obj = getElement(ctx, elem);
+				args.rval().setObject(*obj);
+				return true;
+			}
+		}
+	}
+	args.rval().setNull();
+
+	return true;
+}
+
 
 static bool
 document_get_property_defaultView(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -1153,6 +1217,7 @@ JSPropertySpec document_props[] = {
 	JS_PSG("charset", document_get_property_charset, JSPROP_ENUMERATE),
 	JS_PSG("characterSet", document_get_property_charset, JSPROP_ENUMERATE),
 	JS_PSG("childNodes", document_get_property_childNodes, JSPROP_ENUMERATE),
+	JS_PSG("currentScript", document_get_property_currentScript, JSPROP_ENUMERATE),
 	JS_PSG("defaultView", document_get_property_defaultView, JSPROP_ENUMERATE),
 	JS_PSG("doctype", document_get_property_doctype, JSPROP_ENUMERATE),
 	JS_PSG("documentElement", document_get_property_documentElement, JSPROP_ENUMERATE),
