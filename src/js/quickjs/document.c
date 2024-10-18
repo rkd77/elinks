@@ -19,6 +19,7 @@
 #include "dialogs/status.h"
 #include "document/document.h"
 #include "document/libdom/doc.h"
+#include "document/libdom/mapa.h"
 #include "document/view.h"
 #include "js/ecmascript.h"
 #include "js/ecmascript-c.h"
@@ -342,6 +343,53 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 
 	return getNodeList(ctx, nodes);
 }
+
+static JSValue
+js_document_get_property_currentScript(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct view_state *vs;
+	struct document_view *doc_view;
+	struct document *document;
+	vs = interpreter->vs;
+
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return JS_NULL;
+	}
+	doc_view = vs->doc_view;
+	document = doc_view->document;
+	void *mapa = (void *)document->element_map;
+
+	if (mapa) {
+		dom_node *elem = (dom_node *)find_in_map(mapa, interpreter->element_offset);
+
+		if (elem) {
+			dom_string *tag_name = NULL;
+			dom_exception exc = dom_node_get_node_name(elem, &tag_name);
+
+			if (exc != DOM_NO_ERR || !tag_name) {
+				return JS_NULL;
+			}
+			bool isScript = !strcmp("SCRIPT", dom_string_data(tag_name));
+			dom_string_unref(tag_name);
+
+			if (isScript) {
+				return getElement(ctx, elem);
+			}
+		}
+	}
+
+	return JS_NULL;
+}
+
 
 static JSValue
 js_document_get_property_defaultView(JSContext *ctx, JSValueConst this_val)
@@ -1829,6 +1877,7 @@ static const JSCFunctionListEntry js_document_proto_funcs[] = {
 	JS_CGETSET_DEF("charset", js_document_get_property_charset, NULL),
 	JS_CGETSET_DEF("characterSet", js_document_get_property_charset, NULL),
 	JS_CGETSET_DEF("childNodes", js_document_get_property_childNodes, NULL),
+	JS_CGETSET_DEF("currentScript", js_document_get_property_currentScript, NULL),
 	JS_CGETSET_DEF("defaultView", js_document_get_property_defaultView, NULL),
 	JS_CGETSET_DEF("doctype", js_document_get_property_doctype, NULL),
 	JS_CGETSET_DEF("documentElement", js_document_get_property_documentElement, NULL),
