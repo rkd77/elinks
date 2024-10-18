@@ -14,6 +14,7 @@ took = [
 'document.body.children.html',
 'document.body.id.html',
 'document.characterSet.html',
+'document.currentScript.html',
 'document.doctype.html',
 'document.documentElement.html',
 'document.documentURI.html',

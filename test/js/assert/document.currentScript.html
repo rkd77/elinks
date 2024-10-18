@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script id="first">
+console.error('document.currentScript.html');
+</script>
+<script id="second">
+console.assert(document.currentScript.id === 'second', 'second');
+</script>
+
+<script id="func">
+function myFunction() {
+  console.assert(document.currentScript.id === 'main', 'main');
+}
+</script>
+<script id="main">
+myFunction();
+console.exit();
+</script>
+</body>
+</html>
