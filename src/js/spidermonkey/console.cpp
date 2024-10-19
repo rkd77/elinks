@@ -58,12 +58,14 @@ static bool console_assert(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool console_error(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool console_exit(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool console_log(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool console_warn(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 const spidermonkeyFunctionSpec console_funcs[] = {
 	{ "assert",		console_assert,		2 },
-	{ "log",		console_log,	 	1 },
 	{ "error",		console_error,	 	1 },
 	{ "exit",		console_exit,	 	0 },
+	{ "log",		console_log,	 	1 },
+	{ "warn",		console_warn,		1 },
 	{ NULL }
 };
 
@@ -152,6 +154,15 @@ console_error(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	return console_log_common(ctx, argc, vp, console_error_filename);
+}
+
+static bool
+console_warn(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return console_log_common(ctx, argc, vp, console_warn_filename);
 }
 
 static bool

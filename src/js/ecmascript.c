@@ -115,6 +115,7 @@ static INIT_LIST_OF(struct string_list_item, disallowed_urls);
 
 char *console_error_filename;
 char *console_log_filename;
+char *console_warn_filename;
 
 char *local_storage_filename;
 
@@ -706,6 +707,7 @@ init_ecmascript_module(struct module *module)
 	if (xdg_config_home) {
 		/* ecmascript console log */
 		console_log_filename = straconcat(xdg_config_home, "/console.log", NULL);
+		console_warn_filename = straconcat(xdg_config_home, "/console.warn", NULL);
 		console_error_filename = program.testjs ? stracpy("/dev/stderr") : straconcat(xdg_config_home, "/console.err", NULL);
 		/* ecmascript local storage db location */
 #ifdef CONFIG_OS_DOS
@@ -731,6 +733,7 @@ done_ecmascript_module(struct module *module)
 	free_string_list(&disallowed_urls);
 	mem_free_if(console_log_filename);
 	mem_free_if(console_error_filename);
+	mem_free_if(console_warn_filename);
 	mem_free_if(local_storage_filename);
 	done_map_timer();
 }

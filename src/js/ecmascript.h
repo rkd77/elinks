@@ -196,6 +196,7 @@ void location_goto_const(struct document_view *doc_view, const char *url, int re
 
 extern char *console_error_filename;
 extern char *console_log_filename;
+extern char *console_warn_filename;
 
 extern char *local_storage_filename;
 extern int local_storage_ready;
