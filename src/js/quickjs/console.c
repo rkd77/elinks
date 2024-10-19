@@ -120,6 +120,17 @@ js_console_error(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *
 }
 
 static JSValue
+js_console_warn(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	return js_console_log_common(ctx, this_val, argc, argv, console_warn_filename);
+}
+
+static JSValue
 js_console_exit(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -147,10 +158,11 @@ js_console_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 
 static const JSCFunctionListEntry js_console_funcs[] = {
 	JS_CFUNC_DEF("assert", 2, js_console_assert),
-	JS_CFUNC_DEF("log", 1, js_console_log),
 	JS_CFUNC_DEF("error", 1, js_console_error),
 	JS_CFUNC_DEF("exit", 0, js_console_exit),
-	JS_CFUNC_DEF("toString", 0, js_console_toString)
+	JS_CFUNC_DEF("log", 1, js_console_log),
+	JS_CFUNC_DEF("toString", 0, js_console_toString),
+	JS_CFUNC_DEF("warn", 1, js_console_warn)
 };
 
 static JSClassDef js_console_class = {
