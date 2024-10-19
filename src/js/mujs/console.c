@@ -103,6 +103,18 @@ mjs_console_error(js_State *J)
 }
 
 static void
+mjs_console_warn(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	const char *str = js_tostring(J, 1);
+
+	mjs_console_log_common(J, str, console_warn_filename);
+}
+
+
+static void
 mjs_console_exit(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -133,10 +145,11 @@ mjs_console_init(js_State *J)
 	js_newobject(J);
 	{
 		addmethod(J, "console.assert", mjs_console_assert, 2);
-		addmethod(J, "console.log", mjs_console_log, 1);
 		addmethod(J, "console.error", mjs_console_error, 1);
 		addmethod(J, "console.exit", mjs_console_exit, 0);
+		addmethod(J, "console.log", mjs_console_log, 1);
 		addmethod(J, "console.toString", mjs_console_toString, 0);
+		addmethod(J, "console.warn", mjs_console_warn, 1);
 	}
 	js_defglobal(J, "console", JS_DONTENUM);
 
