@@ -141,6 +141,7 @@ mjs_node_static_get_property_DOCUMENT_FRAGMENT_NODE(js_State *J)
 	js_pushnumber(J, DOCUMENT_FRAGMENT_NODE);
 }
 
+#if 0
 static void
 mjs_node_fun(js_State *J)
 {
@@ -149,6 +150,7 @@ mjs_node_fun(js_State *J)
 #endif
 	js_pushundefined(J);
 }
+#endif
 
 static void
 mjs_node_constructor(js_State *J)
