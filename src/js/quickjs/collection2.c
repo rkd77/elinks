@@ -36,8 +36,6 @@ js_htmlCollection2_GetOpaque(JSValueConst this_val)
 	REF_JS(this_val);
 
 	return JS_GetOpaque(this_val, js_htmlCollection2_class_id);
-
-//	return attr_find_in_map_rev(map_rev_collections, this_val);
 }
 
 static void
@@ -346,7 +344,6 @@ getCollection2(JSContext *ctx, void *node)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	static int initialized;
-//	JSValue second;
 
 	if (!initialized) {
 		/* collection class */
@@ -354,13 +351,6 @@ getCollection2(JSContext *ctx, void *node)
 		JS_NewClass(JS_GetRuntime(ctx), js_htmlCollection2_class_id, &js_htmlCollection2_class);
 		initialized = 1;
 	}
-//	second = attr_find_in_map(map_collections, node);
-
-//	if (!JS_IsNull(second)) {
-//		JSValue r = JS_DupValue(ctx, second);
-//
-//		RETURN_JS(r);
-//	}
 	JSValue proto = JS_NewObjectClass(ctx, js_htmlCollection2_class_id);
 	REF_JS(proto);
 

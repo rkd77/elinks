@@ -523,7 +523,6 @@ js_fragment_set_property_nodeValue(JSContext *ctx, JSValueConst this_val, JSValu
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_node *node = (dom_node *)(js_getopaque_fragment(this_val, js_fragment_class_id));
-	JSValue r;
 
 	if (!node) {
 		return JS_UNDEFINED;

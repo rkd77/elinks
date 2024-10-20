@@ -522,7 +522,6 @@ js_text_set_property_nodeValue(JSContext *ctx, JSValueConst this_val, JSValue va
 	REF_JS(this_val);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_node *node = (dom_node *)(js_getopaque_text(this_val, js_text_class_id));
-	JSValue r;
 
 	if (!node) {
 		return JS_UNDEFINED;

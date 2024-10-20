@@ -1236,7 +1236,6 @@ js_document_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc,
 	if (!doc_private) {
 		return JS_NULL;
 	}
-	dom_html_document *doc = (dom_html_document *)doc_private->node;
 	//dom_node_ref(doc);
 
 	if (argc < 2) {

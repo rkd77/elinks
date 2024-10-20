@@ -40,10 +40,9 @@ js_htmlCollection_GetOpaque(JSValueConst this_val)
 	REF_JS(this_val);
 
 	return JS_GetOpaque(this_val, js_htmlCollection_class_id);
-
-//	return attr_find_in_map_rev(map_rev_collections, this_val);
 }
 
+#if 0
 static void
 js_htmlCollection_SetOpaque(JSValueConst this_val, void *node)
 {
@@ -58,6 +57,7 @@ js_htmlCollection_SetOpaque(JSValueConst this_val, void *node)
 	}
 #endif
 }
+#endif
 
 static void
 js_htmlColection_finalizer(JSRuntime *rt, JSValue val)
