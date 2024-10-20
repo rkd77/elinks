@@ -144,11 +144,7 @@ conf_data.set('CONFIG_ECMASCRIPT_SMJS_HEARTBEAT', true)
 
 conf_data.set('CONFIG_SCRIPTING', true)
 
-if get_option('msys2')
-    system = 'msys2'
-else
-    system = host_machine.system()
-endif
+system = host_machine.system()
 
 if system == 'haiku'
     conf_data.set('CONFIG_OS_BEOS', true)
