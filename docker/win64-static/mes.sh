@@ -20,7 +20,6 @@ meson setup ~/build --cross-file cross/linux-mingw64.txt \
 -Dbzlib=false \
 -Dcgi=false \
 -Dcss=true \
--Dcombining=false \
 -Ddgi=true \
 -Ddoc=false \
 -Dexmode=true \

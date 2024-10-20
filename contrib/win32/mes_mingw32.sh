@@ -16,7 +16,6 @@ PKG_CONFIG_PATH="$HOME/lib32/pkgconfig" \
 -Dcgi=false \
 -Dcodepoint=false \
 -Dcss=true \
--Dcombining=false \
 -Ddebug=false \
 -Ddgi=true \
 -Ddoc=false \

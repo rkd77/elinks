@@ -20,7 +20,6 @@ meson setup /tmp/builddir2 --cross-file cross/linux-djgpp.txt \
 -Dbzlib=false \
 -Dcgi=false \
 -Dcss=true \
--Dcombining=false \
 -Ddgi=true \
 -Ddoc=false \
 -Dexmode=true \

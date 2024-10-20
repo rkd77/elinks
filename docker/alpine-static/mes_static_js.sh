@@ -13,7 +13,6 @@ meson /root/tmp/builddir_js \
 -Dbzlib=true \
 -Dcgi=true \
 -Dcss=true \
--Dcombining=false \
 -Ddgi=true \
 -Dexmode=true \
 -Dfastmem=true \

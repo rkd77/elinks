@@ -16,7 +16,6 @@ meson /root/tmp/builddir \
 -Dbzlib=true \
 -Dcgi=true \
 -Dcss=true \
--Dcombining=false \
 -Ddgi=true \
 -Dexmode=true \
 -Dfastmem=true \
