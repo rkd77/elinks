@@ -2,7 +2,7 @@
 
 if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS')
 	xxd = find_program('xxd')
-	run_command([xxd, '-i', 'fetch.js', 'fetch.h'])
+	run_command([xxd, '-i', 'fetch.js', 'fetch.h'], check: true)
 endif
 
 if conf_data.get('CONFIG_ECMASCRIPT_SMJS')
