@@ -171,7 +171,7 @@ http_negotiate_parse_data(char *data, int type,
 	if (!len)
 		return 0;
 
-	token->value = (void *) base64_decode_bin(data, len, &bytelen);
+	token->value = (void *) base64_decode_bin((unsigned char *)data, len, &bytelen);
 	token->length = bytelen; /* convert int to size_t */
 
 	if (!token->value)
@@ -273,7 +273,7 @@ http_negotiate_output(struct uri *uri, struct string *header)
 		}
 	}
 
-	encoded = base64_encode_bin((char *) neg->output_token.value,
+	encoded = (char *)base64_encode_bin((unsigned char *) neg->output_token.value,
 				    neg->output_token.length, &len);
 
 	if (encoded == NULL || len == 0)
