@@ -3,7 +3,7 @@ if conf_data.get('CONFIG_NLS')
     # define GETTEXT_PACKAGE
     add_project_arguments('-DGETTEXT_PACKAGE="elinks"', language:'c')
     i18n.gettext('elinks',
-        args: '--directory=' + meson.source_root()
+        args: '--directory=' + meson.project_source_root()
     )
 endif
 

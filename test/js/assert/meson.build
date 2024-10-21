@@ -92,7 +92,7 @@ took = [
 
 if conf_data.get('CONFIG_ECMASCRIPT')
     foreach t: tofail
-        test(t, elinks, protocol: 'exitcode', is_parallel: true, timeout: 30, should_fail: true, verbose: false, workdir: meson.source_root() / 'test/js/assert/',
+        test(t, elinks, protocol: 'exitcode', is_parallel: true, timeout: 30, should_fail: true, verbose: false, workdir: meson.project_source_root() / 'test/js/assert/',
             args: ['--test', '1', '--eval', 'set ecmascript.enable = 1',
             '--eval', 'set ecmascript.allow_xhr_file = 1',
             '--eval', 'set ecmascript.enable_console_log = 1',
@@ -101,7 +101,7 @@ if conf_data.get('CONFIG_ECMASCRIPT')
         t])
     endforeach
     foreach t : took
-        test(t, elinks, protocol: 'exitcode', is_parallel: true, timeout: 30, should_fail: false, verbose: false, workdir: meson.source_root() / 'test/js/assert',
+        test(t, elinks, protocol: 'exitcode', is_parallel: true, timeout: 30, should_fail: false, verbose: false, workdir: meson.project_source_root() / 'test/js/assert',
             args: ['--test', '1', '--eval', 'set ecmascript.enable = 1',
             '--eval', 'set ecmascript.allow_xhr_file = 1',
             '--eval', 'set ecmascript.enable_console_log = 1',

@@ -1,35 +1,35 @@
 exe1 = executable('html-mangle', 'html-mangle.c',
-meson.source_root() / 'src/dom/configuration.c',
-meson.source_root() / 'src/dom/node.c',
-meson.source_root() / 'src/dom/select.c',
-meson.source_root() / 'src/dom/stack.c',
-meson.source_root() / 'src/dom/scanner.c',
-meson.source_root() / 'src/dom/css/scanner.c',
+meson.project_source_root() / 'src/dom/configuration.c',
+meson.project_source_root() / 'src/dom/node.c',
+meson.project_source_root() / 'src/dom/select.c',
+meson.project_source_root() / 'src/dom/stack.c',
+meson.project_source_root() / 'src/dom/scanner.c',
+meson.project_source_root() / 'src/dom/css/scanner.c',
 testdeps,
 c_args:['-DHAVE_CONFIG_H'], cpp_args:['-DHAVE_CONFIG_H'], include_directories:['.', '../..', '../../..'],
 build_by_default:false)
 
 exe2 = executable('sgml-parser', 'sgml-parser.c',
-meson.source_root() / 'src/dom/configuration.c',
-meson.source_root() / 'src/dom/node.c',
-meson.source_root() / 'src/dom/select.c',
-meson.source_root() / 'src/dom/stack.c',
-meson.source_root() / 'src/dom/scanner.c',
-meson.source_root() / 'src/dom/css/scanner.c',
-meson.source_root() / 'src/dom/sgml/dump.c',
-meson.source_root() / 'src/dom/sgml/parser.c',
-meson.source_root() / 'src/dom/sgml/scanner.c',
-meson.source_root() / 'src/dom/sgml/sgml.c',
+meson.project_source_root() / 'src/dom/configuration.c',
+meson.project_source_root() / 'src/dom/node.c',
+meson.project_source_root() / 'src/dom/select.c',
+meson.project_source_root() / 'src/dom/stack.c',
+meson.project_source_root() / 'src/dom/scanner.c',
+meson.project_source_root() / 'src/dom/css/scanner.c',
+meson.project_source_root() / 'src/dom/sgml/dump.c',
+meson.project_source_root() / 'src/dom/sgml/parser.c',
+meson.project_source_root() / 'src/dom/sgml/scanner.c',
+meson.project_source_root() / 'src/dom/sgml/sgml.c',
 
-meson.source_root() / 'src/dom/sgml/docbook/docbook.c',
-meson.source_root() / 'src/dom/sgml/html/html.c',
-meson.source_root() / 'src/dom/sgml/rss/rss.c',
-meson.source_root() / 'src/dom/sgml/xbel/xbel.c',
+meson.project_source_root() / 'src/dom/sgml/docbook/docbook.c',
+meson.project_source_root() / 'src/dom/sgml/html/html.c',
+meson.project_source_root() / 'src/dom/sgml/rss/rss.c',
+meson.project_source_root() / 'src/dom/sgml/xbel/xbel.c',
 testdeps,
 c_args:['-DHAVE_CONFIG_H'], cpp_args:['-DHAVE_CONFIG_H'], include_directories:['.', '../..', '../../..'],
 build_by_default:false)
 
-test_lib = environment({'TEST_LIB': meson.source_root() / 'test/libtest.sh'})
+test_lib = environment({'TEST_LIB': meson.project_source_root() / 'test/libtest.sh'})
 
 t1 = find_program('test-dom-configuration-basic')
 t2 = find_program('test-sgml-dump-basic')

@@ -1,7 +1,7 @@
 project('elinks', ['c','cpp'], version:'0.18.GIT', license:'GPLv2', default_options:['cpp_std=gnu++17'], meson_version:'>=1.0.1')
 srcs=[]
 
-srcdir = meson.source_root()
+srcdir = meson.project_source_root()
 
 git = find_program('git', required: false)
 
