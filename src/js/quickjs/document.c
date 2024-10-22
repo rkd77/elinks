@@ -1551,7 +1551,7 @@ js_document_getElementsByClassName(JSContext *ctx, JSValueConst this_val, int ar
 	if (!col) {
 		return JS_NULL;
 	}
-	JSValue ret = getCollection(ctx, col);
+	JSValue ret = getCollection2(ctx, col);
 
 	RETURN_JS(ret);
 }

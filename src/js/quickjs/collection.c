@@ -17,6 +17,7 @@
 
 #include "document/libdom/corestrings.h"
 #include "js/ecmascript.h"
+#include "js/ecmascript-c.h"
 #include "js/quickjs/mapa.h"
 #include "js/quickjs.h"
 #include "js/quickjs/collection.h"
@@ -32,6 +33,7 @@ JSClassID js_htmlCollection_class_id;
 struct js_col {
 	JSValue arr;
 	void *node;
+	unsigned int was_class_name:1;
 };
 
 static void *
@@ -71,10 +73,22 @@ js_htmlColection_finalizer(JSRuntime *rt, JSValue val)
 	if (!col_private) {
 		return;
 	}
-	dom_html_collection *ns = (dom_html_collection *)(col_private->node);
+	if (col_private->was_class_name) {
+		struct el_dom_html_collection *ns = (struct el_dom_html_collection *)(col_private->node);
 
-	if (ns) {
-		dom_html_collection_unref(ns);
+		if (ns) {
+			if (ns->refcnt > 0) {
+				free_el_dom_collection(ns->ctx);
+				ns->ctx = NULL;
+				dom_html_collection_unref((dom_html_collection *)ns);
+			}
+		}
+	} else {
+		dom_html_collection *ns = (dom_html_collection *)(col_private->node);
+
+		if (ns) {
+			dom_html_collection_unref(ns);
+		}
 	}
 	mem_free(col_private);
 }
@@ -428,8 +442,8 @@ static JSClassDef js_htmlCollection_class = {
 	.exotic = &exo
 };
 
-JSValue
-getCollection(JSContext *ctx, void *node)
+static JSValue
+getCollection_common(JSContext *ctx, void *node, bool was_class_name)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -447,6 +461,7 @@ getCollection(JSContext *ctx, void *node)
 	if (!col_private) {
 		return JS_NULL;
 	}
+	col_private->was_class_name = was_class_name;
 	JSValue proto = JS_NewArray(ctx);
 	js_htmlCollection_set_items(ctx, proto, node);
 
@@ -463,4 +478,16 @@ getCollection(JSContext *ctx, void *node)
 	JSValue rr = JS_DupValue(ctx, col_obj);
 
 	RETURN_JS(rr);
+}
+
+JSValue
+getCollection(JSContext *ctx, void *node)
+{
+	return getCollection_common(ctx, node, false);
+}
+
+JSValue
+getCollection2(JSContext *ctx, void *node)
+{
+	return getCollection_common(ctx, node, true);
 }
