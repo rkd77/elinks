@@ -27,6 +27,7 @@
 #include "document/libdom/corestrings.h"
 #include "document/view.h"
 #include "js/ecmascript.h"
+#include "js/ecmascript-c.h"
 #include "js/spidermonkey/collection.h"
 #include "js/spidermonkey/element.h"
 #include "intl/libintl.h"
@@ -56,7 +57,8 @@
 enum {
 	SLOT_NODE = 0,
 	SLOT_ITEM_NAMEDITEM,
-	SLOT_ARRAY
+	SLOT_ARRAY,
+	SLOT_WAS_CLASS_NAME
 };
 
 static bool htmlCollection2_item(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -69,10 +71,24 @@ static void htmlCollection_finalize(JS::GCContext *op, JSObject *obj)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	dom_html_collection *ns = JS::GetMaybePtrFromReservedSlot<dom_html_collection>(obj, SLOT_NODE);
+	bool was_class_name = JS::GetReservedSlot(obj, SLOT_WAS_CLASS_NAME).toBoolean();
 
-	if (ns) {
-		dom_html_collection_unref(ns);
+	if (was_class_name) {
+		struct el_dom_html_collection *ns = JS::GetMaybePtrFromReservedSlot<el_dom_html_collection>(obj, SLOT_NODE);
+
+		if (ns) {
+			if (ns->refcnt > 0) {
+				free_el_dom_collection(ns->ctx);
+				ns->ctx = NULL;
+				dom_html_collection_unref((dom_html_collection *)ns);
+			}
+		}
+	} else {
+		dom_html_collection *ns = JS::GetMaybePtrFromReservedSlot<dom_html_collection>(obj, SLOT_NODE);
+
+		if (ns) {
+			dom_html_collection_unref(ns);
+		}
 	}
 }
 
@@ -192,7 +208,7 @@ js::ObjectOps col_obj_ops = {
 
 JSClass htmlCollection_class = {
 	"htmlCollection",
-	JSCLASS_HAS_RESERVED_SLOTS(3),
+	JSCLASS_HAS_RESERVED_SLOTS(4),
 	&htmlCollection_ops,
 	.oOps = &col_obj_ops
 };
@@ -506,8 +522,8 @@ htmlCollection_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 	return true;
 }
 
-JSObject *
-getCollection(JSContext *ctx, void *node)
+static JSObject *
+getCollection_common(JSContext *ctx, void *node, bool was_class_name)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -545,6 +561,19 @@ getCollection(JSContext *ctx, void *node)
 	JS::SetReservedSlot(el, SLOT_NODE, JS::PrivateValue(node));
 	JS::SetReservedSlot(el, SLOT_ITEM_NAMEDITEM, JS::ObjectValue(*col));
 	JS::SetReservedSlot(el, SLOT_ARRAY, JS::ObjectValue(*arr));
+	JS::SetReservedSlot(el, SLOT_WAS_CLASS_NAME, JS::BooleanValue(was_class_name));
 
 	return el;
+}
+
+JSObject *
+getCollection(JSContext *ctx, void *node)
+{
+	return getCollection_common(ctx, node, false);
+}
+
+JSObject *
+getCollection2(JSContext *ctx, void *node)
+{
+	return getCollection_common(ctx, node, true);
 }

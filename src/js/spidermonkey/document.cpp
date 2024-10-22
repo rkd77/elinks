@@ -2004,7 +2004,7 @@ document_getElementsByClassName(JSContext *ctx, unsigned int argc, JS::Value *vp
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *obj = getCollection(ctx, col);
+	JSObject *obj = getCollection2(ctx, col);
 	args.rval().setObject(*obj);
 
 	return true;
