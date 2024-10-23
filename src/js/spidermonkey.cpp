@@ -160,8 +160,9 @@ spidermonkey_init(struct module *module)
 static void
 spidermonkey_done(struct module *xxx)
 {
-	if (js_module_init_ok)
-		spidermonkey_runtime_release();
+	if (js_module_init_ok) {
+		spidermonkey_release_all_runtimes();
+	}
 }
 
 static const char *

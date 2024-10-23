@@ -75,6 +75,14 @@ spidermonkey_runtime_release(void)
 	}
 }
 
+void
+spidermonkey_release_all_runtimes(void)
+{
+	while (spidermonkey_runtime_refcount > 0) {
+		spidermonkey_runtime_release();
+	}
+}
+
 /** An ELinks-specific replacement for JS_DefineFunctions().
  *
  * @relates spidermonkeyFunctionSpec */
