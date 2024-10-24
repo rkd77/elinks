@@ -25,9 +25,6 @@
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
-void *map_collections;
-void *map_rev_collections;
-
 JSClassID js_htmlCollection_class_id;
 
 struct js_col {

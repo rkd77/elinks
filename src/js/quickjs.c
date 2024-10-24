@@ -157,8 +157,6 @@ quickjs_init(struct module *module)
 	map_attrs = attr_create_new_attrs_map();
 	map_attributes = attr_create_new_attributes_map();
 	map_rev_attributes = attr_create_new_attributes_map_rev();
-	map_collections = attr_create_new_collections_map();
-	map_rev_collections = attr_create_new_collections_map_rev();
 	map_doctypes = attr_create_new_doctypes_map();
 	map_elements = attr_create_new_elements_map();
 	map_privates = attr_create_new_privates_map_void();
@@ -194,8 +192,6 @@ quickjs_done(struct module *xxx)
 	attr_delete_map(map_attrs);
 	attr_delete_map(map_attributes);
 	attr_delete_map_rev(map_rev_attributes);
-	attr_delete_map(map_collections);
-	attr_delete_map_rev(map_rev_collections);
 	attr_delete_map(map_doctypes);
 	attr_delete_map(map_elements);
 	map_elements = NULL;

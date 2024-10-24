@@ -12,8 +12,6 @@ struct Xhr;
 extern void *map_attrs;
 extern void *map_attributes;
 extern void *map_rev_attributes;
-extern void *map_collections;
-extern void *map_rev_collections;
 extern void *map_doctypes;
 extern void *map_elements;
 extern void *map_privates;
