@@ -3858,9 +3858,6 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CFUNC_DEF("toString", 0, js_element_toString)
 };
 
-void *map_elements;
-//static std::map<void *, JSValueConst> map_elements;
-
 static
 void js_element_finalizer(JSRuntime *rt, JSValue val)
 {
@@ -3899,7 +3896,6 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		free_list(el_private->listeners);
 		JS_FreeValueRT(rt, el_private->thisval);
 
-		attr_erase_from_map_str(map_elements, el_private->node);
 		mem_free(el_private);
 	}
 }
@@ -3963,21 +3959,6 @@ getElement(JSContext *ctx, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-
-//	JSValue second;
-//	static int initialized;
-//	/* create the element class */
-//	if (!initialized) {
-//		JS_NewClassID(&js_element_class_id);
-//		JS_NewClass(JS_GetRuntime(ctx), js_element_class_id, &js_element_class);
-//		initialized = 1;
-//	}
-//	second = attr_find_in_map(map_elements, node);
-//
-//	if (!JS_IsNull(second)) {
-//		JSValue r = JS_DupValue(ctx, second);
-//		RETURN_JS(r);
-//	}
 	struct js_element_private *el_private = (struct js_element_private *)mem_calloc(1, sizeof(*el_private));
 
 	if (!el_private) {
@@ -3999,7 +3980,6 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	dom_node_ref((dom_node *)node);
 	JS_SetOpaque(element_obj, el_private);
 
-	attr_save_in_map(map_elements, node, element_obj);
 	attr_save_in_map_void(map_privates, node, el_private);
 
 	void *old_node_data = NULL;

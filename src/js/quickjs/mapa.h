@@ -13,7 +13,6 @@ extern void *map_attrs;
 extern void *map_attributes;
 extern void *map_rev_attributes;
 extern void *map_doctypes;
-extern void *map_elements;
 extern void *map_privates;
 extern void *map_form;
 extern void *map_form_rev;

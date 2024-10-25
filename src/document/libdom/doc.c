@@ -59,9 +59,6 @@ js_html_document_user_data_handler(dom_node_operation operation,
 		if (map_privates) {
 			attr_erase_from_map(map_privates, data);
 		}
-		if (map_elements) {
-			attr_erase_from_map(map_elements, data);
-		}
 #endif
 		//fprintf(stderr, "DELETED: data=%p src=%p dst=%p\n", data, src, dst);
 		/* This is the only path I expect */
