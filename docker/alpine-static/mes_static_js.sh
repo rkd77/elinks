@@ -4,7 +4,7 @@ rm -rf /root/tmp/builddir_js
 
 CFLAGS="-O2 -static -no-pie" \
 CXXFLAGS="-O2 -static -no-pie" \
-meson /root/tmp/builddir_js \
+meson setup /root/tmp/builddir_js \
 -D88-colors=true \
 -D256-colors=true \
 -Dbacktrace=false \

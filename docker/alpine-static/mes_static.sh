@@ -7,7 +7,7 @@ PKG_CONFIG_PATH="/usr/local/lib/pkgconfig" \
 LDFLAGS="-L/usr/local/lib" \
 CFLAGS="-O2 -I/usr/local/include -static -no-pie" \
 CXXFLAGS="-O2 -I/usr/local/include -static -no-pie" \
-meson /root/tmp/builddir \
+meson setup /root/tmp/builddir \
 -D88-colors=true \
 -D256-colors=true \
 -Dbacktrace=false \
