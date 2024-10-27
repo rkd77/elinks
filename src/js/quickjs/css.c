@@ -24,9 +24,6 @@
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
-void *map_csses;
-void *map_rev_csses;
-
 #if 0
 static void *
 js_CSSStyleDeclaration_GetOpaque(JSValueConst this_val)
@@ -165,29 +162,9 @@ getCSSStyleDeclaration(JSContext *ctx, void *node)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 
-#if 0
-	static int initialized;
-	JSValue second;
-
-	if (!initialized) {
-		initialized = 1;
-	}
-	second = attr_find_in_map(map_csses, node);
-
-	if (!JS_IsNull(second)) {
-		JSValue r = JS_DupValue(ctx, second);
-
-		RETURN_JS(r);
-	}
-#endif
 	JSValue CSSStyleDeclaration_obj = JS_NewArray(ctx);
 	JS_SetPropertyFunctionList(ctx, CSSStyleDeclaration_obj, js_CSSStyleDeclaration_proto_funcs, countof(js_CSSStyleDeclaration_proto_funcs));
-	//js_CSSStyleDeclaration_SetOpaque(CSSStyleDeclaration_obj, node);
 	js_CSSStyleDeclaration_set_items(ctx, CSSStyleDeclaration_obj, node);
-	//attr_save_in_map(map_csses, node, CSSStyleDeclaration_obj);
+
 	RETURN_JS(CSSStyleDeclaration_obj);
-
-//	JSValue rr = JS_DupValue(ctx, CSSStyleDeclaration_obj);
-
-//	RETURN_JS(rr);
 }

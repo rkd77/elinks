@@ -24,9 +24,6 @@ extern void *map_rev_nodelist;
 extern void *map_form_elements;
 extern void *map_form_elements_rev;
 
-extern void *map_csses;
-extern void *map_rev_csses;
-
 extern void *map_interp;
 
 void attr_save_in_map(void *m, void *node, JSValueConst value);
