@@ -20,6 +20,7 @@ meson setup /root/tmp/builddir \
 -Dexmode=true \
 -Dfastmem=true \
 -Dfsp=false \
+-Dfsp2=true \
 -Dgemini=true \
 -Dgettext=false \
 -Dgnutls=false \
