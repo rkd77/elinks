@@ -709,8 +709,6 @@ static union option_info config_options_info[] = {
 
 	/* Keep options in alphabetical order. */
 
-
-
 	INIT_OPT_TREE("document", N_("Downloading"),
 		"download", OPT_ZERO,
 		N_("Options regarding files downloading and handling.")),
@@ -723,6 +721,10 @@ static union option_info config_options_info[] = {
 		"set_original_time", OPT_ZERO, 0,
 		N_("Set the timestamp of each downloaded file to the "
 		"timestamp stored on the server.")),
+
+	INIT_OPT_BOOL("document.download", N_("Show compressed files as plain text"),
+		"compressed_as_plain", OPT_ZERO, 1,
+		N_("Whether to view compressed files (.gz, .zst or .xz) as plain text.")),
 
 	/* Does automatic resuming make sense as an option? */
 	INIT_OPT_INT("document.download", N_("Prevent overwriting"),

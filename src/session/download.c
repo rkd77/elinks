@@ -1913,6 +1913,19 @@ struct {
 	{ NULL,				1 },
 };
 
+static const char *compressed_types[] = {
+#ifdef CONFIG_GZIP
+	"application/gzip",
+#endif
+#ifdef CONFIG_ZSTD
+	"application/zstd",
+#endif
+#ifdef CONFIG_LZMA
+	"application/x-xz",
+#endif
+	NULL
+};
+
 /*! @relates type_query */
 int
 setup_download_handler(struct session *ses, struct download *loading,
@@ -1936,12 +1949,22 @@ setup_download_handler(struct session *ses, struct download *loading,
 		plaintext = known_types[i].plain;
 		goto plaintext_follow;
 	}
-
 	xwin = ses->tab->term->environment & ENV_XWIN;
 	handler = get_mime_type_handler(ctype, xwin);
 
-	if (!handler && strlen(ctype) >= 4 && !c_strncasecmp(ctype, "text", 4))
-		goto plaintext_follow;
+	if (!handler) {
+		if (strlen(ctype) >= 4 && !c_strncasecmp(ctype, "text", 4)) {
+			goto plaintext_follow;
+		}
+		for (i = 0; compressed_types[i]; i++) {
+			if (c_strcasecmp(ctype, compressed_types[i])) {
+				continue;
+			}
+			if (get_opt_bool("document.download.compressed_as_plain", ses)) {
+				goto plaintext_follow;
+			}
+		}
+	}
 
 	type_query = find_type_query(ses);
 	if (type_query) {
