@@ -1924,7 +1924,7 @@ static const char *compressed_types[] = {
 	"application/x-xz",
 #endif
 #ifdef CONFIG_BZIP2
-	"application/x-bz2",
+	"application/x-bzip2",
 #endif
 	NULL
 };
