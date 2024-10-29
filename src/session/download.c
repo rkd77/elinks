@@ -1923,6 +1923,9 @@ static const char *compressed_types[] = {
 #ifdef CONFIG_LZMA
 	"application/x-xz",
 #endif
+#ifdef CONFIG_BZIP2
+	"application/x-bz2",
+#endif
 	NULL
 };
 
