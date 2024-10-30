@@ -1843,7 +1843,7 @@ set_libcss_node_data(void *pw, void *node, void *libcss_node_data)
 	}
 
 	if (old_node_data) {
-		err = css_libcss_node_data_handler(&selection_handler,
+		(void)css_libcss_node_data_handler(&selection_handler,
 				CSS_NODE_DELETED,
 				NULL, node, NULL, old_node_data);
 	}
