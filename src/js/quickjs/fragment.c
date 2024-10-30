@@ -1508,9 +1508,13 @@ js_fragment_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	}
 	//dom_node_ref(el);
 	JSValue node = argv[0];
-	dom_node *el2 = (dom_node *)(js_getopaque_fragment(node, js_fragment_class_id));
+	dom_node *el2 = (dom_node *)js_getopaque_any(node);
+
+	if (!el2) {
+		return JS_NULL;
+	}
 	dom_exception exc;
-	dom_node *spare;
+	dom_node *spare = NULL;
 	exc = dom_node_remove_child(el, el2, &spare);
 
 	if (exc == DOM_NO_ERR && spare) {
