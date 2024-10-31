@@ -4,6 +4,7 @@
 #include "config.h"
 #endif
 
+#include <iconv.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -591,11 +592,36 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 	JS::RootedValue r_val(ctx, rval);
 	JS::CompileOptions options(ctx);
 
-	JS::SourceText<mozilla::Utf8Unit> srcBuf;
-	if (!srcBuf.init(ctx, code->source, code->length, JS::SourceOwnership::Borrowed)) {
+	char *utf8_data = (char *)mem_alloc(code->length);
+
+	if (!utf8_data) {
 		return;
 	}
+	iconv_t cd = iconv_open("UTF-8//IGNORE", "UTF-8");
+
+	if (cd == (iconv_t)-1) {
+		mem_free(utf8_data);
+		return;
+	}
+	char *inbuf = code->source;
+	char *outbuf = utf8_data;
+	size_t inbytes_len = code->length;
+	size_t outbytes_len = code->length;
+
+	if (iconv(cd, &inbuf, &inbytes_len, &outbuf, &outbytes_len) < 0) {
+		mem_free(utf8_data);
+		iconv_close(cd);
+		return;
+	}
+	JS::SourceText<mozilla::Utf8Unit> srcBuf;
+	if (!srcBuf.init(ctx, utf8_data, code->length - outbytes_len, JS::SourceOwnership::Borrowed)) {
+		iconv_close(cd);
+		mem_free(utf8_data);
+		return;
+	}
+	iconv_close(cd);
 	JS::Evaluate(ctx, options, srcBuf, &r_val);
+	mem_free(utf8_data);
 
 	spidermonkey_check_for_exception(ctx);
 
