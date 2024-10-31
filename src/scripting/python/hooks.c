@@ -170,7 +170,36 @@ script_hook_pre_format_html(va_list ap, void *data)
 		result = PyObject_CallMethod(python_hooks, method, "ss#", url, utf8_data, width);
 		mem_free(utf8_data);
 	} else {
-		result = PyObject_CallMethod(python_hooks, method, "ss#", url, fragment->data, (int)fragment->length);
+		char *utf8_data = mem_calloc(1, fragment->length + 1);
+
+		if (!utf8_data) {
+			goto error;
+		}
+		iconv_t cd = iconv_open("UTF-8//IGNORE", "UTF-8");
+
+		if (cd == (iconv_t)-1) {
+			mem_free(utf8_data);
+			goto error;
+		}
+		char *inbuf = fragment->data;
+		char *outbuf = utf8_data;
+		size_t inbytes_len = fragment->length;
+		size_t outbytes_len = fragment->length;
+
+		if (iconv(cd, &inbuf, &inbytes_len, &outbuf, &outbytes_len) < 0) {
+			mem_free(utf8_data);
+			iconv_close(cd);
+			goto error;
+		}
+		int len = (int)(fragment->length - outbytes_len);
+		result = PyObject_CallMethod(python_hooks, method, "ss#", url, utf8_data, len);
+
+		if (result == Py_None && outbytes_len > 0) {
+			(void)add_fragment(cached, 0, utf8_data, len);
+			normalize_cache_entry(cached, len);
+		}
+		iconv_close(cd);
+		mem_free(utf8_data);
 	}
 
 	if (!result) goto error;
