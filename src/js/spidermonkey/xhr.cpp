@@ -625,6 +625,18 @@ xhr_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			}
 			mem_free(ref);
 		}
+	} else {
+		char *ref = get_uri_string(vs->uri, URI_SERVER);
+
+		if (ref) {
+			char *url = straconcat(ref, xhr->responseURL, NULL);
+
+			if (url) {
+				xhr->uri = get_uri(url, URI_NONE);
+				mem_free(url);
+			}
+			mem_free(ref);
+		}
 	}
 	if (!xhr->uri) {
 		xhr->uri = get_uri(xhr->responseURL, URI_NONE);
