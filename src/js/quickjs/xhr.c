@@ -1078,6 +1078,18 @@ xhr_open(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 				}
 				mem_free(ref);
 			}
+		} else {
+			char *ref = get_uri_string(vs->uri, URI_SERVER);
+
+			if (ref) {
+				char *url = straconcat(ref, x->responseURL, NULL);
+
+				if (url) {
+					x->uri = get_uri(url, URI_NONE);
+					mem_free(url);
+				}
+				mem_free(ref);
+			}
 		}
 
 		if (!x->uri) {
