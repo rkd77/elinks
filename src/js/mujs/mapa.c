@@ -231,7 +231,6 @@ process_xhr_headers(char *head, struct mjs_xhr *x)
 			next = next2 + 1;
 			next2 = strchr(next, '\n');
 		}
-		next = next2 + 1;
 		size = explode(line, ':', &header, &value);
 
 		if (size == 0) {
