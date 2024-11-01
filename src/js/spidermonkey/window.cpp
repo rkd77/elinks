@@ -32,6 +32,7 @@
 #include "js/spidermonkey/location.h"
 #include "js/spidermonkey/message.h"
 #include "js/spidermonkey/window.h"
+#include "js/spidermonkey/xhr.h"
 #include "js/timer.h"
 #include "intl/libintl.h"
 #include "main/select.h"
@@ -196,6 +197,7 @@ const spidermonkeyFunctionSpec window_funcs[] = {
 	{ "removeEventListener", window_removeEventListener, 3 },
 	{ "setInterval",	window_setInterval,	2 },
 	{ "setTimeout",	window_setTimeout,	2 },
+	{ "XMLHttpRequest", xhr_constructor, 0 },
 	{ NULL }
 };
 
