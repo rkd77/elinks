@@ -35,6 +35,7 @@
 #include "js/quickjs/location.h"
 #include "js/quickjs/document.h"
 #include "js/quickjs/element.h"
+#include "js/quickjs/node.h"
 #include "js/quickjs/nodelist.h"
 #include "js/quickjs/nodelist2.h"
 #include "js/quickjs/text.h"
@@ -193,7 +194,7 @@ js_document_get_property_body(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 	//dom_node_unref(doc);
-	JSValue rr = getElement(ctx, body);
+	JSValue rr = getNode(ctx, body);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -381,7 +382,7 @@ js_document_get_property_currentScript(JSContext *ctx, JSValueConst this_val)
 			dom_string_unref(tag_name);
 
 			if (isScript) {
-				return getElement(ctx, elem);
+				return getNode(ctx, elem);
 			}
 		}
 	}
@@ -447,7 +448,7 @@ js_document_get_property_documentElement(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 	//dom_node_unref(doc);
-	JSValue rr = getElement(ctx, root);
+	JSValue rr = getNode(ctx, root);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -561,7 +562,7 @@ js_document_get_property_head(JSContext *ctx, JSValueConst this_val)
 // TODO
 	return JS_NULL;
 
-//	return getElement(ctx, element);
+//	return getNode(ctx, element);
 }
 
 static JSValue
@@ -1335,7 +1336,7 @@ js_document_createComment(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	}
 	//dom_node_unref(doc);
 
-	return getElement(ctx, comment);
+	return getNode(ctx, comment);
 }
 
 static JSValue
@@ -1413,7 +1414,7 @@ js_document_createElement(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 		return JS_NULL;
 	}
 	//dom_node_unref(doc);
-	JSValue rr = getElement(ctx, element);
+	JSValue rr = getNode(ctx, element);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -1516,7 +1517,7 @@ js_document_getElementById(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 		return JS_NULL;
 	}
 	//dom_node_unref(doc);
-	JSValue rr = getElement(ctx, element);
+	JSValue rr = getNode(ctx, element);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -1704,7 +1705,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	}
 	//dom_node_unref(doc);
 
-	return getElement(ctx, ret);
+	return getNode(ctx, ret);
 }
 
 static JSValue

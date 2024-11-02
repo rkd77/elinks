@@ -19,6 +19,7 @@
 #include "js/quickjs/mapa.h"
 #include "js/quickjs.h"
 #include "js/quickjs/element.h"
+#include "js/quickjs/node.h"
 #include "js/quickjs/nodelist.h"
 
 
@@ -136,7 +137,7 @@ js_nodeList_item2(JSContext *ctx, JSValueConst this_val, int idx)
 		dom_nodelist_unref(nl);
 		return JS_UNDEFINED;
 	}
-	ret = getElement(ctx, element);
+	ret = getNode(ctx, element);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -196,7 +197,7 @@ js_nodeList_set_items(JSContext *ctx, JSValue this_val, void *node)
 			continue;
 		}
 
-		obj = getElement(ctx, element);
+		obj = getNode(ctx, element);
 		REF_JS(obj);
 
 		JS_SetPropertyUint32(ctx, this_val, i, JS_DupValue(ctx, obj));

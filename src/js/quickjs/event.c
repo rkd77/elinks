@@ -15,6 +15,7 @@
 #include "js/quickjs.h"
 #include "js/quickjs/element.h"
 #include "js/quickjs/event.h"
+#include "js/quickjs/node.h"
 #include "intl/charsets.h"
 #include "terminal/event.h"
 
@@ -164,7 +165,7 @@ js_event_get_property_target(JSContext *ctx, JSValueConst this_val)
 	if (exc != DOM_NO_ERR || !target) {
 		return JS_NULL;
 	}
-	JSValue r = getElement(ctx, target);
+	JSValue r = getNode(ctx, target);
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif

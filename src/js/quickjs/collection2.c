@@ -22,6 +22,7 @@
 #include "js/quickjs.h"
 #include "js/quickjs/collection.h"
 #include "js/quickjs/element.h"
+#include "js/quickjs/node.h"
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
@@ -118,7 +119,7 @@ js_htmlCollection2_item2(JSContext *ctx, JSValueConst this_val, int idx)
 		dom_html_collection_unref((dom_html_collection *)ns);
 		return JS_UNDEFINED;
 	}
-	ret = getElement(ctx, node);
+	ret = getNode(ctx, node);
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -187,7 +188,7 @@ js_htmlCollection2_namedItem2(JSContext *ctx, JSValueConst this_val, const char 
 
 		if (err == DOM_NO_ERR && val) {
 			if (dom_string_caseless_isequal(name, val)) {
-				JSValue ret = getElement(ctx, element);
+				JSValue ret = getNode(ctx, element);
 				dom_string_unref(val);
 				dom_string_unref(name);
 #ifdef ECMASCRIPT_DEBUG
@@ -204,7 +205,7 @@ js_htmlCollection2_namedItem2(JSContext *ctx, JSValueConst this_val, const char 
 
 		if (err == DOM_NO_ERR && val) {
 			if (dom_string_caseless_isequal(name, val)) {
-				JSValue ret = getElement(ctx, element);
+				JSValue ret = getNode(ctx, element);
 				dom_string_unref(val);
 				dom_string_unref(name);
 #ifdef ECMASCRIPT_DEBUG
@@ -286,7 +287,7 @@ js_htmlCollection2_set_items(JSContext *ctx, JSValue this_val, void *node)
 		if (err != DOM_NO_ERR || !element) {
 			continue;
 		}
-		JSValue obj = getElement(ctx, element);
+		JSValue obj = getNode(ctx, element);
 
 		REF_JS(obj);
 		JS_SetPropertyUint32(ctx, this_val, counter, JS_DupValue(ctx, obj));

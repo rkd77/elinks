@@ -26,6 +26,7 @@
 #include "js/quickjs/mapa.h"
 #include "js/quickjs.h"
 #include "js/quickjs/element.h"
+#include "js/quickjs/node.h"
 #include "js/quickjs/nodelist2.h"
 #include "js/quickjs/window.h"
 #include "intl/libintl.h"
@@ -136,7 +137,7 @@ getNodeList2(JSContext *ctx, void *nodes)
 	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
 		dom_node_ref((dom_node *)(sn->node));
-		JSValue obj = getElement(ctx, sn->node);
+		JSValue obj = getNode(ctx, sn->node);
 		REF_JS(obj);
 
 		JS_SetPropertyUint32(ctx, proto, i, JS_DupValue(ctx, obj));

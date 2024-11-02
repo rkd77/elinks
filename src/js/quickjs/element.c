@@ -37,6 +37,7 @@
 #include "js/quickjs/fragment.h"
 #include "js/quickjs/heartbeat.h"
 #include "js/quickjs/keyboard.h"
+#include "js/quickjs/node.h"
 #include "js/quickjs/nodelist.h"
 #include "js/quickjs/nodelist2.h"
 #include "js/quickjs/style.h"
@@ -633,7 +634,7 @@ js_element_get_property_firstChild(JSContext *ctx, JSValueConst this_val)
 		//dom_node_unref(el);
 		return JS_NULL;
 	}
-	JSValue rr = getElement(ctx, node);
+	JSValue rr = getNode(ctx, node);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -687,7 +688,7 @@ js_element_get_property_firstElementChild(JSContext *ctx, JSValueConst this_val)
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
 			dom_nodelist_unref(nodes);
-			JSValue rr = getElement(ctx, child);
+			JSValue rr = getNode(ctx, child);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -829,7 +830,7 @@ js_element_get_property_lastChild(JSContext *ctx, JSValueConst this_val)
 		//dom_node_unref(el);
 		return JS_NULL;
 	}
-	JSValue rr = getElement(ctx, last_child);
+	JSValue rr = getNode(ctx, last_child);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -882,7 +883,7 @@ js_element_get_property_lastElementChild(JSContext *ctx, JSValueConst this_val)
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
 			dom_nodelist_unref(nodes);
-			JSValue rr = getElement(ctx, child);
+			JSValue rr = getNode(ctx, child);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -936,7 +937,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		exc = dom_node_get_node_type(next, &type);
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
-			JSValue rr = getElement(ctx, next);
+			JSValue rr = getNode(ctx, next);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -1100,7 +1101,7 @@ js_element_get_property_nextSibling(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 	//dom_node_unref(el);
-	JSValue rr = getElement(ctx, node);
+	JSValue rr = getNode(ctx, node);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -1203,7 +1204,7 @@ js_element_get_property_offsetParent(JSContext *ctx, JSValueConst this_val)
 	}
 	//dom_node_unref(el);
 
-	return getElement(ctx, node);
+	return getNode(ctx, node);
 }
 
 #if 0
@@ -1313,7 +1314,7 @@ js_element_get_property_parentElement(JSContext *ctx, JSValueConst this_val)
 		//dom_node_unref(el);
 		return JS_NULL;
 	}
-	JSValue rr = getElement(ctx, node);
+	JSValue rr = getNode(ctx, node);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -1343,7 +1344,7 @@ js_element_get_property_parentNode(JSContext *ctx, JSValueConst this_val)
 		//dom_node_unref(el);
 		return JS_NULL;
 	}
-	JSValue rr = getElement(ctx, node);
+	JSValue rr = getNode(ctx, node);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -1388,7 +1389,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		exc = dom_node_get_node_type(prev, &type);
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
-			JSValue rr = getElement(ctx, prev);
+			JSValue rr = getNode(ctx, prev);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -1425,7 +1426,7 @@ js_element_get_property_previousSibling(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 	//dom_node_unref(el);
-	JSValue rr = getElement(ctx, node);
+	JSValue rr = getNode(ctx, node);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -2636,7 +2637,7 @@ js_element_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	if (exc == DOM_NO_ERR && res) {
 		interpreter->changed = 1;
 		//dom_node_unref(el);
-		JSValue rr = getElement(ctx, res);
+		JSValue rr = getNode(ctx, res);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -2749,7 +2750,7 @@ js_element_cloneNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 		return JS_NULL;
 	}
 	//dom_node_unref(el);
-	JSValue rr = getElement(ctx, clone);
+	JSValue rr = getNode(ctx, clone);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -2872,7 +2873,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	if (!res) {
 		return JS_NULL;
 	}
-	JSValue ret = getElement(ctx, res);
+	JSValue ret = getNode(ctx, res);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -3328,7 +3329,7 @@ js_element_insertBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	interpreter->changed = 1;
 	//dom_node_unref(el);
 
-	JSValue rr = getElement(ctx, spare);
+	JSValue rr = getNode(ctx, spare);
 	dom_node_unref(spare);
 
 	return rr;
@@ -3485,7 +3486,7 @@ js_element_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 		return JS_NULL;
 	}
 	//dom_node_unref(el);
-	JSValue rr = getElement(ctx, ret);
+	JSValue rr = getNode(ctx, ret);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -3656,7 +3657,7 @@ js_element_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 		interpreter->changed = 1;
 		//dom_node_unref(el);
 
-		return getElement(ctx, spare);
+		return getNode(ctx, spare);
 	}
 	//dom_node_unref(el);
 
