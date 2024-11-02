@@ -44,7 +44,6 @@
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
-static JSValue getDoctype(JSContext *ctx, void *node);
 static JSClassID js_doctype_class_id;
 static JSClassID js_document_class_id;
 
@@ -2015,7 +2014,7 @@ js_doctype_init(JSContext *ctx)
 	return 0;
 }
 
-static JSValue
+JSValue
 getDoctype(JSContext *ctx, void *node)
 {
 #ifdef ECMASCRIPT_DEBUG

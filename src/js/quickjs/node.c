@@ -18,8 +18,13 @@
 #include "js/ecmascript.h"
 #include "js/quickjs/mapa.h"
 #include "js/quickjs.h"
+#include "js/quickjs/attr.h"
+#include "js/quickjs/document.h"
 #include "js/quickjs/element.h"
+#include "js/quickjs/fragment.h"
+#include "js/quickjs/node.h"
 #include "js/quickjs/nodelist.h"
+#include "js/quickjs/text.h"
 
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
@@ -53,6 +58,36 @@ static const JSCFunctionListEntry node_class_funcs[] = {
 static JSClassDef node_class = {
 	"Node",
 };
+
+JSValue
+getNode(JSContext *ctx, void *n)
+{
+	dom_node *node = (dom_node *)n;
+	dom_node_type typ;
+	dom_exception exc = dom_node_get_node_type(node, &typ);
+
+	if (exc != DOM_NO_ERR) {
+		return JS_NULL;
+	}
+	switch (typ) {
+	case ELEMENT_NODE:
+		return getElement(ctx, n);
+	case ATTRIBUTE_NODE:
+		return getAttr(ctx, n);
+	case TEXT_NODE:
+	case CDATA_SECTION_NODE:
+	case PROCESSING_INSTRUCTION_NODE:
+	case COMMENT_NODE:
+	default:
+		return getText(ctx, n);
+	case DOCUMENT_NODE:
+		return getDocument2(ctx, n);
+	case DOCUMENT_TYPE_NODE:
+		return getDoctype(ctx, n);
+	case DOCUMENT_FRAGMENT_NODE:
+		return getDocumentFragment(ctx, n);
+	}
+}
 
 static JSValue
 node_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)

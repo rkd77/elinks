@@ -7,7 +7,8 @@
 extern "C" {
 #endif
 
-JSValue js_node_init(JSContext *ctx);
+int js_node_init(JSContext *ctx);
+JSValue getNode(JSContext *ctx, void *n);
 
 #ifdef __cplusplus
 }
