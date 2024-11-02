@@ -10,6 +10,11 @@
 
 #include <curl/curl.h>
 
+#ifdef CONFIG_LIBDOM
+#include <dom/dom.h>
+#include <dom/bindings/hubbub/parser.h>
+#endif
+
 #include "elinks.h"
 
 #include "bfu/dialog.h"
@@ -22,7 +27,12 @@
 #include "document/forms.h"
 #include "document/view.h"
 #include "js/ecmascript.h"
+#include "js/mujs/attr.h"
+#include "js/mujs/document.h"
+#include "js/mujs/element.h"
+#include "js/mujs/fragment.h"
 #include "js/mujs/mapa.h"
+#include "js/mujs/text.h"
 #include "js/mujs.h"
 #include "js/mujs/node.h"
 #include "js/timer.h"
@@ -151,6 +161,45 @@ mjs_node_fun(js_State *J)
 	js_pushundefined(J);
 }
 #endif
+
+void
+mjs_push_node(js_State *J, void *n)
+{
+	dom_node *node = (dom_node *)n;
+	dom_node_type typ;
+	dom_exception exc = dom_node_get_node_type(node, &typ);
+
+	if (exc != DOM_NO_ERR) {
+		js_pushnull(J);
+		return;
+	}
+	switch (typ) {
+	case ELEMENT_NODE:
+		mjs_push_element(J, n);
+		return;
+	case ATTRIBUTE_NODE:
+		mjs_push_attr(J, n);
+		return;
+	case TEXT_NODE:
+	case CDATA_SECTION_NODE:
+	case PROCESSING_INSTRUCTION_NODE:
+	case COMMENT_NODE:
+	default:
+		mjs_push_text(J, n);
+		return;
+	case DOCUMENT_NODE:
+		mjs_push_document2(J, n);
+		return;
+	case DOCUMENT_TYPE_NODE:
+		mjs_push_doctype(J, n);
+		return;
+	case DOCUMENT_FRAGMENT_NODE:
+		mjs_push_fragment(J, n);
+		return;
+	}
+}
+
+
 
 static void
 mjs_node_constructor(js_State *J)

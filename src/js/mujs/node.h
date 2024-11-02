@@ -10,6 +10,7 @@ extern "C" {
 #endif
 
 int mjs_node_init(js_State *J);
+void mjs_push_node(js_State *J, void *node);
 
 #ifdef __cplusplus
 }

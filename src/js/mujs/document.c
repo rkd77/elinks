@@ -104,8 +104,6 @@ mjs_doc_getprivate(js_State *J, int idx)
 	return priv->node;
 }
 
-static void mjs_push_doctype(js_State *J, void *node);
-
 static void mjs_document_dispatchEvent(js_State *J);
 
 static void
@@ -1664,7 +1662,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	}
 }
 
-static void
+void
 mjs_push_doctype(js_State *J, void *node)
 {
 #ifdef ECMASCRIPT_DEBUG
