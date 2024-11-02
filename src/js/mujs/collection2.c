@@ -22,6 +22,7 @@
 #include "js/mujs.h"
 #include "js/mujs/collection.h"
 #include "js/mujs/element.h"
+#include "js/mujs/node.h"
 
 static void
 mjs_htmlCollection2_get_property_length(js_State *J)
@@ -63,7 +64,7 @@ mjs_push_htmlCollection2_item2(js_State *J, int idx)
 		js_pushundefined(J);
 		return;
 	}
-	mjs_push_element(J, node);
+	mjs_push_node(J, node);
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -123,7 +124,7 @@ mjs_push_htmlCollection2_namedItem2(js_State *J, const char *str)
 
 		if (err == DOM_NO_ERR && val) {
 			if (dom_string_caseless_isequal(name, val)) {
-				mjs_push_element(J, element);
+				mjs_push_node(J, element);
 				dom_string_unref(val);
 				dom_string_unref(name);
 #ifdef ECMASCRIPT_DEBUG
@@ -140,7 +141,7 @@ mjs_push_htmlCollection2_namedItem2(js_State *J, const char *str)
 
 		if (err == DOM_NO_ERR && val) {
 			if (dom_string_caseless_isequal(name, val)) {
-				mjs_push_element(J, element);
+				mjs_push_node(J, element);
 				dom_string_unref(val);
 				dom_string_unref(name);
 #ifdef ECMASCRIPT_DEBUG
@@ -201,7 +202,7 @@ mjs_htmlCollection2_set_items(js_State *J, void *node)
 		if (err != DOM_NO_ERR || !element) {
 			continue;
 		}
-		mjs_push_element(J, element);
+		mjs_push_node(J, element);
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -219,7 +220,7 @@ mjs_htmlCollection2_set_items(js_State *J, void *node)
 					js_pop(J, 1);
 					goto next;
 				}
-				mjs_push_element(J, element);
+				mjs_push_node(J, element);
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif

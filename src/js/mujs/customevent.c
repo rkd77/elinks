@@ -17,6 +17,7 @@
 #include "js/mujs.h"
 #include "js/mujs/customevent.h"
 #include "js/mujs/element.h"
+#include "js/mujs/node.h"
 #include "intl/charsets.h"
 #include "terminal/event.h"
 #include "viewer/text/vs.h"
@@ -217,7 +218,7 @@ mjs_customEvent_get_property_target(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_element(J, target);
+	mjs_push_node(J, target);
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif

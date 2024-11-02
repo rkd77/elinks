@@ -15,6 +15,7 @@
 #include "js/mujs/mapa.h"
 #include "js/mujs.h"
 #include "js/mujs/element.h"
+#include "js/mujs/node.h"
 #include "js/mujs/nodelist2.h"
 #include "js/mujs/window.h"
 
@@ -47,7 +48,7 @@ mjs_push_nodeList2_item2(js_State *J, int idx)
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_element(J, sn->node);
+	mjs_push_node(J, sn->node);
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -80,7 +81,7 @@ mjs_nodeList2_set_items(js_State *J, void *nodes)
 	struct selector_node *sn = NULL;
 
 	foreach (sn, *sni) {
-		mjs_push_element(J, sn->node);
+		mjs_push_node(J, sn->node);
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif

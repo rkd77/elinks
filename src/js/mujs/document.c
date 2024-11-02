@@ -42,6 +42,7 @@
 #include "js/mujs/location.h"
 #include "js/mujs/document.h"
 #include "js/mujs/element.h"
+#include "js/mujs/node.h"
 #include "js/mujs/nodelist.h"
 #include "js/mujs/nodelist2.h"
 #include "js/mujs/text.h"
@@ -178,7 +179,7 @@ mjs_document_get_property_body(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_element(J, body);
+	mjs_push_node(J, body);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -333,7 +334,7 @@ mjs_document_get_property_currentScript(js_State *J)
 			dom_string_unref(tag_name);
 
 			if (isScript) {
-				mjs_push_element(J, elem);
+				mjs_push_node(J, elem);
 				return;
 			}
 		}
@@ -386,7 +387,7 @@ mjs_document_get_property_documentElement(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_element(J, root);
+	mjs_push_node(J, root);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -500,7 +501,7 @@ mjs_document_get_property_head(js_State *J)
 		return;
 	}
 	auto element = elements[0];
-	mjs_push_element(J, element);
+	mjs_push_node(J, element);
 #endif
 	js_pushnull(J);
 }
@@ -1157,7 +1158,7 @@ mjs_document_createComment(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_element(J, comment);
+	mjs_push_node(J, comment);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -1219,7 +1220,7 @@ mjs_document_createElement(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_element(J, element);
+	mjs_push_node(J, element);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -1296,7 +1297,7 @@ mjs_document_getElementById(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_element(J, element);
+	mjs_push_node(J, element);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -1448,7 +1449,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_element(J, ret);
+	mjs_push_node(J, ret);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif

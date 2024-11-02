@@ -42,6 +42,7 @@
 #include "js/mujs/event.h"
 #include "js/mujs/fragment.h"
 #include "js/mujs/keyboard.h"
+#include "js/mujs/node.h"
 #include "js/mujs/nodelist.h"
 #include "js/mujs/nodelist2.h"
 #include "js/mujs/style.h"
@@ -547,7 +548,7 @@ mjs_element_get_property_firstChild(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_element(J, node);
+	mjs_push_node(J, node);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -597,7 +598,7 @@ mjs_element_get_property_firstElementChild(js_State *J)
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
 			dom_nodelist_unref(nodes);
-			mjs_push_element(J, child);
+			mjs_push_node(J, child);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -719,7 +720,7 @@ mjs_element_get_property_lastChild(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_element(J, last_child);
+	mjs_push_node(J, last_child);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -768,7 +769,7 @@ mjs_element_get_property_lastElementChild(js_State *J)
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
 			dom_nodelist_unref(nodes);
-			mjs_push_element(J, child);
+			mjs_push_node(J, child);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -819,7 +820,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		exc = dom_node_get_node_type(next, &type);
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
-			mjs_push_element(J, next);
+			mjs_push_node(J, next);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -956,7 +957,7 @@ mjs_element_get_property_nextSibling(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_element(J, node);
+	mjs_push_node(J, node);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -1062,7 +1063,7 @@ mjs_element_get_property_offsetParent(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_element(J, node);
+	mjs_push_node(J, node);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -1179,7 +1180,7 @@ mjs_element_get_property_parentElement(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_element(J, node);
+	mjs_push_node(J, node);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -1206,7 +1207,7 @@ mjs_element_get_property_parentNode(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_element(J, node);
+	mjs_push_node(J, node);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -1248,7 +1249,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		exc = dom_node_get_node_type(prev, &type);
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
-			mjs_push_element(J, prev);
+			mjs_push_node(J, prev);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -1281,7 +1282,7 @@ mjs_element_get_property_previousSibling(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_element(J, node);
+	mjs_push_node(J, node);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -2387,7 +2388,7 @@ mjs_element_appendChild(js_State *J)
 
 	if (exc == DOM_NO_ERR && res) {
 		interpreter->changed = 1;
-		mjs_push_element(J, res);
+		mjs_push_node(J, res);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -2483,7 +2484,7 @@ mjs_element_cloneNode(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_element(J, clone);
+	mjs_push_node(J, clone);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -2594,7 +2595,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_element(J, res);
+	mjs_push_node(J, res);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -2952,7 +2953,7 @@ mjs_element_insertBefore(js_State *J)
 		return;
 	}
 	interpreter->changed = 1;
-	mjs_push_element(J, spare);
+	mjs_push_node(J, spare);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -3062,7 +3063,7 @@ mjs_element_querySelector(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_element(J, ret);
+	mjs_push_node(J, ret);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -3192,7 +3193,7 @@ mjs_element_removeChild(js_State *J)
 
 	if (exc == DOM_NO_ERR && spare) {
 		interpreter->changed = 1;
-		mjs_push_element(J, spare);
+		mjs_push_node(J, spare);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -3459,7 +3460,7 @@ int
 mjs_element_init(js_State *J)
 {
 #if 0
-	mjs_push_element(J, NULL);
+	mjs_push_node(J, NULL);
 	js_defglobal(J, "Element", JS_DONTENUM);
 #endif
 	return 0;
