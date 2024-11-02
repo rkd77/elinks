@@ -10,6 +10,8 @@
 
 #include "elinks.h"
 
+#include "js/libdom/dom.h"
+
 #include "js/spidermonkey/util.h"
 #include <js/BigInt.h>
 #include <js/Conversions.h>
@@ -25,8 +27,13 @@
 #include "document/view.h"
 #include "js/ecmascript.h"
 #include "js/spidermonkey.h"
+#include "js/spidermonkey/attr.h"
+#include "js/spidermonkey/document.h"
+#include "js/spidermonkey/element.h"
+#include "js/spidermonkey/fragment.h"
 #include "js/spidermonkey/heartbeat.h"
 #include "js/spidermonkey/node.h"
+#include "js/spidermonkey/text.h"
 #include "js/timer.h"
 #include "intl/libintl.h"
 #include "main/select.h"
@@ -82,6 +89,36 @@ JSClass node_class = {
 	JSCLASS_HAS_RESERVED_SLOTS(0),
 	&node_ops
 };
+
+JSObject *
+getNode(JSContext *ctx, void *n)
+{
+	dom_node *node = (dom_node *)n;
+	dom_node_type typ;
+	dom_exception exc = dom_node_get_node_type(node, &typ);
+
+	if (exc != DOM_NO_ERR) {
+		return NULL;
+	}
+	switch (typ) {
+	case ELEMENT_NODE:
+		return getElement(ctx, n);
+	case ATTRIBUTE_NODE:
+		return getAttr(ctx, n);
+	case TEXT_NODE:
+	case CDATA_SECTION_NODE:
+	case PROCESSING_INSTRUCTION_NODE:
+	case COMMENT_NODE:
+	default:
+		return getText(ctx, n);
+	case DOCUMENT_NODE:
+		return getDocument(ctx, n);
+	case DOCUMENT_TYPE_NODE:
+		return getDoctype(ctx, n);
+	case DOCUMENT_FRAGMENT_NODE:
+		return getDocumentFragment(ctx, n);
+	}
+}
 
 bool
 node_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)

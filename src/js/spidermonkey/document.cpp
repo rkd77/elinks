@@ -95,7 +95,6 @@ struct document_private {
 	enum readyState state;
 };
 
-static JSObject *getDoctype(JSContext *ctx, void *node);
 static void document_event_handler(dom_event *event, void *pw);
 
 static void document_finalize(JS::GCContext *op, JSObject *obj)
@@ -2381,7 +2380,7 @@ JSPropertySpec doctype_props[] = {
 	JS_PS_END
 };
 
-static JSObject *
+JSObject *
 getDoctype(JSContext *ctx, void *node)
 {
 #ifdef ECMASCRIPT_DEBUG

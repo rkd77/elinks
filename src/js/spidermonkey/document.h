@@ -11,6 +11,8 @@ extern const spidermonkeyFunctionSpec document_funcs[];
 extern JSPropertySpec document_props[];
 
 JSObject *getDocument(JSContext *ctx, void *doc);
+JSObject *getDoctype(JSContext *ctx, void *node);
+
 bool initDocument(JSContext *ctx, struct ecmascript_interpreter *interpreter, JSObject *document_obj, void *doc);
 
 #endif
