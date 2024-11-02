@@ -30,6 +30,7 @@
 #include "js/ecmascript-c.h"
 #include "js/spidermonkey/collection.h"
 #include "js/spidermonkey/element.h"
+#include "js/spidermonkey/node.h"
 #include "intl/libintl.h"
 #include "main/select.h"
 #include "osdep/newwin.h"
@@ -359,7 +360,7 @@ htmlCollection2_item2(JSContext *ctx, JS::HandleObject hobj, int idx, JS::Mutabl
 	if (err != DOM_NO_ERR) {
 		return true;
 	}
-	JSObject *obj = getElement(ctx, node);
+	JSObject *obj = getNode(ctx, node);
 	hvp.setObject(*obj);
 	dom_node_unref(node);
 
@@ -422,7 +423,7 @@ htmlCollection2_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS:
 
 		if (err == DOM_NO_ERR && val) {
 			if (dom_string_caseless_isequal(name, val)) {
-				JSObject *obj = (JSObject *)getElement(ctx, element);
+				JSObject *obj = (JSObject *)getNode(ctx, element);
 				hvp.setObject(*obj);
 
 				dom_string_unref(val);
@@ -438,7 +439,7 @@ htmlCollection2_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS:
 
 		if (err == DOM_NO_ERR && val) {
 			if (dom_string_caseless_isequal(name, val)) {
-				JSObject *obj = (JSObject *)getElement(ctx, element);
+				JSObject *obj = (JSObject *)getNode(ctx, element);
 				hvp.setObject(*obj);
 
 				dom_string_unref(val);
@@ -492,7 +493,7 @@ htmlCollection_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 		if (err != DOM_NO_ERR || !element) {
 			continue;
 		}
-		JSObject *obj = getElement(ctx, element);
+		JSObject *obj = getNode(ctx, element);
 
 		if (!obj) {
 			continue;

@@ -27,6 +27,7 @@
 #include "js/ecmascript.h"
 #include "js/ecmascript-c.h"
 #include "js/spidermonkey/element.h"
+#include "js/spidermonkey/node.h"
 #include "js/spidermonkey/nodelist2.h"
 #include "js/spidermonkey/window.h"
 #include "intl/libintl.h"
@@ -156,7 +157,7 @@ nodeList2_item(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	JSObject *res = getElement(ctx, sn->node);
+	JSObject *res = getNode(ctx, sn->node);
 	args.rval().setObject(*res);
 	return true;
 }
@@ -182,7 +183,7 @@ getNodeList2(JSContext *ctx, void *res)
 	int i = 0;
 
 	foreach (sn, *sni) {
-		JSObject *obj = getElement(ctx, sn->node);
+		JSObject *obj = getNode(ctx, sn->node);
 
 		if (obj) {
 			JS::RootedObject v(ctx, obj);

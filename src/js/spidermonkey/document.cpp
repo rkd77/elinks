@@ -43,6 +43,7 @@
 #include "js/spidermonkey/event.h"
 #include "js/spidermonkey/fragment.h"
 #include "js/spidermonkey/heartbeat.h"
+#include "js/spidermonkey/node.h"
 #include "js/spidermonkey/nodelist.h"
 #include "js/spidermonkey/nodelist2.h"
 #include "js/spidermonkey/text.h"
@@ -271,7 +272,7 @@ document_get_property_body(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *obj = getElement(ctx, body);
+	JSObject *obj = getNode(ctx, body);
 	args.rval().setObject(*obj);
 
 	return true;
@@ -481,7 +482,7 @@ document_get_property_currentScript(JSContext *ctx, unsigned int argc, JS::Value
 			dom_string_unref(tag_name);
 
 			if (isScript) {
-				JSObject *obj = getElement(ctx, elem);
+				JSObject *obj = getNode(ctx, elem);
 				args.rval().setObject(*obj);
 				return true;
 			}
@@ -570,7 +571,7 @@ document_get_property_documentElement(JSContext *ctx, unsigned int argc, JS::Val
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *obj = getElement(ctx, root);
+	JSObject *obj = getNode(ctx, root);
 	args.rval().setObject(*obj);
 
 	return true;
@@ -1654,7 +1655,7 @@ document_createComment(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *obj = getElement(ctx, comment);
+	JSObject *obj = getNode(ctx, comment);
 	args.rval().setObject(*obj);
 
 	return true;
@@ -1747,7 +1748,7 @@ document_createElement(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *obj = getElement(ctx, element);
+	JSObject *obj = getNode(ctx, element);
 	args.rval().setObject(*obj);
 
 	return true;
@@ -1963,7 +1964,7 @@ document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *obj = getElement(ctx, element);
+	JSObject *obj = getNode(ctx, element);
 	args.rval().setObject(*obj);
 
 	return true;
@@ -2139,7 +2140,7 @@ document_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!ret) {
 		args.rval().setNull();
 	} else {
-		JSObject *el = getElement(ctx, ret);
+		JSObject *el = getNode(ctx, ret);
 		args.rval().setObject(*el);
 	}
 

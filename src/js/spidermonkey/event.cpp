@@ -29,6 +29,7 @@
 #include "js/spidermonkey/element.h"
 #include "js/spidermonkey/heartbeat.h"
 #include "js/spidermonkey/event.h"
+#include "js/spidermonkey/node.h"
 #include "js/timer.h"
 #include "intl/libintl.h"
 #include "main/select.h"
@@ -346,7 +347,7 @@ event_get_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *obj = getElement(ctx, target);
+	JSObject *obj = getNode(ctx, target);
 	args.rval().setObject(*obj);
 	dom_node_unref(target);
 

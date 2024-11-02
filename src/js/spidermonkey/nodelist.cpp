@@ -26,6 +26,7 @@
 #include "document/view.h"
 #include "js/ecmascript.h"
 #include "js/spidermonkey/element.h"
+#include "js/spidermonkey/node.h"
 #include "js/spidermonkey/nodelist.h"
 #include "js/spidermonkey/window.h"
 #include "intl/libintl.h"
@@ -208,7 +209,7 @@ nodeList_item2(JSContext *ctx, JS::HandleObject hobj, int idx, JS::MutableHandle
 	if (err != DOM_NO_ERR || !element) {
 		return true;
 	}
-	JSObject *obj = getElement(ctx, element);
+	JSObject *obj = getNode(ctx, element);
 	hvp.setObject(*obj);
 	dom_node_unref(element);
 
@@ -259,7 +260,7 @@ nodeList_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 		if (err != DOM_NO_ERR || !element) {
 			continue;
 		}
-		JSObject *obj = getElement(ctx, element);
+		JSObject *obj = getNode(ctx, element);
 
 		if (obj) {
 			JS::RootedObject v(ctx, obj);

@@ -39,6 +39,7 @@
 #include "js/spidermonkey/element.h"
 #include "js/spidermonkey/heartbeat.h"
 #include "js/spidermonkey/keyboard.h"
+#include "js/spidermonkey/node.h"
 #include "js/spidermonkey/nodelist.h"
 #include "js/spidermonkey/nodelist2.h"
 #include "js/spidermonkey/style.h"
@@ -1048,7 +1049,7 @@ element_get_property_firstChild(JSContext *ctx, unsigned int argc, JS::Value *vp
 		return true;
 	}
 
-	JSObject *elem = getElement(ctx, node);
+	JSObject *elem = getNode(ctx, node);
 	dom_node_unref(node);
 	args.rval().setObject(*elem);
 
@@ -1131,7 +1132,7 @@ element_get_property_firstElementChild(JSContext *ctx, unsigned int argc, JS::Va
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
 			dom_nodelist_unref(nodes);
-			JSObject *elem = getElement(ctx, child);
+			JSObject *elem = getNode(ctx, child);
 			dom_node_unref(child);
 			args.rval().setObject(*elem);
 			return true;
@@ -1387,7 +1388,7 @@ element_get_property_lastChild(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	JSObject *elem = getElement(ctx, last_child);
+	JSObject *elem = getNode(ctx, last_child);
 	dom_node_unref(last_child);
 	args.rval().setObject(*elem);
 
@@ -1469,7 +1470,7 @@ element_get_property_lastElementChild(JSContext *ctx, unsigned int argc, JS::Val
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
 			dom_nodelist_unref(nodes);
-			JSObject *elem = getElement(ctx, child);
+			JSObject *elem = getNode(ctx, child);
 			dom_node_unref(child);
 			args.rval().setObject(*elem);
 			return true;
@@ -1547,7 +1548,7 @@ element_get_property_nextElementSibling(JSContext *ctx, unsigned int argc, JS::V
 		exc = dom_node_get_node_type(next, &type);
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
-			JSObject *elem = getElement(ctx, next);
+			JSObject *elem = getNode(ctx, next);
 			dom_node_unref(next);
 			args.rval().setObject(*elem);
 			return true;
@@ -1852,7 +1853,7 @@ element_get_property_nextSibling(JSContext *ctx, unsigned int argc, JS::Value *v
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *elem = getElement(ctx, node);
+	JSObject *elem = getNode(ctx, node);
 	dom_node_unref(node);
 	args.rval().setObject(*elem);
 
@@ -2019,7 +2020,7 @@ element_get_property_offsetParent(JSContext *ctx, unsigned int argc, JS::Value *
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *elem = getElement(ctx, node);
+	JSObject *elem = getNode(ctx, node);
 	dom_node_unref(node);
 	args.rval().setObject(*elem);
 
@@ -2229,7 +2230,7 @@ element_get_property_parentElement(JSContext *ctx, unsigned int argc, JS::Value 
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *elem = getElement(ctx, node);
+	JSObject *elem = getNode(ctx, node);
 	dom_node_unref(node);
 	args.rval().setObject(*elem);
 
@@ -2289,7 +2290,7 @@ element_get_property_parentNode(JSContext *ctx, unsigned int argc, JS::Value *vp
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *elem = getElement(ctx, node);
+	JSObject *elem = getNode(ctx, node);
 	dom_node_unref(node);
 	args.rval().setObject(*elem);
 
@@ -2361,7 +2362,7 @@ element_get_property_previousElementSibling(JSContext *ctx, unsigned int argc, J
 		exc = dom_node_get_node_type(prev, &type);
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
-			JSObject *elem = getElement(ctx, prev);
+			JSObject *elem = getNode(ctx, prev);
 			dom_node_unref(prev);
 			args.rval().setObject(*elem);
 			return true;
@@ -2427,7 +2428,7 @@ element_get_property_previousSibling(JSContext *ctx, unsigned int argc, JS::Valu
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *elem = getElement(ctx, node);
+	JSObject *elem = getNode(ctx, node);
 	dom_node_unref(node);
 	args.rval().setObject(*elem);
 
@@ -4061,7 +4062,7 @@ element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	if (exc == DOM_NO_ERR && res) {
 		interpreter->changed = 1;
-		JSObject *obj = getElement(ctx, res);
+		JSObject *obj = getNode(ctx, res);
 		dom_node_unref(res);
 		args.rval().setObject(*obj);
 		debug_dump_xhtml(document->dom);
@@ -4194,7 +4195,7 @@ element_cloneNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *obj = getElement(ctx, clone);
+	JSObject *obj = getNode(ctx, clone);
 	dom_node_unref(clone);
 	args.rval().setObject(*obj);
 
@@ -4319,7 +4320,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *ret = getElement(ctx, res);
+	JSObject *ret = getNode(ctx, res);
 	dom_node_unref(res);
 	args.rval().setObject(*ret);
 
@@ -4859,7 +4860,7 @@ element_insertBefore(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	if (err != DOM_NO_ERR || !spare) {
 		return false;
 	}
-	JSObject *obj = getElement(ctx, spare);
+	JSObject *obj = getNode(ctx, spare);
 	dom_node_unref(spare);
 	args.rval().setObject(*obj);
 	interpreter->changed = 1;
@@ -5048,7 +5049,7 @@ element_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!ret) {
 		args.rval().setNull();
 	} else {
-		JSObject *el = getElement(ctx, ret);
+		JSObject *el = getNode(ctx, ret);
 		dom_node_unref(ret);
 		args.rval().setObject(*el);
 	}
@@ -5258,7 +5259,7 @@ element_removeChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	if (exc == DOM_NO_ERR && spare) {
 		interpreter->changed = 1;
-		JSObject *obj = getElement(ctx, spare);
+		JSObject *obj = getNode(ctx, spare);
 		dom_node_unref(spare);
 		args.rval().setObject(*obj);
 		debug_dump_xhtml(document->dom);

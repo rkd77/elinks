@@ -39,6 +39,7 @@
 #include "js/spidermonkey/element.h"
 #include "js/spidermonkey/heartbeat.h"
 #include "js/spidermonkey/keyboard.h"
+#include "js/spidermonkey/node.h"
 #include "js/spidermonkey/nodelist.h"
 #include "js/spidermonkey/nodelist2.h"
 #include "js/spidermonkey/style.h"
@@ -88,6 +89,8 @@ static bool text_get_property_parentElement(JSContext *ctx, unsigned int argc, J
 static bool text_get_property_parentNode(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool text_get_property_previousElementSibling(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool text_get_property_previousSibling(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool text_get_property_tagName(JSContext *ctx, unsigned int argc, JS::Value *vp);
+
 static bool text_get_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool text_set_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
@@ -147,6 +150,7 @@ JSPropertySpec text_props[] = {
 	JS_PSG("parentNode",	text_get_property_parentNode, JSPROP_ENUMERATE),
 ////	JS_PSG("previousElementSibling",	text_get_property_previousElementSibling, JSPROP_ENUMERATE),
 	JS_PSG("previousSibling",	text_get_property_previousSibling, JSPROP_ENUMERATE),
+	JS_PSG("tagName",	text_get_property_tagName, JSPROP_ENUMERATE),
 	JS_PSGS("textContent",	text_get_property_textContent, text_set_property_textContent, JSPROP_ENUMERATE),
 	JS_PS_END
 };
@@ -421,7 +425,7 @@ text_get_property_firstChild(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	JSObject *elem = getElement(ctx, node);
+	JSObject *elem = getNode(ctx, node);
 	dom_node_unref(node);
 	args.rval().setObject(*elem);
 
@@ -504,7 +508,7 @@ text_get_property_firstElementChild(JSContext *ctx, unsigned int argc, JS::Value
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
 			dom_nodelist_unref(nodes);
-			JSObject *elem = getElement(ctx, child);
+			JSObject *elem = getNode(ctx, child);
 			dom_node_unref(child);
 			args.rval().setObject(*elem);
 			return true;
@@ -572,7 +576,7 @@ text_get_property_lastChild(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	JSObject *elem = getElement(ctx, last_child);
+	JSObject *elem = getNode(ctx, last_child);
 	dom_node_unref(last_child);
 	args.rval().setObject(*elem);
 
@@ -654,7 +658,7 @@ text_get_property_lastElementChild(JSContext *ctx, unsigned int argc, JS::Value 
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
 			dom_nodelist_unref(nodes);
-			JSObject *elem = getElement(ctx, child);
+			JSObject *elem = getNode(ctx, child);
 			dom_node_unref(child);
 			args.rval().setObject(*elem);
 			return true;
@@ -733,7 +737,7 @@ text_get_property_nextElementSibling(JSContext *ctx, unsigned int argc, JS::Valu
 		exc = dom_node_get_node_type(next, &type);
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
-			JSObject *elem = getElement(ctx, next);
+			JSObject *elem = getNode(ctx, next);
 			dom_node_unref(next);
 			args.rval().setObject(*elem);
 			return true;
@@ -1039,7 +1043,7 @@ text_get_property_nextSibling(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *elem = getElement(ctx, node);
+	JSObject *elem = getNode(ctx, node);
 	dom_node_unref(node);
 	args.rval().setObject(*elem);
 
@@ -1142,7 +1146,7 @@ text_get_property_parentElement(JSContext *ctx, unsigned int argc, JS::Value *vp
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *elem = getElement(ctx, node);
+	JSObject *elem = getNode(ctx, node);
 	dom_node_unref(node);
 	args.rval().setObject(*elem);
 
@@ -1202,7 +1206,7 @@ text_get_property_parentNode(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *elem = getElement(ctx, node);
+	JSObject *elem = getNode(ctx, node);
 	dom_node_unref(node);
 	args.rval().setObject(*elem);
 
@@ -1275,7 +1279,7 @@ text_get_property_previousElementSibling(JSContext *ctx, unsigned int argc, JS::
 		exc = dom_node_get_node_type(prev, &type);
 
 		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
-			JSObject *elem = getElement(ctx, prev);
+			JSObject *elem = getNode(ctx, prev);
 			dom_node_unref(prev);
 			args.rval().setObject(*elem);
 			return true;
@@ -1342,9 +1346,67 @@ text_get_property_previousSibling(JSContext *ctx, unsigned int argc, JS::Value *
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *elem = getElement(ctx, node);
+	JSObject *elem = getNode(ctx, node);
 	dom_node_unref(node);
 	args.rval().setObject(*elem);
+
+	return true;
+}
+
+static bool
+text_get_property_tagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &text_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	vs = interpreter->vs;
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+	dom_string *tag_name = NULL;
+	dom_exception exc = dom_node_get_node_name(el, &tag_name);
+
+	if (exc != DOM_NO_ERR || !tag_name) {
+		args.rval().setNull();
+		return true;
+	}
+	args.rval().setString(JS_NewStringCopyZ(ctx, dom_string_data(tag_name)));
+	dom_string_unref(tag_name);
 
 	return true;
 }
@@ -1729,7 +1791,7 @@ text_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	if (exc == DOM_NO_ERR && res) {
 		interpreter->changed = 1;
-		JSObject *obj = getElement(ctx, res);
+		JSObject *obj = getNode(ctx, res);
 		dom_node_unref(res);
 		args.rval().setObject(*obj);
 		debug_dump_xhtml(document->dom);
@@ -1779,7 +1841,7 @@ text_cloneNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *obj = getElement(ctx, clone);
+	JSObject *obj = getNode(ctx, clone);
 	dom_node_unref(clone);
 	args.rval().setObject(*obj);
 
@@ -1970,7 +2032,7 @@ text_insertBefore(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	if (err != DOM_NO_ERR || !spare) {
 		return false;
 	}
-	JSObject *obj = getElement(ctx, spare);
+	JSObject *obj = getNode(ctx, spare);
 	dom_node_unref(spare);
 	args.rval().setObject(*obj);
 	interpreter->changed = 1;
@@ -2120,7 +2182,7 @@ text_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!ret) {
 		args.rval().setNull();
 	} else {
-		JSObject *el = getElement(ctx, ret);
+		JSObject *el = getNode(ctx, ret);
 		dom_node_unref(ret);
 		args.rval().setObject(*el);
 	}
@@ -2228,7 +2290,7 @@ text_removeChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	if (exc == DOM_NO_ERR && spare) {
 		interpreter->changed = 1;
-		JSObject *obj = getElement(ctx, spare);
+		JSObject *obj = getNode(ctx, spare);
 		dom_node_unref(spare);
 		args.rval().setObject(*obj);
 		debug_dump_xhtml(document->dom);
