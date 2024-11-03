@@ -394,6 +394,7 @@ if conf_data.get('CONFIG_OS_WIN32') and compiler.has_header('ws2tcpip.h')
 endif
 
 st = get_option('static')
+deps = []
 
 if conf_data.get('CONFIG_BACKTRACE') and conf_data.get('HAVE_EXECINFO_H') == 1
     execinfodeps = compiler.find_library('execinfo', static: st, required: false)
@@ -402,7 +403,6 @@ if conf_data.get('CONFIG_BACKTRACE') and conf_data.get('HAVE_EXECINFO_H') == 1
     endif
 endif
 
-deps = []
 if conf_data.get('CONFIG_GZIP')
     zdeps = dependency('zlib', static: st, required: false)
     if not zdeps.found()
