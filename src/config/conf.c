@@ -757,9 +757,9 @@ parse_config_file(struct option *options, const char *name,
 
 	fputc('\a', stderr);
 
-	if (get_cmd_opt_bool("dump")
-	    || get_cmd_opt_bool("source"))
+	if (get_cmd_opt_bool("dump") || get_cmd_opt_bool("source") || get_cmd_opt_bool("test")) {
 		return;
+	}
 
 	sleep(1);
 }
