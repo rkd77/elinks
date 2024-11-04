@@ -233,13 +233,12 @@ msgid "Whether to display IP of the document in the status bar."
 msgstr "Czy wyświetlać adres IP strony na pasku statusu."
 
 #: src/bfu/leds.c:101
-#, fuzzy
 msgid "Show available memory"
-msgstr "%u dostępny"
+msgstr "Pokaż ilość dostępnej pamięci"
 
 #: src/bfu/leds.c:103
 msgid "Whether to display available memory. From /proc/meminfo."
-msgstr ""
+msgstr "Czy wyświetlać ilość dostępnej pamięci. Na podstawie /proc/meminfo."
 
 #
 #: src/bfu/leds.c:105
@@ -1242,9 +1241,8 @@ msgid "Reload the current page"
 msgstr "Przeładuj bieżącą stronę"
 
 #: src/config/actions-main.inc:103
-#, fuzzy
 msgid "Reopen last closed tab"
-msgstr "Otwórz nową kartę"
+msgstr "Ponownie otwórz ostatnio zamkniętą kartę"
 
 #: src/config/actions-main.inc:104
 msgid "Re-render the current page"
@@ -1588,13 +1586,12 @@ msgid "Use a specific local IPv6 address"
 msgstr "Ustaw podany adres IPv6 dla wychodzących połączeń"
 
 #: src/config/cmdline.c:843
-#, fuzzy
 msgid "Set mode of displaying colors in documents"
-msgstr "Przełącz sposób wyświetlania numerów odnośników"
+msgstr "Ustaw tryb wyświetlania kolorów w dokumentach"
 
 #: src/config/cmdline.c:845
 msgid "Possible values 0, 1 or 2."
-msgstr ""
+msgstr "Możliwe wartości 0, 1 albo 2."
 
 #: src/config/cmdline.c:847
 msgid "Name of directory with configuration file"
@@ -1931,11 +1928,11 @@ msgstr ""
 
 #: src/config/cmdline.c:1022
 msgid "Test js"
-msgstr ""
+msgstr "Testowanie js"
 
 #: src/config/cmdline.c:1024
 msgid "When enabled, helps to test js."
-msgstr ""
+msgstr "Gdy włączone, pomaga testować js."
 
 #: src/config/cmdline.c:1026
 msgid ""
@@ -3664,11 +3661,11 @@ msgstr "Ustaw znacznik czasu każdego ściąganego pliku na taki jak na serwerze
 
 #: src/config/options.inc:725
 msgid "Show compressed files as plain text"
-msgstr ""
+msgstr "Pokazuj skompresowane pliki jako zwykły tekst"
 
 #: src/config/options.inc:727
 msgid "Whether to view compressed files (.gz, .zst or .xz) as plain text."
-msgstr ""
+msgstr "Czy pokazywać skompresowane pliki (.gz, .zst lub .xz) jako zwykły tekst."
 
 #. Does automatic resuming make sense as an option?
 #: src/config/options.inc:730
@@ -3797,13 +3794,12 @@ msgid "Whether to print references (URIs) of document links in dump output."
 msgstr "Czy wypisywać referencje (URI) odnośników dokumentu przy zrzutach."
 
 #: src/config/options.inc:793
-#, fuzzy
 msgid "Scripting enabled"
-msgstr "Ecmascript włączone"
+msgstr "Skrypty włączone"
 
 #: src/config/options.inc:795
 msgid "Whether to call scripting pre_format_hooks by taking a dump."
-msgstr ""
+msgstr "Czy wywoływać skrypty pre_format_hook podczas wykonywania zrzutów."
 
 #: src/config/options.inc:797
 msgid "Terminal hyperlinks"
@@ -4691,14 +4687,12 @@ msgid "Status bar show ip text colors."
 msgstr "Kolory tekstu na pasku statusu dotyczące adresu IP."
 
 #: src/config/options.inc:1356
-#, fuzzy
 msgid "Status bar show available memory"
-msgstr "Pokazywanie adresu IP"
+msgstr "Pokazywanie ilości dostępnej pamięci na pasku statusu"
 
 #: src/config/options.inc:1358
-#, fuzzy
 msgid "Status bar show available memory text colors."
-msgstr "Kolory tekstu na pasku statusu dotyczące adresu IP."
+msgstr "Kolory tekstu na pasku statusu dotyczące ilości dostępnej pamięci."
 
 #: src/config/options.inc:1360
 msgid "Generic status bar"
@@ -6927,11 +6921,11 @@ msgstr "Czy zabronić skryptom otwieranie nowych okien lub kart."
 
 #: src/js/ecmascript.c:83
 msgid "Check integrity"
-msgstr ""
+msgstr "Sprawdź integralność"
 
 #: src/js/ecmascript.c:85
 msgid "Whether to check integrity. It can have negative impact on performance."
-msgstr ""
+msgstr "Czy sprawdzać integralność. Może mieć negatywny wpływ na wydajność."
 
 #: src/js/ecmascript.c:89
 msgid "Whether to run those scripts inside of documents."
@@ -7022,40 +7016,36 @@ msgid "QuickJS"
 msgstr "QuickJS"
 
 #: src/js/quickjs.c:595
-#, fuzzy
 msgid "Options specific to QuickJS."
-msgstr "Ustawienia dotyczące przeglądania lokalnych plików."
+msgstr "Ustawienia dotyczące QuickJS."
 
 #: src/js/quickjs.c:597
 msgid "GC threshold"
-msgstr ""
+msgstr "GC threshold"
 
 #: src/js/quickjs.c:599
 msgid "GC threshold in bytes."
-msgstr ""
+msgstr "GC threshold w bajtach."
 
 #: src/js/quickjs.c:601 src/js/spidermonkey.cpp:758
-#, fuzzy
 msgid "Memory limit"
-msgstr "Przydzielona pamięć"
+msgstr "Limit przydzielonej pamięci"
 
 #: src/js/quickjs.c:603
 msgid "Runtime memory limit in bytes per context."
-msgstr ""
+msgstr "Limit pamięci w bajtach na kontekst."
 
 #: src/js/spidermonkey.cpp:754
-#, fuzzy
 msgid "Spidermonkey"
 msgstr "SpiderMonkey"
 
 #: src/js/spidermonkey.cpp:756
-#, fuzzy
 msgid "Options specific to Spidermonkey."
-msgstr "Ustawienia dotyczące przeglądania lokalnych plików."
+msgstr "Ustawienia dotyczące Spidermonkey."
 
 #: src/js/spidermonkey.cpp:760
 msgid "Runtime memory limit in bytes."
-msgstr ""
+msgstr "Limit pamięci w bajtach."
 
 #. name:
 #: src/js/spidermonkey.cpp:766
@@ -8934,30 +8924,29 @@ msgstr "Przełącz na implementację ftp biblioteki libcurl."
 
 #: src/protocol/ftp/ftp.c:84 src/protocol/http/http.c:205
 msgid "Curl max receive speed"
-msgstr ""
+msgstr "Maksymalna prędkość pobieranie dla curla"
 
 #: src/protocol/ftp/ftp.c:86 src/protocol/http/http.c:207
 msgid "Max download speed in bytes/s. 0 means unlimited."
-msgstr ""
+msgstr "Maksymalna prędkość pobierania w bajtach na sekundę. 0 oznacza brak limitu."
 
 #: src/protocol/ftp/ftp.c:88 src/protocol/http/http.c:209
-#, fuzzy
 msgid "Curl max send speed"
-msgstr "aktualna prędkość"
+msgstr "Maksymalna prędkość wysyłania dla curla"
 
 #: src/protocol/ftp/ftp.c:90 src/protocol/http/http.c:211
 msgid "Max upload speed in bytes/s. 0 means unlimited."
-msgstr ""
+msgstr "Maksymalna prędkość wysyłania w bajtach na sekundę. 0 oznacza brak limitu."
 
 #: src/protocol/ftp/ftp.c:92 src/protocol/http/http.c:239
 msgid "Curl TLS13 ciphers"
-msgstr ""
+msgstr "Szyfry TLS13 curla"
 
 #: src/protocol/ftp/ftp.c:94 src/protocol/http/http.c:241
 msgid ""
 "Colon separated list of TLS13 ciphers. See https://curl.se/docs/ssl-ciphers."
 "html"
-msgstr ""
+msgstr "Oddzielona dwukropkami lista szyfrów TLS13. Zobacz https://curl.se/docs/ssl-ciphers.html"
 
 #: src/protocol/ftp/ftp.c:97
 msgid "Use passive mode (IPv4)"
@@ -9629,20 +9618,19 @@ msgstr "Skryptowanie"
 
 #
 #: src/scripting/scripting.c:75
-#, fuzzy
 msgid "Document scripting options."
-msgstr "Ustawienia dotyczące dokumentu."
+msgstr "Ustawienia dotyczące skryptów."
 
 #: src/scripting/scripting.c:77
-#, fuzzy
 msgid "Sleep on errors"
-msgstr "Błąd przy usuwaniu"
+msgstr "Wstrzymaj działanie przy błędach"
 
 #: src/scripting/scripting.c:79
 msgid ""
 "In case of errors in scripts an error message is shown. If this option is "
 "enabled ELinks also sleeps for 3 seconds."
-msgstr ""
+msgstr "W przypadku błędów w skryptach wyświetlany jest komunikat błędu. Jeśli ta opcja jest włączona, "
+"oprócz tego ELinks przystaje na 3 sekundy."
 
 #: src/scripting/smjs/action_object.cpp:105
 msgid "Cannot run actions in a tab that doesn't have the focus"
