@@ -8924,7 +8924,7 @@ msgstr "Przełącz na implementację ftp biblioteki libcurl."
 
 #: src/protocol/ftp/ftp.c:84 src/protocol/http/http.c:205
 msgid "Curl max receive speed"
-msgstr "Maksymalna prędkość pobieranie dla curla"
+msgstr "Maksymalna prędkość pobierania dla curla"
 
 #: src/protocol/ftp/ftp.c:86 src/protocol/http/http.c:207
 msgid "Max download speed in bytes/s. 0 means unlimited."
