@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.10.6.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2024-11-04 08:53+0100\n"
+"POT-Creation-Date: 2024-11-04 09:33+0100\n"
 "PO-Revision-Date: 2024-11-04 09:09+0100\n"
 "Last-Translator: Strahinya Radich (Страхиња Радић) <contact@strahinja.org>\n"
 "Language-Team: Serbian <sr@li.org>\n"
@@ -6803,14 +6803,6 @@ msgstr "Турски"
 msgid "Ukrainian"
 msgstr "Украјински"
 
-#: src/js/ecmascript-c.c:57
-msgid "Ecmascript enabled"
-msgstr "Ecmascript активиран"
-
-#: src/js/ecmascript-c.c:59
-msgid "Ecmascript disabled"
-msgstr "Ecmascript деактивиран"
-
 #: src/js/ecmascript.c:73
 msgid "ECMAScript options."
 msgstr "Опције ECMAScript-а."
@@ -6898,6 +6890,14 @@ msgstr ""
 "%d секунди. То вероватно значи да у скрипту постоји\n"
 "грешка и да би могао да заустави цео ELinks, па је зато\n"
 "извршавање скрипта прекинуто."
+
+#: src/js/ecmascript-c.c:57
+msgid "Ecmascript enabled"
+msgstr "Ecmascript активиран"
+
+#: src/js/ecmascript-c.c:59
+msgid "Ecmascript disabled"
+msgstr "Ecmascript деактивиран"
 
 #: src/js/mujs.c:268 src/js/quickjs.c:465 src/js/spidermonkey.cpp:129
 msgid "A script embedded in the current document raised the following:\n"
@@ -8751,7 +8751,7 @@ msgid "Finger"
 msgstr "Finger"
 
 #. name:
-#: src/protocol/fsp/fsp.c:56 src/protocol/fsp/fsp2.c:96
+#: src/protocol/fsp/fsp2.c:96 src/protocol/fsp/fsp.c:56
 msgid "FSP"
 msgstr "FSP"
 
