@@ -9,7 +9,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: ELinks 0.15.GIT\n"
+"Project-Id-Version: ELinks 0.18.GIT\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
 "POT-Creation-Date: 2024-11-04 09:33+0100\n"
 "PO-Revision-Date: 2021-12-02 17:36+0100\n"
