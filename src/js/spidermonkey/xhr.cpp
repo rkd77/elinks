@@ -510,6 +510,7 @@ xhr_getAllResponseHeaders(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		output += h.first + ": " + h.second + "\r\n";
 	}
 	args.rval().setString(JS_NewStringCopyZ(ctx, output.c_str()));
+
 	return true;
 }
 
@@ -1597,7 +1598,8 @@ xhr_get_property_responseText(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setString(JS_NewStringCopyZ(ctx, ""));
 		return true;
 	}
-	args.rval().setString(JS_NewStringCopyZ(ctx, xhr->responseText));
+	JS::ConstUTF8CharsZ u(xhr->responseText, strlen(xhr->responseText));
+	args.rval().setString(JS_NewStringCopyUTF8Z(ctx, u));
 
 	return true;
 }
