@@ -3648,7 +3648,12 @@ js_element_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	}
 	//dom_node_ref(el);
 	JSValue node = argv[0];
-	dom_node *el2 = (dom_node *)(js_getopaque(node, js_element_class_id));
+	dom_node *el2 = (dom_node *)js_getopaque_any(node);
+
+	if (!el2) {
+		return JS_NULL;
+	}
+
 	dom_exception exc;
 	dom_node *spare;
 	exc = dom_node_remove_child(el, el2, &spare);
