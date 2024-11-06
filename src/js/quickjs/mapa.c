@@ -594,10 +594,10 @@ process_xhr_headers(char *head, struct Xhr *x)
 				add_to_string(&hh, normalized_value);
 				mem_free_set(&item->value, hh.source);
 			}
+			mem_free(header);
 		} else {
 			add_hash_item(responseHeaders, header, strlen(header), stracpy(normalized_value));
 		}
-		mem_free(header);
 		mem_free(value);
 	}
 	x->status = status;
