@@ -3187,6 +3187,11 @@ mjs_element_removeChild(js_State *J)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
 	dom_node *el2 = (dom_node *)(mjs_getprivate(J, 1));
+
+	if (!el2) {
+		js_pushnull(J);
+		return;
+	}
 	dom_exception exc;
 	dom_node *spare;
 	exc = dom_node_remove_child(el, el2, &spare);
