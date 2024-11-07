@@ -387,6 +387,9 @@ imported:
 		}
 	}
 
+	if (eof - html >= (sizeof("<![CDATA[") - 1) && !strncmp(html, "<![CDATA[", (sizeof("<![CDATA[") - 1))) {
+		html += (sizeof("<![CDATA[") - 1);
+	}
 	*end = html;
 
 	/* Now look ahead for the script end. The <script> contents is raw
@@ -414,6 +417,7 @@ imported:
 			 * already stretching things a little bit to an
 			 * extreme ;-). */
 		}
+
 
 		if (**end != '<')
 			continue;
