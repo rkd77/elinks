@@ -36,6 +36,7 @@
 #include "js/spidermonkey/form.h"
 #include "js/spidermonkey/heartbeat.h"
 #include "js/spidermonkey/history.h"
+#include "js/spidermonkey/image.h"
 #include "js/spidermonkey/keyboard.h"
 #include "js/spidermonkey/location.h"
 #include "js/spidermonkey/localstorage.h"
@@ -261,7 +262,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	JSObject *console_obj, *document_obj, /* *forms_obj,*/ *history_obj,
 	         *statusbar_obj, *menubar_obj, *navigator_obj, *node_obj, *localstorage_obj, *screen_obj,
 	         *xhr_obj, *event_obj, *keyboardEvent_obj, *messageEvent_obj, *customEvent_obj,
-	         *url_obj, *urlSearchParams_obj, *domparser_obj;
+	         *url_obj, *urlSearchParams_obj, *domparser_obj, *image_obj;
 
 	assert(interpreter);
 	if (!js_module_init_ok) return NULL;
@@ -488,6 +489,16 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 					node_static_props, NULL, "Node");
 
 	if (!node_obj) {
+		goto release_and_fail;
+	}
+
+	image_obj = spidermonkey_InitClass(ctx, global, NULL,
+					&image_class, image_constructor, 0,
+					NULL,
+					NULL,
+					NULL, NULL, "Image");
+
+	if (!image_obj) {
 		goto release_and_fail;
 	}
 
