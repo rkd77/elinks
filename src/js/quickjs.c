@@ -34,6 +34,7 @@
 #include "js/quickjs/fragment.h"
 #include "js/quickjs/heartbeat.h"
 #include "js/quickjs/history.h"
+#include "js/quickjs/image.h"
 #include "js/quickjs/keyboard.h"
 #include "js/quickjs/localstorage.h"
 #include "js/quickjs/location.h"
@@ -354,6 +355,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	js_domparser_init(ctx);
 	js_node_init(ctx);
 	js_fragment_init(ctx);
+	js_image_init(ctx);
 
 	interpreter->document_obj = getDocument(ctx, document->dom);
 
