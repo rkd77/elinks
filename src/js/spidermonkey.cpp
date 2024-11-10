@@ -281,7 +281,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 
 	// JS_SetContextPrivate(ctx, interpreter);
 
-	JS::SetWarningReporter(ctx, error_reporter);
+	// JS::SetWarningReporter(ctx, error_reporter);
 
 	JS_AddInterruptCallback(ctx, heartbeat_callback);
 	JS::RealmOptions options;
