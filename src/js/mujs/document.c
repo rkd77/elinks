@@ -93,7 +93,7 @@ struct mjs_document_private {
 
 static void document_event_handler(dom_event *event, void *pw);
 
-static void *
+void *
 mjs_doc_getprivate(js_State *J, int idx)
 {
 	struct mjs_document_private *priv = (struct mjs_document_private *)js_touserdata(J, idx, "document");

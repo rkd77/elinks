@@ -37,6 +37,7 @@
 #include "js/mujs/element.h"
 #include "js/mujs/event.h"
 #include "js/mujs/history.h"
+#include "js/mujs/image.h"
 #include "js/mujs/keyboard.h"
 #include "js/mujs/localstorage.h"
 #include "js/mujs/location.h"
@@ -166,6 +167,7 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	mjs_url_init(J);
 	mjs_domparser_init(J);
 	mjs_node_init(J);
+	mjs_image_init(J);
 
 	mjs_push_document(J, document->dom);
 
