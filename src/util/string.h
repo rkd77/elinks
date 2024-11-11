@@ -316,6 +316,7 @@ struct ecmascript_string_list_item {
 	LIST_HEAD_EL(struct ecmascript_string_list_item);
 	struct string string;
 	int element_offset;
+	unsigned int started:1;
 };
 struct string *add_to_ecmascript_string_list(LIST_OF(struct ecmascript_string_list_item) *list, const char *string, int length, int element_offset);
 

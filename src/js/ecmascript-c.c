@@ -183,12 +183,13 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 		struct fragment *fragment;
 		size_t len;
 
-		if (string->length == 0)
+		if (string->length == 0 || (*current)->started)
 			continue;
 
 		if (*string->source != '^') {
 			/* Evaluate <script>code</script> snippet */
 			ecmascript_eval(interpreter, string, NULL, (*current)->element_offset);
+			(*current)->started = 1;
 			continue;
 		}
 
@@ -196,15 +197,19 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 		null_char = strchr(string->source + 1, '\0');
 
 		if (!null_char) {
-			continue;
+			return;
 		}
 		len = null_char - string->source - 1;
 
 		uristring = null_char + 1;
-		if (!*uristring) continue;
+		if (!*uristring) {
+			return;
+		}
 
 		uri = get_uri(uristring, URI_BASE);
-		if (!uri) continue;
+		if (!uri) {
+			return;
+		}
 
 		cached = get_redirected_cache_entry(uri);
 
@@ -267,7 +272,7 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 			ERROR("The script of %s was lost in too full a cache!",
 			      uristring);
 #endif
-			continue;
+			return;
 		}
 
 		fragment = get_cache_fragment(cached);
@@ -275,6 +280,7 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 			struct string code = INIT_STRING(fragment->data, (int)fragment->length);
 
 			ecmascript_eval(interpreter, &code, NULL, (*current)->element_offset);
+			(*current)->started = 1;
 		}
 	}
 	check_for_rerender(interpreter, "eval");

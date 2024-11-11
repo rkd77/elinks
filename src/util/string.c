@@ -680,6 +680,7 @@ add_to_ecmascript_string_list(LIST_OF(struct ecmascript_string_list_item) *list,
 	}
 
 	item->element_offset = element_offset;
+	item->started = 0;
 
 	add_to_list_end(*list, item);
 	return string;
