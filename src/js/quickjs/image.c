@@ -23,6 +23,7 @@
 #include "document/html/frames.h"
 #include "document/document.h"
 #include "document/forms.h"
+#include "document/libdom/corestrings.h"
 #include "document/view.h"
 #include "js/ecmascript.h"
 #include "js/quickjs.h"
@@ -73,15 +74,9 @@ js_image_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueC
 		return JS_NULL;
 	}
 
-	dom_string *tag_name = NULL;
-	dom_exception exc = dom_string_create((const uint8_t *)"img", 3, &tag_name);
-
-	if (exc != DOM_NO_ERR || !tag_name) {
-		//dom_node_unref(doc);
-		return JS_NULL;
-	}
+	dom_string *tag_name = dom_string_ref(corestring_dom_IMG);
 	dom_element *element = NULL;
-	exc = dom_document_create_element(doc, tag_name, &element);
+	dom_exception exc = dom_document_create_element(doc, tag_name, &element);
 	dom_string_unref(tag_name);
 
 	if (exc != DOM_NO_ERR || !element) {

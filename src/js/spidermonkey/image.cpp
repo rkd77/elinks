@@ -11,6 +11,7 @@
 #include "elinks.h"
 
 #include "js/libdom/dom.h"
+#include "document/libdom/corestrings.h"
 
 #include "js/spidermonkey/util.h"
 #include <js/BigInt.h>
@@ -67,16 +68,9 @@ image_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
 		return false;
 	}
 	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
-	dom_string *tag_name = NULL;
-	dom_exception exc;
-	exc = dom_string_create((const uint8_t *)"img", 3, &tag_name);
-
-	if (exc != DOM_NO_ERR || !tag_name) {
-		args.rval().setNull();
-		return true;
-	}
+	dom_string *tag_name = dom_string_ref(corestring_dom_IMG);
 	dom_element *element = NULL;
-	exc = dom_document_create_element(doc, tag_name, &element);
+	dom_exception exc = dom_document_create_element(doc, tag_name, &element);
 	dom_string_unref(tag_name);
 
 	if (exc != DOM_NO_ERR || !element) {

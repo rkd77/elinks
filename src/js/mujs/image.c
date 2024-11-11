@@ -8,8 +8,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef CONFIG_LIBDOM
+#include <dom/dom.h>
+#include <dom/bindings/hubbub/parser.h>
+#endif
+
 #include "elinks.h"
 
+#include "document/libdom/corestrings.h"
 #include "document/libdom/doc.h"
 #include "js/ecmascript.h"
 #include "js/libdom/dom.h"
@@ -34,15 +40,9 @@ mjs_image_constructor(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
-	dom_string *tag_name = NULL;
-	dom_exception exc = dom_string_create((const uint8_t *)"img", 3, &tag_name);
-
-	if (exc != DOM_NO_ERR || !tag_name) {
-		js_pushnull(J);
-		return;
-	}
+	dom_string *tag_name = dom_string_ref(corestring_dom_IMG);
 	dom_element *element = NULL;
-	exc = dom_document_create_element(doc, tag_name, &element);
+	dom_exception exc = dom_document_create_element(doc, tag_name, &element);
 	dom_string_unref(tag_name);
 
 	if (exc != DOM_NO_ERR || !element) {
