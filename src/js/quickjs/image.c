@@ -74,10 +74,8 @@ js_image_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueC
 		return JS_NULL;
 	}
 
-	dom_string *tag_name = dom_string_ref(corestring_dom_IMG);
 	dom_element *element = NULL;
-	dom_exception exc = dom_document_create_element(doc, tag_name, &element);
-	dom_string_unref(tag_name);
+	dom_exception exc = dom_document_create_element(doc, corestring_dom_IMG, &element);
 
 	if (exc != DOM_NO_ERR || !element) {
 		//dom_node_unref(doc);

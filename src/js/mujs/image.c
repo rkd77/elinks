@@ -40,10 +40,8 @@ mjs_image_constructor(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
-	dom_string *tag_name = dom_string_ref(corestring_dom_IMG);
 	dom_element *element = NULL;
-	dom_exception exc = dom_document_create_element(doc, tag_name, &element);
-	dom_string_unref(tag_name);
+	dom_exception exc = dom_document_create_element(doc, corestring_dom_IMG, &element);
 
 	if (exc != DOM_NO_ERR || !element) {
 		js_pushnull(J);
