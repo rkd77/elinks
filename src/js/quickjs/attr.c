@@ -157,6 +157,8 @@ getAttr(JSContext *ctx, void *node)
 	JS_SetClassProto(ctx, js_attr_class_id, attr_obj);
 	JS_SetOpaque(attr_obj, node);
 
+	dom_node_ref((dom_attr *)node);
+
 	JSValue rr = JS_DupValue(ctx, attr_obj);
 
 	RETURN_JS(rr);
