@@ -25,6 +25,7 @@ took = [
 'document.images.html',
 'document.links.html',
 'document.location.href.html',
+'document.new.html',
 'document.querySelectorAll.html',
 'document.querySelector.html',
 'domparser.html',
