@@ -1583,62 +1583,6 @@ mjs_document_toString(js_State *J)
 	js_pushstring(J, "[document object]");
 }
 
-int
-mjs_document_init(js_State *J)
-{
-	js_newobject(J);
-	{
-		addmethod(J, "addEventListener", mjs_document_addEventListener, 3);
-		addmethod(J, "createComment",	mjs_document_createComment, 1);
-		addmethod(J, "createDocumentFragment",mjs_document_createDocumentFragment, 0);
-		addmethod(J, "createElement",	mjs_document_createElement, 1);
-		addmethod(J, "createTextNode",	mjs_document_createTextNode, 1);
-		addmethod(J, "dispatchEvent",	mjs_document_dispatchEvent, 1);
-		addmethod(J, "write",		mjs_document_write, 1);
-		addmethod(J, "writeln",		mjs_document_writeln, 1);
-		addmethod(J, "replace",		mjs_document_replace, 2);
-		addmethod(J, "getElementById",	mjs_document_getElementById, 1);
-		addmethod(J, "getElementsByClassName",	mjs_document_getElementsByClassName, 1);
-//		addmethod(J, "getElementsByName",	mjs_document_getElementsByName, 1);
-		addmethod(J, "getElementsByTagName",	mjs_document_getElementsByTagName, 1);
-		addmethod(J, "querySelector",	mjs_document_querySelector, 1);
-		addmethod(J, "querySelectorAll",	mjs_document_querySelectorAll, 1);
-		addmethod(J, "removeEventListener", mjs_document_removeEventListener, 3);
-		addmethod(J, "toString", mjs_document_toString, 0);
-
-		addproperty(J, "anchors", mjs_document_get_property_anchors, NULL);
-		addproperty(J, "baseURI", mjs_document_get_property_baseURI, NULL);
-		addproperty(J, "body", mjs_document_get_property_body, mjs_document_set_property_body);
-#ifdef CONFIG_COOKIES
-		addproperty(J, "cookie", mjs_document_get_property_cookie, mjs_document_set_property_cookie);
-#endif
-		addproperty(J, "charset", mjs_document_get_property_charset, NULL);
-		addproperty(J, "characterSet", mjs_document_get_property_charset, NULL);
-		addproperty(J, "childNodes", mjs_document_get_property_childNodes, NULL);
-		addproperty(J, "defaultView", mjs_document_get_property_defaultView, NULL);
-		addproperty(J, "doctype", mjs_document_get_property_doctype, NULL);
-		addproperty(J, "documentElement", mjs_document_get_property_documentElement, NULL);
-		addproperty(J, "documentURI", mjs_document_get_property_documentURI, NULL);
-		addproperty(J, "domain", mjs_document_get_property_domain, NULL);
-		addproperty(J, "forms", mjs_document_get_property_forms, NULL);
-		addproperty(J, "head", mjs_document_get_property_head, NULL);
-		addproperty(J, "images", mjs_document_get_property_images, NULL);
-		addproperty(J, "implementation", mjs_document_get_property_implementation, NULL);
-		addproperty(J, "inputEncoding", mjs_document_get_property_charset, NULL);
-		addproperty(J, "links", mjs_document_get_property_links, NULL);
-		addproperty(J, "location", mjs_document_get_property_location, mjs_document_set_property_location);
-		addproperty(J, "nodeType", mjs_document_get_property_nodeType, NULL);
-		addproperty(J, "referrer", mjs_document_get_property_referrer, NULL);
-		addproperty(J, "readyState", mjs_document_get_property_readyState, NULL);
-		addproperty(J, "scripts", mjs_document_get_property_scripts, NULL);
-		addproperty(J, "title",	mjs_document_get_property_title, mjs_document_set_property_title); /* TODO: Charset? */
-		addproperty(J, "URL", mjs_document_get_property_url, mjs_document_set_property_url);
-	}
-	js_defglobal(J, "document", JS_DONTENUM);
-
-	return 0;
-}
-
 static void
 mjs_doctype_toString(js_State *J)
 {
@@ -1864,6 +1808,109 @@ mjs_push_document2(js_State *J, void *doc)
 //	}
 }
 
+static void
+mjs_document_fun(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	js_pushundefined(J);
+}
+
+static void
+mjs_document_constructor(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct mjs_document_private *doc_private = (struct mjs_document_private *)mem_calloc(1, sizeof(*doc_private));
+
+	if (!doc_private) {
+		return;
+	}
+	struct string str;
+
+	if (!init_string(&str)) {
+		return;
+	}
+	add_to_string(&str, "<!doctype html>\n<html><head></head><body></body></html>");
+	void *doc = document_parse_text("utf-8", str.source, str.length);
+	done_string(&str);
+
+	js_newobject(J);
+	{
+		js_newuserdata(J, "document", doc_private, mjs_doc_private_finalizer);
+		addmethod(J, "addEventListener", mjs_document_addEventListener, 3);
+		addmethod(J, "createComment",	mjs_document_createComment, 1);
+		addmethod(J, "createDocumentFragment",mjs_document_createDocumentFragment, 0);
+		addmethod(J, "createElement",	mjs_document_createElement, 1);
+		addmethod(J, "createTextNode",	mjs_document_createTextNode, 1);
+		addmethod(J, "dispatchEvent",	mjs_document_dispatchEvent, 1);
+		addmethod(J, "write",		mjs_document_write, 1);
+		addmethod(J, "writeln",		mjs_document_writeln, 1);
+		addmethod(J, "replace",		mjs_document_replace, 2);
+		addmethod(J, "getElementById",	mjs_document_getElementById, 1);
+		addmethod(J, "getElementsByClassName",	mjs_document_getElementsByClassName, 1);
+//		addmethod(J, "getElementsByName",	mjs_document_getElementsByName, 1);
+		addmethod(J, "getElementsByTagName",	mjs_document_getElementsByTagName, 1);
+		addmethod(J, "querySelector",	mjs_document_querySelector, 1);
+		addmethod(J, "querySelectorAll",	mjs_document_querySelectorAll, 1);
+		addmethod(J, "removeEventListener", mjs_document_removeEventListener, 3);
+		addmethod(J, "toString", mjs_document_toString, 0);
+
+		addproperty(J, "anchors", mjs_document_get_property_anchors, NULL);
+		addproperty(J, "baseURI", mjs_document_get_property_baseURI, NULL);
+		addproperty(J, "body", mjs_document_get_property_body, mjs_document_set_property_body);
+#ifdef CONFIG_COOKIES
+		addproperty(J, "cookie", mjs_document_get_property_cookie, mjs_document_set_property_cookie);
+#endif
+		addproperty(J, "charset", mjs_document_get_property_charset, NULL);
+		addproperty(J, "characterSet", mjs_document_get_property_charset, NULL);
+		addproperty(J, "childNodes", mjs_document_get_property_childNodes, NULL);
+		addproperty(J, "currentScript", mjs_document_get_property_currentScript, NULL);
+		addproperty(J, "defaultView", mjs_document_get_property_defaultView, NULL);
+		addproperty(J, "doctype", mjs_document_get_property_doctype, NULL);
+		addproperty(J, "documentElement", mjs_document_get_property_documentElement, NULL);
+		addproperty(J, "documentURI", mjs_document_get_property_documentURI, NULL);
+		addproperty(J, "domain", mjs_document_get_property_domain, NULL);
+		addproperty(J, "forms", mjs_document_get_property_forms, NULL);
+		addproperty(J, "head", mjs_document_get_property_head, NULL);
+		addproperty(J, "images", mjs_document_get_property_images, NULL);
+		addproperty(J, "implementation", mjs_document_get_property_implementation, NULL);
+		addproperty(J, "inputEncoding", mjs_document_get_property_charset, NULL);
+		addproperty(J, "links", mjs_document_get_property_links, NULL);
+		addproperty(J, "location", mjs_document_get_property_location, mjs_document_set_property_location);
+		addproperty(J, "nodeType", mjs_document_get_property_nodeType, NULL);
+		addproperty(J, "readyState", mjs_document_get_property_readyState, NULL);
+		addproperty(J, "referrer", mjs_document_get_property_referrer, NULL);
+		addproperty(J, "scripts", mjs_document_get_property_scripts, NULL);
+		addproperty(J, "title",	mjs_document_get_property_title, mjs_document_set_property_title); /* TODO: Charset? */
+		addproperty(J, "URL", mjs_document_get_property_url, mjs_document_set_property_url);
+	}
+	init_list(doc_private->listeners);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	doc_private->interpreter = interpreter;
+	doc_private->node = doc;
+	doc_private->ref_count = 1;
+	js_copy(J, 0);
+	doc_private->thisval = js_ref(J);
+
+	if (doc) {
+#ifdef ECMASCRIPT_DEBUG
+fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
+#endif
+		dom_node_ref((dom_node *)doc);
+	}
+}
+
+int
+mjs_document_init(js_State *J)
+{
+	js_pushglobal(J);
+	js_newcconstructor(J, mjs_document_fun, mjs_document_constructor, "Document", 0);
+	js_defglobal(J, "Document", JS_DONTENUM);
+	return 0;
+}
 
 static void
 mjs_document_dispatchEvent(js_State *J)

@@ -170,6 +170,7 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	mjs_image_init(J);
 
 	mjs_push_document(J, document->dom);
+	mjs_document_init(J);
 
 	return J;
 #if 0
