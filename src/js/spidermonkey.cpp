@@ -259,7 +259,7 @@ void *
 spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 {
 	JSContext *ctx;
-	JSObject *console_obj, *document_obj, /* *forms_obj,*/ *history_obj,
+	JSObject *console_obj, *document_obj, *Document_obj,  /* *forms_obj,*/ *history_obj,
 	         *statusbar_obj, *menubar_obj, *navigator_obj, *node_obj, *localstorage_obj, *screen_obj,
 	         *xhr_obj, *event_obj, *keyboardEvent_obj, *messageEvent_obj, *customEvent_obj,
 	         *url_obj, *urlSearchParams_obj, *domparser_obj, *image_obj;
@@ -499,6 +499,15 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 					NULL, NULL, "Image");
 
 	if (!image_obj) {
+		goto release_and_fail;
+	}
+
+	Document_obj = spidermonkey_InitClass(ctx, global, NULL,
+					      &document_class, Document_constructor, 0,
+					      document_props,
+					      document_funcs,
+					      NULL, NULL, "Document");
+	if (!Document_obj) {
 		goto release_and_fail;
 	}
 

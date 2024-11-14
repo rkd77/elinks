@@ -2462,3 +2462,43 @@ initDocument(JSContext *ctx, struct ecmascript_interpreter *interpreter, JSObjec
 
 	return true;
 }
+
+bool
+Document_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+	JS::RootedObject newObj(ctx, JS_NewObjectForConstructor(ctx, &document_class, args));
+
+	if (!newObj) {
+		return false;
+	}
+	struct string str;
+
+	if (!init_string(&str)) {
+		return false;
+	}
+	add_to_string(&str, "<!doctype html>\n<html><head></head><body></body></html>");
+	void *doc = document_parse_text("utf-8", str.source, str.length);
+	done_string(&str);
+
+	struct document_private *doc_private = (struct document_private *)mem_calloc(1, sizeof(*doc_private));
+
+	if (!doc_private) {
+		return false;
+	}
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	doc_private->interpreter = interpreter;
+	doc_private->thisval = newObj;
+	doc_private->doc = (dom_document *)doc;
+	init_list(doc_private->listeners);
+	doc_private->ref_count = 1;
+	dom_node_ref(doc);
+	JS::SetReservedSlot(newObj, 0, JS::PrivateValue(doc));
+	JS::SetReservedSlot(newObj, 1, JS::PrivateValue(doc_private));
+	args.rval().setObject(*newObj);
+	return true;
+}
