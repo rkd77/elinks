@@ -2112,6 +2112,98 @@ getDocument2(JSContext *ctx, void *doc)
 	RETURN_JS(document_obj);
 }
 
+static JSValue
+js_document_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(new_target);
+
+	JSValue document_obj = JS_NewObjectClass(ctx, js_document_class_id);
+
+	if (JS_IsException(document_obj)) {
+		return document_obj;
+	}
+	struct js_document_private *doc_private = (struct js_document_private *)mem_calloc(1, sizeof(*doc_private));
+
+	if (!doc_private) {
+		return JS_NULL;
+	}
+	init_list(doc_private->listeners);
+
+	struct string str;
+
+	if (!init_string(&str)) {
+		return JS_NULL;
+	}
+	add_to_string(&str, "<!doctype html>\n<html><head></head><body></body></html>");
+	void *doc = document_parse_text("utf-8", str.source, str.length);
+	done_string(&str);
+
+	if (doc) {
+		dom_node_ref((dom_node *)doc);
+	}
+	doc_private->node = doc;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	doc_private->interpreter = interpreter;
+
+	JS_SetPropertyFunctionList(ctx, document_obj, js_document_proto_funcs, countof(js_document_proto_funcs));
+	JS_SetOpaque(document_obj, doc_private);
+	doc_private->thisval = document_obj;
+
+	RETURN_JS(document_obj);
+}
+
+static void
+JS_NewGlobalCConstructor2(JSContext *ctx, JSValue func_obj, const char *name, JSValueConst proto)
+{
+	REF_JS(func_obj);
+	REF_JS(proto);
+
+	JSValue global_object = JS_GetGlobalObject(ctx);
+
+	JS_DefinePropertyValueStr(ctx, global_object, name,
+		JS_DupValue(ctx, func_obj), JS_PROP_WRITABLE | JS_PROP_CONFIGURABLE);
+	JS_SetConstructor(ctx, func_obj, proto);
+	JS_FreeValue(ctx, func_obj);
+	JS_FreeValue(ctx, global_object);
+}
+
+static JSValueConst
+JS_NewGlobalCConstructor(JSContext *ctx, const char *name, JSCFunction *func, int length, JSValueConst proto)
+{
+	JSValue func_obj;
+	func_obj = JS_NewCFunction2(ctx, func, name, length, JS_CFUNC_constructor_or_func, 0);
+	REF_JS(func_obj);
+	REF_JS(proto);
+
+	JS_NewGlobalCConstructor2(ctx, func_obj, name, proto);
+
+	return func_obj;
+}
+
+int
+js_document_init(JSContext *ctx)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JSValue proto;
+
+	proto = JS_NewObject(ctx);
+	REF_JS(proto);
+
+	JS_SetPropertyFunctionList(ctx, proto, js_document_proto_funcs, countof(js_document_proto_funcs));
+	JS_SetClassProto(ctx, js_document_class_id, proto);
+
+	/* Event object */
+	(void)JS_NewGlobalCConstructor(ctx, "Document", js_document_constructor, 1, proto);
+	//REF_JS(obj);
+	return 0;
+}
+
+
 static void
 document_event_handler(dom_event *event, void *pw)
 {
