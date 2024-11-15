@@ -39,7 +39,8 @@ mjs_image_constructor(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	dom_document *doc = (dom_document *)interpreter->doc;
 	dom_element *element = NULL;
 	dom_exception exc = dom_document_create_element(doc, corestring_dom_IMG, &element);
 
