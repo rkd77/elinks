@@ -82,6 +82,7 @@ took = [
 'fragment.getElementsByTagName.html',
 'fragment.hasChildNodes.html',
 'fragment.new.html',
+'image.new.html',
 'keyboardEvent.html',
 'navigator.appCodeName.html',
 'node.nodeType.html',
