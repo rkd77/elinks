@@ -34,6 +34,7 @@
 #include "js/spidermonkey/domparser.h"
 #include "js/spidermonkey/event.h"
 #include "js/spidermonkey/form.h"
+#include "js/spidermonkey/fragment.h"
 #include "js/spidermonkey/heartbeat.h"
 #include "js/spidermonkey/history.h"
 #include "js/spidermonkey/image.h"
@@ -259,7 +260,7 @@ void *
 spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 {
 	JSContext *ctx;
-	JSObject *console_obj, *document_obj, *Document_obj,  /* *forms_obj,*/ *history_obj,
+	JSObject *console_obj, *document_obj, *Document_obj,  *fragment_obj, /* *forms_obj,*/ *history_obj,
 	         *statusbar_obj, *menubar_obj, *navigator_obj, *node_obj, *localstorage_obj, *screen_obj,
 	         *xhr_obj, *event_obj, *keyboardEvent_obj, *messageEvent_obj, *customEvent_obj,
 	         *url_obj, *urlSearchParams_obj, *domparser_obj, *image_obj;
@@ -510,6 +511,17 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!Document_obj) {
 		goto release_and_fail;
 	}
+
+	fragment_obj = spidermonkey_InitClass(ctx, global, NULL,
+					      &fragment_class, DocumentFragment_constructor, 0,
+					      fragment_props,
+					      fragment_funcs,
+					      NULL, NULL, "DocumentFragment");
+	if (!fragment_obj) {
+		goto release_and_fail;
+	}
+
+
 
 #if 1
 	// Register a hook in order to provide modules

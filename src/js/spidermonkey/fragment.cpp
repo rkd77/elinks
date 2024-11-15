@@ -2276,6 +2276,51 @@ getDocumentFragment(JSContext *ctx, void *node)
 	return el;
 }
 
+bool
+DocumentFragment_constructor(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject newObj(ctx, JS_NewObjectForConstructor(ctx, &fragment_class, args));
+
+	if (!newObj) {
+		return false;
+	}
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	JS::RootedObject r_doc(ctx, interpreter->document_obj);
+	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(r_doc, 0);
+
+	if (!doc) {
+		return false;
+	}
+	struct fragment_private *el_private = (struct fragment_private *)mem_calloc(1, sizeof(*el_private));
+
+	if (!el_private) {
+		return false;
+	}
+	dom_document_fragment *fragment = NULL;
+	dom_exception exc = dom_document_create_document_fragment(doc, &fragment);
+
+	if (exc != DOM_NO_ERR || !fragment) {
+		mem_free(el_private);
+		return false;
+	}
+	init_list(el_private->listeners);
+	el_private->ref_count = 1;
+	el_private->node = (dom_node *)fragment;
+	el_private->thisval = newObj;
+	dom_node_ref((dom_node *)fragment);
+
+	JS::SetReservedSlot(newObj, 0, JS::PrivateValue(fragment));
+	JS::SetReservedSlot(newObj, 1, JS::PrivateValue(el_private));
+	args.rval().setObject(*newObj);
+
+	return true;
+}
+
 #if 0
 void
 check_fragment_event(void *interp, void *elem, const char *event_name, struct term_event *ev)
