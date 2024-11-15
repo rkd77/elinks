@@ -31,6 +31,7 @@
 #include "js/quickjs/collection.h"
 #include "js/quickjs/dataset.h"
 #include "js/quickjs/domrect.h"
+#include "js/quickjs/document.h"
 #include "js/quickjs/element.h"
 #include "js/quickjs/event.h"
 #include "js/quickjs/fragment.h"
@@ -1646,6 +1647,80 @@ static JSClassDef js_fragment_class = {
 	.gc_mark = js_fragment_mark,
 };
 
+static JSValue
+js_DocumentFragment_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(new_target);
+
+	JSValue obj = JS_NewObjectClass(ctx, js_fragment_class_id);
+	REF_JS(obj);
+
+	if (JS_IsException(obj)) {
+		return obj;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(interpreter->document_obj);
+
+	if (!doc) {
+		return JS_NULL;
+	}
+	//dom_node_ref(doc);
+	dom_document_fragment *fragment = NULL;
+	dom_exception exc = dom_document_create_document_fragment(doc, &fragment);
+
+	if (exc != DOM_NO_ERR || !fragment) {
+		//dom_node_unref(doc);
+		return JS_NULL;
+	}
+	//dom_node_unref(doc);
+	struct js_fragment_private *el_private = (struct js_fragment_private *)mem_calloc(1, sizeof(*el_private));
+
+	if (!el_private) {
+		return JS_NULL;
+	}
+	init_list(el_private->listeners);
+	el_private->node = fragment;
+
+	JS_SetPropertyFunctionList(ctx, obj, js_fragment_proto_funcs, countof(js_fragment_proto_funcs));
+	JS_SetClassProto(ctx, js_fragment_class_id, obj);
+	JS_SetOpaque(obj, el_private);
+
+	JS_DupValue(ctx, obj);
+
+	return obj;
+}
+
+static void
+JS_NewGlobalCConstructor2(JSContext *ctx, JSValue func_obj, const char *name, JSValueConst proto)
+{
+	REF_JS(func_obj);
+	REF_JS(proto);
+
+	JSValue global_object = JS_GetGlobalObject(ctx);
+
+	JS_DefinePropertyValueStr(ctx, global_object, name,
+		JS_DupValue(ctx, func_obj), JS_PROP_WRITABLE | JS_PROP_CONFIGURABLE);
+	JS_SetConstructor(ctx, func_obj, proto);
+	JS_FreeValue(ctx, func_obj);
+	JS_FreeValue(ctx, global_object);
+}
+
+static JSValueConst
+JS_NewGlobalCConstructor(JSContext *ctx, const char *name, JSCFunction *func, int length, JSValueConst proto)
+{
+	JSValue func_obj;
+	func_obj = JS_NewCFunction2(ctx, func, name, length, JS_CFUNC_constructor_or_func, 0);
+	REF_JS(func_obj);
+	REF_JS(proto);
+
+	JS_NewGlobalCConstructor2(ctx, func_obj, name, proto);
+
+	return func_obj;
+}
+
 int
 js_fragment_init(JSContext *ctx)
 {
@@ -1664,6 +1739,10 @@ js_fragment_init(JSContext *ctx)
 	JS_SetPropertyFunctionList(ctx, fragment_proto, js_fragment_proto_funcs, countof(js_fragment_proto_funcs));
 	JS_SetClassProto(ctx, js_fragment_class_id, fragment_proto);
 	JS_SetPropertyStr(ctx, global_obj, "DocumentFragment", JS_DupValue(ctx, fragment_proto));
+
+	/* Event object */
+	(void)JS_NewGlobalCConstructor(ctx, "DocumentFragment", js_DocumentFragment_constructor, 1, fragment_proto);
+	//REF_JS(obj);
 
 	JS_FreeValue(ctx, global_obj);
 
