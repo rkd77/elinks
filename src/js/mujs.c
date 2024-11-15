@@ -36,6 +36,7 @@
 #include "js/mujs/domparser.h"
 #include "js/mujs/element.h"
 #include "js/mujs/event.h"
+#include "js/mujs/fragment.h"
 #include "js/mujs/history.h"
 #include "js/mujs/image.h"
 #include "js/mujs/keyboard.h"
@@ -171,6 +172,7 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 
 	mjs_push_document(J, document->dom);
 	mjs_document_init(J);
+	mjs_fragment_init(J);
 
 	return J;
 #if 0

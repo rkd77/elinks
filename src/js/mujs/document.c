@@ -1715,12 +1715,12 @@ mjs_push_document(js_State *J, void *doc)
 		addproperty(J, "title",	mjs_document_get_property_title, mjs_document_set_property_title); /* TODO: Charset? */
 		addproperty(J, "URL", mjs_document_get_property_url, mjs_document_set_property_url);
 	}
-	js_defglobal(J, "document", JS_DONTENUM);
+	js_setglobal(J, "document");
 
 	init_list(doc_private->listeners);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	doc_private->interpreter = interpreter;
-	doc_private->node = doc;
+	interpreter->doc = doc_private->node = doc;
 	doc_private->ref_count = 1;
 	doc_private->thisval = js_ref(J);
 	if (doc) {

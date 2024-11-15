@@ -112,6 +112,7 @@ struct ecmascript_interpreter {
 #endif
 #ifdef CONFIG_MUJS
 	const char *fun;
+	void *doc;
 #endif
 	int element_offset;
 	unsigned int changed:1;

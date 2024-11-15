@@ -1350,13 +1350,91 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	}
 }
 
+static void
+mjs_DocumentFragment_fun(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	js_pushundefined(J);
+}
+
+static void
+mjs_DocumentFragment_constructor(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	dom_document *doc = (dom_document *)interpreter->doc;
+
+	if (!doc) {
+		js_pushnull(J);
+		return;
+	}
+	dom_document_fragment *fragment = NULL;
+	dom_exception exc = dom_document_create_document_fragment(doc, &fragment);
+
+	if (exc != DOM_NO_ERR || !fragment) {
+		js_pushnull(J);
+		return;
+	}
+	struct mjs_fragment_private *el_private = (struct mjs_fragment_private *)mem_calloc(1, sizeof(*el_private));
+
+	if (!el_private) {
+		dom_node_unref((dom_node *)fragment);
+		js_pushnull(J);
+		return;
+	}
+	el_private->node = fragment;
+
+	js_newobject(J);
+	{
+		js_copy(J, 0);
+		el_private->thisval = js_ref(J);
+		js_newuserdata(J, "fragment", el_private, mjs_fragment_finalizer);
+		addmethod(J, "addEventListener", mjs_fragment_addEventListener, 3);
+		addmethod(J, "appendChild",mjs_fragment_appendChild, 1);
+		addmethod(J, "cloneNode",	mjs_fragment_cloneNode, 1);
+		addmethod(J, "contains",	mjs_fragment_contains, 1);
+		addmethod(J, "dispatchEvent",	mjs_fragment_dispatchEvent, 1);
+		addmethod(J, "hasChildNodes",	mjs_fragment_hasChildNodes, 0);
+		addmethod(J, "insertBefore",	mjs_fragment_insertBefore, 2);
+		addmethod(J, "isEqualNode",	mjs_fragment_isEqualNode, 1);
+		addmethod(J, "isSameNode",		mjs_fragment_isSameNode, 1);
+		addmethod(J, "querySelector",	mjs_fragment_querySelector, 1);
+		addmethod(J, "querySelectorAll",	mjs_fragment_querySelectorAll, 1);
+		addmethod(J, "removeChild",	mjs_fragment_removeChild, 1);
+		addmethod(J, "removeEventListener", mjs_fragment_removeEventListener, 3);
+		addmethod(J, "toString",		mjs_fragment_toString, 0);
+
+		addproperty(J, "children",	mjs_fragment_get_property_children, NULL);
+		addproperty(J, "childElementCount",	mjs_fragment_get_property_childElementCount, NULL);
+		addproperty(J, "childNodes",	mjs_fragment_get_property_childNodes, NULL);
+		addproperty(J, "firstChild",	mjs_fragment_get_property_firstChild, NULL);
+		addproperty(J, "firstElementChild",	mjs_fragment_get_property_firstElementChild, NULL);
+		addproperty(J, "lastChild",	mjs_fragment_get_property_lastChild, NULL);
+		addproperty(J, "lastElementChild",	mjs_fragment_get_property_lastElementChild, NULL);
+////		addproperty(J, "nextElementSibling",	mjs_fragment_get_property_nextElementSibling, NULL);
+		addproperty(J, "nextSibling",	mjs_fragment_get_property_nextSibling, NULL);
+		addproperty(J, "nodeName",	mjs_fragment_get_property_nodeName, NULL);
+		addproperty(J, "nodeType",	mjs_fragment_get_property_nodeType, NULL);
+		addproperty(J, "nodeValue",	mjs_fragment_get_property_nodeValue, mjs_fragment_set_property_nodeValue);
+		addproperty(J, "ownerDocument",	mjs_fragment_get_property_ownerDocument, NULL);
+		addproperty(J, "parentElement",	mjs_fragment_get_property_parentElement, NULL);
+		addproperty(J, "parentNode",	mjs_fragment_get_property_parentNode, NULL);
+////		addproperty(J, "previousElementSibling",	mjs_fragment_get_property_previousElementSibling, NULL);
+		addproperty(J, "previousSibling",	mjs_fragment_get_property_previousSibling, NULL);
+		addproperty(J, "textContent",	mjs_fragment_get_property_textContent, mjs_fragment_set_property_textContent);
+	}
+}
+
 int
 mjs_fragment_init(js_State *J)
 {
-#if 0
-	mjs_push_node(J, NULL);
-	js_defglobal(J, "fragment", JS_DONTENUM);
-#endif
+	js_pushglobal(J);
+	js_newcconstructor(J, mjs_DocumentFragment_fun, mjs_DocumentFragment_constructor, "DocumentFragment", 0);
+	js_defglobal(J, "DocumentFragment", JS_DONTENUM);
 	return 0;
 }
 
