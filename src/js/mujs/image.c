@@ -48,6 +48,28 @@ mjs_image_constructor(js_State *J)
 		js_pushnull(J);
 		return;
 	}
+	const char *width = js_tostring(J, 1);
+
+	if (width) {
+		dom_string *value_str = NULL;
+		exc = dom_string_create((const uint8_t *)width, strlen(width), &value_str);
+
+		if (exc == DOM_NO_ERR) {
+			(void)dom_element_set_attribute(element, corestring_dom_width, value_str);
+			dom_string_unref(value_str);
+		}
+	}
+	const char *height = js_tostring(J, 2);
+
+	if (height) {
+		dom_string *value_str = NULL;
+		exc = dom_string_create((const uint8_t *)height, strlen(height), &value_str);
+
+		if (exc == DOM_NO_ERR) {
+			(void)dom_element_set_attribute(element, corestring_dom_height, value_str);
+			dom_string_unref(value_str);
+		}
+	}
 	mjs_push_node(J, element);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);

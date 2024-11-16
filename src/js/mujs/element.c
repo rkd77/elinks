@@ -615,6 +615,32 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 }
 
 static void
+mjs_element_get_property_height(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+	dom_string *h = NULL;
+	dom_exception exc;
+
+	if (!el) {
+		js_pushnull(J);
+		return;
+	}
+	exc = dom_element_get_attribute(el, corestring_dom_height, &h);
+
+	if (exc != DOM_NO_ERR || !h) {
+		js_pushnumber(J, 0);
+		return;
+	}
+	int height = atoi(dom_string_data(h));
+	dom_string_unref(h);
+
+	js_pushnumber(J, height);
+}
+
+static void
 mjs_element_get_property_href(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1458,6 +1484,32 @@ mjs_element_get_property_outerHtml(js_State *J)
 	ecmascript_walk_tree(&buf, el, false, false);
 	js_pushstring(J, buf.source);
 	done_string(&buf);
+}
+
+static void
+mjs_element_get_property_width(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+	dom_string *w = NULL;
+	dom_exception exc;
+
+	if (!el) {
+		js_pushnull(J);
+		return;
+	}
+	exc = dom_element_get_attribute(el, corestring_dom_width, &w);
+
+	if (exc != DOM_NO_ERR || !w) {
+		js_pushnumber(J, 0);
+		return;
+	}
+	int width = atoi(dom_string_data(w));
+	dom_string_unref(w);
+
+	js_pushnumber(J, width);
 }
 
 static void
@@ -3430,6 +3482,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		addproperty(J, "dir",	mjs_element_get_property_dir, mjs_element_set_property_dir);
 		addproperty(J, "firstChild",	mjs_element_get_property_firstChild, NULL);
 		addproperty(J, "firstElementChild",	mjs_element_get_property_firstElementChild, NULL);
+		addproperty(J, "height",	mjs_element_get_property_height, NULL);
 		addproperty(J, "href",	mjs_element_get_property_href, mjs_element_set_property_href);
 		addproperty(J, "id",	mjs_element_get_property_id, mjs_element_set_property_id);
 		addproperty(J, "innerHTML",	mjs_element_get_property_innerHtml, mjs_element_set_property_innerHtml);
@@ -3458,6 +3511,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		addproperty(J, "textContent",	mjs_element_get_property_textContent, mjs_element_set_property_textContent);
 		addproperty(J, "title",	mjs_element_get_property_title, mjs_element_set_property_title);
 		addproperty(J, "value", mjs_element_get_property_value, mjs_element_set_property_value);
+		addproperty(J, "width",	mjs_element_get_property_width, NULL);
 	}
 }
 
