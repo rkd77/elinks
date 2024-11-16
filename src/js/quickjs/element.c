@@ -707,6 +707,32 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 }
 
 static JSValue
+js_element_get_property_height(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_string *h = NULL;
+	dom_exception exc;
+
+	if (!el) {
+		return JS_NULL;
+	}
+	exc = dom_element_get_attribute(el, corestring_dom_height, &h);
+
+	if (exc != DOM_NO_ERR || !h) {
+		return JS_NewInt32(ctx, 0);
+	}
+	int height = atoi(dom_string_data(h));
+	dom_string_unref(h);
+
+	return JS_NewInt32(ctx, height);
+}
+
+static JSValue
 js_element_get_property_href(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1662,6 +1688,32 @@ js_element_get_property_textContent(JSContext *ctx, JSValueConst this_val)
 	//dom_node_unref(el);
 
 	RETURN_JS(ret);
+}
+
+static JSValue
+js_element_get_property_width(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_string *w = NULL;
+	dom_exception exc;
+
+	if (!el) {
+		return JS_NULL;
+	}
+	exc = dom_element_get_attribute(el, corestring_dom_width, &w);
+
+	if (exc != DOM_NO_ERR || !w) {
+		return JS_NewInt32(ctx, 0);
+	}
+	int width = atoi(dom_string_data(w));
+	dom_string_unref(w);
+
+	return JS_NewInt32(ctx, width);
 }
 
 static JSValue
@@ -3804,6 +3856,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("dir",	js_element_get_property_dir, js_element_set_property_dir),
 	JS_CGETSET_DEF("firstChild",	js_element_get_property_firstChild, NULL),
 	JS_CGETSET_DEF("firstElementChild",	js_element_get_property_firstElementChild, NULL),
+	JS_CGETSET_DEF("height",	js_element_get_property_height, NULL),
 	JS_CGETSET_DEF("href",	js_element_get_property_href, js_element_set_property_href),
 	JS_CGETSET_DEF("id",	js_element_get_property_id, js_element_set_property_id),
 	JS_CGETSET_DEF("innerHTML",	js_element_get_property_innerHtml, js_element_set_property_innerHtml),
@@ -3832,6 +3885,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("textContent",	js_element_get_property_textContent, js_element_set_property_textContent), // Node
 	JS_CGETSET_DEF("title",	js_element_get_property_title, js_element_set_property_title),
 	JS_CGETSET_DEF("value",	js_element_get_property_value, js_element_set_property_value),
+	JS_CGETSET_DEF("width",	js_element_get_property_width, NULL),
 	JS_CFUNC_DEF("addEventListener",	3, js_element_addEventListener),
 	JS_CFUNC_DEF("appendChild",	1, js_element_appendChild), // Node
 	JS_CFUNC_DEF("blur",		0, js_element_blur),

@@ -81,6 +81,38 @@ js_image_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueC
 		//dom_node_unref(doc);
 		return JS_NULL;
 	}
+
+	if (argc > 0) {
+		size_t width_len;
+		const char *width = JS_ToCStringLen(ctx, &width_len, argv[0]);
+
+		if (width) {
+			dom_string *value_str = NULL;
+			exc = dom_string_create((const uint8_t *)width, width_len, &value_str);
+			JS_FreeCString(ctx, width);
+
+			if (exc == DOM_NO_ERR) {
+				(void)dom_element_set_attribute(element, corestring_dom_width, value_str);
+				dom_string_unref(value_str);
+			}
+		}
+	}
+
+	if (argc > 1) {
+		size_t height_len;
+		const char *height = JS_ToCStringLen(ctx, &height_len, argv[1]);
+
+		if (height) {
+			dom_string *value_str = NULL;
+			exc = dom_string_create((const uint8_t *)height, height_len, &value_str);
+			JS_FreeCString(ctx, height);
+
+			if (exc == DOM_NO_ERR) {
+				(void)dom_element_set_attribute(element, corestring_dom_height, value_str);
+				dom_string_unref(value_str);
+			}
+		}
+	}
 	//dom_node_unref(doc);
 	JSValue rr = getNode(ctx, element);
 #ifdef ECMASCRIPT_DEBUG
