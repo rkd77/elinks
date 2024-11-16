@@ -75,6 +75,40 @@ image_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
 		args.rval().setNull();
 		return true;
 	}
+
+	if (argc > 0) {
+		char *width = jsval_to_string(ctx, args[0]);
+
+		if (width) {
+			size_t width_len = strlen(width);
+			dom_string *value_str = NULL;
+
+			exc = dom_string_create((const uint8_t *)width, width_len, &value_str);
+			mem_free(width);
+
+			if (exc == DOM_NO_ERR) {
+				(void)dom_element_set_attribute(element, corestring_dom_width, value_str);
+				dom_string_unref(value_str);
+			}
+		}
+	}
+
+	if (argc > 1) {
+		char *height = jsval_to_string(ctx, args[1]);
+
+		if (height) {
+			size_t height_len = strlen(height);
+			dom_string *value_str = NULL;
+
+			exc = dom_string_create((const uint8_t *)height, height_len, &value_str);
+			mem_free(height);
+
+			if (exc == DOM_NO_ERR) {
+				(void)dom_element_set_attribute(element, corestring_dom_height, value_str);
+				dom_string_unref(value_str);
+			}
+		}
+	}
 	JSObject *obj = getNode(ctx, element);
 	args.rval().setObject(*obj);
 

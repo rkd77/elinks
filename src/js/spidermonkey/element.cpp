@@ -125,6 +125,8 @@ static bool element_get_property_title(JSContext *ctx, unsigned int argc, JS::Va
 static bool element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_width(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_height(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 
 struct ele_listener {
@@ -183,6 +185,7 @@ JSPropertySpec element_props[] = {
 	JS_PSGS("dir",	element_get_property_dir, element_set_property_dir, JSPROP_ENUMERATE),
 	JS_PSG("firstChild",	element_get_property_firstChild, JSPROP_ENUMERATE),
 	JS_PSG("firstElementChild",	element_get_property_firstElementChild, JSPROP_ENUMERATE),
+	JS_PSG("height",		element_get_property_height, JSPROP_ENUMERATE),
 	JS_PSGS("href",	element_get_property_href, element_set_property_href, JSPROP_ENUMERATE),
 	JS_PSGS("id",	element_get_property_id, element_set_property_id, JSPROP_ENUMERATE),
 	JS_PSGS("innerHTML",	element_get_property_innerHtml, element_set_property_innerHtml, JSPROP_ENUMERATE),
@@ -211,6 +214,7 @@ JSPropertySpec element_props[] = {
 	JS_PSGS("textContent",	element_get_property_textContent, element_set_property_textContent, JSPROP_ENUMERATE),
 	JS_PSGS("title",	element_get_property_title, element_set_property_title, JSPROP_ENUMERATE),
 	JS_PSGS("value",	element_get_property_value, element_set_property_value, JSPROP_ENUMERATE),
+	JS_PSG("width",		element_get_property_width, JSPROP_ENUMERATE),
 	JS_PS_END
 };
 
@@ -1141,6 +1145,66 @@ element_get_property_firstElementChild(JSContext *ctx, unsigned int argc, JS::Va
 	}
 	dom_nodelist_unref(nodes);
 	args.rval().setNull();
+
+	return true;
+}
+
+static bool
+element_get_property_height(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	vs = interpreter->vs;
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_string *h = NULL;
+	dom_exception exc;
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+	exc = dom_element_get_attribute(el, corestring_dom_height, &h);
+
+	if (exc != DOM_NO_ERR || !h) {
+		args.rval().setInt32(0);
+		return true;
+	}
+	int height = atoi(dom_string_data(h));
+	args.rval().setInt32(height);
+	dom_string_unref(h);
 
 	return true;
 }
@@ -2833,6 +2897,67 @@ element_get_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *v
 
 	return true;
 }
+
+static bool
+element_get_property_width(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	vs = interpreter->vs;
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_string *w = NULL;
+	dom_exception exc;
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+	exc = dom_element_get_attribute(el, corestring_dom_width, &w);
+
+	if (exc != DOM_NO_ERR || !w) {
+		args.rval().setInt32(0);
+		return true;
+	}
+	int width = atoi(dom_string_data(w));
+	args.rval().setInt32(width);
+	dom_string_unref(w);
+
+	return true;
+}
+
 
 static bool
 element_set_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp)
