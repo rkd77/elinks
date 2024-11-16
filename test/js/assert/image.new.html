@@ -7,6 +7,10 @@ function myFunction() {
   var image = new Image;
   console.assert(image.nodeType === 1, 'Image type 1');
   console.assert(image.tagName === 'IMG', 'IMG');
+
+  var im2 = new Image(100, 200);
+  console.assert(im2.width === 100, 'width 100');
+  console.assert(im2.height === 200, 'height 200');
 }
 console.error('image.new.html');
 myFunction();
