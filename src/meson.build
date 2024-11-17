@@ -47,6 +47,10 @@ if compiler.has_argument('-Wno-builtin-declaration-mismatch')
 	extra_args += ['-Wno-builtin-declaration-mismatch']
 endif
 
+if compiler.has_argument('-Wno-array-bounds')
+	extra_args += ['-Wno-array-bounds']
+endif
+
 extra_cpp_args = extra_args
 extra_cpp_args += extracppflags
 
