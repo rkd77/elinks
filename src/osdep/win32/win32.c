@@ -166,7 +166,7 @@ int
 exe(char *path)
 {
 	int rc;
-	char *shell = get_shell();
+	const char *shell = get_shell();
 	char *x = *path != '"' ? " /c start /wait " : " /c start /wait \"\" ";
 	char *p = malloc((strlen(shell) + strlen(x) + strlen(path)) * 2 + 1);
 
@@ -248,7 +248,7 @@ get_input_handle(void)
 		SetConsoleMode(hStdIn, ENABLE_EXTENDED_FLAGS);
 		SetConsoleMode(hStdIn, (ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT));
 	}
-	return (int) hStdIn;
+	return (int)(intptr_t)hStdIn;
 }
 
 int
@@ -263,7 +263,7 @@ get_output_handle(void)
 		GetConsoleMode(hStdOut, &dwMode);
 		SetConsoleMode(hStdOut, dwMode);
 	}
-	return (int) hStdOut;
+	return (int)(intptr_t)hStdOut;
 }
 
 int
