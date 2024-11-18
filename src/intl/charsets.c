@@ -105,7 +105,6 @@ struct codepage_desc {
  * compiler emits global definitions for the symbols so that the
  * functions can be called from other translation units.  */
 NONSTATIC_INLINE char *encode_utf8(unicode_val_T u);
-NONSTATIC_INLINE int utf8charlen(const char *p);
 NONSTATIC_INLINE unicode_val_T utf8_to_unicode(char **string,
 					       const char *end);
 
