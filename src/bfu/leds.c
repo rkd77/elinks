@@ -242,15 +242,13 @@ static int
 draw_temperature(struct session *ses, int xpos, int ypos, struct color_pair *color)
 {
 	struct terminal *term = ses->tab->term;
-	FILE *f;
 	int temp = 0;
 	int ret;
 	struct string text;
 	int i;
 	int length;
-	char *pos, *end;
-
-	f = fopen(get_leds_temperature_filename(), "r");
+	char *pos;
+	FILE *f = fopen(get_leds_temperature_filename(), "r");
 
 	if (!f) {
 		return 0;
@@ -268,10 +266,10 @@ draw_temperature(struct session *ses, int xpos, int ypos, struct color_pair *col
 	add_format_to_string(&text, "[%d°C]", (int)(temp * 0.001 + 0.5));
 #ifdef CONFIG_UTF8
 	length = utf8_ptr2cells(text.source, NULL);
+	char *end = text.source + text.length;
 #else
 	length = text.length;
 #endif
-	end = text.source + text.length;
 	for (i = 0, pos = text.source; i < length; i++) {
 #ifdef CONFIG_UTF8
 		unicode_val_T data = utf8_to_unicode(&pos, end);
