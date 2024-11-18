@@ -84,12 +84,12 @@ static const char *keymap_2[] = {
 static enum fd_types
 what_fd_type(int *fd)
 {
-	if (*fd == (int)GetStdHandle(STD_INPUT_HANDLE)
-	    || *fd == (int)GetStdHandle(STD_OUTPUT_HANDLE)
-	    || *fd == (int)GetStdHandle(STD_ERROR_HANDLE))
+	if (*fd == (int)(intptr_t)GetStdHandle(STD_INPUT_HANDLE)
+	    || *fd == (int)(intptr_t)GetStdHandle(STD_OUTPUT_HANDLE)
+	    || *fd == (int)(intptr_t)GetStdHandle(STD_ERROR_HANDLE))
 		return FDT_TERMINAL;
 
-	if (GetFileType((HANDLE) *fd) == FILE_TYPE_PIPE)
+	if (GetFileType((HANDLE)(intptr_t)*fd) == FILE_TYPE_PIPE)
 		return FDT_PIPE;
 
 	if (*fd >= SOCK_SHIFT) {
@@ -143,11 +143,9 @@ console_mouse_read(const MOUSE_EVENT_RECORD *mer, char *buf, int max)
 	static int prev_buttons;
 	struct interlink_event ev;
 	struct interlink_event_mouse mouse;
-	int len;
 	int buttons;
 	int change;
 	int wheeled;
-	int extended_button;
 	int16_t wdy;
 
 	mouse.x = mer->dwMousePosition.X;
@@ -189,18 +187,6 @@ console_mouse_read(const MOUSE_EVENT_RECORD *mer, char *buf, int max)
 	}
 
 	return 0;
-}
-
-static int
-init_mouse(int cons, int suspend)
-{
-	return 1;
-}
-
-static int
-done_mouse(void)
-{
-	return 1;
 }
 
 void *
@@ -303,7 +289,7 @@ win32_write(int fd, const void *buf, unsigned len)
 		break;
 
 	case FDT_PIPE:
-		WriteFile((HANDLE) fd, buf, len, &written, NULL);
+		WriteFile((HANDLE)(intptr_t)fd, buf, len, &written, NULL);
 		rc = written;
 		if (rc != len)
 			errno = GetLastError();
@@ -312,10 +298,10 @@ win32_write(int fd, const void *buf, unsigned len)
 	case FDT_TERMINAL:
 		if (isatty(STDOUT_FILENO) > 0) {
 #if 0
-			WriteConsole ((HANDLE) fd, buf, len, &written, NULL);
+			WriteConsole ((HANDLE)(intptr_t)fd, buf, len, &written, NULL);
 			rc = written;
 #else
-			rc = VT100_decode((HANDLE) fd, buf, len);
+			rc = VT100_decode((HANDLE)(intptr_t)fd, buf, len);
 #endif
 		} else {
 			/* stdout redirected */
@@ -349,14 +335,14 @@ win32_read(int fd, void *buf, unsigned len)
 		break;
 
 	case FDT_PIPE:
-		if (!ReadFile((HANDLE) fd, buf, len, &Read, NULL))
+		if (!ReadFile((HANDLE)(intptr_t)fd, buf, len, &Read, NULL))
 			rc = -1;
 		else
 			rc = Read;
 		break;
 
 	case FDT_TERMINAL:
-		rc = console_read((HANDLE) fd, buf, len, NULL);
+		rc = console_read((HANDLE)(intptr_t)fd, buf, len, NULL);
 		if (rc == 0)
 			TRACE("read 0 !!");
 		break;
@@ -386,7 +372,7 @@ win32_close(int fd)
 		break;
 
 	case FDT_PIPE:
-		if (CloseHandle((HANDLE)fd))
+		if (CloseHandle((HANDLE)(intptr_t)fd))
 			rc = 0;
 		break;
 
@@ -425,7 +411,7 @@ win32_ioctl(int fd, long option, int *flag)
 
 		mode = flg ? PIPE_NOWAIT : PIPE_WAIT;
 		mode |= PIPE_READMODE_BYTE;
-		SetNamedPipeHandleState((HANDLE) fd, &mode, NULL, NULL);
+		SetNamedPipeHandleState((HANDLE)(intptr_t)fd, &mode, NULL, NULL);
 		rc = 0;
 		break;
 
@@ -574,8 +560,8 @@ win32_pipe(int *fds)
 		return (-1);
 	}
 
-	fds[0] = (int) rd_pipe;
-	fds[1] = (int) wr_pipe;
+	fds[0] = (int)(intptr_t)rd_pipe;
+	fds[1] = (int)(intptr_t)wr_pipe;
 
 	return 0;
 }
@@ -583,7 +569,7 @@ win32_pipe(int *fds)
 static const char *
 timeval_str(const struct timeval *tv)
 {
-	static unsigned char buf[30];
+	static char buf[30];
 
 	snprintf(buf, sizeof(buf), "%ld.%03ld", tv->tv_sec, tv->tv_usec/1000);
 
@@ -632,7 +618,7 @@ static int
 select_read(int fd, struct fd_set *rd)
 {
 	int rc = 0;
-	HANDLE hnd = (HANDLE) fd;
+	HANDLE hnd = (HANDLE)(intptr_t)fd;
 
 	if (GetFileType(hnd) == FILE_TYPE_PIPE) {
 		DWORD read = 0;
@@ -647,7 +633,7 @@ select_read(int fd, struct fd_set *rd)
 			rc++;
 		}
 	} else {
-		hnd = (HANDLE) _get_osfhandle(fd);
+		hnd = (HANDLE)_get_osfhandle(fd);
 		if (WaitForSingleObject(hnd, 0) == WAIT_OBJECT_0) {
 			FD_SET (fd, rd);
 			rc++;
@@ -719,7 +705,7 @@ int win32_select (int num_fds, struct fd_set *rd, struct fd_set *wr,
 		struct fd_set *ex, struct timeval *tv)
 {
 	struct fd_set tmp_rd, tmp_ex;
-	struct timeval expiry, start_time;
+	struct timeval expiry = {0};
 	int    fd, rc;
 	BOOL   expired = FALSE;
 
@@ -734,6 +720,7 @@ int win32_select (int num_fds, struct fd_set *rd, struct fd_set *wr,
 	FD_ZERO(&tmp_ex);
 
 	if (tv) {
+		struct timeval start_time;
 		gettimeofday(&start_time, NULL);
 
 		expiry.tv_sec  = start_time.tv_sec  + tv->tv_sec;
