@@ -500,7 +500,7 @@ memacpy_u(char *text, int textlen, int utf8)
 	mem[textlen] = 0;
 	return mem;
 #else
-	return memacpy(text, textlen);
+	return (UCHAR *)memacpy(text, textlen);
 #endif
 }
 
