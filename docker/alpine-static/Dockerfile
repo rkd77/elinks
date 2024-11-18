@@ -52,8 +52,7 @@ RUN apk add \
  musl-dev \
  nghttp2-dev \
  nghttp2-static \
- c-ares-dev \
- c-ares-static
+ c-ares-dev
 
 ## [*] netsurf libs
 # get netsurf source
