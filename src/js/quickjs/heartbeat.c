@@ -25,7 +25,9 @@
 
 static INIT_LIST_OF(struct heartbeat, heartbeats);
 
+#if !defined(CONFIG_OS_DOS) && !defined(CONFIG_OS_WIN32)
 static struct itimerval heartbeat_timer = { { 1, 0 }, { 1, 0 } };
+#endif
 
 /* This callback is installed by JS_SetInterruptHandler.
  * Returning 1 terminates script execution immediately. */
@@ -67,7 +69,7 @@ check_heartbeats(void *data)
 			}
 		}
 	}
-#ifndef CONFIG_OS_DOS
+#if !defined(CONFIG_OS_DOS) && !defined(CONFIG_OS_WIN32)
 	install_signal_handler(SIGVTALRM, check_heartbeats, NULL, 1);
 #endif
 }
@@ -100,7 +102,7 @@ add_heartbeat(struct ecmascript_interpreter *interpreter)
 	hb->ref_count = 1;
 	add_to_list(heartbeats, hb);
 
-#ifndef CONFIG_OS_DOS
+#if !defined(CONFIG_OS_DOS) && !defined(CONFIG_OS_WIN32)
 	/* Update the heartbeat timer. */
 	if (list_is_singleton(*hb)) {
 		heartbeat_timer.it_value.tv_sec = 1;
@@ -126,7 +128,7 @@ done_heartbeat(struct heartbeat *hb)
 		return;
 	}
 
-#ifndef CONFIG_OS_DOS
+#if !defined(CONFIG_OS_DOS) && !defined(CONFIG_OS_WIN32)
 	/* Stop the heartbeat timer if this heartbeat is the only one. */
 	if (list_is_singleton(*hb)) {
 		heartbeat_timer.it_value.tv_sec = 0;
