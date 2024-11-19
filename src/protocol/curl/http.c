@@ -207,6 +207,11 @@ do_http(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_MAX_RECV_SPEED_LARGE, (curl_off_t)get_opt_long("protocol.http.curl_max_recv_speed", NULL));
 		curl_easy_setopt(curl, CURLOPT_MAX_SEND_SPEED_LARGE, (curl_off_t)get_opt_long("protocol.http.curl_max_send_speed", NULL));
 
+		char *interface = get_cmd_opt_str("bind-address");
+		if (interface && *interface) {
+			curl_easy_setopt(curl, CURLOPT_INTERFACE, interface);
+		}
+
 		if (conn->uri->protocol == PROTOCOL_HTTPS) {
 			char *ciphers = get_opt_str("protocol.https.curl_tls13_ciphers", NULL);
 
