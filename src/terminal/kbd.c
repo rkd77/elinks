@@ -255,20 +255,19 @@ static int
 setraw(struct itrm *itrm, int save_orig)
 {
 	struct termios t;
-	long vdisable = -1;
 
 	memset(&t, 0, sizeof(t));
 	if (tcgetattr(itrm->in.ctl, &t)) return -1;
 
 	if (save_orig) copy_struct(&itrm->t, &t);
 
+#ifdef VERASE
+	long vdisable = -1;
 #ifdef _POSIX_VDISABLE
 	vdisable = _POSIX_VDISABLE;
 #elif defined(HAVE_FPATHCONF)
 	vdisable = fpathconf(itrm->in.ctl, _PC_VDISABLE);
 #endif
-
-#ifdef VERASE
 /* Is VERASE defined on Windows? */
 	if (vdisable != -1 && t.c_cc[VERASE] == vdisable)
 		itrm->verase = -1;
@@ -277,7 +276,6 @@ setraw(struct itrm *itrm, int save_orig)
 #else
 	itrm->verase = -1;
 #endif
-
 	elinks_cfmakeraw(&t);
 	t.c_lflag |= ISIG;
 #ifdef TOSTOP
