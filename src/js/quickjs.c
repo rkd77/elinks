@@ -80,6 +80,7 @@ void *map_interp;
 static void
 quickjs_get_version(char *quickjs_version)
 {
+#ifdef HAVE_OPEN_MEMSTREAM
 	char *ptr = NULL;
 	size_t size = 0;
 	FILE *f = open_memstream(&ptr, &size);
@@ -108,6 +109,7 @@ quickjs_get_version(char *quickjs_version)
 		}
 		free(ptr);
 	}
+#endif
 }
 
 static const char *

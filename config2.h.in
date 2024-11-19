@@ -548,6 +548,9 @@
 /* Define if you have off_t */
 #mesondefine HAVE_OFF_T
 
+/* Define if you have the `open_memstream' function. */
+#mesondefine HAVE_OPEN_MEMSTREAM
+
 /* Define to 1 if you have the `poll' function. */
 #mesondefine HAVE_POLL
 

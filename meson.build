@@ -1116,6 +1116,10 @@ if compiler.has_function('strtoul', prefix: '#include <stdlib.h>')
     conf_data.set('HAVE_STRTOUL', 1)
 endif
 
+if compiler.has_function('open_memstream', prefix: '#include <stdio.h>')
+    conf_data.set('HAVE_OPEN_MEMSTREAM', 1)
+endif
+
 if compiler.compiles('int a; typeof(a) b;', name: 'typeof')
     conf_data.set('HAVE_TYPEOF', 1)
 endif
