@@ -534,6 +534,7 @@ connected(struct socket *socket)
 	complete_connect_socket(socket, NULL, NULL);
 }
 
+#ifdef HAVE_INET_PTON
 static int to_bind;
 static struct sockaddr_in sa_bind;
 
@@ -541,16 +542,13 @@ static struct sockaddr_in sa_bind;
 static int to_bind_ipv6;
 static struct sockaddr_in6 sa6_bind;
 #endif
+#endif
 
 static void
 init_bind_address(void)
 {
-	char *bind_address = get_cmd_opt_str("bind-address");
-#ifdef CONFIG_IPV6
-	char *bind_address_ipv6 = get_cmd_opt_str("bind-address-ipv6");
-#endif
-
 #ifdef HAVE_INET_PTON
+	char *bind_address = get_cmd_opt_str("bind-address");
 	to_bind = (bind_address && *bind_address);
 
 	if (to_bind) {
@@ -561,6 +559,7 @@ init_bind_address(void)
 	}
 
 #ifdef CONFIG_IPV6
+	char *bind_address_ipv6 = get_cmd_opt_str("bind-address-ipv6");
 	to_bind_ipv6 = (bind_address_ipv6 && *bind_address_ipv6);
 
 	if (to_bind_ipv6) {
