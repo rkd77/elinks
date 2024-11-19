@@ -260,6 +260,7 @@ static int
 match_uri_host_ip(const char *uri_host,
 		  ASN1_OCTET_STRING *cert_host_asn1)
 {
+#if defined(HAVE_INET_PTON) || defined(HAVE_INET_ATON)
 #ifdef HAVE_ASN1_STRING_GET0_DATA
 	const unsigned char *cert_host_addr = ASN1_STRING_get0_data(cert_host_asn1);
 #else
@@ -267,10 +268,11 @@ match_uri_host_ip(const char *uri_host,
 #endif
 
 	struct in_addr uri_host_in;
+#ifdef HAVE_INET_PTON
 #ifdef CONFIG_IPV6
 	struct in6_addr uri_host_in6;
 #endif
-
+#endif
 	/* RFC 5280 defines the iPAddress alternative of GeneralName
 	 * as an OCTET STRING.  Verify that the type is indeed that.
 	 * This is an assertion because, if someone puts the wrong
@@ -311,6 +313,9 @@ match_uri_host_ip(const char *uri_host,
 	default:
 		return 0;
 	}
+#else
+	return 0;
+#endif
 }
 
 /** Verify one certificate in the server certificate chain.
