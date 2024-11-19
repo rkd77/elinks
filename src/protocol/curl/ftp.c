@@ -513,9 +513,9 @@ do_ftpes(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_MAX_RECV_SPEED_LARGE, (curl_off_t)get_opt_long("protocol.ftp.curl_max_recv_speed", NULL));
 		curl_easy_setopt(curl, CURLOPT_MAX_SEND_SPEED_LARGE, (curl_off_t)get_opt_long("protocol.ftp.curl_max_send_speed", NULL));
 
-		char *interface = get_cmd_opt_str("bind-address");
-		if (interface && *interface) {
-			curl_easy_setopt(curl, CURLOPT_INTERFACE, interface);
+		char *inter_face = get_cmd_opt_str("bind-address");
+		if (inter_face && *inter_face) {
+			curl_easy_setopt(curl, CURLOPT_INTERFACE, inter_face);
 		}
 		//curl_easy_setopt(curl, CURLOPT_XFERINFODATA, conn);
 		//curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, progress_callback);
