@@ -312,12 +312,11 @@ check_if_no_terminal(void)
 void
 exec_thread(char *path, int p)
 {
-	int plen = strlen(path + 1) + 2;
-
 #if defined(HAVE_SETPGID) && !defined(CONFIG_OS_BEOS) && !defined(HAVE_BEGINTHREAD)
 	if (path[0] == TERM_EXEC_NEWWIN) setpgid(0, 0);
 #endif
 #ifndef WIN32
+	int plen = strlen(path + 1) + 2;
 	if (path[0] == TERM_EXEC_BG)
 		exe_no_stdin(path + 1);
 	else
