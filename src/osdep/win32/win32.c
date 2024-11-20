@@ -32,12 +32,26 @@
 
 #include "elinks.h"
 
+#ifdef CONFIG_QUICKJS
+#include "js/quickjs/heartbeat.h"
+#endif
+
 #include "main/select.h"
 #include "main/timer.h"
 #include "osdep/win32/win32.h"
 #include "osdep/osdep.h"
 #include "terminal/terminal.h"
 
+#ifdef CONFIG_QUICKJS
+static HANDLE hTimer = NULL;
+static HANDLE hTimerQueue = NULL;
+
+VOID CALLBACK
+TimerRoutine(PVOID lpParam, BOOLEAN TimerOrWaitFired)
+{
+	check_heartbeats(NULL);
+}
+#endif
 
 void
 init_osdep(void)
@@ -66,11 +80,26 @@ init_osdep(void)
 		}
 	}
 #endif
+
+#ifdef CONFIG_QUICKJS
+	hTimerQueue = CreateTimerQueue();
+
+	if (hTimerQueue != NULL) {
+		(void)CreateTimerQueueTimer(&hTimer, hTimerQueue,
+		(WAITORTIMERCALLBACK)TimerRoutine, NULL , 1000, 1000, 0);
+	}
+#endif
 }
 
 void
 terminate_osdep(void)
 {
+#ifdef CONFIG_QUICKJS
+	if (hTimerQueue) {
+		DeleteTimerQueue(hTimerQueue);
+		hTimerQueue = NULL;
+	}
+#endif
 }
 
 int
