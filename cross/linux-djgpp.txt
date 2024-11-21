@@ -5,7 +5,7 @@ objc = '/usr/bin/i586-pc-msdosdjgpp-gcc'
 ar = '/usr/bin/i586-pc-msdosdjgpp-ar'
 pkgconfig = '/usr/bin/pkg-config'
 strip = '/usr/bin/i586-pc-msdosdjgpp-strip'
-exe_wrapper = 'wine'
+exe_wrapper = 'dosemu -K'
 ld = '/usr/bin/i586-pc-msdosdjgpp-ld'
 # --allow-multiple-definition'
 cmake = '/usr/bin/cmake'
@@ -14,7 +14,7 @@ cmake = '/usr/bin/cmake'
 # Directory that contains 'bin', 'lib', etc
 root = '/usr/i586-pc-msdosdjgpp'
 # Directory that contains 'bin', 'lib', etc for the toolchain and system libraries
-sys_root = '/usr/i586-pc-msdosdjgpp/sys-include/'
+#sys_root = '/usr/i586-pc-msdosdjgpp/sys-include/'
 need_exe_wrapper = true
 elinks_wrapper = 'elinks_dos.py'
 
