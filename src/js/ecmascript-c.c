@@ -4,6 +4,8 @@
 #include "config.h"
 #endif
 
+#include <stdio.h>
+
 #include "elinks.h"
 
 #include "js/libdom/dom.h"
