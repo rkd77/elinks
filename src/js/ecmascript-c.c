@@ -379,7 +379,7 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 		free_list(interpreter->timeouts);
 #ifdef CONFIG_QUICKJS
 		if (!JS_IsNull(interpreter->location_obj)) {
-			//JS_FreeValue(t->ctx, interpreter->location_obj);
+			JS_FreeValue((JSContext *)interpreter->backend_data, interpreter->location_obj);
 		}
 		if (!JS_IsNull(interpreter->document_obj)) {
 			//JS_FreeValue(t->ctx, interpreter->document_obj);

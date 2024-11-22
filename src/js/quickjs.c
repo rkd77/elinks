@@ -360,6 +360,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	js_image_init(ctx);
 
 	interpreter->document_obj = getDocument(ctx, document->dom);
+	interpreter->location_obj = getLocation(ctx);
 	js_document_init(ctx);
 
 	JS_SetModuleLoaderFunc(interpreter->rt, NULL, el_js_module_loader, NULL);
