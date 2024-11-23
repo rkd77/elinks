@@ -53,10 +53,10 @@ meson setup /root/tmp/builddir_js \
 -Dx=false \
 -Dxbel=true \
 -Dzlib=true \
--Dzstd=true
+-Dzstd=true || exit 1
 
-meson compile -j $(($(nproc) - 1)) -C /root/tmp/builddir_js
+meson compile -j $(($(nproc) - 1)) -C /root/tmp/builddir_js || exit 2
 
-strip /root/tmp/builddir_js/src/elinks
+strip /root/tmp/builddir_js/src/elinks || exit 3
 
-upx /root/tmp/builddir_js/src/elinks
+upx /root/tmp/builddir_js/src/elinks || exit 4

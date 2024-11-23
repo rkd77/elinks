@@ -56,10 +56,10 @@ meson setup /root/tmp/builddir \
 -Dx=false \
 -Dxbel=true \
 -Dzlib=true \
--Dzstd=true
+-Dzstd=true || exit 1
 
-meson compile -C /root/tmp/builddir
+meson compile -C /root/tmp/builddir || exit 2
 
-strip /root/tmp/builddir/src/elinks
+strip /root/tmp/builddir/src/elinks || exit 3
 
-upx /root/tmp/builddir/src/elinks
+upx /root/tmp/builddir/src/elinks || exit 4

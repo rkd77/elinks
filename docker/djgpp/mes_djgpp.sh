@@ -64,12 +64,12 @@ meson setup /tmp/builddir --cross-file cross/linux-djgpp.txt \
 -Dx=false \
 -Dxbel=true \
 -Dzlib=true \
--Dzstd=false
+-Dzstd=false || exit 1
 
-meson compile -C /tmp/builddir
+meson compile -C /tmp/builddir || exit 2
 
-i586-pc-msdosdjgpp-strip /tmp/builddir/src/elinks.exe
+i586-pc-msdosdjgpp-strip /tmp/builddir/src/elinks.exe || exit 3
 
-upx /tmp/builddir/src/elinks.exe
+upx /tmp/builddir/src/elinks.exe || exit 4
 
 #cp -a /tmp/builddir/src/elinks.exe ~/.dosemu/drive_c/ELINKS/src/
