@@ -64,6 +64,7 @@ struct js_document_private {
 	LIST_OF(struct document_listener) listeners;
 	struct ecmascript_interpreter *interpreter;
 	JSValue thisval;
+	JSValue images;
 	dom_event_listener *listener;
 	void *node;
 	enum readyState state;
@@ -573,7 +574,16 @@ js_document_get_property_images(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
+	struct js_document_private *res = (struct js_document_private *)JS_GetOpaque(this_val, js_document_class_id);
+
+	if (!res) {
+		return JS_NULL;
+	}
+
+	if (!JS_IsNull(res->images)) {
+		return JS_DupValue(ctx, res->images);
+	}
+	dom_html_document *doc = (struct dom_html_document *)res->node;
 
 	if (!doc) {
 		return JS_NULL;
@@ -587,10 +597,9 @@ js_document_get_property_images(JSContext *ctx, JSValueConst this_val)
 		//dom_node_unref(doc);
 		return JS_NULL;
 	}
-	JSValue rr = getCollection(ctx, images);
-	//dom_node_unref(doc);
+	res->images = getCollection(ctx, images);
 
-	RETURN_JS(rr);
+	RETURN_JS(res->images);
 }
 
 static JSValue
@@ -1939,6 +1948,7 @@ js_document_finalizer(JSRuntime *rt, JSValue val)
 			JS_FreeValueRT(rt, l->fun);
 		}
 		free_list(doc_private->listeners);
+
 		if (doc_private->node) {
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
@@ -2084,6 +2094,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	JS_SetPropertyStr(ctx, global_obj, "document", document_obj);
 	JS_FreeValue(ctx, global_obj);
 	doc_private->thisval = document_obj;
+	doc_private->images = JS_NULL;
 
 	RETURN_JS(document_obj);
 }
@@ -2112,6 +2123,7 @@ getDocument2(JSContext *ctx, void *doc)
 	JS_SetPropertyFunctionList(ctx, document_obj, js_document_proto_funcs, countof(js_document_proto_funcs));
 	JS_SetOpaque(document_obj, doc_private);
 	doc_private->thisval = document_obj;
+	doc_private->images = JS_NULL;
 
 	RETURN_JS(document_obj);
 }
