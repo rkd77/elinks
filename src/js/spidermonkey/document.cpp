@@ -91,7 +91,7 @@ struct document_private {
 	struct ecmascript_interpreter *interpreter;
 	dom_document *doc;
 	JS::Heap<JSObject *> thisval;
-	JS::Heap<JSObject *> images;
+	JS::Heap<JSObject *> *images;
 	dom_event_listener *listener;
 	int ref_count;
 	enum readyState state;
@@ -125,6 +125,9 @@ static void document_finalize(JS::GCContext *op, JSObject *obj)
 			delete (l->fun);
 		}
 		free_list(doc_private->listeners);
+		if (doc_private->images) {
+			delete (doc_private->images);
+		}
 		mem_free(doc_private);
 		JS::SetReservedSlot(obj, 1, JS::UndefinedValue());
 	}
@@ -752,7 +755,7 @@ document_get_property_images(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	if (doc_private->images) {
-		args.rval().setObject(*(doc_private->images));
+		args.rval().setObject(*(*(doc_private->images)));
 		return true;
 	}
 	dom_html_document *doc = (dom_html_document *)JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
@@ -769,8 +772,7 @@ document_get_property_images(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 	JSObject *obj = getCollection(ctx, images);
-	JS::RootedObject im(ctx, obj);
-	doc_private->images = im;
+	doc_private->images = new JS::Heap<JSObject *>(obj);
 	args.rval().setObject(*obj);
 
 	return true;
