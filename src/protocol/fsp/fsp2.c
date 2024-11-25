@@ -16,6 +16,10 @@ use of this software.
                      This is a free software.  Be creative.
                     Let me know of any bugs and suggestions.
 */                  
+#ifdef CONFIG_OS_WIN32
+#define _CRT_RAND_S
+#endif
+
 #include <sys/types.h>
 
 #ifdef HAVE_SYS_SOCKET_H
@@ -63,7 +67,13 @@ use of this software.
 
 #ifdef CONFIG_OS_WIN32
 #undef random
-#define random rand
+long
+random(void)
+{
+	unsigned int number = 0;
+	(void)rand_s(&number);
+	return (long)number;
+}
 #endif
 
 static void fsp_stat_continue(void *data);
