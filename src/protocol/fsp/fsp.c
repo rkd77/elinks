@@ -145,7 +145,7 @@ display_entry(const FSP_RDENTRY *fentry, const char dircolor[])
 	const size_t namelen = strlen(fentry->name);
 
 	if (!init_string(&string)) return;
-	add_format_to_string(&string, "%10d", fentry->size);
+	add_format_to_string(&string, "%10u", fentry->size);
 	add_to_string(&string, "\t<a href=\"");
 	/* The result of encode_uri_string does not include '&' or '<'
 	 * which could mess up the HTML.  */
