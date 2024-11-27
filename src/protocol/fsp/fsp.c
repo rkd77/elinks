@@ -145,7 +145,34 @@ display_entry(const FSP_RDENTRY *fentry, const char dircolor[])
 	const size_t namelen = strlen(fentry->name);
 
 	if (!init_string(&string)) return;
-	add_format_to_string(&string, "%10u", fentry->size);
+	add_format_to_string(&string, "%10u\t", fentry->size);
+
+#ifdef HAVE_STRFTIME
+	if (fentry->lastmod > 0) {
+		time_t current_time = time(NULL);
+		time_t when = (time_t)fentry->lastmod;
+		struct tm *when_tm;
+		char *fmt;
+		/* LC_TIME=fi_FI.UTF_8 can generate "elo___ 31 23:59"
+		 * where each _ denotes U+00A0 encoded as 0xC2 0xA0,
+		 * thus needing a 19-byte buffer.  */
+		char date[MAX_STR_LEN];
+		int wr;
+
+		when_tm = localtime(&when);
+
+		if (current_time > when + 6L * 30L * 24L * 60L * 60L
+		    || current_time < when - 60L * 60L)
+			fmt = gettext("%b %e  %Y");
+		else
+			fmt = gettext("%b %e %H:%M");
+
+		wr = strftime(date, sizeof(date), fmt, when_tm);
+		add_cp_html_to_string(&string, get_cp_index("System"), date, wr);
+	} else
+#endif
+	add_to_string(&string, gettext("             "));
+
 	add_to_string(&string, "\t<a href=\"");
 	/* The result of encode_uri_string does not include '&' or '<'
 	 * which could mess up the HTML.  */
