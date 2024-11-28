@@ -156,6 +156,12 @@ init(void)
 	init_modules(main_modules);
 
 	init_options();
+
+#if defined(CONFIG_OS_WIN32) && defined(CONFIG_QUICKJS)
+	if (get_cmd_opt_bool("delete-timer-queue")) {
+		delete_timer_queue();
+	}
+#endif
 	init_static_version();
 
 	register_modules_options(main_modules);

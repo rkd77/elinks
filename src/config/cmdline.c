@@ -879,6 +879,12 @@ union option_info cmdline_options_info[] = {
 		"be ignored. It forces use of default keybindings and will "
 		"reset user-defined ones on save.")),
 
+	INIT_OPT_BOOL("", N_("Delete timer queue"),
+		"delete-timer-queue", OPT_ZERO, 0,
+		N_("Whether to delete timer queue under Windows. "
+		"When QuickJS is enabled on Win32, you can enable this option to disable "
+		"js execution timeouts.")),
+
 	INIT_OPT_BOOL("", N_("Print formatted versions of given URLs to stdout"),
 		"dump", OPT_ZERO, 0,
 		N_("Print formatted plain-text versions of given URLs to "

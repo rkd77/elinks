@@ -91,14 +91,22 @@ init_osdep(void)
 #endif
 }
 
-void
-terminate_osdep(void)
-{
 #ifdef CONFIG_QUICKJS
+void
+delete_timer_queue(void)
+{
 	if (hTimerQueue) {
 		DeleteTimerQueue(hTimerQueue);
 		hTimerQueue = NULL;
 	}
+}
+#endif
+
+void
+terminate_osdep(void)
+{
+#ifdef CONFIG_QUICKJS
+	delete_timer_queue();
 #endif
 }
 

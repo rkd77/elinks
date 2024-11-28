@@ -1,4 +1,3 @@
-
 #ifndef EL__OSDEP_WIN32_WIN32_H
 #define EL__OSDEP_WIN32_WIN32_H
 
@@ -20,6 +19,9 @@ void open_in_new_win32(struct terminal *term, char *exe_name,
 char *user_appdata_directory(void);
 #define user_appdata_directory user_appdata_directory
 
+#ifdef CONFIG_QUICKJS
+void delete_timer_queue();
+#endif
 
 /* Stub functions: */
 
