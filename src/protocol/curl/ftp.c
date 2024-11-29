@@ -375,8 +375,10 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 					mem_free(copy);
 					return -1;
 				}
+				char *symlink = memacpy(ftp_info.symlink.source, ftp_info.symlink.length);
 				*copy = ftp_info;
 				copy->name.source = str;
+				copy->symlink.source = symlink;
 				sftp->infos = tmp;
 				sftp->infos[sftp->info_number] = copy;
 				sftp->info_number++;
@@ -424,6 +426,7 @@ done_ftp_infos(struct ftpes_connection_info *ftp)
 
 	for (i = 0; i < ftp->info_number; i++) {
 		done_string(&ftp->infos[i]->name);
+		done_string(&ftp->infos[i]->symlink);
 		mem_free(ftp->infos[i]);
 	}
 	mem_free_set(&ftp->infos, NULL);
@@ -611,7 +614,6 @@ out_of_mem:
 			abort_connection(conn, state);
 			return;
 		}
-
 		add_fragment(conn->cached, conn->from, string.source, string.length);
 		conn->from += string.length;
 
