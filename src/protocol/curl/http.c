@@ -412,7 +412,9 @@ http_curl_got_header(void *stream, void *buf, size_t len)
 	}
 
 	if (len == 2 && buffer[0] == 13 && buffer[1] == 10) {
-		if (!conn->cached) {
+		curl_easy_getinfo(http->easy, CURLINFO_RESPONSE_CODE, &http->code);
+
+		if (!conn->cached && http->code != 103L) {
 			conn->cached = get_cache_entry(conn->uri);
 
 			if (!conn->cached) {
@@ -420,14 +422,16 @@ http_curl_got_header(void *stream, void *buf, size_t len)
 				return;
 			}
 		}
-		curl_easy_getinfo(http->easy, CURLINFO_RESPONSE_CODE, &http->code);
 		curl_easy_getinfo(http->easy, CURLINFO_CONTENT_LENGTH_DOWNLOAD_T, &conn->est_length);
 
 		if (conn->est_length != -1 && conn->progress->start > 0) {
 			conn->est_length += conn->progress->start;
 		}
-		mem_free_set(&conn->cached->head, memacpy(http->headers.source, http->headers.length));
-		mem_free_set(&conn->cached->content_type, NULL);
+
+		if (http->code != 103L) {
+			mem_free_set(&conn->cached->head, memacpy(http->headers.source, http->headers.length));
+			mem_free_set(&conn->cached->content_type, NULL);
+		}
 		done_string(&http->headers);
 		init_string(&http->headers);
 	}
