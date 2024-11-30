@@ -5151,7 +5151,7 @@ msgstr "Format daty"
 
 #: src/config/options.inc:1591
 msgid "Date format to use in dialogs. See strftime(3)."
-msgstr "Format daty używany w dialog. Zobacz strftime(3)."
+msgstr "Format daty używany w okienkach dialogowych. Zobacz strftime(3)."
 
 #. date added
 #: src/config/options.inc:1596
