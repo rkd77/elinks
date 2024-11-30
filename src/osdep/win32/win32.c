@@ -96,7 +96,7 @@ void
 delete_timer_queue(void)
 {
 	if (hTimerQueue) {
-		DeleteTimerQueue(hTimerQueue);
+		DeleteTimerQueueEx(hTimerQueue, NULL);
 		hTimerQueue = NULL;
 	}
 }
