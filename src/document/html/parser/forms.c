@@ -184,7 +184,7 @@ no_type_attr:
 		fc->default_value = stracpy("");
 
 	html_context->special_f(html_context, SP_CONTROL, fc);
-	elformat.form = fc;
+	elformat.form = fc->mode != FORM_MODE_DISABLED ? fc : NULL;
 	elformat.style.attr |= AT_BOLD;
 }
 
@@ -196,7 +196,7 @@ html_input_format(struct html_context *html_context, char *a,
 	char *top_name = html_top->name;
 	html_stack_dup(html_context, ELEMENT_KILLABLE);
 	html_focusable(html_context, a);
-	elformat.form = fc;
+	elformat.form = fc->mode != FORM_MODE_DISABLED ? fc : NULL;
 	elformat.top_name = top_name;
 	mem_free_if(elformat.title);
 	elformat.title = get_attr_val(a, "title", html_context->doc_cp);
@@ -500,7 +500,7 @@ end_parse:
 
 	menu_labels(fc->menu, "", labels);
 	html_stack_dup(html_context, ELEMENT_KILLABLE);
-	elformat.form = fc;
+	elformat.form = fc->mode != FORM_MODE_DISABLED ? fc : NULL;
 	elformat.style.attr |= AT_BOLD;
 	put_chrs(html_context, "[&nbsp;", 7);
 
@@ -623,7 +623,7 @@ end_parse:
 
 	put_chrs(html_context, " ", 1);
 	html_stack_dup(html_context, ELEMENT_KILLABLE);
-	elformat.form = fc;
+	elformat.form = fc->mode != FORM_MODE_DISABLED ? fc : NULL;
 	elformat.style.attr |= AT_BOLD;
 	put_chrs(html_context, "[ ]", 3);
 	pop_html_element(html_context);
@@ -724,7 +724,7 @@ pp:
 	else put_chrs(html_context, " ", 1);
 
 	html_stack_dup(html_context, ELEMENT_KILLABLE);
-	elformat.form = fc;
+	elformat.form = fc->mode != FORM_MODE_DISABLED ? fc : NULL;
 	elformat.style.attr |= AT_BOLD;
 
 	for (i = 0; i < rows; i++) {
