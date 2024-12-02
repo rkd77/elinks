@@ -718,6 +718,7 @@ js_document_get_property_readyState(JSContext *ctx, JSValueConst this_val)
 	JSValue r;
 
 	switch (doc_private->state) {
+	default:
 	case LOADING:
 		r = JS_NewString(ctx, "loading");
 		break;
