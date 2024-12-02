@@ -907,6 +907,7 @@ document_get_property_readyState(JSContext *ctx, unsigned int argc, JS::Value *v
 	}
 
 	switch (doc_private->state) {
+	default:
 	case LOADING:
 		args.rval().setString(JS_NewStringCopyZ(ctx, "loading"));
 		break;
