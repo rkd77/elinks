@@ -80,19 +80,21 @@ init_osdep(void)
 		}
 	}
 #endif
+}
 
 #ifdef CONFIG_QUICKJS
+void
+create_timer_queue(void)
+{
 	hTimerQueue = CreateTimerQueue();
 
 	if (hTimerQueue != NULL) {
 		(void)CreateTimerQueueTimer(&hTimer, hTimerQueue,
 		(WAITORTIMERCALLBACK)TimerRoutine, NULL , 1000, 1000, 0);
 	}
-#endif
 }
 
-#ifdef CONFIG_QUICKJS
-void
+static void
 delete_timer_queue(void)
 {
 	if (hTimerQueue) {

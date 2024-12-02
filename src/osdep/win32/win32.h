@@ -20,7 +20,7 @@ char *user_appdata_directory(void);
 #define user_appdata_directory user_appdata_directory
 
 #ifdef CONFIG_QUICKJS
-void delete_timer_queue();
+void create_timer_queue(void);
 #endif
 
 /* Stub functions: */

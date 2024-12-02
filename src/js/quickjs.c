@@ -52,6 +52,7 @@
 #include "intl/libintl.h"
 #include "main/select.h"
 #include "osdep/newwin.h"
+#include "osdep/osdep.h"
 #include "osdep/sysname.h"
 #include "protocol/http/http.h"
 #include "protocol/uri.h"
@@ -180,6 +181,11 @@ quickjs_init(struct module *module)
 	quickjs_runtime = JS_NewRuntime();
 #endif
 	map_interp = interp_new_map();
+#ifdef CONFIG_OS_WIN32
+	if (!get_cmd_opt_bool("delete-timer-queue")) {
+		create_timer_queue();
+	}
+#endif
 }
 
 static void
