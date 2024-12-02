@@ -601,6 +601,7 @@ mjs_document_get_property_readyState(js_State *J)
 		return;
 	}
 	switch (doc_private->state) {
+	default:
 	case LOADING:
 		js_pushstring(J, "loading");
 		break;
