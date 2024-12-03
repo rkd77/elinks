@@ -524,6 +524,7 @@ static struct element_info elements[] = {
  {"SUP",         html_superscript, NULL,                 0, ET_NESTABLE    },
  {"TABLE",       html_table,       NULL,                 2, ET_NESTABLE    },
  {"TD",          html_td,          NULL,                 0, ET_NESTABLE    },
+ {"TEMPLATE",    html_template,    NULL,                 0, ET_NON_NESTABLE},
  {"TEXTAREA",    html_textarea,    NULL,                 0, ET_NON_PAIRABLE},
  {"TH",          html_th,          NULL,                 0, ET_NESTABLE    },
  {"TITLE",       html_title,       NULL,                 0, ET_NESTABLE    },

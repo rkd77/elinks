@@ -1192,3 +1192,10 @@ html_noscript(struct html_context *html_context, char *a,
 		html_skip(html_context, a);
 #endif
 }
+
+void
+html_template(struct html_context *html_context, char *a,
+              char *xxx3, char *xxx4, char **xxx5)
+{
+	html_skip(html_context, a);
+}

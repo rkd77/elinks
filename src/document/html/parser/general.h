@@ -58,6 +58,7 @@ element_handler_T html_superscript;
 element_handler_T html_superscript_close;
 element_handler_T html_table;
 element_handler_T html_td;
+element_handler_T html_template;
 element_handler_T html_th;
 element_handler_T html_title;
 element_handler_T html_tr;
