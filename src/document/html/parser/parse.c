@@ -1045,7 +1045,13 @@ start_element(struct element_info *ei,
 	ELEMENT_RENDER_PROLOGUE
 
 	/* Call the element's open handler. */
-	if (ei->open) ei->open(html_context, attr, html, eof, &html);
+	if (ei->open) {
+		if (has_attr(attr, "hidden", html_context->doc_cp)) {
+			html_skip(html_context, attr);
+		} else {
+			ei->open(html_context, attr, html, eof, &html);
+		}
+	}
 
 	/* Apply CSS styles again. */
 #ifdef CONFIG_CSS
