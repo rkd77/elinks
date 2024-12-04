@@ -1224,7 +1224,9 @@ process_element(char *name, int namelen, int endingtag,
 		}
 	}
 
-	if (!ei) return html;
+	if (!ei) {
+		ei = &elements[NUMBER_OF_TAGS];
+	}
 
 	if (!endingtag) {
 		return start_element(ei, name, namelen, html, eof, attr, html_context);
