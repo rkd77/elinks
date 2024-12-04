@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <style>
+      .hidden { display: none }
+      custom-element { display: none }
+      div { display: none }
+    </style>
+  </head>
+  <body>
+    <form>
+      <p>Enabled</p>
+      <p><button type="submit">button type=submit</button></p>
+      <p><button>button</button></p>
+      <p><input type="submit" value="input type=submit"></p>
+      <p><input type="button" value="input type=button"></p>
+      <p>Disabled</p>
+      <p><button type="submit" disabled>button type=submit</button></p>
+      <p><button disabled>button</button></p>
+      <p><input type="submit" disabled value="input type=submit"></p>
+      <p><input type="button" disabled value="input type=button"></p>
+      <p>Hidden text</p>
+      <p hidden>Paragraph with "hidden" attribute</p>
+      <p style="display: none">Paragraph with display: none inline style</p>
+      <p class="hidden">Paragraph with class="hidden"</p>
+      <custom-element>Custom element with display: none global style</custom-element>
+      <template>Template element</template>
+      <p><button type="submit">button type=submit2</button></p>
+      <div>div with display: none global style</div>
+      <p>The end</p>
+    </form>
+  </body>
+</html>
