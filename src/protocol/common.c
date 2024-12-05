@@ -113,6 +113,9 @@ init_directory_listing(struct string *page, struct uri *uri)
 	case PROTOCOL_SMB:
 		info = "Samba";
 		break;
+	case PROTOCOL_SFTP:
+		info = "SFTP";
+		break;
 	default:
 		info = "?";
 	}
