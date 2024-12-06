@@ -30,6 +30,7 @@
 #include "osdep/sysname.h"
 #include "protocol/date.h"
 #include "protocol/gemini/codes.h"
+#include "protocol/gemini/dialog.h"
 #include "protocol/gemini/gemini.h"
 #include "protocol/header.h"
 #include "protocol/uri.h"
@@ -60,10 +61,6 @@ done_gemini(struct module *mod)
 {
 }
 
-struct gemini_connection_info {
-	int code;
-};
-
 static void
 gemini_end_request(struct connection *conn, struct connection_state state,
 		 int notrunc)
@@ -85,6 +82,7 @@ done_gemini_connection(struct connection *conn)
 {
 	struct gemini_connection_info *gemini = (struct gemini_connection_info *)conn->info;
 
+	mem_free_if(gemini->prompt);
 	mem_free(gemini);
 	conn->info = NULL;
 	conn->done = NULL;
@@ -167,6 +165,18 @@ read_gemini_data_done(struct connection *conn)
 	if (!conn->from) {
 		if (gemini->code >= 40) {
 			gemini_error_document(conn, gemini->code);
+		} else if (gemini->code == 10 || gemini->code == 11) {
+			struct gemini_error_info *info;
+			assert(conn && conn->uri);
+			info = (struct gemini_error_info *)mem_calloc(1, sizeof(*info));
+
+			if (!info) {
+				return;
+			}
+			info->code = gemini->code;
+			info->uri = get_uri_reference(conn->uri);
+			info->prompt = null_or_stracpy(gemini->prompt);
+			add_questions_entry(do_gemini_query_dialog, info);
 		} else {
 			/* This is not an error, thus fine. No need generate any
 			 * document, as this may be empty and it's not a problem.
@@ -314,15 +324,21 @@ gemini_got_header(struct socket *socket, struct read_buffer *rb)
 	if (!init_string(&head_string)) {
 		return;
 	}
-	add_to_string(&head_string, "\nContent-Type: ");
-	add_bytes_to_string(&head_string, rb->data + 3, a - 2);
 
-	if (!conn->cached) {
-		done_string(&head_string);
-		abort_connection(conn, connection_state(S_OUT_OF_MEM));
-		return;
+	if (h == 10 || h == 11) {
+		add_bytes_to_string(&head_string, rb->data + 3, a - 4);
+		mem_free_set(&gemini->prompt, head_string.source);
+	} else {
+		add_to_string(&head_string, "\nContent-Type: ");
+		add_bytes_to_string(&head_string, rb->data + 3, a - 2);
+
+		if (!conn->cached) {
+			done_string(&head_string);
+			abort_connection(conn, connection_state(S_OUT_OF_MEM));
+			return;
+		}
+		mem_free_set(&conn->cached->head, head_string.source);
 	}
-	mem_free_set(&conn->cached->head, head_string.source);
 
 	kill_buffer_data(rb, a + 1);
 	read_gemini_data(socket, rb);

@@ -18,6 +18,7 @@
 #include "intl/libintl.h"
 #include "network/connection.h"
 #include "protocol/gemini/codes.h"
+#include "protocol/gemini/gemini.h"
 #include "protocol/uri.h"
 #include "session/session.h"
 #include "session/task.h"
@@ -124,11 +125,6 @@ get_gemini_error_document(struct terminal *term, struct uri *uri, int code)
 
 	return string.source;
 }
-
-struct gemini_error_info {
-	int code;
-	struct uri *uri;
-};
 
 static void
 show_gemini_error_document(struct session *ses, void *data)

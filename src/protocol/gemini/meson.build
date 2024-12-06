@@ -1,1 +1,1 @@
-srcs += files('codes.c', 'gemini.c')
+srcs += files('codes.c', 'dialog.c', 'gemini.c')
