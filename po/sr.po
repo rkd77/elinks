@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.10.6.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2024-11-04 09:33+0100\n"
+"POT-Creation-Date: 2024-12-06 16:58+0100\n"
 "PO-Revision-Date: 2024-11-04 09:09+0100\n"
 "Last-Translator: Strahinya Radich (Страхиња Радић) <contact@strahinja.org>\n"
 "Language-Team: Serbian <sr@li.org>\n"
@@ -270,11 +270,11 @@ msgstr ""
 "стањима."
 
 #. name:
-#: src/bfu/leds.c:510 src/bfu/leds.c:552
+#: src/bfu/leds.c:508 src/bfu/leds.c:550
 msgid "LED indicators"
 msgstr "Индикатори диода"
 
-#: src/bfu/leds.c:511
+#: src/bfu/leds.c:509
 #, c-format
 msgid ""
 "What the different LEDs indicate:\n"
@@ -1645,43 +1645,54 @@ msgstr ""
 "поставити на подразумеване вредности при чувању."
 
 #: src/config/cmdline.c:882
+#, fuzzy
+msgid "Delete timer queue"
+msgstr "Брисање ставке"
+
+#: src/config/cmdline.c:884
+msgid ""
+"Whether to delete timer queue under Windows. When QuickJS is enabled on "
+"Win32, you can enable this option to disable js execution timeouts."
+msgstr ""
+
+#: src/config/cmdline.c:888
 msgid "Print formatted versions of given URLs to stdout"
 msgstr "Исписивање форматираних верзија задатих УРЛ-ова на стандардни излаз"
 
-#: src/config/cmdline.c:884
+#: src/config/cmdline.c:890
 msgid "Print formatted plain-text versions of given URLs to stdout."
 msgstr ""
 "Исписује форматиране текстуалне верзије задатих УРЛ-ова на стандардни излаз."
 
-#: src/config/cmdline.c:887
+#: src/config/cmdline.c:893
 msgid "Codepage to use with -dump"
 msgstr "Кодна страна за -dump"
 
-#: src/config/cmdline.c:889
+#: src/config/cmdline.c:895
 msgid "Codepage used when formatting dump output."
 msgstr "Кодна страна за форматирање излаза истовара."
 
-#: src/config/cmdline.c:891
+#: src/config/cmdline.c:897
 msgid "Color mode used with -dump"
 msgstr "Режим боја који се користи за -dump"
 
-#: src/config/cmdline.c:893
+#: src/config/cmdline.c:899
 msgid "Color mode used with -dump."
 msgstr "Режим боја који се користи за -dump."
 
-#: src/config/cmdline.c:895
+#: src/config/cmdline.c:901
 msgid "Width of document formatted with -dump"
 msgstr "Ширина документа форматираног преко -dump"
 
-#: src/config/cmdline.c:897
+#: src/config/cmdline.c:903
 msgid "Width of the dump output."
 msgstr "Ширина излаза истовара."
 
-#: src/config/cmdline.c:899
+#: src/config/cmdline.c:905
 msgid "Evaluate configuration file directive"
 msgstr "Обрада директиве датотеке са подешавањима"
 
-#: src/config/cmdline.c:901
+#: src/config/cmdline.c:907
 msgid ""
 "Specify configuration file directives on the command-line which will be "
 "evaluated after all configuration files has been read. Example usage:\n"
@@ -1692,11 +1703,11 @@ msgstr ""
 "\t-eval 'set protocol.file.allow_special_files = 1'"
 
 #. lynx compatibility
-#: src/config/cmdline.c:907
+#: src/config/cmdline.c:913
 msgid "Interpret documents of unknown types as HTML"
 msgstr "Интерпретирање докумената непознатог типа као HTML"
 
-#: src/config/cmdline.c:909
+#: src/config/cmdline.c:915
 msgid ""
 "Makes ELinks assume documents of unknown types are HTML. Useful when using "
 "ELinks as an external viewer from MUAs. This is equivalent to -default-mime-"
@@ -1706,19 +1717,19 @@ msgstr ""
 "Корисно када се ELinks користи као спољашњи прегледач из програма за пошту. "
 "Ово је еквивалентно -default-mime-type text/html."
 
-#: src/config/cmdline.c:919
+#: src/config/cmdline.c:925
 msgid "Print usage help and exit"
 msgstr "Исписивање помоћи у вези са употребом и излаз"
 
-#: src/config/cmdline.c:921
+#: src/config/cmdline.c:927
 msgid "Print usage help and exit."
 msgstr "Исписује помоћ у вези са употребом и излази."
 
-#: src/config/cmdline.c:923
+#: src/config/cmdline.c:929
 msgid "Only permit local connections"
 msgstr "Дозвољавају се само локална повезивања"
 
-#: src/config/cmdline.c:925
+#: src/config/cmdline.c:931
 msgid ""
 "Restricts ELinks to work offline and only connect to servers with local "
 "addresses (ie. 127.0.0.1). No connections to remote servers will be "
@@ -1728,28 +1739,28 @@ msgstr ""
 "имају локалне адресе (нпр. 127.0.0.1). Повезивање са удаљеним серверима неће "
 "бити дозвољено."
 
-#: src/config/cmdline.c:929
+#: src/config/cmdline.c:935
 msgid "Print detailed usage help and exit"
 msgstr "Исписивање детаљне помоћи у вези са употребом и излаз"
 
-#: src/config/cmdline.c:931
+#: src/config/cmdline.c:937
 msgid "Print detailed usage help and exit."
 msgstr "Исписује детаљну помоћ у вези са употребом и излази."
 
-#: src/config/cmdline.c:933
+#: src/config/cmdline.c:939
 msgid "Look up specified host"
 msgstr "Тражење адресе задатог хоста"
 
-#: src/config/cmdline.c:935
+#: src/config/cmdline.c:941
 msgid "Look up specified host and print all DNS resolved IP addresses."
 msgstr ""
 "Тражи адресу задатог хоста и исписује све IP адресе које су разрешене DNS-ом."
 
-#: src/config/cmdline.c:938
+#: src/config/cmdline.c:944
 msgid "Run as separate instance"
 msgstr "Покретање засебне инстанце"
 
-#: src/config/cmdline.c:940
+#: src/config/cmdline.c:946
 msgid ""
 "Run ELinks as a separate instance instead of connecting to an existing "
 "instance. Note that normally no runtime state files (bookmarks, history, "
@@ -1761,11 +1772,11 @@ msgstr ""
 "датотека стања извршавања (обележивачи, историја, итд.) не записује на диск. "
 "Погледајте и -touch-files."
 
-#: src/config/cmdline.c:945
+#: src/config/cmdline.c:951
 msgid "Disable use of files in ~/.config/elinks"
 msgstr "Деактивирање коришћења датотека у директоријуму ~/.config/elinks"
 
-#: src/config/cmdline.c:947
+#: src/config/cmdline.c:953
 msgid ""
 "Disables creation and use of files in the user specific home configuration "
 "directory (~/.config/elinks). It forces default configuration values to be "
@@ -1775,19 +1786,19 @@ msgstr ""
 "подешавањима (~/.config/elinks). Захтева да се користе подразумеване "
 "вредности подешавања и деактивира чување датотека стања извршавања."
 
-#: src/config/cmdline.c:952
+#: src/config/cmdline.c:958
 msgid "Disable libevent"
 msgstr "Деактивирање libevent-а"
 
-#: src/config/cmdline.c:954
+#: src/config/cmdline.c:960
 msgid "Disables libevent."
 msgstr "Деактивирање libevent-а."
 
-#: src/config/cmdline.c:956
+#: src/config/cmdline.c:962
 msgid "Disable link numbering in dump output"
 msgstr "Деактивирање додељивања бројева везама у излазу истовара"
 
-#: src/config/cmdline.c:958
+#: src/config/cmdline.c:964
 msgid ""
 "Prevents printing of link number in dump output.\n"
 "\n"
@@ -1797,11 +1808,11 @@ msgstr ""
 "\n"
 "Приметите да ово утиче само на прекидач -dump, и ни на шта друго."
 
-#: src/config/cmdline.c:962
+#: src/config/cmdline.c:968
 msgid "Disable printing of link references in dump output"
 msgstr "Деактивирање исписивања референци веза у излазу истовара"
 
-#: src/config/cmdline.c:964
+#: src/config/cmdline.c:970
 msgid ""
 "Prevents printing of references (URIs) of document links in dump output.\n"
 "\n"
@@ -1811,11 +1822,11 @@ msgstr ""
 "\n"
 "Приметите да ово утиче само на прекидач -dump, и ни на шта више."
 
-#: src/config/cmdline.c:969
+#: src/config/cmdline.c:975
 msgid "Control an already running ELinks"
 msgstr "Управљање већ покренутим ELinks-ом"
 
-#: src/config/cmdline.c:971
+#: src/config/cmdline.c:977
 msgid ""
 "Control a remote ELinks instance by passing commands to it. The option takes "
 "an additional argument containing the method which should be invoked and any "
@@ -1853,11 +1864,11 @@ msgstr ""
 "\tsearch(ниска)             : претрага у текућем језичку\n"
 "\txfeDoCommand(openBrowser) : отвара нови прозор"
 
-#: src/config/cmdline.c:991
+#: src/config/cmdline.c:997
 msgid "Connect to session ring with given ID"
 msgstr "Повезивање са сесијским прстеном користећи задати ID"
 
-#: src/config/cmdline.c:993
+#: src/config/cmdline.c:999
 msgid ""
 "ID of session ring this ELinks session should connect to. ELinks works in so-"
 "called session rings, whereby all instances of ELinks are interconnected and "
@@ -1889,19 +1900,19 @@ msgstr ""
 "Такође, приметите да се ниједна датотека о стању извршавања не уписује на "
 "диск када се користи ова опција. Погледајте и -touch-files."
 
-#: src/config/cmdline.c:1011
+#: src/config/cmdline.c:1017
 msgid "Print the source of given URLs to stdout"
 msgstr "Штампање изворног кода задатих УРЛ-ова на стандардном излазу"
 
-#: src/config/cmdline.c:1013
+#: src/config/cmdline.c:1019
 msgid "Print given URLs in source form to stdout."
 msgstr "Штампа задате УРЛ-ове у изворном облику на стандардни излаз."
 
-#: src/config/cmdline.c:1017
+#: src/config/cmdline.c:1023
 msgid "Whether to use terminfo"
 msgstr "Да ли да се користи terminfo"
 
-#: src/config/cmdline.c:1019
+#: src/config/cmdline.c:1025
 msgid ""
 "When enabled, terminfo ncurses functions will be used instead of hardcoded "
 "sequences."
@@ -1909,22 +1920,22 @@ msgstr ""
 "Када је укључено, terminfo ncurses функције ће се користити уместо "
 "предефинисаних секвенци."
 
-#: src/config/cmdline.c:1022
+#: src/config/cmdline.c:1028
 msgid "Test js"
 msgstr "Тестирање js-а"
 
-#: src/config/cmdline.c:1024
+#: src/config/cmdline.c:1030
 msgid "When enabled, helps to test js."
 msgstr "Када је укључено, помаже да се тестира js."
 
-#: src/config/cmdline.c:1026
+#: src/config/cmdline.c:1032
 msgid ""
 "Touch files in ~/.config/elinks when running with -no-connect/-session-ring"
 msgstr ""
 "Освежавање датотека у ~/.config/elinks када је задато -no-connect или -"
 "session-ring"
 
-#: src/config/cmdline.c:1028
+#: src/config/cmdline.c:1034
 msgid ""
 "When enabled, runtime state files (bookmarks, history, etc.) are written to "
 "disk, even when -no-connect or -session-ring is used. The option has no "
@@ -1935,11 +1946,11 @@ msgstr ""
 "session-ring. Ова опција нема утицаја ако се не користи заједно са неком од "
 "ових опција."
 
-#: src/config/cmdline.c:1033
+#: src/config/cmdline.c:1039
 msgid "Verbose level"
 msgstr "Ниво брбљивости"
 
-#: src/config/cmdline.c:1035
+#: src/config/cmdline.c:1041
 msgid ""
 "The verbose level controls what messages are shown at start up and while "
 "running:\n"
@@ -1953,11 +1964,11 @@ msgstr ""
 "\t1 приказује озбиљне грешке и упозорења\n"
 "\t2 приказује све грешке"
 
-#: src/config/cmdline.c:1041
+#: src/config/cmdline.c:1047
 msgid "Print version information and exit"
 msgstr "Исписивање података о верзији и излаз"
 
-#: src/config/cmdline.c:1043
+#: src/config/cmdline.c:1049
 msgid "Print ELinks version information and exit."
 msgstr "Исписује податке о верзији ELinks-а и излази."
 
@@ -6891,71 +6902,71 @@ msgstr ""
 "грешка и да би могао да заустави цео ELinks, па је зато\n"
 "извршавање скрипта прекинуто."
 
-#: src/js/ecmascript-c.c:57
+#: src/js/ecmascript-c.c:59
 msgid "Ecmascript enabled"
 msgstr "Ecmascript активиран"
 
-#: src/js/ecmascript-c.c:59
+#: src/js/ecmascript-c.c:61
 msgid "Ecmascript disabled"
 msgstr "Ecmascript деактивиран"
 
-#: src/js/mujs.c:268 src/js/quickjs.c:465 src/js/spidermonkey.cpp:129
+#: src/js/mujs.c:273 src/js/quickjs.c:477 src/js/spidermonkey.cpp:131
 msgid "A script embedded in the current document raised the following:\n"
 msgstr "Скрипт уграђен у текући документ је направио следећу грешку:\n"
 
-#: src/js/mujs.c:271 src/js/quickjs.c:468 src/js/spidermonkey.cpp:133
+#: src/js/mujs.c:276 src/js/quickjs.c:480 src/js/spidermonkey.cpp:135
 msgid "JavaScript Error"
 msgstr "Грешка JavaScript-а"
 
 #. name:
-#: src/js/mujs.c:454
+#: src/js/mujs.c:459
 msgid "mujs"
 msgstr "mujs"
 
-#: src/js/mujs/window.c:335 src/js/quickjs/window.c:737
+#: src/js/mujs/window.c:335 src/js/quickjs/window.c:741
 #: src/js/spidermonkey/window.cpp:442
 msgid "JavaScript Alert"
 msgstr "Упозорење JavaScript-а"
 
 #. name:
-#: src/js/quickjs.c:593 src/js/quickjs.c:609
+#: src/js/quickjs.c:605 src/js/quickjs.c:621
 msgid "QuickJS"
 msgstr "QuickJS"
 
-#: src/js/quickjs.c:595
+#: src/js/quickjs.c:607
 msgid "Options specific to QuickJS."
 msgstr "Опције у вези са QuickJS-ом."
 
-#: src/js/quickjs.c:597
+#: src/js/quickjs.c:609
 msgid "GC threshold"
 msgstr "Праг GC-а"
 
-#: src/js/quickjs.c:599
+#: src/js/quickjs.c:611
 msgid "GC threshold in bytes."
 msgstr "Праг GC-а (скупљача смећа) у бајтовима."
 
-#: src/js/quickjs.c:601 src/js/spidermonkey.cpp:758
+#: src/js/quickjs.c:613 src/js/spidermonkey.cpp:790
 msgid "Memory limit"
 msgstr "Ограничење меморије"
 
-#: src/js/quickjs.c:603
+#: src/js/quickjs.c:615
 msgid "Runtime memory limit in bytes per context."
 msgstr "Ограничење радне меморије у бајтовима по контексту."
 
-#: src/js/spidermonkey.cpp:754
+#: src/js/spidermonkey.cpp:786
 msgid "Spidermonkey"
 msgstr "Spidermonkey"
 
-#: src/js/spidermonkey.cpp:756
+#: src/js/spidermonkey.cpp:788
 msgid "Options specific to Spidermonkey."
 msgstr "Опције у вези са Spidermonkey-ем."
 
-#: src/js/spidermonkey.cpp:760
+#: src/js/spidermonkey.cpp:792
 msgid "Runtime memory limit in bytes."
 msgstr "Ограничење радне меморије у бајтовима."
 
 #. name:
-#: src/js/spidermonkey.cpp:766
+#: src/js/spidermonkey.cpp:798
 msgid "SpiderMonkey"
 msgstr "SpiderMonkey"
 
@@ -8655,15 +8666,18 @@ msgstr "FTPES"
 msgid "SFTP"
 msgstr "SFTP"
 
-#: src/protocol/curl/ftp.c:207 src/protocol/ftp/ftp.c:1280 src/util/file.h:256
+#: src/protocol/curl/ftp.c:207 src/protocol/fsp/fsp2.c:914
+#: src/protocol/fsp/fsp.c:166 src/protocol/ftp/ftp.c:1280 src/util/file.h:256
 msgid "%b %e  %Y"
 msgstr "%b %e  %Y"
 
-#: src/protocol/curl/ftp.c:209 src/protocol/ftp/ftp.c:1282 src/util/file.h:258
+#: src/protocol/curl/ftp.c:209 src/protocol/fsp/fsp2.c:916
+#: src/protocol/fsp/fsp.c:168 src/protocol/ftp/ftp.c:1282 src/util/file.h:258
 msgid "%b %e %H:%M"
 msgstr "%b %e %H:%M"
 
-#: src/protocol/curl/ftp.c:216 src/protocol/ftp/ftp.c:1289 src/util/file.h:265
+#: src/protocol/curl/ftp.c:216 src/protocol/fsp/fsp2.c:922
+#: src/protocol/fsp/fsp.c:174 src/protocol/ftp/ftp.c:1289 src/util/file.h:265
 msgid "             "
 msgstr "             "
 
@@ -8751,7 +8765,7 @@ msgid "Finger"
 msgstr "Finger"
 
 #. name:
-#: src/protocol/fsp/fsp2.c:96 src/protocol/fsp/fsp.c:56
+#: src/protocol/fsp/fsp2.c:106 src/protocol/fsp/fsp.c:56
 msgid "FSP"
 msgstr "FSP"
 
@@ -8849,20 +8863,25 @@ msgid "Use EPSV instead of EPRT (passive vs active mode, IPv6 only)."
 msgstr ""
 "Користиће се EPSV уместо EPRT (пасивни уместо активног режима, само уз IPv6)."
 
-#: src/protocol/gemini/codes.c:83
+#: src/protocol/gemini/codes.c:84
 #, c-format
 msgid "Gemini error %02d"
 msgstr "Грешка Џеминија %02d"
 
-#: src/protocol/gemini/codes.c:106
+#: src/protocol/gemini/codes.c:107
 #, c-format
 msgid ""
 "  An error occurred on the server while fetching the document you\n"
 "  requested.\n"
 msgstr "  Грешка на серверу приликом добављања траженог документа.\n"
 
+#: src/protocol/gemini/dialog.c:65
+#, fuzzy
+msgid "Enter text"
+msgstr "Текст насловне линије"
+
 #. name:
-#: src/protocol/gemini/gemini.c:48
+#: src/protocol/gemini/gemini.c:49
 msgid "Gemini"
 msgstr "Џемини"
 
@@ -9775,7 +9794,7 @@ msgstr "Неисправан догађај %d"
 msgid "Could not read event: %d (%s)"
 msgstr "Неуспешно читање догађаја: %d (%s)"
 
-#: src/terminal/kbd.c:1255
+#: src/terminal/kbd.c:1253
 #, c-format
 msgid "Too many bytes read from the itrm!"
 msgstr "Прочитано је превише бајтова из itrm-а!"

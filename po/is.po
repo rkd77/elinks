@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.5pre0.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2024-11-04 09:33+0100\n"
+"POT-Creation-Date: 2024-12-06 16:58+0100\n"
 "PO-Revision-Date: 2003-01-03 03:41+0100\n"
 "Last-Translator: Armon Red <armon@islandia.is>\n"
 "Language-Team: Icelandic <kde-isl@mmedia.is>\n"
@@ -275,11 +275,11 @@ msgid ""
 msgstr ""
 
 #. name:
-#: src/bfu/leds.c:510 src/bfu/leds.c:552
+#: src/bfu/leds.c:508 src/bfu/leds.c:550
 msgid "LED indicators"
 msgstr ""
 
-#: src/bfu/leds.c:511
+#: src/bfu/leds.c:509
 #, c-format
 msgid ""
 "What the different LEDs indicate:\n"
@@ -1709,42 +1709,53 @@ msgid ""
 msgstr ""
 
 #: src/config/cmdline.c:882
+#, fuzzy
+msgid "Delete timer queue"
+msgstr "Eyða"
+
+#: src/config/cmdline.c:884
+msgid ""
+"Whether to delete timer queue under Windows. When QuickJS is enabled on "
+"Win32, you can enable this option to disable js execution timeouts."
+msgstr ""
+
+#: src/config/cmdline.c:888
 msgid "Print formatted versions of given URLs to stdout"
 msgstr ""
 
-#: src/config/cmdline.c:884
+#: src/config/cmdline.c:890
 msgid "Print formatted plain-text versions of given URLs to stdout."
 msgstr ""
 
-#: src/config/cmdline.c:887
+#: src/config/cmdline.c:893
 msgid "Codepage to use with -dump"
 msgstr ""
 
-#: src/config/cmdline.c:889
+#: src/config/cmdline.c:895
 msgid "Codepage used when formatting dump output."
 msgstr ""
 
-#: src/config/cmdline.c:891
+#: src/config/cmdline.c:897
 msgid "Color mode used with -dump"
 msgstr ""
 
-#: src/config/cmdline.c:893
+#: src/config/cmdline.c:899
 msgid "Color mode used with -dump."
 msgstr ""
 
-#: src/config/cmdline.c:895
+#: src/config/cmdline.c:901
 msgid "Width of document formatted with -dump"
 msgstr ""
 
-#: src/config/cmdline.c:897
+#: src/config/cmdline.c:903
 msgid "Width of the dump output."
 msgstr ""
 
-#: src/config/cmdline.c:899
+#: src/config/cmdline.c:905
 msgid "Evaluate configuration file directive"
 msgstr ""
 
-#: src/config/cmdline.c:901
+#: src/config/cmdline.c:907
 msgid ""
 "Specify configuration file directives on the command-line which will be "
 "evaluated after all configuration files has been read. Example usage:\n"
@@ -1752,58 +1763,58 @@ msgid ""
 msgstr ""
 
 #. lynx compatibility
-#: src/config/cmdline.c:907
+#: src/config/cmdline.c:913
 msgid "Interpret documents of unknown types as HTML"
 msgstr ""
 
-#: src/config/cmdline.c:909
+#: src/config/cmdline.c:915
 msgid ""
 "Makes ELinks assume documents of unknown types are HTML. Useful when using "
 "ELinks as an external viewer from MUAs. This is equivalent to -default-mime-"
 "type text/html."
 msgstr ""
 
-#: src/config/cmdline.c:919
+#: src/config/cmdline.c:925
 msgid "Print usage help and exit"
 msgstr ""
 
-#: src/config/cmdline.c:921
+#: src/config/cmdline.c:927
 msgid "Print usage help and exit."
 msgstr ""
 
-#: src/config/cmdline.c:923
+#: src/config/cmdline.c:929
 msgid "Only permit local connections"
 msgstr ""
 
-#: src/config/cmdline.c:925
+#: src/config/cmdline.c:931
 msgid ""
 "Restricts ELinks to work offline and only connect to servers with local "
 "addresses (ie. 127.0.0.1). No connections to remote servers will be "
 "permitted."
 msgstr ""
 
-#: src/config/cmdline.c:929
+#: src/config/cmdline.c:935
 msgid "Print detailed usage help and exit"
 msgstr ""
 
-#: src/config/cmdline.c:931
+#: src/config/cmdline.c:937
 msgid "Print detailed usage help and exit."
 msgstr ""
 
-#: src/config/cmdline.c:933
+#: src/config/cmdline.c:939
 #, fuzzy
 msgid "Look up specified host"
 msgstr "Ekkert forrit skilgreint fyrir"
 
-#: src/config/cmdline.c:935
+#: src/config/cmdline.c:941
 msgid "Look up specified host and print all DNS resolved IP addresses."
 msgstr ""
 
-#: src/config/cmdline.c:938
+#: src/config/cmdline.c:944
 msgid "Run as separate instance"
 msgstr ""
 
-#: src/config/cmdline.c:940
+#: src/config/cmdline.c:946
 msgid ""
 "Run ELinks as a separate instance instead of connecting to an existing "
 "instance. Note that normally no runtime state files (bookmarks, history, "
@@ -1811,52 +1822,52 @@ msgid ""
 "files."
 msgstr ""
 
-#: src/config/cmdline.c:945
+#: src/config/cmdline.c:951
 msgid "Disable use of files in ~/.config/elinks"
 msgstr ""
 
-#: src/config/cmdline.c:947
+#: src/config/cmdline.c:953
 msgid ""
 "Disables creation and use of files in the user specific home configuration "
 "directory (~/.config/elinks). It forces default configuration values to be "
 "used and disables saving of runtime state files."
 msgstr ""
 
-#: src/config/cmdline.c:952
+#: src/config/cmdline.c:958
 msgid "Disable libevent"
 msgstr ""
 
-#: src/config/cmdline.c:954
+#: src/config/cmdline.c:960
 msgid "Disables libevent."
 msgstr ""
 
-#: src/config/cmdline.c:956
+#: src/config/cmdline.c:962
 msgid "Disable link numbering in dump output"
 msgstr ""
 
-#: src/config/cmdline.c:958
+#: src/config/cmdline.c:964
 msgid ""
 "Prevents printing of link number in dump output.\n"
 "\n"
 "Note that this really affects only -dump, nothing else."
 msgstr ""
 
-#: src/config/cmdline.c:962
+#: src/config/cmdline.c:968
 msgid "Disable printing of link references in dump output"
 msgstr ""
 
-#: src/config/cmdline.c:964
+#: src/config/cmdline.c:970
 msgid ""
 "Prevents printing of references (URIs) of document links in dump output.\n"
 "\n"
 "Note that this really affects only -dump, nothing else."
 msgstr ""
 
-#: src/config/cmdline.c:969
+#: src/config/cmdline.c:975
 msgid "Control an already running ELinks"
 msgstr ""
 
-#: src/config/cmdline.c:971
+#: src/config/cmdline.c:977
 msgid ""
 "Control a remote ELinks instance by passing commands to it. The option takes "
 "an additional argument containing the method which should be invoked and any "
@@ -1877,11 +1888,11 @@ msgid ""
 "\txfeDoCommand(openBrowser) : open new window"
 msgstr ""
 
-#: src/config/cmdline.c:991
+#: src/config/cmdline.c:997
 msgid "Connect to session ring with given ID"
 msgstr ""
 
-#: src/config/cmdline.c:993
+#: src/config/cmdline.c:999
 msgid ""
 "ID of session ring this ELinks session should connect to. ELinks works in so-"
 "called session rings, whereby all instances of ELinks are interconnected and "
@@ -1899,49 +1910,49 @@ msgid ""
 "used. See also -touch-files."
 msgstr ""
 
-#: src/config/cmdline.c:1011
+#: src/config/cmdline.c:1017
 msgid "Print the source of given URLs to stdout"
 msgstr ""
 
-#: src/config/cmdline.c:1013
+#: src/config/cmdline.c:1019
 msgid "Print given URLs in source form to stdout."
 msgstr ""
 
-#: src/config/cmdline.c:1017
+#: src/config/cmdline.c:1023
 msgid "Whether to use terminfo"
 msgstr ""
 
-#: src/config/cmdline.c:1019
+#: src/config/cmdline.c:1025
 msgid ""
 "When enabled, terminfo ncurses functions will be used instead of hardcoded "
 "sequences."
 msgstr ""
 
-#: src/config/cmdline.c:1022
+#: src/config/cmdline.c:1028
 msgid "Test js"
 msgstr ""
 
-#: src/config/cmdline.c:1024
+#: src/config/cmdline.c:1030
 msgid "When enabled, helps to test js."
 msgstr ""
 
-#: src/config/cmdline.c:1026
+#: src/config/cmdline.c:1032
 msgid ""
 "Touch files in ~/.config/elinks when running with -no-connect/-session-ring"
 msgstr ""
 
-#: src/config/cmdline.c:1028
+#: src/config/cmdline.c:1034
 msgid ""
 "When enabled, runtime state files (bookmarks, history, etc.) are written to "
 "disk, even when -no-connect or -session-ring is used. The option has no "
 "effect if not used in conjunction with any of these options."
 msgstr ""
 
-#: src/config/cmdline.c:1033
+#: src/config/cmdline.c:1039
 msgid "Verbose level"
 msgstr ""
 
-#: src/config/cmdline.c:1035
+#: src/config/cmdline.c:1041
 msgid ""
 "The verbose level controls what messages are shown at start up and while "
 "running:\n"
@@ -1950,11 +1961,11 @@ msgid ""
 "\t2 means show all messages"
 msgstr ""
 
-#: src/config/cmdline.c:1041
+#: src/config/cmdline.c:1047
 msgid "Print version information and exit"
 msgstr ""
 
-#: src/config/cmdline.c:1043
+#: src/config/cmdline.c:1049
 msgid "Print ELinks version information and exit."
 msgstr ""
 
@@ -6554,73 +6565,73 @@ msgid ""
 "ELinks, so the script execution was interrupted."
 msgstr ""
 
-#: src/js/ecmascript-c.c:57
+#: src/js/ecmascript-c.c:59
 msgid "Ecmascript enabled"
 msgstr ""
 
-#: src/js/ecmascript-c.c:59
+#: src/js/ecmascript-c.c:61
 msgid "Ecmascript disabled"
 msgstr ""
 
-#: src/js/mujs.c:268 src/js/quickjs.c:465 src/js/spidermonkey.cpp:129
+#: src/js/mujs.c:273 src/js/quickjs.c:477 src/js/spidermonkey.cpp:131
 msgid "A script embedded in the current document raised the following:\n"
 msgstr ""
 
-#: src/js/mujs.c:271 src/js/quickjs.c:468 src/js/spidermonkey.cpp:133
+#: src/js/mujs.c:276 src/js/quickjs.c:480 src/js/spidermonkey.cpp:135
 msgid "JavaScript Error"
 msgstr ""
 
 #. name:
-#: src/js/mujs.c:454
+#: src/js/mujs.c:459
 msgid "mujs"
 msgstr ""
 
-#: src/js/mujs/window.c:335 src/js/quickjs/window.c:737
+#: src/js/mujs/window.c:335 src/js/quickjs/window.c:741
 #: src/js/spidermonkey/window.cpp:442
 msgid "JavaScript Alert"
 msgstr ""
 
 #. name:
-#: src/js/quickjs.c:593 src/js/quickjs.c:609
+#: src/js/quickjs.c:605 src/js/quickjs.c:621
 msgid "QuickJS"
 msgstr ""
 
-#: src/js/quickjs.c:595
+#: src/js/quickjs.c:607
 msgid "Options specific to QuickJS."
 msgstr ""
 
-#: src/js/quickjs.c:597
+#: src/js/quickjs.c:609
 msgid "GC threshold"
 msgstr ""
 
-#: src/js/quickjs.c:599
+#: src/js/quickjs.c:611
 msgid "GC threshold in bytes."
 msgstr ""
 
-#: src/js/quickjs.c:601 src/js/spidermonkey.cpp:758
+#: src/js/quickjs.c:613 src/js/spidermonkey.cpp:790
 #, fuzzy
 msgid "Memory limit"
 msgstr "Uppl. minnis"
 
-#: src/js/quickjs.c:603
+#: src/js/quickjs.c:615
 msgid "Runtime memory limit in bytes per context."
 msgstr ""
 
-#: src/js/spidermonkey.cpp:754
+#: src/js/spidermonkey.cpp:786
 msgid "Spidermonkey"
 msgstr ""
 
-#: src/js/spidermonkey.cpp:756
+#: src/js/spidermonkey.cpp:788
 #, fuzzy
 msgid "Options specific to Spidermonkey."
 msgstr "Ekkert forrit skilgreint fyrir"
 
-#: src/js/spidermonkey.cpp:760
+#: src/js/spidermonkey.cpp:792
 msgid "Runtime memory limit in bytes."
 msgstr ""
 
 #. name:
-#: src/js/spidermonkey.cpp:766
+#: src/js/spidermonkey.cpp:798
 msgid "SpiderMonkey"
 msgstr ""
 
@@ -8232,15 +8243,18 @@ msgstr ""
 msgid "SFTP"
 msgstr ""
 
-#: src/protocol/curl/ftp.c:207 src/protocol/ftp/ftp.c:1280 src/util/file.h:256
+#: src/protocol/curl/ftp.c:207 src/protocol/fsp/fsp2.c:914
+#: src/protocol/fsp/fsp.c:166 src/protocol/ftp/ftp.c:1280 src/util/file.h:256
 msgid "%b %e  %Y"
 msgstr ""
 
-#: src/protocol/curl/ftp.c:209 src/protocol/ftp/ftp.c:1282 src/util/file.h:258
+#: src/protocol/curl/ftp.c:209 src/protocol/fsp/fsp2.c:916
+#: src/protocol/fsp/fsp.c:168 src/protocol/ftp/ftp.c:1282 src/util/file.h:258
 msgid "%b %e %H:%M"
 msgstr ""
 
-#: src/protocol/curl/ftp.c:216 src/protocol/ftp/ftp.c:1289 src/util/file.h:265
+#: src/protocol/curl/ftp.c:216 src/protocol/fsp/fsp2.c:922
+#: src/protocol/fsp/fsp.c:174 src/protocol/ftp/ftp.c:1289 src/util/file.h:265
 msgid "             "
 msgstr ""
 
@@ -8324,7 +8338,7 @@ msgid "Finger"
 msgstr ""
 
 #. name:
-#: src/protocol/fsp/fsp2.c:96 src/protocol/fsp/fsp.c:56
+#: src/protocol/fsp/fsp2.c:106 src/protocol/fsp/fsp.c:56
 msgid "FSP"
 msgstr ""
 
@@ -8417,20 +8431,25 @@ msgstr ""
 msgid "Use EPSV instead of EPRT (passive vs active mode, IPv6 only)."
 msgstr ""
 
-#: src/protocol/gemini/codes.c:83
+#: src/protocol/gemini/codes.c:84
 #, c-format
 msgid "Gemini error %02d"
 msgstr ""
 
-#: src/protocol/gemini/codes.c:106
+#: src/protocol/gemini/codes.c:107
 #, c-format
 msgid ""
 "  An error occurred on the server while fetching the document you\n"
 "  requested.\n"
 msgstr ""
 
+#: src/protocol/gemini/dialog.c:65
+#, fuzzy
+msgid "Enter text"
+msgstr "Setja inn slóð"
+
 #. name:
-#: src/protocol/gemini/gemini.c:48
+#: src/protocol/gemini/gemini.c:49
 msgid "Gemini"
 msgstr ""
 
@@ -9197,7 +9216,7 @@ msgstr ""
 msgid "Could not read event: %d (%s)"
 msgstr "Gat ekki skrifað í skrá"
 
-#: src/terminal/kbd.c:1255
+#: src/terminal/kbd.c:1253
 #, c-format
 msgid "Too many bytes read from the itrm!"
 msgstr ""

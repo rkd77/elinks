@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.18.GIT\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2024-11-04 09:33+0100\n"
+"POT-Creation-Date: 2024-12-06 16:58+0100\n"
 "PO-Revision-Date: 2021-12-02 17:36+0100\n"
 "Last-Translator: Witold Filipczyk <witekfl@poczta.onet.pl>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -275,11 +275,11 @@ msgid ""
 msgstr "Włączenie LEDów. Te wskaźniki poinformują cię o różnych stanach."
 
 #. name:
-#: src/bfu/leds.c:510 src/bfu/leds.c:552
+#: src/bfu/leds.c:508 src/bfu/leds.c:550
 msgid "LED indicators"
 msgstr "Wskaźniki LED"
 
-#: src/bfu/leds.c:511
+#: src/bfu/leds.c:509
 #, c-format
 msgid ""
 "What the different LEDs indicate:\n"
@@ -1660,44 +1660,57 @@ msgstr ""
 "użytkownika w momencie zapisu."
 
 #: src/config/cmdline.c:882
+msgid "Delete timer queue"
+msgstr "Usuń kolejkę stoperów"
+
+#: src/config/cmdline.c:884
+msgid ""
+"Whether to delete timer queue under Windows. When QuickJS is enabled on "
+"Win32, you can enable this option to disable js execution timeouts."
+msgstr ""
+"Czy skasować kolejkę stoperów pod Windows. Gdy QuickJS jest włączone na "
+"Windows, możesz włączyć tę opcję, żeby wyłączyć limity czasu wykonywania "
+"javascriptu."
+
+#: src/config/cmdline.c:888
 msgid "Print formatted versions of given URLs to stdout"
 msgstr "Wypisanie sformatowanych wersji danych URL-i na standardowe wyjście"
 
-#: src/config/cmdline.c:884
+#: src/config/cmdline.c:890
 msgid "Print formatted plain-text versions of given URLs to stdout."
 msgstr ""
 "Wypisanie sformatowanych wersji podanych URL-i na standardowe\n"
 "wyjście."
 
-#: src/config/cmdline.c:887
+#: src/config/cmdline.c:893
 msgid "Codepage to use with -dump"
 msgstr "Strona kodowa używana razem z -dump"
 
-#: src/config/cmdline.c:889
+#: src/config/cmdline.c:895
 msgid "Codepage used when formatting dump output."
 msgstr "Strona kodowa używana przy zrzutach."
 
-#: src/config/cmdline.c:891
+#: src/config/cmdline.c:897
 msgid "Color mode used with -dump"
 msgstr "Tryb koloru używany razem z -dump"
 
-#: src/config/cmdline.c:893
+#: src/config/cmdline.c:899
 msgid "Color mode used with -dump."
 msgstr "Tryb koloru używany razem z -dump."
 
-#: src/config/cmdline.c:895
+#: src/config/cmdline.c:901
 msgid "Width of document formatted with -dump"
 msgstr "Szerokość sformatowanego dokumentu z -dump"
 
-#: src/config/cmdline.c:897
+#: src/config/cmdline.c:903
 msgid "Width of the dump output."
 msgstr "Szerokość wyjścia dump."
 
-#: src/config/cmdline.c:899
+#: src/config/cmdline.c:905
 msgid "Evaluate configuration file directive"
 msgstr "Wylicz podaną opcję konfiguracyjną"
 
-#: src/config/cmdline.c:901
+#: src/config/cmdline.c:907
 msgid ""
 "Specify configuration file directives on the command-line which will be "
 "evaluated after all configuration files has been read. Example usage:\n"
@@ -1708,11 +1721,11 @@ msgstr ""
 "\t-eval 'set protocol.file.allow_special_files = 1'"
 
 #. lynx compatibility
-#: src/config/cmdline.c:907
+#: src/config/cmdline.c:913
 msgid "Interpret documents of unknown types as HTML"
 msgstr "Interpretuj dokumenty nieznanego typu jako HTML"
 
-#: src/config/cmdline.c:909
+#: src/config/cmdline.c:915
 msgid ""
 "Makes ELinks assume documents of unknown types are HTML. Useful when using "
 "ELinks as an external viewer from MUAs. This is equivalent to -default-mime-"
@@ -1722,19 +1735,19 @@ msgstr ""
 "Przydatne podczas używania ELinks jako zewnętrznej przeglądarki z programem "
 "pocztowym. Jest to równoważne z -default-mime-type text/html."
 
-#: src/config/cmdline.c:919
+#: src/config/cmdline.c:925
 msgid "Print usage help and exit"
 msgstr "Wypisz informacje na temat użycia ELinksa i zakończ działanie"
 
-#: src/config/cmdline.c:921
+#: src/config/cmdline.c:927
 msgid "Print usage help and exit."
 msgstr "Wypisz informacje na temat użycia ELinksa i zakończ działanie."
 
-#: src/config/cmdline.c:923
+#: src/config/cmdline.c:929
 msgid "Only permit local connections"
 msgstr "Zezwól jedynie na lokalne połączenia"
 
-#: src/config/cmdline.c:925
+#: src/config/cmdline.c:931
 msgid ""
 "Restricts ELinks to work offline and only connect to servers with local "
 "addresses (ie. 127.0.0.1). No connections to remote servers will be "
@@ -1743,30 +1756,30 @@ msgstr ""
 "Ogranicz ELinksa, tak aby otwierał połączenia tylko do lokalnych adresów "
 "(np. 127.0.0.1). ELinks nie będzie się łączył ze zdalnymi serwerami."
 
-#: src/config/cmdline.c:929
+#: src/config/cmdline.c:935
 msgid "Print detailed usage help and exit"
 msgstr "Wypisz dokładne informacje na temat użycia ELinksa i zakończ działanie"
 
-#: src/config/cmdline.c:931
+#: src/config/cmdline.c:937
 msgid "Print detailed usage help and exit."
 msgstr ""
 "Wypisz dokładne informacje na temat użycia ELinksa i zakończ\n"
 "działanie."
 
 #
-#: src/config/cmdline.c:933
+#: src/config/cmdline.c:939
 msgid "Look up specified host"
 msgstr "Szukanie danego hosta"
 
-#: src/config/cmdline.c:935
+#: src/config/cmdline.c:941
 msgid "Look up specified host and print all DNS resolved IP addresses."
 msgstr "Szukanie danego hosta i wypisanie wszystkich rozwiązanych adresów."
 
-#: src/config/cmdline.c:938
+#: src/config/cmdline.c:944
 msgid "Run as separate instance"
 msgstr "Uruchamianie jako oddzielna instancja"
 
-#: src/config/cmdline.c:940
+#: src/config/cmdline.c:946
 msgid ""
 "Run ELinks as a separate instance instead of connecting to an existing "
 "instance. Note that normally no runtime state files (bookmarks, history, "
@@ -1777,11 +1790,11 @@ msgstr ""
 "instancji. Wiedz, że żadne pliki stanu (zakładki, historia itp.) nie są "
 "zapisywane na dysk, gdy ta opcja jest używana. Zobacz także -touch-files."
 
-#: src/config/cmdline.c:945
+#: src/config/cmdline.c:951
 msgid "Disable use of files in ~/.config/elinks"
 msgstr "Nie używaj plików w ~/.config/elinks"
 
-#: src/config/cmdline.c:947
+#: src/config/cmdline.c:953
 msgid ""
 "Disables creation and use of files in the user specific home configuration "
 "directory (~/.config/elinks). It forces default configuration values to be "
@@ -1791,19 +1804,19 @@ msgstr ""
 "(~/.config/elinks). Wymusza użycie domyślnej konfiguracji i blokuje zapis "
 "plików konfiguracyjnych."
 
-#: src/config/cmdline.c:952
+#: src/config/cmdline.c:958
 msgid "Disable libevent"
 msgstr "Wyłącz libevent"
 
-#: src/config/cmdline.c:954
+#: src/config/cmdline.c:960
 msgid "Disables libevent."
 msgstr "Wyłącz libevent."
 
-#: src/config/cmdline.c:956
+#: src/config/cmdline.c:962
 msgid "Disable link numbering in dump output"
 msgstr "Nie numeruj odnośników przy -dump"
 
-#: src/config/cmdline.c:958
+#: src/config/cmdline.c:964
 msgid ""
 "Prevents printing of link number in dump output.\n"
 "\n"
@@ -1813,11 +1826,11 @@ msgstr ""
 "\n"
 "Pamiętaj, że dotyczy to tylko -dump, niczego innego."
 
-#: src/config/cmdline.c:962
+#: src/config/cmdline.c:968
 msgid "Disable printing of link references in dump output"
 msgstr "Nie pokazuj referencji odnośników przy -dump"
 
-#: src/config/cmdline.c:964
+#: src/config/cmdline.c:970
 msgid ""
 "Prevents printing of references (URIs) of document links in dump output.\n"
 "\n"
@@ -1827,11 +1840,11 @@ msgstr ""
 "\n"
 "Pamiętaj, że dotyczy to tylko -dump, niczego innego."
 
-#: src/config/cmdline.c:969
+#: src/config/cmdline.c:975
 msgid "Control an already running ELinks"
 msgstr "Kontrolowanie już działającego ELinksa"
 
-#: src/config/cmdline.c:971
+#: src/config/cmdline.c:977
 msgid ""
 "Control a remote ELinks instance by passing commands to it. The option takes "
 "an additional argument containing the method which should be invoked and any "
@@ -1869,11 +1882,11 @@ msgstr ""
 "\tsearch(string)            : szukaj w bieżacym tabie\n"
 "\txfeDoCommand(openBrowser) : otwórz nowe okienko"
 
-#: src/config/cmdline.c:991
+#: src/config/cmdline.c:997
 msgid "Connect to session ring with given ID"
 msgstr "Połącz się do pierścienia sesji z danym ID"
 
-#: src/config/cmdline.c:993
+#: src/config/cmdline.c:999
 msgid ""
 "ID of session ring this ELinks session should connect to. ELinks works in so-"
 "called session rings, whereby all instances of ELinks are interconnected and "
@@ -1906,19 +1919,19 @@ msgstr ""
 "stanu nie są zapisywane na dysk, gdy ta opcja jest użyta. Zobacz także -"
 "touch-files."
 
-#: src/config/cmdline.c:1011
+#: src/config/cmdline.c:1017
 msgid "Print the source of given URLs to stdout"
 msgstr "Wypisz źródło danego URL na standardowe wyjście"
 
-#: src/config/cmdline.c:1013
+#: src/config/cmdline.c:1019
 msgid "Print given URLs in source form to stdout."
 msgstr "Wypisz podany URL w postaci źródłowej na standardowe wyjście."
 
-#: src/config/cmdline.c:1017
+#: src/config/cmdline.c:1023
 msgid "Whether to use terminfo"
 msgstr "Czy używać bazy terminfo"
 
-#: src/config/cmdline.c:1019
+#: src/config/cmdline.c:1025
 msgid ""
 "When enabled, terminfo ncurses functions will be used instead of hardcoded "
 "sequences."
@@ -1926,21 +1939,21 @@ msgstr ""
 "Gdy włączone, funkcje ncurses (terminfo) będą używane do wyświetlania "
 "zamiast wpisanych na sztywno kodów sekwencji sterujących i kolorów."
 
-#: src/config/cmdline.c:1022
+#: src/config/cmdline.c:1028
 msgid "Test js"
 msgstr "Testowanie js"
 
-#: src/config/cmdline.c:1024
+#: src/config/cmdline.c:1030
 msgid "When enabled, helps to test js."
 msgstr "Gdy włączone, pomaga testować js."
 
-#: src/config/cmdline.c:1026
+#: src/config/cmdline.c:1032
 msgid ""
 "Touch files in ~/.config/elinks when running with -no-connect/-session-ring"
 msgstr ""
 "Uaktualnij pliki w ~/.config/elinks gdy uruchomiony -no-connect/-session-ring"
 
-#: src/config/cmdline.c:1028
+#: src/config/cmdline.c:1034
 msgid ""
 "When enabled, runtime state files (bookmarks, history, etc.) are written to "
 "disk, even when -no-connect or -session-ring is used. The option has no "
@@ -1950,11 +1963,11 @@ msgstr ""
 "dysk nawet jeśli -no-connect lub -session-ring będzie podane. Opcja nie daje "
 "żadnego rezultatu, bez połączenia z żadną z tych opcji."
 
-#: src/config/cmdline.c:1033
+#: src/config/cmdline.c:1039
 msgid "Verbose level"
 msgstr "Poziom gadatliwości"
 
-#: src/config/cmdline.c:1035
+#: src/config/cmdline.c:1041
 msgid ""
 "The verbose level controls what messages are shown at start up and while "
 "running:\n"
@@ -1968,11 +1981,11 @@ msgstr ""
 "\t1 pokazuj poważne błędy i ostrzeżenia\n"
 "\t2 pokazuj wszystkie informacje"
 
-#: src/config/cmdline.c:1041
+#: src/config/cmdline.c:1047
 msgid "Print version information and exit"
 msgstr "Wypisz informacje o wersji i zakończ działanie"
 
-#: src/config/cmdline.c:1043
+#: src/config/cmdline.c:1049
 msgid "Print ELinks version information and exit."
 msgstr "Wypisz informacje o wersji ELinksa i zakończ działanie."
 
@@ -3665,7 +3678,8 @@ msgstr "Pokazuj skompresowane pliki jako zwykły tekst"
 
 #: src/config/options.inc:727
 msgid "Whether to view compressed files (.gz, .zst or .xz) as plain text."
-msgstr "Czy pokazywać skompresowane pliki (.gz, .zst lub .xz) jako zwykły tekst."
+msgstr ""
+"Czy pokazywać skompresowane pliki (.gz, .zst lub .xz) jako zwykły tekst."
 
 #. Does automatic resuming make sense as an option?
 #: src/config/options.inc:730
@@ -6984,71 +6998,71 @@ msgstr ""
 "błąd i może to spowodować zastopowanie całego ELinksa.\n"
 "Wykonywanie skryptu zostało przerwane."
 
-#: src/js/ecmascript-c.c:57
+#: src/js/ecmascript-c.c:59
 msgid "Ecmascript enabled"
 msgstr "Ecmascript włączone"
 
-#: src/js/ecmascript-c.c:59
+#: src/js/ecmascript-c.c:61
 msgid "Ecmascript disabled"
 msgstr "Ecmascript wyłączone"
 
-#: src/js/mujs.c:268 src/js/quickjs.c:465 src/js/spidermonkey.cpp:129
+#: src/js/mujs.c:273 src/js/quickjs.c:477 src/js/spidermonkey.cpp:131
 msgid "A script embedded in the current document raised the following:\n"
 msgstr "Skrypt zawarty w bieżącym dokumencie spowodował:\n"
 
-#: src/js/mujs.c:271 src/js/quickjs.c:468 src/js/spidermonkey.cpp:133
+#: src/js/mujs.c:276 src/js/quickjs.c:480 src/js/spidermonkey.cpp:135
 msgid "JavaScript Error"
 msgstr "Błąd JavaScriptu"
 
 #. name:
-#: src/js/mujs.c:454
+#: src/js/mujs.c:459
 msgid "mujs"
 msgstr "mujs"
 
-#: src/js/mujs/window.c:335 src/js/quickjs/window.c:737
+#: src/js/mujs/window.c:335 src/js/quickjs/window.c:741
 #: src/js/spidermonkey/window.cpp:442
 msgid "JavaScript Alert"
 msgstr "Alert JavaScriptu"
 
 #. name:
-#: src/js/quickjs.c:593 src/js/quickjs.c:609
+#: src/js/quickjs.c:605 src/js/quickjs.c:621
 msgid "QuickJS"
 msgstr "QuickJS"
 
-#: src/js/quickjs.c:595
+#: src/js/quickjs.c:607
 msgid "Options specific to QuickJS."
 msgstr "Ustawienia dotyczące QuickJS."
 
-#: src/js/quickjs.c:597
+#: src/js/quickjs.c:609
 msgid "GC threshold"
 msgstr "GC threshold"
 
-#: src/js/quickjs.c:599
+#: src/js/quickjs.c:611
 msgid "GC threshold in bytes."
 msgstr "GC threshold w bajtach."
 
-#: src/js/quickjs.c:601 src/js/spidermonkey.cpp:758
+#: src/js/quickjs.c:613 src/js/spidermonkey.cpp:790
 msgid "Memory limit"
 msgstr "Limit przydzielonej pamięci"
 
-#: src/js/quickjs.c:603
+#: src/js/quickjs.c:615
 msgid "Runtime memory limit in bytes per context."
 msgstr "Limit pamięci w bajtach na kontekst."
 
-#: src/js/spidermonkey.cpp:754
+#: src/js/spidermonkey.cpp:786
 msgid "Spidermonkey"
 msgstr "SpiderMonkey"
 
-#: src/js/spidermonkey.cpp:756
+#: src/js/spidermonkey.cpp:788
 msgid "Options specific to Spidermonkey."
 msgstr "Ustawienia dotyczące Spidermonkey."
 
-#: src/js/spidermonkey.cpp:760
+#: src/js/spidermonkey.cpp:792
 msgid "Runtime memory limit in bytes."
 msgstr "Limit pamięci w bajtach."
 
 #. name:
-#: src/js/spidermonkey.cpp:766
+#: src/js/spidermonkey.cpp:798
 msgid "SpiderMonkey"
 msgstr "SpiderMonkey"
 
@@ -8772,15 +8786,18 @@ msgstr "FTPES"
 msgid "SFTP"
 msgstr "SFTP"
 
-#: src/protocol/curl/ftp.c:207 src/protocol/ftp/ftp.c:1280 src/util/file.h:256
+#: src/protocol/curl/ftp.c:207 src/protocol/fsp/fsp2.c:914
+#: src/protocol/fsp/fsp.c:166 src/protocol/ftp/ftp.c:1280 src/util/file.h:256
 msgid "%b %e  %Y"
 msgstr "%e.%m.%Y "
 
-#: src/protocol/curl/ftp.c:209 src/protocol/ftp/ftp.c:1282 src/util/file.h:258
+#: src/protocol/curl/ftp.c:209 src/protocol/fsp/fsp2.c:916
+#: src/protocol/fsp/fsp.c:168 src/protocol/ftp/ftp.c:1282 src/util/file.h:258
 msgid "%b %e %H:%M"
 msgstr "%e.%m %H:%M"
 
-#: src/protocol/curl/ftp.c:216 src/protocol/ftp/ftp.c:1289 src/util/file.h:265
+#: src/protocol/curl/ftp.c:216 src/protocol/fsp/fsp2.c:922
+#: src/protocol/fsp/fsp.c:174 src/protocol/ftp/ftp.c:1289 src/util/file.h:265
 msgid "             "
 msgstr "             "
 
@@ -8870,7 +8887,7 @@ msgid "Finger"
 msgstr "Finger"
 
 #. name:
-#: src/protocol/fsp/fsp2.c:96 src/protocol/fsp/fsp.c:56
+#: src/protocol/fsp/fsp2.c:106 src/protocol/fsp/fsp.c:56
 msgid "FSP"
 msgstr "FSP"
 
@@ -8928,7 +8945,8 @@ msgstr "Maksymalna prędkość pobierania dla curla"
 
 #: src/protocol/ftp/ftp.c:86 src/protocol/http/http.c:207
 msgid "Max download speed in bytes/s. 0 means unlimited."
-msgstr "Maksymalna prędkość pobierania w bajtach na sekundę. 0 oznacza brak limitu."
+msgstr ""
+"Maksymalna prędkość pobierania w bajtach na sekundę. 0 oznacza brak limitu."
 
 #: src/protocol/ftp/ftp.c:88 src/protocol/http/http.c:209
 msgid "Curl max send speed"
@@ -8936,7 +8954,8 @@ msgstr "Maksymalna prędkość wysyłania dla curla"
 
 #: src/protocol/ftp/ftp.c:90 src/protocol/http/http.c:211
 msgid "Max upload speed in bytes/s. 0 means unlimited."
-msgstr "Maksymalna prędkość wysyłania w bajtach na sekundę. 0 oznacza brak limitu."
+msgstr ""
+"Maksymalna prędkość wysyłania w bajtach na sekundę. 0 oznacza brak limitu."
 
 #: src/protocol/ftp/ftp.c:92 src/protocol/http/http.c:239
 msgid "Curl TLS13 ciphers"
@@ -8946,7 +8965,9 @@ msgstr "Szyfry TLS13 curla"
 msgid ""
 "Colon separated list of TLS13 ciphers. See https://curl.se/docs/ssl-ciphers."
 "html"
-msgstr "Oddzielona dwukropkami lista szyfrów TLS13. Zobacz https://curl.se/docs/ssl-ciphers.html"
+msgstr ""
+"Oddzielona dwukropkami lista szyfrów TLS13. Zobacz https://curl.se/docs/ssl-"
+"ciphers.html"
 
 #: src/protocol/ftp/ftp.c:97
 msgid "Use passive mode (IPv4)"
@@ -8964,20 +8985,24 @@ msgstr "Używanie trybu pasywnego (IPv6)"
 msgid "Use EPSV instead of EPRT (passive vs active mode, IPv6 only)."
 msgstr "Używaj EPSV zamiast EPRT (tryb pasywny kontra aktywny, tylko IPv6)."
 
-#: src/protocol/gemini/codes.c:83
+#: src/protocol/gemini/codes.c:84
 #, c-format
 msgid "Gemini error %02d"
 msgstr "Błąd Gemini %02d"
 
-#: src/protocol/gemini/codes.c:106
+#: src/protocol/gemini/codes.c:107
 #, c-format
 msgid ""
 "  An error occurred on the server while fetching the document you\n"
 "  requested.\n"
 msgstr "  Wystąpił błąd na serwerze podczas ściągania żądanego dokumentu.\n"
 
+#: src/protocol/gemini/dialog.c:65
+msgid "Enter text"
+msgstr "Wprowadź tekst"
+
 #. name:
-#: src/protocol/gemini/gemini.c:48
+#: src/protocol/gemini/gemini.c:49
 msgid "Gemini"
 msgstr "Gemini"
 
@@ -9629,8 +9654,9 @@ msgstr "Wstrzymaj działanie przy błędach"
 msgid ""
 "In case of errors in scripts an error message is shown. If this option is "
 "enabled ELinks also sleeps for 3 seconds."
-msgstr "W przypadku błędów w skryptach wyświetlany jest komunikat błędu. Jeśli ta opcja jest włączona, "
-"oprócz tego ELinks przystaje na 3 sekundy."
+msgstr ""
+"W przypadku błędów w skryptach wyświetlany jest komunikat błędu. Jeśli ta "
+"opcja jest włączona, oprócz tego ELinks przystaje na 3 sekundy."
 
 #: src/scripting/smjs/action_object.cpp:105
 msgid "Cannot run actions in a tab that doesn't have the focus"
@@ -9888,7 +9914,7 @@ msgstr "Błędne zdarzenie %d"
 msgid "Could not read event: %d (%s)"
 msgstr "Nie można odczytać zdarzenia: %d (%s)"
 
-#: src/terminal/kbd.c:1255
+#: src/terminal/kbd.c:1253
 #, c-format
 msgid "Too many bytes read from the itrm!"
 msgstr "Zbyt dużo bajtów przeczytanych z itrm!"
