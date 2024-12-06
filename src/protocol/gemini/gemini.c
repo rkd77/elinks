@@ -300,7 +300,7 @@ gemini_got_header(struct socket *socket, struct read_buffer *rb)
 		return;
 	}
 
-	if ((a && get_gemini_code(rb, &h))
+	if (get_gemini_code(rb, &h)
 	    || ((h >= 40) || h < 10)) {
 		gemini->code = h;
 		mem_free_set(&conn->cached->head, stracpy("\nContent-Type: text/html\r\n"));
