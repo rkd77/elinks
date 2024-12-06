@@ -84,6 +84,16 @@ input_dialog(struct terminal *term, struct memory_list *ml,
 	     void (*fn)(void *, char *),
 	     void (*cancelfn)(void *));
 
+void
+password_dialog(struct terminal *term, struct memory_list *ml,
+	     char *title,
+	     char *text,
+	     void *data, struct input_history *history, int l,
+	     const char *def, int min, int max,
+	     widget_handler_T *check,
+	     void (*fn)(void *, char *),
+	     void (*cancelfn)(void *));
+
 
 /* Input lines */
 

@@ -241,6 +241,59 @@ input_field(struct terminal *term, struct memory_list *ml, int intl,
 
 	add_to_ml(&ml, (void *) dlg, (void *) NULL);
 	do_dialog(term, dlg, ml);
+#undef INPUT_WIDGETS_COUNT
+}
+
+static void
+password_field(struct terminal *term, struct memory_list *ml, int intl,
+	    char *title,
+	    char *text,
+	    char *okbutton,
+	    char *cancelbutton,
+	    void *data, struct input_history *history, int l,
+	    const char *def, int min, int max,
+	    widget_handler_T *check,
+	    void (*fn)(void *, char *),
+	    void (*cancelfn)(void *))
+{
+	struct dialog *dlg;
+	char *field;
+
+	if (intl) {
+		title = _(title, term);
+		text = _(text, term);
+		okbutton = _(okbutton, term);
+		cancelbutton = _(cancelbutton, term);
+	}
+
+#define INPUT_WIDGETS_COUNT 3
+	dlg = calloc_dialog(INPUT_WIDGETS_COUNT, l);
+	if (!dlg) return;
+
+	/* @field is automatically cleared by calloc() */
+	field = get_dialog_offset(dlg, INPUT_WIDGETS_COUNT);
+
+	if (def) {
+		int defsize = strlen(def) + 1;
+
+		memcpy(field, def, (defsize > l) ? l - 1 : defsize);
+	}
+
+	dlg->title = title;
+	dlg->layouter = generic_dialog_layouter;
+	dlg->layout.fit_datalen = 1;
+	dlg->udata2 = data;
+
+	add_dlg_field_pass(dlg, text, min, max, check, l, field);
+
+	add_dlg_button(dlg, okbutton, B_ENTER, input_field_ok, (void *)fn);
+	add_dlg_button(dlg, cancelbutton, B_ESC, input_field_cancel, (void *)cancelfn);
+
+	add_dlg_end(dlg, INPUT_WIDGETS_COUNT);
+
+	add_to_ml(&ml, (void *) dlg, (void *) NULL);
+	do_dialog(term, dlg, ml);
+#undef INPUT_WIDGETS_COUNT
 }
 
 void
@@ -255,6 +308,23 @@ input_dialog(struct terminal *term, struct memory_list *ml,
 {
 	/* [gettext_accelerator_context(input_dialog)] */
 	input_field(term, ml, 1, title, text, N_("~OK"), N_("~Cancel"),
+		    data, history, l,
+		    def, min, max,
+		    check, fn, cancelfn);
+}
+
+void
+password_dialog(struct terminal *term, struct memory_list *ml,
+	     char *title,
+	     char *text,
+	     void *data, struct input_history *history, int l,
+	     const char *def, int min, int max,
+	     widget_handler_T *check,
+	     void (*fn)(void *, char *),
+	     void (*cancelfn)(void *))
+{
+	/* [gettext_accelerator_context(input_dialog)] */
+	password_field(term, ml, 1, title, text, N_("~OK"), N_("~Cancel"),
 		    data, history, l,
 		    def, min, max,
 		    check, fn, cancelfn);

@@ -61,10 +61,19 @@ do_gemini_query_dialog(struct session *ses, void *data)
 	struct gemini_error_info *info = (struct gemini_error_info *)data;
 	info->ses = ses;
 
-	input_dialog(ses->tab->term, NULL,
+	if (info->code == 11) {
+		password_dialog(ses->tab->term, NULL,
 		     info->prompt, N_("Enter text"),
 		     info, NULL,
 		     MAX_STR_LEN, info->value, 0, 0, NULL,
 		     (void (*)(void *, char *))query_ok,
 		     query_cancel);
+	} else {
+		input_dialog(ses->tab->term, NULL,
+		     info->prompt, N_("Enter text"),
+		     info, NULL,
+		     MAX_STR_LEN, info->value, 0, 0, NULL,
+		     (void (*)(void *, char *))query_ok,
+		     query_cancel);
+	}
 }
