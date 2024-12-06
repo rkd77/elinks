@@ -325,6 +325,8 @@ src/js/mujs/fragment.c
 src/js/mujs/fragment.h
 src/js/mujs/history.c
 src/js/mujs/history.h
+src/js/mujs/image.c
+src/js/mujs/image.h
 src/js/mujs/implementation.c
 src/js/mujs/implementation.h
 src/js/mujs/input.c
@@ -400,6 +402,8 @@ src/js/quickjs/heartbeat.c
 src/js/quickjs/heartbeat.h
 src/js/quickjs/history.c
 src/js/quickjs/history.h
+src/js/quickjs/image.c
+src/js/quickjs/image.h
 src/js/quickjs/implementation.c
 src/js/quickjs/implementation.h
 src/js/quickjs/input.c
@@ -478,6 +482,8 @@ src/js/spidermonkey/heartbeat.cpp
 src/js/spidermonkey/heartbeat.h
 src/js/spidermonkey/history.cpp
 src/js/spidermonkey/history.h
+src/js/spidermonkey/image.cpp
+src/js/spidermonkey/image.h
 src/js/spidermonkey/implementation.cpp
 src/js/spidermonkey/implementation.h
 src/js/spidermonkey/input.cpp
@@ -668,6 +674,8 @@ src/protocol/ftpparse.c
 src/protocol/ftpparse.h
 src/protocol/gemini/codes.c
 src/protocol/gemini/codes.h
+src/protocol/gemini/dialog.c
+src/protocol/gemini/dialog.h
 src/protocol/gemini/gemini.c
 src/protocol/gemini/gemini.h
 src/protocol/gopher/gopher.c
