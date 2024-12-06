@@ -328,6 +328,10 @@ gemini_got_header(struct socket *socket, struct read_buffer *rb)
 	if (h == 10 || h == 11) {
 		add_bytes_to_string(&head_string, rb->data + 3, a - 4);
 		mem_free_set(&gemini->prompt, head_string.source);
+		if (conn->cached) {
+			delete_cache_entry(conn->cached);
+			conn->cached = NULL;
+		}
 	} else {
 		add_to_string(&head_string, "\nContent-Type: ");
 		add_bytes_to_string(&head_string, rb->data + 3, a - 2);
