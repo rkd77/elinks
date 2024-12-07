@@ -5,6 +5,27 @@ You can see the complete list of recent changes, bugfixes and new features
 in the https://github.com/rkd77/felinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
+ELinks 0.18.0rc1
+----------------
+
+Released on 2024-12-07
+
+* drop combining compile time option
+* bump mozjs dependency to 128
+* console.assert (and extension console.exit)
+* test option for testing js code
+* added document.scripting_sleep_on_error option #319
+* skip hidden elements #341
+* fix linking -lexecinfo #337
+* Serbian translation update
+* Polish translation update
+* detect if gettext has _nl_msg_cat_cntr #325
+* added reopen-last-closed-tab action #309
+* added options for memory limits of Spidermonkey and QuickJS
+* gemini input #121
+* compilation fixes
+
+
 ELinks 0.17.1.1
 ---------------
 
