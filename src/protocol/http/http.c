@@ -1693,7 +1693,7 @@ again:
 	/* XXX: Is there some reason why NOT to follow the Location header
 	 * for any status? If the server didn't mean it, it wouldn't send
 	 * it, after all...? --pasky */
-	if (h == 201 || h == 301 || h == 302 || h == 303 || h == 307) {
+	if (h == 201 || h == 301 || h == 302 || h == 303 || h == 307 || h == 308) {
 		d = parse_header(conn->cached->head, "Location", NULL);
 		if (d) {
 			int use_get_method = (h == 303);
