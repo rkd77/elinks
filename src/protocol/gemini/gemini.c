@@ -175,7 +175,8 @@ read_gemini_data_done(struct connection *conn)
 			}
 			info->code = gemini->code;
 			info->uri = get_uri_reference(conn->uri);
-			info->prompt = null_or_stracpy(gemini->prompt);
+			info->prompt = gemini->prompt;
+			gemini->prompt = NULL;
 			add_questions_entry(do_gemini_query_dialog, info);
 		} else {
 			/* This is not an error, thus fine. No need generate any
@@ -277,7 +278,6 @@ gemini_got_header(struct socket *socket, struct read_buffer *rb)
 {
 	struct connection *conn = (struct connection *)socket->conn;
 	struct gemini_connection_info *gemini = (struct gemini_connection_info *)conn->info;
-	struct string head_string;
 	struct connection_state state = (!is_in_state(conn->state, S_PROC)
 					 ? connection_state(S_GETH)
 					 : connection_state(S_PROC));
@@ -321,18 +321,24 @@ gemini_got_header(struct socket *socket, struct read_buffer *rb)
 		return;
 	}
 
-	if (!init_string(&head_string)) {
-		return;
-	}
-
 	if (h == 10 || h == 11) {
-		add_bytes_to_string(&head_string, rb->data + 3, a - 4);
-		mem_free_set(&gemini->prompt, head_string.source);
+		gemini->prompt = memacpy(rb->data + 3, a - 4);
+
+		if (!gemini->prompt) {
+			abort_connection(conn, connection_state(S_OUT_OF_MEM));
+			return;
+		}
 		if (conn->cached) {
 			delete_cache_entry(conn->cached);
 			conn->cached = NULL;
 		}
 	} else {
+		struct string head_string;
+
+		if (!init_string(&head_string)) {
+			abort_connection(conn, connection_state(S_OUT_OF_MEM));
+			return;
+		}
 		add_to_string(&head_string, "\nContent-Type: ");
 		add_bytes_to_string(&head_string, rb->data + 3, a - 2);
 
