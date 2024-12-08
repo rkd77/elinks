@@ -29,17 +29,20 @@ static void
 query_ok(void *d, const char *data)
 {
 	struct gemini_error_info *info = (struct gemini_error_info *)d;
+	struct string q;
 
-	char *url = get_uri_string(info->uri, URI_PROTOCOL | URI_HOST | URI_PORT | URI_DATA);
-	char *url2 = straconcat(url, "?", data, NULL);
+	if (init_string(&q)) {
+		char *url = get_uri_string(info->uri, URI_PROTOCOL | URI_HOST | URI_PORT | URI_DATA);
 
-	mem_free_if(url);
-
-	if (!url2) {
-		return;
+		if (url) {
+			add_to_string(&q, url);
+			mem_free(url);
+			add_char_to_string(&q, '?');
+			encode_uri_string(&q, data, -1, 0);
+			goto_url_with_hook(info->ses, q.source);
+		}
+		done_string(&q);
 	}
-	goto_url_with_hook(info->ses, url2);
-	mem_free(url2);
 	done_uri(info->uri);
 	mem_free(info->prompt);
 	mem_free(info);
