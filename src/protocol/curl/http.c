@@ -493,7 +493,7 @@ http_curl_handle_error(struct connection *conn, CURLcode res)
 			struct uri *uri = redirect_cache(conn->cached, url, (http->code == 303L), -1);
 
 			if (uri) {
-				set_connection_state(conn, connection_state(S_TRANS));
+				abort_connection(conn, connection_state(S_OK));
 			} else {
 				abort_connection(conn, connection_state(S_OK));
 			}
