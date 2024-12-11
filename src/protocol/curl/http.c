@@ -490,23 +490,11 @@ http_curl_handle_error(struct connection *conn, CURLcode res)
 		struct http_curl_connection_info *http = (struct http_curl_connection_info *)conn->info;
 
 		if (url) {
-			struct uri *uri = redirect_cache(conn->cached, url, (http->code == 303L), -1);
-
-			if (uri) {
-				abort_connection(conn, connection_state(S_OK));
-			} else {
-				abort_connection(conn, connection_state(S_OK));
-			}
-			return;
-		}
-
-		if (http->code == 401L) {
+			(void)redirect_cache(conn->cached, url, (http->code == 303L), -1);
+		} else if (http->code == 401L) {
 			add_auth_entry(conn->uri, "HTTP Auth", NULL, NULL, 0);
-			abort_connection(conn, connection_state(S_OK));
-			return;
 		}
 		abort_connection(conn, connection_state(S_OK));
-		return;
 	} else {
 		abort_connection(conn, connection_state(S_CURL_ERROR - res));
 	}
