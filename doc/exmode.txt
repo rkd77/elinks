@@ -99,3 +99,30 @@ Also, perhaps wider scale of commands should be implemented in ex-mode. The
 code is extremely flexible and it is very trivial to make another ex-mode
 command handler, it's just that no one has done it yet ;-). Also, more actions
 should be able to take arguments.
+
+
+Macros
+~~~~~~
+
+Addition to the ex-mode are macros, because code of macros relies on the ex-mode
+code. You can set up to 10 macros, for example:
+
+set macro.0 = "goto-url https://www.google.com"
+
+In the ex-mode you can call it as:
+
+:macro-0
+
+Next you can bind macros to keys. For example:
+
+bind "main" "F4" = "macro-0"
+
+Since now the F4 key will go to the google page.
+In macro you can set any command of the ex-mode, you can group a few commands
+separating them by semicolon and escaping quotes. Example:
+
+set macro.1 = "set protocol.http.user_agent = \"Blah blah\";goto-url https://lite.duckduckgo.com/lite"
+
+:macro-1
+
+Examples are "weak", but you get the idea, don't you?
