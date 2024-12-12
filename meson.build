@@ -521,7 +521,7 @@ endif
 conf_data.set('CONFIG_LIBCURL', false)
 curldeps = false
 if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or conf_data.get('CONFIG_MUJS')
-    curldeps = dependency('libcurl', static: st, required: false)
+    curldeps = dependency('libcurl', static: st, version: '>=7.66.0', required: false)
     if not curldeps.found()
         curldeps = compiler.find_library('curl', static: st)
     endif
@@ -532,7 +532,7 @@ if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or
 endif
 
 if not conf_data.get('CONFIG_LIBCURL') and get_option('libcurl')
-    curldeps = dependency('libcurl', static: st, required: false)
+    curldeps = dependency('libcurl', static: st, version: '>=7.66.0', required: false)
     if not curldeps.found()
         curldeps = compiler.find_library('curl', static: st)
     endif
