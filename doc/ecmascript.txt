@@ -23,11 +23,11 @@ Ok, so how to get the ECMAScript support working?
 
 On Debian testing or unstable (SID), run the following:
 
-	$ apt-get install libmozjs-115-dev
+	$ apt-get install libmozjs-128-dev
 
 On Arch Linux, run the following:
 
-	$ pacman -S js115
+	$ pacman -S js128
 
 SpiderMonkey is disabled by default, enable it like this:
 
@@ -35,7 +35,7 @@ SpiderMonkey is disabled by default, enable it like this:
 
 Check for the following line in the features summary:
 
-	Run-time dependency mozjs-115 found: YES 115.15.0
+	Run-time dependency mozjs-128 found: YES 128.5.0
 
 Then run:
 
