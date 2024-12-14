@@ -968,6 +968,18 @@ fixup_tables(struct plain_renderer *renderer)
 					line->ch.chars[x].data = BORDER_SDTEE;
 					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
 					break;
+				case 1:
+				case 4:
+				case 5:
+					line->ch.chars[x].data = BORDER_SVLINE;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
+					break;
+				case 2:
+				case 8:
+				case 10:
+					line->ch.chars[x].data = BORDER_SHLINE;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
+					break;
 				default:
 					break;
 				}
