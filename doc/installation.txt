@@ -35,7 +35,7 @@ have the following libraries and programs installed:
 `_______________________`____________________________________________________
 Dependency		|Description
 _____________________________________________________________________________
-Lua or Guile		|Makes it possible to write scripting plugins.	    \
+Lua, Guile, python3, perl or ruby		|Makes it possible to write scripting plugins.	    \
 ifdef::installation-webpage[]
 			 See link:manual.html#lua-scripting[the Elinks - Lua interface]    \
 endif::installation-webpage[]
@@ -45,13 +45,17 @@ endif::installation-webpage[]
 			 for more info.
 zlib 1.2.0.2 or later	|For handling gzip or deflate compressed documents   \
 			 both locally and sent from server.
+brotli			|For brotli compressed documents.
 bzip2			|Likewise, for bzip2 compressed documents.
-LZMA Utils		|Likewise, for LZMA compressed documents.            \
-			 Version 4.32.5 should work.  XZ Utils does not work.
+xz utils		|Likewise, for LZMA compressed documents.
+zstd			|For zstd compressed documents.
 OpenSSL, GNU TLS, or nss_compat_ossl \
-			|For handling secure HTTP browsing.
+			|For handling secure HTTP browsing and gemini.
+libcurl		|For SFTP, FTPes and as an alternative protocol "engine" \
+			 for http and ftp.
+fsplib			|For FSP protocol.
 pkg-config		|Needed for locating some libraries (at least	    \
-			 GNU TLS, TRE, and SpiderMonkey)
+			 GNU TLS, TRE, and SpiderMonkey).
 GPM			|'General Purpose Mouse' for mouse support.
 expat			|'XML Parser Toolkit' needed for XBEL support.
 http://laurikari.net/tre/[TRE]						     \
@@ -61,14 +65,19 @@ rxvt-unicode		|For terminal emulator which supports 88 colors.
 xterm with 256 colors	|Program atleast patch level  179 or rxvt program   \
 			 from version 2.7.9 for support of 256 colors.	    \
 			 Newer PuTTY also has 256 color support.
-libidn			|For internationalized domain names.
+libidn2		|For internationalized domain names.
 SpiderMonkey		|Mozilla's JavaScript engine for getting	    \
-			 JavaScript/ECMAScript support in ELinks.	    \
+			 JavaScript/ECMAScript support in ELinks.
+QuickJS		|Alternative engine for JavaScript.
+MuJS			|Another ECMAScript engine.
+libsqlite		|For local storage in js.
+libparserutils, libhubbub, libwapcaplet, libdom, libcss	|Libraries required \
+			 for js and CSS support.
 ifdef::installation-webpage[]
-			 See also link:manual.html#ecmascript[notes on ECMAScript support].
+			 See also link:manual.html#ecmascript[notes on ECMAScript support].|
 endif::installation-webpage[]
 ifndef::installation-webpage[]
-			 See also <<ecmascript,notes on ECMAScript support>>.
+			 See also <<ecmascript,notes on ECMAScript support>>.|
 endif::installation-webpage[]
 _____________________________________________________________________________
 
