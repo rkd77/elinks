@@ -53,6 +53,7 @@ OpenSSL, GNU TLS, or nss_compat_ossl \
 			|For handling secure HTTP browsing and gemini.
 libcurl		|For SFTP, FTPes and as an alternative protocol "engine" \
 			 for http and ftp.
+libevent or libev	|Alternative to the select an event loop library.
 fsplib			|For FSP protocol.
 pkg-config		|Needed for locating some libraries (at least	    \
 			 GNU TLS, TRE, and SpiderMonkey).
