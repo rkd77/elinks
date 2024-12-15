@@ -2402,6 +2402,125 @@ ret:
 	return part;
 }
 
+static void
+subst_frame_chars(struct document *document)
+{
+	int y;
+
+	for (y = 0; y < document->height; y++) {
+		int x;
+		struct line *prev_line = y > 0 ? &document->data[y - 1] : NULL;
+		struct line *line = &document->data[y];
+		struct line *next_line = y < document->height - 1 ? &document->data[y + 1] : NULL;
+
+		for (x = 0; x < line->length; x++) {
+			int dir;
+#ifdef CONFIG_UTF8
+			unicode_val_T ch = line->ch.chars[x].data;
+			unicode_val_T prev_char, next_char, up_char, down_char;
+#else
+			unsigned char ch = line->ch.chars[x].data;
+			unsigned char prev_char, next_char, up_char, down_char;
+#endif
+			if (ch != '+' && ch != '-' && ch != '|') {
+				continue;
+			}
+
+			prev_char = x > 0 ? line->ch.chars[x - 1].data : ' ';
+			next_char = x < line->length - 1 ? line->ch.chars[x + 1].data : ' ';
+			up_char = (prev_line && x < prev_line->length) ? prev_line->ch.chars[x].data : ' ';
+			down_char = (next_line && x < next_line->length) ? next_line->ch.chars[x].data : ' ';
+
+			switch (ch) {
+			case '+':
+				dir = 0;
+				if (up_char == '|' || up_char == BORDER_SVLINE) dir |= 1;
+				if (next_char == '-' || next_char == BORDER_SHLINE) dir |= 2;
+				if (down_char == '|' || down_char == BORDER_SVLINE) dir |= 4;
+				if (prev_char == '-' || prev_char == BORDER_SHLINE) dir |= 8;
+
+				switch (dir) {
+				case 15:
+					line->ch.chars[x].data = BORDER_SCROSS;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
+					break;
+				case 13:
+					line->ch.chars[x].data = BORDER_SLTEE;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
+					break;
+				case 7:
+					line->ch.chars[x].data = BORDER_SRTEE;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
+					break;
+				case 6:
+					line->ch.chars[x].data = BORDER_SULCORNER;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
+					break;
+				case 12:
+					line->ch.chars[x].data = BORDER_SURCORNER;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
+					break;
+				case 3:
+					line->ch.chars[x].data = BORDER_SDLCORNER;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
+					break;
+				case 9:
+					line->ch.chars[x].data = BORDER_SDRCORNER;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
+					break;
+				case 11:
+					line->ch.chars[x].data = BORDER_SUTEE;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
+					break;
+				case 14:
+					line->ch.chars[x].data = BORDER_SDTEE;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
+					break;
+				case 1:
+				case 4:
+				case 5:
+					line->ch.chars[x].data = BORDER_SVLINE;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
+					break;
+				case 2:
+				case 8:
+				case 10:
+					line->ch.chars[x].data = BORDER_SHLINE;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
+					break;
+				default:
+					break;
+				}
+				break;
+			case '-':
+				if (prev_char == BORDER_SHLINE || prev_char == BORDER_SCROSS || prev_char == '+' || prev_char == '|'
+				|| prev_char == BORDER_SULCORNER || prev_char == BORDER_SDLCORNER || prev_char == BORDER_SRTEE
+				|| prev_char == BORDER_SUTEE || prev_char == BORDER_SDTEE || next_char == '-') {
+					line->ch.chars[x].data = BORDER_SHLINE;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
+				}
+				break;
+			case '|':
+				if (up_char == BORDER_SVLINE || up_char == '+' || up_char == '|' || up_char == BORDER_SULCORNER
+				|| up_char == BORDER_SURCORNER || up_char == BORDER_SCROSS || up_char == BORDER_SRTEE || up_char == BORDER_SLTEE
+				|| up_char == BORDER_SDTEE) {
+					if (next_char == '-') {
+						line->ch.chars[x].data = BORDER_SRTEE;
+					} else if (prev_char == BORDER_SHLINE || prev_char == '-') {
+						line->ch.chars[x].data = BORDER_SLTEE;
+					} else {
+						line->ch.chars[x].data = BORDER_SVLINE;
+					}
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
+				}
+				break;
+			default:
+				continue;
+			}
+		}
+	}
+}
+
 void
 render_html_document(struct cache_entry *cached, struct document *document,
 		     struct string *buffer)
@@ -2529,4 +2648,8 @@ render_html_document(struct cache_entry *cached, struct document *document,
 		fclose(f);
 	}
 #endif
+
+	if (document->options.html_subst_frame_chars) {
+		subst_frame_chars(document);
+	}
 }

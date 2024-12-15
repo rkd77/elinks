@@ -851,6 +851,10 @@ static union option_info config_options_info[] = {
 		"4 is type in addition\n"
 		"5 is everything")),
 
+	INIT_OPT_BOOL("document.html", N_("Substitute frame chars"),
+		"subst_frame_chars", OPT_ZERO, 0,
+		N_("Replace ascii frame chars by border frame chars in html documents.")),
+
 	INIT_OPT_BOOL("document.html", N_("Underline links"),
 		"underline_links", OPT_ZERO, 0,
 		N_("Underline links.")),
