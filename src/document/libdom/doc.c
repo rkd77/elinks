@@ -95,10 +95,14 @@ document_parse_text(const char *charset, const char *data, size_t length)
 
 	/* Parse */
 	error = dom_hubbub_parser_parse_chunk(parser, (const uint8_t *)data, length);
-	if (0 && error != DOM_HUBBUB_OK) {
-		dom_hubbub_parser_destroy(parser);
-		fprintf(stderr, "Parsing errors occur\n");
-		return NULL;
+	if (error != DOM_HUBBUB_OK) {
+		if (error == (DOM_HUBBUB_HUBBUB_ERR | HUBBUB_UNKNOWN)) {
+			fprintf(stderr, "Unknown error\n");
+		} else {
+			dom_hubbub_parser_destroy(parser);
+			fprintf(stderr, "Parsing errors occur\n");
+			return NULL;
+		}
 	}
 
 	/* Done parsing file */
