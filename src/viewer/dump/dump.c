@@ -28,6 +28,7 @@
 #include "intl/libintl.h"
 #include "main/select.h"
 #include "main/main.h"
+#include "mime/mime.h"
 #include "network/connection.h"
 #include "network/state.h"
 #include "osdep/ascii.h"
@@ -511,6 +512,7 @@ dump_formatted(int fd, struct download *download, struct cache_entry *cached)
 
 	init_vs(&vs, cached->uri, -1);
 
+	(void)get_content_type(cached);
 
 	render_document(&vs, &formatted, &o);
 
