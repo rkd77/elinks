@@ -3,8 +3,8 @@
 rm -rf builddir32
 export LDFLAGS="-lws2_32"
 export CFLAGS="-g2 -O2"
-LIBRARY_PATH="$HOME/lib32" \
-PKG_CONFIG_PATH="$HOME/lib32/pkgconfig" \
+LIBRARY_PATH="$HOME/64/lib" \
+PKG_CONFIG_PATH="$HOME/64/lib/pkgconfig" \
 /mingw32/bin/meson setup builddir32 \
 -D88-colors=false \
 -D256-colors=false \
@@ -48,7 +48,7 @@ PKG_CONFIG_PATH="$HOME/lib32/pkgconfig" \
 -Dopenssl=true \
 -Dpdfdoc=false \
 -Dperl=false \
--Dprefix=$HOME \
+-Dprefix=$HOME/64 \
 -Dpython=false \
 -Dquickjs=false \
 -Dreproducible=false \
