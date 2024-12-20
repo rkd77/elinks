@@ -67,3 +67,50 @@ that there are no SpiderMonkey references outside of
 ECMAScript backend, go ahead - you will just need to write an autoconf
 detection for it and tie it to `src/ecmascript/ecmascript.c`, which should be
 easy. We await your patches eagerly.
+
+
+As of 2024
+^^^^^^^^^^
+
+There are 3 javascript engines you could choose from:
+
+- Spidermonkey (mozjs128). Passed tests, but segfaults occur, especially
+on shutdown.
+- QuickJS. Tests also passed. For machines with limited resources,
+for example DOS machines. Not all memory is released on shutdown.
+Needs more work.
+- MuJS. For fans of MuJS. Not all tests passed. I don't know
+how to implement missing bits.
+
+By, tests I mean:
+
+	meson ... -Dtest=true ...
+	ninja test
+
+There as some assertions in these tests. Small subset of DOM HTML is "covered".
+If you have some knowledge of these engines, you can help.
+On some sites ELinks might crash, or slowdown. There is a workaround for this.
+Files allow.txt and disallow.txt.
+In the file ~/.config/elinks/allow.txt one can enter prefixes of urls
+which are allowed. These are urls for text/html pages.
+
+For example:
+
+	file://
+	https://www.example.com/news.php
+
+All scripts in local pages are allowed, scripts at https://www.example.com/news.php
+are also allowed, but other not. If allow.txt is not empty, urls which prefixes
+do not occur in this file are forbidden.
+In the file ~/.config/elinks/disallow.txt you can also put prefixes, but this time
+disallowed. If allow.txt is empty or nonexistent, all scripts allowed, besides
+pages which prefixes occuring in disallow.txt.
+
+Sample content of disallow.txt:
+
+	http://
+	https://www.example.org/
+
+All scripts on pages with protocol http are forbidden. The scripts on pages starting
+with https://www.example.com/ are also disallowed. When both files exist, you must
+check it out yourself.
