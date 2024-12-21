@@ -359,3 +359,27 @@ everything is marked TODO!
 - Insert mode in text-input form-fields.
 
 - Menu searching.
+
+
+Tweaks
+~~~~~~
+
+Default settings are a bit conservative. For new users ELinks starts in the monochrome
+mode, the http compression is disabled, etc. Here are some settings I change in new
+installations:
+
+- Setup -> Terminal options (set color mode, border chars and other terminal options)
+
+- set protocol.http.compression = 1
+
+- set ui.dialogs.shadows = 1
+
+- set protocol.ftp.use_curl = 1
+
+- set protocol.http.use_curl = 1
+
+- set connection.ssl.gemini_cert_verify = 0
+
+- set ui.background_char = 9617
+
+The latter is for TV like desktop.
