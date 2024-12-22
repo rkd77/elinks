@@ -48,7 +48,7 @@ No frames		Dumb terminal type / ASCII art
 VT 100 frames		Works in most terminals
 Linux or OS/2 frames	Linux console / you get double frames and other goodies
 KOI-8
-FreeBSD			FreeBSD console
+FreeBSD			FreeBSD console or Mac OS
 ------------------------------------------------------------------------------
 
 The default is to assume dumb terminal/ASCII art.
