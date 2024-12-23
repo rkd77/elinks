@@ -47,8 +47,9 @@ Type			Notes
 No frames		Dumb terminal type / ASCII art
 VT 100 frames		Works in most terminals
 Linux or OS/2 frames	Linux console / you get double frames and other goodies
-KOI-8
+Linux frames with fbterm colors	fbterm is special, so separate item
 FreeBSD			FreeBSD console or Mac OS
+KOI-8
 ------------------------------------------------------------------------------
 
 The default is to assume dumb terminal/ASCII art.
@@ -67,6 +68,7 @@ Mono mode		Only 2 colors are used
 16 color mode		Uses the common ANSI colors
 88 color mode		Uses XTerm RGB codes (if compiled in)
 256 color mode		Uses XTerm RGB codes (if compiled in)
+true color		24 bit color (if compiled in)
 ------------------------------------------------------------------------------
 
 The default is to use mono mode.
