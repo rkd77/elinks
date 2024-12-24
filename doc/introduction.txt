@@ -380,6 +380,10 @@ installations:
 
 - set connection.ssl.gemini_cert_verify = 0
 
+- set document.css.enable = 1
+
+- set document.css.libcss = 1
+
 - set ui.background_char = 9617
 
 The latter is for TV like desktop.
