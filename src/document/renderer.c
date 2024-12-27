@@ -357,7 +357,16 @@ comp_links(const void *v1, const void *v2)
 
 	assert(l1 && l2);
 	if_assert_failed return 0;
-	return (l1->number - l2->number);
+
+	if (l1->number < l2->number) {
+		return -1;
+	}
+
+	if (l1->number > l2->number) {
+		return 1;
+	}
+
+	return 0;
 }
 
 void
