@@ -191,7 +191,15 @@ compare_nodes(const void *a, const void *b)
 	void *nodea = ((struct el_node_elem *)a)->node;
 	void *nodeb = ((struct el_node_elem *)b)->node;
 
-	return nodea - nodeb;
+	if (nodea < nodeb) {
+		return -1;
+	}
+
+	if (nodea > nodeb) {
+		return 1;
+	}
+
+	return 0;
 }
 
 int
