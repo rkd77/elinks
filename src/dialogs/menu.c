@@ -979,6 +979,7 @@ complete_file_menu(struct terminal *term, int no_elevator, void *data,
 	if (!menu) return;
 
 	entries = get_directory_entries(dirname, 1);
+
 	if (!entries) {
 		mem_free(menu);
 		return;
@@ -1079,26 +1080,28 @@ auto_complete_file(struct terminal *term, int no_elevator, char *path,
 	if (get_cmd_opt_bool("anonymous"))
 		return;
 
-	if (!*path) path = (char *)"./";
+	if (*path) {
+		/* Use the URI translation to handle ./ and ../ and ~/ expansion */
+		uri = get_translated_uri(path, term->cwd);
 
-	/* Use the URI translation to handle ./ and ../ and ~/ expansion */
-	uri = get_translated_uri(path, term->cwd);
-	if (!uri) return;
+		if (!uri) return;
 
-	if (uri->protocol != PROTOCOL_FILE) {
-		path = NULL;
+		if (uri->protocol != PROTOCOL_FILE) {
+			path = NULL;
+		} else {
+			path = get_uri_string(uri, URI_PATH);
+		}
+		done_uri(uri);
 	} else {
-		path = get_uri_string(uri, URI_PATH);
+		path = straconcat(term->cwd, STRING_DIR_SEP, NULL);
 	}
 
-	done_uri(uri);
 	if (!path) return;
 
 	filename = get_filename_position(path);
 
 	if (*filename && file_is_dir(path)) {
 		filename = path + strlen(path);
-
 	} else if (*filename && file_exists(path)) {
 		/* Complete any tilde expansion */
 		file_func(term, path, data);
@@ -1113,12 +1116,12 @@ auto_complete_file(struct terminal *term, int no_elevator, char *path,
 
 	/* Make sure the dirname has an ending slash */
 	if (!dir_sep(path[-1])) {
-		char separator = *dirname;
+		char separator = CHAR_DIR_SEP;
+
 		int dirnamelen = path - dirname;
 
 		insert_in_string(&dirname, dirnamelen, &separator, 1);
 	}
-
 	complete_file_menu(term, no_elevator, data,
 			   file_func, dir_func, dirname, filename);
 
