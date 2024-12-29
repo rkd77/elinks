@@ -523,6 +523,11 @@ mcode_or_die(const char *where, CURLMcode code)
 #endif
 
 #ifdef CONFIG_LIBCURL
+#ifdef CONFIG_OS_WIN32
+#define SOCK_SHIFT 1024
+#else
+#define SOCK_SHIFT 0
+#endif
 /* Called by libevent when our timeout expires */
 static void
 timer_cb_select(void *userp)
