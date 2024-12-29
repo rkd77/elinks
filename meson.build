@@ -555,7 +555,7 @@ if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or
 endif
 
 conf_data.set('CONFIG_LIBDOM', false)
-libdomdeps = false
+libdomdeps = []
 
 if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or conf_data.get('CONFIG_MUJS')
     libdomdeps = dependency('libdom', static: st, version: '>=0.4.2', required: false)
