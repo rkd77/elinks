@@ -78,13 +78,14 @@
 #define __STRING(x) #x
 #endif
 
-#if defined(CONFIG_LIBEVENT) && defined(CONFIG_LIBCURL)
-
+#undef SOCK_SHIFT
 #ifdef CONFIG_OS_WIN32
 #define SOCK_SHIFT 1024
 #else
 #define SOCK_SHIFT 0
 #endif
+
+#if defined(CONFIG_LIBEVENT) && defined(CONFIG_LIBCURL)
 
 /* Information associated with a specific easy handle */
 typedef struct _ConnInfo
@@ -466,11 +467,6 @@ sock_cb(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp)
 
 #if !defined(CONFIG_LIBEVENT) && !defined(CONFIG_LIBEV) && defined(CONFIG_LIBCURL)
 
-#ifdef CONFIG_OS_WIN32
-#define SOCK_SHIFT 1024
-#else
-#define SOCK_SHIFT 0
-#endif
 /* Information associated with a specific easy handle */
 typedef struct _ConnInfo
 {
@@ -523,11 +519,7 @@ mcode_or_die(const char *where, CURLMcode code)
 #endif
 
 #ifdef CONFIG_LIBCURL
-#ifdef CONFIG_OS_WIN32
-#define SOCK_SHIFT 1024
-#else
-#define SOCK_SHIFT 0
-#endif
+
 /* Called by libevent when our timeout expires */
 static void
 timer_cb_select(void *userp)
