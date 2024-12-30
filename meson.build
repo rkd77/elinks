@@ -112,6 +112,10 @@ else
     conf_data.set('CONFIG_ECMASCRIPT', false)
 endif
 
+if conf_data.get('CONFIG_GETTEXT') and not conf_data.get('CONFIG_NLS')
+    error('nls must be enabled too')
+endif
+
 if conf_data.get('CONFIG_SCRIPTING_SPIDERMONKEY') and not conf_data.get('CONFIG_ECMASCRIPT_SMJS')
     error('spidermonkey must be enabled too')
 endif
