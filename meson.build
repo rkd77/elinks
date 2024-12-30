@@ -112,6 +112,10 @@ else
     conf_data.set('CONFIG_ECMASCRIPT', false)
 endif
 
+if conf_data.get('CONFIG_SCRIPTING_SPIDERMONKEY') and not conf_data.get('CONFIG_ECMASCRIPT_SMJS')
+    error('spidermonkey must be enabled too')
+endif
+
 if conf_data.get('CONFIG_SCRIPTING_SPIDERMONKEY') and conf_data.get('CONFIG_QUICKJS')
     error('quickjs and sm-scripting cannot be both enabled')
 endif
@@ -513,14 +517,14 @@ if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_SCRIPTING_SP
     deps += mozjsdeps
 endif
 
-if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or conf_data.get('CONFIG_MUJS')
+if conf_data.get('CONFIG_ECMASCRIPT')
     sqlite3deps = dependency('sqlite3', static: st)
     deps += sqlite3deps
 endif
 
 conf_data.set('CONFIG_LIBCURL', false)
 curldeps = false
-if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or conf_data.get('CONFIG_MUJS')
+if conf_data.get('CONFIG_ECMASCRIPT')
     curldeps = dependency('libcurl', static: st, version: '>=7.66.0', required: false)
     if not curldeps.found()
         curldeps = compiler.find_library('curl', static: st)
@@ -545,7 +549,7 @@ endif
 conf_data.set('CONFIG_LIBCSS', false)
 cssdeps = false
 
-if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or conf_data.get('CONFIG_MUJS')
+if conf_data.get('CONFIG_ECMASCRIPT')
     cssdeps = dependency('libcss', static: st, version: '>=0.9.2', required: false)
     if not cssdeps.found()
         cssdeps = dependency('libcss', static: true, version: '>=0.9.2')
@@ -557,7 +561,7 @@ endif
 conf_data.set('CONFIG_LIBDOM', false)
 libdomdeps = []
 
-if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or conf_data.get('CONFIG_MUJS')
+if conf_data.get('CONFIG_ECMASCRIPT')
     libdomdeps = dependency('libdom', static: st, version: '>=0.4.2', required: false)
     if not libdomdeps.found()
         libdomdeps = dependency('libdom', static: true, version: '>=0.4.2')
