@@ -1281,6 +1281,15 @@ jump_to_link_number(struct session *ses, struct document_view *doc_view, int n)
 	current_link_hover(doc_view);
 }
 
+static int
+compare(const void *a, const void *b)
+{
+	int na = ((struct reverse_link_lookup *)a)->number;
+	int nb = ((struct reverse_link_lookup *)b)->number;
+
+	return na - nb;
+}
+
 /** This is common backend for goto_link_number() and try_document_key(). */
 static void
 goto_link_number_do(struct session *ses, struct document_view *doc_view, int n)
@@ -1289,6 +1298,18 @@ goto_link_number_do(struct session *ses, struct document_view *doc_view, int n)
 
 	assert(ses && doc_view && doc_view->document);
 	if_assert_failed return;
+
+	struct document *document = doc_view->document;
+
+	if (document->reverse_link_lookup) {
+		struct reverse_link_lookup key = { .number = n+1, .i = 0 };
+		struct reverse_link_lookup *res = bsearch(&key, document->reverse_link_lookup, document->nlinks, sizeof(*res), compare);
+
+		if (res == NULL) {
+			return;
+		}
+		n = res->i;
+	}
 	if (n < 0 || n >= doc_view->document->nlinks) return;
 	jump_to_link_number(ses, doc_view, n);
 

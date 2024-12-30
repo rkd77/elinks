@@ -325,6 +325,7 @@ reset_document(struct document *document)
 		mem_free_set(&document->links, NULL);
 		document->nlinks = 0;
 	}
+	mem_free_set(&document->reverse_link_lookup, NULL);
 
 	if (document->data) {
 		int pos;
@@ -391,6 +392,7 @@ done_document(struct document *document)
 
 		mem_free(document->links);
 	}
+	mem_free_set(&document->reverse_link_lookup, NULL);
 
 	if (document->data) {
 		int pos;

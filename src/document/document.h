@@ -137,6 +137,7 @@ struct link {
 	int npoints;
 
 	int number;
+	unsigned int tabindex;
 
 	/** This is supposed to be the colour-pair of the link, but the actual
 	 * colours on the canvas can differ--e.g., with image links. */
@@ -151,6 +152,11 @@ struct link {
 		char *name;
 		struct el_form_control *form_control;
 	} data;
+};
+
+struct reverse_link_lookup {
+	int number;
+	int i;
 };
 
 #define get_link_index(document, link) (link - document->links)
@@ -271,6 +277,8 @@ struct document {
 	struct line *data;
 
 	struct link *links;
+
+	struct reverse_link_lookup *reverse_link_lookup;
 	/** @name Arrays with one item per rendered document's line.
 	 * @{ */
 	struct link **lines1; /**< The first link on the line. */

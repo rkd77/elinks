@@ -358,6 +358,14 @@ comp_links(const void *v1, const void *v2)
 	assert(l1 && l2);
 	if_assert_failed return 0;
 
+	if (l1->tabindex < l2->tabindex) {
+		return -1;
+	}
+
+	if (l1->tabindex > l2->tabindex) {
+		return 1;
+	}
+
 	if (l1->number < l2->number) {
 		return -1;
 	}
@@ -368,6 +376,26 @@ comp_links(const void *v1, const void *v2)
 
 	return 0;
 }
+
+static int
+comp_ints(const void *v1, const void *v2)
+{
+	const struct reverse_link_lookup *l1 = (const struct reverse_link_lookup *)v1, *l2 = (const struct reverse_link_lookup *)v2;
+
+	assert(l1 && l2);
+	if_assert_failed return 0;
+
+	if (l1->number < l2->number) {
+		return -1;
+	}
+
+	if (l1->number > l2->number) {
+		return 1;
+	}
+
+	return 0;
+}
+
 
 void
 sort_links(struct document *document)
@@ -418,6 +446,21 @@ sort_links(struct document *document)
 			document->lines2[j] = &document->links[i];
 			if (!document->lines1[j])
 				document->lines1[j] = &document->links[i];
+		}
+	}
+	mem_free_set(&document->reverse_link_lookup, NULL);
+
+	if (document->options.use_tabindex) {
+		document->reverse_link_lookup = mem_alloc(document->nlinks * sizeof(*document->reverse_link_lookup));
+
+		if (document->reverse_link_lookup) {
+			for (i = 0; i < document->nlinks; i++) {
+				struct link *link = &document->links[i];
+
+				document->reverse_link_lookup[i].number = link->number;
+				document->reverse_link_lookup[i].i = i;
+			}
+			qsort(document->reverse_link_lookup, document->nlinks, sizeof(*document->reverse_link_lookup), comp_ints);
 		}
 	}
 	document->links_sorted = 1;

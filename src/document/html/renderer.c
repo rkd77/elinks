@@ -1309,7 +1309,7 @@ new_link(struct html_context *html_context, const char *name, int namelen)
 
 	link = &document->links[document->nlinks++];
 	link->number = link_number - 1;
-	if (document->options.use_tabindex) link->number += elformat.tabindex;
+	link->tabindex = document->options.use_tabindex ? elformat.tabindex : 0;
 	link->accesskey = elformat.accesskey;
 	link->title = null_or_stracpy(elformat.title);
 	link->where_img = null_or_stracpy(elformat.image);
