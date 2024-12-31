@@ -1132,7 +1132,7 @@ if compiler.compiles('int a; typeof(a) b;', name: 'typeof')
     conf_data.set('HAVE_TYPEOF', 1)
 endif
 
-if conf_data.get('CONFIG_GETTEXT') and conf_data.get('CONFIG_NLS')
+if conf_data.get('CONFIG_GETTEXT')
     code = '''#include <libintl.h>
     extern int _nl_msg_cat_cntr;
     void main() { _nl_msg_cat_cntr = 1; }

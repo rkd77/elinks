@@ -35,7 +35,7 @@ if conf_data.get('CONFIG_MAILCAP') and (get_option('test-mailcap') or get_option
 		meson.project_source_root() / 'src/intl/gettext/textdomain.c')
 	endif
 
-	if conf_data.get('CONFIG_NLS') and conf_data.get('CONFIG_GETTEXT')
+	if conf_data.get('CONFIG_GETTEXT')
 		mailcap_cache_files += files(
 		meson.project_source_root() / 'src/intl/libintl.c',
 		meson.project_source_root() / 'src/util/env.c')
