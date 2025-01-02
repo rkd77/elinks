@@ -91,7 +91,7 @@ goto_mark(unsigned char mark, struct view_state *vs)
 	assert(is_valid_mark_index(i));
 
 	/* TODO: Support for cross-document marks. --pasky */
-	if (!marks[i] || !compare_uri(marks[i]->uri, vs->uri, 0)) {
+	if (!marks[i] || !compare_uri(marks[i]->uri, vs->uri, URI_HTTP_REFERRER)) {
 		return;
 	}
 
@@ -143,7 +143,14 @@ set_mark(unsigned char mark, struct view_state *mark_vs)
 	if (!vs) return;
 	copy_vs(vs, mark_vs);
 
-	vs->uri->fragmentlen = 0;
+	if (vs->uri->fragmentlen) {
+		struct uri *new_uri = get_composed_uri(vs->uri, URI_HTTP_REFERRER);
+
+		if (new_uri) {
+			done_uri(vs->uri);
+			vs->uri = new_uri;
+		}
+	}
 	marks[i] = vs;
 }
 
