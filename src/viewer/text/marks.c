@@ -83,15 +83,17 @@ goto_mark(unsigned char mark, struct view_state *vs)
 	struct document_view *doc_view;
 	int i;
 
-	if (!is_valid_mark_char(mark))
+	if (!is_valid_mark_char(mark)) {
 		return;
+	}
 
 	i = index_from_char(mark);
 	assert(is_valid_mark_index(i));
 
 	/* TODO: Support for cross-document marks. --pasky */
-	if (!marks[i] || !compare_uri(marks[i]->uri, vs->uri, 0))
+	if (!marks[i] || !compare_uri(marks[i]->uri, vs->uri, 0)) {
 		return;
+	}
 
 	old_current_link = vs->current_link;
 #ifdef CONFIG_ECMASCRIPT
@@ -141,6 +143,7 @@ set_mark(unsigned char mark, struct view_state *mark_vs)
 	if (!vs) return;
 	copy_vs(vs, mark_vs);
 
+	vs->uri->fragmentlen = 0;
 	marks[i] = vs;
 }
 
