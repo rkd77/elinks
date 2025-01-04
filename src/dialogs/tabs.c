@@ -66,7 +66,7 @@ init_tab_item(char *url, char *title, int i)
 		mem_free(tab_item);
 		return NULL;
 	}
-	tab_item->box_item = add_listbox_leaf(&tab_browser, NULL, tab_item);
+	tab_item->box_item = add_listbox_item(&tab_browser, NULL, BI_LEAF, tab_item, -1);
 
 	if (!tab_item->box_item) {
 		mem_free(tab_item->url);
@@ -400,7 +400,7 @@ populate_tabs_data(struct session *ses)
 		mem_free_if(item->title);
 	}
 
-	for (i = tab_count - 1; i >= 0; i--) {
+	for (i = 0; i < tab_count; i++) {
 		struct window *tab = get_tab_by_number(term, i);
 		struct session *tab_ses = (struct session *)tab->data;
 		struct document_view *doc_view = tab_ses ? current_frame(tab_ses) : NULL;
