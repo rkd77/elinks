@@ -100,6 +100,8 @@ src/dialogs/progress.c
 src/dialogs/progress.h
 src/dialogs/status.c
 src/dialogs/status.h
+src/dialogs/tabs.c
+src/dialogs/tabs.h
 src/document/css/apply.c
 src/document/css/apply.h
 src/document/css/css.c
