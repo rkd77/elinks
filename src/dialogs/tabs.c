@@ -417,6 +417,7 @@ populate_tabs_data(struct session *ses)
 		}
 		add_tab_item(url, title, i);
 	}
+	tab_browser.do_not_save_state = 1;
 }
 
 void
