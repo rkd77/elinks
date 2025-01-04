@@ -263,6 +263,7 @@ tab_menu(struct session *ses, int x, int y, int place_above_cursor)
 	if (tabs_count > 1) {
 		add_menu_action(&menu, N_("Nex~t tab"), ACT_MAIN_TAB_NEXT);
 		add_menu_action(&menu, N_("Pre~v tab"), ACT_MAIN_TAB_PREV);
+		add_menu_action(&menu, N_("Tab ~manager"), ACT_MAIN_TAB_MANAGER);
 	}
 
 	add_menu_action(&menu, N_("~Close tab"), ACT_MAIN_TAB_CLOSE);

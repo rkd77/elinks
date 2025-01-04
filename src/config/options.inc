@@ -1482,6 +1482,12 @@ static union option_info config_options_info[] = {
 		"tabs", OPT_ZERO,
 		N_("Window tabs settings.")),
 
+	INIT_OPT_INT("ui.tabs", N_("Display style"),
+		"display_type", OPT_ZERO, 0, 1, 0,
+		N_("What to display in tab manager dialog:\n"
+		"0 is URLs\n"
+		"1 is page titles")),
+
 	INIT_OPT_INT("ui.tabs", N_("Display tabs bar"),
 		"show_bar", OPT_ZERO, 0, 2, 1,
 		N_("Show tabs bar on the screen:\n"

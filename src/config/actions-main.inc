@@ -124,6 +124,7 @@ ACTION_(MAIN, "submit-form-reload", SUBMIT_FORM_RELOAD, N__("Submit form and rel
 ACTION_(MAIN, "tab-close", TAB_CLOSE, N__("Close tab"), 0),
 ACTION_(MAIN, "tab-close-all-but-current", TAB_CLOSE_ALL_BUT_CURRENT, N__("Close all tabs but the current one"), 0),
 ACTION_(MAIN, "tab-external-command", TAB_EXTERNAL_COMMAND, N__("Pass URI of current tab to external command"), ACTION_RESTRICT_ANONYMOUS | ACTION_REQUIRE_LOCATION),
+ACTION_(MAIN, "tab-manager", TAB_MANAGER, N__("Open tab manager"), 0),
 ACTION_(MAIN, "tab-menu", TAB_MENU, N__("Open the tab menu"), 0),
 ACTION_(MAIN, "tab-move-left", TAB_MOVE_LEFT, N__("Move the current tab to the left"), 0),
 ACTION_(MAIN, "tab-move-right", TAB_MOVE_RIGHT, N__("Move the current tab to the right"), 0),

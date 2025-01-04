@@ -23,6 +23,7 @@
 #include "dialogs/menu.h"
 #include "dialogs/options.h"
 #include "dialogs/status.h"
+#include "dialogs/tabs.h"
 #include "document/document.h"
 #include "document/view.h"
 #ifdef CONFIG_ECMASCRIPT
@@ -715,6 +716,10 @@ do_action(struct session *ses, main_action_T action_id, int verbose)
 
 		case ACT_MAIN_TAB_PREV:
 			switch_current_tab(ses, -1);
+			break;
+
+		case ACT_MAIN_TAB_MANAGER:
+			tab_manager(ses);
 			break;
 
 		case ACT_MAIN_TERMINAL_RESIZE:
