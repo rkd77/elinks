@@ -532,7 +532,7 @@ static int keybinding_text_toggle;
 
 /* XXX: ACTION_BOX_SIZE is just a quick hack, we ought to allocate
  * the sub-arrays separately. --pasky */
-#define ACTION_BOX_SIZE 139
+#define ACTION_BOX_SIZE 140
 static struct listbox_item *action_box_items[KEYMAP_MAX][ACTION_BOX_SIZE];
 
 struct listbox_item *
