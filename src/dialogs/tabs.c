@@ -385,12 +385,9 @@ struct_hierbox_browser(
 	&tab_listbox_ops
 );
 
-static void
-populate_tabs_data(struct session *ses)
+void
+free_tabs_data(void)
 {
-	struct terminal *term = ses->tab->term;
-	int tab_count = number_of_tabs(term);
-	int i;
 	struct tab_item *item, *next;
 
 	foreachsafe (item, next, tabs.entries) {
@@ -398,7 +395,16 @@ populate_tabs_data(struct session *ses)
 		done_listbox_item(&tab_browser, item->box_item);
 		mem_free_if(item->url);
 		mem_free_if(item->title);
+		mem_free(item);
 	}
+}
+
+static void
+populate_tabs_data(struct session *ses)
+{
+	struct terminal *term = ses->tab->term;
+	int tab_count = number_of_tabs(term);
+	int i;
 
 	for (i = 0; i < tab_count; i++) {
 		struct window *tab = get_tab_by_number(term, i);
@@ -425,6 +431,7 @@ tab_manager(struct session *ses)
 {
 	mem_free_set(&tab_last_searched_title, NULL);
 	mem_free_set(&tab_last_searched_url, NULL);
+	free_tabs_data();
 	populate_tabs_data(ses);
 	hierbox_browser(&tab_browser, ses);
 }

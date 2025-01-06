@@ -9,6 +9,7 @@ extern "C" {
 #endif
 
 extern struct hierbox_browser tab_browser;
+void free_tabs_data(void);
 void tab_manager(struct session *);
 
 #ifdef __cplusplus

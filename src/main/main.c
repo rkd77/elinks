@@ -28,6 +28,7 @@
 #include "config/home.h"
 #include "config/options.h"
 #include "dialogs/menu.h"
+#include "dialogs/tabs.h"
 #include "document/document.h"
 #ifdef CONFIG_LIBDOM
 #include "document/libdom/renderer2.h"
@@ -332,6 +333,7 @@ terminate_all_subsystems(void)
 	done_event();
 	terminate_select();
 	terminate_osdep();
+	free_tabs_data();
 #ifdef CONFIG_LIBDOM
 	free_libdom();
 #endif
