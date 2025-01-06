@@ -321,27 +321,6 @@ push_goto_button(struct dialog_data *dlg_data,
 	return EVENT_PROCESSED;
 }
 
-static widget_handler_status_T
-push_close_button(struct dialog_data *dlg_data,
-                         struct widget_data *button)
-{
-	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
-	struct listbox_item *item = box->sel;
-	struct session *ses = (struct session *)dlg_data->dlg->udata;
-	struct terminal *term = dlg_data->win->term;
-
-	if (!item) return EVENT_PROCESSED;
-
-	if (item->type == BI_LEAF) {
-		int num = get_tab_item_number(item);
-
-		switch_to_tab(term, num, -1);
-	}
-	/* Close the dialog */
-	delete_window(dlg_data->win);
-	return EVENT_PROCESSED;
-}
-
 /* Bookmarking: */
 
 #ifdef CONFIG_BOOKMARKS
@@ -373,7 +352,6 @@ static const struct hierbox_browser_button tabs_buttons[] = {
 #ifdef CONFIG_BOOKMARKS
 	{ N_("~Bookmark"),       push_bookmark_button, 0 },
 #endif
-	//{ N_("~Close"),           push_close_button, 1 },
 	{ N_("~Search"),         push_search_button, 1 },
 	{ N_("~Toggle display url/title"), push_toggle_display_button, 1 },
 };
