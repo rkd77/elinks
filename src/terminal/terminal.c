@@ -20,6 +20,7 @@
 
 #include "bookmarks/bookmarks.h"
 #include "config/options.h"
+#include "dialogs/tabs.h"
 #include "main/main.h"
 #include "main/module.h"
 #include "main/object.h"
@@ -195,6 +196,8 @@ init_term(int fdin, int fdout)
 	term->spec = get_opt_rec(config_options, name);
 	object_lock(term->spec);
 
+	init_hierbox_tab_browser(term);
+
 	/* It's a new terminal, so assume the user is using it right now,
 	 * and sort it to the front of the list.  */
 	add_to_list(terminals, term);
@@ -290,6 +293,7 @@ destroy_terminal(struct terminal *term)
 	if (term->closed_tab_uri) {
 		done_uri(term->closed_tab_uri);
 	}
+	free_tabs_data(term);
 
 	mem_free(term);
 	check_if_no_terminal();

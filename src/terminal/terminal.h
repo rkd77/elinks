@@ -1,6 +1,8 @@
 #ifndef EL__TERMINAL_TERMINAL_H
 #define EL__TERMINAL_TERMINAL_H
 
+#include "bfu/hierbox.h"
+#include "bfu/inphist.h"
 #include "config/options.h"
 #include "protocol/uri.h"
 #include "terminal/event.h"
@@ -185,6 +187,9 @@ struct terminal {
 	int cell_height;
 
 	struct uri *closed_tab_uri;
+
+	struct hierbox_browser tab_browser;
+	struct input_history tabs_history;
 };
 
 #define do_not_ignore_next_mouse_event(term) \

@@ -40,10 +40,8 @@ struct tab_item {
 static char *tab_last_searched_title;
 static char *tab_last_searched_url;
 
-INIT_INPUT_HISTORY(tabs);
-
 static struct tab_item *
-init_tab_item(char *url, char *title, int i)
+init_tab_item(struct terminal *term, char *url, char *title, int i)
 {
 	struct tab_item *tab_item = (struct tab_item *)mem_calloc(1, sizeof(*tab_item));
 
@@ -66,7 +64,7 @@ init_tab_item(char *url, char *title, int i)
 		mem_free(tab_item);
 		return NULL;
 	}
-	tab_item->box_item = add_listbox_item(&tab_browser, NULL, BI_LEAF, tab_item, -1);
+	tab_item->box_item = add_listbox_item(&term->tab_browser, NULL, BI_LEAF, tab_item, -1);
 
 	if (!tab_item->box_item) {
 		mem_free(tab_item->url);
@@ -80,14 +78,14 @@ init_tab_item(char *url, char *title, int i)
 }
 
 static void
-add_tab_item(char *url, char *title, int i)
+add_tab_item(struct terminal *term, char *url, char *title, int i)
 {
-	struct tab_item *item = init_tab_item(url, title, i);
+	struct tab_item *item = init_tab_item(term, url, title, i);
 
 	if (!item) {
 		return;
 	}
-	add_to_history_list(&tabs, item);
+	add_to_history_list(&term->tabs_history, item);
 }
 
 /* Implementation of the listbox operations */
@@ -213,7 +211,7 @@ static const struct listbox_ops tab_listbox_ops = {
 /* Searching: */
 
 static int
-tab_simple_search(char *search_url, char *search_title)
+tab_simple_search(struct terminal *term, char *search_url, char *search_title)
 {
 	struct tab_item *tab_item;
 
@@ -230,13 +228,13 @@ tab_simple_search(char *search_url, char *search_title)
 
 	if (!*search_title && !*search_url) {
 		/* No search terms, make all entries visible. */
-		foreach (tab_item, tabs.entries) {
+		foreach (tab_item, term->tabs_history.entries) {
 			tab_item->box_item->visible = 1;
 		}
 		return 1;
 	}
 
-	foreach (tab_item, tabs.entries) {
+	foreach (tab_item, term->tabs_history.entries) {
 		/* Make matching entries visible, hide others. */
 		if ((*search_title
 		     && strcasestr((const char *)tab_item->title, (const char *)search_title))
@@ -255,15 +253,16 @@ static void
 tabs_search_do(void *data)
 {
 	struct dialog *dlg = (struct dialog *)data;
-	struct listbox_item *item = (struct listbox_item *)tab_browser.root.child.next;
+	struct terminal *term = (struct terminal *)dlg->udata2;
+	struct listbox_item *item = (struct listbox_item *)term->tab_browser.root.child.next;
 	struct listbox_data *box;
 
-	if (!tab_simple_search((char *)dlg->widgets[1].data, (char *)dlg->widgets[0].data)) return;
-	if (list_empty(tab_browser.root.child)) return;
+	if (!tab_simple_search(term, (char *)dlg->widgets[1].data, (char *)dlg->widgets[0].data)) return;
+	if (list_empty(term->tab_browser.root.child)) return;
 
 	/* Shouldn't we rather do this only for the specific listbox_data box
 	 * in dlg->widget->data so only the current dialog is updated? --jonas */
-	foreach (box, tab_browser.boxes) {
+	foreach (box, term->tab_browser.boxes) {
 		box->top = item;
 		box->sel = box->top;
 	}
@@ -275,7 +274,7 @@ launch_search_dialog(struct terminal *term, struct dialog_data *parent,
 {
 	do_edit_dialog(term, 1, N_("Search tabs"), tab_last_searched_title,
 		       tab_last_searched_url, ses, parent, tabs_search_do,
-		       NULL, NULL, EDIT_DLG_SEARCH);
+		       NULL, term, EDIT_DLG_SEARCH);
 }
 
 static widget_handler_status_T
@@ -291,12 +290,13 @@ push_search_button(struct dialog_data *dlg_data, struct widget_data *widget_data
 static widget_handler_status_T
 push_toggle_display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	struct terminal *term = dlg_data->win->term;
 	int *display_type;
 
 	display_type = &get_opt_int("ui.tabs.display_type", NULL);
 	*display_type = !*display_type;
 
-	update_hierbox_browser(&tab_browser);
+	update_hierbox_browser(&term->tab_browser);
 
 	return EVENT_PROCESSED;
 }
@@ -378,21 +378,39 @@ static const struct hierbox_browser_button tabs_buttons[] = {
 	{ N_("~Toggle display url/title"), push_toggle_display_button, 1 },
 };
 
-struct_hierbox_browser(
-	tab_browser,
-	N_("Tabs manager"),
-	tabs_buttons,
-	&tab_listbox_ops
-);
+void
+init_hierbox_tab_browser(struct terminal *term)
+{
+	struct hierbox_browser *tab_browser = &term->tab_browser;
+
+	tab_browser->title = N_("Tabs manager");
+	tab_browser->buttons = tabs_buttons;
+	tab_browser->buttons_size = sizeof_array(tabs_buttons);
+	init_list(tab_browser->boxes);
+	init_list(tab_browser->dialogs);
+
+	struct listbox_item root = {
+		NULL_LIST_HEAD_EL,
+		{ D_LIST_HEAD_EL(tab_browser->root.child) },
+		BI_FOLDER,
+		-1,
+		1,
+		0,
+	};
+	copy_struct(&tab_browser->root, &root);
+	tab_browser->ops = &tab_listbox_ops;
+
+	init_list(term->tabs_history.entries);
+}
 
 void
-free_tabs_data(void)
+free_tabs_data(struct terminal *term)
 {
 	struct tab_item *item, *next;
 
-	foreachsafe (item, next, tabs.entries) {
-		del_from_history_list(&tabs, item);
-		done_listbox_item(&tab_browser, item->box_item);
+	foreachsafe (item, next, term->tabs_history.entries) {
+		del_from_history_list(&term->tabs_history, item);
+		done_listbox_item(&term->tab_browser, item->box_item);
 		mem_free_if(item->url);
 		mem_free_if(item->title);
 		mem_free(item);
@@ -421,9 +439,9 @@ populate_tabs_data(struct session *ses)
 				url = struri(doc_view->vs->uri);
 			}
 		}
-		add_tab_item(url, title, i);
+		add_tab_item(term, url, title, i);
 	}
-	tab_browser.do_not_save_state = 1;
+	term->tab_browser.do_not_save_state = 1;
 }
 
 void
@@ -431,7 +449,7 @@ tab_manager(struct session *ses)
 {
 	mem_free_set(&tab_last_searched_title, NULL);
 	mem_free_set(&tab_last_searched_url, NULL);
-	free_tabs_data();
+	free_tabs_data(ses->tab->term);
 	populate_tabs_data(ses);
-	hierbox_browser(&tab_browser, ses);
+	hierbox_browser(&ses->tab->term->tab_browser, ses);
 }
