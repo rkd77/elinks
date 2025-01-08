@@ -475,7 +475,7 @@ string_concat(struct string *string, ...)
 NONSTATIC_INLINE struct string *
 add_char_to_string(struct string *string, unsigned char character)
 {
-	assertm(string && character, "[add_char_to_string]");
+	assertm(string, "[add_char_to_string]");
 	if_assert_failed { return NULL; }
 
 	check_string_magic(string);
