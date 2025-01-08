@@ -524,7 +524,7 @@ add_gopher_menu_line(struct string *buffer, char *line)
 	default:
 	{
 		struct string address;
-		const char *format = "%s//%s%s%s/";
+		const char *format = "%s://%s%s%s/";
 		/* If port is defined it means that both @selector and @host
 		 * was correctly parsed. */
 		if (!port || !init_string(&address)) {
