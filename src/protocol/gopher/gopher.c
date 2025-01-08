@@ -456,13 +456,16 @@ add_gopher_menu_line(struct string *buffer, char *line)
 		port = host ? strchr(host, ASCII_TAB) : NULL;
 		if (port) {
 			char *end;
-			int portno;
-
+			int portno = -1;
 			errno = 0;
-			portno = strtol(port + 1, (char **) &end, 10);
+
+			if (!isdigit(port[1])) {
+				port = NULL;
+			} else {
+				portno = strtol(port + 1, (char **) &end, 10);
+			}
 			if (errno || !uri_port_is_valid(portno)) {
 				port = NULL;
-
 			} else {
 				/* Try to wipe out the default gopher port
 				 * number from being appended to links. */
@@ -521,9 +524,7 @@ add_gopher_menu_line(struct string *buffer, char *line)
 	default:
 	{
 		struct string address;
-		const char *format = selector && *selector
-				      ? "%s://%s@%s/" : "%s://%s%s/";
-
+		const char *format = "%s//%s%s%s/";
 		/* If port is defined it means that both @selector and @host
 		 * was correctly parsed. */
 		if (!port || !init_string(&address)) {
@@ -535,12 +536,18 @@ add_gopher_menu_line(struct string *buffer, char *line)
 		assert(selector && host);
 
 		if (entity == GOPHER_TELNET) {
+			if (*selector == '/') {
+				++selector;
+			}
 			add_format_to_string(&address, format,
-					     "telnet", selector, host);
+					     "telnet", selector, (*selector ? "@" : ""), host);
 
 		} else if (entity == GOPHER_TN3270) {
+			if (*selector == '/') {
+				++selector;
+			}
 			add_format_to_string(&address, format,
-					     "tn3270", selector, host);
+					     "tn3270", selector, (*selector ? "@" : ""), host);
 
 		} else {
 			add_format_to_string(&address, "gopher://%s/%c",
@@ -581,7 +588,7 @@ static char *
 get_gopher_line_end(char *data, int datalen)
 {
 	for (; datalen >= 1; data++, datalen--) {
-		if (data[0] == ASCII_CR && data[1] == ASCII_LF)
+		if (data[0] == ASCII_CR && datalen > 1 && data[1] == ASCII_LF)
 			return data + 2;
 
 		if (data[0] == ASCII_LF)
@@ -630,6 +637,7 @@ read_gopher_directory_data(struct connection *conn, struct read_buffer *rb)
 		add_gopher_menu_line(&buffer, line);
 		conn->received += end - rb->data;
 		kill_buffer_data(rb, end - rb->data);
+		rb->data[rb->length] = '\0';
 	}
 
 	if (!is_in_state(state, S_TRANS)
