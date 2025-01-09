@@ -870,12 +870,12 @@ init_html_parser(struct uri *uri, struct document *document,
 	elformat.color.link_number = options->default_color.link_number;
 
 	par_elformat.align = ALIGN_LEFT;
-	par_elformat.leftmargin = options->margin;
-	par_elformat.rightmargin = options->margin;
+	par_elformat.leftmargin = 0; //options->margin;
+	par_elformat.rightmargin = 0; //options->margin;
 
 	par_elformat.width = options->document_width;
 	par_elformat.list_level = par_elformat.list_number = 0;
-	par_elformat.dd_margin = options->margin;
+	par_elformat.dd_margin = 0; //options->margin;
 	par_elformat.flags = P_DISC;
 
 	par_elformat.color.background = options->default_style.color.background;

@@ -38,8 +38,13 @@ init_document_options(struct session *ses, struct document_options *doo)
 		doo->document_width = get_opt_int("document.browse.preferred_document_width", ses);
 
 	if (ses) {
-		if (doo->document_width <= 0 || doo->document_width > ses->tab->term->width)
-			doo->document_width = ses->tab->term->width;
+		if (doo->document_width <= 0 || doo->document_width > ses->tab->term->width) {
+			doo->document_width = ses->tab->term->width - 2 * doo->margin;
+
+			if (doo->document_width <= 0) {
+				doo->document_width = ses->tab->term->width;
+			}
+		}
 	} else {
 		/* Assume we are in -dump mode.  Should we consolidate
 		 * document.dump.width with document.browse.preferred_document_width ? */

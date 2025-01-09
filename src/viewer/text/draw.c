@@ -298,7 +298,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	struct color_pair color;
 	struct view_state *vs;
 	struct terminal *term;
-	struct el_box *box;
+	struct el_box *box, box_bg;
 	struct screen_char *last = NULL;
 
 	int vx, vy;
@@ -310,9 +310,21 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	box = &doc_view->box;
 	term = ses->tab->term;
 
+	copy_struct(&box_bg, box);
+
+	if (box->x == 0) {
+		int margin = get_opt_int("document.browse.margin_width", ses);
+		box->x += margin;
+
+		if (box->width > 2 * margin) {
+			box->width -= 2 * margin;
+		}
+	}
+
 	/* The code in this function assumes that both width and height are
 	 * bigger than 1 so we have to bail out here. */
 	if (box->width < 2 || box->height < 2) return;
+
 
 	if (active) {
 		/* When redrawing the document after things like link menu we
@@ -335,9 +347,9 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	if (!vs) {
 		int bgchar = get_opt_int("ui.background_char", ses);
 #ifdef CONFIG_UTF8
-		draw_box(term, box, bgchar, 0, get_bfu_color(term, "desktop"));
+		draw_box(term, &box_bg, bgchar, 0, get_bfu_color(term, "desktop"));
 #else
-		draw_box(term, box, (unsigned char)bgchar, 0, get_bfu_color(term, "desktop"));
+		draw_box(term, &box_bg, (unsigned char)bgchar, 0, get_bfu_color(term, "desktop"));
 #endif
 		return;
 	}
@@ -345,9 +357,9 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	if (document_has_frames(doc_view->document)) {
 		int bgchar = get_opt_int("ui.background_char", ses);
 #ifdef CONFIG_UTF8
-		draw_box(term, box, bgchar, 0, get_bfu_color(term, "desktop"));
+		draw_box(term, &box_bg, bgchar, 0, get_bfu_color(term, "desktop"));
 #else
-		draw_box(term, box, (unsigned char)bgchar, 0, get_bfu_color(term, "desktop"));
+		draw_box(term, &box_bg, (unsigned char)bgchar, 0, get_bfu_color(term, "desktop"));
 #endif
 		draw_frame_lines(term, doc_view->document->frame_desc, box->x, box->y, &color);
 		if (vs->current_link == -1)
@@ -404,9 +416,9 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 
 	int bgchar = get_opt_int("ui.background_char", ses);
 #ifdef CONFIG_UTF8
-	draw_box(term, box, bgchar, 0, get_bfu_color(term, "desktop"));
+	draw_box(term, &box_bg, bgchar, 0, get_bfu_color(term, "desktop"));
 #else
-	draw_box(term, box, (unsigned char)bgchar, 0, get_bfu_color(term, "desktop"));
+	draw_box(term, &box_bg, (unsigned char)bgchar, 0, get_bfu_color(term, "desktop"));
 #endif
 	if (!doc_view->document->height) {
 		return;
