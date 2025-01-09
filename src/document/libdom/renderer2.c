@@ -145,6 +145,8 @@ dump_dom_element(void *mapa, void *mapa_rev, struct string *buf, dom_node *node,
 					add_to_string(buf, "&lt;");
 				} else if (!in_script && length == 1 && *string_text == '>') {
 					add_to_string(buf, "&gt;");
+				} else if (!in_script && length == 1 && *string_text == '&') {
+					add_to_string(buf, "&amp;");
 				} else {
 					add_bytes_to_string(buf, string_text, length);
 				}
