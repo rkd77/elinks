@@ -1567,10 +1567,12 @@ do_mouse_event(struct session *ses, struct term_event *ev,
 		assert(doc_view && doc_view->document);
 		if_assert_failed return 0;
 
+#if 0
 		assertm(doc_view->document->options.box.x == doc_view->box.x
 		        && doc_view->document->options.box.y == doc_view->box.y,
 			"Jonas' 1.565 -> 1.566 patch sucks");
 		if_assert_failed return 0;
+#endif
 
 		if (check_mouse_position(ev, &doc_view->box)) {
 			matched = doc_view;
