@@ -38,6 +38,14 @@ init_document_options(struct session *ses, struct document_options *doo)
 		doo->document_width = get_opt_int("document.browse.preferred_document_width", ses);
 
 	if (ses) {
+		if (doo->document_width > 0 && get_opt_bool("document.browse.margin_auto", ses)) {
+			int margin = (ses->tab->term->width - doo->document_width) / 2;
+
+			if (margin >= 0) {
+				doo->margin = margin;
+			}
+		}
+
 		if (doo->document_width <= 0 || doo->document_width > ses->tab->term->width) {
 			doo->document_width = ses->tab->term->width - 2 * doo->margin;
 

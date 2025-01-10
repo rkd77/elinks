@@ -497,6 +497,10 @@ static union option_info config_options_info[] = {
 		"2 automatically starts typeahead searching thru all document\n"
 		"  text")),
 
+	INIT_OPT_BOOL("document.browse", N_("Whether to set margin automatically"),
+		"margin_auto", OPT_ZERO, 0,
+		N_("Whether to set margins automatically. Note, that preferred_document_width, "
+		"and use_preferred_document_width must be non-zero.")),
 
 	INIT_OPT_INT("document.browse", N_("Horizontal text margin"),
 		"margin_width", OPT_ZERO, 0, 100, 3,
