@@ -313,7 +313,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	copy_struct(&box_bg, box);
 
 	if (box->x == 0) {
-		int margin = get_opt_int("document.browse.margin_width", ses);
+		int margin = doc_view->document->options.margin;
 		box->x += margin;
 
 		if (box->width > 2 * margin) {
