@@ -825,6 +825,11 @@ static union option_info config_options_info[] = {
 		"html", OPT_ZERO,
 		N_("Options concerning the display of HTML pages.")),
 
+	INIT_OPT_BOOL("document.html", N_("Compress empty lines"),
+		"compress_empty_lines", OPT_ZERO, 0,
+		N_("Compress successive empty lines to only one in displayed "
+		"text.")),
+
 	INIT_OPT_BOOL("document.html", N_("Display frames"),
 		"display_frames", OPT_ZERO, 1,
 		N_("Display frames.")),

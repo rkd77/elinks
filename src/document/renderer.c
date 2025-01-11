@@ -145,6 +145,63 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 	}
 }
 
+static void
+compress_lines(struct document *document)
+{
+	int minus = 0;
+	int maxy = document->height;
+	int i,x,y;
+
+	if (!maxy) {
+		return;
+	}
+	int *offset = calloc(maxy, sizeof(*offset));
+
+	if (!offset) {
+		return;
+	}
+	int lines = 0;
+
+	for (y = 0; y < maxy; y++) {
+		if (minus) {
+			memmove(&document->data[y - minus], &document->data[y], sizeof(struct line));
+		}
+		lines++;
+
+		for (x = 0; x < document->data[y].length; x++) {
+			if (!isspace(document->data[y].ch.chars[x].data) && (document->data[y].ch.chars[x].data != UCS_NO_BREAK_SPACE)) {
+				lines = 0;
+				break;
+			}
+		}
+
+		if (lines > 1) {
+			minus++;
+			document->height--;
+		}
+		offset[y] = minus;
+	}
+
+	if (!minus) {
+		mem_free(offset);
+		return;
+	}
+
+	for (i = 0; i < document->nlinks; i++) {
+		struct link *link = &document->links[i];
+		int c;
+
+		for (c = 0; c < link->npoints; c++) {
+			int oldy = link->points[c].y;
+
+			assert(oldy < maxy && offset[oldy] >= 0);
+			if_assert_failed continue;
+			link->points[c].y -= offset[oldy];
+		}
+	}
+	mem_free(offset);
+}
+
 void
 render_document(struct view_state *vs, struct document_view *doc_view,
 		struct document_options *options)
@@ -218,6 +275,11 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 		shrink_memory(0);
 
 		render_encoded_document(cached, document);
+
+		if (!vs->plain && options->html_compress_empty_lines) {
+			compress_lines(document);
+		}
+
 		sort_links(document);
 		if (!document->title) {
 			uri_component_T components;
