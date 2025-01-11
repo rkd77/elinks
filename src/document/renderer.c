@@ -155,7 +155,7 @@ compress_lines(struct document *document)
 	if (!maxy) {
 		return;
 	}
-	int *offset = calloc(maxy, sizeof(*offset));
+	int *offset = mem_calloc(maxy, sizeof(*offset));
 
 	if (!offset) {
 		return;
