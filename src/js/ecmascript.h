@@ -95,22 +95,19 @@ struct ecmascript_interpreter {
 #ifdef CONFIG_ECMASCRIPT_SMJS
 	JSAutoRealm *ar;
 	JS::Heap<JSObject*> *ac;
+	JSObject *document_obj;
+	JSObject *location_obj;
+	JS::Heap<JS::Value> *fun;
 #endif
 #ifdef CONFIG_QUICKJS
 	JSRuntime *rt;
 	JSValue document_obj;
 	JSValue location_obj;
-#else
-	void *document_obj;
-	void *location_obj;
-#endif
-#ifdef CONFIG_QUICKJS
 	JSValueConst fun;
 #endif
-#ifdef CONFIG_ECMASCRIPT_SMJS
-	JS::Heap<JS::Value> *fun;
-#endif
 #ifdef CONFIG_MUJS
+	void *document_obj;
+	void *location_obj;
 	const char *fun;
 	void *doc;
 #endif
