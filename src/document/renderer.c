@@ -145,8 +145,8 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 	}
 }
 
-static void
-compress_lines(struct document *document)
+void
+compress_empty_lines(struct document *document)
 {
 	int minus = 0;
 	int maxy = document->height;
@@ -277,7 +277,7 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 		render_encoded_document(cached, document);
 
 		if (!vs->plain && options->html_compress_empty_lines) {
-			compress_lines(document);
+			compress_empty_lines(document);
 		}
 
 		sort_links(document);

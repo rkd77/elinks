@@ -268,16 +268,21 @@ static void
 delayed_reload(void *data)
 {
 	struct delayed_rel *rel = (struct delayed_rel *)data;
-	struct session *ses = rel->ses;
-
 	assert(rel);
+	struct session *ses = rel->ses;
+	struct document *document = rel->document;
 
-	object_unlock(rel->document);
+	object_unlock(document);
 
-	reset_document(rel->document);
-	rel->document->links_sorted = 0;
-	dump_xhtml(rel->cached, rel->document, 1 + rel->was_write);
-	sort_links(rel->document);
+	reset_document(document);
+	document->links_sorted = 0;
+	dump_xhtml(rel->cached, document, 1 + rel->was_write);
+
+	if (!ses->doc_view->vs->plain && document->options.html_compress_empty_lines) {
+		compress_empty_lines(document);
+	}
+
+	sort_links(document);
 	draw_formatted(ses, 2);
 	load_common(ses);
 	mem_free(rel);
