@@ -59,7 +59,7 @@
 #include <vector>
 
 struct eljs_url {
-	struct uri uri;
+	struct uri *uri;
 	char *hash;
 	char *host;
 	char *pathname;
@@ -96,8 +96,8 @@ url_finalize(JS::GCContext *op, JSObject *url_obj)
 	struct eljs_url *url = JS::GetMaybePtrFromReservedSlot<struct eljs_url>(url_obj, 0);
 
 	if (url) {
-		char *uristring = url->uri.string;
-		done_uri(&url->uri);
+		char *uristring = url->uri->string;
+		done_uri(url->uri);
 		mem_free_if(uristring);
 		mem_free_if(url->hash);
 		mem_free_if(url->host);
@@ -161,9 +161,10 @@ url_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
 		if (!urlstring) {
 			return false;
 		}
-		int ret = parse_uri(&url->uri, urlstring);
+		url->uri = get_uri(urlstring, 0);
 
-		if (ret != URI_ERRNO_OK) {
+		if (!url->uri) {
+			mem_free(urlstring);
 			return false;
 		}
 	}
@@ -212,8 +213,8 @@ url_get_property_hash(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	if (url->uri.fragmentlen) {
-		add_bytes_to_string(&fragment, url->uri.fragment, url->uri.fragmentlen);
+	if (url->uri->fragmentlen) {
+		add_bytes_to_string(&fragment, url->uri->fragment, url->uri->fragmentlen);
 	}
 	args.rval().setString(JS_NewStringCopyZ(ctx, fragment.source));
 	done_string(&fragment);
@@ -254,7 +255,7 @@ url_get_property_host(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	char *str = get_uri_string(&url->uri, URI_HOST_PORT);
+	char *str = get_uri_string(url->uri, URI_HOST_PORT);
 
 	if (!str) {
 #ifdef ECMASCRIPT_DEBUG
@@ -301,7 +302,7 @@ url_get_property_hostname(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	char *str = get_uri_string(&url->uri, URI_HOST);
+	char *str = get_uri_string(url->uri, URI_HOST);
 
 	if (!str) {
 #ifdef ECMASCRIPT_DEBUG
@@ -348,7 +349,7 @@ url_get_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	char *str = get_uri_string(&url->uri, URI_ORIGINAL);
+	char *str = get_uri_string(url->uri, URI_ORIGINAL);
 
 	if (!str) {
 #ifdef ECMASCRIPT_DEBUG
@@ -395,7 +396,7 @@ url_get_property_origin(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	char *str = get_uri_string(&url->uri, URI_SERVER);
+	char *str = get_uri_string(url->uri, URI_SERVER);
 
 	if (!str) {
 #ifdef ECMASCRIPT_DEBUG
@@ -447,11 +448,11 @@ url_get_property_pathname(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!init_string(&pathname)) {
 		return false;
 	}
-	const char *query = (const char *)memchr(url->uri.data, '?', url->uri.datalen);
-	int len = (query ? query - url->uri.data : url->uri.datalen);
+	const char *query = (const char *)memchr(url->uri->data, '?', url->uri->datalen);
+	int len = (query ? query - url->uri->data : url->uri->datalen);
 
 	add_char_to_string(&pathname, '/');
-	add_bytes_to_string(&pathname, url->uri.data, len);
+	add_bytes_to_string(&pathname, url->uri->data, len);
 	args.rval().setString(JS_NewStringCopyZ(ctx, pathname.source));
 	done_string(&pathname);
 
@@ -492,8 +493,8 @@ url_get_property_port(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!init_string(&port)) {
 		return false;
 	}
-	if (url->uri.portlen) {
-		add_bytes_to_string(&port, url->uri.port, url->uri.portlen);
+	if (url->uri->portlen) {
+		add_bytes_to_string(&port, url->uri->port, url->uri->portlen);
 	}
 	args.rval().setString(JS_NewStringCopyZ(ctx, port.source));
 	done_string(&port);
@@ -541,10 +542,10 @@ url_get_property_protocol(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	/* Custom or unknown keep the URI untouched. */
-	if (url->uri.protocol == PROTOCOL_UNKNOWN) {
-		add_to_string(&proto, struri(&url->uri));
+	if (url->uri->protocol == PROTOCOL_UNKNOWN) {
+		add_to_string(&proto, struri(url->uri));
 	} else {
-		add_bytes_to_string(&proto, url->uri.string, url->uri.protocollen);
+		add_bytes_to_string(&proto, url->uri->string, url->uri->protocollen);
 		add_char_to_string(&proto, ':');
 	}
 	args.rval().setString(JS_NewStringCopyZ(ctx, proto.source));
@@ -591,7 +592,7 @@ url_get_property_search(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!init_string(&search)) {
 		return false;
 	}
-	const char *query = (const char *)memchr(url->uri.data, '?', url->uri.datalen);
+	const char *query = (const char *)memchr(url->uri->data, '?', url->uri->datalen);
 
 	if (query) {
 		add_bytes_to_string(&search, query, strcspn(query, "#" POST_CHAR_S));
@@ -640,8 +641,8 @@ url_set_property_hash(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	mem_free_set(&url->hash, hash);
 
 	if (hash) {
-		url->uri.fragment = hash;
-		url->uri.fragmentlen = strlen(hash);
+		url->uri->fragment = hash;
+		url->uri->fragmentlen = strlen(hash);
 	}
 	args.rval().setUndefined();
 
@@ -686,8 +687,8 @@ url_set_property_host(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	mem_free_set(&url->host, host);
 
 	if (host) {
-		url->uri.host = host;
-		url->uri.hostlen = strlen(host);
+		url->uri->host = host;
+		url->uri->hostlen = strlen(host);
 	}
 	args.rval().setUndefined();
 
@@ -732,8 +733,8 @@ url_set_property_hostname(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	mem_free_set(&url->host, hostname);
 
 	if (hostname) {
-		url->uri.host = hostname;
-		url->uri.hostlen = strlen(hostname);
+		url->uri->host = hostname;
+		url->uri->hostlen = strlen(hostname);
 	}
 	args.rval().setUndefined();
 
@@ -770,17 +771,13 @@ url_set_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	done_uri(&url->uri);
+	done_uri(url->uri);
 	char *urlstring = jsval_to_string(ctx, args[0]);
 
 	if (!urlstring) {
 		return false;
 	}
-	int ret = parse_uri(&url->uri, urlstring);
-
-	if (ret != URI_ERRNO_OK) {
-		return false;
-	}
+	url->uri = get_uri(urlstring, 0);
 	args.rval().setUndefined();
 
 	return true;
@@ -824,8 +821,8 @@ url_set_property_pathname(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	mem_free_set(&url->pathname, pathname);
 
 	if (pathname) {
-		url->uri.data = pathname;
-		url->uri.datalen = strlen(pathname);
+		url->uri->data = pathname;
+		url->uri->datalen = strlen(pathname);
 	}
 	args.rval().setUndefined();
 
@@ -870,8 +867,8 @@ url_set_property_port(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	mem_free_set(&url->port, port);
 
 	if (port) {
-		url->uri.port = port;
-		url->uri.portlen = strlen(port);
+		url->uri->port = port;
+		url->uri->portlen = strlen(port);
 	}
 	args.rval().setUndefined();
 
@@ -938,9 +935,9 @@ url_set_property_protocol(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	mem_free_set(&url->protocol, protocol);
 
 	if (protocol) {
-		url->uri.protocollen = get_protocol_length(protocol);
+		url->uri->protocollen = get_protocol_length(protocol);
 		/* Figure out whether the protocol is known */
-		url->uri.protocol = get_protocol(protocol, url->uri.protocollen);
+		url->uri->protocol = get_protocol(protocol, url->uri->protocollen);
 	}
 	args.rval().setUndefined();
 
