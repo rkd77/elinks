@@ -1206,6 +1206,6 @@ if get_option('doc')
     subdir('doc')
 endif
 
-if get_option('test')
+if get_option('test') and get_option('test-js')
     subdir('test/js/assert')
 endif
