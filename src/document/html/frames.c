@@ -227,7 +227,7 @@ format_frames(struct session *ses, struct frameset_desc *fsd,
 
 	copy_struct(&o, op);
 
-	o.margin = !!o.margin;
+	//o.margin = !!o.margin;
 
 	n = 0;
 	for (j = 0; j < fsd->box.height; j++) {
