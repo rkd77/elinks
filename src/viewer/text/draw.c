@@ -293,7 +293,7 @@ check_link_under_cursor(struct session *ses, struct document_view *doc_view)
  * @a active indicates whether the document is focused -- i.e.,
  * whether it is displayed in the selected frame or document. */
 static void
-draw_doc(struct session *ses, struct document_view *doc_view, int active, int frames)
+draw_doc(struct session *ses, struct document_view *doc_view, int active)
 {
 	struct color_pair color;
 	struct view_state *vs;
@@ -316,7 +316,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active, int fr
 		int margin = doc_view->document->options.margin;
 		box->x += margin;
 
-		if (!frames && box->width > 2 * margin) {
+		if (box->width > 2 * margin) {
 			box->width -= 2 * margin;
 		}
 	}
@@ -565,7 +565,7 @@ draw_frames(struct session *ses)
 
 		foreach (doc_view, ses->scrn_frames) {
 			if (doc_view->depth == d)
-				draw_doc(ses, doc_view, doc_view == current_doc_view, 1);
+				draw_doc(ses, doc_view, doc_view == current_doc_view);
 			else if (doc_view->depth > d)
 				more = 1;
 		}
@@ -592,7 +592,7 @@ draw_iframes(struct session *ses)
 	current_doc_view = current_frame(ses);
 
 	foreach (doc_view, ses->scrn_iframes) {
-		draw_doc(ses, doc_view, doc_view == current_doc_view, 1);
+		draw_doc(ses, doc_view, doc_view == current_doc_view);
 	}
 }
 
@@ -653,12 +653,12 @@ refresh_view(struct session *ses, struct document_view *doc_view, int frames)
 #ifdef CONFIG_LIBDOM
 			//scan_document(doc_view->parent_doc_view);
 #endif
-			draw_doc(ses, doc_view->parent_doc_view, 0, 0);
+			draw_doc(ses, doc_view->parent_doc_view, 0);
 		} else {
 #ifdef CONFIG_LIBDOM
 			//scan_document(doc_view);
 #endif
-			draw_doc(ses, doc_view, 1, 0);
+			draw_doc(ses, doc_view, 1);
 		}
 		if (frames) draw_frames(ses);
 		draw_iframes(ses);
