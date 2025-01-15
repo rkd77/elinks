@@ -98,7 +98,7 @@ check_document_fragment(struct session *ses, struct document_view *doc_view)
 
 static void
 draw_frame_lines(struct terminal *term, struct frameset_desc *frameset_desc,
-		 int xp, int yp, struct color_pair *colors)
+		 int xp, int yp, struct color_pair *colors, int margin)
 {
 	int y, j;
 
@@ -117,11 +117,11 @@ draw_frame_lines(struct terminal *term, struct frameset_desc *frameset_desc,
 			if (i) {
 				struct el_box box;
 
-				set_box(&box, x, y + 1, 1, height);
+				set_box(&box, x - margin, y + 1, 1, height);
 				draw_box(term, &box, BORDER_SVLINE, SCREEN_ATTR_FRAME, colors);
 
 				if (j == frameset_desc->box.height - 1)
-					draw_border_cross(term, x, y + height + 1,
+					draw_border_cross(term, x - margin, y + height + 1,
 							  BORDER_X_UP, colors);
 			} else if (j) {
 				if (x >= 0)
@@ -164,7 +164,7 @@ draw_frame_lines(struct terminal *term, struct frameset_desc *frameset_desc,
 
 			if (frameset_desc->frame_desc[p].subframe) {
 				draw_frame_lines(term, frameset_desc->frame_desc[p].subframe,
-						 x + 1, y + 1, colors);
+						 x + 1, y + 1, colors, margin);
 			}
 			x += width + 1;
 		}
@@ -312,8 +312,9 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active, int fr
 
 	copy_struct(&box_bg, box);
 
+	int margin = doc_view->document->options.margin;
+
 	if (box->x == 0) {
-		int margin = doc_view->document->options.margin;
 		box->x += margin;
 
 		if (!frames && box->width > 2 * margin) {
@@ -361,7 +362,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active, int fr
 #else
 		draw_box(term, &box_bg, (unsigned char)bgchar, 0, get_bfu_color(term, "desktop"));
 #endif
-		draw_frame_lines(term, doc_view->document->frame_desc, box->x, box->y, &color);
+		draw_frame_lines(term, doc_view->document->frame_desc, box->x, box->y, &color, margin);
 		if (vs->current_link == -1)
 			vs->current_link = 0;
 
@@ -414,12 +415,14 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active, int fr
 	doc_view->last_x = vx;
 	doc_view->last_y = vy;
 
-	int bgchar = get_opt_int("ui.background_char", ses);
+	if (!box_bg.x) {
+		int bgchar = get_opt_int("ui.background_char", ses);
 #ifdef CONFIG_UTF8
-	draw_box(term, &box_bg, bgchar, 0, get_bfu_color(term, "desktop"));
+		draw_box(term, &box_bg, bgchar, 0, get_bfu_color(term, "desktop"));
 #else
-	draw_box(term, &box_bg, (unsigned char)bgchar, 0, get_bfu_color(term, "desktop"));
+		draw_box(term, &box_bg, (unsigned char)bgchar, 0, get_bfu_color(term, "desktop"));
 #endif
+	}
 	if (!doc_view->document->height) {
 		return;
 	}
