@@ -341,8 +341,8 @@ render_document_frames(struct session *ses, int no_cache)
 
 	init_document_options(ses, &doc_opts);
 
-	set_box(&doc_opts.box, 0, 0,
-		ses->tab->term->width, ses->tab->term->height);
+	set_box(&doc_opts.box, doc_opts.margin, 0,
+		doc_opts.document_width, ses->tab->term->height);
 
 	if (ses->status.show_title_bar) {
 		doc_opts.box.y++;

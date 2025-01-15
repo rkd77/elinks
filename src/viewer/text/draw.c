@@ -98,7 +98,7 @@ check_document_fragment(struct session *ses, struct document_view *doc_view)
 
 static void
 draw_frame_lines(struct terminal *term, struct frameset_desc *frameset_desc,
-		 int xp, int yp, struct color_pair *colors, int margin)
+		 int xp, int yp, struct color_pair *colors)
 {
 	int y, j;
 
@@ -117,11 +117,11 @@ draw_frame_lines(struct terminal *term, struct frameset_desc *frameset_desc,
 			if (i) {
 				struct el_box box;
 
-				set_box(&box, x - margin, y + 1, 1, height);
+				set_box(&box, x, y + 1, 1, height);
 				draw_box(term, &box, BORDER_SVLINE, SCREEN_ATTR_FRAME, colors);
 
 				if (j == frameset_desc->box.height - 1)
-					draw_border_cross(term, x - margin, y + height + 1,
+					draw_border_cross(term, x, y + height + 1,
 							  BORDER_X_UP, colors);
 			} else if (j) {
 				if (x >= 0)
@@ -164,7 +164,7 @@ draw_frame_lines(struct terminal *term, struct frameset_desc *frameset_desc,
 
 			if (frameset_desc->frame_desc[p].subframe) {
 				draw_frame_lines(term, frameset_desc->frame_desc[p].subframe,
-						 x + 1, y + 1, colors, margin);
+						 x + 1, y + 1, colors);
 			}
 			x += width + 1;
 		}
@@ -293,12 +293,12 @@ check_link_under_cursor(struct session *ses, struct document_view *doc_view)
  * @a active indicates whether the document is focused -- i.e.,
  * whether it is displayed in the selected frame or document. */
 static void
-draw_doc(struct session *ses, struct document_view *doc_view, int active, int frames)
+draw_doc(struct session *ses, struct document_view *doc_view, int active)
 {
 	struct color_pair color;
 	struct view_state *vs;
 	struct terminal *term;
-	struct el_box *box, box_bg;
+	struct el_box *box;
 	struct screen_char *last = NULL;
 
 	int vx, vy;
@@ -310,22 +310,9 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active, int fr
 	box = &doc_view->box;
 	term = ses->tab->term;
 
-	copy_struct(&box_bg, box);
-
-	int margin = doc_view->document->options.margin;
-
-	if (box->x == 0) {
-		box->x += margin;
-
-		if (!frames && box->width > 2 * margin) {
-			box->width -= 2 * margin;
-		}
-	}
-
 	/* The code in this function assumes that both width and height are
 	 * bigger than 1 so we have to bail out here. */
 	if (box->width < 2 || box->height < 2) return;
-
 
 	if (active) {
 		/* When redrawing the document after things like link menu we
@@ -348,9 +335,9 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active, int fr
 	if (!vs) {
 		int bgchar = get_opt_int("ui.background_char", ses);
 #ifdef CONFIG_UTF8
-		draw_box(term, &box_bg, bgchar, 0, get_bfu_color(term, "desktop"));
+		draw_box(term, box, bgchar, 0, get_bfu_color(term, "desktop"));
 #else
-		draw_box(term, &box_bg, (unsigned char)bgchar, 0, get_bfu_color(term, "desktop"));
+		draw_box(term, box, (unsigned char)bgchar, 0, get_bfu_color(term, "desktop"));
 #endif
 		return;
 	}
@@ -358,17 +345,16 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active, int fr
 	if (document_has_frames(doc_view->document)) {
 		int bgchar = get_opt_int("ui.background_char", ses);
 #ifdef CONFIG_UTF8
-		draw_box(term, &box_bg, bgchar, 0, get_bfu_color(term, "desktop"));
+		draw_box(term, box, bgchar, 0, get_bfu_color(term, "desktop"));
 #else
-		draw_box(term, &box_bg, (unsigned char)bgchar, 0, get_bfu_color(term, "desktop"));
+		draw_box(term, box, (unsigned char)bgchar, 0, get_bfu_color(term, "desktop"));
 #endif
-		draw_frame_lines(term, doc_view->document->frame_desc, box->x, box->y, &color, margin);
+		draw_frame_lines(term, doc_view->document->frame_desc, box->x, box->y, &color);
 		if (vs->current_link == -1)
 			vs->current_link = 0;
 
 		return;
 	}
-
 
 	if (ses->navigate_mode == NAVIGATE_LINKWISE) {
 		check_vs(doc_view);
@@ -415,14 +401,12 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active, int fr
 	doc_view->last_x = vx;
 	doc_view->last_y = vy;
 
-	if (!box_bg.x) {
-		int bgchar = get_opt_int("ui.background_char", ses);
+	int bgchar = get_opt_int("ui.background_char", ses);
 #ifdef CONFIG_UTF8
-		draw_box(term, &box_bg, bgchar, 0, get_bfu_color(term, "desktop"));
+	draw_box(term, box, bgchar, 0, get_bfu_color(term, "desktop"));
 #else
-		draw_box(term, &box_bg, (unsigned char)bgchar, 0, get_bfu_color(term, "desktop"));
+	draw_box(term, box, (unsigned char)bgchar, 0, get_bfu_color(term, "desktop"));
 #endif
-	}
 	if (!doc_view->document->height) {
 		return;
 	}
@@ -568,7 +552,7 @@ draw_frames(struct session *ses)
 
 		foreach (doc_view, ses->scrn_frames) {
 			if (doc_view->depth == d)
-				draw_doc(ses, doc_view, doc_view == current_doc_view, 1);
+				draw_doc(ses, doc_view, doc_view == current_doc_view);
 			else if (doc_view->depth > d)
 				more = 1;
 		}
@@ -595,7 +579,7 @@ draw_iframes(struct session *ses)
 	current_doc_view = current_frame(ses);
 
 	foreach (doc_view, ses->scrn_iframes) {
-		draw_doc(ses, doc_view, doc_view == current_doc_view, 1);
+		draw_doc(ses, doc_view, doc_view == current_doc_view);
 	}
 }
 
@@ -656,12 +640,12 @@ refresh_view(struct session *ses, struct document_view *doc_view, int frames)
 #ifdef CONFIG_LIBDOM
 			//scan_document(doc_view->parent_doc_view);
 #endif
-			draw_doc(ses, doc_view->parent_doc_view, 0, 0);
+			draw_doc(ses, doc_view->parent_doc_view, 0);
 		} else {
 #ifdef CONFIG_LIBDOM
 			//scan_document(doc_view);
 #endif
-			draw_doc(ses, doc_view, 1, 0);
+			draw_doc(ses, doc_view, 1);
 		}
 		if (frames) draw_frames(ses);
 		draw_iframes(ses);
