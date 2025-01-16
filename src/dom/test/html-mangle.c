@@ -115,7 +115,9 @@ void make_up_value(void)
 {
 	char c=R(2);
 
-	if (c) putchar('"');
+	if (c) {
+		putchar('"');
+	}
 
 	switch (R(31)) {
 	case 0: printf("javascript:"); make_up_value(); break;
@@ -154,11 +156,16 @@ void make_up_value(void)
 	case 22: putchar('#'); break;
 	case 23: putchar('*'); break;
 	default:
-		 if (R(2)) putchar('-'); printf("%d",rand());
-		 break;
+		if (R(2)) {
+			putchar('-');
+		}
+		printf("%d",rand());
+		break;
 	}
 
-	if (c) putchar('"');
+	if (c) {
+		putchar('"');
+	}
 }
 
 void random_tag(void)
