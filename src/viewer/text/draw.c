@@ -453,10 +453,8 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 			}
 		}
 
-		for (j = st; j < i; j++) {
-			if (j - vx >= 0) {
-				draw_space(term, box->x + j - vx, box->y + y - vy, first);
-			}
+		for (j = int_max(st - vx, 0); j < i - vx; j++) {
+			draw_space(term, box->x + j, box->y + y - vy, first);
 		}
 
 		for (i = last_index; i < box->width + vx; i++) {
