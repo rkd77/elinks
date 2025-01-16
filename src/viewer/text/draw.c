@@ -438,7 +438,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 			}
 
 			for (i = en - 1; i >= 0; --i) {
-				if (doc_view->document->data[y].ch.chars[i].data != ' ') {
+				if (doc_view->document->data[y].ch.chars[i].data != ' ' && doc_view->document->data[y].ch.chars[i].data != UCS_NO_BREAK_SPACE) {
 					last = &doc_view->document->data[y].ch.chars[i];
 					last_index = i + 1;
 					break;
@@ -447,7 +447,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 		}
 
 		for (i = st; i < max; i++) {
-			if (doc_view->document->data[y].ch.chars[i].data != ' ') {
+			if (doc_view->document->data[y].ch.chars[i].data != ' '  && doc_view->document->data[y].ch.chars[i].data != UCS_NO_BREAK_SPACE) {
 				first = &doc_view->document->data[y].ch.chars[i];
 				break;
 			}
@@ -457,10 +457,8 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 			draw_space(term, box->x + j, box->y + y - vy, first);
 		}
 
-		for (i = last_index; i < box->width + vx; i++) {
-			if (i - vx < box->width && i - vx >= 0) {
-				draw_space(term, box->x + i - vx, box->y + y - vy, last);
-			}
+		for (i = int_max(last_index - vx, 0); i < box->width; i++) {
+			draw_space(term, box->x + i, box->y + y - vy, last);
 		}
 	}
 #if 0
