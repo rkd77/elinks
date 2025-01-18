@@ -983,6 +983,20 @@ copy_frame(struct image *src, struct el_box *box, int cell_width, int cell_heigh
 	encoder->clipy = y >= 0 ? 0 : (-y * cell_height);
 	encoder->clipwidth = box->width * cell_width;
 	encoder->clipheight = box->height * cell_height;
+
+	if (src->width < encoder->clipwidth) {
+		encoder->clipwidth = src->width;
+	}
+	if (src->height < encoder->clipheight) {
+		encoder->clipheight = src->height;
+	}
+
+	if (x * cell_width + encoder->clipwidth >= box->width * cell_width) {
+		encoder->clipwidth = (box->width * cell_width - x * cell_width);
+	}
+	if (y * cell_height + encoder->clipheight >= box->height * cell_height) {
+		encoder->clipheight = (box->height * cell_height - y * cell_height);
+	}
 	status = sixel_output_new(&output, sixel_write_callback, &dest->pixels, NULL);
 
 	if (SIXEL_FAILED(status)) {
