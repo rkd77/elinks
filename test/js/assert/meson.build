@@ -103,6 +103,7 @@ if conf_data.get('CONFIG_ECMASCRIPT')
             '--eval', 'set ecmascript.enable_console_log = 1',
             '--eval', 'set ui.sessions.fork_on_start = 0',
             '--no-connect', '1',
+            '--no-home', '1',
         t])
     endforeach
     foreach t : took
@@ -112,6 +113,7 @@ if conf_data.get('CONFIG_ECMASCRIPT')
             '--eval', 'set ecmascript.enable_console_log = 1',
             '--eval', 'set ui.sessions.fork_on_start = 0',
             '--no-connect', '1',
+            '--no-home', '1',
         t])
     endforeach
 endif
