@@ -1423,14 +1423,14 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 	int ymax = (term_)->height - 1;						\
 										\
 	for (; y <= ymax; y++) {					\
-		if (!test_bitfield_bit(screen->dirty, y) && !test_bitfield_bit(screen->dirty_image, y)) continue;		\
+		int dirty = test_bitfield_bit(screen->dirty_image, y);						\
+		if (!dirty && !test_bitfield_bit(screen->dirty, y)) continue;		\
 		int ypos = y * (term_)->width;					\
 		struct screen_char *current = &screen->last_image[ypos];	\
 		struct screen_char *pos = &screen->image[ypos];			\
 		struct screen_char *start_of_line = pos;			\
 		int is_last_line = (y == ymax);					\
 		int x = 0;						\
-		int dirty = test_bitfield_bit(screen->dirty_image, y);						\
 		clear_bitfield_bit(screen->dirty, y);				\
 		clear_bitfield_bit(screen->dirty_image, y);				\
 										\
