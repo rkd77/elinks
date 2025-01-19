@@ -27,10 +27,12 @@ struct terminal_screen {
 	unsigned int was_dirty:1;
 
 	struct bitfield *dirty;
+	struct bitfield *dirty_image;
 };
 
 /** Mark the screen ready for redrawing. */
 void set_screen_dirty(struct terminal_screen *screen, int from, int to);
+void set_screen_dirty_image(struct terminal_screen *screen, int from, int to);
 
 /** Initializes a screen. Returns NULL upon allocation failure. */
 struct terminal_screen *init_screen(void);

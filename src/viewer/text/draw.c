@@ -31,6 +31,7 @@
 #include "session/location.h"
 #include "session/session.h"
 #include "terminal/draw.h"
+#include "terminal/screen.h"
 #ifdef CONFIG_LIBSIXEL
 #include "terminal/sixel.h"
 #endif
@@ -476,7 +477,13 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	}
 #ifdef CONFIG_LIBSIXEL
 	while (!list_empty(term->images)) {
-		delete_image((struct image *)term->images.next);
+		struct image *im = (struct image *)term->images.next;
+
+		int ystart = im->y;
+		int yend = ystart + (im->height + term->cell_height - 1) / term->cell_height;
+
+		set_screen_dirty_image(term->screen, ystart, yend);
+		delete_image(im);
 	}
 
 	if (1) {

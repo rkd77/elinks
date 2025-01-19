@@ -470,6 +470,17 @@ set_screen_dirty(struct terminal_screen *screen, int from, int to)
 	screen->was_dirty = 1;
 }
 
+void
+set_screen_dirty_image(struct terminal_screen *screen, int from, int to)
+{
+	unsigned int i;
+
+	for (i = from; i <= to; i++) {
+		set_bitfield_bit(screen->dirty_image, i);
+	}
+	screen->was_dirty = 1;
+}
+
 #include <stdio.h>
 
 /** Set screen_driver.opt according to screen_driver.type and @a term_spec.
@@ -1412,15 +1423,16 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 	int ymax = (term_)->height - 1;						\
 										\
 	for (; y <= ymax; y++) {					\
-		if (!test_bitfield_bit(screen->dirty, y)) continue;		\
+		if (!test_bitfield_bit(screen->dirty, y) && !test_bitfield_bit(screen->dirty_image, y)) continue;		\
 		int ypos = y * (term_)->width;					\
 		struct screen_char *current = &screen->last_image[ypos];	\
 		struct screen_char *pos = &screen->image[ypos];			\
 		struct screen_char *start_of_line = pos;			\
 		int is_last_line = (y == ymax);					\
 		int x = 0;						\
-		int dirty = 0;						\
+		int dirty = test_bitfield_bit(screen->dirty_image, y);						\
 		clear_bitfield_bit(screen->dirty, y);				\
+		clear_bitfield_bit(screen->dirty_image, y);				\
 										\
 		for (; x <= xmax; x++, current++, pos++) {			\
 			if (compare_bg_color(pos->c.color, current->c.color)) {	\
@@ -1482,11 +1494,6 @@ redraw_screen(struct terminal *term)
 
 	if (!init_string(&image)) return;
 
-#ifdef CONFIG_LIBSIXEL
-	if (driver->opt.sixel) {
-		try_to_draw_images(term);
-	}
-#endif
 	switch (driver->opt.color_mode) {
 	default:
 		/* If the desired color mode was not compiled in,
@@ -1550,6 +1557,12 @@ redraw_screen(struct terminal *term)
 
 	copy_screen_chars(screen->last_image, screen->image, term->width * term->height);
 	screen->was_dirty = 0;
+
+#ifdef CONFIG_LIBSIXEL
+	if (driver->opt.sixel) {
+		try_to_draw_images(term);
+	}
+#endif
 }
 
 void
@@ -1618,6 +1631,10 @@ resize_screen(struct terminal *term, int width, int height)
 		struct bitfield *new_dirty = init_bitfield(height);
 		if (!new_dirty) return;
 		mem_free_set(&screen->dirty, new_dirty);
+
+		struct bitfield *new_dirty_image = init_bitfield(height);
+		if (!new_dirty_image) return;
+		mem_free_set(&screen->dirty_image, new_dirty_image);
 	}
 
 	bsize = size * sizeof(*image);
@@ -1642,6 +1659,7 @@ done_screen(struct terminal_screen *screen)
 {
 	mem_free_if(screen->image);
 	mem_free(screen->dirty);
+	mem_free(screen->dirty_image);
 	mem_free(screen);
 }
 
