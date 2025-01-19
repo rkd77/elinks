@@ -504,7 +504,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 				continue;
 			}
 
-			struct image *im_copy = copy_frame(&im, box->width, box->height, term->cell_width, term->cell_height, vs->x, vs->y);
+			struct image *im_copy = copy_frame(&im, box, term->cell_width, term->cell_height, vs->x, vs->y);
 
 			if (im_copy) {
 				add_to_list(term->images, im_copy);

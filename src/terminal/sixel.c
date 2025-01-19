@@ -903,9 +903,8 @@ end:
 	return ile;
 }
 
-
 struct image *
-copy_frame(struct image *src, int box_width, int box_height, int cell_width, int cell_height, int dx, int dy)
+copy_frame(struct image *src, struct el_box *box, int cell_width, int cell_height, int dx, int dy)
 {
 	sixel_decoder_t *decoder = NULL;
 	sixel_encoder_t *encoder = NULL;
@@ -977,12 +976,27 @@ copy_frame(struct image *src, int box_width, int box_height, int cell_width, int
 	if (SIXEL_FAILED(status)) {
 		goto end;
 	}
-	x = src->x - dx;
-	y = src->y - dy;
+	x = src->x - box->x - dx;
+	y = src->y - box->y - dy;
+
 	encoder->clipx = x >= 0 ? 0 : (-x * cell_width);
 	encoder->clipy = y >= 0 ? 0 : (-y * cell_height);
-	encoder->clipwidth = box_width * cell_width;
-	encoder->clipheight = box_height * cell_height;
+	encoder->clipwidth = box->width * cell_width;
+	encoder->clipheight = box->height * cell_height;
+
+	if (src->width < encoder->clipwidth) {
+		encoder->clipwidth = src->width;
+	}
+	if (src->height < encoder->clipheight) {
+		encoder->clipheight = src->height;
+	}
+
+	if (x * cell_width + encoder->clipwidth >= box->width * cell_width) {
+		encoder->clipwidth = (box->width * cell_width - x * cell_width);
+	}
+	if (y * cell_height + encoder->clipheight >= box->height * cell_height) {
+		encoder->clipheight = (box->height * cell_height - y * cell_height);
+	}
 	status = sixel_output_new(&output, sixel_write_callback, &dest->pixels, NULL);
 
 	if (SIXEL_FAILED(status)) {
@@ -993,15 +1007,21 @@ copy_frame(struct image *src, int box_width, int box_height, int cell_width, int
 	if (SIXEL_FAILED(status)) {
 		goto end;
 	}
-	dest->x = x < 0 ? 0 : x;
-	dest->y = y < 0 ? 1 : y;
-	dest->width = src->width;
-	dest->height = src->height;
+	dest->x = x < box->x ? box->x : x;
+	dest->y = y < box->y ? box->y : y;
+	dest->width = encoder->clipx >= src->width ? 0 : sixel_frame_get_width(frame);
+	dest->height = encoder->clipy >= src->height ? 0 : sixel_frame_get_height(frame);
 end:
 	sixel_frame_unref(frame);
 	sixel_output_unref(output);
 	sixel_decoder_unref(decoder);
 	sixel_encoder_unref(encoder);
+
+	if (!dest->width || !dest->height) {
+		done_string(&dest->pixels);
+		mem_free(dest);
+		return NULL;
+	}
 
 	return dest;
 }
