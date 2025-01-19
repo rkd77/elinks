@@ -29,6 +29,7 @@
 #include "config/options.h"
 #include "config/kbdbind.h"
 #include "document/html/frames.h"
+#include "document/html/parser/general.h"
 #include "document/html/parser/link.h"
 #include "document/html/parser/parse.h"
 #include "document/html/parser/stack.h"
@@ -37,6 +38,10 @@
 #include "globhist/globhist.h"
 #include "mime/mime.h"
 #include "protocol/uri.h"
+#ifdef CONFIG_LIBSIXEL
+#include "terminal/sixel.h"
+#endif
+#include "util/base64.h"
 #include "util/conv.h"
 #include "util/error.h"
 #include "util/memdebug.h"
@@ -223,6 +228,46 @@ put_image_label(char *a, char *label,
 }
 
 static void
+html_img_sixel(struct html_context *html_context, char *a,
+        char *html, char *eof, char **end)
+{
+#ifdef CONFIG_LIBSIXEL
+	if (!html_context->options->sixel || !html_context->part->document || html_context->table_level) {
+		return;
+	}
+	char *elsix = get_attr_val(a, "elsix", html_context->doc_cp);
+
+	if (!elsix) {
+		return;
+	}
+	struct string pixels;
+
+	if (!init_string(&pixels)) {
+		mem_free(elsix);
+		return;
+	}
+	int datalen;
+	unsigned char *data = base64_decode_bin((const unsigned char *)elsix, strlen(elsix), &datalen);
+
+	mem_free(elsix);
+
+	if (!data) {
+		done_string(&pixels);
+		return;
+	}
+	add_bytes_to_string(&pixels, (const char *)data, datalen);
+	mem_free(data);
+	struct document *document = html_context->document;
+	html_linebrk(html_context, a, html, eof, end);
+
+	int lineno = html_context->part->cy + html_context->part->box.y;
+	int how_many = add_image_to_document(document, &pixels, lineno) + 1;
+	done_string(&pixels);
+	ln_break(html_context, how_many);
+#endif
+}
+
+static void
 html_img_do(char *a, char *object_src,
             struct html_context *html_context)
 {
@@ -258,7 +303,7 @@ html_img_do(char *a, char *object_src,
 		elformat.form = NULL;
 		elformat.style.attr |= AT_BOLD;
 		usemap = 1;
- 	}
+	}
 
 	ismap = elformat.link
 	        && has_attr(a, "ismap", html_context->doc_cp)
@@ -365,8 +410,11 @@ html_img_do(char *a, char *object_src,
 
 void
 html_img(struct html_context *html_context, char *a,
-         char *xxx3, char *xxx4, char **xxx5)
+         char *html, char *eof, char **end)
 {
+#ifdef CONFIG_LIBSIXEL
+	html_img_sixel(html_context, a, html, eof, end);
+#endif
 	html_img_do(a, NULL, html_context);
 }
 
