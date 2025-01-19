@@ -1434,7 +1434,7 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 		clear_bitfield_bit(screen->dirty, y);				\
 		clear_bitfield_bit(screen->dirty_image, y);				\
 										\
-		for (; x <= xmax; x++, current++, pos++) {			\
+		if (!dirty) for (; x <= xmax; x++, current++, pos++) {			\
 			if (compare_bg_color(pos->c.color, current->c.color)) {	\
 				/* No update for exact match. */		\
 				if (compare_fg_color(pos->c.color, current->c.color)\
