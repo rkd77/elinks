@@ -227,11 +227,11 @@ put_image_label(char *a, char *label,
 	elformat.style.attr = saved_attr;
 }
 
+#ifdef CONFIG_LIBSIXEL
 static void
 html_img_sixel(struct html_context *html_context, char *a,
         char *html, char *eof, char **end)
 {
-#ifdef CONFIG_LIBSIXEL
 	if (!html_context->options->sixel || !html_context->part->document || html_context->table_level) {
 		return;
 	}
@@ -260,12 +260,12 @@ html_img_sixel(struct html_context *html_context, char *a,
 	struct document *document = html_context->document;
 	html_linebrk(html_context, a, html, eof, end);
 
-	int lineno = html_context->part->cy + html_context->part->box.y;
+	int lineno = html_context->part->cy + html_context->part->box.y - 1;
 	int how_many = add_image_to_document(document, &pixels, lineno) + 1;
 	done_string(&pixels);
 	ln_break(html_context, how_many);
-#endif
 }
+#endif
 
 static void
 html_img_do(char *a, char *object_src,

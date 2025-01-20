@@ -494,6 +494,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 
 			copy_struct(&im, im2);
 			im.x += box->x;
+			im.y += box->y;
 
 			if (im.y >= vs->y + box->height) {
 				continue;

@@ -39,8 +39,12 @@
 #include "protocol/uri.h"
 #include "session/location.h"
 #include "session/session.h"
+#ifdef CONFIG_LIBSIXEL
+#include "terminal/sixel.h"
+#endif
 #include "terminal/terminal.h"
 #include "terminal/window.h"
+#include "util/bitfield.h"
 #include "util/error.h"
 #include "util/memory.h"
 #include "util/string.h"
@@ -160,6 +164,25 @@ compress_empty_lines(struct document *document)
 	if (!offset) {
 		return;
 	}
+#ifdef CONFIG_LIBSIXEL
+	struct bitfield *images = init_bitfield(maxy);
+
+	if (!images) {
+		mem_free(offset);
+		return;
+	}
+	struct image *im;
+
+	foreach (im, document->images) {
+		int ystart = im->y;
+		int yend = im->y + (im->height + document->options.cell_height - 1) / document->options.cell_height;
+		int i;
+
+		for (i = ystart; i <= yend; i++) {
+			set_bitfield_bit(images, i);
+		}
+	}
+#endif
 	int lines = 0;
 
 	for (y = 0; y < maxy; y++) {
@@ -168,13 +191,21 @@ compress_empty_lines(struct document *document)
 		}
 		lines++;
 
+#ifdef CONFIG_LIBSIXEL
+		if (test_bitfield_bit(images, y)) {
+			lines = 0;
+			goto skip_loop;
+		}
+#endif
 		for (x = 0; x < document->data[y].length; x++) {
 			if (!isspace(document->data[y].ch.chars[x].data) && (document->data[y].ch.chars[x].data != UCS_NO_BREAK_SPACE)) {
 				lines = 0;
 				break;
 			}
 		}
-
+#ifdef CONFIG_LIBSIXEL
+skip_loop:
+#endif
 		if (lines > 1) {
 			minus++;
 			document->height--;
@@ -184,6 +215,9 @@ compress_empty_lines(struct document *document)
 
 	if (!minus) {
 		mem_free(offset);
+#ifdef CONFIG_LIBSIXEL
+		mem_free(images);
+#endif
 		return;
 	}
 
@@ -199,6 +233,17 @@ compress_empty_lines(struct document *document)
 			link->points[c].y -= offset[oldy];
 		}
 	}
+#ifdef CONFIG_LIBSIXEL
+	foreach (im, document->images) {
+		int oldy = im->y;
+
+		assert(oldy < maxy && offset[oldy] >= 0);
+		if_assert_failed continue;
+
+		im->y -= offset[oldy];
+	}
+	mem_free(images);
+#endif
 	mem_free(offset);
 }
 
