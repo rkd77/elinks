@@ -323,7 +323,7 @@ get_file_download_text(struct listbox_item *item, struct terminal *term)
 	struct file_download *file_download = (struct file_download *)item->udata;
 	char *uristring;
 
-	uristring = get_uri_string(file_download->uri, URI_PUBLIC);
+	uristring = !file_download->external_handler ? stracpy(file_download->file) : get_uri_string(file_download->uri, URI_PUBLIC);
 	if (uristring) {
 #ifdef CONFIG_UTF8
 		if (term->utf8_cp)
