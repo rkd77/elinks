@@ -1814,6 +1814,9 @@ do_type_query(struct type_query *type_query, char *ct, struct mime_handler *hand
 
 		if (handler && handler->program) {
 			safe_strncpy(field, handler->program, MAX_STR_LEN);
+			selected_widget = 3;
+		} else {
+			selected_widget = 4;
 		}
 
 		/* xgettext:no-c-format */
@@ -1824,7 +1827,7 @@ do_type_query(struct type_query *type_query, char *ct, struct mime_handler *hand
 		type_query->external_handler = field;
 
 		add_dlg_checkbox(dlg, _("Block the terminal", term), &type_query->block);
-		selected_widget = 3;
+
 
 	} else if (handler) {
 		char *field = text + MAX_STR_LEN;
