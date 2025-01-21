@@ -56,7 +56,8 @@ static union option_info user_protocol_options[] = {
 		"%p in the string means port\n"
 		"%d in the string means path (everything after the port)\n"
 		"%s in the string means subject (?subject=<this>)\n"
-		"%u in the string means the whole URL")),
+		"%u in the string means the whole URL with especial characters escaped\n"
+		"%U in the string means the whole URL surrounded by single quotes")),
 
 #define INIT_OPT_USER_PROTOCOL(scheme, system, cmd) \
 	INIT_OPT_STRING("protocol.user." scheme, NULL, system, OPT_ZERO, cmd, NULL)
@@ -139,6 +140,13 @@ subst_cmd(char *cmd, struct uri *uri, char *subj,
 		cmd++;
 		/* TODO: Decode URI fragments before adding them. --jonas */
 		switch (*cmd) {
+			case 'U':
+			{
+				char *url = struri(uri);
+				int length = get_real_uri_length(uri);
+				add_shell_quoted_to_string(&string, url, length);
+				break;
+			}
 			case 'u':
 			{
 				char *url = struri(uri);
