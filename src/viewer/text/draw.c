@@ -486,7 +486,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 		delete_image(im);
 	}
 
-	if (1) {
+	if (doc_view->document->options.sixel) {
 		struct image *im2;
 
 		foreach (im2, doc_view->document->images) {
