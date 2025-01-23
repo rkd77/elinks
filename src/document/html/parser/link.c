@@ -232,7 +232,7 @@ static void
 html_img_sixel(struct html_context *html_context, char *a,
         char *html, char *eof, char **end)
 {
-	if (!html_context->options->sixel || !html_context->part->document || html_context->table_level) {
+	if (!html_context->options->sixel || !html_context->document) {
 		return;
 	}
 	char *elsix = get_attr_val(a, "elsix", html_context->doc_cp);
@@ -259,11 +259,34 @@ html_img_sixel(struct html_context *html_context, char *a,
 	mem_free(data);
 	struct document *document = html_context->document;
 	html_linebrk(html_context, a, html, eof, end);
+	put_chrs(html_context, "&nbsp;", 6);
+	ln_break(html_context, 1);
 
-	int lineno = html_context->part->cy + html_context->part->box.y - 1;
-	int how_many = add_image_to_document(document, &pixels, lineno) + 1;
+	int lineno = html_context->part->cy + html_context->part->box.y;
+
+	struct image *im = NULL;
+
+	int how_many = add_image_to_document(document, &pixels, lineno, &im);
 	done_string(&pixels);
-	ln_break(html_context, how_many);
+
+	if (!im) {
+		return;
+	}
+	int xw = (im->width + document->options.cell_width - 1) / document->options.cell_width;
+	int y;
+
+	unsigned char ch[2] = {33,0};
+
+	im->image_number = html_context->image_number++;
+	ch[0] += im->image_number;
+
+	for (y = 0; y < how_many; y++) {
+		int x;
+		for (x = 0; x < xw; x++) {
+			put_chrs(html_context, (const char *)ch, 1);
+		}
+		ln_break(html_context, 1);
+	}
 }
 #endif
 

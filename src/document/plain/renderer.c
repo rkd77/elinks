@@ -663,7 +663,7 @@ add_document_line(struct plain_renderer *renderer,
 							break;
 						}
 						add_bytes_to_string(&pixels, line + line_pos, end + 2 - line - line_pos);
-						how_many = add_image_to_document(document, &pixels, lineno) + 1;
+						how_many = add_image_to_document(document, &pixels, lineno, NULL) + 1;
 						done_string(&pixels);
 
 						realloc_line(document, pos - startpos, lineno);

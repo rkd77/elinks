@@ -135,6 +135,8 @@ struct html_context {
 	 * html/tables.c */
 	int table_level;
 
+	int image_number;
+
 	/* For:
 	 * html/parser/forms.c
 	 * html/parser/link.c

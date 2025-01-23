@@ -488,11 +488,26 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 
 	if (doc_view->document->options.sixel) {
 		struct image *im2;
+		struct line *data = doc_view->document->data;
 
 		foreach (im2, doc_view->document->images) {
 			struct image im;
 
 			copy_struct(&im, im2);
+
+			int x;
+			int found = 0;
+
+			for (x = 0; x < data[im.y].length; x++) {
+				if ((im.image_number == data[im.y].ch.chars[x].data - 33) && (im.image_number == data[im.y].ch.chars[x+1].data - 33)) {
+					found = 1;
+					break;
+				}
+			}
+
+			if (!found) {
+				continue;
+			}
 			im.x += box->x;
 			im.y += box->y;
 
@@ -515,6 +530,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 			struct image *im_copy = copy_frame(&im, box, term->cell_width, term->cell_height, vs->x, vs->y);
 
 			if (im_copy) {
+				im_copy->x += x;
 				add_to_list(term->images, im_copy);
 			}
 		}

@@ -22,6 +22,7 @@ struct image {
 	int y;
 	int width;
 	int height;
+	int image_number;
 };
 
 void delete_image(struct image *im);
@@ -29,7 +30,7 @@ void delete_image(struct image *im);
 void try_to_draw_images(struct terminal *term);
 
 /* return height of image in terminal rows */
-int add_image_to_document(struct document *doc, struct string *pixels, int lineno);
+int add_image_to_document(struct document *doc, struct string *pixels, int lineno, struct image **imagine);
 
 struct image *copy_frame(struct image *src, struct el_box *box, int cell_width, int cell_height, int dx, int dy);
 

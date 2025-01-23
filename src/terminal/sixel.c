@@ -827,7 +827,7 @@ delete_image(struct image *im)
 }
 
 int
-add_image_to_document(struct document *doc, struct string *pixels, int lineno)
+add_image_to_document(struct document *doc, struct string *pixels, int lineno, struct image **imagine)
 {
 	unsigned char *indexed_pixels = NULL;
 	unsigned char *palette = NULL;
@@ -839,6 +839,10 @@ add_image_to_document(struct document *doc, struct string *pixels, int lineno)
 	int ile = 0;
 	struct image *im = mem_calloc(1, sizeof(*im));
 	SIXELSTATUS status;
+
+	if (imagine) {
+		*imagine = NULL;
+	}
 
 	if (!im) {
 		return 0;
@@ -899,6 +903,10 @@ add_image_to_document(struct document *doc, struct string *pixels, int lineno)
 end:
 	sixel_frame_unref(frame);
 	sixel_decoder_unref(decoder);
+
+	if (imagine) {
+		*imagine = im;
+	}
 
 	return ile;
 }
