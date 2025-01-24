@@ -24,7 +24,12 @@ quit_hook() -- Clean up before ELinks exits.
 """
 
 import elinks
-from urllib.parse import urlparse, parse_qs
+import base64
+import os
+import subprocess
+
+from urllib.parse import urlparse, parse_qs, urlunparse
+from bs4 import BeautifulSoup
 from importlib import reload
 
 dumbprefixes = {
@@ -82,6 +87,33 @@ def follow_url_hook(url):
         except:
             pass
 
+
+def img2sixel(url):
+    data = subprocess.check_output(f"curl -s {url} | img2sixel", shell=True)
+    return base64.b64encode(data).decode('ascii')
+
+def build_url(base_url, path):
+    # Returns a list in the structure of urlparse.ParseResult
+    url_parts = list(urlparse(base_url))
+    url_parts[2] = path
+    return urlunparse(url_parts)
+
+
+def sixel(url, html):
+    if not html.startswith('<!DOCTYPE'):
+        return None
+    soup = BeautifulSoup(html, features='lxml')
+    base_href = os.path.dirname(url)
+    images = soup.find_all('img')
+    for i in images:
+        if i['src'].endswith(('.webp', '.avif', '.png','.jpeg','.jpg')):
+            filename = build_url(base_href, i['src'])
+            e = img2sixel(filename)
+            if e:
+                i['elsix'] = e
+    return str(soup)
+
+
 def pre_format_html_hook(url, html):
     """Rewrite the body of a document before it's formatted.
 
@@ -101,6 +133,9 @@ def pre_format_html_hook(url, html):
     elif url.startswith("https://www.mbank.com.pl/ib_navibar_3.asp"):
         return html.replace('<td valign="top"><img',
                             '<tr><td valign="top"><img')
+    # uncomment if you want to see some sixel images
+    #return sixel(url, html)
+
 
 def proxy_for_hook(url):
     """Determine what proxy server to use for a given URL.
