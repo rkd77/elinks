@@ -495,18 +495,20 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 
 			copy_struct(&im, im2);
 
-			int x;
-			int found = 0;
-
-			for (x = 0; x < data[im.y].length; x++) {
-				if ((im.image_number == data[im.y].ch.chars[x].data - 33) && (im.image_number == data[im.y].ch.chars[x+1].data - 33)) {
-					found = 1;
-					break;
-				}
-			}
+			int x = 0;
+			int found = vs->plain;
 
 			if (!found) {
-				continue;
+				for (;x < data[im.y].length; x++) {
+					if ((im.image_number == data[im.y].ch.chars[x].data - 33) && (im.image_number == data[im.y].ch.chars[x+1].data - 33)) {
+						found = 1;
+						break;
+					}
+				}
+
+				if (!found) {
+					continue;
+				}
 			}
 			im.x += box->x;
 			im.y += box->y;
