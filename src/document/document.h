@@ -313,6 +313,7 @@ struct document {
 	enum clipboard_status clipboard_status;
 #ifdef CONFIG_LIBSIXEL
 	LIST_OF(struct image) images;
+	struct uri_list image_uris;
 #endif
 };
 

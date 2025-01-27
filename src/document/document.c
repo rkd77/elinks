@@ -415,6 +415,7 @@ done_document(struct document *document)
 	while (!list_empty(document->images)) {
 		delete_image((struct image *)document->images.next);
 	}
+	free_uri_list(&document->image_uris);
 #endif
 
 #ifdef CONFIG_CSS

@@ -518,6 +518,24 @@ load_css_imports(struct session *ses, struct document_view *doc_view)
 #define load_css_imports(ses, doc_view)
 #endif
 
+#ifdef CONFIG_LIBSIXEL
+static void
+load_images(struct session *ses, struct document_view *doc_view)
+{
+	struct document *document = doc_view->document;
+	struct uri *uri;
+	int index;
+
+	if (!document) return;
+
+	foreach_uri (uri, index, &document->image_uris) {
+		request_additional_file(ses, "", uri, PRI_CSS);
+	}
+}
+#else
+#define load_images(ses, doc_view)
+#endif
+
 #ifdef CONFIG_ECMASCRIPT
 static inline void
 load_ecmascript_imports(struct session *ses, struct document_view *doc_view)
@@ -557,6 +575,7 @@ load_frames(struct session *ses, struct document_view *doc_view)
 	foreach (doc_view, ses->scrn_frames) {
 		load_css_imports(ses, doc_view);
 		load_ecmascript_imports(ses, doc_view);
+		load_images(ses, ses->doc_view);
 	}
 }
 
@@ -589,6 +608,7 @@ load_common(struct session *ses)
 	load_css_imports(ses, ses->doc_view);
 	load_ecmascript_imports(ses, ses->doc_view);
 	load_iframes(ses, ses->doc_view);
+	load_images(ses, ses->doc_view);
 	process_file_requests(ses);
 }
 
@@ -759,6 +779,7 @@ doc_loading_callback(struct download *download, struct session *ses)
 		load_frames(ses, ses->doc_view);
 		load_css_imports(ses, ses->doc_view);
 		load_ecmascript_imports(ses, ses->doc_view);
+		load_images(ses, ses->doc_view);
 		process_file_requests(ses);
 
 		start_document_refreshes(ses);

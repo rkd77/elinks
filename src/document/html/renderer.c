@@ -2230,6 +2230,19 @@ html_special(struct html_context *html_context, html_special_type_T c, ...)
 			}
 			break;
 		}
+
+		case SP_IMAGE:
+#ifdef CONFIG_LIBSIXEL
+		{
+			if (document) {
+				struct uri *uri = va_arg(l, struct uri *);
+
+				add_to_uri_list(&document->image_uris, uri);
+			}
+		}
+#endif
+			break;
+
 		default:
 			break;
 

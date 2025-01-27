@@ -34,7 +34,8 @@ enum html_special_type {
 	SP_STYLESHEET,
 	SP_COLOR_LINK_LINES,
 	SP_SCRIPT,
-	SP_IFRAME
+	SP_IFRAME,
+	SP_IMAGE
 };
 
 typedef unsigned int html_special_type_T;

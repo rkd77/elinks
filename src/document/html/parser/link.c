@@ -26,6 +26,7 @@
 #include "bfu/listmenu.h"
 #include "bfu/menu.h"
 #include "bookmarks/bookmarks.h"
+#include "cache/cache.h"
 #include "config/options.h"
 #include "config/kbdbind.h"
 #include "document/html/frames.h"
@@ -235,25 +236,60 @@ html_img_sixel(struct html_context *html_context, char *a,
 	if (!html_context->options->sixel || !html_context->document) {
 		return;
 	}
+	unsigned char *data = NULL;
+	int datalen = 0;
 	char *elsix = get_attr_val(a, "elsix", html_context->doc_cp);
 
 	if (!elsix) {
-		return;
+		char *url = get_attr_val(a, "src", html_context->doc_cp);
+
+		if (!url) {
+			return;
+		}
+		char *url2 = join_urls(html_context->base_href, url);
+
+		if (url2) {
+			struct uri *uri = get_uri(url2, URI_BASE);
+
+			if (uri) {
+				struct cache_entry *cached = get_redirected_cache_entry(uri);
+
+				if (cached) {
+					struct fragment *fragment = get_cache_fragment(cached);
+
+					if (fragment) {
+						data = el_sixel_get_image(fragment->data, fragment->length);
+					}
+				}
+				if (!data) {
+					html_context->special_f(html_context, SP_IMAGE, uri);
+				}
+				done_uri(uri);
+			}
+			mem_free(url2);
+		}
+		mem_free(url);
+		if (data) {
+			datalen = strlen(data);
+		} else {
+			return;
+		}
 	}
 	struct string pixels;
 
 	if (!init_string(&pixels)) {
-		mem_free(elsix);
+		mem_free_if(elsix);
 		return;
 	}
-	int datalen;
-	unsigned char *data = base64_decode_bin((const unsigned char *)elsix, strlen(elsix), &datalen);
+	if (!datalen) {
+		data = base64_decode_bin((const unsigned char *)elsix, strlen(elsix), &datalen);
 
-	mem_free(elsix);
+		mem_free(elsix);
 
-	if (!data) {
-		done_string(&pixels);
-		return;
+		if (!data) {
+			done_string(&pixels);
+			return;
+		}
 	}
 	add_bytes_to_string(&pixels, (const char *)data, datalen);
 	mem_free(data);
