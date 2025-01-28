@@ -495,6 +495,14 @@ get_document_css_magic(struct document *document)
 		if (cached) css_magic += cached->cache_id + cached->data_size;
 	}
 
+#ifdef CONFIG_LIBSIXEL
+	foreach_uri (uri, index, &document->image_uris) {
+		struct cache_entry *cached = find_in_cache(uri);
+
+		if (cached) css_magic += cached->cache_id + cached->data_size;
+	}
+#endif
+
 	return css_magic;
 }
 
