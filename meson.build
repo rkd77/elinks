@@ -1132,6 +1132,10 @@ if compiler.compiles('int a; typeof(a) b;', name: 'typeof')
     conf_data.set('HAVE_TYPEOF', 1)
 endif
 
+if compiler.has_function('memfd_create', prefix: '#include <sys/mman.h>', args: '-D_GNU_SOURCE')
+    conf_data.set('HAVE_MEMFD_CREATE', 1)
+endif
+
 if conf_data.get('CONFIG_GETTEXT')
     code = '''#include <libintl.h>
     extern int _nl_msg_cat_cntr;

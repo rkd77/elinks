@@ -27,11 +27,10 @@
 #include "config.h"
 #endif
 
+#ifdef HAVE_MEMFD_CREATE
 #define _GNU_SOURCE         /* See feature_test_macros(7) */
 #include <sys/mman.h>
-
-int memfd_create(const char *name, unsigned int flags);
-
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1049,6 +1048,7 @@ el_sixel_get_image(char *data, int length)
 	sixel_encoder_t *encoder = NULL;
 	unsigned char *ret = NULL;
 
+#ifdef HAVE_MEMFD_CREATE
 	status = sixel_encoder_new(&encoder, NULL);
 
 	if (SIXEL_FAILED(status)) {
@@ -1100,7 +1100,7 @@ el_sixel_get_image(char *data, int length)
 
 error:
 	fclose(f);
-end:
 	sixel_encoder_unref(encoder);
+#endif
 	return ret;
 }

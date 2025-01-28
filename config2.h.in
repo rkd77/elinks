@@ -500,6 +500,9 @@
 /* Define to 1 if you have the <malloc.h> header file. */
 #mesondefine HAVE_MALLOC_H
 
+/* Define to 1 if you have the `memfd_create' function. */
+#mesondefine HAVE_MEMFD_CREATE
+
 /* Define to 1 if you have the `memmove' function. */
 #mesondefine HAVE_MEMMOVE
 
