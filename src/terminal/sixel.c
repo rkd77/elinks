@@ -1042,11 +1042,12 @@ end:
 }
 
 unsigned char *
-el_sixel_get_image(char *data, int length)
+el_sixel_get_image(char *data, int length, int *outlen)
 {
 	SIXELSTATUS status = SIXEL_FALSE;
 	sixel_encoder_t *encoder = NULL;
 	unsigned char *ret = NULL;
+	*outlen = 0;
 
 #ifdef HAVE_MEMFD_CREATE
 	status = sixel_encoder_new(&encoder, NULL);
@@ -1091,7 +1092,7 @@ el_sixel_get_image(char *data, int length)
 			FILE *f2 = fdopen(fdout, "rb");
 			if (f2) {
 				rewind(f2);
-				fread(ret, 1, (size_t)sb.st_size, f2);
+				*outlen = (int)fread(ret, 1, (size_t)sb.st_size, f2);
 				fclose(f2);
 			}
 		}

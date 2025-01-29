@@ -258,7 +258,7 @@ html_img_sixel(struct html_context *html_context, char *a,
 					struct fragment *fragment = get_cache_fragment(cached);
 
 					if (fragment) {
-						data = el_sixel_get_image(fragment->data, fragment->length);
+						data = el_sixel_get_image(fragment->data, fragment->length, &datalen);
 					}
 				}
 				if (!data) {
@@ -269,9 +269,7 @@ html_img_sixel(struct html_context *html_context, char *a,
 			mem_free(url2);
 		}
 		mem_free(url);
-		if (data) {
-			datalen = strlen(data);
-		} else {
+		if (!data) {
 			return;
 		}
 	}
