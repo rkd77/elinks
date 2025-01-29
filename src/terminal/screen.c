@@ -831,6 +831,11 @@ add_char_data(struct string *screen, struct screen_driver *driver,
 	 * in which case this function must not alter *screen.
 	 */
 
+	if (border & SCREEN_ATTR_IMAGE) {
+		add_char_to_string(screen, ' ');
+		return;
+	}
+
 	if (border && driver->opt.frame && data >= 176 && data < 224)
 		data = driver->opt.frame[data - 176];
 
@@ -1411,7 +1416,7 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 		}
 	}
 
-	add_char_data(screen, driver, ch->data, ch->attr & SCREEN_ATTR_FRAME);
+	add_char_data(screen, driver, ch->data, ch->attr & (SCREEN_ATTR_FRAME | SCREEN_ATTR_IMAGE));
 }
 #endif
 
