@@ -309,15 +309,16 @@ html_img_sixel(struct html_context *html_context, char *a,
 	int xw = (im->width + document->options.cell_width - 1) / document->options.cell_width;
 	int y;
 
-	unsigned char ch[2] = {33,0};
-
 	im->image_number = html_context->image_number++;
-	ch[0] += im->image_number;
+
+	char str[8] = {0};
+	memcpy(str, encode_utf8(im->image_number + 33), 7);
+	int len = strlen(str);
 
 	for (y = 0; y < how_many; y++) {
 		int x;
 		for (x = 0; x < xw; x++) {
-			put_chrs(html_context, (const char *)ch, 1);
+			put_chrs(html_context, (const char *)str, len);
 		}
 		ln_break(html_context, 1);
 	}
