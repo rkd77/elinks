@@ -414,6 +414,10 @@ http_curl_got_header(void *stream, void *buf, size_t len)
 	if (len == 2 && buffer[0] == 13 && buffer[1] == 10) {
 		curl_easy_getinfo(http->easy, CURLINFO_RESPONSE_CODE, &http->code);
 
+		if (http->code == 0L) {
+			goto next;
+		}
+
 		if (!conn->cached && http->code != 103L) {
 			conn->cached = get_cache_entry(conn->uri);
 
@@ -432,6 +436,7 @@ http_curl_got_header(void *stream, void *buf, size_t len)
 			mem_free_set(&conn->cached->head, memacpy(http->headers.source, http->headers.length));
 			mem_free_set(&conn->cached->content_type, NULL);
 		}
+next:
 		done_string(&http->headers);
 		init_string(&http->headers);
 	}

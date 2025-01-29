@@ -135,12 +135,22 @@ get_proxy_worker(struct uri *uri, char *proxy,
 
 	switch (uri->protocol) {
 	case PROTOCOL_HTTP:
+#ifdef CONFIG_LIBCURL
+		if (get_opt_bool("protocol.http.use_curl", NULL)) {
+			goto end;
+		}
+#endif
 		protocol_proxy = get_protocol_proxy("protocol.http.proxy.host",
 						    "HTTP_PROXY", "http_proxy",
 						    "http://", NULL);
 		break;
 
 	case PROTOCOL_HTTPS:
+#ifdef CONFIG_LIBCURL
+		if (get_opt_bool("protocol.http.use_curl", NULL)) {
+			goto end;
+		}
+#endif
 		/* As Timo Lindfors explains, the communication between ELinks
 		 * and the proxy server is never encrypted, altho the proxy
 		 * might be used to transfer encrypted data between Web client
@@ -160,6 +170,11 @@ get_proxy_worker(struct uri *uri, char *proxy,
 		break;
 
 	case PROTOCOL_FTP:
+#ifdef CONFIG_LIBCURL
+		if (get_opt_bool("protocol.ftp.use_curl", NULL)) {
+			goto end;
+		}
+#endif
 		protocol_proxy = get_protocol_proxy("protocol.ftp.proxy.host",
 						    "FTP_PROXY", "ftp_proxy",
 						    "ftp://", "http://");
@@ -183,6 +198,7 @@ get_proxy_worker(struct uri *uri, char *proxy,
 			return proxy_uri(uri, protocol_proxy, error_state);
 	}
 
+end:
 	return get_composed_uri(uri, URI_BASE);
 }
 
