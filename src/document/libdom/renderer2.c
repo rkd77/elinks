@@ -589,7 +589,7 @@ dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
 			if (!cached2) {
 				return;
 			}
-			cached2->head = cached->head;
+			mem_free_set(&cached2->head, cached->head);
 			cached->head = NULL;
 
 			add_fragment(cached2, 0, document->text.source, document->text.length);
@@ -599,7 +599,6 @@ dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
 			document->cache_id = cached2->cache_id;
 			document->cached = cached2;
 			render_xhtml_document(cached2, document, &document->text);
-			object_unlock(cached);
 			return;
 		}
 		render_html_document(cached, document, &document->text);

@@ -65,6 +65,7 @@ static void nodeList2_finalize(JS::GCContext *op, JSObject *obj)
 
 	if (sni) {
 		free_list(*sni);
+		mem_free(sni);
 	}
 }
 
