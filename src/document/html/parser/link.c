@@ -254,7 +254,7 @@ html_img_sixel(struct html_context *html_context, char *a,
 			if (uri) {
 				struct cache_entry *cached = get_redirected_cache_entry(uri);
 
-				if (cached) {
+				if (cached && !cached->incomplete) {
 					struct fragment *fragment = get_cache_fragment(cached);
 
 					if (fragment) {
