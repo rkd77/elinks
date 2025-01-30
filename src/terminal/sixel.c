@@ -101,7 +101,7 @@ struct sixel_encoder {
     void *dither_cache;
 };
 
-#ifdef CONFIG_DEBUG
+#ifdef CONFIG_MEMCOUNT
 static sixel_allocator_t *el_sixel_allocator;
 
 static void
@@ -858,7 +858,7 @@ add_image_to_document(struct document *doc, struct string *pixels, int lineno, s
 		mem_free(im);
 		return 0;
 	}
-#ifdef CONFIG_DEBUG
+#ifdef CONFIG_MEMCOUNT
 	init_allocator();
 	status = sixel_decoder_new(&decoder, el_sixel_allocator);
 #else
@@ -943,7 +943,7 @@ copy_frame(struct image *src, struct el_box *box, int cell_width, int cell_heigh
 		mem_free(dest);
 		return NULL;
 	}
-#ifdef CONFIG_DEBUG
+#ifdef CONFIG_MEMCOUNT
 	init_allocator();
 	status = sixel_decoder_new(&decoder, el_sixel_allocator);
 #else
@@ -1050,7 +1050,7 @@ el_sixel_get_image(char *data, int length, int *outlen)
 	*outlen = 0;
 
 #ifdef HAVE_MEMFD_CREATE
-#ifdef CONFIG_DEBUG
+#ifdef CONFIG_MEMCOUNT
 	init_allocator();
 	status = sixel_encoder_new(&encoder, el_sixel_allocator);
 #else

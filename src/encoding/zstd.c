@@ -49,7 +49,7 @@ zstd_open(struct stream_encoded *stream, int fd)
 	}
 
 	data->fdread = fd;
-#ifdef CONFIG_DEBUG
+#ifdef CONFIG_MEMCOUNT
 	data->zstd_stream = ZSTD_createDCtx_advanced(el_zstd_mf);
 #else
 	data->zstd_stream = ZSTD_createDCtx();

@@ -33,6 +33,7 @@ option('html-highlight', type: 'boolean', value: false, description: 'HTML highl
 option('backtrace', type: 'boolean', value: true, description: 'backtrace support')
 option('no-root', type: 'boolean', value: false, description: 'prevention of usage by root')
 option('withdebug', type: 'boolean', value: false, description: 'leak debug and internal error checking')
+option('memcount', type: 'boolean', value: false, description: 'count memory allocations')
 option('fastmem', type: 'boolean', value: false, description: 'direct use of system allocation functions, not usable with debug enabled')
 option('own-libc', type: 'boolean', value: false, description: 'force use of internal functions instead of those of system libc')
 option('small', type: 'boolean', value: false, description: 'reduce binary size as far as possible (but see the bottom of doc/small.txt!)')

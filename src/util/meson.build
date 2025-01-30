@@ -6,12 +6,19 @@ endif
 if conf_data.get('CONFIG_CSS') or conf_data.get('CONFIG_BITTORRENT')
 	srcs += files('scanner.c')
 endif
-if conf_data.get('CONFIG_DEBUG')
-	srcs += files('memcount.cpp', 'memdebug.c')
+
+if conf_data.get('CONFIG_MEMCOUNT')
+	srcs += files('memcount.cpp')
 endif
+
+if conf_data.get('CONFIG_DEBUG')
+	srcs += files('memdebug.c')
+endif
+
 if conf_data.get('CONFIG_DOM')
 	srcs += files('scanner.c')
 endif
+
 if conf_data.get('CONFIG_BITTORRENT')
 	if conf_data.get('CONFIG_OWN_LIBC') or not conf_data.get('CONFIG_OPENSSL')
 		srcs += files('sha1.c')

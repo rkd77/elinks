@@ -52,7 +52,7 @@ brotli_open(struct stream_encoded *stream, int fd)
 	if (!data) {
 		return -1;
 	}
-#ifdef CONFIG_DEBUG
+#ifdef CONFIG_MEMCOUNT
 	data->state = BrotliDecoderCreateInstance(el_brotli_alloc, el_brotli_free, NULL);
 #else
 	data->state = BrotliDecoderCreateInstance(NULL, NULL, NULL);

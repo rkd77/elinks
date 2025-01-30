@@ -860,7 +860,7 @@ enable_libevent(void)
 		return;
 #endif
 
-#if !defined(EVENT__DISABLE_MM_REPLACEMENT) && defined(CONFIG_DEBUG)
+#if !defined(EVENT__DISABLE_MM_REPLACEMENT) && defined(CONFIG_MEMCOUNT)
 	event_set_mem_functions(el_libevent_malloc, el_libevent_realloc, el_libevent_free);
 #endif
 
@@ -1153,7 +1153,7 @@ select_loop(void (*init)(void))
 #if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBEVENT)
 		memset(&g, 0, sizeof(GlobalInfo));
 		g.evbase = event_base;
-#ifdef CONFIG_DEBUG
+#ifdef CONFIG_MEMCOUNT
 		curl_global_init_mem(CURL_GLOBAL_DEFAULT, el_curl_malloc, el_curl_free, el_curl_realloc, el_curl_strdup, el_curl_calloc);
 #else
 		curl_global_init(CURL_GLOBAL_DEFAULT);
@@ -1176,7 +1176,7 @@ select_loop(void (*init)(void))
 #if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBEV)
 		memset(&g, 0, sizeof(GlobalInfo));
 		g.loop = ev_default_loop(0);
-#ifdef CONFIG_DEBUG
+#ifdef CONFIG_MEMCOUNT
 		curl_global_init_mem(CURL_GLOBAL_DEFAULT, el_curl_malloc, el_curl_free, el_curl_realloc, el_curl_strdup, el_curl_calloc);
 #else
 		curl_global_init(CURL_GLOBAL_DEFAULT);
@@ -1229,7 +1229,7 @@ select_loop(void (*init)(void))
 	{
 #if defined(CONFIG_LIBCURL)
 		memset(&g, 0, sizeof(GlobalInfo));
-#ifdef CONFIG_DEBUG
+#ifdef CONFIG_MEMCOUNT
 		curl_global_init_mem(CURL_GLOBAL_DEFAULT, el_curl_malloc, el_curl_free, el_curl_realloc, el_curl_strdup, el_curl_calloc);
 #else
 		curl_global_init(CURL_GLOBAL_DEFAULT);

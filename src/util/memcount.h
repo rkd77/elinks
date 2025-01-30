@@ -1,7 +1,7 @@
 #ifndef EL__UTIL_MEMCOUNT_H
 #define EL__UTIL_MEMCOUNT_H
 
-#ifdef CONFIG_DEBUG
+#ifdef CONFIG_MEMCOUNT
 
 #ifdef CONFIG_LIBSIXEL
 #include <sixel.h>

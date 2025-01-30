@@ -164,6 +164,9 @@
 /* Define if you want: Marks support */
 #mesondefine CONFIG_MARKS
 
+/* Define if you want: memcount support */
+#mesondefine CONFIG_MEMCOUNT
+
 /* Define if you want: Mimetypes files support */
 #mesondefine CONFIG_MIMETYPES
 

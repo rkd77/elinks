@@ -175,7 +175,7 @@ quickjs_init(struct module *module)
 	map_form_elements_rev = attr_create_new_form_elements_map_rev();
 	//js_module_init_ok = spidermonkey_runtime_addref();
 
-#ifdef CONFIG_DEBUG
+#ifdef CONFIG_MEMCOUNT
 	quickjs_runtime = JS_NewRuntime2(&el_quickjs_mf, NULL);
 #else
 	quickjs_runtime = JS_NewRuntime();

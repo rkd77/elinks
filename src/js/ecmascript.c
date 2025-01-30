@@ -722,7 +722,7 @@ init_ecmascript_module(struct module *module)
 #endif
 	}
 	ecmascript_enabled = get_opt_bool("ecmascript.enable", NULL);
-#ifdef CONFIG_DEBUG
+#ifdef CONFIG_MEMCOUNT
 	curl_global_init_mem(CURL_GLOBAL_DEFAULT, el_curl_malloc, el_curl_free, el_curl_realloc, el_curl_strdup, el_curl_calloc);
 #else
 	curl_global_init(CURL_GLOBAL_DEFAULT);

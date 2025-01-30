@@ -268,7 +268,7 @@ get_resource_info(struct terminal *term, void *data)
 	val = get_number_of_temporary_files();
 	add_format_to_string(&info, ": %ld.", val);
 
-#ifdef CONFIG_DEBUG
+#ifdef CONFIG_MEMCOUNT
 #ifdef CONFIG_BROTLI
 	add_format_to_string(&info, "\nBrotli: calls: %ld active: %ld, size: %ld", get_brotli_total_allocs(), get_brotli_active(), get_brotli_size());
 #endif

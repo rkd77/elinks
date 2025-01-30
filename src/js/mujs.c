@@ -138,7 +138,7 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 {
 	assert(interpreter);
 
-#ifdef CONFIG_DEBUG
+#ifdef CONFIG_MEMCOUNT
 	js_State *J = js_newstate(el_mujs_alloc, NULL, 0);
 #else
 	js_State *J = js_newstate(NULL, NULL, 0);
