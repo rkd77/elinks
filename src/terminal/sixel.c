@@ -1050,7 +1050,12 @@ el_sixel_get_image(char *data, int length, int *outlen)
 	*outlen = 0;
 
 #ifdef HAVE_MEMFD_CREATE
+#ifdef CONFIG_DEBUG
+	init_allocator();
+	status = sixel_encoder_new(&encoder, el_sixel_allocator);
+#else
 	status = sixel_encoder_new(&encoder, NULL);
+#endif
 
 	if (SIXEL_FAILED(status)) {
 		goto error;
