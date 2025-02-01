@@ -196,7 +196,7 @@ format_iframes(struct session *ses, struct iframeset_desc *ifsd,
 
 	copy_struct(&o, op);
 
-	o.margin = !!o.margin;
+	//o.margin = !!o.margin;
 
 	for (j = 0; j < ifsd->n; j++) {
 		struct iframe_desc *iframe_desc = &ifsd->iframe_desc[j];

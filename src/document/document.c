@@ -206,6 +206,7 @@ init_document(struct cache_entry *cached, struct document_options *options)
 	init_list(document->forms);
 	init_list(document->tags);
 	init_list(document->nodes);
+	init_list(document->iframes);
 
 #ifdef CONFIG_LIBDOM
 	init_string(&document->text);
@@ -357,6 +358,7 @@ reset_document(struct document *document)
 
 	free_list(document->tags);
 	free_list(document->nodes);
+	free_list(document->iframes);
 
 	mem_free_set(&document->search, NULL);
 	mem_free_set(&document->slines1, NULL);
@@ -441,6 +443,7 @@ done_document(struct document *document)
 #endif
 	free_list(document->tags);
 	free_list(document->nodes);
+	free_list(document->iframes);
 
 	mem_free_if(document->search);
 	mem_free_if(document->slines1);

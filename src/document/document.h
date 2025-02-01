@@ -22,6 +22,7 @@ struct el_form_control;
 struct frame_desc;
 struct frameset_desc;
 struct hash;
+struct iframe2;
 struct image;
 struct module;
 struct screen_char;
@@ -224,6 +225,7 @@ struct document {
 	LIST_OF(struct form) forms;
 	LIST_OF(struct tag) tags;
 	LIST_OF(struct node) nodes;
+	LIST_OF(struct iframe2) iframes;
 
 #ifdef CONFIG_ECMASCRIPT
 	/** ECMAScript snippets to be executed during loading the document into

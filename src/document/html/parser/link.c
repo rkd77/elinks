@@ -30,6 +30,7 @@
 #include "config/options.h"
 #include "config/kbdbind.h"
 #include "document/html/frames.h"
+#include "document/html/iframes.h"
 #include "document/html/parser/general.h"
 #include "document/html/parser/link.h"
 #include "document/html/parser/parse.h"
@@ -593,9 +594,10 @@ html_audio(struct html_context *html_context, char *a,
 	mem_free(url);
 }
 
+
 static void
-html_iframe_do(char *a, char *object_src,
-               struct html_context *html_context)
+html_iframe_do(struct html_context *html_context, char *a,
+        char *html, char *eof, char **end, char *object_src)
 {
 	char *name, *url = NULL;
 	int height = 0;
@@ -636,15 +638,38 @@ html_iframe_do(char *a, char *object_src,
 	}
 
 	if (height > 0) {
-		int y = html_context->part->cy + 2;
 		char *url2;
 
-		ln_break(html_context, height + 3);
+		html_linebrk(html_context, a, html, eof, end);
+		put_chrs(html_context, "&nbsp;", 6);
+		ln_break(html_context, 1);
+		struct iframe2 *iframe = mem_calloc(1, sizeof(*iframe));
 
+		if (iframe) {
+			iframe->number = html_context->image_number++;
+			iframe->box.x = 0;
+			iframe->box.y = 0;
+			iframe->box.width = width;
+			iframe->box.height = height;
+			char str[8] = {0};
+			memcpy(str, encode_utf8(iframe->number + 33), 7);
+			int len = strlen(str);
+			int yp;
+
+			for (yp = 0; yp < height; yp++) {
+				int xw;
+				for (xw = 0; xw < width; xw++) {
+					put_chrs(html_context, (const char *)str, len);
+				}
+				ln_break(html_context, 1);
+			}
+			ln_break(html_context, 1);
+			add_to_list(html_context->document->iframes, iframe);
+		}
 		url2 = join_urls(html_context->base_href, url);
 
 		if (url2) {
-			html_context->special_f(html_context, SP_IFRAME, url2, name, y, width, height);
+			//html_context->special_f(html_context, SP_IFRAME, url2, name, y, width, height);
 			mem_free(url2);
 		}
 	} else {
@@ -663,14 +688,14 @@ html_iframe_do(char *a, char *object_src,
 
 void
 html_iframe(struct html_context *html_context, char *a,
-            char *xxx3, char *xxx4, char **xxx5)
+         char *html, char *eof, char **end)
 {
-	html_iframe_do(a, NULL, html_context);
+	html_iframe_do(html_context, a, html, eof, end, NULL);
 }
 
 void
 html_object(struct html_context *html_context, char *a,
-            char *xxx3, char *xxx4, char **xxx5)
+         char *html, char *eof, char **end)
 {
 	char *type, *url;
 
@@ -687,7 +712,7 @@ html_object(struct html_context *html_context, char *a,
 
 	if (!c_strncasecmp(type, "text/", 5)) {
 		/* We will just emulate <iframe>. */
-		html_iframe_do(a, url, html_context);
+		html_iframe_do(html_context, a, html, eof, end, url);
 		html_skip(html_context, a);
 
 	} else if (!c_strncasecmp(type, "image/", 6)) {
@@ -721,7 +746,7 @@ html_object(struct html_context *html_context, char *a,
 
 void
 html_embed(struct html_context *html_context, char *a,
-           char *xxx3, char *xxx4, char **xxx5)
+         char *html, char *eof, char **end)
 {
 	char *type, *extension;
 	char *object_src;
@@ -746,7 +771,7 @@ html_embed(struct html_context *html_context, char *a,
 		html_img_do(a, object_src, html_context);
 	} else {
 		/* We will just emulate <iframe>. */
-		html_iframe_do(a, object_src, html_context);
+		html_iframe_do(html_context, a, html, eof, end, object_src);
 	}
 
 	mem_free_if(type);

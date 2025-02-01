@@ -1,6 +1,8 @@
 #ifndef EL__DOCUMENT_HTML_IFRAMES_H
 #define EL__DOCUMENT_HTML_IFRAMES_H
 
+#include "util/lists.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -8,6 +10,12 @@ extern "C" {
 struct document_options;
 struct el_box;
 struct iframeset_desc;
+
+struct iframe2 {
+	LIST_HEAD_EL(struct iframe2);
+	struct el_box box;
+	int number;
+};
 
 struct iframe_desc {
 	char *name;
