@@ -25,6 +25,10 @@
 #include <curl/curl.h>
 #endif
 
+#ifdef HAVE_SYS_EVENTFD_H
+#include <sys/eventfd.h>
+#endif
+
 #include "main/timer.h"
 
 #ifdef __cplusplus
@@ -40,7 +44,11 @@ do {							\
 
 #ifndef NO_SIGNAL_HANDLERS
 extern pid_t signal_pid;
+#ifdef HAVE_SYS_EVENTFD_H
+extern int signal_efd;
+#else
 extern int signal_pipe[2];
+#endif
 #endif
 
 #if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBEVENT)

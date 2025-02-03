@@ -650,6 +650,9 @@
 /* Define to 1 if you have the <sys/cygwin.h> header file. */
 #mesondefine HAVE_SYS_CYGWIN_H
 
+/* Define to 1 if you have the <sys/eventfd.h> header file. */
+#mesondefine HAVE_SYS_EVENTFD_H
+
 /* Define to 1 if you have the <sys/fmutex.h> header file. */
 #mesondefine HAVE_SYS_FMUTEX_H
 
