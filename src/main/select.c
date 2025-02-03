@@ -1091,6 +1091,13 @@ try_redraw_all_terminals(void)
 static void
 clear_events(int h, int blocking)
 {
+#ifdef HAVE_SYS_EVENTFD_H
+	if (1) {
+		int rd;
+		uint64_t t;
+		EINTRLOOP(rd, (int)read(h, &t, sizeof(t)));
+	}
+#else
 #if !defined(O_NONBLOCK) && !defined(FIONBIO)
 	blocking = 1;
 #endif
@@ -1100,17 +1107,21 @@ clear_events(int h, int blocking)
 		EINTRLOOP(rd, (int)read(h, c, sizeof c));
 		if (rd != sizeof c) break;
 	}
+#endif
 }
 
 pid_t signal_pid;
+#ifdef HAVE_SYS_EVENTFD_H
+int signal_efd = -1;
+#else
 int signal_pipe[2] = { -1, -1 };
+#endif
 
 static void
 clear_events_ptr(void *handle)
 {
 	clear_events((int)(intptr_t)handle, 0);
 }
-
 #endif
 
 void
@@ -1131,12 +1142,19 @@ select_loop(void (*init)(void))
 #if !defined(NO_SIGNAL_HANDLERS)
 	signal_pid = getpid();
 
+#ifdef HAVE_SYS_EVENTFD_H
+	if ((signal_efd = eventfd(0, EFD_NONBLOCK)) < 0) {
+		elinks_internal("ERROR: can't create eventfd for signal handling");
+	}
+	set_handlers(signal_efd, clear_events_ptr, NULL, NULL, (void *)(intptr_t)signal_efd);
+#else
 	if (c_pipe(signal_pipe)) {
 		elinks_internal("ERROR: can't create pipe for signal handling");
 	}
 	set_nonblocking_fd(signal_pipe[0]);
 	set_nonblocking_fd(signal_pipe[1]);
 	set_handlers(signal_pipe[0], clear_events_ptr, NULL, NULL, (void *)(intptr_t)signal_pipe[0]);
+#endif
 #endif
 	init();
 

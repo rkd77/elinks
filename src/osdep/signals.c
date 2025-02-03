@@ -274,10 +274,18 @@ got_signal(int sig)
 
 	s->mask = 1;
 
+#ifdef HAVE_SYS_EVENTFD_H
+	if (can_write(signal_efd)) {
+		uint64_t t = 1;
+		int wr;
+		EINTRLOOP(wr, (int)write(signal_efd, &t, sizeof(t)));
+	}
+#else
 	if (can_write(signal_pipe[1])) {
 		int wr;
 		EINTRLOOP(wr, (int)write(signal_pipe[1], "", 1));
 	}
+#endif
 
 	errno = saved_errno;
 }
