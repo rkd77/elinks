@@ -8,6 +8,11 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h> /* OS/2 needs this after sys/types.h */
+
+#ifdef HAVE_SYS_EVENTFD_H
+#include <sys/eventfd.h>
+#endif
+
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -502,6 +507,72 @@ done_interlink(void)
  * else it tries to bind and listen on a socket, and
  * return -1
  */
+#ifdef HAVE_SYS_EVENTFD_H
+
+/* eventfd version */
+int
+init_interlink(void)
+{
+	int efd;
+	uint64_t trigger = 1;
+	ssize_t n;
+	int fd = connect_to_af_unix();
+
+	if (fd != -1 || remote_session_flags) return fd;
+
+	parse_options_again();
+
+	if (get_opt_bool("ui.sessions.fork_on_start", NULL)) {
+
+		pid_t pid;
+		if ((efd = eventfd(0, 0)) == -1) {
+			report_af_unix_error("eventfd()", errno);
+			return -1;
+		}
+		pid = fork();
+
+		if (pid == -1) return -1;
+
+		if (pid > 0) {
+			int error = 0;
+			master_pid = pid;
+
+			/* wait for forked child to complete the bind() */
+			n = read(efd, &trigger, sizeof(trigger));
+
+			if (n <= 0) {
+				errno = EPIPE; /* write end closed */
+				report_af_unix_error("read()", errno);
+				error = 1;
+			}
+			if (close(efd) == -1) {
+				report_af_unix_error("close(efd)", errno);
+				error = 1;
+			}
+			if (error) return -1;
+
+			return connect_to_af_unix();
+		}
+
+		/* child */
+		master_pid = getpid();
+		close_terminal_pipes();
+	}
+	bind_to_af_unix();
+	if (get_opt_bool("ui.sessions.fork_on_start", NULL)) {
+		n = write(efd, &trigger, sizeof(trigger));
+
+		if (n <= 0) {
+			errno = EPIPE; /* read end closed */
+			report_af_unix_error("write()", errno);
+		}
+		if (close(efd) == -1) {
+			report_af_unix_error("close(efd 2)", errno);
+		}
+	}
+	return -1;
+}
+#else
 int
 init_interlink(void)
 {
@@ -564,7 +635,7 @@ init_interlink(void)
 	}
 	return -1;
 }
-
+#endif
 
 #undef MAX_BIND_TRIES
 #undef BIND_TRIES_DELAY
