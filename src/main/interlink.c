@@ -507,8 +507,7 @@ done_interlink(void)
  * else it tries to bind and listen on a socket, and
  * return -1
  */
-#ifdef HAVE_SYS_EVENTFD_H
-
+#if 0 && defined(HAVE_SYS_EVENTFD_H)
 /* eventfd version */
 int
 init_interlink(void)
