@@ -646,6 +646,8 @@ html_iframe_do(struct html_context *html_context, char *a,
 		struct iframe2 *iframe = mem_calloc(1, sizeof(*iframe));
 
 		if (iframe) {
+			int y = html_context->part->cy;
+			int x = html_context->part->cx;
 			iframe->number = html_context->image_number++;
 			iframe->box.x = 0;
 			iframe->box.y = 0;
@@ -665,12 +667,13 @@ html_iframe_do(struct html_context *html_context, char *a,
 			}
 			ln_break(html_context, 1);
 			add_to_list(html_context->document->iframes, iframe);
-		}
-		url2 = join_urls(html_context->base_href, url);
 
-		if (url2) {
-			//html_context->special_f(html_context, SP_IFRAME, url2, name, y, width, height);
-			mem_free(url2);
+			url2 = join_urls(html_context->base_href, url);
+
+			if (url2) {
+				html_context->special_f(html_context, SP_IFRAME, url2, name, iframe->number, y, width, height);
+				mem_free(url2);
+			}
 		}
 	} else {
 		if (*name) {

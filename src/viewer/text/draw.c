@@ -175,7 +175,7 @@ draw_frame_lines(struct terminal *term, struct frameset_desc *frameset_desc,
 
 static void
 draw_iframe_lines(struct terminal *term, struct iframeset_desc *iframe_desc,
-		 int xp, int yp, struct color_pair *colors)
+		 int xp, int yp, struct color_pair *colors, int number)
 {
 	int j;
 
@@ -185,11 +185,14 @@ draw_iframe_lines(struct terminal *term, struct iframeset_desc *iframe_desc,
 	for (j = 0; j < iframe_desc->n; j++) {
 		struct el_box box;
 
+		if (iframe_desc->iframe_desc[j].number != number) {
+			continue;
+		}
 		int y = yp + iframe_desc->iframe_desc[j].box.y - 1;
 		int x = xp + iframe_desc->iframe_desc[j].box.x - 1;
 
 		int height = iframe_desc->iframe_desc[j].box.height + 1;
-		int width = iframe_desc->iframe_desc[j].box.width + 1;
+		int width = iframe_desc->iframe_desc[j].box.width;
 
 		set_box(&box, x, y + 1, 1, height - 1);
 		draw_box(term, &box, BORDER_SVLINE, SCREEN_ATTR_FRAME, colors);
@@ -209,6 +212,8 @@ draw_iframe_lines(struct terminal *term, struct iframeset_desc *iframe_desc,
 		draw_border_char(term, x + width, y, BORDER_SURCORNER, colors);
 		draw_border_char(term, x + width, y + height, BORDER_SDRCORNER, colors);
 		draw_border_cross(term, x, y, BORDER_X_DOWN, colors);
+
+		break;
 	}
 }
 
@@ -294,7 +299,7 @@ check_link_under_cursor(struct session *ses, struct document_view *doc_view)
  * @a active indicates whether the document is focused -- i.e.,
  * whether it is displayed in the selected frame or document. */
 static void
-draw_doc(struct session *ses, struct document_view *doc_view, int active)
+draw_doc(struct session *ses, struct document_view *doc_view, int active, struct document_view *old)
 {
 	struct color_pair color;
 	struct view_state *vs;
@@ -305,6 +310,8 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	int vx, vy;
 	int y;
 
+	int iframe_dx = 0;
+
 	assert(ses && ses->tab && ses->tab->term && doc_view);
 	if_assert_failed return;
 
@@ -314,6 +321,24 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	/* The code in this function assumes that both width and height are
 	 * bigger than 1 so we have to bail out here. */
 	if (box->width < 2 || box->height < 2) return;
+
+	if (old) {
+		struct line *data = old->document->data;
+		int y = box->y;
+		int x;
+		int found = -1;
+
+		for (x = 0; x < data[y].length; x++) {
+			if ((doc_view->iframe_number == data[y].ch.chars[x].data - 33) && (doc_view->iframe_number == data[y].ch.chars[x+1].data - 33)) {
+				found = x;
+				break;
+			}
+		}
+		if (found > 0) {
+			iframe_dx = found;
+			box->x += found;
+		}
+	}
 
 	if (active) {
 		/* When redrawing the document after things like link menu we
@@ -340,7 +365,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 #else
 		draw_box(term, box, (unsigned char)bgchar, 0, get_bfu_color(term, "desktop"));
 #endif
-		return;
+		goto exit;
 	}
 
 	if (document_has_frames(doc_view->document)) {
@@ -354,7 +379,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 		if (vs->current_link == -1)
 			vs->current_link = 0;
 
-		return;
+		goto exit;
 	}
 
 	if (ses->navigate_mode == NAVIGATE_LINKWISE) {
@@ -397,7 +422,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
             && !document_has_iframes(doc_view->document)) {
 		clear_link(term, doc_view);
 		draw_view_status(ses, doc_view, active);
-		return;
+		goto exit;
 	}
 	doc_view->last_x = vx;
 	doc_view->last_y = vy;
@@ -409,7 +434,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	draw_box(term, box, (unsigned char)bgchar, 0, get_bfu_color(term, "desktop"));
 #endif
 	if (!doc_view->document->height) {
-		return;
+		goto exit;
 	}
 
 	while (vs->y >= doc_view->document->height) vs->y -= box->height;
@@ -470,8 +495,8 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	if (has_search_word(doc_view))
 		doc_view->last_x = doc_view->last_y = -1;
 
-	if (document_has_iframes(doc_view->document)) {
-		draw_iframe_lines(term, doc_view->document->iframe_desc, box->x, box->y, &color);
+	if (old && document_has_iframes(old->document)) {
+		draw_iframe_lines(term, old->document->iframe_desc, box->x - 1, 1, &color, doc_view->iframe_number);
 //		if (vs->current_link == -1)
 //			vs->current_link = 0;
 	}
@@ -538,6 +563,11 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 		}
 	}
 #endif
+
+exit:
+	if (old) {
+		box->x -= iframe_dx;
+	}
 }
 
 static void
@@ -574,7 +604,7 @@ draw_frames(struct session *ses)
 
 		foreach (doc_view, ses->scrn_frames) {
 			if (doc_view->depth == d)
-				draw_doc(ses, doc_view, doc_view == current_doc_view);
+				draw_doc(ses, doc_view, doc_view == current_doc_view, NULL);
 			else if (doc_view->depth > d)
 				more = 1;
 		}
@@ -585,7 +615,7 @@ draw_frames(struct session *ses)
 }
 
 static void
-draw_iframes(struct session *ses)
+draw_iframes(struct session *ses, struct document_view *old)
 {
 	struct document_view *doc_view, *current_doc_view;
 
@@ -601,7 +631,11 @@ draw_iframes(struct session *ses)
 	current_doc_view = current_frame(ses);
 
 	foreach (doc_view, ses->scrn_iframes) {
-		draw_doc(ses, doc_view, doc_view == current_doc_view);
+		doc_view->box.x += old->box.x;
+		doc_view->box.y += old->box.y;
+		draw_doc(ses, doc_view, doc_view == current_doc_view, old);
+		doc_view->box.x -= old->box.x;
+		doc_view->box.y -= old->box.y;
 	}
 }
 
@@ -662,15 +696,15 @@ refresh_view(struct session *ses, struct document_view *doc_view, int frames)
 #ifdef CONFIG_LIBDOM
 			//scan_document(doc_view->parent_doc_view);
 #endif
-			draw_doc(ses, doc_view->parent_doc_view, 0);
+			draw_doc(ses, doc_view->parent_doc_view, 0, NULL);
 		} else {
 #ifdef CONFIG_LIBDOM
 			//scan_document(doc_view);
 #endif
-			draw_doc(ses, doc_view, 1);
+			draw_doc(ses, doc_view, 1, NULL);
 		}
 		if (frames) draw_frames(ses);
-		draw_iframes(ses);
+		draw_iframes(ses, doc_view);
 	}
 	print_screen_status(ses);
 }

@@ -26,7 +26,7 @@
 #include "util/time.h"
 
 void add_iframeset_entry(struct iframeset_desc **parent,
-		char *url, char *name, int y, int width, int height, int nlink)
+		char *url, char *name, int number, int y, int width, int height, int nlink)
 {
 	struct iframeset_desc *iframeset_desc;
 	struct iframe_desc *iframe_desc;
@@ -53,6 +53,7 @@ void add_iframeset_entry(struct iframeset_desc **parent,
 	iframe_desc->box.width = width;
 	iframe_desc->box.height = height;
 	iframe_desc->nlink = nlink;
+	iframe_desc->number = number;
 	if (!iframe_desc->uri)
 		iframe_desc->uri = get_uri(about_blank, URI_NONE);
 
@@ -170,6 +171,7 @@ format_iframe(struct session *ses, struct iframe_desc *iframe_desc,
 redir:
 	doc_view = find_ifd(ses, iframe_desc->name, j, o->box.x, o->box.y);
 	if (doc_view) {
+		doc_view->iframe_number = iframe_desc->number;
 		render_document(vs, doc_view, o);
 		///assert(doc_view->document);
 		//doc_view->document->iframe = frame_desc;
@@ -178,7 +180,6 @@ redir:
 
 	return doc_view;
 }
-
 
 void
 format_iframes(struct session *ses, struct iframeset_desc *ifsd,

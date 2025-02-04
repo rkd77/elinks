@@ -29,6 +29,8 @@ struct document_view {
 	int depth;
 	int used;
 	int prev_y;
+
+	int iframe_number;
 };
 
 #define get_old_current_link(doc_view) \
