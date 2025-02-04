@@ -51,7 +51,9 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
+#ifdef CONFIG_LIBCURL
 #include <curl/curl.h>
+#endif
 
 #include <iostream>
 #include <list>
@@ -1043,6 +1045,7 @@ xhr_send(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		}
 
 		if (!xhr->async) {
+#ifdef CONFIG_LIBCURL
 			char *url = get_uri_string(xhr->uri, URI_DIR_LOCATION | URI_PATH | URI_USER | URI_PASSWORD);
 
 			if (!url) {
@@ -1078,6 +1081,10 @@ xhr_send(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 			args.rval().setUndefined();
 			return true;
+#else
+			args.rval().setUndefined();
+			return false;
+#endif
 		}
 		xhr->download.data = xhr;
 		xhr->download.callback = (download_callback_T *)xhr_loading_callback;

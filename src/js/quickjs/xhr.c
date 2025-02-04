@@ -28,7 +28,9 @@
 #include "config.h"
 #endif
 
+#ifdef CONFIG_LIBCURL
 #include <curl/curl.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -1238,6 +1240,7 @@ xhr_send(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 			}
 
 			if (!x->async) {
+#ifdef CONFIG_LIBCURL
 				char *url = get_uri_string(x->uri, URI_DIR_LOCATION | URI_PATH | URI_USER | URI_PASSWORD);
 
 				if (!url) {
@@ -1278,6 +1281,9 @@ xhr_send(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 				x->status = 200;
 				mem_free(url);
 				return JS_UNDEFINED;
+#else
+				return JS_EXCEPTION;
+#endif
 			}
 			x->sent = true;
 			x->download.data = x;

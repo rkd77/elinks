@@ -56,7 +56,9 @@
 #include "viewer/text/form.h" /* <-ecmascript_reset_state() */
 #include "viewer/text/vs.h"
 
+#ifdef CONFIG_LIBCURL
 #include <curl/curl.h>
+#endif
 
 #undef max
 #undef min
@@ -722,10 +724,12 @@ init_ecmascript_module(struct module *module)
 #endif
 	}
 	ecmascript_enabled = get_opt_bool("ecmascript.enable", NULL);
+#ifdef CONFIG_LIBCURL
 #ifdef CONFIG_MEMCOUNT
 	curl_global_init_mem(CURL_GLOBAL_DEFAULT, el_curl_malloc, el_curl_free, el_curl_realloc, el_curl_strdup, el_curl_calloc);
 #else
 	curl_global_init(CURL_GLOBAL_DEFAULT);
+#endif
 #endif
 	init_map_timer();
 }
@@ -733,7 +737,9 @@ init_ecmascript_module(struct module *module)
 static void
 done_ecmascript_module(struct module *module)
 {
+#ifdef CONFIG_LIBCURL
 	curl_global_cleanup();
+#endif
 	free_string_list(&allowed_urls);
 	free_string_list(&disallowed_urls);
 	mem_free_if(console_log_filename);

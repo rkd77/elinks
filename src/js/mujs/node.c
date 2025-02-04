@@ -8,8 +8,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <curl/curl.h>
-
 #ifdef CONFIG_LIBDOM
 #include <dom/dom.h>
 #include <dom/bindings/hubbub/parser.h>
