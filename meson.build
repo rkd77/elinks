@@ -531,17 +531,7 @@ if conf_data.get('CONFIG_ECMASCRIPT')
 endif
 
 conf_data.set('CONFIG_LIBCURL', false)
-curldeps = false
-if conf_data.get('CONFIG_ECMASCRIPT')
-    curldeps = dependency('libcurl', static: st, version: '>=7.66.0', required: false)
-    if not curldeps.found()
-        curldeps = compiler.find_library('curl', static: st)
-    endif
-    if curldeps.found()
-        deps += curldeps
-        conf_data.set('CONFIG_LIBCURL', true)
-    endif
-endif
+curldeps = []
 
 if not conf_data.get('CONFIG_LIBCURL') and get_option('libcurl')
     curldeps = dependency('libcurl', static: st, version: '>=7.66.0', required: false)

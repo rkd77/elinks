@@ -8,7 +8,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef CONFIG_LIBCURL
 #include <curl/curl.h>
+#endif
 
 #include "elinks.h"
 
@@ -766,6 +768,7 @@ mjs_xhr_send(js_State *J)
 		}
 
 		if (!xhr->async) {
+#ifdef CONFIG_LIBCURL
 			char *url = get_uri_string(xhr->uri, URI_DIR_LOCATION | URI_PATH | URI_USER | URI_PASSWORD);
 
 			if (!url) {
@@ -798,6 +801,10 @@ mjs_xhr_send(js_State *J)
 
 			js_pushundefined(J);
 			return;
+#else
+			js_error(J, "unimplemented");
+			return;
+#endif
 		}
 		xhr->download.data = xhr;
 		xhr->download.callback = (download_callback_T *)mjs_xhr_loading_callback;
