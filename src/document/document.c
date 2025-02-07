@@ -51,6 +51,7 @@
 
 #include "cache/cache.h"
 #include "config/options.h"
+#include "document/docdata.h"
 #include "document/document.h"
 #include "document/forms.h"
 #include "document/html/frames.h"
@@ -383,7 +384,7 @@ done_document(struct document *document)
 	mem_free_if(document->ip);
 	mem_free_if(document->title);
 	if (document->frame_desc) free_frameset_desc(document->frame_desc);
-	if (document->iframe_desc) free_iframeset_desc(document->iframe_desc);
+	if (document->iframeset_desc) free_iframeset_desc(document->iframeset_desc);
 	if (document->refresh) done_document_refresh(document->refresh);
 
 	if (document->links) {
@@ -714,6 +715,84 @@ get_link_number_by_offset(struct document *document, int offset)
 	return -1;
 }
 #endif
+
+void
+insert_document_into_document(struct document *dest, struct document *src, int y)
+{
+	if (!dest || !src) {
+		return;
+	}
+	if (y > dest->height) {
+		y = dest->height;
+	}
+	if (!ALIGN_LINES(&dest->data, dest->height, dest->height + src->height)) {
+		return;
+	}
+	memmove(&dest->data[y + src->height], &dest->data[y], (dest->height - y) * sizeof(struct line));
+	memcpy(&dest->data[y], &src->data[0], src->height * sizeof(struct line));
+
+	/* old links */
+	int i;
+	int tomove = dest->nlinks;
+	for (i = 0; i < dest->nlinks; i++) {
+		struct link *link = &dest->links[i];
+		int c;
+		int found = 0;
+
+		for (c = 0; c < link->npoints; c++) {
+			if (link->points[c].y < y) {
+				continue;
+			};
+			link->points[c].y += src->height;
+			found = 1;
+			if (i < tomove) {
+				tomove = i;
+			}
+		}
+		if (found) {
+			link->number += src->nlinks;
+		}
+	}
+	/* new links */
+	memmove(&dest->links[tomove + src->nlinks], &dest->links[tomove], (dest->nlinks - tomove) * sizeof(struct link));
+	memcpy(&dest->links[tomove], &src->links[0], src->nlinks * sizeof(struct link));
+
+	for (i = 0; i < src->nlinks; i++) {
+		struct link *link = &dest->links[i + tomove];
+		int c;
+
+		for (c = 0; c < link->npoints; c++) {
+			link->points[c].y += y;
+		}
+		link->number += tomove;
+	}
+
+	/* old images */
+#ifdef CONFIG_LIBSIXEL
+	struct image *im;
+	foreach (im, dest->images) {
+		if (im->y < y) {
+			continue;
+		};
+		im->y += src->height;
+	}
+	/* new images */
+	foreach (im, src->images) {
+		struct image *imcopy = mem_calloc(1, sizeof(*imcopy));
+
+		if (!imcopy) {
+			continue;
+		}
+		copy_struct(imcopy, im);
+		imcopy->y += y;
+		add_to_list(dest->images, imcopy);
+	}
+#endif
+	dest->height += src->height;
+	dest->nlinks += src->nlinks;
+	dest->links_sorted = 0;
+	sort_links(dest);
+}
 
 struct module document_module = struct_module(
 	/* Because this module is listed in main_modules rather than

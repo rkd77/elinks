@@ -25,8 +25,7 @@
 #include "util/string.h"
 #include "util/time.h"
 
-void add_iframeset_entry(struct iframeset_desc **parent,
-		char *url, char *name, int number, int y, int width, int height, int nlink)
+void add_iframeset_entry(struct document *parent, char *url, char *name, int number, int y, int width, int height, int nlink)
 {
 	struct iframeset_desc *iframeset_desc;
 	struct iframe_desc *iframe_desc;
@@ -36,14 +35,14 @@ void add_iframeset_entry(struct iframeset_desc **parent,
 	assert(parent);
 	if_assert_failed return;
 
-	if (!*parent) {
-		*parent = (struct iframeset_desc *)mem_calloc(1, sizeof(struct iframeset_desc));
+	if (!parent->iframeset_desc) {
+		parent->iframeset_desc = (struct iframeset_desc *)mem_calloc(1, sizeof(struct iframeset_desc));
 	} else {
-		*parent = (struct iframeset_desc *)mem_realloc(*parent, sizeof(struct iframeset_desc) + ((*parent)->n + 1) * sizeof(struct iframe_desc));
+		parent->iframeset_desc = (struct iframeset_desc *)mem_realloc(parent->iframeset_desc, sizeof(struct iframeset_desc) + (parent->iframeset_desc->n + 1) * sizeof(struct iframe_desc));
 	}
-	if (!*parent) return;
+	if (!parent->iframeset_desc) return;
 
-	iframeset_desc = *parent;
+	iframeset_desc = parent->iframeset_desc;
 	offset = iframeset_desc->n;
 	iframe_desc = &iframeset_desc->iframe_desc[offset];
 	iframe_desc->name = stracpy(name);
@@ -54,6 +53,7 @@ void add_iframeset_entry(struct iframeset_desc **parent,
 	iframe_desc->box.height = height;
 	iframe_desc->nlink = nlink;
 	iframe_desc->number = number;
+	iframe_desc->inserted = 0;
 	if (!iframe_desc->uri)
 		iframe_desc->uri = get_uri(about_blank, URI_NONE);
 
@@ -122,7 +122,7 @@ find_ifd(struct session *ses, char *name,
 
 
 static struct document_view *
-format_iframe(struct session *ses, struct iframe_desc *iframe_desc,
+format_iframe(struct session *ses, struct document *document, struct iframe_desc *iframe_desc,
 	     struct document_options *o, int j)
 {
 	struct view_state *vs;
@@ -172,7 +172,17 @@ redir:
 	doc_view = find_ifd(ses, iframe_desc->name, j, o->box.x, o->box.y);
 	if (doc_view) {
 		doc_view->iframe_number = iframe_desc->number;
-		render_document(vs, doc_view, o);
+		if (!iframe_desc->inserted) {
+			render_document(vs, doc_view, o);
+			insert_document_into_document(document, doc_view->document, iframe_desc->box.y);
+			iframe_desc->inserted = 1;
+			int yy;
+
+			for (yy = j + 1; yy < document->iframeset_desc->n; yy++) {
+				document->iframeset_desc->iframe_desc[yy].box.y += doc_view->document->height;
+				document->iframeset_desc->iframe_desc[yy].nlink += doc_view->document->nlinks;
+			}
+		}
 		///assert(doc_view->document);
 		//doc_view->document->iframe = frame_desc;
 	}
@@ -182,11 +192,11 @@ redir:
 }
 
 void
-format_iframes(struct session *ses, struct iframeset_desc *ifsd,
-	      struct document_options *op, int depth)
+format_iframes(struct session *ses, struct document *document, struct document_options *op, int depth)
 {
 	struct document_options o;
 	int j;
+	struct iframeset_desc *ifsd = document->iframeset_desc;
 
 	assert(ses && ifsd && op);
 	if_assert_failed return;
@@ -209,7 +219,7 @@ format_iframes(struct session *ses, struct iframeset_desc *ifsd,
 		o.box.height = int_min(iframe_desc->box.height, ses->tab->term->height - iframe_desc->box.y - 1);
 		o.framename = iframe_desc->name;
 
-		format_iframe(ses, iframe_desc, &o, j);
+		format_iframe(ses, document, iframe_desc, &o, j);
 		o.box.x += o.box.width + 1;
 		o.box.y += o.box.height + 1;
 #ifdef CONFIG_DEBUG

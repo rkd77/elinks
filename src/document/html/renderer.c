@@ -2227,7 +2227,7 @@ html_special(struct html_context *html_context, html_special_type_T c, ...)
 				int width = va_arg(l, int);
 				int height = va_arg(l, int);
 
-				add_iframeset_entry(&document->iframe_desc, url, name, x, y, width, height, document->nlinks);
+				add_iframeset_entry(document, url, name, x, y, width, height, document->nlinks);
 			}
 			break;
 		}

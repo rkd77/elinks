@@ -559,9 +559,9 @@ load_iframes(struct session *ses, struct document_view *doc_view)
 {
 	struct document *document = doc_view->document;
 
-	if (!document || !document->iframe_desc) return;
+	if (!document || !document->iframeset_desc) return;
 
-	request_iframes(ses, document->iframe_desc, 0);
+	request_iframes(ses, document->iframeset_desc, 0);
 }
 
 NONSTATIC_INLINE void

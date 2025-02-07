@@ -260,7 +260,7 @@ struct document {
 	 * Used for checking rerendering for available CSS imports. */
 	unsigned long css_magic;
 #endif
-	struct iframeset_desc *iframe_desc;
+	struct iframeset_desc *iframeset_desc;
 
 	struct uri *uri;
 
@@ -320,7 +320,7 @@ struct document {
 };
 
 #define document_has_frames(document_) ((document_) && (document_)->frame_desc)
-#define document_has_iframes(document_) ((document_) && (document_)->iframe_desc)
+#define document_has_iframes(document_) ((document_) && (document_)->iframeset_desc)
 
 /** Initializes a document and its canvas.
  * @returns NULL on allocation failure.
@@ -369,6 +369,9 @@ extern struct module document_module;
 #define accesskey_string_to_unicode(s) (((s)[0] && !(s)[1] && isprint((s)[0])) ? (s)[0] : 0)
 
 int find_tag(struct document *document, char *name, int namelen);
+
+void insert_document_into_document(struct document *dest, struct document *src, int y);
+
 
 #ifdef __cplusplus
 }

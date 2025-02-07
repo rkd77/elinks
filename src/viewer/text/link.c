@@ -505,62 +505,6 @@ next_link_in_view_(struct document_view *doc_view, int current, int direction,
 	document = doc_view->document;
 	vs = doc_view->vs;
 
-	if (document_has_iframes(document)) {
-		struct document_view *dw;
-
-		if (direction > 0) {
-			int j = 0;
-
-			foreach (dw, doc_view->session->scrn_iframes) {
-				if (vs->current_link != document->iframe_desc->iframe_desc[j].nlink - 1) {
-					goto next;
-				}
-				if (dw->document->nlinks > 0) {
-					vs = dw->vs;
-					current_link_blur(doc_view);
-
-					if (fn(dw, &dw->document->links[0])) {
-						dw->parent_doc_view = dw->session->doc_view;
-						dw->session->doc_view = dw;
-						vs->current_link = 0;
-
-						if (cntr) cntr(dw, &dw->document->links[0]);
-						current_link_hover(dw);
-
-						return 1;
-					}
-				}
-next:
-				j++;
-			}
-		} else {
-			int j = document->iframe_desc->n - 1;
-
-			foreachback (dw, doc_view->session->scrn_iframes) {
-				if (vs->current_link != document->iframe_desc->iframe_desc[j].nlink) {
-					goto nextback;
-				}
-				if (dw->document->nlinks > 0) {
-					int last = dw->document->nlinks - 1;
-					vs = dw->vs;
-					current_link_blur(doc_view);
-
-					if (fn(dw, &dw->document->links[last])) {
-						dw->parent_doc_view = dw->session->doc_view;
-						dw->session->doc_view = dw;
-						vs->current_link = last;
-						if (cntr) cntr(dw, &dw->document->links[last]);
-						current_link_hover(dw);
-
-						return 1;
-					}
-				}
-nextback:
-				j--;
-			}
-		}
-	}
-
 	get_visible_links_range(doc_view, &start, &end);
 
 	current_link_blur(doc_view);
@@ -576,37 +520,6 @@ nextback:
 			return 1;
 		}
 		current += direction;
-	}
-
-	if (doc_view->parent_doc_view &&
-		((current <= 0 && direction < 0) || (current == document->nlinks && direction > 0))) {
-		int j = 0;
-		struct document_view *dw = NULL;
-		struct session *ses = doc_view->parent_doc_view->session;
-
-		foreach (dw, ses->scrn_iframes) {
-			if (dw == doc_view) {
-				break;
-			}
-			j++;
-		}
-		document = doc_view->parent_doc_view->document;
-		vs = doc_view->parent_doc_view->vs;
-		if (direction < 0) {
-			current = document->iframe_desc->iframe_desc[j].nlink - 1;
-		} else {
-			current = document->iframe_desc->iframe_desc[j].nlink;
-		}
-
-		if (fn(doc_view->parent_doc_view, &document->links[current])) {
-			vs->current_link = current;
-			doc_view = doc_view->parent_doc_view;
-			doc_view->session->doc_view = doc_view;
-
-			if (cntr) cntr(doc_view, &document->links[current]);
-			current_link_hover(doc_view);
-			return 1;
-		}
 	}
 	vs->current_link = -1;
 

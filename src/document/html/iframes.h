@@ -7,6 +7,7 @@
 extern "C" {
 #endif
 
+struct document;
 struct document_options;
 struct el_box;
 struct iframeset_desc;
@@ -23,6 +24,7 @@ struct iframe_desc {
 	struct el_box box;
 	int nlink;
 	int number;
+	unsigned int inserted:1;
 };
 
 struct iframeset_desc {
@@ -31,8 +33,8 @@ struct iframeset_desc {
 	struct iframe_desc iframe_desc[1]; /* must be last of struct. --Zas */
 };
 
-void add_iframeset_entry(struct iframeset_desc **parent, char *url, char *name, int x, int y, int width, int height, int nlink);
-void format_iframes(struct session *ses, struct iframeset_desc *ifsd, struct document_options *op, int depth);
+void add_iframeset_entry(struct document *parent, char *url, char *name, int x, int y, int width, int height, int nlink);
+void format_iframes(struct session *ses, struct document *document, struct document_options *op, int depth);
 
 #ifdef __cplusplus
 }

@@ -643,37 +643,12 @@ html_iframe_do(struct html_context *html_context, char *a,
 		html_linebrk(html_context, a, html, eof, end);
 		put_chrs(html_context, "&nbsp;", 6);
 		ln_break(html_context, 1);
-		struct iframe2 *iframe = mem_calloc(1, sizeof(*iframe));
+		int y = html_context->part->cy;
+		url2 = join_urls(html_context->base_href, url);
 
-		if (iframe) {
-			int y = html_context->part->cy;
-			int x = html_context->part->cx;
-			iframe->number = html_context->image_number++;
-			iframe->box.x = 0;
-			iframe->box.y = 0;
-			iframe->box.width = width;
-			iframe->box.height = height;
-			char str[8] = {0};
-			memcpy(str, encode_utf8(iframe->number + 33), 7);
-			int len = strlen(str);
-			int yp;
-
-			for (yp = 0; yp < height; yp++) {
-				int xw;
-				for (xw = 0; xw < width; xw++) {
-					put_chrs(html_context, (const char *)str, len);
-				}
-				ln_break(html_context, 1);
-			}
-			ln_break(html_context, 1);
-			add_to_list(html_context->document->iframes, iframe);
-
-			url2 = join_urls(html_context->base_href, url);
-
-			if (url2) {
-				html_context->special_f(html_context, SP_IFRAME, url2, name, iframe->number, y, width, height);
-				mem_free(url2);
-			}
+		if (url2) {
+			html_context->special_f(html_context, SP_IFRAME, url2, name, html_context->image_number++, y, width, height);
+			mem_free(url2);
 		}
 	} else {
 		if (*name) {

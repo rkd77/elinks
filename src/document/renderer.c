@@ -427,7 +427,7 @@ render_document_frames(struct session *ses, int no_cache)
 	}
 
 	if (document_has_iframes(ses->doc_view->document)) {
-		format_iframes(ses, ses->doc_view->document->iframe_desc, &doc_opts, 0);
+		format_iframes(ses, ses->doc_view->document, &doc_opts, 0);
 	}
 
 	foreach (doc_view, ses->scrn_frames) {
