@@ -643,8 +643,14 @@ html_iframe_do(struct html_context *html_context, char *a,
 		html_linebrk(html_context, a, html, eof, end);
 		put_chrs(html_context, "&nbsp;", 6);
 		ln_break(html_context, 1);
+		put_chrs(html_context, "---IFRAME---", 12);
+		ln_break(html_context, 1);
 		int y = html_context->part->cy;
 		url2 = join_urls(html_context->base_href, url);
+
+		put_chrs(html_context, "---/IFRAME---", 13);
+		ln_break(html_context, 1);
+
 
 		if (url2) {
 			html_context->special_f(html_context, SP_IFRAME, url2, name, html_context->image_number++, y, width, height);
