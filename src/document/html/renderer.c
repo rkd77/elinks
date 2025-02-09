@@ -1246,6 +1246,7 @@ align_line(struct html_context *html_context, int y, int last)
 static inline void
 init_link_event_hooks(struct html_context *html_context, struct link *link)
 {
+#ifdef CONFIG_ECMASCRIPT
 	link->event_hooks = (LIST_OF(struct script_event_hook) *)mem_calloc(1, sizeof(*link->event_hooks));
 	if (!link->event_hooks) return;
 
@@ -1275,7 +1276,6 @@ init_link_event_hooks(struct html_context *html_context, struct link *link)
 	add_evhook(link->event_hooks, SEVHOOK_ONKEYUP, elformat.onkeyup);
 	add_evhook(link->event_hooks, SEVHOOK_ONKEYPRESS, elformat.onkeypress);
 
-#ifdef CONFIG_ECMASCRIPT
 	add_evhook(link->event_hooks, SEVHOOK_ONKEYPRESS_BODY, html_context->document->body_onkeypress);
 #endif
 #undef add_evhook

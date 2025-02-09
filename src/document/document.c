@@ -274,17 +274,65 @@ done_link_members(struct link *link)
 		struct script_event_hook *evhook, *safety;
 
 		foreachsafe (evhook, safety, *link->event_hooks) {
-			mem_free_if(evhook->src);
-			mem_free(evhook);
+			mem_free_set(&evhook->src, NULL);
+			mem_free_set(&evhook, NULL);
 		}
-		mem_free(link->event_hooks);
+		mem_free_set(&link->event_hooks, NULL);
 	}
-	mem_free_if(get_link_name(link));
-	mem_free_if(link->where);
-	mem_free_if(link->target);
-	mem_free_if(link->title);
-	mem_free_if(link->where_img);
-	mem_free_if(link->points);
+	if (!link_is_form(link)) {
+		mem_free_set(&link->data.name, NULL);
+	}
+	mem_free_set(&link->where, NULL);
+	mem_free_set(&link->target, NULL);
+	mem_free_set(&link->title, NULL);
+	mem_free_set(&link->where_img, NULL);
+	mem_free_set(&link->points, NULL);
+}
+
+static void
+copy_link(struct link *dest, struct link *src)
+{
+	dest->accesskey = src->accesskey;
+	dest->type = src->type;
+
+#ifdef CONFIG_ECMASCRIPT
+	dest->element_offset = src->element_offset; // TODO
+#endif
+	dest->where = null_or_stracpy(src->where);
+	dest->target = null_or_stracpy(src->target);
+	dest->where_img = null_or_stracpy(src->where_img);
+
+	dest->title = null_or_stracpy(src->title);
+	dest->npoints = src->npoints;
+
+	dest->points = mem_calloc(dest->npoints, sizeof(struct point));
+
+	if (dest->points) {
+		memcpy(dest->points, src->points, dest->npoints * (sizeof(struct point)));
+	}
+	dest->number = src->number;
+	dest->tabindex = src->tabindex;
+	dest->color = src->color;
+
+	dest->event_hooks = NULL; // TODO
+	//LIST_OF(struct script_event_hook) *event_hooks;
+
+	if (!link_is_form(src)) {
+		dest->data.name = null_or_stracpy(src->data.name);
+	} else {
+		dest->data = src->data;
+	}
+}
+
+static void
+copy_line(struct line *dest, struct line *src)
+{
+	dest->length = src->length;
+	dest->ch.chars = mem_alloc(dest->length * sizeof(struct screen_char));
+
+	if (dest->ch.chars) {
+		memcpy(dest->ch.chars, src->ch.chars, dest->length * sizeof(struct screen_char));
+	}
 }
 
 void
@@ -719,7 +767,7 @@ get_link_number_by_offset(struct document *document, int offset)
 void
 insert_document_into_document(struct document *dest, struct document *src, int y)
 {
-	if (!dest || !src) {
+	if (!dest || !src || !src->height) {
 		return;
 	}
 	if (y > dest->height) {
@@ -729,14 +777,17 @@ insert_document_into_document(struct document *dest, struct document *src, int y
 		return;
 	}
 	memmove(&dest->data[y + src->height], &dest->data[y], (dest->height - y) * sizeof(struct line));
-	memcpy(&dest->data[y], &src->data[0], src->height * sizeof(struct line));
+
+	int i;
+	for (i = 0; i < src->height; i++) {
+		copy_line(&dest->data[y + i], &src->data[i]);
+	}
 
 	if (!ALIGN_LINK(&dest->links, dest->nlinks, dest->nlinks + src->nlinks)) {
 		return;
 	}
 
 	/* old links */
-	int i;
 	int tomove = dest->nlinks;
 	for (i = 0; i < dest->nlinks; i++) {
 		struct link *link = &dest->links[i];
@@ -759,7 +810,11 @@ insert_document_into_document(struct document *dest, struct document *src, int y
 	}
 	/* new links */
 	memmove(&dest->links[tomove + src->nlinks], &dest->links[tomove], (dest->nlinks - tomove) * sizeof(struct link));
-	memcpy(&dest->links[tomove], &src->links[0], src->nlinks * sizeof(struct link));
+
+	for (i = 0; i < src->nlinks; i++) {
+		copy_link(&dest->links[tomove + i], &src->links[i]);
+	}
+	//memcpy(&dest->links[tomove], &src->links[0], src->nlinks * sizeof(struct link));
 
 	for (i = 0; i < src->nlinks; i++) {
 		struct link *link = &dest->links[i + tomove];
@@ -801,19 +856,22 @@ insert_document_into_document(struct document *dest, struct document *src, int y
 void
 remove_document_from_document(struct document *dest, struct document *src, int y)
 {
-	if (!dest || !src) {
+	if (!dest || !src || !src->height) {
 		return;
 	}
 	if (y > dest->height) {
 		y = dest->height;
 	}
-	memmove(&dest->data[y], &dest->data[y + src->height], (src->height) * sizeof(struct line));
+	int i;
+	for (i = 0; i < src->height; i++) {
+		mem_free_if(dest->data[y + i].ch.chars);
+	}
+	memmove(&dest->data[y], &dest->data[y + src->height], (dest->height - src->height - y) * sizeof(struct line));
 
 	if (!ALIGN_LINES(&dest->data, dest->height, dest->height - src->height)) {
 		return;
 	}
 	/* old links */
-	int i;
 
 	for (i = 0; i < dest->nlinks; i++) {
 		struct link *link = &dest->links[i];
@@ -829,10 +887,23 @@ remove_document_from_document(struct document *dest, struct document *src, int y
 			}
 		}
 	}
+
+	int before = dest->nlinks;
+	for (i = 0; i < dest->nlinks; i++) {
+		struct link *link = &dest->links[i];
+
+		if (!link->npoints) {
+			done_link_members(link);
+			memmove(link, link + 1,
+				(dest->nlinks - i - 1) * sizeof(*link));
+			dest->nlinks--;
+			i--;
+		}
+	}
 	//memmove(&dest->links[tomove], &dest->links[tomove + src->nlinks], (src->nlinks) * sizeof(struct link));
-	//if (!ALIGN_LINK(&dest->links, dest->nlinks, dest->nlinks - src->nlinks)) {
-	//	return;
-	//}
+	if (!ALIGN_LINK(&dest->links, before, dest->nlinks)) {
+		return;
+	}
 
 	/* old images */
 #ifdef CONFIG_LIBSIXEL
@@ -847,8 +918,8 @@ remove_document_from_document(struct document *dest, struct document *src, int y
 	}
 #endif
 	dest->height -= src->height;
-	dest->links_sorted = 0;
-	sort_links(dest);
+	//dest->links_sorted = 0;
+	//sort_links(dest);
 }
 
 struct module document_module = struct_module(

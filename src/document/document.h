@@ -47,10 +47,9 @@ struct sixel {
 struct line {
 	union {
 		struct screen_char *chars;
-		struct sixel *sixel;
+		//struct sixel *sixel;
 	} ch;
-	unsigned int length:30;
-	unsigned int kind:1;
+	unsigned int length;
 };
 
 /** Codepage status */
