@@ -24,6 +24,7 @@ struct iframe_desc {
 	struct el_box box;
 	int nlink;
 	int number;
+	int cache_id;
 	unsigned int inserted:1;
 };
 

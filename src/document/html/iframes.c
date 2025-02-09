@@ -157,7 +157,7 @@ format_iframe(struct session *ses, struct document *document, struct iframe_desc
 
 	vs = &iframe->vs;
 	cached = find_in_cache(vs->uri);
-	if (!cached) {
+	if (!cached || cached->incomplete) {
 		return NULL;
 	}
 
@@ -180,15 +180,27 @@ redir:
 	if (doc_view) {
 		doc_view->iframe_number = iframe_desc->number;
 		if (!iframe_desc->inserted) {
+render:
 			render_document(vs, doc_view, o);
 			insert_document_into_document(document, doc_view->document, iframe_desc->box.y);
 			iframe_desc->inserted = 1;
+			iframe_desc->cache_id = cached->cache_id;
 			int yy;
 
 			for (yy = j + 1; yy < document->iframeset_desc->n; yy++) {
 				document->iframeset_desc->iframe_desc[yy].box.y += doc_view->document->height;
 				document->iframeset_desc->iframe_desc[yy].nlink += doc_view->document->nlinks;
 			}
+		} else if (iframe_desc->cache_id < cached->cache_id) {
+			remove_document_from_document(document, doc_view->document, iframe_desc->box.y);
+
+			int yy;
+
+			for (yy = j + 1; yy < document->iframeset_desc->n; yy++) {
+				document->iframeset_desc->iframe_desc[yy].box.y -= doc_view->document->height;
+				document->iframeset_desc->iframe_desc[yy].nlink -= doc_view->document->nlinks;
+			}
+			goto render;
 		}
 		///assert(doc_view->document);
 		//doc_view->document->iframe = frame_desc;

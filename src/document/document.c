@@ -731,6 +731,10 @@ insert_document_into_document(struct document *dest, struct document *src, int y
 	memmove(&dest->data[y + src->height], &dest->data[y], (dest->height - y) * sizeof(struct line));
 	memcpy(&dest->data[y], &src->data[0], src->height * sizeof(struct line));
 
+	if (!ALIGN_LINK(&dest->links, dest->nlinks, dest->nlinks + src->nlinks)) {
+		return;
+	}
+
 	/* old links */
 	int i;
 	int tomove = dest->nlinks;
@@ -790,6 +794,59 @@ insert_document_into_document(struct document *dest, struct document *src, int y
 #endif
 	dest->height += src->height;
 	dest->nlinks += src->nlinks;
+	dest->links_sorted = 0;
+	sort_links(dest);
+}
+
+void
+remove_document_from_document(struct document *dest, struct document *src, int y)
+{
+	if (!dest || !src) {
+		return;
+	}
+	if (y > dest->height) {
+		y = dest->height;
+	}
+	memmove(&dest->data[y], &dest->data[y + src->height], (src->height) * sizeof(struct line));
+
+	if (!ALIGN_LINES(&dest->data, dest->height, dest->height - src->height)) {
+		return;
+	}
+	/* old links */
+	int i;
+
+	for (i = 0; i < dest->nlinks; i++) {
+		struct link *link = &dest->links[i];
+		int c;
+
+		for (c = 0; c < link->npoints; c++) {
+			if (link->points[c].y >= y && (link->points[c].y < (y + src->height))) {
+				link->npoints = 0;
+				break;
+			};
+			if (link->points[c].y >= (y + src->height)) {
+				link->points[c].y -= src->height;
+			}
+		}
+	}
+	//memmove(&dest->links[tomove], &dest->links[tomove + src->nlinks], (src->nlinks) * sizeof(struct link));
+	//if (!ALIGN_LINK(&dest->links, dest->nlinks, dest->nlinks - src->nlinks)) {
+	//	return;
+	//}
+
+	/* old images */
+#ifdef CONFIG_LIBSIXEL
+	struct image *im, *next;
+	foreachsafe (im, next, dest->images) {
+		if (im->y >= y && im->y < (y + src->height)) {
+			del_from_list(im);
+			mem_free(im);
+			continue;
+		}
+		im->y -= src->height;
+	}
+#endif
+	dest->height -= src->height;
 	dest->links_sorted = 0;
 	sort_links(dest);
 }

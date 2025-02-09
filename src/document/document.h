@@ -371,6 +371,7 @@ extern struct module document_module;
 int find_tag(struct document *document, char *name, int namelen);
 
 void insert_document_into_document(struct document *dest, struct document *src, int y);
+void remove_document_from_document(struct document *dest, struct document *src, int y);
 
 
 #ifdef __cplusplus
