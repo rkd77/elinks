@@ -191,7 +191,7 @@ render:
 				document->iframeset_desc->iframe_desc[yy].box.y += doc_view->document->height;
 				document->iframeset_desc->iframe_desc[yy].nlink += doc_view->document->nlinks;
 			}
-		} else if (iframe_desc->cache_id < cached->cache_id) {
+		} else if (iframe_desc->cache_id != cached->cache_id) {
 			remove_document_from_document(document, doc_view->document, iframe_desc->box.y);
 
 			int yy;
