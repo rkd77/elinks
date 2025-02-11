@@ -313,9 +313,29 @@ copy_link(struct link *dest, struct link *src)
 	dest->number = src->number;
 	dest->tabindex = src->tabindex;
 	dest->color = src->color;
+	dest->event_hooks = NULL;
 
-	dest->event_hooks = NULL; // TODO
-	//LIST_OF(struct script_event_hook) *event_hooks;
+	if (src->event_hooks) {
+		dest->event_hooks = (LIST_OF(struct script_event_hook) *)mem_calloc(1, sizeof(*dest->event_hooks));
+
+		if (dest->event_hooks) {
+			init_list(*dest->event_hooks);
+			struct script_event_hook *evhook;
+
+			foreach (evhook, *src->event_hooks) {
+				if (!evhook->src) {
+					continue;
+				}
+				struct script_event_hook *copy_evhook = (struct script_event_hook *)mem_calloc(1, sizeof(*copy_evhook));
+				if (!copy_evhook) {
+					continue;
+				}
+				copy_evhook->type = evhook->type;
+				copy_evhook->src = stracpy(evhook->src);
+				add_to_list(*(dest->event_hooks), copy_evhook);
+			}
+		}
+	}
 
 	if (!link_is_form(src)) {
 		dest->data.name = null_or_stracpy(src->data.name);
