@@ -836,7 +836,7 @@ static union option_info config_options_info[] = {
 
 	INIT_OPT_BOOL("document.html", N_("Display iframes"),
 		"display_iframes", OPT_ZERO, 0,
-		N_("Display iframes. Iframe code is not finished. This option is disabled by default.")),
+		N_("Display iframes. This code is experimental.")),
 
 	INIT_OPT_BOOL("document.html", N_("Display tables"),
 		"display_tables", OPT_ZERO, 1,
