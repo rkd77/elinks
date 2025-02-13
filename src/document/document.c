@@ -274,19 +274,19 @@ done_link_members(struct link *link)
 		struct script_event_hook *evhook, *safety;
 
 		foreachsafe (evhook, safety, *link->event_hooks) {
-			mem_free_set(&evhook->src, NULL);
-			mem_free_set(&evhook, NULL);
+			mem_free_if(evhook->src);
+			mem_free(evhook);
 		}
-		mem_free_set(&link->event_hooks, NULL);
+		mem_free(link->event_hooks);
 	}
 	if (!link_is_form(link)) {
-		mem_free_set(&link->data.name, NULL);
+		mem_free_if(link->data.name);
 	}
-	mem_free_set(&link->where, NULL);
-	mem_free_set(&link->target, NULL);
-	mem_free_set(&link->title, NULL);
-	mem_free_set(&link->where_img, NULL);
-	mem_free_set(&link->points, NULL);
+	mem_free_if(link->where);
+	mem_free_if(link->target);
+	mem_free_if(link->title);
+	mem_free_if(link->where_img);
+	mem_free_if(link->points);
 }
 
 static void
