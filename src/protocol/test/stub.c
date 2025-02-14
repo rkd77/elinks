@@ -60,6 +60,7 @@ STUB_MODULE(http_protocol_module);
 STUB_MODULE(nntp_protocol_module);
 STUB_MODULE(sftp_protocol_module);
 STUB_MODULE(smb_protocol_module);
+STUB_MODULE(spartan_protocol_module);
 STUB_MODULE(uri_rewrite_module);
 STUB_MODULE(user_protocol_module);
 
@@ -102,6 +103,7 @@ STUB_PROTOCOL_HANDLER(nntp_protocol_handler);
 STUB_PROTOCOL_HANDLER(proxy_protocol_handler);
 STUB_PROTOCOL_HANDLER(sftp_protocol_handler);
 STUB_PROTOCOL_HANDLER(smb_protocol_handler);
+STUB_PROTOCOL_HANDLER(spartan_protocol_handler);
 STUB_PROTOCOL_EXTERNAL_HANDLER(user_protocol_handler);
 
 /* declared in "protocol/user.h" */

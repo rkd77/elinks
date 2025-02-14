@@ -36,6 +36,7 @@ enum protocol {
 	PROTOCOL_SFTP,
 	PROTOCOL_SMB,
 	PROTOCOL_SNEWS,
+	PROTOCOL_SPARTAN,
 
 	/* Keep these last! */
 	PROTOCOL_UNKNOWN,

@@ -51,6 +51,7 @@
 #include "protocol/nntp/nntp.h"
 #include "protocol/rewrite/rewrite.h"
 #include "protocol/smb/smb.h"
+#include "protocol/spartan/spartan.h"
 #include "protocol/user.h"
 
 
@@ -89,6 +90,7 @@ static const struct protocol_backend protocol_backends[] = {
 	{ "sftp",	  22, sftp_protocol_handler,		1, 1, 0, 0, 0 },
 	{ "smb",	 139, smb_protocol_handler,		1, 1, 0, 0, 1 },
 	{ "snews",	   0, news_protocol_handler,		0, 0, 1, 0, 1 },
+	{ "spartan", 300, spartan_protocol_handler,	1, 1, 0, 0, 1 },
 
 	/* Keep these last! */
 	{ NULL,		   0, NULL,			0, 0, 1, 0, 1 },
@@ -341,6 +343,9 @@ static struct module *protocol_submodules[] = {
 #endif
 #ifdef CONFIG_SMB
 	&smb_protocol_module,
+#endif
+#ifdef CONFIG_SPARTAN
+	&spartan_protocol_module,
 #endif
 #ifdef CONFIG_URI_REWRITE
 	&uri_rewrite_module,

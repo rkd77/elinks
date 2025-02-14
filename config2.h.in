@@ -256,6 +256,9 @@
 /* Define if you want: Samba protocol support */
 #mesondefine CONFIG_SMB
 
+/* Define if you want: Spartan protocol support */
+#mesondefine CONFIG_SPARTAN
+
 /* Define if you want: SSL support */
 #mesondefine CONFIG_SSL
 

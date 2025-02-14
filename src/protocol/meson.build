@@ -25,6 +25,9 @@ endif
 if conf_data.get('CONFIG_SMB')
 	subdir('smb')
 endif
+if conf_data.get('CONFIG_SPARTAN')
+	subdir('spartan')
+endif
 if conf_data.get('CONFIG_URI_REWRITE')
 	subdir('rewrite')
 endif

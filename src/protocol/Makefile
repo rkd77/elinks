@@ -10,6 +10,7 @@ SUBDIRS-$(CONFIG_GEMINI)	+= gemini
 SUBDIRS-$(CONFIG_GOPHER)	+= gopher
 SUBDIRS-$(CONFIG_NNTP)		+= nntp
 SUBDIRS-$(CONFIG_SMB)		+= smb
+SUBDIRS-$(CONFIG_SPARTAN)	+= spartan
 SUBDIRS-$(CONFIG_URI_REWRITE)	+= rewrite
 
 SUBDIRS = auth file http test
