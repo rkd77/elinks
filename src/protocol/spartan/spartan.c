@@ -111,7 +111,7 @@ spartan_send_header(struct socket *socket)
 	struct spartan_connection_info *spartan;
 	struct string header;
 	struct uri *uri = conn->uri;
-	char *uripath, *urihost;
+	char *uripath, *urihost, *uriquery;
 
 	/* Sanity check for a host */
 	if (!uri || !uri->host || !*uri->host || !uri->hostlen) {
@@ -127,6 +127,7 @@ spartan_send_header(struct socket *socket)
 		mem_free(urihost);
 		return;
 	}
+	uriquery = get_uri_string(uri, URI_QUERY);
 
 	spartan = init_spartan_connection_info(conn);
 	if (!spartan) return;
@@ -138,8 +139,13 @@ spartan_send_header(struct socket *socket)
 	add_to_string(&header, urihost);
 	add_char_to_string(&header, ' ');
 	add_to_string(&header, uripath);
-	add_to_string(&header, " 0");
+	size_t length = uriquery ? strlen(uriquery) : 0;
+	add_format_to_string(&header, " %d", length);
 	add_crlf_to_string(&header);
+	if (uriquery) {
+		add_to_string(&header, uriquery);
+		mem_free(uriquery);
+	}
 	mem_free(uripath);
 	mem_free(urihost);
 
