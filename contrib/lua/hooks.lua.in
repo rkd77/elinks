@@ -287,6 +287,7 @@ smartprefixes = {
     gwhere = "http://www.googlism.com/?ism=%s&name=3",
     gwhen = "http://www.googlism.com/?ism=%s&name=4",
     gs = "gemini://tlgs.one/search?%s",
+    s = "spartan://tlgs.one/search?%s",
     fm = "http://www.freshmeat.net/search/?q=%s",
     savannah = "http://savannah.nongnu.org/search/?words=%s&type_of_search=soft&exact=1",
     sf = "http://sourceforge.net/search/?q=%s",
