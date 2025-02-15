@@ -110,6 +110,49 @@ convert_single_line(struct string *ret, struct string *line)
 		return;
 	}
 
+	if (line->length >= 2 && !strncmp(line->source, "=:", 2)) {
+		int i = 2;
+		int href;
+		int inner;
+
+		struct string form;
+		if (!init_string(&form)) {
+			return;
+		}
+		add_to_string(&form, "<form action=\"");
+		for (; i < line->length; ++i) {
+			if (line->source[i] != ' ' && line->source[i] != '\t') {
+				break;
+			};
+		}
+		href = i;
+
+		for (; i < line->length; ++i) {
+			if (line->source[i] == ' ' || line->source[i] == '\t') {
+				break;
+			}
+		}
+
+		add_bytes_to_string(&form, line->source + href, i - href);
+		add_to_string(&form, "\" method=\"get\"><textarea name=\"elq\" cols=\"10\" rows=\"1\"></textarea><input type=\"submit\"/></form>");
+
+		inner = i;
+
+		for (; i < line->length; ++i) {
+			if (line->source[i] != ' ' && line->source[i] != '\t') {
+				break;
+			};
+		}
+
+		if (inner == i) {
+			add_bytes_to_string(ret, line->source + href, i - href);
+		} else {
+			add_html_to_string(ret, line->source + i, line->length - i);
+		}
+		add_string_to_string(ret, &form);
+		done_string(&form);
+		return;
+	}
 	add_html_to_string(ret, line->source, line->length);
 	add_to_string(ret, "<br/>");
 }

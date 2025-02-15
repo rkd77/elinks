@@ -140,10 +140,15 @@ spartan_send_header(struct socket *socket)
 	add_char_to_string(&header, ' ');
 	add_to_string(&header, uripath);
 	size_t length = uriquery ? strlen(uriquery) : 0;
-	add_format_to_string(&header, " %d", length);
+
+	int skip = 0;
+	if (length && !strncmp(uriquery, "elq=", 4)) {
+		skip = 4;
+	}
+	add_format_to_string(&header, " %d", length - skip);
 	add_crlf_to_string(&header);
 	if (uriquery) {
-		add_to_string(&header, uriquery);
+		add_to_string(&header, uriquery + skip);
 		mem_free(uriquery);
 	}
 	mem_free(uripath);
