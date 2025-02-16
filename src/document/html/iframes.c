@@ -53,7 +53,7 @@ void add_iframeset_entry(struct document *parent, char *url, char *name, int num
 	} else {
 		iframe_desc->name = stracpy(name);
 	}
-	iframe_desc->uri = get_uri(url, URI_NONE);
+	iframe_desc->uri = url ? get_uri(url, URI_NONE) : NULL;
 	iframe_desc->box.x = 1;
 	iframe_desc->box.y = y;
 	iframe_desc->box.width = width;
@@ -61,8 +61,9 @@ void add_iframeset_entry(struct document *parent, char *url, char *name, int num
 	iframe_desc->nlink = nlink;
 	iframe_desc->number = number;
 	iframe_desc->inserted = 0;
-	if (!iframe_desc->uri)
+	if (!iframe_desc->uri) {
 		iframe_desc->uri = get_uri(about_blank, URI_NONE);
+	}
 
 	iframeset_desc->n++;
 }

@@ -605,13 +605,12 @@ html_iframe_do(struct html_context *html_context, char *a,
 
 	url = null_or_stracpy(object_src);
 	if (!url) url = get_url_val(a, "src", html_context->doc_cp);
-	if (!url) return;
 
 	name = get_attr_val(a, "name", html_context->doc_cp);
 	if (!name) name = get_attr_val(a, "id", html_context->doc_cp);
 	if (!name) name = stracpy("");
 	if (!name) {
-		mem_free(url);
+		mem_free_if(url);
 		return;
 	}
 
@@ -638,8 +637,6 @@ html_iframe_do(struct html_context *html_context, char *a,
 	}
 
 	if (height > 0) {
-		char *url2;
-
 		html_linebrk(html_context, a, html, eof, end);
 		put_chrs(html_context, "&nbsp;", 6);
 		ln_break(html_context, 1);
@@ -667,7 +664,7 @@ html_iframe_do(struct html_context *html_context, char *a,
 		}
 		ln_break(html_context, 1);
 		int y = html_context->part->cy;
-		url2 = join_urls(html_context->base_href, url);
+		char *url2 = url ? join_urls(html_context->base_href, url) : NULL;
 
 		if (init_string(&frame)) {
 			add_to_string(&frame, "/IFrame: ");
@@ -687,11 +684,8 @@ html_iframe_do(struct html_context *html_context, char *a,
 			}
 		}
 		ln_break(html_context, 1);
-
-		if (url2) {
-			html_context->special_f(html_context, SP_IFRAME, url2, name, html_context->image_number++, y, width, height);
-			mem_free(url2);
-		}
+		html_context->special_f(html_context, SP_IFRAME, url2, name, html_context->image_number++, y, width, height);
+		mem_free_if(url2);
 	} else {
 		if (*name) {
 			put_link_line("IFrame: ", name, url,
@@ -701,9 +695,8 @@ html_iframe_do(struct html_context *html_context, char *a,
 			      html_context->options->framename, html_context);
 		}
 	}
-
 	mem_free(name);
-	mem_free(url);
+	mem_free_if(url);
 }
 
 void
