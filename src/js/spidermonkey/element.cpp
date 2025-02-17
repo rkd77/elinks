@@ -33,6 +33,7 @@
 #include "js/spidermonkey/attr.h"
 #include "js/spidermonkey/attributes.h"
 #include "js/spidermonkey/collection.h"
+#include "js/spidermonkey/document.h"
 #include "js/spidermonkey/dataset.h"
 #include "js/spidermonkey/domrect.h"
 #include "js/spidermonkey/event.h"
@@ -79,6 +80,7 @@ static bool element_get_property_childNodes(JSContext *ctx, unsigned int argc, J
 static bool element_get_property_classList(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
+//static bool element_get_property_contentDocument(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_dataset(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool element_get_property_clientHeight(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool element_get_property_clientLeft(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -177,6 +179,7 @@ JSPropertySpec element_props[] = {
 	JS_PSG("childNodes",	element_get_property_childNodes, JSPROP_ENUMERATE),
 	JS_PSG("classList",	element_get_property_classList, JSPROP_ENUMERATE),
 	JS_PSGS("className",	element_get_property_className, element_set_property_className, JSPROP_ENUMERATE),
+//	JS_PSG("contentDocument",	element_get_property_contentDocument, JSPROP_ENUMERATE),
 //	JS_PSG("clientHeight",	element_get_property_clientHeight, JSPROP_ENUMERATE),
 //	JS_PSG("clientLeft",	element_get_property_clientLeft, JSPROP_ENUMERATE),
 //	JS_PSG("clientTop",	element_get_property_clientTop, JSPROP_ENUMERATE),
@@ -678,6 +681,69 @@ element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+
+static bool
+element_get_property_contentDocument(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	vs = interpreter->vs;
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	dom_html_element *el = (dom_html_element *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_exception exc;
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+	dom_html_element_type ty;
+	exc = dom_html_element_get_tag_type(el, &ty);
+
+	if (exc == DOM_NO_ERR && ty == DOM_HTML_ELEMENT_TYPE_IFRAME) {
+		dom_document *contentDocument = NULL;
+		exc = dom_html_object_element_get_content_document((dom_html_object_element *)el, &contentDocument);
+		if (exc == DOM_NO_ERR && contentDocument) {
+			JSObject *res = getDocument(ctx, contentDocument);
+			args.rval().setObject(*res);
+			return true;
+		}
+	}
+	args.rval().setUndefined();
+
+	return false;
+}
+
 
 static bool
 element_get_property_dataset(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -5418,29 +5484,43 @@ element_replaceWith(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
+	dom_exception exc;
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	args.rval().setUndefined();
 
-// TODO
-#if 0
+	if (!el) {
+		return true;
+	}
+	dom_node *new_child = NULL;
+
+	if (!args[0].isNull()) {
+		JS::RootedObject child1(ctx, &args[0].toObject());
+		new_child = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(child1, 0);
+	}
+
+	if (!new_child) {
+		return true;
+	}
+	dom_node *parent = NULL;
+	exc = dom_node_get_parent_node(el, &parent);
+
+	if (exc != DOM_NO_ERR || !parent) {
+		return true;
+	}
+	dom_node *res = NULL;
+	exc = dom_node_replace_child(parent, new_child, el, &res);
+	dom_node_unref(parent);
+
+	if (exc == DOM_NO_ERR) {
+		dom_node_unref(res);
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	interpreter->changed = 1;
 	struct view_state *vs = interpreter->vs;
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
-
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
-
-	if (!el || !args[0].isObject()) {
-		args.rval().setUndefined();
-		return true;
-	}
-
-	JS::RootedObject replacement(ctx, &args[0].toObject());
-	xmlpp::Node *rep = JS::GetMaybePtrFromReservedSlot<xmlpp::Node>(replacement, 0);
-	auto n = xmlAddPrevSibling(el->cobj(), rep->cobj());
-	xmlpp::Node::create_wrapper(n);
-	xmlpp::Node::remove_node(el);
-	interpreter->changed = 1;
-	args.rval().setUndefined();
 	debug_dump_xhtml(document->dom);
-#endif
+
 	return true;
 }
 

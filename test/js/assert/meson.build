@@ -72,6 +72,7 @@ took = [
 'element.querySelectorAll.html',
 'element.querySelector.html',
 'element.remove.html',
+'element.replaceWith.html',
 'element.setAttribute.html',
 'element.textContent.html',
 #'event.html',
