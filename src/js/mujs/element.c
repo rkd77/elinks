@@ -3266,22 +3266,39 @@ mjs_element_replaceWith(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-// TODO
-#if 0
-
+	dom_exception exc;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
-	xmlpp::Node *rep = static_cast<xmlpp::Node *>(mjs_getprivate(J, 1));
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
 
-	if (!el || !rep) {
+	if (!el) {
 		js_pushundefined(J);
 		return;
 	}
-	auto n = xmlAddPrevSibling(el->cobj(), rep->cobj());
-	xmlpp::Node::create_wrapper(n);
-	xmlpp::Node::remove_node(el);
+	dom_node *new_child = (dom_node *)(mjs_getprivate(J, 1));
+
+	if (!new_child) {
+		js_pushundefined(J);
+		return;
+	}
+	dom_node *parent = NULL;
+	exc = dom_node_get_parent_node(el, &parent);
+
+	if (exc != DOM_NO_ERR || !parent) {
+		js_pushundefined(J);
+		return;
+	}
+	dom_node *res = NULL;
+	exc = dom_node_replace_child(parent, new_child, el, &res);
+	dom_node_unref(parent);
+
+	if (exc == DOM_NO_ERR) {
+		dom_node_unref(res);
+	}
 	interpreter->changed = 1;
-#endif
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
+	debug_dump_xhtml(document->dom);
 	js_pushundefined(J);
 }
 
