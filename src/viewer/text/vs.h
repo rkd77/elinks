@@ -1,7 +1,9 @@
-
 #ifndef EL__VIEWER_TEXT_VS_H
 #define EL__VIEWER_TEXT_VS_H
 
+#ifdef CONFIG_QUICKJS
+#include <quickjs/quickjs.h>
+#endif
 #include "util/lists.h"
 
 #ifdef __cplusplus
@@ -62,6 +64,12 @@ struct view_state {
 	struct JSObject *winobject;
 	struct JSObject *locobject;
 #endif
+
+#ifdef CONFIG_QUICKJS
+	JSValue win_obj;
+	JSValue location_obj;
+#endif
+
 #endif
 };
 
@@ -76,6 +84,11 @@ void next_frame(struct session *, int);
 #ifdef CONFIG_ECMASCRIPT_SMJS
 void detach_js_view_state(struct view_state *vs);
 #endif
+
+#ifdef CONFIG_QUICKJS
+void detach_js_view_state(struct view_state *vs);
+#endif
+
 
 #ifdef __cplusplus
 }

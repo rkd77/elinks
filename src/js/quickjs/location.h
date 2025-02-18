@@ -7,8 +7,10 @@
 extern "C" {
 #endif
 
+struct view_state;
+
 JSValue js_location_init(JSContext *ctx);
-JSValue getLocation(JSContext *ctx);
+JSValue getLocation(JSContext *ctx, struct view_state *vs);
 
 #ifdef __cplusplus
 }

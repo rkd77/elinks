@@ -54,6 +54,7 @@ struct el_window {
 	JSValue thisval;
 	LIST_OF(struct win_listener) listeners;
 	JSValue onmessage;
+	struct view_state *vs;
 };
 
 struct el_message {
@@ -80,7 +81,33 @@ js_window_finalize(JSRuntime *rt, JSValue val)
 			mem_free_set(&l->typ, NULL);
 		}
 		free_list(elwin->listeners);
+
+		if (elwin->vs) {
+			elwin->vs->win_obj = JS_NULL;
+		}
 		mem_free(elwin);
+	}
+}
+
+void
+detach_js_view_state(struct view_state *vs)
+{
+	assert(main_ctx);
+	assert(vs);
+	if_assert_failed return;
+
+	if (!JS_IsNull(vs->win_obj)) {
+		struct el_window *elwin = (struct el_window *)JS_GetOpaque(vs->win_obj, js_window_class_id);
+
+		if (elwin) {
+			elwin->vs = NULL;
+		}
+		vs->win_obj = JS_NULL;
+	}
+
+	if (!JS_IsNull(vs->location_obj)) {
+		JS_SetOpaque(vs->location_obj, NULL);
+		vs->location_obj = JS_NULL;
 	}
 }
 
@@ -539,7 +566,11 @@ js_window_get_property_location(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct el_window *elwin = (struct el_window *)JS_GetOpaque(this_val, js_window_class_id);
 
+	if (elwin && elwin->vs) {
+		return getLocation(ctx, elwin->vs);
+	}
 	JSValue ret = interpreter->location_obj;
 
 	JS_DupValue(ctx, ret);
@@ -1014,4 +1045,32 @@ js_window_init(JSContext *ctx)
 	JS_FreeValue(ctx, global_obj);
 
 	return 0;
+}
+
+JSValue
+getWindow(JSContext *ctx, struct view_state *vs)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct el_window *elwin = (struct el_window *)mem_calloc(1, sizeof(*elwin));
+
+	if (!elwin) {
+		return JS_NULL;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+
+	JSValue win_obj = JS_NewObjectClass(ctx, js_window_class_id);
+	JS_SetPropertyFunctionList(ctx, win_obj, js_window_proto_funcs, countof(js_window_proto_funcs));
+	init_list(elwin->listeners);
+	elwin->interpreter = interpreter;
+	elwin->thisval = win_obj;
+	elwin->vs = vs;
+
+	if (vs) {
+		vs->win_obj = win_obj;
+	}
+	JS_SetOpaque(win_obj, elwin);
+
+	return win_obj;
 }

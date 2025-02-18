@@ -44,6 +44,7 @@
 #include "js/quickjs/text.h"
 #include "js/quickjs/tokenlist.h"
 #include "js/quickjs/window.h"
+#include "session/location.h"
 #include "session/session.h"
 #include "terminal/event.h"
 #include "viewer/text/draw.h"
@@ -425,6 +426,72 @@ js_element_get_property_className(JSContext *ctx, JSValueConst this_val)
 	//dom_node_unref(el);
 
 	RETURN_JS(r);
+}
+
+static JSValue
+js_element_get_property_contentWindow(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	JSValue r;
+
+	dom_html_element *el = (dom_html_element *)(js_getopaque(this_val, js_element_class_id));
+	dom_exception exc;
+
+	if (!el) {
+		return JS_NULL;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+
+	struct view_state *vs = interpreter->vs;
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return JS_UNDEFINED;
+	}
+	dom_html_element_type ty;
+	exc = dom_html_element_get_tag_type(el, &ty);
+
+	if (exc == DOM_NO_ERR && ty == DOM_HTML_ELEMENT_TYPE_IFRAME) {
+		struct document_view *doc_view = vs->doc_view;
+		struct session *ses = doc_view->session;
+
+		if (!ses) {
+			return JS_UNDEFINED;
+		}
+		struct location *loc = cur_loc(ses);
+		if (!loc) {
+			return JS_UNDEFINED;
+		}
+		dom_string *name = NULL;
+		exc = dom_html_iframe_element_get_name((dom_html_iframe_element *)el, &name);
+
+		if (exc != DOM_NO_ERR || !name) {
+			return JS_UNDEFINED;
+		}
+		char *iframe_name = memacpy(dom_string_data(name), dom_string_length(name));
+		dom_string_unref(name);
+
+		if (!iframe_name) {
+			return JS_UNDEFINED;
+		}
+		struct frame *iframe = NULL;
+
+		foreach (iframe, loc->iframes) {
+			if (!c_strcasecmp(iframe->name, iframe_name)) break;
+		}
+		mem_free(iframe_name);
+
+		if (!iframe) {
+			return JS_UNDEFINED;
+		}
+		struct view_state *ifvs = &iframe->vs;
+		return getWindow(ctx, ifvs);
+	}
+	return JS_UNDEFINED;
 }
 
 #if 0
@@ -3859,6 +3926,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("childNodes",	js_element_get_property_childNodes, NULL),
 	JS_CGETSET_DEF("classList",	js_element_get_property_classList, NULL),
 	JS_CGETSET_DEF("className",	js_element_get_property_className, js_element_set_property_className),
+	JS_CGETSET_DEF("contentWindow", js_element_get_property_contentWindow, NULL),
 //	JS_CGETSET_DEF("clientHeight",	js_element_get_property_clientHeight, NULL),
 //	JS_CGETSET_DEF("clientLeft",	js_element_get_property_clientLeft, NULL),
 //	JS_CGETSET_DEF("clientTop",	js_element_get_property_clientTop, NULL),

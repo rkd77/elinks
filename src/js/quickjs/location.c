@@ -34,7 +34,11 @@ js_location_get_property_hash(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
+	struct view_state *vs = JS_GetOpaque(this_val, js_location_class_id);
+
+	if (!vs) {
+		vs = interpreter->vs;
+	}
 
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
@@ -67,7 +71,11 @@ js_location_get_property_host(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
+	struct view_state *vs = JS_GetOpaque(this_val, js_location_class_id);
+
+	if (!vs) {
+		vs = interpreter->vs;
+	}
 
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
@@ -100,7 +108,11 @@ js_location_get_property_hostname(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
+	struct view_state *vs = JS_GetOpaque(this_val, js_location_class_id);
+
+	if (!vs) {
+		vs = interpreter->vs;
+	}
 
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
@@ -133,7 +145,11 @@ js_location_get_property_href(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
+	struct view_state *vs = JS_GetOpaque(this_val, js_location_class_id);
+
+	if (!vs) {
+		vs = interpreter->vs;
+	}
 
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
@@ -166,7 +182,11 @@ js_location_get_property_origin(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
+	struct view_state *vs = JS_GetOpaque(this_val, js_location_class_id);
+
+	if (!vs) {
+		vs = interpreter->vs;
+	}
 
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
@@ -199,7 +219,11 @@ js_location_get_property_pathname(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
+	struct view_state *vs = JS_GetOpaque(this_val, js_location_class_id);
+
+	if (!vs) {
+		vs = interpreter->vs;
+	}
 
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
@@ -233,7 +257,11 @@ js_location_get_property_port(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
+	struct view_state *vs = JS_GetOpaque(this_val, js_location_class_id);
+
+	if (!vs) {
+		vs = interpreter->vs;
+	}
 
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
@@ -265,7 +293,11 @@ js_location_get_property_protocol(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
+	struct view_state *vs = JS_GetOpaque(this_val, js_location_class_id);
+
+	if (!vs) {
+		vs = interpreter->vs;
+	}
 
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
@@ -302,7 +334,11 @@ js_location_get_property_search(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
+	struct view_state *vs = JS_GetOpaque(this_val, js_location_class_id);
+
+	if (!vs) {
+		vs = interpreter->vs;
+	}
 
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
@@ -337,7 +373,11 @@ js_location_set_property_hash(JSContext *ctx, JSValueConst this_val, JSValue val
 	REF_JS(this_val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
+	struct view_state *vs = JS_GetOpaque(this_val, js_location_class_id);
+
+	if (!vs) {
+		vs = interpreter->vs;
+	}
 
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
@@ -369,7 +409,11 @@ js_location_set_property_host(JSContext *ctx, JSValueConst this_val, JSValue val
 	REF_JS(val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
+	struct view_state *vs = JS_GetOpaque(this_val, js_location_class_id);
+
+	if (!vs) {
+		vs = interpreter->vs;
+	}
 
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
@@ -400,7 +444,11 @@ js_location_set_property_hostname(JSContext *ctx, JSValueConst this_val, JSValue
 	REF_JS(val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
+	struct view_state *vs = JS_GetOpaque(this_val, js_location_class_id);
+
+	if (!vs) {
+		vs = interpreter->vs;
+	}
 
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
@@ -431,7 +479,11 @@ js_location_set_property_href(JSContext *ctx, JSValueConst this_val, JSValue val
 	REF_JS(val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
+	struct view_state *vs = JS_GetOpaque(this_val, js_location_class_id);
+
+	if (!vs) {
+		vs = interpreter->vs;
+	}
 
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
@@ -462,7 +514,11 @@ js_location_set_property_pathname(JSContext *ctx, JSValueConst this_val, JSValue
 	REF_JS(val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
+	struct view_state *vs = JS_GetOpaque(this_val, js_location_class_id);
+
+	if (!vs) {
+		vs = interpreter->vs;
+	}
 
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
@@ -493,7 +549,11 @@ js_location_set_property_port(JSContext *ctx, JSValueConst this_val, JSValue val
 	REF_JS(val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
+	struct view_state *vs = JS_GetOpaque(this_val, js_location_class_id);
+
+	if (!vs) {
+		vs = interpreter->vs;
+	}
 
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
@@ -524,7 +584,11 @@ js_location_set_property_protocol(JSContext *ctx, JSValueConst this_val, JSValue
 	REF_JS(val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
+	struct view_state *vs = JS_GetOpaque(this_val, js_location_class_id);
+
+	if (!vs) {
+		vs = interpreter->vs;
+	}
 
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
@@ -555,7 +619,11 @@ js_location_set_property_search(JSContext *ctx, JSValueConst this_val, JSValue v
 	REF_JS(val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
+	struct view_state *vs = JS_GetOpaque(this_val, js_location_class_id);
+
+	if (!vs) {
+		vs = interpreter->vs;
+	}
 
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
@@ -585,7 +653,11 @@ js_location_assign(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	REF_JS(this_val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
+	struct view_state *vs = JS_GetOpaque(this_val, js_location_class_id);
+
+	if (!vs) {
+		vs = interpreter->vs;
+	}
 
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
@@ -613,7 +685,11 @@ js_location_reload(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	REF_JS(this_val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
+	struct view_state *vs = JS_GetOpaque(this_val, js_location_class_id);
+
+	if (!vs) {
+		vs = interpreter->vs;
+	}
 
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
@@ -635,7 +711,11 @@ js_location_replace(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 	REF_JS(this_val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
+	struct view_state *vs = JS_GetOpaque(this_val, js_location_class_id);
+
+	if (!vs) {
+		vs = interpreter->vs;
+	}
 
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
@@ -721,7 +801,7 @@ js_location_init(JSContext *ctx)
 }
 
 JSValue
-getLocation(JSContext *ctx)
+getLocation(JSContext *ctx, struct view_state *vs)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -737,7 +817,11 @@ getLocation(JSContext *ctx)
 	REF_JS(location_obj);
 	JS_SetPropertyFunctionList(ctx, location_obj, js_location_proto_funcs, countof(js_location_proto_funcs));
 	JS_SetClassProto(ctx, js_location_class_id, location_obj);
+	JS_SetOpaque(location_obj, vs);
 
+	if (vs) {
+		vs->location_obj = location_obj;
+	}
 	JSValue rr = JS_DupValue(ctx, location_obj);
 	RETURN_JS(rr);
 }

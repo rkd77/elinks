@@ -40,6 +40,10 @@ init_vs(struct view_state *vs, struct uri *uri, int plain)
 	vs->uri = uri ? get_uri_reference(uri) : NULL;
 	vs->did_fragment = !uri->fragmentlen;
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
+#ifdef CONFIG_QUICKJS
+	vs->win_obj = JS_NULL;
+	vs->location_obj = JS_NULL;
+#endif
 	/* If we ever get to render this vs, give it an interpreter. */
 	vs->ecmascript_fragile = 1;
 #endif
@@ -72,6 +76,11 @@ destroy_vs(struct view_state *vs, int blast_ecmascript)
 #ifdef CONFIG_ECMASCRIPT_SMJS
 	detach_js_view_state(vs);
 #endif
+
+#ifdef CONFIG_QUICKJS
+	detach_js_view_state(vs);
+#endif
+
 	if (blast_ecmascript && vs->ecmascript) {
 		ecmascript_put_interpreter(vs->ecmascript);
 	}
@@ -96,6 +105,10 @@ copy_vs(struct view_state *dst, struct view_state *src)
 #ifdef CONFIG_ECMASCRIPT_SMJS
 	dst->winobject = NULL;
 	dst->locobject = NULL;
+#endif
+#ifdef CONFIG_QUICKJS
+	dst->win_obj = JS_NULL;
+	dst->location_obj = JS_NULL;
 #endif
 	dst->ecmascript = NULL;
 	/* If we ever get to render this vs, give it an interpreter. */

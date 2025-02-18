@@ -7,7 +7,10 @@
 extern "C" {
 #endif
 
+struct view_state;
+
 int js_window_init(JSContext *ctx);
+JSValue getWindow(JSContext *ctx, struct view_state *vs);
 
 #ifdef __cplusplus
 }
