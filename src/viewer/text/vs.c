@@ -69,6 +69,9 @@ destroy_vs(struct view_state *vs, int blast_ecmascript)
 	
 	if (vs->uri) done_uri(vs->uri);
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
+#ifdef CONFIG_ECMASCRIPT_SMJS
+	detach_js_view_state(vs);
+#endif
 	if (blast_ecmascript && vs->ecmascript) {
 		ecmascript_put_interpreter(vs->ecmascript);
 	}
@@ -90,6 +93,10 @@ copy_vs(struct view_state *dst, struct view_state *src)
 	/* We do not copy ecmascript stuff around since it's specific for
 	 * a single location, offsprings (followups and so) nedd their own. */
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
+#ifdef CONFIG_ECMASCRIPT_SMJS
+	dst->winobject = NULL;
+	dst->locobject = NULL;
+#endif
 	dst->ecmascript = NULL;
 	/* If we ever get to render this vs, give it an interpreter. */
 	dst->ecmascript_fragile = 1;

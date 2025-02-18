@@ -58,6 +58,10 @@ struct view_state {
 	 * until then the old document is still hanging there. */
 	unsigned int ecmascript_fragile:1;
 	struct ecmascript_interpreter *ecmascript;
+#ifdef CONFIG_ECMASCRIPT_SMJS
+	struct JSObject *winobject;
+	struct JSObject *locobject;
+#endif
 #endif
 };
 
@@ -68,6 +72,10 @@ void copy_vs(struct view_state *, struct view_state *);
 void check_vs(struct document_view *);
 
 void next_frame(struct session *, int);
+
+#ifdef CONFIG_ECMASCRIPT_SMJS
+void detach_js_view_state(struct view_state *vs);
+#endif
 
 #ifdef __cplusplus
 }

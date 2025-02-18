@@ -81,6 +81,7 @@ static bool element_get_property_classList(JSContext *ctx, unsigned int argc, JS
 static bool element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool element_get_property_contentDocument(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_contentWindow(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_dataset(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool element_get_property_clientHeight(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool element_get_property_clientLeft(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -180,6 +181,7 @@ JSPropertySpec element_props[] = {
 	JS_PSG("classList",	element_get_property_classList, JSPROP_ENUMERATE),
 	JS_PSGS("className",	element_get_property_className, element_set_property_className, JSPROP_ENUMERATE),
 //	JS_PSG("contentDocument",	element_get_property_contentDocument, JSPROP_ENUMERATE),
+	JS_PSG("contentWindow",	element_get_property_contentWindow, JSPROP_ENUMERATE),
 //	JS_PSG("clientHeight",	element_get_property_clientHeight, JSPROP_ENUMERATE),
 //	JS_PSG("clientLeft",	element_get_property_clientLeft, JSPROP_ENUMERATE),
 //	JS_PSG("clientTop",	element_get_property_clientTop, JSPROP_ENUMERATE),
@@ -744,6 +746,101 @@ element_get_property_contentDocument(JSContext *ctx, unsigned int argc, JS::Valu
 	return false;
 }
 
+static bool
+element_get_property_contentWindow(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	vs = interpreter->vs;
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	dom_html_element *el = (dom_html_element *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_exception exc;
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+	dom_html_element_type ty;
+	exc = dom_html_element_get_tag_type(el, &ty);
+
+	if (exc == DOM_NO_ERR && ty == DOM_HTML_ELEMENT_TYPE_IFRAME) {
+		struct document_view *doc_view = vs->doc_view;
+		struct session *ses = doc_view->session;
+
+		if (!ses) {
+			args.rval().setUndefined();
+			return true;
+		}
+		struct location *loc = cur_loc(ses);
+		if (!loc) {
+			args.rval().setUndefined();
+			return true;
+		}
+		dom_string *name = NULL;
+		exc = dom_html_iframe_element_get_name((dom_html_iframe_element *)el, &name);
+
+		if (exc != DOM_NO_ERR || !name) {
+			args.rval().setUndefined();
+			return true;
+		}
+		char *iframe_name = memacpy(dom_string_data(name), dom_string_length(name));
+		dom_string_unref(name);
+
+		if (!iframe_name) {
+			args.rval().setUndefined();
+			return true;
+		}
+		struct frame *iframe = NULL;
+
+		foreach (iframe, loc->iframes) {
+			if (!c_strcasecmp(iframe->name, iframe_name)) break;
+		}
+		mem_free(iframe_name);
+
+		if (!iframe) {
+			args.rval().setUndefined();
+			return true;
+		}
+		struct view_state *ifvs = &iframe->vs;
+		JSObject *contentWindow = getWindow(ctx, ifvs);
+		args.rval().setObject(*contentWindow);
+
+		return true;
+	}
+	args.rval().setUndefined();
+	return true;
+}
 
 static bool
 element_get_property_dataset(JSContext *ctx, unsigned int argc, JS::Value *vp)

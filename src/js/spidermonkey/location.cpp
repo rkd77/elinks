@@ -70,6 +70,11 @@ location_finalize(JS::GCContext *op, JSObject *obj)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	struct view_state *vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(obj, 0);
+
+	if (vs) {
+		vs->locobject = NULL;
+	}
 }
 
 JSClassOps location_ops = {
@@ -141,15 +146,18 @@ location_get_property_hash(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
+	vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(hobj, 0);
 
-	vs = interpreter->vs;
+	if (!vs) {
+		vs = interpreter->vs;
+	}
+
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 		return false;
 	}
-
 	struct string fragment;
 	if (!init_string(&fragment)) {
 		return false;
@@ -195,8 +203,11 @@ location_get_property_host(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
+	vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(hobj, 0);
 
-	vs = interpreter->vs;
+	if (!vs) {
+		vs = interpreter->vs;
+	}
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -249,8 +260,11 @@ location_get_property_hostname(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
+	vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(hobj, 0);
 
-	vs = interpreter->vs;
+	if (!vs) {
+		vs = interpreter->vs;
+	}
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -303,8 +317,11 @@ location_get_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
+	vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(hobj, 0);
 
-	vs = interpreter->vs;
+	if (!vs) {
+		vs = interpreter->vs;
+	}
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -357,8 +374,12 @@ location_get_property_origin(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
+	vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(hobj, 0);
 
-	vs = interpreter->vs;
+	if (!vs) {
+		vs = interpreter->vs;
+	}
+
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -411,8 +432,12 @@ location_get_property_pathname(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
+	vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(hobj, 0);
 
-	vs = interpreter->vs;
+	if (!vs) {
+		vs = interpreter->vs;
+	}
+
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -462,8 +487,12 @@ location_get_property_port(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &location_class, NULL)) {
 		return false;
 	}
+	vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(hobj, 0);
 
-	vs = interpreter->vs;
+	if (!vs) {
+		vs = interpreter->vs;
+	}
+
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -514,8 +543,12 @@ location_get_property_protocol(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
+	vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(hobj, 0);
 
-	vs = interpreter->vs;
+	if (!vs) {
+		vs = interpreter->vs;
+	}
+
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -572,8 +605,12 @@ location_get_property_search(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
+	vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(hobj, 0);
 
-	vs = interpreter->vs;
+	if (!vs) {
+		vs = interpreter->vs;
+	}
+
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -628,8 +665,12 @@ location_set_property_hash(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
+	vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(hobj, 0);
 
-	vs = interpreter->vs;
+	if (!vs) {
+		vs = interpreter->vs;
+	}
+
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -640,7 +681,6 @@ location_set_property_hash(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
-
 
 static bool
 location_set_property_host(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -672,8 +712,12 @@ location_set_property_host(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
+	vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(hobj, 0);
 
-	vs = interpreter->vs;
+	if (!vs) {
+		vs = interpreter->vs;
+	}
+
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -715,8 +759,12 @@ location_set_property_hostname(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
+	vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(hobj, 0);
 
-	vs = interpreter->vs;
+	if (!vs) {
+		vs = interpreter->vs;
+	}
+
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -755,8 +803,12 @@ location_set_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &location_class, NULL)) {
 		return false;
 	}
+	vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(hobj, 0);
 
-	vs = interpreter->vs;
+	if (!vs) {
+		vs = interpreter->vs;
+	}
+
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -798,8 +850,12 @@ location_set_property_pathname(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
+	vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(hobj, 0);
 
-	vs = interpreter->vs;
+	if (!vs) {
+		vs = interpreter->vs;
+	}
+
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -841,8 +897,12 @@ location_set_property_port(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
+	vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(hobj, 0);
 
-	vs = interpreter->vs;
+	if (!vs) {
+		vs = interpreter->vs;
+	}
+
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -884,8 +944,12 @@ location_set_property_protocol(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
+	vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(hobj, 0);
 
-	vs = interpreter->vs;
+	if (!vs) {
+		vs = interpreter->vs;
+	}
+
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -927,8 +991,12 @@ location_set_property_search(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
+	vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(hobj, 0);
 
-	vs = interpreter->vs;
+	if (!vs) {
+		vs = interpreter->vs;
+	}
+
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -990,8 +1058,12 @@ location_assign(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
+	vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(hobj, 0);
 
-	vs = interpreter->vs;
+	if (!vs) {
+		vs = interpreter->vs;
+	}
+
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -1041,8 +1113,12 @@ location_reload(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
+	vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(hobj, 0);
 
-	vs = interpreter->vs;
+	if (!vs) {
+		vs = interpreter->vs;
+	}
+
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -1091,8 +1167,12 @@ location_replace(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
+	vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(hobj, 0);
 
-	vs = interpreter->vs;
+	if (!vs) {
+		vs = interpreter->vs;
+	}
+
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -1150,7 +1230,7 @@ location_goto_common(JSContext *ctx, struct document_view *doc_view, JS::HandleV
 }
 
 JSObject *
-getLocation(JSContext *ctx)
+getLocation(JSContext *ctx, struct view_state *vs)
 {
 	JSObject *el = JS_NewObject(ctx, &location_class);
 
@@ -1161,6 +1241,11 @@ getLocation(JSContext *ctx)
 
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) location_props);
 	spidermonkey_DefineFunctions(ctx, el, location_funcs);
+	JS::SetReservedSlot(el, 0, JS::PrivateValue(vs));
+
+	if (vs) {
+		vs->locobject = el;
+	}
 
 	return el;
 }

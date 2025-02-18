@@ -854,7 +854,7 @@ document_get_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	if (!interpreter->location_obj) {
-		interpreter->location_obj = getLocation(ctx);
+		interpreter->location_obj = getLocation(ctx, NULL);
 	}
 	args.rval().setObject(*(JSObject *)(interpreter->location_obj));
 	return true;

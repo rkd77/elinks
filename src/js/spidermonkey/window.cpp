@@ -82,6 +82,7 @@ struct el_window {
 	JS::RootedObject thisval;
 	LIST_OF(struct listener) listeners;
 	JS::RootedValue onmessage;
+	struct view_state *vs;
 };
 
 struct el_message {
@@ -106,6 +107,10 @@ window_finalize(JS::GCContext *op, JSObject *obj)
 			mem_free_set(&l->typ, NULL);
 		}
 		free_list(elwin->listeners);
+
+		if (elwin->vs) {
+			elwin->vs->winobject = NULL;
+		}
 		mem_free(elwin);
 	}
 	moduleRegistry.erase(obj);
@@ -129,6 +134,44 @@ JSClass window_class = {
 	JSCLASS_HAS_RESERVED_SLOTS(1) | JSCLASS_GLOBAL_FLAGS,	/* struct view_state * */
 	&window_ops
 };
+
+JSClass content_window_class = {
+	"contentWindow",
+	JSCLASS_HAS_RESERVED_SLOTS(1),	/* struct view_state * */
+	&window_ops
+};
+
+void
+detach_js_view_state(struct view_state *vs)
+{
+	assert(main_ctx);
+	assert(vs);
+	if_assert_failed return;
+
+	if (vs->winobject) {
+		JS::RootedObject robj(main_ctx, vs->winobject);
+
+		if (JS_InstanceOf(main_ctx, robj, (JSClass *) &window_class, NULL)
+			|| JS_InstanceOf(main_ctx, robj, (JSClass *) &content_window_class, NULL)) {
+			struct el_window *elwin = JS::GetMaybePtrFromReservedSlot<struct el_window>(robj, 0);
+
+			if (elwin) {
+				elwin->vs = NULL;
+			}
+			vs->winobject = NULL;
+		}
+	}
+
+	if (vs->locobject) {
+		JS::RootedObject lobj(main_ctx, vs->locobject);
+
+		if (JS_InstanceOf(main_ctx, lobj, (JSClass *) &location_class, NULL)) {
+			JS::SetReservedSlot(lobj, 0, JS::UndefinedValue());
+			vs->locobject = NULL;
+		}
+	}
+}
+
 
 /* "location" is special because we need to simulate "location.href"
  * when the code is asking directly for "location". We do not register
@@ -185,6 +228,7 @@ static bool window_postMessage(JSContext *ctx, unsigned int argc, JS::Value *rva
 static bool window_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_setInterval(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool window_toString(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec window_funcs[] = {
 	{ "addEventListener", window_addEventListener, 3 },
@@ -197,6 +241,7 @@ const spidermonkeyFunctionSpec window_funcs[] = {
 	{ "removeEventListener", window_removeEventListener, 3 },
 	{ "setInterval",	window_setInterval,	2 },
 	{ "setTimeout",	window_setTimeout,	2 },
+	{ "toString",	window_toString,	0 },
 	{ "XMLHttpRequest", xhr_constructor, 0 },
 	{ NULL }
 };
@@ -954,9 +999,16 @@ window_get_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	struct el_window *elwin = JS::GetMaybePtrFromReservedSlot<struct el_window>(hobj, 0);
+
+	if (elwin && elwin->vs) {
+		JSObject *loc = getLocation(ctx, elwin->vs);
+		args.rval().setObject(*loc);
+		return true;
+	}
 
 	if (!interpreter->location_obj) {
-		interpreter->location_obj = getLocation(ctx);
+		interpreter->location_obj = getLocation(ctx, NULL);
 	}
 	args.rval().setObject(*(JSObject *)(interpreter->location_obj));
 	return true;
@@ -1150,4 +1202,51 @@ window_get_property_top(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		\* for too long.)                                        `.(,_,)\o/ */
 	args.rval().setUndefined();
 	return true;
+}
+
+static bool
+window_toString(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+
+	args.rval().setString(JS_NewStringCopyZ(ctx, "Window object"));
+	return true;
+}
+
+JSObject *
+getWindow(JSContext *ctx, struct view_state *vs)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JSObject *el = JS_NewObject(ctx, &content_window_class);
+
+	if (!el) {
+		return NULL;
+	}
+	struct el_window *elwin = (struct el_window *)mem_calloc(1, sizeof(*elwin));
+
+	if (!elwin) {
+		return NULL;
+	}
+	JS::RootedObject r_el(ctx, el);
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	init_list(elwin->listeners);
+	elwin->interpreter = interpreter;
+	elwin->vs = vs;
+	elwin->thisval = r_el;
+
+	if (vs) {
+		vs->winobject = el;
+	}
+	JS::SetReservedSlot(el, 0, JS::PrivateValue(elwin));
+
+	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) window_props);
+	spidermonkey_DefineFunctions(ctx, el, window_funcs);
+
+	return el;
 }
