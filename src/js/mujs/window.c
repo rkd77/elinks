@@ -69,6 +69,7 @@ struct el_window {
 	const char *thisval;
 	LIST_OF(struct listener) listeners;
 	char *onmessage;
+	struct view_state *vs;
 };
 
 struct el_message {
@@ -175,7 +176,13 @@ mjs_window_get_property_location(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	mjs_push_location(J);
+	struct el_window *elwin = (struct el_window *)js_touserdata(J, 0, "window");
+
+	if (elwin && elwin->vs) {
+		mjs_push_location(J, elwin->vs);
+	} else {
+		mjs_push_location(J, NULL);
+	}
 }
 
 static void
@@ -838,4 +845,48 @@ mjs_window_init(js_State *J)
 
 
 	return 0;
+}
+
+void
+mjs_push_window(js_State *J, struct view_state *vs)
+{
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct el_window *elwin = (struct el_window *)mem_calloc(1, sizeof(*elwin));
+
+	if (!elwin) {
+		js_error(J, "out of memory");
+		return;
+	}
+	init_list(elwin->listeners);
+	elwin->interpreter = interpreter;
+	elwin->vs = vs;
+
+	js_newobject(J);
+	{
+		js_newuserdata(J, "window", elwin, mjs_window_finalizer);
+		addmethod(J, "addEventListener", mjs_window_addEventListener, 3);
+		addmethod(J, "alert", mjs_window_alert, 1);
+		addmethod(J, "clearInterval", mjs_window_clearInterval, 1);
+		addmethod(J, "clearTimeout", mjs_window_clearTimeout, 1);
+		addmethod(J, "getComputedStyle", mjs_window_getComputedStyle, 2);
+		addmethod(J, "open", mjs_window_open, 3);
+		addmethod(J, "postMessage", mjs_window_postMessage, 3);
+		addmethod(J, "removeEventListener", mjs_window_removeEventListener, 3);
+		addmethod(J, "setInterval", mjs_window_setInterval, 2);
+		addmethod(J, "setTimeout", mjs_window_setTimeout, 2);
+		addmethod(J, "toString", mjs_window_toString, 0);
+
+		addproperty(J, "closed", mjs_window_get_property_closed, NULL);
+		addproperty(J, "event", mjs_window_get_property_event, NULL);
+		addproperty(J, "innerHeight", mjs_window_get_property_innerHeight, NULL);
+		addproperty(J, "innerWidth", mjs_window_get_property_innerWidth, NULL);
+		addproperty(J, "location", mjs_window_get_property_location, mjs_window_set_property_location);
+		addproperty(J, "parent", mjs_window_get_property_parent, NULL);
+		addproperty(J, "self", mjs_window_get_property_self, NULL);
+		addproperty(J, "status", mjs_window_get_property_status, mjs_window_set_property_status);
+		addproperty(J, "top", mjs_window_get_property_top, NULL);
+	}
+	js_copy(J, 0);
+	elwin->thisval = js_ref(J);
+
 }

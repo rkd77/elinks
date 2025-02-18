@@ -565,7 +565,7 @@ mjs_document_get_property_location(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	mjs_push_location(J);
+	mjs_push_location(J, NULL);
 }
 
 static void mjs_document_set_property_url(js_State *J);
