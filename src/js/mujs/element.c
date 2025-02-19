@@ -336,6 +336,92 @@ mjs_element_get_property_className(js_State *J)
 }
 
 static void
+mjs_element_get_property_contentDocument(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_html_element *el = (dom_html_element *)(mjs_getprivate(J, 0));
+	dom_exception exc;
+
+	if (!el) {
+		js_pushnull(J);
+		return;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct view_state *vs = interpreter->vs;
+
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		js_pushnull(J);
+		return;
+	}
+	dom_html_element_type ty;
+	exc = dom_html_element_get_tag_type(el, &ty);
+
+	if (exc == DOM_NO_ERR && ty == DOM_HTML_ELEMENT_TYPE_IFRAME) {
+		struct document_view *doc_view = vs->doc_view;
+		struct session *ses = doc_view->session;
+
+		if (!ses) {
+			js_pushundefined(J);
+			return;
+		}
+		struct location *loc = cur_loc(ses);
+		if (!loc) {
+			js_pushundefined(J);
+			return;
+		}
+		dom_string *name = NULL;
+		exc = dom_html_iframe_element_get_name((dom_html_iframe_element *)el, &name);
+
+		if (exc != DOM_NO_ERR || !name) {
+			js_pushundefined(J);
+			return;
+		}
+		char *iframe_name = memacpy(dom_string_data(name), dom_string_length(name));
+		dom_string_unref(name);
+
+		if (!iframe_name) {
+			js_pushundefined(J);
+			return;
+		}
+		struct frame *iframe = NULL;
+
+		foreach (iframe, loc->iframes) {
+			if (!c_strcasecmp(iframe->name, iframe_name)) break;
+		}
+		mem_free(iframe_name);
+
+		if (!iframe) {
+			js_pushundefined(J);
+			return;
+		}
+		struct view_state *ifvs = &iframe->vs;
+		doc_view = ifvs->doc_view;
+
+		if (!doc_view) {
+			js_pushundefined(J);
+			return;
+		}
+		struct document *document = doc_view->document;
+
+		if (!document) {
+			js_pushundefined(J);
+			return;
+		}
+
+		if (document->dom) {
+			mjs_push_document2(J, document->dom);
+			return;
+		}
+	}
+	js_pushundefined(J);
+}
+
+static void
 mjs_element_get_property_contentWindow(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -3563,6 +3649,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		addproperty(J, "childNodes",	mjs_element_get_property_childNodes, NULL);
 		addproperty(J, "classList",	mjs_element_get_property_classList, NULL);
 		addproperty(J, "className",	mjs_element_get_property_className, mjs_element_set_property_className);
+		addproperty(J, "contentDocument",	mjs_element_get_property_contentDocument, NULL);
 		addproperty(J, "contentWindow",	mjs_element_get_property_contentWindow, NULL);
 //		addproperty(J, "clientHeight",	mjs_element_get_property_clientHeight, NULL);
 //		addproperty(J, "clientLeft", mjs_element_get_property_clientLeft, NULL);
