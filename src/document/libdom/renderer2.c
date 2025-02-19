@@ -524,6 +524,30 @@ debug_dump_xhtml(void *d)
 }
 
 void
+debug_dump_xhtml2(void *r)
+{
+#ifdef ECMASCRIPT_DEBUG
+	dom_node *root = (dom_node *)r;
+
+	struct string text;
+
+	if (!init_string(&text)) {
+		return;
+	}
+
+	if (walk_tree(NULL, NULL, &text, root, true, 0) == false) {
+		fprintf(stderr, "Failed to complete DOM structure dump.\n");
+		done_string(&text);
+		//dom_node_unref(doc);
+		return;
+	}
+
+	fprintf(stderr, "\n---%s\n", text.source);
+	done_string(&text);
+#endif
+}
+
+void
 dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
 {
 	dom_exception exc; /* returned by libdom functions */

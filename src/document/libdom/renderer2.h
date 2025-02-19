@@ -21,6 +21,7 @@ void dump_xhtml(struct cache_entry *cached, struct document *document, int parse
 
 void free_libdom(void);
 void debug_dump_xhtml(void *doc);
+void debug_dump_xhtml2(void *node);
 
 int fire_generic_dom_event(void *typ, void *target, int bubbles, int cancelable);
 int fire_onload(void *doc);

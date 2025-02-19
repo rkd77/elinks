@@ -80,7 +80,7 @@ static bool element_get_property_childNodes(JSContext *ctx, unsigned int argc, J
 static bool element_get_property_classList(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
-//static bool element_get_property_contentDocument(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_contentDocument(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_contentWindow(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_dataset(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool element_get_property_clientHeight(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -180,7 +180,7 @@ JSPropertySpec element_props[] = {
 	JS_PSG("childNodes",	element_get_property_childNodes, JSPROP_ENUMERATE),
 	JS_PSG("classList",	element_get_property_classList, JSPROP_ENUMERATE),
 	JS_PSGS("className",	element_get_property_className, element_set_property_className, JSPROP_ENUMERATE),
-//	JS_PSG("contentDocument",	element_get_property_contentDocument, JSPROP_ENUMERATE),
+	JS_PSG("contentDocument",	element_get_property_contentDocument, JSPROP_ENUMERATE),
 	JS_PSG("contentWindow",	element_get_property_contentWindow, JSPROP_ENUMERATE),
 //	JS_PSG("clientHeight",	element_get_property_clientHeight, JSPROP_ENUMERATE),
 //	JS_PSG("clientLeft",	element_get_property_clientLeft, JSPROP_ENUMERATE),
@@ -733,17 +733,65 @@ element_get_property_contentDocument(JSContext *ctx, unsigned int argc, JS::Valu
 	exc = dom_html_element_get_tag_type(el, &ty);
 
 	if (exc == DOM_NO_ERR && ty == DOM_HTML_ELEMENT_TYPE_IFRAME) {
-		dom_document *contentDocument = NULL;
-		exc = dom_html_object_element_get_content_document((dom_html_object_element *)el, &contentDocument);
-		if (exc == DOM_NO_ERR && contentDocument) {
-			JSObject *res = getDocument(ctx, contentDocument);
-			args.rval().setObject(*res);
+		struct document_view *doc_view = vs->doc_view;
+		struct session *ses = doc_view->session;
+
+		if (!ses) {
+			args.rval().setUndefined();
+			return true;
+		}
+		struct location *loc = cur_loc(ses);
+		if (!loc) {
+			args.rval().setUndefined();
+			return true;
+		}
+		dom_string *name = NULL;
+		exc = dom_html_iframe_element_get_name((dom_html_iframe_element *)el, &name);
+
+		if (exc != DOM_NO_ERR || !name) {
+			args.rval().setUndefined();
+			return true;
+		}
+		char *iframe_name = memacpy(dom_string_data(name), dom_string_length(name));
+		dom_string_unref(name);
+
+		if (!iframe_name) {
+			args.rval().setUndefined();
+			return true;
+		}
+		struct frame *iframe = NULL;
+
+		foreach (iframe, loc->iframes) {
+			if (!c_strcasecmp(iframe->name, iframe_name)) break;
+		}
+		mem_free(iframe_name);
+
+		if (!iframe) {
+			args.rval().setUndefined();
+			return true;
+		}
+		struct view_state *ifvs = &iframe->vs;
+		doc_view = ifvs->doc_view;
+
+		if (!doc_view) {
+			args.rval().setUndefined();
+			return true;
+		}
+		struct document *document = doc_view->document;
+
+		if (!document) {
+			args.rval().setUndefined();
+			return true;
+		}
+
+		if (document->dom) {
+			JSObject *doc = getDocument(ctx, document->dom);
+			args.rval().setObject(*doc);
 			return true;
 		}
 	}
 	args.rval().setUndefined();
-
-	return false;
+	return true;
 }
 
 static bool
