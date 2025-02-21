@@ -92,7 +92,6 @@ js_window_finalize(JSRuntime *rt, JSValue val)
 void
 detach_js_view_state(struct view_state *vs)
 {
-	assert(main_ctx);
 	assert(vs);
 	if_assert_failed return;
 
