@@ -3888,24 +3888,139 @@ js_element_replaceWith(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	if (!new_child) {
 		return JS_UNDEFINED;
 	}
-	dom_node *parent = NULL;
-	exc = dom_node_get_parent_node(el, &parent);
-
-	if (exc != DOM_NO_ERR || !parent) {
-		return JS_UNDEFINED;
-	}
-	dom_node *res = NULL;
-	exc = dom_node_replace_child(parent, new_child, el, &res);
-	dom_node_unref(parent);
-
-	if (exc == DOM_NO_ERR) {
-		dom_node_unref(res);
-	}
-	interpreter->changed = 1;
 	struct view_state *vs = interpreter->vs;
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
+
+// outerHTML
+	struct string buf;
+	if (!init_string(&buf)) {;
+		return JS_UNDEFINED;
+	}
+	ecmascript_walk_tree(&buf, new_child, false, false);
+
+	size_t size = buf.length;
+	char *s = buf.source;
+	struct dom_node *cref = NULL;
+
+	dom_hubbub_parser_params parse_params;
+	dom_hubbub_error error;
+	dom_hubbub_parser *parser = NULL;
+	struct dom_document_fragment *fragment = NULL;
+	struct dom_node *child = NULL, *html = NULL, *body = NULL;
+	struct dom_nodelist *bodies = NULL;
+
+	parse_params.enc = "UTF-8";
+	parse_params.fix_enc = true;
+	parse_params.enable_script = false;
+	parse_params.msg = NULL;
+	parse_params.script = NULL;
+	parse_params.ctx = NULL;
+	parse_params.daf = NULL;
+
+	struct dom_document *doc = NULL;
+	dom_node *parent = NULL;
+
+	exc = dom_node_get_owner_document(el, &doc);
+	if (exc != DOM_NO_ERR) goto out;
+
+	exc = dom_node_get_parent_node(el, &parent);
+
+	if (exc != DOM_NO_ERR || !parent) {
+		goto out;
+	}
+
+	error = dom_hubbub_fragment_parser_create(&parse_params,
+						  doc,
+						  &parser,
+						  &fragment);
+	if (error != DOM_HUBBUB_OK) {
+		fprintf(stderr, "Unable to create fragment parser!");
+		goto out;
+	}
+
+	error = dom_hubbub_parser_parse_chunk(parser, (const uint8_t*)s, size);
+	if (error != DOM_HUBBUB_OK) {
+		fprintf(stderr, "Unable to parse HTML chunk");
+		goto out;
+	}
+	error = dom_hubbub_parser_completed(parser);
+	if (error != DOM_HUBBUB_OK) {
+		fprintf(stderr, "Unable to complete parser");
+		goto out;
+	}
+
+	/* The first child in the fragment will be an HTML element
+	 * because that's how hubbub works, walk through that to the body
+	 * element hubbub will have created, we want to migrate that element's
+	 * children into ourself.
+	 */
+	exc = dom_node_get_first_child(fragment, &html);
+	if (exc != DOM_NO_ERR) goto out;
+
+	/* We can then ask that HTML element to give us its body */
+	exc = dom_element_get_elements_by_tag_name(html, corestring_dom_BODY, &bodies);
+	if (exc != DOM_NO_ERR) goto out;
+
+	/* And now we can get the body which will be the zeroth body */
+	exc = dom_nodelist_item(bodies, 0, &body);
+	if (exc != DOM_NO_ERR) goto out;
+
+	/* Migrate the children */
+	exc = dom_node_get_first_child(body, &child);
+	if (exc != DOM_NO_ERR) goto out;
+	while (child != NULL) {
+		exc = dom_node_remove_child(body, child, &cref);
+		if (exc != DOM_NO_ERR) goto out;
+		dom_node_unref(cref);
+
+		dom_node *spare = NULL;
+		exc = dom_node_insert_before(parent, child, el, &spare);
+
+		if (exc != DOM_NO_ERR) goto out;
+		dom_node_unref(spare);
+		dom_node_unref(cref);
+		dom_node_unref(child);
+		child = NULL;
+		exc = dom_node_get_first_child(body, &child);
+		if (exc != DOM_NO_ERR) goto out;
+	}
+	exc = dom_node_remove_child(parent, el, &cref);
+
+	if (exc != DOM_NO_ERR) goto out;
+
+	interpreter->changed = 1;
 	debug_dump_xhtml(document->dom);
+
+out:
+	if (parser != NULL) {
+		dom_hubbub_parser_destroy(parser);
+	}
+	if (doc != NULL) {
+		dom_node_unref(doc);
+	}
+	if (fragment != NULL) {
+		dom_node_unref(fragment);
+	}
+	if (child != NULL) {
+		dom_node_unref(child);
+	}
+	if (html != NULL) {
+		dom_node_unref(html);
+	}
+	if (bodies != NULL) {
+		dom_nodelist_unref(bodies);
+	}
+	if (body != NULL) {
+		dom_node_unref(body);
+	}
+	if (cref != NULL) {
+		dom_node_unref(cref);
+	}
+	if (parent != NULL) {
+		dom_node_unref(parent);
+	}
+	done_string(&buf);
 
 	return JS_UNDEFINED;
 }
