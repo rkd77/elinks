@@ -96,7 +96,9 @@ url_finalize(JS::GCContext *op, JSObject *url_obj)
 	struct eljs_url *url = JS::GetMaybePtrFromReservedSlot<struct eljs_url>(url_obj, 0);
 
 	if (url) {
-		done_uri(url->uri);
+		if (url->uri) {
+			done_uri(url->uri);
+		}
 		mem_free_if(url->hash);
 		mem_free_if(url->host);
 		mem_free_if(url->pathname);

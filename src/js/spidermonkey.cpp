@@ -659,7 +659,7 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 	JS::RootedValue r_val(ctx, rval);
 	JS::CompileOptions options(ctx);
 
-	char *utf16_data = (char *)mem_alloc(code->length * sizeof(char16_t));
+	char *utf16_data = (char *)mem_calloc(sizeof(char16_t), (code->length + 1));
 
 	if (!utf16_data) {
 		return;
@@ -673,7 +673,7 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 	char *inbuf = code->source;
 	char *outbuf = utf16_data;
 	size_t inbytes_len = code->length;
-	size_t outbytes_left = code->length * sizeof(char16_t);
+	size_t outbytes_left = (code->length + 1) * sizeof(char16_t);
 
 	if (iconv(cd, &inbuf, &inbytes_len, &outbuf, &outbytes_left) < 0) {
 		mem_free(utf16_data);
@@ -682,7 +682,7 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 	}
 	JS::SourceText<char16_t> srcBuf;
 
-	if (!srcBuf.init(ctx, (char16_t *)utf16_data, (code->length * sizeof(char16_t) - outbytes_left) / sizeof(char16_t), JS::SourceOwnership::Borrowed)) {
+	if (!srcBuf.init(ctx, (char16_t *)utf16_data, ((code->length + 1) * sizeof(char16_t) - outbytes_left) / sizeof(char16_t), JS::SourceOwnership::Borrowed)) {
 		iconv_close(cd);
 		mem_free(utf16_data);
 		return;
