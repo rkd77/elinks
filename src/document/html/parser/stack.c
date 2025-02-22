@@ -110,7 +110,7 @@ kill_html_stack_item(struct html_context *html_context, struct html_element *e)
 	    && onload && *onload && *onload != '^') {
 		/* XXX: The following expression alone amounts two #includes. */
 		add_to_ecmascript_string_list(&html_context->part->document->onload_snippets,
-		                   onload, -1, 0);
+		                   onload, -1, html_top->name - html_context->part->document->text.source);
 	}
 	mem_free_if(onload);
 #endif

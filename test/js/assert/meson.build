@@ -64,6 +64,7 @@ took = [
 'element.nodeName.html',
 'element.nodeType.html',
 'element.nodeValue.html',
+'element.onload.html',
 'element.outerHTML.html',
 'element.parentElement.html',
 'element.parentNode.html',

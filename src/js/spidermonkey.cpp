@@ -11,6 +11,8 @@
 
 #include "elinks.h"
 
+#include "js/libdom/dom.h"
+
 #include "js/spidermonkey/util.h"
 
 #include "bfu/dialog.h"
@@ -20,6 +22,7 @@
 #include "dialogs/menu.h"
 #include "dialogs/status.h"
 #include "document/html/frames.h"
+#include "document/libdom/mapa.h"
 #include "document/libdom/renderer.h"
 #include "document/libdom/renderer2.h"
 #include "document/document.h"
@@ -32,6 +35,7 @@
 #include "js/spidermonkey/customevent.h"
 #include "js/spidermonkey/document.h"
 #include "js/spidermonkey/domparser.h"
+#include "js/spidermonkey/element.h"
 #include "js/spidermonkey/event.h"
 #include "js/spidermonkey/form.h"
 #include "js/spidermonkey/fragment.h"
@@ -621,39 +625,76 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 	interpreter->ret = ret;
 
 	JS::RootedObject cg(ctx, JS::CurrentGlobalOrNull(ctx));
+
+	struct view_state *vs = interpreter->vs;
+	JSObject *th = NULL;
+
+	if (vs) {
+		struct document *document = vs->doc_view->document;
+		void *mapa = (void *)document->element_map;
+
+		if (mapa) {
+			dom_node *elem = (dom_node *)find_in_map(mapa, interpreter->element_offset);
+
+			if (elem) {
+				dom_html_element_type ty;
+				dom_exception exc = dom_html_element_get_tag_type(elem, &ty);
+
+				if (exc == DOM_NO_ERR && ty != DOM_HTML_ELEMENT_TYPE_SCRIPT) {
+					th = getElement(ctx, elem);
+				}
+			}
+		}
+	}
+	JS::RootedObjectVector envChain(ctx);
+
+	if (th) {
+		JS::RootedObject thisobj(ctx, th);
+
+		if (envChain.append(thisobj)) {
+			JSAutoRealm ar(ctx, cg);
+			JS_WrapObject(ctx, envChain[0]);
+		}
+	}
 	JS::RootedValue r_val(ctx, rval);
 	JS::CompileOptions options(ctx);
 
-	char *utf8_data = (char *)mem_alloc(code->length);
+	char *utf16_data = (char *)mem_alloc(code->length * sizeof(char16_t));
 
-	if (!utf8_data) {
+	if (!utf16_data) {
 		return;
 	}
-	iconv_t cd = iconv_open("UTF-8//IGNORE", "UTF-8");
+	iconv_t cd = iconv_open("UTF-16//IGNORE", "UTF-8");
 
 	if (cd == (iconv_t)-1) {
-		mem_free(utf8_data);
+		mem_free(utf16_data);
 		return;
 	}
 	char *inbuf = code->source;
-	char *outbuf = utf8_data;
+	char *outbuf = utf16_data;
 	size_t inbytes_len = code->length;
-	size_t outbytes_len = code->length;
+	size_t outbytes_left = code->length * sizeof(char16_t);
 
-	if (iconv(cd, &inbuf, &inbytes_len, &outbuf, &outbytes_len) < 0) {
-		mem_free(utf8_data);
+	if (iconv(cd, &inbuf, &inbytes_len, &outbuf, &outbytes_left) < 0) {
+		mem_free(utf16_data);
 		iconv_close(cd);
 		return;
 	}
-	JS::SourceText<mozilla::Utf8Unit> srcBuf;
-	if (!srcBuf.init(ctx, utf8_data, code->length - outbytes_len, JS::SourceOwnership::Borrowed)) {
+	JS::SourceText<char16_t> srcBuf;
+
+	if (!srcBuf.init(ctx, (char16_t *)utf16_data, (code->length * sizeof(char16_t) - outbytes_left) / sizeof(char16_t), JS::SourceOwnership::Borrowed)) {
 		iconv_close(cd);
-		mem_free(utf8_data);
+		mem_free(utf16_data);
 		return;
 	}
 	iconv_close(cd);
-	JS::Evaluate(ctx, options, srcBuf, &r_val);
-	mem_free(utf8_data);
+
+	if (envChain.empty()) {
+		JS::Evaluate(ctx, options, srcBuf, &r_val);
+	} else {
+		JS::Evaluate(ctx, envChain, options, srcBuf, &r_val);
+	}
+	mem_free(utf16_data);
 
 	spidermonkey_check_for_exception(ctx);
 

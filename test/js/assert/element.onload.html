@@ -1,0 +1,16 @@
+<html>
+<body>
+<script>
+console.error('element.onload.html');
+
+function check(id)
+{
+	console.assert(id === 'id3', 'id3');
+	console.exit();
+}
+</script>
+<div id="id1">AAA</div>
+<div id="id3" onload="check(id);">BBB</div>
+<div id="id5">CCC</div>
+</body>
+</html>

@@ -760,13 +760,17 @@ element_get_property_contentDocument(JSContext *ctx, unsigned int argc, JS::Valu
 			return true;
 		}
 		struct frame *iframe = NULL;
+		bool found = false;
 
 		foreach (iframe, loc->iframes) {
-			if (!c_strcasecmp(iframe->name, iframe_name)) break;
+			if (!c_strcasecmp(iframe->name, iframe_name)) {
+				found = true;
+				break;
+			}
 		}
 		mem_free(iframe_name);
 
-		if (!iframe) {
+		if (!found || !iframe) {
 			args.rval().setUndefined();
 			return true;
 		}
