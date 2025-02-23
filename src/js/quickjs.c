@@ -10,6 +10,8 @@
 
 #include "elinks.h"
 
+#include "js/libdom/dom.h"
+
 #include "bfu/dialog.h"
 #include "cache/cache.h"
 #include "config/options.h"
@@ -17,6 +19,7 @@
 #include "dialogs/menu.h"
 #include "dialogs/status.h"
 #include "document/html/frames.h"
+#include "document/libdom/mapa.h"
 #include "document/libdom/renderer.h"
 #include "document/libdom/renderer2.h"
 #include "document/document.h"
@@ -493,9 +496,35 @@ quickjs_eval(struct ecmascript_interpreter *interpreter,
 //		return;
 //	}
 	ctx = (JSContext *)interpreter->backend_data;
+	struct view_state *vs = interpreter->vs;
+	JSValue this_obj = JS_NULL;
+
+	if (vs) {
+		struct document *document = vs->doc_view->document;
+		void *mapa = (void *)document->element_map;
+
+		if (mapa) {
+			dom_node *elem = (dom_node *)find_in_map(mapa, interpreter->element_offset);
+
+			if (elem) {
+				dom_html_element_type ty;
+				dom_exception exc = dom_html_element_get_tag_type(elem, &ty);
+
+				if (exc == DOM_NO_ERR && ty != DOM_HTML_ELEMENT_TYPE_SCRIPT) {
+					this_obj = getElement(ctx, elem);
+				}
+			}
+		}
+	}
 	interpreter->heartbeat = add_heartbeat(interpreter);
 	interpreter->ret = ret;
-	JSValue r = JS_Eval(ctx, code->source, code->length, "", 0);
+	JSValue r;
+
+	if (JS_IsNull(this_obj)) {
+		r = JS_Eval(ctx, code->source, code->length, "", 0);
+	} else {
+		r = JS_EvalThis(ctx, this_obj, code->source, code->length, "", 0);
+	}
 	done_heartbeat(interpreter->heartbeat);
 
 	if (JS_IsException(r)) {
