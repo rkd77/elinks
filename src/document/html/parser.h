@@ -158,6 +158,8 @@ struct html_element {
 	 * indicates that it should process only script tags. */
 	int invisible;
 
+	unsigned int visibility_hidden:1;
+
 	/* The name of the element without NUL termination. name is a pointer
 	 * into the actual document source. */
 	char *name;

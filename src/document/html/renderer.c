@@ -1410,6 +1410,16 @@ html_special_tag(struct document *document, char *t, int x, int y)
 		renderer_context.last_tag_for_newline = tag;
 }
 
+static void
+put_chars_invisible(struct html_context *html_context, const char *chars, int charslen)
+{
+	const unsigned char *data = (const unsigned char *)chars;
+	int i;
+
+	for (i = 0; i < charslen; i++) {
+		put_chars(html_context, (data[i] < 33 ? " " : NBSP_CHAR_STRING), 1);
+	}
+}
 
 void
 put_chars_conv(struct html_context *html_context,
@@ -1425,11 +1435,12 @@ put_chars_conv(struct html_context *html_context,
 		put_chars(html_context, chars, charslen);
 		return;
 	}
+	void *func = html_context->visibility_hidden ? put_chars_invisible : put_chars;
 
 	convert_string(renderer_context.convert_table, chars, charslen,
 	               html_context->options->cp,
 	               (elformat.style.attr & AT_NO_ENTITIES) ? CSM_NONE : CSM_DEFAULT,
-		       NULL, (void (*)(void *, char *, int)) put_chars, html_context);
+		       NULL, (void (*)(void *, char *, int)) func, html_context);
 }
 
 /*
@@ -1689,6 +1700,7 @@ html_has_non_space_chars(const char *chars, int charslen)
 
 	return 0;
 }
+
 
 static void
 put_chars(struct html_context *html_context, const char *chars, int charslen)

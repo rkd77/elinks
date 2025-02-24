@@ -63,9 +63,6 @@ struct el_sheet {
 };
 #endif
 
-
-
-
 struct html_context {
 	struct document *document;
 #ifdef CONFIG_CSS
@@ -119,6 +116,7 @@ struct html_context {
 	unsigned int skip_textarea:1;
 
 	unsigned int was_xml_parsed:1;
+	unsigned int visibility_hidden:1;
 
 	/* For html/parser.c, html/renderer.c */
 	int margin;

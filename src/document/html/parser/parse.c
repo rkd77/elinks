@@ -1007,6 +1007,7 @@ start_element(struct element_info *ei,
 	if (html_context->options->libcss_enable) {
 		if (html_context->options->css_enable) {
 			select_css(html_context, html_top);
+			html_context->visibility_hidden =  html_top->visibility_hidden;
 		}
 	} else
 #endif
