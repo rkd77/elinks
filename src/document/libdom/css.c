@@ -11,13 +11,17 @@
 #include <libcss/libcss.h>
 
 #include "cache/cache.h"
+#include "config/home.h"
 #include "document/html/internal.h"
 #include "document/libdom/css.h"
 #include "document/libdom/mapa.h"
 #include "document/libdom/corestrings.h"
+#include "network/connection.h"
 #include "util/string.h"
 
 #define UNUSED(a)
+
+static void import_default_css(struct html_context *html_context);
 
 static css_error node_name(void *pw, void *node, css_qname *qname);
 static css_error node_classes(void *pw, void *node,
@@ -2067,7 +2071,6 @@ is_bold(int val)
 	}
 }
 
-
 void
 select_css(struct html_context *html_context, struct html_element *html_element)
 {
@@ -2103,6 +2106,11 @@ select_css(struct html_context *html_context, struct html_element *html_element)
 
 	if (!el) {
 		return;
+	}
+
+	if (!html_context->was_read_user_stylesheet) {
+		import_default_css(html_context);
+		html_context->was_read_user_stylesheet = 1;
 	}
 	dom_string *s;
 	dom_exception err;
@@ -2424,6 +2432,40 @@ import_css2(struct html_context *html_context, struct uri *uri)
 //		css_parse_stylesheet(css, uri, fragment->data, end);
 //		css->import_level--;
 	}
+}
+
+static void
+import_css_file(struct html_context *html_context, const char *url, int urllen)
+{
+	char *xdg_config_home = get_xdg_config_home();
+	struct string string, filename;
+
+	if (!*url
+	    || !init_string(&filename))
+		return;
+
+	if (*url != '/' && xdg_config_home) {
+		add_to_string(&filename, xdg_config_home);
+	}
+
+	add_bytes_to_string(&filename, url, urllen);
+
+	if (is_in_state(read_encoded_file(&filename, &string), S_OK)) {
+		parse_css_common(html_context, string.source, string.length, NULL);
+		done_string(&string);
+	}
+
+	done_string(&filename);
+}
+
+static void
+import_default_css(struct html_context *html_context)
+{
+	char *url = get_opt_str("document.css.stylesheet", NULL);
+
+	if (!*url) return;
+
+	import_css_file(html_context, url, strlen(url));
 }
 
 void *
