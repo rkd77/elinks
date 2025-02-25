@@ -526,9 +526,9 @@ quickjs_eval(struct ecmascript_interpreter *interpreter,
 		struct string eval;
 
 		if (init_string(&eval)) {
-			add_to_string(&eval, "function evalInContext( ctx, script ) { with(ctx) { return eval(script); } }; evalInContext(this, ");
-			add_shell_quoted_to_string(&eval, code->source, code->length);
-			add_to_string(&eval, ");");
+			add_to_string(&eval, "function evalInContext( ctx, script ) { with(ctx) { return eval(script); } }; evalInContext(this, '");
+			add_quoted_to_string(&eval, code->source, code->length);
+			add_to_string(&eval, "');");
 
 			r = JS_EvalThis(ctx, this_obj, eval.source, eval.length, "", 0);
 			JS_FreeValue(ctx, this_obj);
