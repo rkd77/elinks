@@ -2023,12 +2023,6 @@ apply_text_align(struct html_context *html_context, struct html_element *element
 }
 
 static void
-apply_visibility_hidden(struct html_context *html_context, struct html_element *element, uint8_t visibility_hidden)
-{
-	element->visibility_hidden = visibility_hidden;
-}
-
-static void
 apply_font_style(struct html_context *html_context, struct html_element *element, uint8_t font_style)
 {
 	int add = 0;
@@ -2222,8 +2216,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	if (text_align) {
 		apply_text_align(html_context, html_element, text_align);
 	}
-	bool visibility_hidden = (css_computed_visibility(style->styles[CSS_PSEUDO_ELEMENT_NONE]) == CSS_VISIBILITY_HIDDEN);
-	apply_visibility_hidden(html_context, html_element, visibility_hidden);
+	html_context->visibility_hidden = html_element->visibility_hidden = (css_computed_visibility(style->styles[CSS_PSEUDO_ELEMENT_NONE]) == CSS_VISIBILITY_HIDDEN);
 
 end:
 	code = css_select_results_destroy(style);
