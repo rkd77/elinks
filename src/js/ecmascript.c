@@ -543,15 +543,22 @@ ecmascript_timeout_handler2(void *val)
 	struct ecmascript_timeout *t = (struct ecmascript_timeout *)val;
 	struct ecmascript_interpreter *interpreter = t->interpreter;
 
+#if 0
 	assertm(interpreter->vs->doc_view != NULL,
 		"setTimeout: vs with no document (e_f %d)",
 		interpreter->vs->ecmascript_fragile);
-#ifdef CONFIG_ECMASCRIPT_SMJS
-	JS::RootedValue vfun((JSContext *)interpreter->backend_data, *(t->fun));
-	ecmascript_call_function(interpreter, vfun, NULL);
-#else
-	ecmascript_call_function(interpreter, t->fun, NULL);
 #endif
+
+	if (interpreter->vs->doc_view) {
+#ifdef CONFIG_ECMASCRIPT_SMJS
+		JS::RootedValue vfun((JSContext *)interpreter->backend_data, *(t->fun));
+		ecmascript_call_function(interpreter, vfun, NULL);
+#else
+		ecmascript_call_function(interpreter, t->fun, NULL);
+#endif
+	} else {
+		t->timeout_next = 0;
+	}
 	if (t->timeout_next > 0) {
 		install_timer(&t->tid, t->timeout_next, ecmascript_timeout_handler2, t);
 	} else {
