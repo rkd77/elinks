@@ -518,12 +518,22 @@ quickjs_eval(struct ecmascript_interpreter *interpreter,
 	}
 	interpreter->heartbeat = add_heartbeat(interpreter);
 	interpreter->ret = ret;
-	JSValue r;
+	JSValue r = JS_NULL;
 
 	if (JS_IsNull(this_obj)) {
 		r = JS_Eval(ctx, code->source, code->length, "", 0);
 	} else {
-		r = JS_EvalThis(ctx, this_obj, code->source, code->length, "", 0);
+		struct string eval;
+
+		if (init_string(&eval)) {
+			add_to_string(&eval, "function evalInContext( ctx, script ) { with(ctx) { return eval(script); } }; evalInContext(this, ");
+			add_shell_quoted_to_string(&eval, code->source, code->length);
+			add_to_string(&eval, ");");
+
+			r = JS_EvalThis(ctx, this_obj, eval.source, eval.length, "", 0);
+			JS_FreeValue(ctx, this_obj);
+			done_string(&eval);
+		}
 	}
 	done_heartbeat(interpreter->heartbeat);
 
