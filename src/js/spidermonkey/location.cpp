@@ -164,6 +164,7 @@ location_get_property_hash(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	if (vs->uri->fragmentlen) {
+		add_char_to_string(&fragment, '#');
 		add_bytes_to_string(&fragment, vs->uri->fragment, vs->uri->fragmentlen);
 	}
 

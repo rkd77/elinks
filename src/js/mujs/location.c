@@ -50,6 +50,7 @@ mjs_location_get_property_hash(js_State *J)
 	}
 
 	if (vs->uri->fragmentlen) {
+		add_char_to_string(&fragment, '#');
 		add_bytes_to_string(&fragment, vs->uri->fragment, vs->uri->fragmentlen);
 	}
 	js_pushstring(J, fragment.source);
