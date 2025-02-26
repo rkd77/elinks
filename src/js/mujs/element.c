@@ -369,11 +369,6 @@ mjs_element_get_property_contentDocument(js_State *J)
 			js_pushundefined(J);
 			return;
 		}
-		struct location *loc = cur_loc(ses);
-		if (!loc) {
-			js_pushundefined(J);
-			return;
-		}
 		dom_string *name = NULL;
 		exc = dom_html_iframe_element_get_name((dom_html_iframe_element *)el, &name);
 
@@ -388,25 +383,21 @@ mjs_element_get_property_contentDocument(js_State *J)
 			js_pushundefined(J);
 			return;
 		}
-		struct frame *iframe = NULL;
+		struct document_view *doc_view2 = NULL;
 
-		foreach (iframe, loc->iframes) {
-			if (!c_strcasecmp(iframe->name, iframe_name)) break;
+		foreachback (doc_view, ses->scrn_iframes) {
+			if (!c_strcasecmp(doc_view->name, iframe_name)) {
+				doc_view2 = doc_view;
+				break;
+			}
 		}
 		mem_free(iframe_name);
 
-		if (!iframe) {
+		if (!doc_view2) {
 			js_pushundefined(J);
 			return;
 		}
-		struct view_state *ifvs = &iframe->vs;
-		doc_view = ifvs->doc_view;
-
-		if (!doc_view) {
-			js_pushundefined(J);
-			return;
-		}
-		struct document *document = doc_view->document;
+		struct document *document = doc_view2->document;
 
 		if (!document) {
 			js_pushundefined(J);
