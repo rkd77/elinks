@@ -740,11 +740,6 @@ element_get_property_contentDocument(JSContext *ctx, unsigned int argc, JS::Valu
 			args.rval().setUndefined();
 			return true;
 		}
-		struct location *loc = cur_loc(ses);
-		if (!loc) {
-			args.rval().setUndefined();
-			return true;
-		}
 		dom_string *name = NULL;
 		exc = dom_html_iframe_element_get_name((dom_html_iframe_element *)el, &name);
 
@@ -759,29 +754,21 @@ element_get_property_contentDocument(JSContext *ctx, unsigned int argc, JS::Valu
 			args.rval().setUndefined();
 			return true;
 		}
-		struct frame *iframe = NULL;
-		bool found = false;
+		struct document_view *doc_view2 = NULL;
 
-		foreach (iframe, loc->iframes) {
-			if (!c_strcasecmp(iframe->name, iframe_name)) {
-				found = true;
+		foreachback (doc_view, ses->scrn_iframes) {
+			if (!c_strcasecmp(doc_view->name, iframe_name)) {
+				doc_view2 = doc_view;
 				break;
 			}
 		}
 		mem_free(iframe_name);
 
-		if (!found || !iframe) {
+		if (!doc_view2) {
 			args.rval().setUndefined();
 			return true;
 		}
-		struct view_state *ifvs = &iframe->vs;
-		doc_view = ifvs->doc_view;
-
-		if (!doc_view) {
-			args.rval().setUndefined();
-			return true;
-		}
-		struct document *document = doc_view->document;
+		struct document *document = doc_view2->document;
 
 		if (!document) {
 			args.rval().setUndefined();
