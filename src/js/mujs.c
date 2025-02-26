@@ -22,6 +22,7 @@
 #include "dialogs/menu.h"
 #include "dialogs/status.h"
 #include "document/html/frames.h"
+#include "document/libdom/mapa.h"
 #include "document/libdom/renderer.h"
 #include "document/libdom/renderer2.h"
 #include "document/document.h"
@@ -287,6 +288,39 @@ mujs_eval(struct ecmascript_interpreter *interpreter,
 
 	js_State *J = (js_State *)interpreter->backend_data;
 	interpreter->ret = ret;
+
+	struct view_state *vs = interpreter->vs;
+
+	if (vs) {
+		struct document *document = vs->doc_view->document;
+		void *mapa = (void *)document->element_map;
+
+		if (mapa) {
+			dom_node *elem = (dom_node *)find_in_map(mapa, interpreter->element_offset);
+
+			if (elem) {
+				dom_html_element_type ty;
+				dom_exception exc = dom_html_element_get_tag_type(elem, &ty);
+
+				if (exc == DOM_NO_ERR && ty != DOM_HTML_ELEMENT_TYPE_SCRIPT) {
+					struct string eval;
+
+					if (init_string(&eval)) {
+						add_to_string(&eval, "function evalInContext( ctx, script ) { with(ctx) { return eval(script); } }; evalInContext(this, '");
+						add_quoted_to_string(&eval, code->source, code->length);
+						add_to_string(&eval, "');");
+
+						js_loadstring(J, "[script]", eval.source);
+						mjs_push_element(J, elem);
+						js_pcall(J, 0);
+						js_pop(J, 1);
+						done_string(&eval);
+					}
+					return;
+				}
+			}
+		}
+	}
 	js_dostring(J, code->source);
 #if 0
 	JSContext *ctx;
