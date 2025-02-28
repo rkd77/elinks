@@ -773,8 +773,25 @@ static const JSCFunctionListEntry js_location_proto_funcs[] = {
 	JS_CFUNC_DEF("toLocaleString", 0, js_location_toString),
 };
 
+static void
+js_location_finalize(JSRuntime *rt, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(val);
+
+	struct view_state *vs = (struct view_state *)JS_GetOpaque(val, js_location_class_id);
+
+	if (vs) {
+		vs->location_obj = JS_NULL;
+	}
+}
+
+
 static JSClassDef js_location_class = {
 	"location",
+	.finalizer = js_location_finalize,
 };
 
 JSValue

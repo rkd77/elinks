@@ -549,9 +549,13 @@ js_element_get_property_contentWindow(JSContext *ctx, JSValueConst this_val)
 			return JS_UNDEFINED;
 		}
 		struct frame *iframe = NULL;
+		struct frame *iframe2 = NULL;
 
-		foreach (iframe, loc->iframes) {
-			if (!c_strcasecmp(iframe->name, iframe_name)) break;
+		foreach (iframe2, loc->iframes) {
+			if (!c_strcasecmp(iframe2->name, iframe_name)) {
+				iframe = iframe2;
+				break;
+			}
 		}
 		mem_free(iframe_name);
 
