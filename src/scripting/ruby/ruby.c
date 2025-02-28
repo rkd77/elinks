@@ -4,6 +4,12 @@
 #include "config.h"
 #endif
 
+#undef _GNU_SOURCE
+#include <ruby.h>
+#include <ruby/version.h>
+
+#undef _
+
 #include "elinks.h"
 
 #include "intl/libintl.h"

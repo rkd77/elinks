@@ -6,7 +6,6 @@
 
 #undef _GNU_SOURCE
 #include <ruby.h>
-#include <ruby/version.h>
 
 #undef _
 
