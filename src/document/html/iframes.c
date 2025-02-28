@@ -135,7 +135,6 @@ format_iframe(struct session *ses, struct document *document, struct iframe_desc
 {
 	struct view_state *vs;
 	struct document_view *doc_view;
-	struct frame *iframe = NULL;
 	struct cache_entry *cached;
 	int plain;
 
@@ -147,9 +146,14 @@ format_iframe(struct session *ses, struct document *document, struct iframe_desc
 	if (!loc) {
 		return NULL;
 	}
+	struct frame *iframe = NULL;
+	struct frame *iframe2 = NULL;
 
-	foreach (iframe, loc->iframes) {
-		if (!c_strcasecmp(iframe->name, iframe_desc->name)) break;
+	foreach (iframe2, loc->iframes) {
+		if (!c_strcasecmp(iframe2->name, iframe_desc->name)) {
+			iframe = iframe2;
+			break;
+		}
 	}
 
 	if (!iframe) {
