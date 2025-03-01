@@ -26,6 +26,7 @@ struct iframe_desc {
 	int number;
 	int cache_id;
 	unsigned int inserted:1;
+	unsigned int hidden:1;
 };
 
 struct iframeset_desc {
@@ -34,7 +35,7 @@ struct iframeset_desc {
 	struct iframe_desc iframe_desc[1]; /* must be last of struct. --Zas */
 };
 
-void add_iframeset_entry(struct document *parent, char *url, char *name, int x, int y, int width, int height, int nlink);
+void add_iframeset_entry(struct document *parent, char *url, char *name, int x, int y, int width, int height, int nlink, int hidden);
 void format_iframes(struct session *ses, struct document *document, struct document_options *op, int depth);
 
 #ifdef __cplusplus

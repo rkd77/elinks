@@ -1052,7 +1052,12 @@ start_element(struct element_info *ei,
 	/* Call the element's open handler. */
 	if (ei->open) {
 		if (has_attr(attr, "hidden", html_context->doc_cp)) {
-			html_skip(html_context, attr);
+			if (ei->open != html_iframe) {
+				html_skip(html_context, attr);
+			} else {
+				html_context->hidden = 1;
+				ei->open(html_context, attr, html, eof, &html);
+			}
 		} else {
 			ei->open(html_context, attr, html, eof, &html);
 		}

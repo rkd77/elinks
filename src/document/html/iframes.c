@@ -25,7 +25,7 @@
 #include "util/string.h"
 #include "util/time.h"
 
-void add_iframeset_entry(struct document *parent, char *url, char *name, int number, int y, int width, int height, int nlink)
+void add_iframeset_entry(struct document *parent, char *url, char *name, int number, int y, int width, int height, int nlink, int hidden)
 {
 	struct iframeset_desc *iframeset_desc;
 	struct iframe_desc *iframe_desc;
@@ -61,6 +61,7 @@ void add_iframeset_entry(struct document *parent, char *url, char *name, int num
 	iframe_desc->nlink = nlink;
 	iframe_desc->number = number;
 	iframe_desc->inserted = 0;
+	iframe_desc->hidden = hidden;
 	if (!iframe_desc->uri) {
 		iframe_desc->uri = get_uri(about_blank, URI_NONE);
 	}
@@ -187,7 +188,9 @@ redir:
 		if (!iframe_desc->inserted) {
 render:
 			render_document(vs, doc_view, o);
-			insert_document_into_document(document, doc_view->document, iframe_desc->box.y);
+			if (!iframe_desc->hidden) {
+				insert_document_into_document(document, doc_view->document, iframe_desc->box.y);
+			}
 			iframe_desc->inserted = 1;
 			iframe_desc->cache_id = cached->cache_id;
 			int yy;
@@ -197,7 +200,9 @@ render:
 				document->iframeset_desc->iframe_desc[yy].nlink += doc_view->document->nlinks;
 			}
 		} else if (iframe_desc->cache_id != cached->cache_id) {
-			remove_document_from_document(document, doc_view->document, iframe_desc->box.y);
+			if (!iframe_desc->hidden) {
+				remove_document_from_document(document, doc_view->document, iframe_desc->box.y);
+			}
 
 			int yy;
 

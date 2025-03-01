@@ -602,6 +602,7 @@ html_iframe_do(struct html_context *html_context, char *a,
 	char *name, *url = NULL;
 	int height = 0;
 	int width = 0;
+	int hidden = html_context->hidden;
 
 	url = null_or_stracpy(object_src);
 	if (!url) url = get_url_val(a, "src", html_context->doc_cp);
@@ -637,54 +638,59 @@ html_iframe_do(struct html_context *html_context, char *a,
 	}
 
 	if (height > 0) {
-		html_linebrk(html_context, a, html, eof, end);
-		put_chrs(html_context, "&nbsp;", 6);
-		ln_break(html_context, 1);
-
-		int doc_width = html_context->options->document_width;
-		int i;
-		struct string frame;
-
-		if (init_string(&frame)) {
-			add_to_string(&frame, "IFrame: ");
-			add_to_string(&frame, name);
-
-			int both = doc_width - frame.length;
-			int left = int_max((both) / 2, 0);
-			int right = int_max(0, left + (both % 2));
-
-			for (i = 0; i < left; i++) {
-				put_chrs(html_context, "&#x2500;", 7);
-			}
-			put_chrs(html_context, frame.source, frame.length);
-			done_string(&frame);
-			for (i = 0; i < right; i++) {
-				put_chrs(html_context, "&#x2500;", 7);
-			}
-		}
-		ln_break(html_context, 1);
-		int y = html_context->part->cy;
 		char *url2 = url ? join_urls(html_context->base_href, url) : NULL;
+		int y = html_context->part->cy;
 
-		if (init_string(&frame)) {
-			add_to_string(&frame, "/IFrame: ");
-			add_to_string(&frame, name);
+		if (!hidden) {
+			html_linebrk(html_context, a, html, eof, end);
+			put_chrs(html_context, "&nbsp;", 6);
+			ln_break(html_context, 1);
 
-			int both = doc_width - frame.length;
-			int right = int_max((both) / 2, 0);
-			int left = int_max(0, right + (both % 2));
+			int doc_width = html_context->options->document_width;
+			int i;
+			struct string frame;
 
-			for (i = 0; i < left; i++) {
-				put_chrs(html_context, "&#x2500;", 7);
+			if (init_string(&frame)) {
+				add_to_string(&frame, "IFrame: ");
+				add_to_string(&frame, name);
+
+				int both = doc_width - frame.length;
+				int left = int_max((both) / 2, 0);
+				int right = int_max(0, left + (both % 2));
+
+				for (i = 0; i < left; i++) {
+					put_chrs(html_context, "&#x2500;", 7);
+				}
+				put_chrs(html_context, frame.source, frame.length);
+				done_string(&frame);
+				for (i = 0; i < right; i++) {
+					put_chrs(html_context, "&#x2500;", 7);
+				}
 			}
-			put_chrs(html_context, frame.source, frame.length);
-			done_string(&frame);
-			for (i = 0; i < right; i++) {
-				put_chrs(html_context, "&#x2500;", 7);
+			ln_break(html_context, 1);
+			y = html_context->part->cy;
+
+			if (init_string(&frame)) {
+				add_to_string(&frame, "/IFrame: ");
+				add_to_string(&frame, name);
+
+				int both = doc_width - frame.length;
+				int right = int_max((both) / 2, 0);
+				int left = int_max(0, right + (both % 2));
+
+				for (i = 0; i < left; i++) {
+					put_chrs(html_context, "&#x2500;", 7);
+				}
+				put_chrs(html_context, frame.source, frame.length);
+				done_string(&frame);
+
+				for (i = 0; i < right; i++) {
+					put_chrs(html_context, "&#x2500;", 7);
+				}
 			}
+			ln_break(html_context, 1);
 		}
-		ln_break(html_context, 1);
-		html_context->special_f(html_context, SP_IFRAME, url2, name, html_context->image_number++, y, width, height);
+		html_context->special_f(html_context, SP_IFRAME, url2, name, html_context->image_number++, y, width, height, hidden);
 		mem_free_if(url2);
 	} else {
 		if (*name) {
