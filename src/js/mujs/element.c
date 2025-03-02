@@ -961,6 +961,35 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 }
 
 static void
+mjs_element_get_property_name(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+	dom_string *name = NULL;
+	dom_exception exc;
+
+	if (!el) {
+		js_pushnull(J);
+		return;
+	}
+	exc = dom_element_get_attribute(el, corestring_dom_name, &name);
+
+	if (exc != DOM_NO_ERR) {
+		js_pushnull(J);
+		return;
+	}
+	if (!name) {
+		js_pushstring(J, "");
+		return;
+	} else {
+		js_pushstring(J, dom_string_data(name));
+		dom_string_unref(name);
+	}
+}
+
+static void
 mjs_element_get_property_nextElementSibling(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -3774,6 +3803,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		addproperty(J, "lang",	mjs_element_get_property_lang, mjs_element_set_property_lang);
 		addproperty(J, "lastChild",	mjs_element_get_property_lastChild, NULL);
 		addproperty(J, "lastElementChild",	mjs_element_get_property_lastElementChild, NULL);
+		addproperty(J, "name",	mjs_element_get_property_name, NULL);
 		addproperty(J, "nextElementSibling",	mjs_element_get_property_nextElementSibling, NULL);
 		addproperty(J, "nextSibling",	mjs_element_get_property_nextSibling, NULL);
 		addproperty(J, "nodeName",	mjs_element_get_property_nodeName, NULL);
