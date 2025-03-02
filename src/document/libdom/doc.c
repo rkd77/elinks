@@ -20,6 +20,7 @@
 #include "document/libdom/doc.h"
 
 #ifdef CONFIG_QUICKJS
+#include "js/quickjs/element.h"
 #include "js/quickjs/mapa.h"
 #endif
 
@@ -56,9 +57,17 @@ js_html_document_user_data_handler(dom_node_operation operation,
 		break;
 	case DOM_NODE_DELETED:
 #ifdef CONFIG_QUICKJS
-		if (map_privates) {
-			attr_erase_from_map(map_privates, data);
-		}
+		unset_el_private(data);
+		//if (map_privates) {
+		//	attr_erase_from_map(map_privates, data);
+		//}
+#endif
+
+#ifdef CONFIG_ECMASCRIPT_SMJS
+		unset_el_object(data);
+		//if (map_privates) {
+		//	attr_erase_from_map(map_privates, data);
+		//}
 #endif
 		//fprintf(stderr, "DELETED: data=%p src=%p dst=%p\n", data, src, dst);
 		/* This is the only path I expect */

@@ -195,7 +195,7 @@ js_document_get_property_body(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 	//dom_node_unref(doc);
-	JSValue rr = getNode(ctx, body);
+	JSValue rr = getElement(ctx, body);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif

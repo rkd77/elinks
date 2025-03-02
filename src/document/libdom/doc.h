@@ -23,6 +23,10 @@ void keybstrings_fini(void);
 
 void js_html_document_user_data_handler(dom_node_operation operation, dom_string *key, void *data, struct dom_node *src, struct dom_node *dst);
 
+#ifdef CONFIG_ECMASCRIPT_SMJS
+void unset_el_object(void *data);
+#endif
+
 #ifdef __cplusplus
 }
 #endif

@@ -4187,8 +4187,18 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CFUNC_DEF("toString", 0, js_element_toString)
 };
 
-static
-void js_element_finalizer(JSRuntime *rt, JSValue val)
+void
+unset_el_private(void *priv)
+{
+	struct js_element_private *el_private = (struct js_element_private *)priv;
+
+	if (el_private) {
+		el_private->node = NULL;
+	}
+}
+
+static void
+js_element_finalizer(JSRuntime *rt, JSValue val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -4314,7 +4324,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	void *old_node_data = NULL;
 	dom_node_set_user_data(node,
 				     corestring_dom___ns_key_html_content_data,
-				     (void *)node, js_html_document_user_data_handler,
+				     (void *)el_private, js_html_document_user_data_handler,
 				     (void *) &old_node_data);
 
 	JSValue rr = JS_DupValue(ctx, element_obj);

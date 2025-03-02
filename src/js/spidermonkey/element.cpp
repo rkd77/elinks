@@ -223,6 +223,16 @@ JSPropertySpec element_props[] = {
 	JS_PS_END
 };
 
+void
+unset_el_object(void *data)
+{
+	JSObject *obj = (JSObject *)data;
+
+	if (obj) {
+		JS::SetReservedSlot(obj, 0, JS::UndefinedValue());
+	}
+}
+
 static void element_finalize(JS::GCContext *op, JSObject *obj)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -253,6 +263,9 @@ static void element_finalize(JS::GCContext *op, JSObject *obj)
 	}
 
 	if (el) {
+		void *old_node_data = NULL;
+		dom_node_set_user_data(el, corestring_dom___ns_key_html_content_data, NULL, js_html_document_user_data_handler,
+			(void *) &old_node_data);
 		dom_node_unref(el);
 		JS::SetReservedSlot(obj, 0, JS::UndefinedValue());
 	}
@@ -5894,6 +5907,12 @@ getElement(JSContext *ctx, void *node)
 
 	el_private->thisval = r_el;
 	map_privates[node] = el_private;
+
+	void *old_node_data = NULL;
+	dom_node_set_user_data(node,
+		corestring_dom___ns_key_html_content_data,
+		(void *)el, js_html_document_user_data_handler,
+		(void *)&old_node_data);
 
 	dom_node_ref((dom_node *)node);
 
