@@ -5866,23 +5866,14 @@ element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 JSObject *
 getElement(JSContext *ctx, void *node)
 {
-	auto elem = map_privates.find(node);
-	struct element_private *el_private = NULL;
+	struct element_private *el_private = (struct element_private *)mem_calloc(1, sizeof(*el_private));
 
-	if (elem != map_privates.end()) {
-		el_private = elem->second;
-		el_private->ref_count++;
-	} else {
-		el_private = (struct element_private *)mem_calloc(1, sizeof(*el_private));
-
-		if (!el_private) {
-			return NULL;
-		}
-		init_list(el_private->listeners);
-		el_private->ref_count = 1;
-		el_private->node = (dom_node *)node;
+	if (!el_private) {
+		return NULL;
 	}
-
+	init_list(el_private->listeners);
+	el_private->ref_count = 1;
+	el_private->node = (dom_node *)node;
 	JSObject *el = JS_NewObject(ctx, &element_class);
 
 	if (!el) {

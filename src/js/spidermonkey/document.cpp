@@ -276,7 +276,7 @@ document_get_property_body(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setNull();
 		return true;
 	}
-	JSObject *obj = getNode(ctx, body);
+	JSObject *obj = getElement(ctx, body);
 	args.rval().setObject(*obj);
 
 	return true;
