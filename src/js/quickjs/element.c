@@ -1069,6 +1069,40 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 }
 
 static JSValue
+js_element_get_property_name(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_string *name = NULL;
+	dom_exception exc;
+	JSValue r;
+
+	if (!el) {
+		return JS_NULL;
+	}
+	//dom_node_ref(el);
+	exc = dom_element_get_attribute(el, corestring_dom_name, &name);
+
+	if (exc != DOM_NO_ERR) {
+		//dom_node_unref(el);
+		return JS_NULL;
+	}
+	if (!name) {
+		r = JS_NewString(ctx, "");
+	} else {
+		r = JS_NewStringLen(ctx, dom_string_data(name), dom_string_length(name));
+		dom_string_unref(name);
+	}
+	//dom_node_unref(el);
+
+	RETURN_JS(r);
+}
+
+static JSValue
 js_element_get_property_nextElementSibling(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -4133,6 +4167,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("lang",	js_element_get_property_lang, js_element_set_property_lang),
 	JS_CGETSET_DEF("lastChild",	js_element_get_property_lastChild, NULL),
 	JS_CGETSET_DEF("lastElementChild",	js_element_get_property_lastElementChild, NULL),
+	JS_CGETSET_DEF("name",	js_element_get_property_name, NULL),
 	JS_CGETSET_DEF("nextElementSibling",	js_element_get_property_nextElementSibling, NULL),
 	JS_CGETSET_DEF("nextSibling",	js_element_get_property_nextSibling, NULL),
 	JS_CGETSET_DEF("nodeName",	js_element_get_property_nodeName, NULL), // Node
