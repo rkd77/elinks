@@ -692,7 +692,7 @@ html_iframe_do(struct html_context *html_context, char *a,
 		}
 		html_context->special_f(html_context, SP_IFRAME, url2, name, html_context->image_number++, y, width, height, hidden);
 		mem_free_if(url2);
-	} else {
+	} else if (!hidden) {
 		if (*name) {
 			put_link_line("IFrame: ", name, url,
 			      html_context->options->framename, html_context);
