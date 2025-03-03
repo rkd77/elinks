@@ -2113,9 +2113,9 @@ getDocument2(JSContext *ctx, void *doc)
 	}
 	init_list(doc_private->listeners);
 
-//	if (doc) {
-//		dom_node_ref((dom_node *)doc);
-//	}
+	if (doc) {
+		dom_node_ref((dom_node *)doc);
+	}
 	doc_private->node = doc;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	doc_private->interpreter = interpreter;
