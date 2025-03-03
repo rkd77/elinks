@@ -694,10 +694,10 @@ html_iframe_do(struct html_context *html_context, char *a,
 		mem_free_if(url2);
 	} else if (!hidden) {
 		if (*name) {
-			put_link_line("IFrame: ", name, url,
+			put_link_line("IFrame: ", name, url ?: "",
 			      html_context->options->framename, html_context);
 		} else {
-			put_link_line("", "IFrame", url,
+			put_link_line("", "IFrame", url ?: "",
 			      html_context->options->framename, html_context);
 		}
 	}
