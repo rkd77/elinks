@@ -12,9 +12,9 @@ struct terminal;
 enum connection_priority {
 	PRI_MAIN	= 0,
 	PRI_DOWNLOAD	= 0,
-	PRI_FRAME,
-	PRI_IFRAME,
-	PRI_CSS,
+	PRI_FRAME = 1,
+	PRI_IFRAME = 2,
+	PRI_CSS = 2,
 	PRI_NEED_IMG,
 	PRI_IMG,
 	PRI_PRELOAD,
