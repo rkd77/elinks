@@ -252,7 +252,7 @@ html_script(struct html_context *html_context, char *a,
 	html_skip(html_context, a);
 
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
-	if (html_context->was_xml_parsed) {
+	if (0 && html_context->was_xml_parsed) {
 		return;
 	}
 	/* We try to process nested <script> if we didn't process the parent
