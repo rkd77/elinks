@@ -323,15 +323,13 @@ html_img_sixel(struct html_context *html_context, char *a,
 
 	im->image_number = html_context->image_number++;
 
-	char str[8] = {0};
-	memcpy(str, encode_utf8(im->image_number + 33), 7);
-	int len = strlen(str);
-
 	for (y = 0; y < how_many; y++) {
 		int x;
+		html_context->current_number = im->image_number + 33;
 		for (x = 0; x < xw; x++) {
-			put_chrs(html_context, (const char *)str, len);
+			put_chrs(html_context, "&#9608;", 7);
 		}
+		html_context->current_number = 0;
 		ln_break(html_context, 1);
 	}
 }

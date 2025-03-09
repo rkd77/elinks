@@ -455,7 +455,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 
 			if (!found) {
 				for (;x < data[im.y].length; x++) {
-					if ((im.image_number == data[im.y].ch.chars[x].data - 33) && (im.image_number == data[im.y].ch.chars[x+1].data - 33)) {
+					if ((im.image_number == data[im.y].ch.chars[x].number - 33) && (im.image_number == data[im.y].ch.chars[x+1].number - 33)) {
 						found = 1;
 						break;
 					}

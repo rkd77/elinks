@@ -137,6 +137,9 @@ struct html_context {
 
 	int image_number;
 
+	unsigned int current_number;
+
+
 	/* For:
 	 * html/parser/forms.c
 	 * html/parser/link.c

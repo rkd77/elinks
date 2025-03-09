@@ -485,6 +485,7 @@ set_hline(struct html_context *html_context, const char *chars, int charslen,
 						unsigned char attr = schar->attr;
 
 						schar->data = (unsigned char)*chars++;
+						schar->number = html_context->current_number;
 						schar->attr = SCREEN_ATTR_FRAME;
 						copy_screen_chars(&POS(x, y), schar, 1);
 						schar->attr = attr;
@@ -518,6 +519,7 @@ good_char:
 
 					for(i = 0; i < unicode_to_cell(data); i++) {
 						schar->data = encode_utf8(data)[i];
+						schar->number = html_context->current_number;
 						part->char_width[x] = 1;
 						copy_screen_chars(&POS(x++, y), schar, 1);
 					}
@@ -527,14 +529,17 @@ good_char:
 
 				if (unicode_to_cell(data) == 2) {
 					schar->data = (unicode_val_T)data;
+					schar->number = html_context->current_number;
 					part->char_width[x] = 2;
 					copy_screen_chars(&POS(x++, y), schar, 1);
 					schar->data = UCS_NO_CHAR;
+					schar->number = html_context->current_number;
 					part->spaces[x] = 0;
 					part->char_width[x] = 0;
 				} else {
 					part->char_width[x] = unicode_to_cell(data);
 					schar->data = (unicode_val_T)data;
+					schar->number = html_context->current_number;
 				}
 				copy_screen_chars(&POS(x++, y), schar, 1);
 			} /* while chars < end */
@@ -543,10 +548,12 @@ good_char:
 				part->char_width[x] = 1;
 				if (*chars == NBSP_CHAR) {
 					schar->data = ' ';
+					schar->number = html_context->current_number;
 					part->spaces[x] = html_context->options->wrap_nbsp;
 				} else {
 					part->spaces[x] = (*chars == ' ');
 					schar->data = *chars;
+					schar->number = html_context->current_number;
 				}
 				copy_screen_chars(&POS(x, y), schar, 1);
 			}
@@ -646,10 +653,12 @@ set_hline(struct html_context *html_context, const char *chars, int charslen,
 		for (; charslen > 0; charslen--, x++, chars++) {
 			if (*chars == NBSP_CHAR) {
 				schar->data = ' ';
+				schar->number = html_context->current_number;
 				part->spaces[x] = html_context->options->wrap_nbsp;
 			} else {
 				part->spaces[x] = (*chars == ' ');
 				schar->data = *chars;
+				schar->number = html_context->current_number;
 			}
 			copy_screen_chars(&POS(x, y), schar, 1);
 		}

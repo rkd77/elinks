@@ -64,6 +64,7 @@ struct screen_char {
 		unsigned char color[SCREEN_COLOR_SIZE];
 		unsigned int node_number;
 	} c;
+	unsigned int number;
 #if 0
 	unsigned int element_offset;
 #endif
