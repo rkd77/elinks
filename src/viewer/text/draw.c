@@ -438,9 +438,6 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	}
 	while (!list_empty(term->images)) {
 		struct image *im = (struct image *)term->images.next;
-
-		int ystart = im->y;
-		int yend = ystart + (im->height + term->cell_height - 1) / term->cell_height;
 		delete_image(im);
 	}
 
