@@ -436,8 +436,6 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 
 		int ystart = im->y;
 		int yend = ystart + (im->height + term->cell_height - 1) / term->cell_height;
-
-		set_screen_dirty_image(term->screen, ystart, yend);
 		delete_image(im);
 	}
 
