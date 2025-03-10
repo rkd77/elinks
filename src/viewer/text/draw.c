@@ -431,6 +431,11 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 		doc_view->last_x = doc_view->last_y = -1;
 
 #ifdef CONFIG_LIBSIXEL
+	struct terminal_screen *screen = term->screen;
+
+	if (!screen || !screen->was_dirty) {
+		return;
+	}
 	while (!list_empty(term->images)) {
 		struct image *im = (struct image *)term->images.next;
 
