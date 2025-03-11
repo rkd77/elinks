@@ -899,7 +899,7 @@ add_image_to_document(struct document *doc, struct string *pixels, int lineno, s
 	if (SIXEL_FAILED(status)) {
 		goto end;
 	}
-	im->y = lineno + 1;
+	im->y = lineno;
 	im->x = 0;
 	im->width = width;
 	im->height = height;
@@ -1022,8 +1022,8 @@ copy_frame(struct image *src, struct el_box *box, int cell_width, int cell_heigh
 	if (SIXEL_FAILED(status)) {
 		goto end;
 	}
-	dest->x = x < box->x ? box->x : x;
-	dest->y = y < box->y ? box->y : y;
+	dest->x = x < 0 ? box->x : box->x + x;
+	dest->y = y < 0 ? box->y : box->y + y;
 	dest->width = encoder->clipx >= src->width ? 0 : sixel_frame_get_width(frame);
 	dest->height = encoder->clipy >= src->height ? 0 : sixel_frame_get_height(frame);
 end:
