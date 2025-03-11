@@ -1105,7 +1105,9 @@ el_sixel_get_image(char *data, int length, int *outlen)
 	close(fdout);
 
 error:
-	fclose(f);
+	if (f) {
+		fclose(f);
+	}
 	sixel_encoder_unref(encoder);
 #endif
 	return ret;
