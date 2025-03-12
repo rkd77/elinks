@@ -473,6 +473,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 			if (im.y + box->y + ((im.height + term->cell_height - 1) / term->cell_height) < vs->y) {
 				continue;
 			}
+			im.x += x;
 
 			if (im.x >= vs->x + box->width) {
 				continue;
@@ -481,11 +482,10 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 			if (im.x + ((im.width + term->cell_width - 1) / term->cell_width) < vs->x) {
 				continue;
 			}
-
 			struct image *im_copy = copy_frame(&im, box, term->cell_width, term->cell_height, vs->x, vs->y);
 
 			if (im_copy) {
-				im_copy->x += x + box->x;
+				im_copy->x += box->x;
 				im_copy->y += box->y;
 				add_to_list(term->images, im_copy);
 			}
