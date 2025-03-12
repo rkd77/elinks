@@ -465,29 +465,28 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 					continue;
 				}
 			}
-			im.x += box->x;
-			im.y += box->y;
 
-			if (im.y >= vs->y + box->height) {
+			if (im.y + box->y >= vs->y + box->height) {
 				continue;
 			}
 
-			if (im.y + ((im.height + term->cell_height - 1) / term->cell_height) < vs->y) {
+			if (im.y + box->y + ((im.height + term->cell_height - 1) / term->cell_height) < vs->y) {
 				continue;
 			}
 
-			if (im.x >= vs->x + box->width + box->x) {
+			if (im.x >= vs->x + box->width) {
 				continue;
 			}
 
-			if (im.x + ((im.width + term->cell_width - 1) / term->cell_width) < vs->x + box->x) {
+			if (im.x + ((im.width + term->cell_width - 1) / term->cell_width) < vs->x) {
 				continue;
 			}
 
 			struct image *im_copy = copy_frame(&im, box, term->cell_width, term->cell_height, vs->x, vs->y);
 
 			if (im_copy) {
-				im_copy->x += x;
+				im_copy->x += x + box->x;
+				im_copy->y += box->y;
 				add_to_list(term->images, im_copy);
 			}
 		}
