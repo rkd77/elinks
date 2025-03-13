@@ -308,11 +308,13 @@ html_img_sixel(struct html_context *html_context, char *a,
 	int xw = (im->width + document->options.cell_width - 1) / document->options.cell_width;
 	int y;
 
-	im->image_number = html_context->image_number++;
+	while (*a && *a != '<') a--;
+
+	im->image_number = *a == '<' ? a + 1 - document->text.source : 0;
 
 	for (y = 0; y < how_many; y++) {
 		int x;
-		html_context->current_number = im->image_number + 33;
+		html_context->current_number = im->image_number;
 		for (x = 0; x < xw; x++) {
 			put_chrs(html_context, "&#9608;", 7);
 		}

@@ -448,6 +448,9 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 		foreach (im2, doc_view->document->images) {
 			struct image im;
 
+			if (!im2->image_number) {
+				continue;
+			}
 			copy_struct(&im, im2);
 
 			int x = 0;
@@ -455,7 +458,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 
 			if (!found) {
 				for (;x < data[im.y].length; x++) {
-					if ((im.image_number == data[im.y].ch.chars[x].number - 33)) {
+					if (im.image_number == data[im.y].ch.chars[x].number) {
 						found = 1;
 						break;
 					}
