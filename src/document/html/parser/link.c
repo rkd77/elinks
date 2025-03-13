@@ -285,6 +285,7 @@ html_img_sixel(struct html_context *html_context, char *a,
 	struct string pixels;
 
 	if (!init_string(&pixels)) {
+		mem_free(data);
 		return;
 	}
 	add_bytes_to_string(&pixels, (const char *)data, datalen);
