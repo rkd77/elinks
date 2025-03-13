@@ -308,9 +308,9 @@ html_img_sixel(struct html_context *html_context, char *a,
 	int xw = (im->width + document->options.cell_width - 1) / document->options.cell_width;
 	int y;
 
-	while (*a && *a != '<') a--;
+	while (*a != '<') a--;
 
-	im->image_number = *a == '<' ? a + 1 - document->text.source : 0;
+	im->image_number = a + 1 - document->text.source;
 
 	for (y = 0; y < how_many; y++) {
 		int x;
