@@ -239,67 +239,53 @@ html_img_sixel(struct html_context *html_context, char *a,
 	}
 	unsigned char *data = NULL;
 	int datalen = 0;
-	char *elsix = get_attr_val(a, "elsix", html_context->doc_cp);
+	char *url = get_attr_val(a, "src", html_context->doc_cp);
 
-	if (!elsix) {
-		char *url = get_attr_val(a, "src", html_context->doc_cp);
+	if (!url) {
+		return;
+	}
+	char *url2 = join_urls(html_context->base_href, url);
 
-		if (!url) {
-			return;
-		}
-		char *url2 = join_urls(html_context->base_href, url);
+	if (url2) {
+		struct uri *uri = get_uri(url2, URI_BASE);
 
-		if (url2) {
-			struct uri *uri = get_uri(url2, URI_BASE);
+		if (uri) {
+			struct cache_entry *cached = get_redirected_cache_entry(uri);
 
-			if (uri) {
-				struct cache_entry *cached = get_redirected_cache_entry(uri);
+			if (cached && !cached->incomplete) {
+				struct fragment *fragment = get_cache_fragment(cached);
 
-				if (cached && !cached->incomplete) {
-					struct fragment *fragment = get_cache_fragment(cached);
+				if (fragment) {
+					if (cached->sixel) {
+						data = (unsigned char *)memacpy(fragment->data, fragment->length);
+						datalen = fragment->length;
+					} else {
+						data = el_sixel_get_image(fragment->data, fragment->length, &datalen);
 
-					if (fragment) {
-						if (cached->sixel) {
-							data = (unsigned char *)memacpy(fragment->data, fragment->length);
-							datalen = fragment->length;
-						} else {
-							data = el_sixel_get_image(fragment->data, fragment->length, &datalen);
-
-							if (data) {
-								(void)add_fragment(cached, 0, (const char *)data, datalen);
-								normalize_cache_entry(cached, datalen);
-								cached->sixel = 1;
-							}
+						if (data) {
+							(void)add_fragment(cached, 0, (const char *)data, datalen);
+							normalize_cache_entry(cached, datalen);
+							cached->sixel = 1;
 						}
 					}
 				}
-				if (!data) {
-					html_context->special_f(html_context, SP_IMAGE, uri);
-				}
-				done_uri(uri);
 			}
-			mem_free(url2);
+			if (!data) {
+				html_context->special_f(html_context, SP_IMAGE, uri);
+			}
+			done_uri(uri);
 		}
-		mem_free(url);
-		if (!data) {
-			return;
-		}
+		mem_free(url2);
+	}
+	mem_free(url);
+
+	if (!data) {
+		return;
 	}
 	struct string pixels;
 
 	if (!init_string(&pixels)) {
-		mem_free_if(elsix);
 		return;
-	}
-	if (!datalen) {
-		data = base64_decode_bin((const unsigned char *)elsix, strlen(elsix), &datalen);
-
-		mem_free(elsix);
-
-		if (!data) {
-			done_string(&pixels);
-			return;
-		}
 	}
 	add_bytes_to_string(&pixels, (const char *)data, datalen);
 	mem_free(data);
