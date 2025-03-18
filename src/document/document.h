@@ -216,6 +216,12 @@ struct search {
 };
 #endif
 
+#ifdef CONFIG_ECMASCRIPT
+struct offset_linknum {
+	int offset, linknum;
+};
+#endif
+
 struct document {
 	OBJECT_HEAD(struct document);
 
@@ -240,6 +246,7 @@ struct document {
 	struct uri_list ecmascript_imports;
 	int ecmascript_counter;
 	char *body_onkeypress;
+	struct offset_linknum *offset_linknum;
 #endif
 #ifdef CONFIG_LIBDOM
 	void *dom;
@@ -309,6 +316,7 @@ struct document {
 
 	enum cp_status cp_status;
 	unsigned int links_sorted:1; /**< whether links are already sorted */
+	unsigned int offset_sorted:1;
 
 	struct el_box clipboard_box;
 	enum clipboard_status clipboard_status;

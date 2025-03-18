@@ -520,6 +520,8 @@ sort_links(struct document *document)
 	qsort(document->links, document->nlinks, sizeof(*document->links),
 	      comp_links);
 
+	document->offset_sorted = 0;
+
 	if (!document->height) return;
 
 	mem_free_if(document->lines1);

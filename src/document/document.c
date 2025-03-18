@@ -423,6 +423,7 @@ reset_document(struct document *document)
 	free_ecmascript_string_list(&document->onload_snippets);
 	free_uri_list(&document->ecmascript_imports);
 	mem_free_set(&document->body_onkeypress, NULL);
+	mem_free_set(&document->offset_linknum, NULL);
 #endif
 
 	free_list(document->tags);
@@ -496,6 +497,7 @@ done_document(struct document *document)
 	free_ecmascript_string_list(&document->onload_snippets);
 	free_uri_list(&document->ecmascript_imports);
 	mem_free_if(document->body_onkeypress);
+	mem_free_if(document->offset_linknum);
 #endif
 
 #ifdef CONFIG_LIBDOM
@@ -767,20 +769,66 @@ done_documents(struct module *module)
 }
 
 #ifdef CONFIG_ECMASCRIPT
+
+/* comparison function for qsort() */
+static int
+comp_offset(const void *v1, const void *v2)
+{
+	const struct offset_linknum *l1 = (const struct offset_linknum *)v1, *l2 = (const struct offset_linknum *)v2;
+
+	assert(l1 && l2);
+	if_assert_failed return 0;
+
+	if (l1->offset < l2->offset) {
+		return -1;
+	}
+
+	if (l1->offset > l2->offset) {
+		return 1;
+	}
+
+	return 0;
+}
+
+static void
+sort_offset(struct document *document)
+{
+	if (!document->nlinks) {
+		return;
+	}
+	mem_free_set(&document->offset_linknum, malloc(document->nlinks * sizeof(struct offset_linknum)));
+
+	if (!document->offset_linknum) {
+		return;
+	}
+	int i;
+
+	for (i = 0; i < document->nlinks; i++) {
+		document->offset_linknum[i].offset = document->links[i].element_offset;
+		document->offset_linknum[i].linknum = i;
+	}
+	qsort(document->offset_linknum, document->nlinks, sizeof(struct offset_linknum), comp_offset);
+	document->offset_sorted = 1;
+}
+
 int
 get_link_number_by_offset(struct document *document, int offset)
 {
-	int link;
-
-	if (!document->links_sorted) sort_links(document);
-
-	for (link = 0; link < document->nlinks; link++) {
-		if (document->links[link].element_offset == offset) {
-			return link;
-		}
+	if (!document->links_sorted) {
+		sort_links(document);
 	}
 
-	return -1;
+	if (!document->offset_sorted) {
+		sort_offset(document);
+
+		if (!document->offset_sorted) {
+			return -1;
+		}
+	}
+	struct offset_linknum key = { .offset = offset, .linknum = -1 };
+	struct offset_linknum *item = (struct offset_linknum *)bsearch(&key, document->offset_linknum, document->nlinks, sizeof(*item), comp_offset);
+
+	return item ? item->linknum : -1;
 }
 #endif
 
