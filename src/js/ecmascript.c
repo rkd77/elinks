@@ -112,6 +112,8 @@ static union option_info ecmascript_options[] = {
 };
 
 int interpreter_count;
+static int was_re = 0;
+static timer_id_T rerender_timer = TIMER_ID_UNDEF;
 
 static INIT_LIST_OF(struct string_list_item, allowed_urls);
 static INIT_LIST_OF(struct string_list_item, disallowed_urls);
@@ -124,6 +126,7 @@ char *console_warn_filename;
 char *local_storage_filename;
 
 int local_storage_ready;
+static void rerender_documents(void *data);
 
 static int
 is_prefix(char *prefix, char *url, int dl)
@@ -349,6 +352,10 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 					}
 				}
 			}
+		}
+		if (!was_re) {
+			was_re = 1;
+			install_timer(&rerender_timer, 50, rerender_documents, NULL);
 		}
 	}
 }
@@ -679,8 +686,6 @@ ecmascript_set_timeout2m(js_State *J, const char *handle, int timeout, int timeo
 }
 #endif
 
-static timer_id_T periodic_rerender_timer = TIMER_ID_UNDEF;
-
 static void
 rerender_doc(struct session *ses, struct document *document, struct cache_entry *cached, int was_write)
 {
@@ -698,7 +703,7 @@ rerender_doc(struct session *ses, struct document *document, struct cache_entry 
 }
 
 static void
-periodic_rerender_documents(void *data)
+rerender_documents(void *data)
 {
 	struct ecmascript_interpreter *i;
 
@@ -731,7 +736,7 @@ periodic_rerender_documents(void *data)
 		i->changed = 0;
 		i->was_write = 0;
 	}
-	install_timer(&periodic_rerender_timer, 50, periodic_rerender_documents, NULL);
+	was_re = 0;
 }
 
 static void
@@ -761,9 +766,6 @@ init_ecmascript_module(struct module *module)
 #endif
 #endif
 	init_map_timer();
-	if (!program.testjs) {
-		install_timer(&periodic_rerender_timer, 50, periodic_rerender_documents, NULL);
-	}
 }
 
 static void
@@ -779,7 +781,9 @@ done_ecmascript_module(struct module *module)
 	mem_free_if(console_warn_filename);
 	mem_free_if(local_storage_filename);
 	done_map_timer();
-	kill_timer(&periodic_rerender_timer);
+	if (was_re) {
+		kill_timer(&rerender_timer);
+	}
 }
 
 static struct module *ecmascript_modules[] = {
