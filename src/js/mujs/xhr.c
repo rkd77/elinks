@@ -521,7 +521,7 @@ onload_run(void *data)
 {
 	struct mjs_xhr *xhr = (struct mjs_xhr *)data;
 
-	if (xhr) {
+	if (xhr && ecmascript_found(xhr->interpreter)) {
 		struct ecmascript_interpreter *interpreter = xhr->interpreter;
 		js_State *J = (js_State *)interpreter->backend_data;
 
@@ -552,7 +552,7 @@ onloadend_run(void *data)
 {
 	struct mjs_xhr *xhr = (struct mjs_xhr *)data;
 
-	if (xhr) {
+	if (xhr && ecmascript_found(xhr->interpreter)) {
 		struct ecmascript_interpreter *interpreter = xhr->interpreter;
 		js_State *J = (js_State *)interpreter->backend_data;
 
@@ -583,7 +583,7 @@ onreadystatechange_run(void *data)
 {
 	struct mjs_xhr *xhr = (struct mjs_xhr *)data;
 
-	if (xhr) {
+	if (xhr && ecmascript_found(xhr->interpreter)) {
 		struct ecmascript_interpreter *interpreter = xhr->interpreter;
 		js_State *J = (js_State *)interpreter->backend_data;
 
@@ -614,7 +614,7 @@ ontimeout_run(void *data)
 {
 	struct mjs_xhr *xhr = (struct mjs_xhr *)data;
 
-	if (xhr) {
+	if (xhr && ecmascript_found(xhr->interpreter)) {
 		struct ecmascript_interpreter *interpreter = xhr->interpreter;
 		js_State *J = (js_State *)interpreter->backend_data;
 
