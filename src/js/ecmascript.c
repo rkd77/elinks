@@ -114,6 +114,7 @@ int interpreter_count;
 
 static INIT_LIST_OF(struct string_list_item, allowed_urls);
 static INIT_LIST_OF(struct string_list_item, disallowed_urls);
+static INIT_LIST_OF(struct ecmascript_interpreter, ecmascript_interpreters);
 
 char *console_error_filename;
 char *console_log_filename;
@@ -263,6 +264,7 @@ ecmascript_get_interpreter(struct view_state *vs)
 	init_list(interpreter->writecode);
 	interpreter->current_writecode = (struct ecmascript_string_list_item *)interpreter->writecode.next;
 	init_list(interpreter->timeouts);
+	add_to_list(ecmascript_interpreters, interpreter);
 	return interpreter;
 }
 
@@ -711,6 +713,13 @@ ecmascript_set_timeout2m(js_State *J, const char *handle, int timeout, int timeo
 }
 #endif
 
+static timer_id_T periodic_rerender_timer = TIMER_ID_UNDEF;
+
+static void
+periodic_rerender_documents(void *data)
+{
+	install_timer(&periodic_rerender_timer, 50, periodic_rerender_documents, NULL);
+}
 
 static void
 init_ecmascript_module(struct module *module)
@@ -739,6 +748,7 @@ init_ecmascript_module(struct module *module)
 #endif
 #endif
 	init_map_timer();
+	install_timer(&periodic_rerender_timer, 50, periodic_rerender_documents, NULL);
 }
 
 static void
@@ -754,6 +764,7 @@ done_ecmascript_module(struct module *module)
 	mem_free_if(console_warn_filename);
 	mem_free_if(local_storage_filename);
 	done_map_timer();
+	kill_timer(&periodic_rerender_timer);
 }
 
 static struct module *ecmascript_modules[] = {

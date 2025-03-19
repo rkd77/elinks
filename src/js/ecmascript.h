@@ -50,6 +50,7 @@ struct uri;
 struct view_state;
 
 struct ecmascript_interpreter {
+	LIST_HEAD_EL(struct ecmascript_interpreter);
 	struct view_state *vs;
 	void *backend_data;
 
