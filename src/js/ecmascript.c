@@ -739,6 +739,20 @@ rerender_documents(void *data)
 	was_re = 0;
 }
 
+int
+ecmascript_found(struct ecmascript_interpreter *interpreter)
+{
+	struct ecmascript_interpreter *i;
+
+	foreach (i, ecmascript_interpreters) {
+		if (i == interpreter) {
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
 static void
 init_ecmascript_module(struct module *module)
 {

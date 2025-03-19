@@ -193,6 +193,8 @@ void toggle_ecmascript(struct session *ses);
 void location_goto(struct document_view *doc_view, char *url, int reload);
 void location_goto_const(struct document_view *doc_view, const char *url, int reload);
 
+int ecmascript_found(struct ecmascript_interpreter *interpreter);
+
 extern char *console_error_filename;
 extern char *console_log_filename;
 extern char *console_warn_filename;

@@ -725,7 +725,7 @@ onload_run(void *data)
 {
 	struct xhr *xhr = (struct xhr *)data;
 
-	if (xhr) {
+	if (xhr && ecmascript_found(xhr->interpreter)) {
 		struct ecmascript_interpreter *interpreter = xhr->interpreter;
 		JSContext *ctx = (JSContext *)interpreter->backend_data;
 		JSAutoRealm ar(ctx, (JSObject *)interpreter->ac->get());
@@ -752,7 +752,7 @@ onloadend_run(void *data)
 {
 	struct xhr *xhr = (struct xhr *)data;
 
-	if (xhr) {
+	if (xhr && ecmascript_found(xhr->interpreter)) {
 		struct ecmascript_interpreter *interpreter = xhr->interpreter;
 		JSContext *ctx = (JSContext *)interpreter->backend_data;
 		JSAutoRealm ar(ctx, (JSObject *)interpreter->ac->get());
@@ -779,7 +779,7 @@ onreadystatechange_run(void *data)
 {
 	struct xhr *xhr = (struct xhr *)data;
 
-	if (xhr) {
+	if (xhr && ecmascript_found(xhr->interpreter)) {
 		struct ecmascript_interpreter *interpreter = xhr->interpreter;
 		JSContext *ctx = (JSContext *)interpreter->backend_data;
 		JSAutoRealm ar(ctx, (JSObject *)interpreter->ac->get());
@@ -806,7 +806,7 @@ ontimeout_run(void *data)
 {
 	struct xhr *xhr = (struct xhr *)data;
 
-	if (xhr) {
+	if (xhr && ecmascript_found(xhr->interpreter)) {
 		struct ecmascript_interpreter *interpreter = xhr->interpreter;
 		JSContext *ctx = (JSContext *)interpreter->backend_data;
 		JSAutoRealm ar(ctx, (JSObject *)interpreter->ac->get());
