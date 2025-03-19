@@ -153,7 +153,7 @@ onload_run(void *data)
 {
 	struct Xhr *x = (struct Xhr *)data;
 
-	if (x) {
+	if (x && ecmascript_found(x->interpreter)) {
 		struct ecmascript_interpreter *interpreter = x->interpreter;
 		JSContext *ctx = (JSContext *)interpreter->backend_data;
 		interpreter->heartbeat = add_heartbeat(interpreter);
@@ -191,7 +191,7 @@ onloadend_run(void *data)
 {
 	struct Xhr *x = (struct Xhr *)data;
 
-	if (x) {
+	if (x && ecmascript_found(x->interpreter)) {
 		struct ecmascript_interpreter *interpreter = x->interpreter;
 		JSContext *ctx = (JSContext *)interpreter->backend_data;
 		interpreter->heartbeat = add_heartbeat(interpreter);
@@ -229,7 +229,7 @@ onreadystatechange_run(void *data)
 {
 	struct Xhr *x = (struct Xhr *)data;
 
-	if (x) {
+	if (x && ecmascript_found(x->interpreter)) {
 		struct ecmascript_interpreter *interpreter = x->interpreter;
 		JSContext *ctx = (JSContext *)interpreter->backend_data;
 		interpreter->heartbeat = add_heartbeat(interpreter);
@@ -267,7 +267,7 @@ ontimeout_run(void *data)
 {
 	struct Xhr *x = (struct Xhr *)data;
 
-	if (x) {
+	if (x && ecmascript_found(x->interpreter)) {
 		struct ecmascript_interpreter *interpreter = x->interpreter;
 		JSContext *ctx = (JSContext *)interpreter->backend_data;
 		interpreter->heartbeat = add_heartbeat(interpreter);
