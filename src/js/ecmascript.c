@@ -46,6 +46,7 @@
 #include "protocol/uri.h"
 #include "session/session.h"
 #include "session/task.h"
+#include "terminal/tab.h"
 #include "terminal/terminal.h"
 #include "terminal/window.h"
 #include "util/conv.h"
@@ -269,30 +270,6 @@ ecmascript_get_interpreter(struct view_state *vs)
 }
 
 static void
-delayed_reload(void *data)
-{
-	struct delayed_rel *rel = (struct delayed_rel *)data;
-	assert(rel);
-	struct session *ses = rel->ses;
-	struct document *document = rel->document;
-
-	object_unlock(document);
-
-	reset_document(document);
-	document->links_sorted = 0;
-	dump_xhtml(rel->cached, document, 1 + rel->was_write);
-
-	if (!ses->doc_view->vs->plain && document->options.html_compress_empty_lines) {
-		compress_empty_lines(document);
-	}
-
-	sort_links(document);
-	draw_formatted(ses, 2);
-	load_common(ses);
-	mem_free(rel);
-}
-
-static void
 run_jobs(void *data)
 {
 #ifdef CONFIG_ECMASCRIPT_SMJS
@@ -324,10 +301,14 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 #endif
 	run_jobs(interpreter);
 
-	if (interpreter->changed && !program.testjs) {
+	if (interpreter->changed && !program.testjs && interpreter->vs) {
 		struct document_view *doc_view = interpreter->vs->doc_view;
+
+		if (!doc_view) {
+			return;
+		}
+
 		struct document *document = doc_view->document;
-		struct session *ses = doc_view->session;
 		struct cache_entry *cached = document->cached;
 #ifdef CONFIG_ECMASCRIPT_SMJS
 		if (interpreter->document_obj) {
@@ -368,21 +349,6 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 					}
 				}
 			}
-		}
-
-		if (document->dom) {
-			struct delayed_rel *rel = (struct delayed_rel *)mem_calloc(1, sizeof(*rel));
-
-			if (rel) {
-				rel->cached = cached;
-				rel->document = document;
-				rel->ses = ses;
-				rel->was_write = interpreter->was_write;
-				object_lock(document);
-				register_bottom_half(delayed_reload, rel);
-			}
-			interpreter->changed = 0;
-			interpreter->was_write = 0;
 		}
 	}
 }
@@ -716,8 +682,55 @@ ecmascript_set_timeout2m(js_State *J, const char *handle, int timeout, int timeo
 static timer_id_T periodic_rerender_timer = TIMER_ID_UNDEF;
 
 static void
+rerender_doc(struct session *ses, struct document *document, struct cache_entry *cached, int was_write)
+{
+	object_unlock(document);
+	reset_document(document);
+	document->links_sorted = 0;
+	dump_xhtml(cached, document, 1 + was_write);
+
+	if (!ses->doc_view->vs->plain && document->options.html_compress_empty_lines) {
+		compress_empty_lines(document);
+	}
+	sort_links(document);
+	draw_formatted(ses, 2);
+	load_common(ses);
+}
+
+static void
 periodic_rerender_documents(void *data)
 {
+	struct ecmascript_interpreter *i;
+
+	foreach (i, ecmascript_interpreters) {
+		if (!i->changed || !i->vs) {
+			continue;
+		}
+		struct document_view *doc_view = i->vs->doc_view;
+
+		if (!doc_view) {
+			continue;
+		}
+		struct session *ses = doc_view->session;
+
+		if (!ses || ses->tab != get_current_tab(ses->tab->term)) {
+			continue;
+		}
+		struct document *document = doc_view->document;
+
+		if (!document || !document->dom) {
+			continue;
+		}
+		struct cache_entry *cached = document->cached;
+
+		if (!cached) {
+			continue;
+		}
+		rerender_doc(ses, document, cached, i->was_write);
+
+		i->changed = 0;
+		i->was_write = 0;
+	}
 	install_timer(&periodic_rerender_timer, 50, periodic_rerender_documents, NULL);
 }
 
@@ -748,7 +761,9 @@ init_ecmascript_module(struct module *module)
 #endif
 #endif
 	init_map_timer();
-	install_timer(&periodic_rerender_timer, 50, periodic_rerender_documents, NULL);
+	if (!program.testjs) {
+		install_timer(&periodic_rerender_timer, 50, periodic_rerender_documents, NULL);
+	}
 }
 
 static void
