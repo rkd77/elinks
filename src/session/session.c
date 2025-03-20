@@ -33,6 +33,7 @@
 #include "main/event.h"
 #include "main/object.h"
 #include "main/timer.h"
+#include "mime/mime.h"
 #include "network/connection.h"
 #include "network/state.h"
 #include "osdep/newwin.h"
@@ -653,9 +654,13 @@ maybe_pre_format_html(struct cache_entry *cached, struct session *ses)
 	struct fragment *fragment;
 	static int pre_format_html_event = EVENT_NONE;
 
-	if (!cached || cached->preformatted)
+	if (!cached || cached->preformatted || cached->sixel)
 		return;
+	char *ctype = get_content_type(cached);
 
+	if (ctype && !strncmp(ctype, "image/", 6)) {
+		return;
+	}
 	/* The script called from here may indirectly call
 	 * garbage_collection().  If the refcount of the cache entry
 	 * were 0, it could then be freed, and the
