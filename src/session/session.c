@@ -658,7 +658,8 @@ maybe_pre_format_html(struct cache_entry *cached, struct session *ses)
 		return;
 	char *ctype = get_content_type(cached);
 
-	if (ctype && !strncmp(ctype, "image/", 6)) {
+	if (ctype && strncmp(ctype, "text/", 5) && strncmp(ctype, "application/xhtml+xml",
+	sizeof("application/xhtml+xml") - 1)) {
 		return;
 	}
 	/* The script called from here may indirectly call
