@@ -411,7 +411,9 @@ set_hline(struct html_context *html_context, const char *chars, int charslen,
 
 	if (part->document) {
 		struct document *const document = part->document;
-
+#ifdef CONFIG_LIBDOM
+		html_context->current_number = html_top->name - document->text.source;
+#endif
 		/* Reallocate LINE(y).chars[] to large enough.  The
 		 * last parameter of realloc_line is the index of the
 		 * last element to which we may want to write,
@@ -639,6 +641,9 @@ set_hline(struct html_context *html_context, const char *chars, int charslen,
 		return;
 
 	if (part->document) {
+#ifdef CONFIG_LIBDOM
+		html_context->current_number = html_top->name - document->text.source;
+#endif
 		if (realloc_line(html_context, part->document,
 		                 Y(y), X(x) + charslen - 1) < 0)
 			return;
