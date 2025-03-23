@@ -87,10 +87,8 @@ term_send_event(struct terminal *term, struct term_event *ev)
 		}
 
 		resize_screen(term, width, height);
-#ifdef CONFIG_LIBSIXEL
 		term->cell_width = ev->info.size.cell_width;
 		term->cell_height = ev->info.size.cell_height;
-#endif
 		erase_screen(term);
 		/* Fall through */
 	}

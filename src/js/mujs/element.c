@@ -483,8 +483,6 @@ mjs_element_get_property_contentWindow(js_State *J)
 	js_pushundefined(J);
 }
 
-
-#if 0
 static void
 mjs_element_get_property_clientHeight(js_State *J)
 {
@@ -534,6 +532,7 @@ mjs_element_get_property_clientHeight(js_State *J)
 		js_pushnumber(J, 0);
 		return;
 	}
+	scan_document(document);
 	struct node_rect *rect = get_element_rect(document, offset);
 
 	if (!rect) {
@@ -543,7 +542,6 @@ mjs_element_get_property_clientHeight(js_State *J)
 	int dy = int_max(0, (rect->y1 + 1 - rect->y0) * ses->tab->term->cell_height);
 	js_pushnumber(J, dy);
 }
-#endif
 
 #if 0
 static void
@@ -3787,7 +3785,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		addproperty(J, "className",	mjs_element_get_property_className, mjs_element_set_property_className);
 		addproperty(J, "contentDocument",	mjs_element_get_property_contentDocument, NULL);
 		addproperty(J, "contentWindow",	mjs_element_get_property_contentWindow, NULL);
-//		addproperty(J, "clientHeight",	mjs_element_get_property_clientHeight, NULL);
+		addproperty(J, "clientHeight",	mjs_element_get_property_clientHeight, NULL);
 //		addproperty(J, "clientLeft", mjs_element_get_property_clientLeft, NULL);
 //		addproperty(J, "clientTop", mjs_element_get_property_clientTop, NULL);
 //		addproperty(J, "clientWidth", mjs_element_get_property_clientWidth, NULL);
