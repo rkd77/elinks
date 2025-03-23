@@ -317,6 +317,7 @@ struct document {
 	enum cp_status cp_status;
 	unsigned int links_sorted:1; /**< whether links are already sorted */
 	unsigned int offset_sorted:1;
+	unsigned int scanned:1;
 
 	struct el_box clipboard_box;
 	enum clipboard_status clipboard_status;

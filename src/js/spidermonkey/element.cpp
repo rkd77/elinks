@@ -83,7 +83,7 @@ static bool element_set_property_className(JSContext *ctx, unsigned int argc, JS
 static bool element_get_property_contentDocument(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_contentWindow(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_dataset(JSContext *ctx, unsigned int argc, JS::Value *vp);
-//static bool element_get_property_clientHeight(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_clientHeight(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool element_get_property_clientLeft(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool element_get_property_clientTop(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool element_get_property_clientWidth(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -183,7 +183,7 @@ JSPropertySpec element_props[] = {
 	JS_PSGS("className",	element_get_property_className, element_set_property_className, JSPROP_ENUMERATE),
 	JS_PSG("contentDocument",	element_get_property_contentDocument, JSPROP_ENUMERATE),
 	JS_PSG("contentWindow",	element_get_property_contentWindow, JSPROP_ENUMERATE),
-//	JS_PSG("clientHeight",	element_get_property_clientHeight, JSPROP_ENUMERATE),
+	JS_PSG("clientHeight",	element_get_property_clientHeight, JSPROP_ENUMERATE),
 //	JS_PSG("clientLeft",	element_get_property_clientLeft, JSPROP_ENUMERATE),
 //	JS_PSG("clientTop",	element_get_property_clientTop, JSPROP_ENUMERATE),
 //	JS_PSG("clientWidth",	element_get_property_clientWidth, JSPROP_ENUMERATE),
@@ -920,8 +920,7 @@ element_get_property_dataset(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return true;
 }
 
-
-#if 0 // it does not work yet
+// it does not work yet
 static bool
 element_get_property_clientHeight(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -999,6 +998,7 @@ element_get_property_clientHeight(JSContext *ctx, unsigned int argc, JS::Value *
 		args.rval().setInt32(ses->tab->term->cell_height);
 		return true;
 	}
+	scan_document(document);
 	struct node_rect *rect = get_element_rect(document, offset);
 
 	if (!rect) {
@@ -1010,7 +1010,6 @@ element_get_property_clientHeight(JSContext *ctx, unsigned int argc, JS::Value *
 
 	return true;
 }
-#endif
 
 #if 0
 static bool

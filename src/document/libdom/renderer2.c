@@ -715,7 +715,6 @@ walk2(struct document *document)
 }
 #endif
 
-#if 0
 static int prev_offset = 0;
 static struct node_rect *prev_element = NULL;
 
@@ -758,38 +757,36 @@ get_element_rect(struct document *document, int offset)
 
 	return n;
 }
-#endif
-//static void dump_results(struct document *document);
+static void dump_results(struct document *document);
 
-#if 0
 void
-scan_document(struct document_view *doc_view)
+scan_document(struct document *document)
 {
 	int y, x;
 
-	if (!doc_view || !doc_view->document) {
+	if (document->scanned) {
 		return;
 	}
 
-	if (doc_view->document->hh) {
-		free_hash(&doc_view->document->hh);
+	if (document->hh) {
+		free_hash(&document->hh);
 	}
-	doc_view->document->hh = init_hash8();
+	document->hh = init_hash8();
 
-	if (!doc_view->document->hh) {
+	if (!document->hh) {
 		return;
 	}
 	prev_offset = 0;
 	prev_element = NULL;
 
-	for (y = 0; y < doc_view->document->height; y++) {
-		for (x = 0; x < doc_view->document->data[y].length; x++) {
-			int offset = doc_view->document->data[y].ch.chars[x].element_offset;
+	for (y = 0; y < document->height; y++) {
+		for (x = 0; x < document->data[y].length; x++) {
+			int offset = document->data[y].ch.chars[x].number;
 
 			if (!offset) {
 				continue;
 			}
-			struct node_rect *tab = get_element_rect(doc_view->document, offset);
+			struct node_rect *tab = get_element_rect(document, offset);
 
 			if (!tab) {
 				continue;
@@ -809,15 +806,15 @@ scan_document(struct document_view *doc_view)
 			}
 		}
 	}
-//	dump_results(doc_view->document);
+//	dump_results(document);
 	prev_offset = 0;
 	prev_element = NULL;
-	walk2(doc_view->document);
+	document->scanned = 1;
+//	walk2(doc_view->document);
 //	dump_results(doc_view->document);
 }
-#endif
 
-#if 0
+#if 1
 static void
 dump_results(struct document *document)
 {

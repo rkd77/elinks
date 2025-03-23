@@ -28,10 +28,11 @@ int fire_onload(void *doc);
 
 #if 0
 void walk2(struct document *document);
-void scan_document(struct document_view *doc_view);
 void try_to_color(struct terminal *term, struct el_box *box, struct document *document, int vx, int vy);
-struct node_rect *get_element_rect(struct document *document, int offset);
 #endif
+
+void scan_document(struct document *document);
+struct node_rect *get_element_rect(struct document *document, int offset);
 
 #ifdef __cplusplus
 }
