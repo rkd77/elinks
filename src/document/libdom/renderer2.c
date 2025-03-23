@@ -313,7 +313,6 @@ free_libdom(void)
 	}
 }
 
-#if 0
 static void
 walk_tree2(struct document *document, dom_node *node)
 {
@@ -405,7 +404,6 @@ next:
 		child = next_child;
 	}
 }
-#endif
 
 #if 0
 static void
@@ -686,7 +684,6 @@ fire_onload(void *doc)
 	return res;
 }
 
-#if 0
 void
 walk2(struct document *document)
 {
@@ -713,7 +710,6 @@ walk2(struct document *document)
 	walk_tree2(document, root);
 	dom_node_unref(root);
 }
-#endif
 
 static int prev_offset = 0;
 static struct node_rect *prev_element = NULL;
@@ -802,7 +798,7 @@ scan_document(struct document *document)
 				tab->x1 = x;
 			}
 			if (tab->y1 < y) {
-				tab->y1 = x;
+				tab->y1 = y;
 			}
 		}
 	}
@@ -810,7 +806,7 @@ scan_document(struct document *document)
 	prev_offset = 0;
 	prev_element = NULL;
 	document->scanned = 1;
-//	walk2(doc_view->document);
+	walk2(document);
 //	dump_results(doc_view->document);
 }
 
