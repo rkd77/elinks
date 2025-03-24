@@ -644,7 +644,6 @@ js_element_get_property_clientTop(JSContext *ctx, JSValueConst this_val)
 }
 #endif
 
-#if 0
 static JSValue
 js_element_get_property_clientWidth(JSContext *ctx, JSValueConst this_val)
 {
@@ -688,6 +687,7 @@ js_element_get_property_clientWidth(JSContext *ctx, JSValueConst this_val)
 	if (offset <= 0) {
 		return JS_NewInt32(ctx, 0);
 	}
+	scan_document(document);
 	struct node_rect *rect = get_element_rect(document, offset);
 
 	if (!rect) {
@@ -697,7 +697,6 @@ js_element_get_property_clientWidth(JSContext *ctx, JSValueConst this_val)
 
 	return JS_NewInt32(ctx, dx);
 }
-#endif
 
 static JSValue
 js_element_get_property_dataset(JSContext *ctx, JSValueConst this_val)
@@ -4153,7 +4152,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("clientHeight",	js_element_get_property_clientHeight, NULL),
 //	JS_CGETSET_DEF("clientLeft",	js_element_get_property_clientLeft, NULL),
 //	JS_CGETSET_DEF("clientTop",	js_element_get_property_clientTop, NULL),
-//	JS_CGETSET_DEF("clientWidth",	js_element_get_property_clientWidth, NULL),
+	JS_CGETSET_DEF("clientWidth",	js_element_get_property_clientWidth, NULL),
 	JS_CGETSET_DEF("dataset",	js_element_get_property_dataset, NULL),
 	JS_CGETSET_DEF("dir",	js_element_get_property_dir, js_element_set_property_dir),
 	JS_CGETSET_DEF("firstChild",	js_element_get_property_firstChild, NULL),
