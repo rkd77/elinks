@@ -543,7 +543,6 @@ mjs_element_get_property_clientHeight(js_State *J)
 	js_pushnumber(J, dy);
 }
 
-#if 0
 static void
 mjs_element_get_property_clientLeft(js_State *J)
 {
@@ -552,9 +551,7 @@ mjs_element_get_property_clientLeft(js_State *J)
 #endif
 	js_pushnumber(J, 0);
 }
-#endif
 
-#if 0
 static void
 mjs_element_get_property_clientTop(js_State *J)
 {
@@ -563,7 +560,6 @@ mjs_element_get_property_clientTop(js_State *J)
 #endif
 	js_pushnumber(J, 0);
 }
-#endif
 
 static void
 mjs_element_get_property_clientWidth(js_State *J)
@@ -3785,8 +3781,8 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		addproperty(J, "contentDocument",	mjs_element_get_property_contentDocument, NULL);
 		addproperty(J, "contentWindow",	mjs_element_get_property_contentWindow, NULL);
 		addproperty(J, "clientHeight",	mjs_element_get_property_clientHeight, NULL);
-//		addproperty(J, "clientLeft", mjs_element_get_property_clientLeft, NULL);
-//		addproperty(J, "clientTop", mjs_element_get_property_clientTop, NULL);
+		addproperty(J, "clientLeft", mjs_element_get_property_clientLeft, NULL);
+		addproperty(J, "clientTop", mjs_element_get_property_clientTop, NULL);
 		addproperty(J, "clientWidth", mjs_element_get_property_clientWidth, NULL);
 		addproperty(J, "dataset",	mjs_element_get_property_dataset, NULL);
 		addproperty(J, "dir",	mjs_element_get_property_dir, mjs_element_set_property_dir);

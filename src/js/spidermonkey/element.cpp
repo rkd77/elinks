@@ -84,8 +84,8 @@ static bool element_get_property_contentDocument(JSContext *ctx, unsigned int ar
 static bool element_get_property_contentWindow(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_dataset(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_clientHeight(JSContext *ctx, unsigned int argc, JS::Value *vp);
-//static bool element_get_property_clientLeft(JSContext *ctx, unsigned int argc, JS::Value *vp);
-//static bool element_get_property_clientTop(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_clientLeft(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_clientTop(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_clientWidth(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -184,8 +184,8 @@ JSPropertySpec element_props[] = {
 	JS_PSG("contentDocument",	element_get_property_contentDocument, JSPROP_ENUMERATE),
 	JS_PSG("contentWindow",	element_get_property_contentWindow, JSPROP_ENUMERATE),
 	JS_PSG("clientHeight",	element_get_property_clientHeight, JSPROP_ENUMERATE),
-//	JS_PSG("clientLeft",	element_get_property_clientLeft, JSPROP_ENUMERATE),
-//	JS_PSG("clientTop",	element_get_property_clientTop, JSPROP_ENUMERATE),
+	JS_PSG("clientLeft",	element_get_property_clientLeft, JSPROP_ENUMERATE),
+	JS_PSG("clientTop",	element_get_property_clientTop, JSPROP_ENUMERATE),
 	JS_PSG("clientWidth",	element_get_property_clientWidth, JSPROP_ENUMERATE),
 	JS_PSG("dataset",	element_get_property_dataset, JSPROP_ENUMERATE),
 	JS_PSGS("dir",	element_get_property_dir, element_set_property_dir, JSPROP_ENUMERATE),
@@ -1011,7 +1011,6 @@ element_get_property_clientHeight(JSContext *ctx, unsigned int argc, JS::Value *
 	return true;
 }
 
-#if 0
 static bool
 element_get_property_clientLeft(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -1023,9 +1022,7 @@ element_get_property_clientLeft(JSContext *ctx, unsigned int argc, JS::Value *vp
 
 	return true;
 }
-#endif
 
-#if 0
 static bool
 element_get_property_clientTop(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -1037,7 +1034,6 @@ element_get_property_clientTop(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
-#endif
 
 static bool
 element_get_property_clientWidth(JSContext *ctx, unsigned int argc, JS::Value *vp)
