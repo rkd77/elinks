@@ -1305,7 +1305,6 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	return rr;
 }
 
-#if 0
 static JSValue
 js_element_get_property_offsetHeight(JSContext *ctx, JSValueConst this_val)
 {
@@ -1314,7 +1313,6 @@ js_element_get_property_offsetHeight(JSContext *ctx, JSValueConst this_val)
 #endif
 	return js_element_get_property_clientHeight(ctx, this_val);
 }
-#endif
 
 #if 0
 static JSValue
@@ -1462,7 +1460,6 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 }
 #endif
 
-#if 0
 static JSValue
 js_element_get_property_offsetWidth(JSContext *ctx, JSValueConst this_val)
 {
@@ -1471,7 +1468,6 @@ js_element_get_property_offsetWidth(JSContext *ctx, JSValueConst this_val)
 #endif
 	return js_element_get_property_clientWidth(ctx, this_val);
 }
-#endif
 
 static JSValue
 js_element_get_property_ownerDocument(JSContext *ctx, JSValueConst this_val)
@@ -4167,11 +4163,11 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("nodeName",	js_element_get_property_nodeName, NULL), // Node
 	JS_CGETSET_DEF("nodeType",	js_element_get_property_nodeType, NULL), // Node
 	JS_CGETSET_DEF("nodeValue",	js_element_get_property_nodeValue, js_element_set_property_nodeValue), // Node
-//	JS_CGETSET_DEF("offsetHeight",	js_element_get_property_offsetHeight, NULL),
+	JS_CGETSET_DEF("offsetHeight",	js_element_get_property_offsetHeight, NULL),
 //	JS_CGETSET_DEF("offsetLeft",	js_element_get_property_offsetLeft, NULL),
 	JS_CGETSET_DEF("offsetParent",	js_element_get_property_offsetParent, NULL),
 //	JS_CGETSET_DEF("offsetTop",	js_element_get_property_offsetTop, NULL),
-//	JS_CGETSET_DEF("offsetWidth",	js_element_get_property_offsetWidth, NULL),
+	JS_CGETSET_DEF("offsetWidth",	js_element_get_property_offsetWidth, NULL),
 	JS_CGETSET_DEF("outerHTML",	js_element_get_property_outerHtml, js_element_set_property_outerHtml),
 	JS_CGETSET_DEF("ownerDocument",	js_element_get_property_ownerDocument, NULL), // Node
 	JS_CGETSET_DEF("parentElement",	js_element_get_property_parentElement, NULL), // Node

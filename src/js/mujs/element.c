@@ -1161,7 +1161,6 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	dom_node_unref(node);
 }
 
-#if 0
 static void
 mjs_element_get_property_offsetHeight(js_State *J)
 {
@@ -1170,7 +1169,6 @@ mjs_element_get_property_offsetHeight(js_State *J)
 #endif
 	mjs_element_get_property_clientHeight(J);
 }
-#endif
 
 #if 0
 static void
@@ -1335,7 +1333,6 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 }
 #endif
 
-#if 0
 static void
 mjs_element_get_property_offsetWidth(js_State *J)
 {
@@ -1344,7 +1341,6 @@ mjs_element_get_property_offsetWidth(js_State *J)
 #endif
 	mjs_element_get_property_clientWidth(J);
 }
-#endif
 
 static void
 mjs_element_get_property_ownerDocument(js_State *J)
@@ -3802,11 +3798,11 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		addproperty(J, "nodeName",	mjs_element_get_property_nodeName, NULL);
 		addproperty(J, "nodeType",	mjs_element_get_property_nodeType, NULL);
 		addproperty(J, "nodeValue",	mjs_element_get_property_nodeValue, mjs_element_set_property_nodeValue);
-//		addproperty(J, "offsetHeight",	mjs_element_get_property_offsetHeight, NULL);
+		addproperty(J, "offsetHeight",	mjs_element_get_property_offsetHeight, NULL);
 //		addproperty(J, "offsetLeft",	mjs_element_get_property_offsetLeft, NULL);
 		addproperty(J, "offsetParent",	mjs_element_get_property_offsetParent, NULL);
 //		addproperty(J, "offsetTop",	mjs_element_get_property_offsetTop, NULL);
-//		addproperty(J, "offsetWidth", mjs_element_get_property_offsetWidth, NULL);
+		addproperty(J, "offsetWidth", mjs_element_get_property_offsetWidth, NULL);
 		addproperty(J, "outerHTML",	mjs_element_get_property_outerHtml, mjs_element_set_property_outerHtml);
 		addproperty(J, "ownerDocument",	mjs_element_get_property_ownerDocument, NULL);
 		addproperty(J, "parentElement",	mjs_element_get_property_parentElement, NULL);

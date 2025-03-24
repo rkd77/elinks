@@ -109,11 +109,11 @@ static bool element_get_property_nodeName(JSContext *ctx, unsigned int argc, JS:
 static bool element_get_property_nodeType(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_nodeValue(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_nodeValue(JSContext *ctx, unsigned int argc, JS::Value *vp);
-//static bool element_get_property_offsetHeight(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_offsetHeight(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool element_get_property_offsetLeft(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_offsetParent(JSContext *ctx, unsigned int argc, JS::Value *vp);
 //static bool element_get_property_offsetTop(JSContext *ctx, unsigned int argc, JS::Value *vp);
-//static bool element_get_property_offsetWidth(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_offsetWidth(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_ownerDocument(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -205,11 +205,11 @@ JSPropertySpec element_props[] = {
 	JS_PSG("nodeName",	element_get_property_nodeName, JSPROP_ENUMERATE),
 	JS_PSG("nodeType",	element_get_property_nodeType, JSPROP_ENUMERATE),
 	JS_PSGS("nodeValue",	element_get_property_nodeValue, element_set_property_nodeValue, JSPROP_ENUMERATE),
-//	JS_PSG("offsetHeight",	element_get_property_offsetHeight, JSPROP_ENUMERATE),
+	JS_PSG("offsetHeight",	element_get_property_offsetHeight, JSPROP_ENUMERATE),
 //	JS_PSG("offsetLeft",	element_get_property_offsetLeft, JSPROP_ENUMERATE),
 	JS_PSG("offsetParent",	element_get_property_offsetParent, JSPROP_ENUMERATE),
 //	JS_PSG("offsetTop",	element_get_property_offsetTop, JSPROP_ENUMERATE),
-//	JS_PSG("offsetWidth",	element_get_property_offsetWidth, JSPROP_ENUMERATE),
+	JS_PSG("offsetWidth",	element_get_property_offsetWidth, JSPROP_ENUMERATE),
 	JS_PSGS("outerHTML",	element_get_property_outerHtml, element_set_property_outerHtml, JSPROP_ENUMERATE),
 	JS_PSG("ownerDocument",	element_get_property_ownerDocument, JSPROP_ENUMERATE),
 	JS_PSG("parentElement",	element_get_property_parentElement, JSPROP_ENUMERATE),
@@ -2202,7 +2202,6 @@ element_get_property_nextSibling(JSContext *ctx, unsigned int argc, JS::Value *v
 	return true;
 }
 
-#if 0
 static bool
 element_get_property_offsetHeight(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -2211,7 +2210,6 @@ element_get_property_offsetHeight(JSContext *ctx, unsigned int argc, JS::Value *
 #endif
 	return element_get_property_clientHeight(ctx, argc, vp);
 }
-#endif
 
 #if 0
 static bool
@@ -2465,7 +2463,6 @@ element_get_property_offsetTop(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 #endif
 
-#if 0
 static bool
 element_get_property_offsetWidth(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -2474,7 +2471,6 @@ element_get_property_offsetWidth(JSContext *ctx, unsigned int argc, JS::Value *v
 #endif
 	return element_get_property_clientWidth(ctx, argc, vp);
 }
-#endif
 
 static bool
 element_get_property_ownerDocument(JSContext *ctx, unsigned int argc, JS::Value *vp)
