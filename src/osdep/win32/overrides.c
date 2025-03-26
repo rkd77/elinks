@@ -75,11 +75,16 @@ static const char *keymap_2[] = {
 	"\E[24~"   /* VK_F12 */
 };
 
+
+#ifdef CONFIG_FASTMEM
+#define TRACE(m...)
+#else
 #define TRACE(m...)					\
 	do {						\
 		if (cmdline_options && (get_cmd_opt_int("verbose") == 2))	\
 			DBG(m);				\
 	} while (0)
+#endif
 
 static enum fd_types
 what_fd_type(int *fd)
@@ -297,12 +302,11 @@ win32_write(int fd, const void *buf, unsigned len)
 
 	case FDT_TERMINAL:
 		if (isatty(STDOUT_FILENO) > 0) {
-#if 0
-			WriteConsole ((HANDLE)(intptr_t)fd, buf, len, &written, NULL);
-			rc = written;
-#else
-			rc = VT100_decode((HANDLE)(intptr_t)fd, buf, len);
-#endif
+			if (is_xterm()) {
+				rc = write(STDOUT_FILENO, buf, len);
+			} else {
+				rc = VT100_decode((HANDLE)(intptr_t)fd, buf, len);
+			}
 		} else {
 			/* stdout redirected */
 			rc = write(STDOUT_FILENO, buf, len);
