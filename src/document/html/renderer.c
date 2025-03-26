@@ -642,7 +642,7 @@ set_hline(struct html_context *html_context, const char *chars, int charslen,
 
 	if (part->document) {
 #ifdef CONFIG_LIBDOM
-		html_context->current_number = html_top->name - document->text.source;
+		html_context->current_number = html_top->name - part->document->text.source;
 #endif
 		if (realloc_line(html_context, part->document,
 		                 Y(y), X(x) + charslen - 1) < 0)
