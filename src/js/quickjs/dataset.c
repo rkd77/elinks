@@ -36,12 +36,10 @@ js_dataset_finalizer(JSRuntime *rt, JSValue val)
 	REF_JS(val);
 	dom_node *el = (dom_node *)(JS_GetOpaque(val, js_dataset_class_id));
 
-	if (el) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-		dom_node_unref(el);
-	}
+	dom_node_unref(el);
 }
 
 /* return < 0 if exception, or TRUE/FALSE */

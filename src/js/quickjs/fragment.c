@@ -397,12 +397,10 @@ js_fragment_get_property_nextElementSibling(JSContext *ctx, JSValueConst this_va
 		dom_exception exc = dom_node_get_next_sibling(node, &next);
 		dom_node_type type;
 
-		if (prev_next) {
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-			dom_node_unref(prev_next);
-		}
+		dom_node_unref(prev_next);
 
 		if (exc != DOM_NO_ERR || !next) {
 			return JS_NULL;
@@ -685,12 +683,10 @@ js_fragment_get_property_previousElementSibling(JSContext *ctx, JSValueConst thi
 		dom_exception exc = dom_node_get_previous_sibling(node, &prev);
 		dom_node_type type;
 
-		if (prev_prev) {
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-			dom_node_unref(prev_prev);
-		}
+		dom_node_unref(prev_prev);
 
 		if (exc != DOM_NO_ERR || !prev) {
 			return JS_NULL;
@@ -1136,12 +1132,12 @@ isAncestor(dom_node *el, dom_node *node)
 	while (node) {
 		dom_exception exc;
 		dom_node *next = NULL;
-		if (prev_next) {
+
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-			dom_node_unref(prev_next);
-		}
+		dom_node_unref(prev_next);
+
 		if (el == node) {
 			return true;
 		}
@@ -1596,18 +1592,14 @@ void js_fragment_finalizer(JSRuntime *rt, JSValue val)
 			dom_event_listener_unref(el_private->listener);
 		}
 
-		if (el) {
 //			void *old_node_data = NULL;
 //			dom_node_set_user_data(el, corestring_dom___ns_key_html_content_data, NULL, js_html_document_user_data_handler,
 //				(void *) &old_node_data);
 
-			if (el->refcnt > 0) {
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-				dom_node_unref(el);
-			}
-		}
+		dom_node_unref(el);
 
 		foreach(l, el_private->listeners) {
 			mem_free_set(&l->typ, NULL);

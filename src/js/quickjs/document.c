@@ -1993,12 +1993,10 @@ js_doctype_finalizer(JSRuntime *rt, JSValue val)
 
 	dom_node *node = (dom_node *)JS_GetOpaque(val, js_doctype_class_id);
 
-	if (node) {
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-		dom_node_unref(node);
-	}
+	dom_node_unref(node);
 }
 
 static JSClassDef js_doctype_class = {

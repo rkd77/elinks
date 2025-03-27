@@ -125,12 +125,10 @@ void js_attr_finalizer(JSRuntime *rt, JSValue val)
 	REF_JS(val);
 	dom_attr *node = (dom_attr *)JS_GetOpaque(val, js_attr_class_id);
 
-	if (node) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-		dom_node_unref(node);
-	}
+	dom_node_unref(node);
 }
 
 static JSClassDef js_attr_class = {
