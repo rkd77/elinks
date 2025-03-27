@@ -172,9 +172,7 @@ attributes_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 			JS_DefineProperty(ctx, hobj, dom_string_data(name), ro, JSPROP_ENUMERATE);
 		}
 next:
-		if (name) {
-			dom_string_unref(name);
-		}
+		dom_string_unref(name);
 		dom_node_unref(attr);
 	}
 

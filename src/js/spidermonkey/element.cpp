@@ -4296,9 +4296,7 @@ element_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 
 ex:
-	if (typ) {
-		dom_string_unref(typ);
-	}
+	dom_string_unref(typ);
 	dom_event_listener_unref(el_private->listener);
 	args.rval().setUndefined();
 

@@ -180,9 +180,7 @@ customEvent_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
 		}
 	}
 	exc = dom_custom_event_init_ns(event, NULL, typ, bubbles, cancelable, detail);
-	if (typ) {
-		dom_string_unref(typ);
-	}
+	dom_string_unref(typ);
 	args.rval().setObject(*newObj);
 
 	return true;

@@ -399,9 +399,7 @@ htmlCollection_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 			}
 		}
 		counter++;
-		if (name) {
-			dom_string_unref(name);
-		}
+		dom_string_unref(name);
 		dom_node_unref(element);
 	}
 

@@ -579,10 +579,7 @@ style_style(JSContext *ctx, unsigned int argc, JS::Value *vp, const char *proper
 
 	if (!style || !dom_string_length(style)) {
 		args.rval().setString(JS_NewStringCopyZ(ctx, ""));
-
-		if (style) {
-			dom_string_unref(style);
-		}
+		dom_string_unref(style);
 		return true;
 	}
 	res = get_css_value(dom_string_data(style), property);
@@ -765,10 +762,7 @@ style_set_style(JSContext *ctx, unsigned int argc, JS::Value *vp, const char *pr
 
 	if (!style || !dom_string_length(style)) {
 		res = set_css_value("", property, value);
-
-		if (style) {
-			dom_string_unref(style);
-		}
+		dom_string_unref(style);
 	} else {
 		res = set_css_value(dom_string_data(style), property, value);
 		dom_string_unref(style);

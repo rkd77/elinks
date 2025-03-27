@@ -184,9 +184,9 @@ keyboardEvent_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
 		key, code, DOM_KEY_LOCATION_STANDARD,
 		false, false, false,
 		false, false, false);
-	if (typ) dom_string_unref(typ);
-	if (key) dom_string_unref(key);
-	if (code) dom_string_unref(code);
+	dom_string_unref(typ);
+	dom_string_unref(key);
+	dom_string_unref(code);
 
 	JS::SetReservedSlot(newObj, 0, JS::PrivateValue(event));
 	args.rval().setObject(*newObj);
@@ -386,7 +386,7 @@ keyboardEvent_get_property_keyCode(JSContext *ctx, unsigned int argc, JS::Value 
 	}
 	unicode_val_T keyCode = convert_dom_string_to_keycode(key);
 	args.rval().setInt32(keyCode);
-	if (key) dom_string_unref(key);
+	dom_string_unref(key);
 
 	return true;
 }
@@ -546,9 +546,7 @@ get_keyboardEvent(JSContext *ctx, struct term_event *ev)
 		false, false, false, false,
 		false, false);
 
-	if (dom_key) {
-		dom_string_unref(dom_key);
-	}
+	dom_string_unref(dom_key);
 //	keyb->keyCode = keyCode;
 	JS::SetReservedSlot(k, 0, JS::PrivateValue(keyb));
 
