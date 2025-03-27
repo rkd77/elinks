@@ -231,9 +231,7 @@ mjs_htmlCollection_set_items(js_State *J, void *node)
 		}
 next:
 		counter++;
-		if (name) {
-			dom_string_unref(name);
-		}
+		dom_string_unref(name);
 	}
 }
 

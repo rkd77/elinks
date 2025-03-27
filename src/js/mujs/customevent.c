@@ -90,10 +90,7 @@ mjs_push_customEvent(js_State *J, char *type_)
 		return;
 	}
 	dom_custom_event_init_ns(event, NULL, typ, false, false, NULL);
-
-	if (typ) {
-		dom_string_unref(typ);
-	}
+	dom_string_unref(typ);
 
 	js_newobject(J);
 	{
@@ -331,10 +328,8 @@ mjs_customEvent_constructor(js_State *J)
 		detail = js_ref(J);
 	}
 	exc = dom_custom_event_init_ns(event, NULL, typ, bubbles, cancelable, detail);
+	dom_string_unref(typ);
 
-	if (typ) {
-		dom_string_unref(typ);
-	}
 	js_newobject(J);
 	{
 		js_newuserdata(J, "event", event, mjs_customEvent_finalizer);

@@ -69,8 +69,8 @@ mjs_push_keyboardEvent(js_State *J, struct term_event *ev, const char *type_)
 		false, false, false, false,
 		false, false);
 
-	if (typ) dom_string_unref(typ);
-	if (dom_key) dom_string_unref(dom_key);
+	dom_string_unref(typ);
+	dom_string_unref(dom_key);
 
 	js_newobject(J);
 	{
@@ -199,7 +199,7 @@ mjs_keyboardEvent_get_property_keyCode(js_State *J)
 		return;
 	}
 	unicode_val_T keyCode = convert_dom_string_to_keycode(key);
-	if (key) dom_string_unref(key);
+	dom_string_unref(key);
 	js_pushnumber(J, keyCode);
 }
 
@@ -351,9 +351,9 @@ mjs_keyboardEvent_constructor(js_State *J)
 		key, code, DOM_KEY_LOCATION_STANDARD,
 		false, false, false,
 		false, false, false);
-	if (typ) dom_string_unref(typ);
-	if (key) dom_string_unref(key);
-	if (code) dom_string_unref(code);
+	dom_string_unref(typ);
+	dom_string_unref(key);
+	dom_string_unref(code);
 
 	js_newobject(J);
 	{

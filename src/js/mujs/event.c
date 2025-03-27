@@ -232,10 +232,7 @@ mjs_event_constructor(js_State *J)
 //	event->composed = js_toboolean(J, -1);
 //	js_pop(J, 1);
 	exc = dom_event_init(event, typ, bubbles, cancelable);
-
-	if (typ) {
-		dom_string_unref(typ);
-	}
+	dom_string_unref(typ);
 
 	js_newobject(J);
 	{

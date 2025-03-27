@@ -43,10 +43,7 @@ mjs_style(js_State *J, const char *property)
 
 	if (!style || !dom_string_length(style)) {
 		js_pushstring(J, "");
-
-		if (style) {
-			dom_string_unref(style);
-		}
+		dom_string_unref(style);
 		return;
 	}
 
@@ -118,10 +115,7 @@ mjs_set_style(js_State *J, const char *property)
 
 	if (!style || !dom_string_length(style)) {
 		res = set_css_value("", property, value);
-
-		if (style) {
-			dom_string_unref(style);
-		}
+		dom_string_unref(style);
 	} else {
 		res = set_css_value(dom_string_data(style), property, value);
 		dom_string_unref(style);

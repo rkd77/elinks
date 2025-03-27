@@ -2499,9 +2499,7 @@ mjs_element_addEventListener(js_State *J)
 	}
 
 ex:
-	if (typ) {
-		dom_string_unref(typ);
-	}
+	dom_string_unref(typ);
 	dom_event_listener_unref(el_private->listener);
 	js_pushundefined(J);
 }
