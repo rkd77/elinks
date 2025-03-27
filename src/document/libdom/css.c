@@ -2198,12 +2198,10 @@ select_css(struct html_context *html_context, struct html_element *html_element)
 
 	bool is_root = (root == el);
 
-	if (root) {
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-		dom_node_unref(root);
-	}
+	dom_node_unref(root);
 
 	uint8_t display = css_computed_display(style->styles[CSS_PSEUDO_ELEMENT_NONE], is_root);
 

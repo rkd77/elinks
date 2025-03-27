@@ -150,12 +150,10 @@ free_document(void *doc)
 	}
 	dom_html_document *ddd = (dom_html_document *)doc;
 
-	if (((dom_node *)ddd)->refcnt > 0) {
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-		dom_node_unref(ddd);
-	}
+	dom_node_unref(ddd);
 }
 
 void
