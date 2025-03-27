@@ -56,10 +56,7 @@ js_nodelist_finalizer(JSRuntime *rt, JSValue val)
 		return;
 	}
 	dom_nodelist *nl = (dom_nodelist *)(nodelist_private->node);
-
-	if (nl) {
-		dom_nodelist_unref(nl);
-	}
+	dom_nodelist_unref(nl);
 	mem_free(nodelist_private);
 }
 
