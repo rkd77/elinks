@@ -1462,10 +1462,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 
 		} while (node != NULL);
 	}
-
-	if (node_name != NULL) {
-		dom_string_unref(node_name);
-	}
+	dom_string_unref(node_name);
 
 	*count = cnt;
 	return CSS_OK;
