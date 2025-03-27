@@ -1188,9 +1188,7 @@ js_document_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JS
 	}
 
 ex:
-	if (typ) {
-		dom_string_unref(typ);
-	}
+	dom_string_unref(typ);
 	dom_event_listener_unref(doc_private->listener);
 
 	return JS_UNDEFINED;

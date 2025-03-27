@@ -354,9 +354,7 @@ js_htmlCollection_set_items(JSContext *ctx, JSValue this_val, void *node)
 		}
 		JS_FreeValue(ctx, obj);
 		counter++;
-		if (name) {
-			dom_string_unref(name);
-		}
+		dom_string_unref(name);
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif

@@ -95,9 +95,7 @@ js_attributes_set_items(JSContext *ctx, JSValue this_val, void *node)
 			JS_DefinePropertyValueStr(ctx, this_val, dom_string_data(name), JS_DupValue(ctx, obj), 0);
 		}
 next:
-		if (name) {
-			dom_string_unref(name);
-		}
+		dom_string_unref(name);
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif

@@ -201,7 +201,7 @@ js_keyboardEvent_get_property_keyCode(JSContext *ctx, JSValueConst this_val)
 	}
 	unicode_val_T keyCode = convert_dom_string_to_keycode(key);
 	JSValue r = JS_NewUint32(ctx, keyCode);
-	if (key) dom_string_unref(key);
+	dom_string_unref(key);
 	dom_event_unref(event);
 
 	RETURN_JS(r);
@@ -343,7 +343,7 @@ get_keyboardEvent(JSContext *ctx, struct term_event *ev)
 		false, false, false, false,
 		false, false);
 
-	if (dom_key) dom_string_unref(dom_key);
+	dom_string_unref(dom_key);
 
 	JSValue keyb_obj = JS_NewObjectClass(ctx, js_keyboardEvent_class_id);
 	JS_SetPropertyFunctionList(ctx, keyb_obj, js_keyboardEvent_proto_funcs, countof(js_keyboardEvent_proto_funcs));
@@ -417,9 +417,9 @@ js_keyboardEvent_constructor(JSContext *ctx, JSValueConst new_target, int argc, 
 		key, code, DOM_KEY_LOCATION_STANDARD,
 		false, false, false,
 		false, false, false);
-	if (typ) dom_string_unref(typ);
-	if (key) dom_string_unref(key);
-	if (code) dom_string_unref(code);
+	dom_string_unref(typ);
+	dom_string_unref(key);
+	dom_string_unref(code);
 
 	JS_SetOpaque(obj, event);
 

@@ -270,10 +270,7 @@ js_event_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueC
 //		event->composed = JS_ToBool(ctx, r);
 	}
 	exc = dom_event_init(event, typ, bubbles, cancelable);
-
-	if (typ) {
-		dom_string_unref(typ);
-	}
+	dom_string_unref(typ);
 	JS_SetOpaque(obj, event);
 
 	return obj;

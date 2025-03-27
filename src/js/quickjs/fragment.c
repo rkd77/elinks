@@ -952,9 +952,7 @@ js_fragment_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JS
 	}
 
 ex:
-	if (typ) {
-		dom_string_unref(typ);
-	}
+	dom_string_unref(typ);
 	dom_event_listener_unref(el_private->listener);
 	//dom_node_unref(el);
 

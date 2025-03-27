@@ -333,10 +333,7 @@ js_customEvent_constructor(JSContext *ctx, JSValueConst new_target, int argc, JS
 		}
 	}
 	exc = dom_custom_event_init_ns(event, NULL, typ, bubbles, cancelable, detail);
-
-	if (typ) {
-		dom_string_unref(typ);
-	}
+	dom_string_unref(typ);
 	JS_SetOpaque(obj, event);
 
 	return obj;

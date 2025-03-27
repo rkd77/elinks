@@ -49,10 +49,7 @@ js_style(JSContext *ctx, JSValueConst this_val, const char *property)
 
 	if (!style || !dom_string_length(style)) {
 		r = JS_NewString(ctx, "");
-
-		if (style) {
-			dom_string_unref(style);
-		}
+		dom_string_unref(style);
 		//dom_node_unref(el);
 		RETURN_JS(r);
 	}
@@ -136,10 +133,7 @@ js_set_style(JSContext *ctx, JSValueConst this_val, JSValue val, const char *pro
 
 	if (!style || !dom_string_length(style)) {
 		res = set_css_value("", property, value);
-
-		if (style) {
-			dom_string_unref(style);
-		}
+		dom_string_unref(style);
 	} else {
 		res = set_css_value(dom_string_data(style), property, value);
 		dom_string_unref(style);
