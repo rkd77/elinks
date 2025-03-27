@@ -1600,12 +1600,10 @@ mjs_doctype_finalizer(js_State *J, void *node)
 {
 	attr_erase_from_map(map_doctypes, node);
 
-	if (node) {
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-		dom_node_unref((dom_node *)node);
-	}
+	dom_node_unref((dom_node *)node);
 }
 
 void
@@ -1642,12 +1640,12 @@ mjs_doc_private_finalizer(js_State *J, void *priv)
 			if (l->fun) js_unref(J, l->fun);
 		}
 		free_list(doc_private->listeners);
-		if (doc_private->node) {
+
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-			dom_node_unref(doc_private->node);
-		}
+		dom_node_unref(doc_private->node);
+
 		if (doc_private->thisval) {
 			js_unref(J, doc_private->thisval);
 		}

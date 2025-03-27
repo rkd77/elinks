@@ -1003,12 +1003,10 @@ mjs_element_get_property_nextElementSibling(js_State *J)
 		dom_exception exc = dom_node_get_next_sibling(node, &next);
 		dom_node_type type;
 
-		if (prev_next) {
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-			dom_node_unref(prev_next);
-		}
+		dom_node_unref(prev_next);
 
 		if (exc != DOM_NO_ERR || !next) {
 			js_pushnull(J);
@@ -1426,12 +1424,10 @@ mjs_element_get_property_previousElementSibling(js_State *J)
 		dom_exception exc = dom_node_get_previous_sibling(node, &prev);
 		dom_node_type type;
 
-		if (prev_prev) {
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-			dom_node_unref(prev_prev);
-		}
+		dom_node_unref(prev_prev);
 
 		if (exc != DOM_NO_ERR || !prev) {
 			js_pushnull(J);
@@ -2021,39 +2017,35 @@ out:
 	if (parser != NULL) {
 		dom_hubbub_parser_destroy(parser);
 	}
-	if (doc != NULL) {
+
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-		dom_node_unref(doc);
-	}
-	if (fragment != NULL) {
+	dom_node_unref(doc);
+
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-		dom_node_unref(fragment);
-	}
-	if (child != NULL) {
+	dom_node_unref(fragment);
+
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-		dom_node_unref(child);
-	}
-	if (html != NULL) {
+	dom_node_unref(child);
+
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-		dom_node_unref(html);
-	}
+	dom_node_unref(html);
+
 	if (bodies != NULL) {
 		dom_nodelist_unref(bodies);
 	}
-	if (body != NULL) {
+
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-		dom_node_unref(body);
-	}
+	dom_node_unref(body);
 	interpreter->changed = 1;
 	js_pushundefined(J);
 }
@@ -2226,45 +2218,41 @@ out:
 	if (parser != NULL) {
 		dom_hubbub_parser_destroy(parser);
 	}
-	if (doc != NULL) {
+
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-		dom_node_unref(doc);
-	}
-	if (fragment != NULL) {
+	dom_node_unref(doc);
+
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-		dom_node_unref(fragment);
-	}
-	if (child != NULL) {
+	dom_node_unref(fragment);
+
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-		dom_node_unref(child);
-	}
-	if (html != NULL) {
+	dom_node_unref(child);
+
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-		dom_node_unref(html);
-	}
+	dom_node_unref(html);
+
 	if (bodies != NULL) {
 		dom_nodelist_unref(bodies);
 	}
-	if (body != NULL) {
+
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-		dom_node_unref(body);
-	}
-	if (cref != NULL) {
+	dom_node_unref(body);
+
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-		dom_node_unref(cref);
-	}
+	dom_node_unref(cref);
+
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -2716,12 +2704,12 @@ isAncestor(dom_node *el, dom_node *node)
 	while (node) {
 		dom_exception exc;
 		dom_node *next = NULL;
-		if (prev_next) {
+
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-			dom_node_unref(prev_next);
-		}
+		dom_node_unref(prev_next);
+
 		if (el == node) {
 			return true;
 		}
@@ -2801,12 +2789,10 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
 	dom_node_unref(root);
 
-	if (el) {
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-		dom_node_unref(el);
-	}
+	dom_node_unref(el);
 
 	if (!res) {
 		js_pushnull(J);
@@ -3554,30 +3540,16 @@ out:
 	if (parser != NULL) {
 		dom_hubbub_parser_destroy(parser);
 	}
-	if (doc != NULL) {
-		dom_node_unref(doc);
-	}
-	if (fragment != NULL) {
-		dom_node_unref(fragment);
-	}
-	if (child != NULL) {
-		dom_node_unref(child);
-	}
-	if (html != NULL) {
-		dom_node_unref(html);
-	}
+	dom_node_unref(doc);
+	dom_node_unref(fragment);
+	dom_node_unref(child);
+	dom_node_unref(html);
 	if (bodies != NULL) {
 		dom_nodelist_unref(bodies);
 	}
-	if (body != NULL) {
-		dom_node_unref(body);
-	}
-	if (cref != NULL) {
-		dom_node_unref(cref);
-	}
-	if (parent != NULL) {
-		dom_node_unref(parent);
-	}
+	dom_node_unref(body);
+	dom_node_unref(cref);
+	dom_node_unref(parent);
 	done_string(&buf);
 
 	js_pushundefined(J);
@@ -3674,12 +3646,10 @@ mjs_element_finalizer(js_State *J, void *priv)
 			}
 			free_list(el_private->listeners);
 
-			if (node && (node->refcnt > 0)) {
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-				dom_node_unref(node);
-			}
+			dom_node_unref(node);
 			if (el_private->thisval) {
 				js_unref(J, el_private->thisval);
 			}

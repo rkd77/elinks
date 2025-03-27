@@ -102,12 +102,10 @@ void mjs_attr_finalizer(js_State *J, void *node)
 {
 	attr_erase_from_map(map_attrs, node);
 
-	if (node) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-		dom_node_unref((dom_node *)node);
-	}
+	dom_node_unref((dom_node *)node);
 }
 
 void
