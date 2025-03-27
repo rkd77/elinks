@@ -114,10 +114,7 @@ static void
 mjs_nodeList_finalizer(js_State *J, void *node)
 {
 	//attr_erase_from_map(map_nodelist, node);
-
-	if (node) {
-		dom_nodelist_unref((dom_nodelist *)node);
-	}
+	dom_nodelist_unref((dom_nodelist *)node);
 }
 
 #if 0

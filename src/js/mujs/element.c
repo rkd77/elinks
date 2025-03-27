@@ -2037,10 +2037,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
 	dom_node_unref(html);
-
-	if (bodies != NULL) {
-		dom_nodelist_unref(bodies);
-	}
+	dom_nodelist_unref(bodies);
 
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
@@ -2238,10 +2235,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
 	dom_node_unref(html);
-
-	if (bodies != NULL) {
-		dom_nodelist_unref(bodies);
-	}
+	dom_nodelist_unref(bodies);
 
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
@@ -3542,9 +3536,7 @@ out:
 	dom_node_unref(fragment);
 	dom_node_unref(child);
 	dom_node_unref(html);
-	if (bodies != NULL) {
-		dom_nodelist_unref(bodies);
-	}
+	dom_nodelist_unref(bodies);
 	dom_node_unref(body);
 	dom_node_unref(cref);
 	dom_node_unref(parent);
