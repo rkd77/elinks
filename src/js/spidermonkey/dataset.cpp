@@ -61,9 +61,7 @@ static void dataset_finalize(JS::GCContext *op, JSObject *obj)
 #endif
 	dom_node *element = JS::GetMaybePtrFromReservedSlot<dom_node>(obj, 0);
 
-	if (element) {
-		dom_node_unref(element);
-	}
+	dom_node_unref(element);
 }
 
 static bool

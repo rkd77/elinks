@@ -183,10 +183,8 @@ static void text_finalize(JS::GCContext *op, JSObject *obj)
 		}
 	}
 
-	if (el) {
-		dom_node_unref(el);
-		JS::SetReservedSlot(obj, 0, JS::UndefinedValue());
-	}
+	dom_node_unref(el);
+	JS::SetReservedSlot(obj, 0, JS::UndefinedValue());
 }
 
 
@@ -726,9 +724,7 @@ text_get_property_nextElementSibling(JSContext *ctx, unsigned int argc, JS::Valu
 		dom_exception exc = dom_node_get_next_sibling(node, &next);
 		dom_node_type type;
 
-		if (prev_next) {
-			dom_node_unref(prev_next);
-		}
+		dom_node_unref(prev_next);
 
 		if (exc != DOM_NO_ERR || !next) {
 			args.rval().setNull();
@@ -1268,9 +1264,7 @@ text_get_property_previousElementSibling(JSContext *ctx, unsigned int argc, JS::
 		dom_exception exc = dom_node_get_previous_sibling(node, &prev);
 		dom_node_type type;
 
-		if (prev_prev) {
-			dom_node_unref(prev_prev);
-		}
+		dom_node_unref(prev_prev);
 
 		if (exc != DOM_NO_ERR || !prev) {
 			args.rval().setNull();
@@ -1855,9 +1849,7 @@ isAncestor(dom_node *el, dom_node *node)
 	while (node) {
 		dom_exception exc;
 		dom_node *next = NULL;
-		if (prev_next) {
-			dom_node_unref(prev_next);
-		}
+		dom_node_unref(prev_next);
 		if (el == node) {
 			return true;
 		}

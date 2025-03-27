@@ -132,10 +132,8 @@ static void document_finalize(JS::GCContext *op, JSObject *obj)
 		JS::SetReservedSlot(obj, 1, JS::UndefinedValue());
 	}
 
-	if (doc) {
-		dom_node_unref(doc);
-		JS::SetReservedSlot(obj, 0, JS::UndefinedValue());
-	}
+	dom_node_unref(doc);
+	JS::SetReservedSlot(obj, 0, JS::UndefinedValue());
 }
 
 JSClassOps document_ops = {
@@ -2232,9 +2230,7 @@ static void doctype_finalize(JS::GCContext *op, JSObject *obj)
 #endif
 	dom_document_type *dtd = JS::GetMaybePtrFromReservedSlot<dom_document_type>(obj, 0);
 
-	if (dtd) {
-		dom_node_unref(dtd);
-	}
+	dom_node_unref(dtd);
 }
 
 JSClassOps doctype_ops = {

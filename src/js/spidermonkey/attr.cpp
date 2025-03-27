@@ -59,9 +59,7 @@ static void attr_finalize(JS::GCContext *op, JSObject *obj)
 #endif
 	dom_attr *attr = (dom_attr *)JS::GetMaybePtrFromReservedSlot<dom_attr>(obj, 0);
 
-	if (attr) {
-		dom_node_unref(attr);
-	}
+	dom_node_unref(attr);
 }
 
 

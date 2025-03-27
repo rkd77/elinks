@@ -1879,9 +1879,7 @@ element_get_property_nextElementSibling(JSContext *ctx, unsigned int argc, JS::V
 		dom_exception exc = dom_node_get_next_sibling(node, &next);
 		dom_node_type type;
 
-		if (prev_next) {
-			dom_node_unref(prev_next);
-		}
+		dom_node_unref(prev_next);
 
 		if (exc != DOM_NO_ERR || !next) {
 			args.rval().setNull();
@@ -2687,9 +2685,7 @@ element_get_property_previousElementSibling(JSContext *ctx, unsigned int argc, J
 		dom_exception exc = dom_node_get_previous_sibling(node, &prev);
 		dom_node_type type;
 
-		if (prev_prev) {
-			dom_node_unref(prev_prev);
-		}
+		dom_node_unref(prev_prev);
 
 		if (exc != DOM_NO_ERR || !prev) {
 			args.rval().setNull();
@@ -3702,24 +3698,14 @@ out:
 	if (parser != NULL) {
 		dom_hubbub_parser_destroy(parser);
 	}
-	if (doc != NULL) {
-		dom_node_unref(doc);
-	}
-	if (fragment != NULL) {
-		dom_node_unref(fragment);
-	}
-	if (child != NULL) {
-		dom_node_unref(child);
-	}
-	if (html != NULL) {
-		dom_node_unref(html);
-	}
+	dom_node_unref(doc);
+	dom_node_unref(fragment);
+	dom_node_unref(child);
+	dom_node_unref(html);
 	if (bodies != NULL) {
 		dom_nodelist_unref(bodies);
 	}
-	if (body != NULL) {
-		dom_node_unref(body);
-	}
+	dom_node_unref(body);
 	mem_free(s);
 	interpreter->changed = 1;
 	debug_dump_xhtml(document->dom);
@@ -3939,27 +3925,15 @@ out:
 	if (parser != NULL) {
 		dom_hubbub_parser_destroy(parser);
 	}
-	if (doc != NULL) {
-		dom_node_unref(doc);
-	}
-	if (fragment != NULL) {
-		dom_node_unref(fragment);
-	}
-	if (child != NULL) {
-		dom_node_unref(child);
-	}
-	if (html != NULL) {
-		dom_node_unref(html);
-	}
+	dom_node_unref(doc);
+	dom_node_unref(fragment);
+	dom_node_unref(child);
+	dom_node_unref(html);
 	if (bodies != NULL) {
 		dom_nodelist_unref(bodies);
 	}
-	if (body != NULL) {
-		dom_node_unref(body);
-	}
-	if (cref != NULL) {
-		dom_node_unref(cref);
-	}
+	dom_node_unref(body);
+	dom_node_unref(cref);
 	dom_node_unref(parent);
 
 	mem_free(s);
@@ -4606,9 +4580,7 @@ isAncestor(dom_node *el, dom_node *node)
 	while (node) {
 		dom_exception exc;
 		dom_node *next = NULL;
-		if (prev_next) {
-			dom_node_unref(prev_next);
-		}
+		dom_node_unref(prev_next);
 		if (el == node) {
 			return true;
 		}
@@ -4706,12 +4678,10 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
 	dom_node_unref(root);
 
-	if (el) {
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-		dom_node_unref(el);
-	}
+	dom_node_unref(el);
 
 	if (!res) {
 		args.rval().setNull();
@@ -5817,30 +5787,16 @@ out:
 	if (parser != NULL) {
 		dom_hubbub_parser_destroy(parser);
 	}
-	if (doc != NULL) {
-		dom_node_unref(doc);
-	}
-	if (fragment != NULL) {
-		dom_node_unref(fragment);
-	}
-	if (child != NULL) {
-		dom_node_unref(child);
-	}
-	if (html != NULL) {
-		dom_node_unref(html);
-	}
+	dom_node_unref(doc);
+	dom_node_unref(fragment);
+	dom_node_unref(child);
+	dom_node_unref(html);
 	if (bodies != NULL) {
 		dom_nodelist_unref(bodies);
 	}
-	if (body != NULL) {
-		dom_node_unref(body);
-	}
-	if (cref != NULL) {
-		dom_node_unref(cref);
-	}
-	if (parent != NULL) {
-		dom_node_unref(parent);
-	}
+	dom_node_unref(body);
+	dom_node_unref(cref);
+	dom_node_unref(parent);
 	done_string(&buf);
 
 	return true;
