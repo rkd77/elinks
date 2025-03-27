@@ -62,10 +62,7 @@ static void nodeList_finalize(JS::GCContext *op, JSObject *obj)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_nodelist *nl = JS::GetMaybePtrFromReservedSlot<dom_nodelist>(obj, 0);
-
-	if (nl) {
-		dom_nodelist_unref(nl);
-	}
+	dom_nodelist_unref(nl);
 }
 
 JSClassOps nodeList_ops = {

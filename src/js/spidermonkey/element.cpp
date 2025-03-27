@@ -3702,9 +3702,7 @@ out:
 	dom_node_unref(fragment);
 	dom_node_unref(child);
 	dom_node_unref(html);
-	if (bodies != NULL) {
-		dom_nodelist_unref(bodies);
-	}
+	dom_nodelist_unref(bodies);
 	dom_node_unref(body);
 	mem_free(s);
 	interpreter->changed = 1;
@@ -3929,9 +3927,7 @@ out:
 	dom_node_unref(fragment);
 	dom_node_unref(child);
 	dom_node_unref(html);
-	if (bodies != NULL) {
-		dom_nodelist_unref(bodies);
-	}
+	dom_nodelist_unref(bodies);
 	dom_node_unref(body);
 	dom_node_unref(cref);
 	dom_node_unref(parent);
@@ -5789,9 +5785,7 @@ out:
 	dom_node_unref(fragment);
 	dom_node_unref(child);
 	dom_node_unref(html);
-	if (bodies != NULL) {
-		dom_nodelist_unref(bodies);
-	}
+	dom_nodelist_unref(bodies);
 	dom_node_unref(body);
 	dom_node_unref(cref);
 	dom_node_unref(parent);
