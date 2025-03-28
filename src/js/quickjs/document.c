@@ -373,14 +373,13 @@ js_document_get_property_currentScript(JSContext *ctx, JSValueConst this_val)
 		dom_node *elem = (dom_node *)find_in_map(mapa, interpreter->element_offset);
 
 		if (elem) {
-			dom_string *tag_name = NULL;
-			dom_exception exc = dom_node_get_node_name(elem, &tag_name);
+			dom_html_element_type ty;
+			dom_exception exc = dom_html_element_get_tag_type(elem, &ty);
 
-			if (exc != DOM_NO_ERR || !tag_name) {
+			if (exc != DOM_NO_ERR) {
 				return JS_NULL;
 			}
-			bool isScript = !strcmp("SCRIPT", dom_string_data(tag_name));
-			dom_string_unref(tag_name);
+			bool isScript = (ty == DOM_HTML_ELEMENT_TYPE_SCRIPT);
 
 			if (isScript) {
 				return getNode(ctx, elem);
