@@ -977,15 +977,15 @@ element_get_property_clientHeight(JSContext *ctx, unsigned int argc, JS::Value *
 		args.rval().setInt32(0);
 		return true;
 	}
-	dom_string *tag_name = NULL;
-	dom_exception exc = dom_node_get_node_name(el, &tag_name);
 
-	if (exc != DOM_NO_ERR || !tag_name) {
+	dom_html_element_type ty;
+	dom_exception exc = dom_html_element_get_tag_type(el, &ty);
+
+	if (exc != DOM_NO_ERR) {
 		args.rval().setInt32(0);
 		return true;
 	}
-	bool root = (!strcmp(dom_string_data(tag_name), "BODY") || !strcmp(dom_string_data(tag_name), "HTML"));
-	dom_string_unref(tag_name);
+	bool root = (ty == DOM_HTML_ELEMENT_TYPE_BODY || ty == DOM_HTML_ELEMENT_TYPE_HTML);
 
 	if (root) {
 		int height = doc_view->box.height * ses->tab->term->cell_height;
@@ -1091,23 +1091,21 @@ element_get_property_clientWidth(JSContext *ctx, unsigned int argc, JS::Value *v
 		args.rval().setInt32(0);
 		return true;
 	}
-	dom_string *tag_name = NULL;
-	dom_exception exc = dom_node_get_node_name(el, &tag_name);
+	dom_html_element_type ty;
+	dom_exception exc = dom_html_element_get_tag_type(el, &ty);
 
-	if (exc != DOM_NO_ERR || !tag_name) {
+	if (exc != DOM_NO_ERR) {
 		args.rval().setInt32(0);
 		return true;
 	}
-	bool root = (!strcmp(dom_string_data(tag_name), "BODY") || !strcmp(dom_string_data(tag_name), "HTML") || !strcmp(dom_string_data(tag_name), "DIV"));
+	bool root = (ty == DOM_HTML_ELEMENT_TYPE_BODY || ty == DOM_HTML_ELEMENT_TYPE_HTML || ty == DOM_HTML_ELEMENT_TYPE_DIV);
 
 	if (root) {
 		int width = doc_view->box.width * ses->tab->term->cell_width;
 		args.rval().setInt32(width);
-		dom_string_unref(tag_name);
 		return true;
 	}
-	bool pre = (!strcmp(dom_string_data(tag_name), "PRE"));
-	dom_string_unref(tag_name);
+	bool pre = (ty == DOM_HTML_ELEMENT_TYPE_PRE);
 
 	if (pre) {
 		dom_string *id = NULL;
