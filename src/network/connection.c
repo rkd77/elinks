@@ -1226,6 +1226,9 @@ connection_timeout_xhr_1(struct connection *conn)
 void
 set_connection_timeout_xhr(struct connection *conn, milliseconds_T timeout)
 {
+	if (!conn) {
+		return;
+	}
 	kill_timer(&conn->timer);
 	conn->xhr_timeout = timeout;
 	install_timer(&conn->timer, timeout / 2, (void (*)(void *)) connection_timeout_xhr_1, conn);
