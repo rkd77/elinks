@@ -562,6 +562,7 @@ style_style(JSContext *ctx, unsigned int argc, JS::Value *vp, const char *proper
 		return false;
 	}
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
 	dom_exception exc;
 	dom_string *style = NULL;
 	char *res = NULL;
@@ -622,6 +623,8 @@ style_get_property_cssText(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
+
 	dom_exception exc;
 	dom_string *style = NULL;
 
@@ -671,6 +674,8 @@ style_set_property_cssText(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
+
 	dom_exception exc;
 	char *res = NULL;
 	args.rval().setUndefined();
@@ -739,6 +744,8 @@ style_set_style(JSContext *ctx, unsigned int argc, JS::Value *vp, const char *pr
 	}
 	dom_exception exc;
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
+
 	dom_string *style = NULL;
 	dom_string *stylestr = NULL;
 	char *res = NULL;

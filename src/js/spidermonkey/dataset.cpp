@@ -60,6 +60,7 @@ static void dataset_finalize(JS::GCContext *op, JSObject *obj)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *element = JS::GetMaybePtrFromReservedSlot<dom_node>(obj, 0);
+	NODEINFO(element);
 
 	dom_node_unref(element);
 }
@@ -81,6 +82,7 @@ dataset_obj_getProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleValue re
 		return true;
 	}
 	dom_node *el = JS::GetMaybePtrFromReservedSlot<dom_node>(obj, 0);
+	NODEINFO(el);
 	struct string data;
 
 	if (!el ||!init_string(&data)) {
@@ -141,6 +143,7 @@ dataset_obj_setProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleId id, J
 		return result.failInvalidDescriptor();
 	}
 	dom_node *el = JS::GetMaybePtrFromReservedSlot<dom_node>(obj, 0);
+	NODEINFO(el);
 	struct string data;
 
 	if (!el ||!init_string(&data)) {
@@ -199,6 +202,7 @@ dataset_obj_deleteProperty(JSContext* ctx, JS::HandleObject obj, JS::HandleId id
 		return result.failCantDelete();
 	}
 	dom_node *el = JS::GetMaybePtrFromReservedSlot<dom_node>(obj, 0);
+	NODEINFO(el);
 	struct string data;
 
 	if (!el ||!init_string(&data)) {
@@ -268,6 +272,7 @@ getDataset(JSContext *ctx, void *node)
 //	JS_DefineProperties(ctx, r_el, (JSPropertySpec *)dataset_props);
 //	spidermonkey_DefineFunctions(ctx, el, dataset_funcs);
 	dom_node_ref(node);
+	NODEINFO(node);
 	JS::SetReservedSlot(ds, 0, JS::PrivateValue(node));
 
 	return ds;

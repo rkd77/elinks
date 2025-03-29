@@ -58,6 +58,7 @@ static void attr_finalize(JS::GCContext *op, JSObject *obj)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_attr *attr = (dom_attr *)JS::GetMaybePtrFromReservedSlot<dom_attr>(obj, 0);
+	NODEINFO(attr);
 
 	dom_node_unref(attr);
 }
@@ -127,6 +128,7 @@ attr_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	dom_attr *attr = (dom_attr *)JS::GetMaybePtrFromReservedSlot<dom_attr>(hobj, 0);
+	NODEINFO(attr);
 	dom_exception err;
 	dom_string *name = NULL;
 
@@ -185,6 +187,7 @@ attr_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	dom_attr *attr = (dom_attr *)JS::GetMaybePtrFromReservedSlot<dom_attr>(hobj, 0);
+	NODEINFO(attr);
 	dom_string *value = NULL;
 	dom_exception err;
 
@@ -212,6 +215,7 @@ getAttr(JSContext *ctx, void *node)
 	if (!el) {
 		return NULL;
 	}
+	NODEINFO(node);
 
 	JS::RootedObject r_el(ctx, el);
 

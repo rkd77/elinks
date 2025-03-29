@@ -105,6 +105,7 @@ static void document_finalize(JS::GCContext *op, JSObject *obj)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(obj, 0);
+	NODEINFO(doc);
 	struct document_private *doc_private = JS::GetMaybePtrFromReservedSlot<struct document_private>(obj, 1);
 
 	if (doc_private) {
@@ -174,6 +175,7 @@ document_get_property_anchors(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	dom_html_document *doc = (dom_html_document *)JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		args.rval().setNull();
@@ -262,6 +264,7 @@ document_get_property_body(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	dom_html_document *doc = (dom_html_document *)JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		args.rval().setNull();
@@ -407,6 +410,7 @@ document_get_property_childNodes(JSContext *ctx, unsigned int argc, JS::Value *v
 		return false;
 	}
 	dom_html_document *doc = (dom_html_document *)JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		args.rval().setNull();
@@ -473,6 +477,7 @@ document_get_property_currentScript(JSContext *ctx, unsigned int argc, JS::Value
 		dom_node *elem = (dom_node *)find_in_map(mapa, interpreter->element_offset);
 
 		if (elem) {
+			NODEINFO(elem);
 			dom_html_element_type ty;
 			dom_exception exc = dom_html_element_get_tag_type(elem, &ty);
 
@@ -530,6 +535,7 @@ document_get_property_doctype(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	dom_html_document *doc = (dom_html_document *)JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		args.rval().setNull();
@@ -560,6 +566,7 @@ document_get_property_documentElement(JSContext *ctx, unsigned int argc, JS::Val
 		return false;
 	}
 	dom_html_document *doc = (dom_html_document *)JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		args.rval().setNull();
@@ -699,6 +706,7 @@ document_get_property_forms(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	dom_html_document *doc = (dom_html_document *)JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		args.rval().setNull();
@@ -756,6 +764,7 @@ document_get_property_images(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 	dom_html_document *doc = (dom_html_document *)JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		args.rval().setNull();
@@ -809,6 +818,7 @@ document_get_property_links(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	dom_html_document *doc = (dom_html_document *)JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		args.rval().setNull();
@@ -1470,6 +1480,8 @@ document_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 
 	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+	NODEINFO(doc);
+
 	struct document_private *doc_private = JS::GetMaybePtrFromReservedSlot<struct document_private>(hobj, 1);
 
 	if (!doc || !doc_private) {
@@ -1568,6 +1580,8 @@ document_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 
 	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+	NODEINFO(doc);
+
 	struct document_private *doc_private = JS::GetMaybePtrFromReservedSlot<struct document_private>(hobj, 1);
 
 	if (!doc || !doc_private) {
@@ -1636,6 +1650,7 @@ document_createComment(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		args.rval().setNull();
@@ -1694,6 +1709,7 @@ document_createDocumentFragment(JSContext *ctx, unsigned int argc, JS::Value *vp
 		return true;
 	}
 	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		args.rval().setNull();
@@ -1734,6 +1750,8 @@ document_createElement(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+	NODEINFO(doc);
+
 	dom_string *tag_name = NULL;
 	dom_exception exc;
 	char *str;
@@ -1792,6 +1810,7 @@ document_dispatchEvent(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 
 	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+	NODEINFO(doc);
 	struct document_private *doc_private = JS::GetMaybePtrFromReservedSlot<struct document_private>(hobj, 1);
 
 	if (!doc || !doc_private) {
@@ -1892,6 +1911,7 @@ document_createTextNode(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+	NODEINFO(doc);
 	dom_string *data = NULL;
 	dom_exception exc;
 	char *str;
@@ -1945,6 +1965,7 @@ document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		args.rval().setNull();
@@ -1998,6 +2019,7 @@ document_getElementsByClassName(JSContext *ctx, unsigned int argc, JS::Value *vp
 		return false;
 	}
 	dom_html_document *doc = (dom_html_document *)JS::GetMaybePtrFromReservedSlot<dom_html_document>(hobj, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		args.rval().setNull();
@@ -2067,6 +2089,7 @@ document_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		args.rval().setNull();
@@ -2125,6 +2148,7 @@ document_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		args.rval().setNull();
@@ -2180,6 +2204,7 @@ document_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		args.rval().setNull();
@@ -2276,6 +2301,7 @@ doctype_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	dom_document_type *dtd = (dom_document_type *)JS::GetMaybePtrFromReservedSlot<dom_document_type>(hobj, 0);
+	NODEINFO(dtd);
 
 	if (!dtd) {
 		args.rval().setNull();
@@ -2321,6 +2347,7 @@ doctype_get_property_publicId(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	dom_document_type *dtd = (dom_document_type *)JS::GetMaybePtrFromReservedSlot<dom_document_type>(hobj, 0);
+	NODEINFO(dtd);
 
 	if (!dtd) {
 		args.rval().setNull();
@@ -2366,6 +2393,7 @@ doctype_get_property_systemId(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	dom_document_type *dtd = (dom_document_type *)JS::GetMaybePtrFromReservedSlot<dom_document_type>(hobj, 0);
+	NODEINFO(dtd);
 
 	if (!dtd) {
 		args.rval().setNull();
@@ -2402,6 +2430,7 @@ getDoctype(JSContext *ctx, void *node)
 	if (!el) {
 		return NULL;
 	}
+	NODEINFO(node);
 
 	JS::RootedObject r_el(ctx, el);
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) doctype_props);
@@ -2416,6 +2445,8 @@ getDocument(JSContext *ctx, void *doc)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	NODEINFO(doc);
+
 	struct document_private *doc_private = (struct document_private *)mem_calloc(1, sizeof(*doc_private));
 
 	if (!doc_private) {
@@ -2453,6 +2484,8 @@ initDocument(JSContext *ctx, struct ecmascript_interpreter *interpreter, JSObjec
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	NODEINFO(doc);
+
 	struct document_private *doc_private = (struct document_private *)mem_calloc(1, sizeof(*doc_private));
 
 	if (!doc_private) {
@@ -2492,6 +2525,7 @@ Document_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
 	}
 	add_to_string(&str, "<!doctype html>\n<html><head></head><body></body></html>");
 	void *doc = document_parse_text("utf-8", str.source, str.length);
+	NODEINFO(doc);
 	done_string(&str);
 
 	struct document_private *doc_private = (struct document_private *)mem_calloc(1, sizeof(*doc_private));

@@ -33,6 +33,7 @@
 
 #ifdef ECMASCRIPT_DEBUG
 #include <stdio.h>
+#include "js/libdom/dom.h"
 #endif
 
 #ifdef __cplusplus
@@ -201,6 +202,14 @@ extern char *console_warn_filename;
 
 extern char *local_storage_filename;
 extern int local_storage_ready;
+
+#ifdef ECMASCRIPT_DEBUG
+#define NODEINFO(node) \
+fprintf(stderr, "node info %s:%d ", __FUNCTION__, __LINE__); \
+if (node) { fprintf(stderr, "node=%p refcnt=%d\n", node, ((dom_node *)(node))->refcnt); } else { fprintf(stderr, "node=null\n"); };
+#else
+#define NODEINFO(node)
+#endif
 
 #ifdef __cplusplus
 }

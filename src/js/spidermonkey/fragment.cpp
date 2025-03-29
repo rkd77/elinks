@@ -158,6 +158,8 @@ static void fragment_finalize(JS::GCContext *op, JSObject *obj)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(obj, 0);
+	NODEINFO(el);
+
 	struct fragment_private *el_private = JS::GetMaybePtrFromReservedSlot<struct fragment_private>(obj, 1);
 
 	if (el_private) {
@@ -225,6 +227,8 @@ fragment_get_property_children(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
+
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 
@@ -284,6 +288,8 @@ fragment_get_property_childElementCount(JSContext *ctx, unsigned int argc, JS::V
 	}
 
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
+
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 	uint32_t res = 0;
@@ -345,6 +351,8 @@ fragment_get_property_childNodes(JSContext *ctx, unsigned int argc, JS::Value *v
 	}
 
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
+
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 
@@ -408,6 +416,7 @@ fragment_get_property_firstChild(JSContext *ctx, unsigned int argc, JS::Value *v
 	dom_exception exc;
 
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
 
 	if (!el) {
 		args.rval().setNull();
@@ -467,6 +476,8 @@ fragment_get_property_firstElementChild(JSContext *ctx, unsigned int argc, JS::V
 	}
 
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
+
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 	uint32_t size = 0;
@@ -557,6 +568,8 @@ fragment_get_property_lastChild(JSContext *ctx, unsigned int argc, JS::Value *vp
 	}
 
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
+
 	dom_node *last_child = NULL;
 	dom_exception exc;
 
@@ -618,6 +631,8 @@ fragment_get_property_lastElementChild(JSContext *ctx, unsigned int argc, JS::Va
 	}
 
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
+
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 	uint32_t size = 0;
@@ -707,6 +722,8 @@ fragment_get_property_nextElementSibling(JSContext *ctx, unsigned int argc, JS::
 	}
 
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
+
 	dom_node *node;
 	dom_node *prev_next = NULL;
 
@@ -783,7 +800,9 @@ fragment_get_property_nodeName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	dom_node *node = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);;
+	dom_node *node = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(node);
+
 	dom_string *name = NULL;
 	dom_exception exc;
 
@@ -843,6 +862,8 @@ fragment_get_property_nodeType(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	dom_node *node = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(node);
+
 	dom_node_type type1;
 	dom_exception exc;
 
@@ -901,6 +922,8 @@ fragment_get_property_nodeValue(JSContext *ctx, unsigned int argc, JS::Value *vp
 	}
 
 	dom_node *node = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(node);
+
 	dom_string *content = NULL;
 	dom_exception exc;
 
@@ -959,6 +982,8 @@ fragment_set_property_nodeValue(JSContext *ctx, unsigned int argc, JS::Value *vp
 		return false;
 	}
 	dom_node *node = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(node);
+
 	args.rval().setUndefined();
 
 	if (!node) {
@@ -1023,6 +1048,8 @@ fragment_get_property_nextSibling(JSContext *ctx, unsigned int argc, JS::Value *
 	}
 
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
+
 	dom_node *node = NULL;
 	dom_exception exc;
 
@@ -1126,6 +1153,8 @@ fragment_get_property_parentElement(JSContext *ctx, unsigned int argc, JS::Value
 	}
 
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
+
 	dom_node *node = NULL;
 	dom_exception exc;
 
@@ -1186,6 +1215,8 @@ fragment_get_property_parentNode(JSContext *ctx, unsigned int argc, JS::Value *v
 	}
 
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
+
 	dom_node *node = NULL;
 	dom_exception exc;
 
@@ -1247,6 +1278,8 @@ fragment_get_property_previousElementSibling(JSContext *ctx, unsigned int argc, 
 	}
 
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
+
 	dom_node *node;
 	dom_node *prev_prev = NULL;
 
@@ -1324,6 +1357,8 @@ fragment_get_property_previousSibling(JSContext *ctx, unsigned int argc, JS::Val
 	}
 
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
+
 	dom_node *node = NULL;
 	dom_exception exc;
 
@@ -1383,6 +1418,7 @@ fragment_get_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *
 		return false;
 	}
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
 
 	if (!el) {
 		args.rval().setNull();
@@ -1432,6 +1468,7 @@ fragment_set_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *
 		return false;
 	}
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
 
 	if (!el) {
 		args.rval().setUndefined();
@@ -1528,6 +1565,8 @@ fragment_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 
 	dom_node *el = JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
+
 	struct fragment_private *el_private = JS::GetMaybePtrFromReservedSlot<struct fragment_private>(hobj, 1);
 
 	if (!el || !el_private) {
@@ -1620,6 +1659,8 @@ fragment_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 
 	dom_node *el = JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
+
 	struct fragment_private *el_private = JS::GetMaybePtrFromReservedSlot<struct fragment_private>(hobj, 1);
 
 	if (!el || !el_private) {
@@ -1699,6 +1740,8 @@ fragment_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
+
 	dom_node *res = NULL;
 
 	if (argc != 1) {
@@ -1758,6 +1801,7 @@ fragment_cloneNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
 
 	if (!el) {
 		args.rval().setNull();
@@ -1828,6 +1872,7 @@ fragment_contains(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
 
 	if (!el) {
 		return false;
@@ -1890,6 +1935,8 @@ fragment_hasChildNodes(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return true;
 	}
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
+
 	dom_exception exc;
 	bool res;
 
@@ -1935,6 +1982,7 @@ fragment_insertBefore(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
 
 	if (!el) {
 		return false;
@@ -1995,6 +2043,7 @@ fragment_isEqualNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
 
 	if (!el) {
 		return false;
@@ -2058,6 +2107,7 @@ fragment_isSameNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
 
 	if (!el) {
 		return false;
@@ -2094,6 +2144,7 @@ fragment_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
 
 	if (!el) {
 		args.rval().setNull();
@@ -2149,6 +2200,7 @@ fragment_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
 
 	if (!el) {
 		args.rval().setNull();
@@ -2206,6 +2258,7 @@ fragment_removeChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
 
 	if (!el || !args[0].isObject()) {
 		args.rval().setNull();
@@ -2380,6 +2433,7 @@ fragment_dispatchEvent(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 	dom_node *element = JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(element);
 
 	if (!element) {
 		args.rval().setBoolean(false);

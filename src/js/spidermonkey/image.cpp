@@ -68,6 +68,7 @@ image_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
 		return false;
 	}
 	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj, 0);
+	NODEINFO(doc);
 	dom_element *element = NULL;
 	dom_exception exc = dom_document_create_element(doc, corestring_dom_IMG, &element);
 
