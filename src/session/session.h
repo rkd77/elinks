@@ -33,6 +33,13 @@ struct delayed_open {
 	char *target;
 };
 
+struct delayed_rel {
+	struct cache_entry *cached;
+	struct document *document;
+	struct session *ses;
+	int was_write;
+};
+
 enum remote_session_flags {
 	SES_REMOTE_NEW_TAB = 1,
 	SES_REMOTE_NEW_WINDOW = 2,
