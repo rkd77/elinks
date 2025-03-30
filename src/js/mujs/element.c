@@ -1537,6 +1537,37 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 }
 
 static void
+mjs_element_get_property_src(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+	NODEINFO(el);
+
+	dom_string *src = NULL;
+	dom_exception exc;
+
+	if (!el) {
+		js_pushnull(J);
+		return;
+	}
+	exc = dom_element_get_attribute(el, corestring_dom_src, &src);
+
+	if (exc != DOM_NO_ERR) {
+		js_pushnull(J);
+		return;
+	}
+	if (!src) {
+		js_pushstring(J, "");
+		return;
+	} else {
+		js_pushstring(J, dom_string_data(src));
+		dom_string_unref(src);
+	}
+}
+
+static void
 mjs_element_get_property_style(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -3889,6 +3920,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		addproperty(J, "parentNode",	mjs_element_get_property_parentNode, NULL);
 		addproperty(J, "previousElementSibling",	mjs_element_get_property_previousElementSibling, NULL);
 		addproperty(J, "previousSibling",	mjs_element_get_property_previousSibling, NULL);
+		addproperty(J, "src",	mjs_element_get_property_src, NULL);
 		addproperty(J, "style",		mjs_element_get_property_style, NULL);
 		addproperty(J, "tagName",	mjs_element_get_property_tagName, NULL);
 		addproperty(J, "textContent",	mjs_element_get_property_textContent, mjs_element_set_property_textContent);
