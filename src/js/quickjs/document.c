@@ -120,6 +120,7 @@ js_document_get_property_anchors(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
+	NODEINFO(doc);
 
 	if (!doc) {
 		return JS_NULL;
@@ -181,6 +182,7 @@ js_document_get_property_body(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
+	NODEINFO(doc);
 
 	if (!doc) {
 		return JS_NULL;
@@ -316,6 +318,7 @@ js_document_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
+	NODEINFO(doc);
 
 	if (!doc) {
 		return JS_NULL;
@@ -371,6 +374,7 @@ js_document_get_property_currentScript(JSContext *ctx, JSValueConst this_val)
 
 	if (mapa) {
 		dom_node *elem = (dom_node *)find_in_map(mapa, interpreter->element_offset);
+		NODEINFO(elem);
 
 		if (elem) {
 			dom_html_element_type ty;
@@ -412,6 +416,7 @@ js_document_get_property_doctype(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
+	NODEINFO(doc);
 
 	if (!doc) {
 		return JS_NULL;
@@ -434,6 +439,7 @@ js_document_get_property_documentElement(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
+	NODEINFO(doc);
 
 	if (!doc) {
 		return JS_NULL;
@@ -531,6 +537,7 @@ js_document_get_property_forms(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
+	NODEINFO(doc);
 
 	if (!doc) {
 		return JS_NULL;
@@ -583,6 +590,7 @@ js_document_get_property_images(JSContext *ctx, JSValueConst this_val)
 		return JS_DupValue(ctx, res->images);
 	}
 	dom_html_document *doc = (struct dom_html_document *)res->node;
+	NODEINFO(doc);
 
 	if (!doc) {
 		return JS_NULL;
@@ -621,6 +629,7 @@ js_document_get_property_links(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
+	NODEINFO(doc);
 
 	if (!doc) {
 		return JS_NULL;
@@ -1125,6 +1134,7 @@ js_document_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JS
 		return JS_NULL;
 	}
 	dom_html_document *doc = doc_private->node;
+	NODEINFO(doc);
 
 	if (argc < 2) {
 		return JS_UNDEFINED;
@@ -1207,6 +1217,7 @@ js_document_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 		return JS_FALSE;
 	}
 	dom_html_document *doc = doc_private->node;
+	NODEINFO(doc);
 
 	if (!doc) {
 		return JS_FALSE;
@@ -1313,6 +1324,7 @@ js_document_createComment(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 		return JS_FALSE;
 	}
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
+	NODEINFO(doc);
 
 	if (!doc) {
 		return JS_NULL;
@@ -1362,6 +1374,7 @@ js_document_createDocumentFragment(JSContext *ctx, JSValueConst this_val, int ar
 		return JS_FALSE;
 	}
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
+	NODEINFO(doc);
 
 	if (!doc) {
 		return JS_NULL;
@@ -1392,6 +1405,7 @@ js_document_createElement(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 		return JS_FALSE;
 	}
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
+	NODEINFO(doc);
 
 	if (!doc) {
 		return JS_NULL;
@@ -1446,6 +1460,7 @@ js_document_createTextNode(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 		return JS_FALSE;
 	}
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
+	NODEINFO(doc);
 
 	if (!doc) {
 		return JS_NULL;
@@ -1495,6 +1510,7 @@ js_document_getElementById(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 		return JS_FALSE;
 	}
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
+	NODEINFO(doc);
 
 	if (!doc) {
 		return JS_NULL;
@@ -1545,6 +1561,7 @@ js_document_getElementsByClassName(JSContext *ctx, JSValueConst this_val, int ar
 #endif
 	REF_JS(this_val);
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
+	NODEINFO(doc);
 
 	if (!doc) {
 		return JS_NULL;
@@ -1628,6 +1645,7 @@ js_document_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc
 		return JS_FALSE;
 	}
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
+	NODEINFO(doc);
 
 	if (!doc) {
 		return JS_NULL;
@@ -1678,6 +1696,7 @@ js_document_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 		return JS_FALSE;
 	}
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
+	NODEINFO(doc);
 
 	if (!doc) {
 		return JS_NULL;
@@ -1731,6 +1750,7 @@ js_document_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JS
 		return JS_FALSE;
 	}
 	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
+	NODEINFO(doc);
 
 	if (!doc) {
 		return JS_NULL;
@@ -1800,6 +1820,7 @@ js_doctype_get_property_name(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_document_type *dtd = (dom_document_type *)(JS_GetOpaque(this_val, js_doctype_class_id));
+	NODEINFO(dtd);
 
 	if (!dtd) {
 		return JS_NULL;
@@ -1825,6 +1846,7 @@ js_doctype_get_property_publicId(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_document_type *dtd = (dom_document_type *)(JS_GetOpaque(this_val, js_doctype_class_id));
+	NODEINFO(dtd);
 
 	if (!dtd) {
 		return JS_NULL;
@@ -1850,6 +1872,7 @@ js_doctype_get_property_systemId(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_document_type *dtd = (dom_document_type *)(JS_GetOpaque(this_val, js_doctype_class_id));
+	NODEINFO(dtd);
 
 	if (!dtd) {
 		return JS_NULL;
@@ -1946,13 +1969,11 @@ js_document_finalizer(JSRuntime *rt, JSValue val)
 			JS_FreeValueRT(rt, l->fun);
 		}
 		free_list(doc_private->listeners);
-
-		if (doc_private->node) {
+		NODEINFO(doc_private->node);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-			dom_node_unref((dom_node *)doc_private->node);
-		}
+		dom_node_unref((dom_node *)doc_private->node);
 		mem_free(doc_private);
 	}
 }
@@ -2031,6 +2052,7 @@ getDoctype(JSContext *ctx, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	NODEINFO(node);
 	static int initialized;
 	/* create the element class */
 	if (!initialized) {
@@ -2059,6 +2081,7 @@ getDocument(JSContext *ctx, void *doc)
 		return JS_NULL;
 	}
 	init_list(doc_private->listeners);
+	NODEINFO(doc);
 
 	if (doc) {
 #ifdef ECMASCRIPT_DEBUG
@@ -2101,6 +2124,7 @@ getDocument2(JSContext *ctx, void *doc)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	NODEINFO(doc);
 	struct js_document_private *doc_private = (struct js_document_private *)mem_calloc(1, sizeof(*doc_private));
 
 	if (!doc_private) {
@@ -2151,6 +2175,7 @@ js_document_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSVal
 	}
 	add_to_string(&str, "<!doctype html>\n<html><head></head><body></body></html>");
 	void *doc = document_parse_text("utf-8", str.source, str.length);
+	NODEINFO(doc);
 	done_string(&str);
 
 	if (doc) {

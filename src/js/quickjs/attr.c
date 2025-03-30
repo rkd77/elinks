@@ -44,6 +44,7 @@ js_attr_get_property_name(JSContext *ctx, JSValueConst this_val)
 	}
 
 	dom_attr *attr = (dom_attr *)(JS_GetOpaque(this_val, js_attr_class_id));
+	NODEINFO(attr);
 
 	if (!attr) {
 		return JS_NULL;
@@ -83,6 +84,7 @@ js_attr_get_property_value(JSContext *ctx, JSValueConst this_val)
 		return JS_EXCEPTION;
 	}
 	dom_attr *attr = (dom_attr *)(JS_GetOpaque(this_val, js_attr_class_id));
+	NODEINFO(attr);
 
 	if (!attr) {
 		return JS_NULL;
@@ -142,6 +144,7 @@ getAttr(JSContext *ctx, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	NODEINFO(node);
 	static int initialized;
 	/* create the element class */
 	if (!initialized) {

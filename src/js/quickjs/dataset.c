@@ -35,6 +35,7 @@ js_dataset_finalizer(JSRuntime *rt, JSValue val)
 #endif
 	REF_JS(val);
 	dom_node *el = (dom_node *)(JS_GetOpaque(val, js_dataset_class_id));
+	NODEINFO(el);
 
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
@@ -56,6 +57,8 @@ js_obj_delete_property(JSContext *ctx, JSValueConst obj, JSAtom prop)
 		return 0;
 	}
 	dom_node *el = (dom_node *)(JS_GetOpaque(obj, js_dataset_class_id));
+	NODEINFO(el);
+
 	struct string data;
 
 	if (!el ||!init_string(&data)) {
@@ -106,6 +109,8 @@ js_obj_get_property(JSContext *ctx, JSValueConst obj, JSAtom atom, JSValueConst 
 		return JS_UNDEFINED;
 	}
 	dom_node *el = (dom_node *)(JS_GetOpaque(obj, js_dataset_class_id));
+	NODEINFO(el);
+
 	struct string data;
 
 	if (!el ||!init_string(&data)) {
@@ -156,6 +161,8 @@ js_obj_set_property(JSContext *ctx, JSValueConst obj, JSAtom atom, JSValueConst 
 		return 0;
 	}
 	dom_node *el = (dom_node *)(JS_GetOpaque(obj, js_dataset_class_id));
+	NODEINFO(el);
+
 	struct string data;
 
 	if (!el ||!init_string(&data)) {
@@ -209,6 +216,7 @@ getDataset(JSContext *ctx, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	NODEINFO(node);
 	/* nodelist class */
 	static int initialized;
 

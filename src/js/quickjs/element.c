@@ -125,6 +125,8 @@ js_element_get_property_attributes(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_namednodemap *attrs = NULL;
 	dom_exception exc;
 
@@ -154,6 +156,8 @@ js_element_get_property_checked(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 	struct document_view *doc_view;
@@ -221,6 +225,8 @@ js_element_set_property_checked(JSContext *ctx, JSValueConst this_val, JSValue v
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 	struct document_view *doc_view;
@@ -291,6 +297,8 @@ js_element_get_property_children(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 
@@ -319,6 +327,8 @@ js_element_get_property_childElementCount(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 	uint32_t res = 0;
@@ -349,6 +359,8 @@ js_element_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 
@@ -377,6 +389,7 @@ js_element_get_property_classList(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_element *el = (dom_element *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_NULL;
@@ -403,6 +416,8 @@ js_element_get_property_className(JSContext *ctx, JSValueConst this_val)
 	JSValue r;
 
 	dom_html_element *el = (dom_html_element *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_string *classstr = NULL;
 	dom_exception exc;
 
@@ -437,6 +452,8 @@ js_element_get_property_contentDocument(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_html_element *el = (dom_html_element *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_exception exc;
 
 	if (!el) {
@@ -508,6 +525,8 @@ js_element_get_property_contentWindow(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_html_element *el = (dom_html_element *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_exception exc;
 
 	if (!el) {
@@ -575,6 +594,7 @@ js_element_get_property_clientHeight(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_NULL;
@@ -646,6 +666,7 @@ js_element_get_property_clientWidth(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_NULL;
@@ -700,6 +721,7 @@ js_element_get_property_dataset(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 	dom_element *el = (dom_element *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_NULL;
@@ -717,6 +739,8 @@ js_element_get_property_dir(JSContext *ctx, JSValueConst this_val)
 	JSValue r;
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_string *dir = NULL;
 	dom_exception exc;
 
@@ -756,6 +780,7 @@ js_element_get_property_firstChild(JSContext *ctx, JSValueConst this_val)
 	dom_exception exc;
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_NULL;
@@ -785,6 +810,8 @@ js_element_get_property_firstElementChild(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 	uint32_t size = 0;
@@ -848,6 +875,8 @@ js_element_get_property_height(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_string *h = NULL;
 	dom_exception exc;
 
@@ -874,6 +903,8 @@ js_element_get_property_href(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_string *href = NULL;
 	dom_exception exc;
 	JSValue r;
@@ -908,6 +939,8 @@ js_element_get_property_id(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_string *id = NULL;
 	dom_exception exc;
 	JSValue r;
@@ -942,6 +975,8 @@ js_element_get_property_lang(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_string *lang = NULL;
 	dom_exception exc;
 	JSValue r;
@@ -976,6 +1011,8 @@ js_element_get_property_lastChild(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_node *last_child = NULL;
 	dom_exception exc;
 
@@ -1007,6 +1044,8 @@ js_element_get_property_lastElementChild(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 	uint32_t size = 0;
@@ -1069,6 +1108,8 @@ js_element_get_property_name(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_string *name = NULL;
 	dom_exception exc;
 	JSValue r;
@@ -1103,6 +1144,8 @@ js_element_get_property_nextElementSibling(JSContext *ctx, JSValueConst this_val
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_node *node;
 	dom_node *prev_next = NULL;
 
@@ -1151,6 +1194,8 @@ js_element_get_property_nodeName(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_node *node = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(node);
+
 	dom_string *name = NULL;
 	dom_exception exc;
 	JSValue r;
@@ -1184,6 +1229,8 @@ js_element_get_property_nodeType(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_node *node = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(node);
+
 	dom_node_type type;
 	dom_exception exc;
 
@@ -1211,6 +1258,8 @@ js_element_get_property_nodeValue(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_node *node = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(node);
+
 	dom_string *content = NULL;
 	dom_exception exc;
 	JSValue r;
@@ -1242,6 +1291,7 @@ js_element_set_property_nodeValue(JSContext *ctx, JSValueConst this_val, JSValue
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_node *node = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(node);
 
 	if (!node) {
 		return JS_UNDEFINED;
@@ -1278,6 +1328,8 @@ js_element_get_property_nextSibling(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_node *node = NULL;
 	dom_exception exc;
 
@@ -1317,6 +1369,7 @@ js_element_get_property_offsetLeft(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_NULL;
@@ -1377,6 +1430,8 @@ js_element_get_property_offsetParent(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 	dom_node *el = (dom_node *)js_getopaque(this_val, js_element_class_id);
+	NODEINFO(el);
+
 	dom_node *node = NULL;
 	dom_exception exc;
 
@@ -1402,6 +1457,7 @@ js_element_get_property_offsetTop(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_NULL;
@@ -1486,6 +1542,8 @@ js_element_get_property_parentElement(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)js_getopaque(this_val, js_element_class_id);
+	NODEINFO(el);
+
 	dom_node *node = NULL;
 	dom_exception exc;
 
@@ -1516,6 +1574,8 @@ js_element_get_property_parentNode(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 	dom_node *el = (dom_node *)js_getopaque(this_val, js_element_class_id);
+	NODEINFO(el);
+
 	dom_node *node = NULL;
 	dom_exception exc;
 
@@ -1547,6 +1607,8 @@ js_element_get_property_previousElementSibling(JSContext *ctx, JSValueConst this
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_node *node;
 	dom_node *prev_prev = NULL;
 
@@ -1595,6 +1657,8 @@ js_element_get_property_previousSibling(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_node *node = NULL;
 	dom_exception exc;
 
@@ -1626,6 +1690,7 @@ js_element_get_property_style(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_NULL;
@@ -1645,6 +1710,7 @@ js_element_get_property_tagName(JSContext *ctx, JSValueConst this_val)
 	JSValue r;
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_NULL;
@@ -1673,6 +1739,8 @@ js_element_get_property_title(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_string *title = NULL;
 	dom_exception exc;
 	JSValue r;
@@ -1708,6 +1776,8 @@ js_element_get_property_value(JSContext *ctx, JSValueConst this_val)
 
 	JSValue r;
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 	struct document_view *doc_view;
@@ -1772,6 +1842,7 @@ js_element_get_property_innerHtml(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_NULL;
@@ -1800,6 +1871,7 @@ js_element_get_property_outerHtml(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_NULL;
@@ -1828,6 +1900,7 @@ js_element_get_property_textContent(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_NULL;
@@ -1856,6 +1929,8 @@ js_element_get_property_width(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_string *w = NULL;
 	dom_exception exc;
 
@@ -1886,6 +1961,7 @@ js_element_set_property_className(JSContext *ctx, JSValueConst this_val, JSValue
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter);
 	dom_html_element *el = (dom_html_element *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -1923,6 +1999,7 @@ js_element_set_property_dir(JSContext *ctx, JSValueConst this_val, JSValue val)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter);
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -1964,6 +2041,7 @@ js_element_set_property_href(JSContext *ctx, JSValueConst this_val, JSValue val)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter);
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -2002,6 +2080,7 @@ js_element_set_property_id(JSContext *ctx, JSValueConst this_val, JSValue val)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter);
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -2038,6 +2117,7 @@ js_element_set_property_innerHtml(JSContext *ctx, JSValueConst this_val, JSValue
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -2213,6 +2293,7 @@ js_element_set_property_lang(JSContext *ctx, JSValueConst this_val, JSValue val)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter);
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -2253,6 +2334,7 @@ js_element_set_property_outerHtml(JSContext *ctx, JSValueConst this_val, JSValue
 		return JS_UNDEFINED;
 	}
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -2420,6 +2502,7 @@ js_element_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSVal
 	REF_JS(val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -2460,6 +2543,7 @@ js_element_set_property_title(JSContext *ctx, JSValueConst this_val, JSValue val
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter);
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -2494,6 +2578,8 @@ js_element_set_property_value(JSContext *ctx, JSValueConst this_val, JSValue val
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 	struct document_view *doc_view;
@@ -2599,6 +2685,7 @@ js_element_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 		return JS_FALSE;
 	}
 	dom_node *el = el_private->node;
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_FALSE;
@@ -2641,6 +2728,7 @@ js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSV
 		return JS_NULL;
 	}
 	dom_node *el = el_private->node;
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_NULL;
@@ -2734,6 +2822,7 @@ js_element_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, 
 		return JS_NULL;
 	}
 	dom_node *el = el_private->node;
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_NULL;
@@ -2804,6 +2893,8 @@ js_element_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_node *res = NULL;
 	dom_exception exc;
 
@@ -2927,6 +3018,7 @@ js_element_cloneNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 		return JS_NULL;
 	}
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_NULL;
@@ -2993,6 +3085,8 @@ js_element_closest(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 		return JS_UNDEFINED;
 	}
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	void *res = NULL;
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
@@ -3088,6 +3182,7 @@ js_element_contains(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 		return JS_UNDEFINED;
 	}
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_EXCEPTION;
@@ -3145,6 +3240,8 @@ js_element_focus(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *
 	REF_JS(this_val);
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 	struct document_view *doc_view;
@@ -3198,6 +3295,8 @@ js_element_getAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 		return JS_UNDEFINED;
 	}
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_exception exc;
 	dom_string *attr_name = NULL;
 	dom_string *attr_value = NULL;
@@ -3252,6 +3351,8 @@ js_element_getAttributeNode(JSContext *ctx, JSValueConst this_val, int argc, JSV
 		return JS_UNDEFINED;
 	}
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_exception exc;
 	dom_string *attr_name = NULL;
 	dom_attr *attr = NULL;
@@ -3314,6 +3415,7 @@ js_element_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc,
 		return JS_FALSE;
 	}
 	dom_element *el = (dom_element *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -3368,6 +3470,7 @@ js_element_hasAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 		return JS_UNDEFINED;
 	}
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_FALSE;
@@ -3418,6 +3521,8 @@ js_element_hasAttributes(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 		return JS_UNDEFINED;
 	}
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_exception exc;
 	bool res;
 
@@ -3451,6 +3556,8 @@ js_element_hasChildNodes(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 		return JS_UNDEFINED;
 	}
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_exception exc;
 	bool res;
 
@@ -3485,6 +3592,7 @@ js_element_insertBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_EXCEPTION;
@@ -3541,6 +3649,7 @@ js_element_isEqualNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 		return JS_UNDEFINED;
 	}
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_EXCEPTION;
@@ -3596,6 +3705,7 @@ js_element_isSameNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 		return JS_UNDEFINED;
 	}
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_EXCEPTION;
@@ -3623,6 +3733,7 @@ js_element_matches(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 		return JS_UNDEFINED;
 	}
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_FALSE;
@@ -3657,6 +3768,7 @@ js_element_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 		return JS_UNDEFINED;
 	}
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_NULL;
@@ -3705,6 +3817,7 @@ js_element_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JSV
 		return JS_NULL;
 	}
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_NULL;
@@ -3746,6 +3859,8 @@ js_element_remove(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst 
 	REF_JS(this_val);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_node *parent = NULL;
 	dom_exception exc;
 
@@ -3790,6 +3905,8 @@ js_element_removeAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 		return JS_UNDEFINED;
 	}
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
 	dom_exception exc;
 	dom_string *attr_name = NULL;
 
@@ -3833,6 +3950,7 @@ js_element_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el || !JS_IsObject(argv[0])) {
 		return JS_NULL;
@@ -3870,6 +3988,7 @@ js_element_replaceWith(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	dom_exception exc;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -4020,6 +4139,7 @@ js_element_setAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -4193,6 +4313,7 @@ js_element_finalizer(JSRuntime *rt, JSValue val)
 	if (el_private) {
 		struct element_listener *l;
 		dom_node *el = (dom_node *)el_private->node;
+		NODEINFO(el);
 
 		if (el_private->listener) {
 			dom_event_listener_unref(el_private->listener);
@@ -4279,6 +4400,8 @@ getElement(JSContext *ctx, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	NODEINFO(node);
+
 	struct js_element_private *el_private = (struct js_element_private *)mem_calloc(1, sizeof(*el_private));
 
 	if (!el_private) {
