@@ -66,8 +66,10 @@ void js_htmlColection2_finalizer(JSRuntime *rt, JSValue val)
 	if (ns) {
 		//attr_erase_from_map_str(map_collections, ns);
 		if (ns->refcnt > 0) {
-			free_el_dom_collection(ns->ctx);
-			ns->ctx = NULL;
+			if (ns->ctx) {
+				free_el_dom_collection(ns->ctx);
+				ns->ctx = NULL;
+			}
 			dom_html_collection_unref((dom_html_collection *)ns);
 		}
 	}

@@ -814,16 +814,19 @@ js_document_get_property_scripts(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
+	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
+	NODEINFO(doc);
 
-// TODO
-	//dom_html_document *doc = (dom_html_document *)document->dom;
+	if (!doc) {
+		return JS_NULL;
+	}
+	dom_html_collection *col = (dom_html_collection *)get_scripts(doc, (dom_node *)doc);
 
-	return JS_NULL;
-
-//	JSValue rr = getCollection(ctx, elements);
-//	JS_FreeValue(ctx, rr);
-
-//	RETURN_JS(rr);
+	if (!col) {
+		return JS_NULL;
+	}
+	JSValue ret = getCollection2(ctx, col);
+	RETURN_JS(ret);
 }
 
 static JSValue

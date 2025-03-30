@@ -828,7 +828,7 @@ void *
 get_scripts(dom_html_document *doc, dom_node *node)
 {
 	struct el_dom_html_collection *col = NULL;
-	dom_exception exc = el_dom_html_collection_create(doc, node, scripts_callback, doc, &col);
+	dom_exception exc = el_dom_html_collection_create(doc, node, scripts_callback, NULL, &col);
 
 	if (exc != DOM_NO_ERR || !col) {
 		return NULL;
