@@ -76,6 +76,7 @@
 
 #include <jsapi.h>
 #include <js/CompilationAndEvaluation.h>
+#include <js/friend/DumpFunctions.h>
 #include <js/Printf.h>
 #include <js/SourceText.h>
 #include <js/Warnings.h>
@@ -125,6 +126,7 @@ error_reporter(JSContext *ctx, JSErrorReport *report)
 	f = open_memstream(&ptr, &size);
 
 	if (f) {
+		js::DumpBacktrace(ctx, f);
 		JS::PrintError(f, report, true/*reportWarnings*/);
 		fclose(f);
 
