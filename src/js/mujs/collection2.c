@@ -253,8 +253,10 @@ mjs_htmlCollection2_finalizer(js_State *J, void *node)
 	if (ns) {
 		//attr_erase_from_map_str(map_collections, ns);
 		if (ns->refcnt > 0) {
-			free_el_dom_collection(ns->ctx);
-			ns->ctx = NULL;
+			if (ns->ctx) {
+				free_el_dom_collection(ns->ctx);
+				ns->ctx = NULL;
+			}
 			dom_html_collection_unref((dom_html_collection *)ns);
 		}
 	}

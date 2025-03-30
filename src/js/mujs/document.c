@@ -695,38 +695,21 @@ mjs_document_get_property_scripts(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
+	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
+	NODEINFO(doc);
 
-	if (!document->dom) {
+	if (!doc) {
 		js_pushnull(J);
 		return;
 	}
-// TODO
-#if 0
-	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
-	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
+	dom_html_collection *col = (dom_html_collection *)get_scripts(doc, (dom_node *)doc);
 
-	xmlpp::ustring xpath = "//script";
-	xmlpp::Node::NodeSet *elements = new(std::nothrow) xmlpp::Node::NodeSet;
-
-	if (!elements) {
+	if (!col) {
 		js_pushnull(J);
 		return;
 	}
-
-	*elements = root->find(xpath);
-
-	if (elements->size() == 0) {
-		js_pushnull(J);
-		return;
-	}
-	mjs_push_collection(J, elements);
-#endif
-	js_pushnull(J);
+	mjs_push_collection2(J, col);
 }
-
 
 static void
 mjs_document_get_property_title(js_State *J)
