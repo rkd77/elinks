@@ -106,6 +106,8 @@ mjs_fragment_get_property_children(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
+
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 
@@ -130,6 +132,8 @@ mjs_fragment_get_property_childElementCount(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
+
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 	uint32_t res = 0;
@@ -156,6 +160,8 @@ mjs_fragment_get_property_childNodes(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
+
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 
@@ -180,6 +186,8 @@ mjs_fragment_get_property_firstChild(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
+
 	dom_node *node = NULL;
 	dom_exception exc;
 
@@ -207,6 +215,8 @@ mjs_fragment_get_property_firstElementChild(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
+
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 	uint32_t size = 0;
@@ -266,6 +276,8 @@ mjs_fragment_get_property_lastChild(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
+
 	dom_node *last_child = NULL;
 	dom_exception exc;
 
@@ -293,6 +305,8 @@ mjs_fragment_get_property_lastElementChild(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
+
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 	uint32_t size = 0;
@@ -352,6 +366,8 @@ mjs_fragment_get_property_nextElementSibling(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
+
 	dom_node *node;
 	dom_node *prev_next = NULL;
 
@@ -399,6 +415,8 @@ mjs_fragment_get_property_nodeName(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *node = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(node);
+
 	dom_string *name = NULL;
 	dom_exception exc;
 
@@ -423,6 +441,7 @@ mjs_fragment_get_property_nodeType(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *node = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(node);
 	dom_node_type type;
 	dom_exception exc;
 
@@ -446,6 +465,8 @@ mjs_fragment_get_property_nodeValue(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *node = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(node);
+
 	dom_string *content = NULL;
 	dom_exception exc;
 
@@ -471,6 +492,7 @@ mjs_fragment_set_property_nodeValue(js_State *J)
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_node *node = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(node);
 
 	if (!node) {
 		js_error(J, "error");
@@ -503,6 +525,8 @@ mjs_fragment_get_property_nextSibling(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
+
 	dom_node *node = NULL;
 	dom_exception exc;
 
@@ -541,6 +565,8 @@ mjs_fragment_get_property_parentElement(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
+
 	dom_node *node = NULL;
 	dom_exception exc;
 
@@ -568,6 +594,8 @@ mjs_fragment_get_property_parentNode(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
+
 	dom_node *node = NULL;
 	dom_exception exc;
 
@@ -596,6 +624,8 @@ mjs_fragment_get_property_previousElementSibling(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
+
 	dom_node *node;
 	dom_node *prev_prev = NULL;
 
@@ -643,6 +673,8 @@ mjs_fragment_get_property_previousSibling(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
+
 	dom_node *node = NULL;
 	dom_exception exc;
 
@@ -670,6 +702,7 @@ mjs_fragment_get_property_textContent(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
 
 	if (!el) {
 		js_pushnull(J);
@@ -693,6 +726,7 @@ mjs_fragment_set_property_textContent(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
 
 	if (!el) {
 		js_pushundefined(J);
@@ -745,6 +779,7 @@ mjs_fragment_addEventListener(js_State *J)
 		return;
 	}
 	dom_node *el = el_private->node;
+	NODEINFO(el);
 
 	if (!el) {
 		js_pushnull(J);
@@ -830,6 +865,7 @@ mjs_fragment_removeEventListener(js_State *J)
 		return;
 	}
 	dom_node *el = el_private->node;
+	NODEINFO(el);
 
 	if (!el) {
 		js_pushnull(J);
@@ -888,6 +924,8 @@ mjs_fragment_appendChild(js_State *J)
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
+
 	dom_node *res = NULL;
 
 	if (!el) {
@@ -921,6 +959,7 @@ mjs_fragment_cloneNode(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
 
 	if (!el) {
 		js_pushnull(J);
@@ -979,6 +1018,7 @@ mjs_fragment_contains(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
 
 	if (!el) {
 		js_error(J, "error");
@@ -1035,7 +1075,6 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	}
 }
 
-
 static void
 mjs_fragment_hasChildNodes(js_State *J)
 {
@@ -1043,6 +1082,8 @@ mjs_fragment_hasChildNodes(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
+
 	dom_exception exc;
 	bool res;
 
@@ -1067,6 +1108,7 @@ mjs_fragment_insertBefore(js_State *J)
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
 
 	if (!el) {
 		js_error(J, "error");
@@ -1101,6 +1143,7 @@ mjs_fragment_isEqualNode(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
 
 	if (!el) {
 		js_error(J, "error");
@@ -1140,6 +1183,7 @@ mjs_fragment_isSameNode(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
 
 	if (!el) {
 		js_error(J, "error");
@@ -1157,6 +1201,7 @@ mjs_fragment_querySelector(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
 
 	if (!el) {
 		js_pushnull(J);
@@ -1196,6 +1241,7 @@ mjs_fragment_querySelectorAll(js_State *J)
 		return;
 	}
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
 
 	if (!el) {
 		js_pushnull(J);
@@ -1226,6 +1272,8 @@ mjs_fragment_removeChild(js_State *J)
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
+
 	dom_node *el2 = (dom_node *)(mjs_getprivate_fragment(J, 1));
 	dom_exception exc;
 	dom_node *spare;
@@ -1259,7 +1307,7 @@ mjs_fragment_finalizer(js_State *J, void *priv)
 
 	if (el_private) {
 		dom_node *node = (dom_node *)(el_private->node);
-
+		NODEINFO(node);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -1271,6 +1319,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 void
 mjs_push_fragment(js_State *J, void *node)
 {
+	NODEINFO(node);
 	struct mjs_fragment_private *el_private = NULL;
 
 #if 0
@@ -1366,6 +1415,7 @@ mjs_DocumentFragment_constructor(js_State *J)
 	}
 	dom_document_fragment *fragment = NULL;
 	dom_exception exc = dom_document_create_document_fragment(doc, &fragment);
+	NODEINFO(fragment);
 
 	if (exc != DOM_NO_ERR || !fragment) {
 		js_pushnull(J);
@@ -1475,6 +1525,7 @@ mjs_fragment_dispatchEvent(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_fragment(J, 0));
+	NODEINFO(el);
 
 	if (!el) {
 		js_pushboolean(J, 0);

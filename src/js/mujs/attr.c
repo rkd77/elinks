@@ -36,6 +36,7 @@ mjs_attr_get_property_name(js_State *J)
 		return;
 	}
 	dom_attr *attr = (dom_attr *)(js_touserdata(J, 0, "attr"));
+	NODEINFO(attr);
 
 	if (!attr) {
 		js_pushnull(J);
@@ -70,6 +71,7 @@ mjs_attr_get_property_value(js_State *J)
 		return;
 	}
 	dom_attr *attr = (dom_attr *)(js_touserdata(J, 0, "attr"));
+	NODEINFO(attr);
 
 	if (!attr) {
 		js_pushnull(J);

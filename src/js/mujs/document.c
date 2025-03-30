@@ -114,6 +114,7 @@ mjs_document_get_property_anchors(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		js_pushnull(J);
@@ -167,6 +168,7 @@ mjs_document_get_property_body(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		js_pushnull(J);
@@ -281,6 +283,7 @@ mjs_document_get_property_childNodes(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		js_pushnull(J);
@@ -321,6 +324,7 @@ mjs_document_get_property_currentScript(js_State *J)
 
 	if (mapa) {
 		dom_node *elem = (dom_node *)find_in_map(mapa, interpreter->element_offset);
+		NODEINFO(elem);
 
 		if (elem) {
 			dom_html_element_type ty;
@@ -357,6 +361,7 @@ mjs_document_get_property_doctype(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		js_pushundefined(J);
@@ -374,6 +379,7 @@ mjs_document_get_property_documentElement(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		js_pushnull(J);
@@ -458,6 +464,7 @@ mjs_document_get_property_forms(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		js_pushnull(J);
@@ -512,6 +519,7 @@ mjs_document_get_property_images(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		js_pushnull(J);
@@ -543,6 +551,7 @@ mjs_document_get_property_links(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		js_pushnull(J);
@@ -988,6 +997,7 @@ mjs_document_addEventListener(js_State *J)
 		return;
 	}
 	dom_document *doc = (dom_document *)doc_private->node;
+	NODEINFO(doc);
 
 	if (!doc) {
 		js_pushnull(J);
@@ -1073,6 +1083,7 @@ mjs_document_removeEventListener(js_State *J)
 		return;
 	}
 	dom_document *doc = (dom_document *)doc_private->node;
+	NODEINFO(doc);
 
 	if (!doc) {
 		js_pushnull(J);
@@ -1129,6 +1140,7 @@ mjs_document_createComment(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		js_pushnull(J);
@@ -1170,6 +1182,7 @@ mjs_document_createDocumentFragment(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		js_pushnull(J);
@@ -1196,6 +1209,8 @@ mjs_document_createElement(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
+	NODEINFO(doc);
+
 	dom_string *tag_name = NULL;
 	dom_exception exc;
 	const char *str = js_tostring(J, 1);
@@ -1232,6 +1247,8 @@ mjs_document_createTextNode(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
+	NODEINFO(doc);
+
 	dom_string *data = NULL;
 	dom_exception exc;
 	const char *str = js_tostring(J, 1);
@@ -1268,6 +1285,7 @@ mjs_document_getElementById(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		js_pushnull(J);
@@ -1309,6 +1327,7 @@ mjs_document_getElementsByClassName(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		js_pushnull(J);
@@ -1376,6 +1395,7 @@ mjs_document_getElementsByTagName(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		js_pushnull(J);
@@ -1414,6 +1434,7 @@ mjs_document_querySelector(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		js_pushnull(J);
@@ -1461,6 +1482,7 @@ mjs_document_querySelectorAll(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		js_pushnull(J);
@@ -1510,6 +1532,7 @@ mjs_doctype_get_property_name(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_document_type *dtd = (dom_document_type *)(js_touserdata(J, 0, "doctype"));
+	NODEINFO(dtd);
 
 	if (!dtd) {
 		js_pushnull(J);
@@ -1533,6 +1556,7 @@ mjs_doctype_get_property_publicId(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_document_type *dtd = (dom_document_type *)(js_touserdata(J, 0, "doctype"));
+	NODEINFO(dtd);
 
 	if (!dtd) {
 		js_pushnull(J);
@@ -1556,6 +1580,7 @@ mjs_doctype_get_property_systemId(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_document_type *dtd = (dom_document_type *)(js_touserdata(J, 0, "doctype"));
+	NODEINFO(dtd);
 
 	if (!dtd) {
 		js_pushnull(J);
@@ -1595,6 +1620,7 @@ void *map_doctypes;
 static void
 mjs_doctype_finalizer(js_State *J, void *node)
 {
+	NODEINFO(node);
 	attr_erase_from_map(map_doctypes, node);
 
 #ifdef ECMASCRIPT_DEBUG
@@ -1637,7 +1663,7 @@ mjs_doc_private_finalizer(js_State *J, void *priv)
 			if (l->fun) js_unref(J, l->fun);
 		}
 		free_list(doc_private->listeners);
-
+		NODEINFO(doc_private->node);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -1733,6 +1759,7 @@ mjs_push_document2(js_State *J, void *doc)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	NODEINFO(doc);
 	struct mjs_document_private *doc_private = (struct mjs_document_private *)mem_calloc(1, sizeof(*doc_private));
 
 	if (!doc_private) {
@@ -1831,6 +1858,8 @@ mjs_document_constructor(js_State *J)
 	}
 	add_to_string(&str, "<!doctype html>\n<html><head></head><body></body></html>");
 	void *doc = document_parse_text("utf-8", str.source, str.length);
+	NODEINFO(doc);
+
 	done_string(&str);
 
 	js_newobject(J);
@@ -1915,6 +1944,7 @@ mjs_document_dispatchEvent(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_document *doc = (dom_document *)mjs_doc_getprivate(J, 0);
+	NODEINFO(doc);
 
 	if (!doc) {
 		js_pushboolean(J, 0);

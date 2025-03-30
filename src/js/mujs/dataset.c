@@ -47,6 +47,8 @@ mjs_obj_dataset_has(js_State *J, void *p, const char *property)
 		return 0;
 	}
 	dom_node *el = (dom_node *)p;
+	NODEINFO(el);
+
 	struct string data;
 
 	if (!el ||!init_string(&data)) {
@@ -90,6 +92,8 @@ mjs_obj_dataset_put(js_State *J, void *p, const char *property)
 		return 0;
 	}
 	dom_node *el = (dom_node *)p;
+	NODEINFO(el);
+
 	struct string data;
 
 	if (!el ||!init_string(&data)) {
@@ -130,6 +134,8 @@ mjs_obj_dataset_del(js_State *J, void *p, const char *property)
 		return 0;
 	}
 	dom_node *el = (dom_node *)p;
+	NODEINFO(el);
+
 	struct string data;
 
 	if (!el ||!init_string(&data)) {
@@ -159,6 +165,7 @@ mjs_push_dataset(js_State *J, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
+	NODEINFO(node);
 	dom_node_ref(node);
 
 	js_newobject(J);

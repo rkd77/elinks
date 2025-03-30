@@ -107,6 +107,8 @@ mjs_text_get_property_children(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
+
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 
@@ -131,6 +133,8 @@ mjs_text_get_property_childElementCount(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
+
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 	uint32_t res = 0;
@@ -157,6 +161,8 @@ mjs_text_get_property_childNodes(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
+
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 
@@ -181,6 +187,8 @@ mjs_text_get_property_firstChild(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
+
 	dom_node *node = NULL;
 	dom_exception exc;
 
@@ -208,6 +216,8 @@ mjs_text_get_property_firstElementChild(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
+
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 	uint32_t size = 0;
@@ -267,6 +277,8 @@ mjs_text_get_property_lastChild(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
+
 	dom_node *last_child = NULL;
 	dom_exception exc;
 
@@ -294,6 +306,8 @@ mjs_text_get_property_lastElementChild(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
+
 	dom_nodelist *nodes = NULL;
 	dom_exception exc;
 	uint32_t size = 0;
@@ -400,6 +414,8 @@ mjs_text_get_property_nodeName(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *node = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(node);
+
 	dom_string *name = NULL;
 	dom_exception exc;
 
@@ -424,6 +440,8 @@ mjs_text_get_property_nodeType(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *node = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(node);
+
 	dom_node_type type;
 	dom_exception exc;
 
@@ -447,6 +465,8 @@ mjs_text_get_property_nodeValue(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *node = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(node);
+
 	dom_string *content = NULL;
 	dom_exception exc;
 
@@ -472,6 +492,7 @@ mjs_text_set_property_nodeValue(js_State *J)
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_node *node = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(node);
 
 	if (!node) {
 		js_error(J, "error");
@@ -504,6 +525,8 @@ mjs_text_get_property_nextSibling(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
+
 	dom_node *node = NULL;
 	dom_exception exc;
 
@@ -542,6 +565,8 @@ mjs_text_get_property_parentElement(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
+
 	dom_node *node = NULL;
 	dom_exception exc;
 
@@ -569,6 +594,8 @@ mjs_text_get_property_parentNode(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
+
 	dom_node *node = NULL;
 	dom_exception exc;
 
@@ -644,6 +671,8 @@ mjs_text_get_property_previousSibling(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
+
 	dom_node *node = NULL;
 	dom_exception exc;
 
@@ -671,6 +700,7 @@ mjs_text_get_property_tagName(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
 
 	if (!el) {
 		js_pushnull(J);
@@ -694,6 +724,7 @@ mjs_text_get_property_textContent(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
 
 	if (!el) {
 		js_pushnull(J);
@@ -717,6 +748,7 @@ mjs_text_set_property_textContent(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
 
 	if (!el) {
 		js_pushundefined(J);
@@ -769,6 +801,7 @@ mjs_text_addEventListener(js_State *J)
 		return;
 	}
 	dom_node *el = el_private->node;
+	NODEINFO(el);
 
 	if (!el) {
 		js_pushnull(J);
@@ -854,6 +887,7 @@ mjs_text_removeEventListener(js_State *J)
 		return;
 	}
 	dom_node *el = el_private->node;
+	NODEINFO(el);
 
 	if (!el) {
 		js_pushnull(J);
@@ -912,6 +946,8 @@ mjs_text_appendChild(js_State *J)
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
+
 	dom_node *res = NULL;
 
 	if (!el) {
@@ -945,6 +981,7 @@ mjs_text_cloneNode(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
 
 	if (!el) {
 		js_pushnull(J);
@@ -1003,6 +1040,7 @@ mjs_text_contains(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
 
 	if (!el) {
 		js_error(J, "error");
@@ -1059,7 +1097,6 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	}
 }
 
-
 static void
 mjs_text_hasChildNodes(js_State *J)
 {
@@ -1067,6 +1104,8 @@ mjs_text_hasChildNodes(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
+
 	dom_exception exc;
 	bool res;
 
@@ -1091,6 +1130,7 @@ mjs_text_insertBefore(js_State *J)
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
 
 	if (!el) {
 		js_error(J, "error");
@@ -1125,6 +1165,7 @@ mjs_text_isEqualNode(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
 
 	if (!el) {
 		js_error(J, "error");
@@ -1164,6 +1205,7 @@ mjs_text_isSameNode(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
 
 	if (!el) {
 		js_error(J, "error");
@@ -1181,6 +1223,7 @@ mjs_text_querySelector(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
 
 	if (!el) {
 		js_pushnull(J);
@@ -1220,6 +1263,7 @@ mjs_text_querySelectorAll(js_State *J)
 		return;
 	}
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
 
 	if (!el) {
 		js_pushnull(J);
@@ -1250,6 +1294,8 @@ mjs_text_removeChild(js_State *J)
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
+
 	dom_node *el2 = (dom_node *)(mjs_getprivate_text(J, 1));
 	dom_exception exc;
 	dom_node *spare;
@@ -1283,7 +1329,7 @@ mjs_text_finalizer(js_State *J, void *priv)
 
 	if (el_private) {
 		dom_node *node = (dom_node *)(el_private->node);
-
+		NODEINFO(node);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
@@ -1295,6 +1341,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 void
 mjs_push_text(js_State *J, void *node)
 {
+	NODEINFO(node);
 	struct mjs_text_private *el_private = NULL;
 
 #if 0
@@ -1422,6 +1469,7 @@ mjs_text_dispatchEvent(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	dom_node *el = (dom_node *)(mjs_getprivate_text(J, 0));
+	NODEINFO(el);
 
 	if (!el) {
 		js_pushboolean(J, 0);
