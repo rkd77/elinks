@@ -1683,6 +1683,43 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 }
 
 static JSValue
+js_element_get_property_src(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
+	dom_string *src = NULL;
+	dom_exception exc;
+	JSValue r;
+
+	if (!el) {
+		return JS_NULL;
+	}
+	//dom_node_ref(el);
+	exc = dom_element_get_attribute(el, corestring_dom_src, &src);
+
+	if (exc != DOM_NO_ERR) {
+		//dom_node_unref(el);
+		return JS_NULL;
+	}
+	if (!src) {
+		r = JS_NewString(ctx, "");
+	} else {
+		r = JS_NewStringLen(ctx, dom_string_data(src), dom_string_length(src));
+		dom_string_unref(src);
+	}
+	//dom_node_unref(el);
+
+	RETURN_JS(r);
+}
+
+
+static JSValue
 js_element_get_property_style(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -4252,6 +4289,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("parentNode",	js_element_get_property_parentNode, NULL), // Node
 	JS_CGETSET_DEF("previousElementSibling",	js_element_get_property_previousElementSibling, NULL),
 	JS_CGETSET_DEF("previousSibling",	js_element_get_property_previousSibling, NULL), // Node
+	JS_CGETSET_DEF("src",		js_element_get_property_src, NULL),
 	JS_CGETSET_DEF("style",		js_element_get_property_style, NULL),
 	JS_CGETSET_DEF("tagName",	js_element_get_property_tagName, NULL),
 	JS_CGETSET_DEF("textContent",	js_element_get_property_textContent, js_element_set_property_textContent), // Node
