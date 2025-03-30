@@ -1056,13 +1056,32 @@ document_get_property_scripts(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-// TODO
-	args.rval().setNull();
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	dom_html_document *doc = (dom_html_document *)JS::GetMaybePtrFromReservedSlot<dom_html_document>(hobj, 0);
+	NODEINFO(doc);
+
+	if (!doc) {
+		args.rval().setNull();
+		return true;
+	}
+	dom_html_collection *col = (dom_html_collection *)get_scripts(doc, (dom_node *)doc);
+
+	if (!col) {
+		args.rval().setNull();
+		return true;
+	}
+	JSObject *obj = getCollection(ctx, col);
+	args.rval().setObject(*obj);
 
 	return true;
 }
-
 
 static bool
 document_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)

@@ -815,6 +815,28 @@ get_elements_by_class_name(dom_html_document *doc, dom_node *node, const char *c
 	return col;
 }
 
+static bool
+scripts_callback(struct dom_node *node, void *ctx)
+{
+	dom_html_element_type ty;
+	dom_exception exc = dom_html_element_get_tag_type(node, &ty);
+
+	return (exc == DOM_NO_ERR) && (ty == DOM_HTML_ELEMENT_TYPE_SCRIPT);
+}
+
+void *
+get_scripts(dom_html_document *doc, dom_node *node)
+{
+	struct el_dom_html_collection *col = NULL;
+	dom_exception exc = el_dom_html_collection_create(doc, node, scripts_callback, doc, &col);
+
+	if (exc != DOM_NO_ERR || !col) {
+		return NULL;
+	}
+
+	return col;
+}
+
 void
 camel_to_html(const char *text, struct string *result)
 {

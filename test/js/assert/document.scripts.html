@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+console.error('document.scripts.html');
+</script>
+<script>
+function myFunction() {
+  var x = document.scripts.length;
+  console.assert(x === 2, x);
+}
+myFunction();
+console.exit();
+</script>
+</body>
+</html>

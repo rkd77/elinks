@@ -28,6 +28,7 @@ took = [
 'document.new.html',
 'document.querySelectorAll.html',
 'document.querySelector.html',
+'document.scripts.html',
 'domparser.html',
 'element.appendChild.html',
 'element.attributes.html',
