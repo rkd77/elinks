@@ -121,6 +121,7 @@ static bool element_get_property_parentElement(JSContext *ctx, unsigned int argc
 static bool element_get_property_parentNode(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_previousElementSibling(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_previousSibling(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_style(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_tagName(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -216,6 +217,7 @@ JSPropertySpec element_props[] = {
 	JS_PSG("parentNode",	element_get_property_parentNode, JSPROP_ENUMERATE),
 	JS_PSG("previousElementSibling",	element_get_property_previousElementSibling, JSPROP_ENUMERATE),
 	JS_PSG("previousSibling",	element_get_property_previousSibling, JSPROP_ENUMERATE),
+	JS_PSG("src", element_get_property_src, JSPROP_ENUMERATE),
 	JS_PSG("style",		element_get_property_style, JSPROP_ENUMERATE),
 	JS_PSG("tagName",	element_get_property_tagName, JSPROP_ENUMERATE),
 	JS_PSGS("textContent",	element_get_property_textContent, element_set_property_textContent, JSPROP_ENUMERATE),
@@ -2801,6 +2803,70 @@ element_get_property_previousSibling(JSContext *ctx, unsigned int argc, JS::Valu
 	JSObject *elem = getNode(ctx, node);
 	dom_node_unref(node);
 	args.rval().setObject(*elem);
+
+	return true;
+}
+
+static bool
+element_get_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	vs = interpreter->vs;
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
+
+	dom_string *src = NULL;
+	dom_exception exc;
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+	exc = dom_element_get_attribute(el, corestring_dom_src, &src);
+
+	if (exc != DOM_NO_ERR) {
+		args.rval().setNull();
+		return true;
+	}
+	if (!src) {
+		args.rval().setString(JS_NewStringCopyZ(ctx, ""));
+	} else {
+		args.rval().setString(JS_NewStringCopyZ(ctx, dom_string_data(src)));
+		dom_string_unref(src);
+	}
 
 	return true;
 }
