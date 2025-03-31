@@ -4406,6 +4406,63 @@ static JSClassDef js_element_class = {
 	.gc_mark = js_element_mark,
 };
 
+static JSValue
+js_element_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(new_target);
+
+	JSValue obj = JS_NewObjectClass(ctx, js_element_class_id);
+	REF_JS(obj);
+
+	if (JS_IsException(obj)) {
+		return obj;
+	}
+	struct js_element_private *el_private = (struct js_element_private *)mem_calloc(1, sizeof(*el_private));
+
+	if (!el_private) {
+		return JS_NULL;
+	}
+	init_list(el_private->listeners);
+	el_private->node = NULL;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	el_private->interpreter = interpreter;
+	JS_SetOpaque(obj, el_private);
+	JS_DupValue(ctx, obj);
+
+	return obj;
+}
+
+static void
+JS_NewGlobalCConstructor2(JSContext *ctx, JSValue func_obj, const char *name, JSValueConst proto)
+{
+	REF_JS(func_obj);
+	REF_JS(proto);
+
+	JSValue global_object = JS_GetGlobalObject(ctx);
+
+	JS_DefinePropertyValueStr(ctx, global_object, name,
+		JS_DupValue(ctx, func_obj), JS_PROP_WRITABLE | JS_PROP_CONFIGURABLE);
+	JS_SetConstructor(ctx, func_obj, proto);
+	JS_FreeValue(ctx, func_obj);
+	JS_FreeValue(ctx, global_object);
+}
+
+static JSValueConst
+JS_NewGlobalCConstructor(JSContext *ctx, const char *name, JSCFunction *func, int length, JSValueConst proto)
+{
+	JSValue func_obj;
+	func_obj = JS_NewCFunction2(ctx, func, name, length, JS_CFUNC_constructor_or_func, 0);
+	REF_JS(func_obj);
+	REF_JS(proto);
+
+	JS_NewGlobalCConstructor2(ctx, func_obj, name, proto);
+
+	return func_obj;
+}
+
 int
 js_element_init(JSContext *ctx)
 {
@@ -4423,7 +4480,8 @@ js_element_init(JSContext *ctx)
 
 	JS_SetPropertyFunctionList(ctx, element_proto, js_element_proto_funcs, countof(js_element_proto_funcs));
 	JS_SetClassProto(ctx, js_element_class_id, element_proto);
-	JS_SetPropertyStr(ctx, global_obj, "Element", JS_DupValue(ctx, element_proto));
+
+	(void)JS_NewGlobalCConstructor(ctx, "Element", js_element_constructor, 1, element_proto);
 
 	JS_FreeValue(ctx, global_obj);
 
