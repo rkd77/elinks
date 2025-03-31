@@ -268,7 +268,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	JSContext *ctx;
 	JSObject *console_obj, *document_obj, *Document_obj,  *fragment_obj, /* *forms_obj,*/ *history_obj,
 	         *statusbar_obj, *menubar_obj, *navigator_obj, *node_obj, *localstorage_obj, *screen_obj,
-	         *xhr_obj, *event_obj, *keyboardEvent_obj, *messageEvent_obj, *customEvent_obj,
+	         *xhr_obj, *element_obj, *event_obj, *keyboardEvent_obj, *messageEvent_obj, *customEvent_obj,
 	         *url_obj, *urlSearchParams_obj, *domparser_obj, *image_obj;
 
 	assert(interpreter);
@@ -406,6 +406,15 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 					      localstorage_funcs,
 					      NULL, NULL, "localStorage");
 	if (!localstorage_obj) {
+		goto release_and_fail;
+	}
+
+	element_obj = spidermonkey_InitClass(ctx, global, NULL,
+					      &element_class, Element_constructor, 0,
+					      element_props,
+					      element_funcs,
+					      NULL, NULL, "Element");
+	if (!element_obj) {
 		goto release_and_fail;
 	}
 

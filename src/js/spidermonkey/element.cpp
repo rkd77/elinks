@@ -6033,6 +6033,34 @@ element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	return true;
 }
 
+bool
+Element_constructor(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject newObj(ctx, JS_NewObjectForConstructor(ctx, &element_class, args));
+
+	if (!newObj) {
+		return false;
+	}
+	struct element_private *el_private = (struct element_private *)mem_calloc(1, sizeof(*el_private));
+
+	if (!el_private) {
+		return false;
+	}
+	init_list(el_private->listeners);
+	el_private->ref_count = 1;
+	el_private->node = NULL;
+	el_private->thisval = newObj;
+
+	JS::SetReservedSlot(newObj, 0, JS::UndefinedValue());
+	JS::SetReservedSlot(newObj, 1, JS::PrivateValue(el_private));
+	args.rval().setObject(*newObj);
+
+	return true;
+}
 
 JSObject *
 getElement(JSContext *ctx, void *node)

@@ -71,6 +71,7 @@ took = [
 'element.parentNode.html',
 'element.previousElementSibling.html',
 'element.previousSibling.html',
+'element.prototype.matches.html',
 'element.querySelectorAll.html',
 'element.querySelector.html',
 'element.remove.html',

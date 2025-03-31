@@ -6,6 +6,8 @@
 struct term_event;
 extern JSClass element_class;
 extern JSPropertySpec element_props[];
+extern const spidermonkeyFunctionSpec element_funcs[];
+bool Element_constructor(JSContext* ctx, unsigned argc, JS::Value* vp);
 
 JSObject *getElement(JSContext *ctx, void *node);
 
