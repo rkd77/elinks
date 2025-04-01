@@ -358,7 +358,7 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 	func = argv[0];
 
 	if (JS_IsFunction(ctx, func)) {
-		struct ecmascript_timeout *id = ecmascript_set_timeout2q(ctx, func, timeout, -1);
+		struct ecmascript_timeout *id = ecmascript_set_timeout2q(ctx, func, timeout, 0);
 #if SIZEOF_INTPTR_T == 4
 		return JS_NewInt32(ctx, (intptr_t)(id));
 #else
@@ -376,7 +376,7 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 		JS_FreeCString(ctx, code);
 
 		if (code2) {
-			struct ecmascript_timeout *id = ecmascript_set_timeout(ctx, code2, timeout, -1);
+			struct ecmascript_timeout *id = ecmascript_set_timeout(ctx, code2, timeout, 0);
 #if SIZEOF_INTPTR_T == 4
 			return JS_NewInt32(ctx, (intptr_t)(id));
 #else
@@ -414,10 +414,7 @@ js_window_clearInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	struct ecmascript_timeout *t = (struct ecmascript_timeout *)(number);
 
 	if (found_in_map_timer(t)) {
-		kill_timer(&t->tid);
-		done_string(&t->code);
-		del_from_list(t);
-		mem_free(t);
+		t->timeout_next = -1;
 	}
 
 	return JS_UNDEFINED;
@@ -450,10 +447,7 @@ js_window_clearTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	struct ecmascript_timeout *t = (struct ecmascript_timeout *)(number);
 
 	if (found_in_map_timer(t)) {
-		kill_timer(&t->tid);
-		done_string(&t->code);
-		del_from_list(t);
-		mem_free(t);
+		t->timeout_next = -1;
 	}
 
 	return JS_UNDEFINED;

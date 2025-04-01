@@ -708,12 +708,12 @@ window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			return true;
 		}
 
-		struct ecmascript_timeout *id = ecmascript_set_timeout(ctx, code, timeout, -1);
+		struct ecmascript_timeout *id = ecmascript_set_timeout(ctx, code, timeout, 0);
 		JS::BigInt *bi = JS::NumberToBigInt(ctx, reinterpret_cast<int64_t>(id));
 		args.rval().setBigInt(bi);
 		return true;
 	}
-	struct ecmascript_timeout *id = ecmascript_set_timeout2(ctx, args[0], timeout, -1);
+	struct ecmascript_timeout *id = ecmascript_set_timeout2(ctx, args[0], timeout, 0);
 	JS::BigInt *bi = JS::NumberToBigInt(ctx, reinterpret_cast<int64_t>(id));
 	args.rval().setBigInt(bi);
 
@@ -745,10 +745,7 @@ window_clearInterval(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	struct ecmascript_timeout *t = reinterpret_cast<struct ecmascript_timeout *>(number);
 
 	if (found_in_map_timer(t)) {
-		kill_timer(&t->tid);
-		done_string(&t->code);
-		del_from_list(t);
-		mem_free(t);
+		t->timeout_next = -1;
 	}
 	return true;
 }
@@ -779,10 +776,7 @@ window_clearTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	struct ecmascript_timeout *t = reinterpret_cast<struct ecmascript_timeout *>(number);
 
 	if (found_in_map_timer(t)) {
-		kill_timer(&t->tid);
-		done_string(&t->code);
-		del_from_list(t);
-		mem_free(t);
+		t->timeout_next = -1;
 	}
 	return true;
 }

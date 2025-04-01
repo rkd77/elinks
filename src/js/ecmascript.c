@@ -517,6 +517,9 @@ ecmascript_timeout_handler(void *val)
 	struct ecmascript_timeout *t = (struct ecmascript_timeout *)val;
 	struct ecmascript_interpreter *interpreter = t->interpreter;
 
+	if (t->timeout_next < 0) {
+		goto skip;
+	}
 	assertm(interpreter->vs->doc_view != NULL,
 		"setTimeout: vs with no document (e_f %d)",
 		interpreter->vs->ecmascript_fragile);
@@ -526,6 +529,7 @@ ecmascript_timeout_handler(void *val)
 		install_timer(&t->tid, t->timeout_next, ecmascript_timeout_handler, t);
 		add_to_map_timer(t);
 	} else {
+skip:
 	/* The expired timer ID has now been erased.  */
 		t->tid = TIMER_ID_UNDEF;
 		del_from_list(t);
@@ -546,6 +550,9 @@ ecmascript_timeout_handler2(void *val)
 	struct ecmascript_timeout *t = (struct ecmascript_timeout *)val;
 	struct ecmascript_interpreter *interpreter = t->interpreter;
 
+	if (t->timeout_next < 0) {
+		goto skip;
+	}
 #if 0
 	assertm(interpreter->vs->doc_view != NULL,
 		"setTimeout: vs with no document (e_f %d)",
@@ -566,6 +573,7 @@ ecmascript_timeout_handler2(void *val)
 		install_timer(&t->tid, t->timeout_next, ecmascript_timeout_handler2, t);
 		add_to_map_timer(t);
 	} else {
+skip:
 		t->tid = TIMER_ID_UNDEF;
 		/* The expired timer ID has now been erased.  */
 		del_from_list(t);
