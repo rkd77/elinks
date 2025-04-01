@@ -737,14 +737,14 @@ window_clearInterval(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 
-	if (argc != 1) {
+	if (argc != 1 || args[0].isNull()) {
 		return true;
 	}
 	JS::BigInt *bi = JS::ToBigInt(ctx, args[0]);
 	int64_t number = JS::ToBigInt64(bi);
 	struct ecmascript_timeout *t = reinterpret_cast<struct ecmascript_timeout *>(number);
 
-	if (t && found_in_map_timer(t->tid)) {
+	if (found_in_map_timer(t)) {
 		kill_timer(&t->tid);
 		done_string(&t->code);
 		del_from_list(t);
@@ -771,14 +771,14 @@ window_clearTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 
-	if (argc != 1) {
+	if (argc != 1 || args[0].isNull()) {
 		return true;
 	}
 	JS::BigInt *bi = JS::ToBigInt(ctx, args[0]);
 	int64_t number = JS::ToBigInt64(bi);
 	struct ecmascript_timeout *t = reinterpret_cast<struct ecmascript_timeout *>(number);
 
-	if (t && found_in_map_timer(t->tid)) {
+	if (found_in_map_timer(t)) {
 		kill_timer(&t->tid);
 		done_string(&t->code);
 		del_from_list(t);

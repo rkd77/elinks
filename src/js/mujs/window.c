@@ -352,10 +352,16 @@ mjs_window_clearInterval(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	const char *text = js_tostring(J, 1);
+
+	if (!text) {
+		js_pushundefined(J);
+		return;
+	}
+
 	uintptr_t number = (uintptr_t)atoll(text);
 	struct ecmascript_timeout *t = (struct ecmascript_timeout *)(number);
 
-	if (t && found_in_map_timer(t->tid)) {
+	if (found_in_map_timer(t)) {
 		kill_timer(&t->tid);
 		done_string(&t->code);
 		del_from_list(t);
@@ -371,10 +377,16 @@ mjs_window_clearTimeout(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	const char *text = js_tostring(J, 1);
+
+	if (!text) {
+		js_pushundefined(J);
+		return;
+	}
+
 	uintptr_t number = (uintptr_t)atoll(text);
 	struct ecmascript_timeout *t = (struct ecmascript_timeout *)(number);
 
-	if (t && found_in_map_timer(t->tid)) {
+	if (found_in_map_timer(t)) {
 		kill_timer(&t->tid);
 		done_string(&t->code);
 		del_from_list(t);

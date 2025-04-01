@@ -99,7 +99,7 @@ check_timers(timeval_T *last_time)
 
 		del_from_list(timer);
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
-		del_from_map_timer(timer);
+		del_from_map_timer(timer->data);
 #endif
 		/* At this point, *@timer is to be considered invalid
 		 * outside timers.c; if anything e.g. passes it to
@@ -184,9 +184,6 @@ install_timer(timer_id_T *id, milliseconds_T delay, void (*func)(void *), void *
 
 		add_at_pos(timer->prev, new_timer);
 	}
-#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
-	add_to_map_timer(new_timer);
-#endif
 }
 
 void
@@ -199,7 +196,7 @@ kill_timer(timer_id_T *id)
 	timer = *id;
 	del_from_list(timer);
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
-	del_from_map_timer(timer);
+	del_from_map_timer(timer->data);
 #endif
 
 #ifdef USE_LIBEVENT

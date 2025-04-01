@@ -13,7 +13,6 @@
 #include "util/hash.h"
 #include "util/string.h"
 
-struct timer;
 static struct hash *map_timer;
 
 void
@@ -39,25 +38,25 @@ done_map_timer(void)
 }
 
 void
-add_to_map_timer(struct timer *timer)
+add_to_map_timer(struct ecmascript_timeout *t)
 {
-	if (map_timer) {
-		char *key = memacpy((const char *)&timer, sizeof(timer));
+	if (map_timer && t) {
+		char *key = memacpy((const char *)&t, sizeof(t));
 
 		if (key) {
-			add_hash_item(map_timer, key, sizeof(timer), (void *)(intptr_t)1);
+			add_hash_item(map_timer, key, sizeof(t), (void *)(intptr_t)1);
 		}
 	}
 }
 
 void
-del_from_map_timer(struct timer *timer)
+del_from_map_timer(struct ecmascript_timeout *t)
 {
-	if (map_timer) {
-		char *key = memacpy((const char *)&timer, sizeof(timer));
+	if (map_timer && t) {
+		char *key = memacpy((const char *)&t, sizeof(t));
 
 		if (key) {
-			struct hash_item *item = get_hash_item(map_timer, key, sizeof(timer));
+			struct hash_item *item = get_hash_item(map_timer, key, sizeof(t));
 
 			if (item) {
 				mem_free_set(&item->key, NULL);
@@ -69,15 +68,15 @@ del_from_map_timer(struct timer *timer)
 }
 
 bool
-found_in_map_timer(struct timer *timer)
+found_in_map_timer(struct ecmascript_timeout *t)
 {
 	bool ret = false;
 
-	if (map_timer) {
-		char *key = memacpy((const char *)&timer, sizeof(timer));
+	if (map_timer && t) {
+		char *key = memacpy((const char *)&t, sizeof(t));
 
 		if (key) {
-			struct hash_item *item = get_hash_item(map_timer, key, sizeof(timer));
+			struct hash_item *item = get_hash_item(map_timer, key, sizeof(t));
 
 			if (item) {
 				ret = true;

@@ -524,6 +524,7 @@ ecmascript_timeout_handler(void *val)
 
 	if (t->timeout_next > 0) {
 		install_timer(&t->tid, t->timeout_next, ecmascript_timeout_handler, t);
+		add_to_map_timer(t);
 	} else {
 	/* The expired timer ID has now been erased.  */
 		t->tid = TIMER_ID_UNDEF;
@@ -563,6 +564,7 @@ ecmascript_timeout_handler2(void *val)
 	}
 	if (t->timeout_next > 0) {
 		install_timer(&t->tid, t->timeout_next, ecmascript_timeout_handler2, t);
+		add_to_map_timer(t);
 	} else {
 		t->tid = TIMER_ID_UNDEF;
 		/* The expired timer ID has now been erased.  */
@@ -624,6 +626,7 @@ ecmascript_set_timeout(void *c, char *code, int timeout, int timeout_next)
 #endif
 	add_to_list(interpreter->timeouts, t);
 	install_timer(&t->tid, timeout, ecmascript_timeout_handler, t);
+	add_to_map_timer(t);
 
 	return t;
 }
@@ -653,6 +656,7 @@ ecmascript_set_timeout2(void *c, JS::HandleValue f, int timeout, int timeout_nex
 	t->fun = new JS::Heap<JS::Value>(fun);
 	add_to_list(interpreter->timeouts, t);
 	install_timer(&t->tid, timeout, ecmascript_timeout_handler2, t);
+	add_to_map_timer(t);
 
 	return t;
 }
@@ -680,6 +684,7 @@ ecmascript_set_timeout2q(void *c, JSValueConst fun, int timeout, int timeout_nex
 	t->fun = JS_DupValue(ctx, fun);
 	add_to_list(interpreter->timeouts, t);
 	install_timer(&t->tid, timeout, ecmascript_timeout_handler2, t);
+	add_to_map_timer(t);
 
 	return t;
 }
@@ -708,6 +713,7 @@ ecmascript_set_timeout2m(js_State *J, const char *handle, int timeout, int timeo
 
 	add_to_list(interpreter->timeouts, t);
 	install_timer(&t->tid, timeout, ecmascript_timeout_handler2, t);
+	add_to_map_timer(t);
 
 	return t;
 }

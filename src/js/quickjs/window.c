@@ -397,7 +397,7 @@ js_window_clearInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 #endif
 	REF_JS(this_val);
 
-	if (argc != 1) {
+	if (argc != 1 || JS_IsNull(argv[0])) {
 		return JS_UNDEFINED;
 	}
 	intptr_t number;
@@ -413,7 +413,7 @@ js_window_clearInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 #endif
 	struct ecmascript_timeout *t = (struct ecmascript_timeout *)(number);
 
-	if (t && found_in_map_timer(t->tid)) {
+	if (found_in_map_timer(t)) {
 		kill_timer(&t->tid);
 		done_string(&t->code);
 		del_from_list(t);
@@ -433,7 +433,7 @@ js_window_clearTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 #endif
 	REF_JS(this_val);
 
-	if (argc != 1) {
+	if (argc != 1 || JS_IsNull(argv[0])) {
 		return JS_UNDEFINED;
 	}
 	intptr_t number;
@@ -449,7 +449,7 @@ js_window_clearTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 #endif
 	struct ecmascript_timeout *t = (struct ecmascript_timeout *)(number);
 
-	if (t && found_in_map_timer(t->tid)) {
+	if (found_in_map_timer(t)) {
 		kill_timer(&t->tid);
 		done_string(&t->code);
 		del_from_list(t);
