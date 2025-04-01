@@ -4,6 +4,9 @@
 #include "config.h"
 #endif
 
+#include <libguile.h>
+#include <stdio.h>
+
 #include "elinks.h"
 
 #include "intl/libintl.h"
@@ -15,6 +18,8 @@ static const char *
 get_name_guile(struct module *xxx)
 {
 	static char elguileversion[32];
+
+	scm_init_guile();
 	snprintf(elguileversion, 31, "Guile %s", scm_to_locale_string(scm_version()));
 
 	return elguileversion;
