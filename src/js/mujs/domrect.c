@@ -55,7 +55,7 @@ mjs_domRect_finalizer(js_State *J, void *val)
 }
 
 void
-mjs_push_domRect(js_State *J)
+mjs_push_domRect(js_State *J, int x, int y, int width, int height, int top, int right, int bottom, int left)
 {
 	struct eljs_domrect *d = (struct eljs_domrect *)mem_calloc(1, sizeof(*d));
 
@@ -63,6 +63,14 @@ mjs_push_domRect(js_State *J)
 		js_error(J, "out of memory");
 		return;
 	}
+	d->x = x;
+	d->y = y;
+	d->width = width;
+	d->height = height;
+	d->top = top;
+	d->right = right;
+	d->bottom = bottom;
+	d->left = left;
 
 	js_newobject(J);
 	{

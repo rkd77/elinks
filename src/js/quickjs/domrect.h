@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-JSValue getDomRect(JSContext *ctx);
+JSValue getDomRect(JSContext *ctx, int x, int y, int width, int height, int top, int right, int bottom, int left);
 extern JSClassID js_domRect_class_id;
 
 #ifdef __cplusplus

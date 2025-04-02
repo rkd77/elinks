@@ -3435,9 +3435,74 @@ js_element_getBoundingClientRect(JSContext *ctx, JSValueConst this_val, int argc
 #endif
 	REF_JS(this_val);
 
-	JSValue rect = getDomRect(ctx);
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
 
-	RETURN_JS(rect);
+	if (!el) {
+		return JS_UNDEFINED;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
+	struct session *ses;
+	dom_html_element_type ty;
+	dom_exception exc;
+
+	int x, y, width, height, top, right, bottom, left;
+
+	x = y = width = height = top = right = bottom = left = 0;
+	bool root;
+	int offset;
+	struct node_rect *rect;
+
+	if (!document) {
+		goto ret;
+	}
+	ses = doc_view->session;
+
+	if (!ses) {
+		goto ret;
+	}
+	exc = dom_html_element_get_tag_type(el, &ty);
+
+	if (exc != DOM_NO_ERR) {
+		goto ret;
+	}
+	root = (ty == DOM_HTML_ELEMENT_TYPE_BODY || ty == DOM_HTML_ELEMENT_TYPE_HTML);
+
+	if (root) {
+		left = doc_view->box.x * ses->tab->term->cell_width;
+		top = doc_view->box.y * ses->tab->term->cell_height;
+		height = doc_view->box.height * ses->tab->term->cell_height;
+		width = doc_view->box.width * ses->tab->term->cell_width;
+		goto ret;
+	}
+	offset = find_offset(document->element_map_rev, el);
+
+	if (offset <= 0) {
+		goto ret;
+	}
+	scan_document(document);
+	rect = get_element_rect(document, offset);
+
+	if (!rect) {
+		goto ret;
+	}
+	height = int_max(0, (rect->y1 + 1 - rect->y0) * ses->tab->term->cell_height);
+	width = int_max(0, (rect->x1 + 1 - rect->x0) * ses->tab->term->cell_width);
+	left = (rect->x0 - doc_view->box.x) * ses->tab->term->cell_width;
+	top = (rect->y0 - doc_view->box.y) * ses->tab->term->cell_height;
+
+ret:
+	x = left;
+	y = top;
+	right = left + width;
+	bottom = top + height;
+
+	JSValue drect = getDomRect(ctx, x, y, width, height, top, right, bottom, left);
+
+	RETURN_JS(drect);
 }
 
 static JSValue

@@ -5098,7 +5098,80 @@ element_getBoundingClientRect(JSContext *ctx, unsigned int argc, JS::Value *rval
 #endif
 		return false;
 	}
-	JSObject *drect = getDomRect(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	struct view_state *vs = interpreter->vs;
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
+
+	if (!el) {
+		args.rval().setUndefined();
+		return true;
+	}
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
+	struct session *ses;
+	dom_html_element_type ty;
+	dom_exception exc;
+
+	int x, y, width, height, top, right, bottom, left;
+
+	x = y = width = height = top = right = bottom = left = 0;
+	bool root;
+	int offset;
+	struct node_rect *rect;
+
+	if (!document) {
+		goto ret;
+	}
+	ses = doc_view->session;
+
+	if (!ses) {
+		goto ret;
+	}
+	exc = dom_html_element_get_tag_type(el, &ty);
+
+	if (exc != DOM_NO_ERR) {
+		goto ret;
+	}
+	root = (ty == DOM_HTML_ELEMENT_TYPE_BODY || ty == DOM_HTML_ELEMENT_TYPE_HTML);
+
+	if (root) {
+		left = doc_view->box.x * ses->tab->term->cell_width;
+		top = doc_view->box.y * ses->tab->term->cell_height;
+		height = doc_view->box.height * ses->tab->term->cell_height;
+		width = doc_view->box.width * ses->tab->term->cell_width;
+		goto ret;
+	}
+	offset = find_offset(document->element_map_rev, el);
+
+	if (offset <= 0) {
+		goto ret;
+	}
+	scan_document(document);
+	rect = get_element_rect(document, offset);
+
+	if (!rect) {
+		goto ret;
+	}
+	height = int_max(0, (rect->y1 + 1 - rect->y0) * ses->tab->term->cell_height);
+	width = int_max(0, (rect->x1 + 1 - rect->x0) * ses->tab->term->cell_width);
+	left = (rect->x0 - doc_view->box.x) * ses->tab->term->cell_width;
+	top = (rect->y0 - doc_view->box.y) * ses->tab->term->cell_height;
+
+ret:
+	x = left;
+	y = top;
+	right = left + width;
+	bottom = top + height;
+
+	JSObject *drect = getDomRect(ctx, x, y, width, height, top, right, bottom, left);
 
 	if (!drect) {
 		args.rval().setNull();

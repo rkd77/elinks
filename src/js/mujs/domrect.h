@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-void mjs_push_domRect(js_State *J);
+void mjs_push_domRect(js_State *J, int x, int y, int width, int height, int top, int right, int bottom, int left);
 
 #ifdef __cplusplus
 }

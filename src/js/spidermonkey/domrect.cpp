@@ -538,13 +538,22 @@ domRect_set_property_y(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 JSObject *
-getDomRect(JSContext *ctx)
+getDomRect(JSContext *ctx, int x, int y, int width, int height, int top, int right, int bottom, int left)
 {
 	struct eljs_domrect *d = (struct eljs_domrect *)mem_calloc(1, sizeof(*d));
 
 	if (!d) {
 		return NULL;
 	}
+	d->x = x;
+	d->y = y;
+	d->width = width;
+	d->height = height;
+	d->top = top;
+	d->right = right;
+	d->bottom = bottom;
+	d->left = left;
+
 	JSObject *dr = JS_NewObject(ctx, &domRect_class);
 
 	if (!dr) {

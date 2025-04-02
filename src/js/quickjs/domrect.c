@@ -368,15 +368,26 @@ js_domRect_set_property_y(JSContext *ctx, JSValueConst this_val, JSValue val)
 }
 
 JSValue
-getDomRect(JSContext *ctx)
+getDomRect(JSContext *ctx, int x, int y, int width, int height, int top, int right, int bottom, int left)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct eljs_domrect *d = mem_calloc(1, sizeof(*d));
 
-	JSValue proto;
+	if (!d) {
+		return JS_NULL;
+	}
+	d->x = x;
+	d->y = y;
+	d->width = width;
+	d->height = height;
+	d->top = top;
+	d->right = right;
+	d->bottom = bottom;
+	d->left = left;
 
+	JSValue proto;
 	{
 		static int initialised;
 
