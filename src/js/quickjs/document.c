@@ -769,7 +769,7 @@ js_document_get_property_referrer(JSContext *ctx, JSValueConst this_val)
 	switch (get_opt_int("protocol.http.referer.policy", NULL)) {
 	case REFERER_NONE:
 		/* oh well */
-		return JS_UNDEFINED;
+		return JS_NewString(ctx, "");
 
 	case REFERER_FAKE:
 		return JS_NewString(ctx, get_opt_str("protocol.http.referer.fake", NULL));
@@ -785,8 +785,10 @@ js_document_get_property_referrer(JSContext *ctx, JSValueConst this_val)
 
 				RETURN_JS(ret);
 			} else {
-				return JS_UNDEFINED;
+				return JS_NewString(ctx, "");
 			}
+		} else {
+			return JS_NewString(ctx, "");
 		}
 		break;
 
@@ -799,12 +801,12 @@ js_document_get_property_referrer(JSContext *ctx, JSValueConst this_val)
 
 			RETURN_JS(ret);
 		} else {
-			return JS_UNDEFINED;
+			return JS_NewString(ctx, "");
 		}
 		break;
 	}
 
-	return JS_UNDEFINED;
+	return JS_NewString(ctx, "");
 }
 
 static JSValue

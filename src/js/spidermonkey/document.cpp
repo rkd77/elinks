@@ -1013,7 +1013,7 @@ document_get_property_referrer(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	switch (get_opt_int("protocol.http.referer.policy", NULL)) {
 	case REFERER_NONE:
 		/* oh well */
-		args.rval().setUndefined();
+		args.rval().setString(JS_NewStringCopyZ(ctx, ""));
 		break;
 
 	case REFERER_FAKE:
@@ -1029,8 +1029,10 @@ document_get_property_referrer(JSContext *ctx, unsigned int argc, JS::Value *vp)
 				args.rval().setString(JS_NewStringCopyZ(ctx, str));
 				mem_free(str);
 			} else {
-				args.rval().setUndefined();
+				args.rval().setString(JS_NewStringCopyZ(ctx, ""));
 			}
+		} else {
+			args.rval().setString(JS_NewStringCopyZ(ctx, ""));
 		}
 		break;
 
@@ -1041,7 +1043,7 @@ document_get_property_referrer(JSContext *ctx, unsigned int argc, JS::Value *vp)
 			args.rval().setString(JS_NewStringCopyZ(ctx, str));
 			mem_free(str);
 		} else {
-			args.rval().setUndefined();
+			args.rval().setString(JS_NewStringCopyZ(ctx, ""));
 		}
 		break;
 	}

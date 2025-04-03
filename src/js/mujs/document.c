@@ -650,7 +650,7 @@ mjs_document_get_property_referrer(js_State *J)
 	switch (get_opt_int("protocol.http.referer.policy", NULL)) {
 	case REFERER_NONE:
 		/* oh well */
-		js_pushundefined(J);
+		js_pushstring(J, "");
 		return;
 
 	case REFERER_FAKE:
@@ -667,7 +667,7 @@ mjs_document_get_property_referrer(js_State *J)
 				mem_free(str);
 				return;
 			} else {
-				js_pushundefined(J);
+				js_pushstring(J, "");
 				return;
 			}
 		}
@@ -680,13 +680,10 @@ mjs_document_get_property_referrer(js_State *J)
 			js_pushstring(J, str);
 			mem_free(str);
 			return;
-		} else {
-			js_pushundefined(J);
-			return;
 		}
 		break;
 	}
-	js_pushundefined(J);
+	js_pushstring(J, "");
 }
 
 static void
