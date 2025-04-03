@@ -2679,6 +2679,81 @@ mjs_element_removeEventListener(js_State *J)
 }
 
 static void
+mjs_element_append(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+	NODEINFO(el);
+
+	if (!el) {
+		js_pushundefined(J);
+		return;
+	}
+	dom_exception exc;
+	dom_html_document *doc = (dom_html_document *)interpreter->doc;
+	NODEINFO(doc);
+
+	if (!doc) {
+		js_pushundefined(J);
+		return;
+	}
+	unsigned int i;
+
+	for (i = 1;; i++) {
+		dom_node *res = NULL;
+		dom_node *el2 = NULL;
+
+		if (!js_isdefined(J, i)) {
+			break;
+		}
+
+		if (js_isstring(J, i)) {
+			const char *str = js_tostring(J, i);
+
+			if (!str) {
+				continue;
+			}
+			int len = strlen(str);
+			dom_string *data = NULL;
+			exc = dom_string_create((const uint8_t *)str, len, &data);
+
+			if (exc != DOM_NO_ERR || !data) {
+				continue;
+			}
+			dom_text *text_node = NULL;
+			exc = dom_document_create_text_node(doc, data, &text_node);
+			dom_string_unref(data);
+
+			if (exc != DOM_NO_ERR || !text_node) {
+				continue;
+			}
+			exc = dom_node_append_child(el, text_node, &res);
+
+			if (exc == DOM_NO_ERR && res) {
+				interpreter->changed = 1;
+				dom_node_unref(res);
+			}
+		} else {
+			el2 = (dom_node *)(mjs_getprivate_any(J, i));
+
+			if (!el2) {
+				continue;
+			}
+			exc = dom_node_append_child(el, el2, &res);
+
+			if (exc == DOM_NO_ERR && res) {
+				interpreter->changed = 1;
+				dom_node_unref(res);
+			}
+		}
+	}
+	js_pushundefined(J);
+}
+
+static void
 mjs_element_appendChild(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -3908,6 +3983,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		el_private->thisval = js_ref(J);
 		js_newuserdata(J, "element", el_private, mjs_element_finalizer);
 		addmethod(J, "addEventListener", mjs_element_addEventListener, 3);
+		addmethod(J, "append",mjs_element_append, 1);
 		addmethod(J, "appendChild",mjs_element_appendChild, 1);
 		addmethod(J, "blur",		mjs_element_blur, 0);
 		addmethod(J, "click",		mjs_element_click, 0);
