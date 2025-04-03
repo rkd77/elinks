@@ -2921,6 +2921,90 @@ js_element_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, 
 }
 
 static JSValue
+js_element_append(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
+	if (!el) {
+		return JS_UNDEFINED;
+	}
+	dom_exception exc;
+
+	JSValue doc_obj = JS_DupValue(ctx, interpreter->document_obj);
+
+	if (JS_IsNull(doc_obj)) {
+		return JS_UNDEFINED;
+	}
+	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(doc_obj);
+	NODEINFO(doc);
+
+	if (!doc) {
+		JS_FreeValue(ctx, doc_obj);
+		return JS_UNDEFINED;
+	}
+	unsigned int i;
+
+	for (i = 0; i < argc; i++) {
+		dom_node *res = NULL;
+		dom_node *el2 = NULL;
+
+		if (JS_IsNull(argv[i])) {
+			continue;
+		}
+
+		if (JS_IsString(argv[i])) {
+			size_t len;
+			const char *str = JS_ToCStringLen(ctx, &len, argv[i]);
+
+			if (!str) {
+				continue;
+			}
+			dom_string *data = NULL;
+			exc = dom_string_create((const uint8_t *)str, len, &data);
+			JS_FreeCString(ctx, str);
+
+			if (exc != DOM_NO_ERR || !data) {
+				continue;
+			}
+			dom_text *text_node = NULL;
+			exc = dom_document_create_text_node(doc, data, &text_node);
+			dom_string_unref(data);
+
+			if (exc != DOM_NO_ERR || !text_node) {
+				continue;
+			}
+			exc = dom_node_append_child(el, text_node, &res);
+
+			if (exc == DOM_NO_ERR && res) {
+				interpreter->changed = 1;
+				dom_node_unref(res);
+			}
+		} else {
+			el2 = (dom_node *)js_getopaque_any(argv[i]);
+
+			if (!el2) {
+				continue;
+			}
+			exc = dom_node_append_child(el, el2, &res);
+
+			if (exc == DOM_NO_ERR && res) {
+				interpreter->changed = 1;
+				dom_node_unref(res);
+			}
+		}
+	}
+	JS_FreeValue(ctx, doc_obj);
+	return JS_UNDEFINED;
+}
+
+static JSValue
 js_element_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -4362,6 +4446,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("value",	js_element_get_property_value, js_element_set_property_value),
 	JS_CGETSET_DEF("width",	js_element_get_property_width, NULL),
 	JS_CFUNC_DEF("addEventListener",	3, js_element_addEventListener),
+	JS_CFUNC_DEF("append",	1, js_element_append), // Node
 	JS_CFUNC_DEF("appendChild",	1, js_element_appendChild), // Node
 	JS_CFUNC_DEF("blur",		0, js_element_blur),
 	JS_CFUNC_DEF("click",		0, js_element_click),
