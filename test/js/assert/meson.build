@@ -30,6 +30,7 @@ took = [
 'document.querySelector.html',
 'document.scripts.html',
 'domparser.html',
+'element.append.html',
 'element.appendChild.html',
 'element.attributes.html',
 'element.checked.html',

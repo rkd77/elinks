@@ -4253,6 +4253,7 @@ element_set_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 
 static bool element_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool element_append(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_blur(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_click(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -4283,6 +4284,7 @@ static bool element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *r
 
 const spidermonkeyFunctionSpec element_funcs[] = {
 	{ "addEventListener",	element_addEventListener,	3 },
+	{ "append",	element_append,	1 },
 	{ "appendChild",	element_appendChild,	1 },
 	{ "blur",	element_blur,		0 },
 	{ "click",	element_click,		0 },
@@ -4498,6 +4500,115 @@ element_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	args.rval().setUndefined();
 	return true;
 }
+
+static bool
+element_append(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp || argc < 1) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	args.rval().setUndefined();
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	NODEINFO(el);
+
+	if (!el) {
+		return true;
+	}
+	dom_exception exc;
+
+	JSObject *doc_obj = interpreter->document_obj;
+
+	if (!doc_obj) {
+		return true;
+	}
+	JS::RootedObject hobj2(ctx, doc_obj);
+
+	if (!JS_InstanceOf(ctx, hobj2, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return true;
+	}
+	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(hobj2, 0);
+
+	if (!doc) {
+		return true;
+	}
+
+	for (unsigned int i = 0; i < argc; i++) {
+		dom_node *res = NULL;
+		dom_node *el2 = NULL;
+
+		if (args[i].isNull()) {
+			continue;
+		}
+
+		if (args[i].isString()) {
+			char *str = jsval_to_string(ctx, args[i]);
+			size_t len;
+
+			if (!str) {
+				continue;
+			}
+			dom_string *data = NULL;
+			len = strlen(str);
+			exc = dom_string_create((const uint8_t *)str, len, &data);
+			mem_free(str);
+
+			if (exc != DOM_NO_ERR || !data) {
+				continue;
+			}
+			dom_text *text_node = NULL;
+			exc = dom_document_create_text_node(doc, data, &text_node);
+			dom_string_unref(data);
+
+			if (exc != DOM_NO_ERR || !text_node) {
+				continue;
+			}
+			exc = dom_node_append_child(el, text_node, &res);
+
+			if (exc == DOM_NO_ERR && res) {
+				interpreter->changed = 1;
+				dom_node_unref(res);
+			}
+		} else {
+			JS::RootedObject node(ctx, &args[i].toObject());
+			el2 = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(node, 0);
+
+			if (!el2) {
+				continue;
+			}
+			exc = dom_node_append_child(el, el2, &res);
+
+			if (exc == DOM_NO_ERR && res) {
+				interpreter->changed = 1;
+				dom_node_unref(res);
+			}
+		}
+	}
+	return true;
+}
+
 
 static bool
 element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<ul id="myList">
+  <li>Coffee</li>
+  <li>Tea</li>
+</ul>
+
+<p>Click the button to append an item to the end of the list.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+
+<p><strong>Note:</strong><br>First create an LI node,<br> then create a Text node,<br> then append the Text node to the LI node.<br>Finally append the LI node to the list.</p>
+<script>
+function myFunction() {
+  var node = document.createElement("LI");
+  //var textnode = document.createTextNode("Water");
+  node.append("Water", " Milk");
+
+  console.assert(node.outerHTML === '<li>Water Milk</li>', "Water Milk");
+
+  //node.append(textnode);
+  document.getElementById("myList").append(node);
+  console.assert(document.getElementsByTagName("UL")[0].outerHTML === '<ul id="myList">\n  <li>Coffee</li>\n  <li>Tea</li>\n<li>Water Milk</li></ul>', document.getElementsByTagName("UL")[0].outerHTML);
+}
+console.error('element.append.html');
+myFunction();
+console.exit();
+</script>
+
+</body>
+</html>
