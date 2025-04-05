@@ -358,7 +358,7 @@ mjs_keyboardEvent_constructor(js_State *J)
 	js_newobject(J);
 	{
 		js_newuserdata(J, "event", event, mjs_keyboardEvent_finalizer);
-		addmethod(J, "preventDefault", mjs_keyboardEvent_preventDefault, 0);
+		addmethod(J, "KeyboardEvent.prototype.preventDefault", mjs_keyboardEvent_preventDefault, 0);
 		addproperty(J, "bubbles", mjs_keyboardEvent_get_property_bubbles, NULL);
 		addproperty(J, "cancelable", mjs_keyboardEvent_get_property_cancelable, NULL);
 		addproperty(J, "code", mjs_keyboardEvent_get_property_code, NULL);

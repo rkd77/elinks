@@ -470,15 +470,15 @@ mujs_eval_boolback(struct ecmascript_interpreter *interpreter,
 void
 addmethod(js_State *J, const char *name, js_CFunction fun, int n)
 {
-	const char *realname = strchr(name, '.');
+	const char *realname = strrchr(name, '.');
 	realname = realname ? realname + 1 : name;
 	js_newcfunction(J, fun, name, n);
-	js_defproperty(J, -2, realname, JS_READONLY | JS_DONTENUM | JS_DONTCONF);
+	js_defproperty(J, -2, realname, JS_DONTENUM);
 }
 
 void addproperty(js_State *J, const char *name, js_CFunction getfun, js_CFunction setfun)
 {
-	const char *realname = strchr(name, '.');
+	const char *realname = strrchr(name, '.');
 	realname = realname ? realname + 1 : name;
 	js_newcfunction(J, getfun, name, 0);
 	if (setfun) {
@@ -486,7 +486,7 @@ void addproperty(js_State *J, const char *name, js_CFunction getfun, js_CFunctio
 	} else {
 		js_pushnull(J);
 	}
-	js_defaccessor(J, -3, realname, JS_READONLY | JS_DONTENUM | JS_DONTCONF);
+	js_defaccessor(J, -3, realname, JS_DONTENUM);
 }
 
 struct module mujs_module = struct_module(

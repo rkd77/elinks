@@ -870,17 +870,17 @@ mjs_push_window(js_State *J, struct view_state *vs)
 	js_newobject(J);
 	{
 		js_newuserdata(J, "window", elwin, mjs_window_finalizer);
-		addmethod(J, "addEventListener", mjs_window_addEventListener, 3);
-		addmethod(J, "alert", mjs_window_alert, 1);
-		addmethod(J, "clearInterval", mjs_window_clearInterval, 1);
-		addmethod(J, "clearTimeout", mjs_window_clearTimeout, 1);
-		addmethod(J, "getComputedStyle", mjs_window_getComputedStyle, 2);
-		addmethod(J, "open", mjs_window_open, 3);
-		addmethod(J, "postMessage", mjs_window_postMessage, 3);
-		addmethod(J, "removeEventListener", mjs_window_removeEventListener, 3);
-		addmethod(J, "setInterval", mjs_window_setInterval, 2);
-		addmethod(J, "setTimeout", mjs_window_setTimeout, 2);
-		addmethod(J, "toString", mjs_window_toString, 0);
+		addmethod(J, "window.addEventListener", mjs_window_addEventListener, 3);
+		addmethod(J, "window.alert", mjs_window_alert, 1);
+		addmethod(J, "window.clearInterval", mjs_window_clearInterval, 1);
+		addmethod(J, "window.clearTimeout", mjs_window_clearTimeout, 1);
+		addmethod(J, "window.getComputedStyle", mjs_window_getComputedStyle, 2);
+		addmethod(J, "window.open", mjs_window_open, 3);
+		addmethod(J, "window.postMessage", mjs_window_postMessage, 3);
+		addmethod(J, "window.removeEventListener", mjs_window_removeEventListener, 3);
+		addmethod(J, "window.setInterval", mjs_window_setInterval, 2);
+		addmethod(J, "window.setTimeout", mjs_window_setTimeout, 2);
+		addmethod(J, "window.toString", mjs_window_toString, 0);
 
 		addproperty(J, "closed", mjs_window_get_property_closed, NULL);
 		addproperty(J, "event", mjs_window_get_property_event, NULL);

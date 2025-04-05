@@ -239,9 +239,9 @@ mjs_push_attributes(js_State *J, void *node)
 	js_newarray(J);
 	{
 		js_newuserdata(J, "attribute", node, mjs_attributes_finalizer);
-		addmethod(J, "item", mjs_attributes_item, 1);
-		addmethod(J, "getNamedItem", mjs_attributes_getNamedItem, 1);
-		addmethod(J, "toString", mjs_attributes_toString, 0);
+		addmethod(J, "Attribute.prototype.item", mjs_attributes_item, 1);
+		addmethod(J, "Attribute.prototype.getNamedItem", mjs_attributes_getNamedItem, 1);
+		addmethod(J, "Attribute.prototype.toString", mjs_attributes_toString, 0);
 //		addproperty(J, "length", mjs_attributes_get_property_length, NULL);
 
 		mjs_attributes_set_items(J, node);

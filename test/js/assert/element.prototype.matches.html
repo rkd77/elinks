@@ -1,9 +1,9 @@
 <script>
 console.error('element.prototype.matches.html');
-if (Element.prototype.matches) {
-	console.assert(1, 'matches');
+if (!Element.prototype.matches) {
+	console.assert(false, 'not matches');
 } else {
-	console.assert(0, 'not matches');
+	console.assert(true, 'matches');
 }
 console.exit();
 </script>

@@ -305,7 +305,7 @@ mjs_messageEvent_constructor(js_State *J)
 	js_newobject(J);
 	{
 		js_newuserdata(J, "event", event, mjs_messageEvent_finalizer);
-		addmethod(J, "preventDefault", mjs_messageEvent_preventDefault, 0);
+		addmethod(J, "MessageEvent.prototype.preventDefault", mjs_messageEvent_preventDefault, 0);
 		addproperty(J, "bubbles", mjs_messageEvent_get_property_bubbles, NULL);
 		addproperty(J, "cancelable", mjs_messageEvent_get_property_cancelable, NULL);
 		addproperty(J, "composed", mjs_messageEvent_get_property_composed, NULL);

@@ -262,9 +262,9 @@ mjs_push_collection(js_State *J, void *node)
 	js_newarray(J);
 	{
 		js_newuserdata(J, "collection", node, mjs_htmlCollection_finalizer);
-		addmethod(J, "item", mjs_htmlCollection_item, 1);
-		addmethod(J, "namedItem", mjs_htmlCollection_namedItem, 1);
-		addmethod(J, "toString", mjs_htmlCollection_toString, 0);
+		addmethod(J, "htmlCollection.prototype.item", mjs_htmlCollection_item, 1);
+		addmethod(J, "htmlCollection.prototype.namedItem", mjs_htmlCollection_namedItem, 1);
+		addmethod(J, "htmlCollection.prototype.toString", mjs_htmlCollection_toString, 0);
 		addproperty(J, "length", mjs_htmlCollection_get_property_length, NULL);
 		mjs_htmlCollection_set_items(J, node);
 	}

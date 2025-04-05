@@ -194,9 +194,9 @@ mjs_push_forms(js_State *J, void *node)
 	{
 		js_newuserdata(J, "forms", node, NULL);
 
-		addmethod(J, "item", mjs_forms_item, 1);
-		addmethod(J, "namedItem", mjs_forms_namedItem, 1);
-		addmethod(J, "toString", mjs_forms_toString, 0);
+		addmethod(J, "forms.item", mjs_forms_item, 1);
+		addmethod(J, "forms.namedItem", mjs_forms_namedItem, 1);
+		addmethod(J, "forms.toString", mjs_forms_toString, 0);
 
 		addproperty(J, "length", mjs_forms_get_property_length, NULL);
 		mjs_forms_set_items(J);

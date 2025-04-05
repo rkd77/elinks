@@ -1322,11 +1322,11 @@ mjs_push_input_object(js_State *J, struct form_state *fs)
 	{
 		js_newuserdata(J, "input", fs, mjs_input_finalizer);
 
-		addmethod(J, "blur", mjs_input_blur, 0);
-		addmethod(J, "click", mjs_input_click, 0);
-		addmethod(J, "focus", mjs_input_focus, 0);
-		addmethod(J, "select", mjs_input_select, 0);
-		addmethod(J, "toString", mjs_input_toString, 0);
+		addmethod(J, "input.blur", mjs_input_blur, 0);
+		addmethod(J, "input.click", mjs_input_click, 0);
+		addmethod(J, "input.focus", mjs_input_focus, 0);
+		addmethod(J, "input.select", mjs_input_select, 0);
+		addmethod(J, "input.toString", mjs_input_toString, 0);
 
 		addproperty(J, "accessKey",	mjs_input_get_property_accessKey, mjs_input_set_property_accessKey);
 		addproperty(J, "alt",	mjs_input_get_property_alt, mjs_input_set_property_alt);

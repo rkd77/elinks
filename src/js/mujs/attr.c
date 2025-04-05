@@ -116,7 +116,7 @@ mjs_push_attr(js_State *J, void *node)
 	js_newobject(J);
 	{
 		js_newuserdata(J, "attr", node, mjs_attr_finalizer);
-		addmethod(J, "toString", mjs_attr_toString, 0);
+		addmethod(J, "Attr.prototype.toString", mjs_attr_toString, 0);
 		addproperty(J, "name", mjs_attr_get_property_name, NULL);
 		addproperty(J, "value", mjs_attr_get_property_value, NULL);
 	}

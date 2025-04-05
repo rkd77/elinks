@@ -199,10 +199,10 @@ mjs_push_tokenlist(js_State *J, void *node)
 	js_newobject(J);
 	{
 		js_newuserdata(J, "tokenlist", node, mjs_tokenlist_finalizer);
-		addmethod(J, "add", mjs_tokenlist_add, 1);
-		addmethod(J, "contains", mjs_tokenlist_contains, 1);
-		addmethod(J, "remove", mjs_tokenlist_remove, 1);
-		addmethod(J, "toggle", mjs_tokenlist_toggle, 1);
-		addmethod(J, "toString", mjs_tokenlist_toString, 0);
+		addmethod(J, "Tokenlist.prototype.add", mjs_tokenlist_add, 1);
+		addmethod(J, "Tokenlist.prototype.contains", mjs_tokenlist_contains, 1);
+		addmethod(J, "Tokenlist.prototype.remove", mjs_tokenlist_remove, 1);
+		addmethod(J, "Tokenlist.prototype.toggle", mjs_tokenlist_toggle, 1);
+		addmethod(J, "Tokenlist.prototype.toString", mjs_tokenlist_toString, 0);
 	}
 }

@@ -1460,15 +1460,15 @@ mjs_xhr_constructor(js_State *J)
 	{
 		xhr->thisval = js_ref(J);
 		js_newuserdata(J, "xhr", xhr, mjs_xhr_finalizer);
-		addmethod(J, "abort", mjs_xhr_abort, 0);
-		addmethod(J, "addEventListener", mjs_xhr_addEventListener, 3);
-		addmethod(J, "getAllResponseHeaders", mjs_xhr_getAllResponseHeaders, 0);
-		addmethod(J, "getResponseHeader", mjs_xhr_getResponseHeader, 1);
-		addmethod(J, "open", mjs_xhr_open, 5);
-		addmethod(J, "overrideMimeType", mjs_xhr_overrideMimeType, 1);
-		addmethod(J, "removeEventListener", mjs_xhr_removeEventListener, 3);
-		addmethod(J, "send", mjs_xhr_send, 1);
-		addmethod(J, "setRequestHeader", mjs_xhr_setRequestHeader, 2);
+		addmethod(J, "XMLHttpRequest.prototype.abort", mjs_xhr_abort, 0);
+		addmethod(J, "XMLHttpRequest.prototype.addEventListener", mjs_xhr_addEventListener, 3);
+		addmethod(J, "XMLHttpRequest.prototype.getAllResponseHeaders", mjs_xhr_getAllResponseHeaders, 0);
+		addmethod(J, "XMLHttpRequest.prototype.getResponseHeader", mjs_xhr_getResponseHeader, 1);
+		addmethod(J, "XMLHttpRequest.prototype.open", mjs_xhr_open, 5);
+		addmethod(J, "XMLHttpRequest.prototype.overrideMimeType", mjs_xhr_overrideMimeType, 1);
+		addmethod(J, "XMLHttpRequest.prototype.removeEventListener", mjs_xhr_removeEventListener, 3);
+		addmethod(J, "XMLHttpRequest.prototype.send", mjs_xhr_send, 1);
+		addmethod(J, "XMLHttpRequest.prototype.setRequestHeader", mjs_xhr_setRequestHeader, 2);
 
 		addproperty(J, "UNSENT", mjs_xhr_static_get_property_UNSENT, NULL);
 		addproperty(J, "OPENED", mjs_xhr_static_get_property_OPENED, NULL);

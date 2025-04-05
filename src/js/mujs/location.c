@@ -696,11 +696,11 @@ mjs_location_init(js_State *J, struct view_state *vs)
 	js_newobject(J);
 	{
 		js_newuserdata(J, "location", vs, mjs_location_finalizer);
-		addmethod(J, "assign", mjs_location_assign, 1);
-		addmethod(J, "reload", mjs_location_reload, 0);
-		addmethod(J, "replace", mjs_location_replace, 1);
-		addmethod(J, "toString", mjs_location_toString, 0);
-		addmethod(J, "toLocaleString", mjs_location_toString, 0);
+		addmethod(J, "location.assign", mjs_location_assign, 1);
+		addmethod(J, "location.reload", mjs_location_reload, 0);
+		addmethod(J, "location.replace", mjs_location_replace, 1);
+		addmethod(J, "location.toString", mjs_location_toString, 0);
+		addmethod(J, "location.toLocaleString", mjs_location_toString, 0);
 
 		addproperty(J, "hash", mjs_location_get_property_hash, mjs_location_set_property_hash);
 		addproperty(J, "host", mjs_location_get_property_host, mjs_location_set_property_host);

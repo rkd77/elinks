@@ -117,10 +117,10 @@ mjs_push_CSSStyleDeclaration(js_State *J, void *node)
 	js_newarray(J);
 	{
 		js_newuserdata(J, "CSSStyleDeclaration", node, mjs_CSSStyleDeclaration_finalizer);
-		addmethod(J, "getPropertyValue", mjs_CSSStyleDeclaration_getPropertyValue, 1);
-		addmethod(J, "item", mjs_CSSStyleDeclaration_item, 1);
-		addmethod(J, "namedItem", mjs_CSSStyleDeclaration_namedItem, 1);
-		addmethod(J, "toString", mjs_CSSStyleDeclaration_toString, 0);
+		addmethod(J, "CSSStyleDeclaration.prototype.getPropertyValue", mjs_CSSStyleDeclaration_getPropertyValue, 1);
+		addmethod(J, "CSSStyleDeclaration.prototype.item", mjs_CSSStyleDeclaration_item, 1);
+		addmethod(J, "CSSStyleDeclaration.prototype.namedItem", mjs_CSSStyleDeclaration_namedItem, 1);
+		addmethod(J, "CSSStyleDeclaration.prototype.toString", mjs_CSSStyleDeclaration_toString, 0);
 		addproperty(J, "length", mjs_CSSStyleDeclaration_get_property_length, NULL);
 		mjs_CSSStyleDeclaration_set_items(J, node);
 	}

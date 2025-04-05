@@ -461,7 +461,7 @@ mjs_push_style(js_State *J, void *node)
 	js_newobject(J);
 	{
 		js_newuserdata(J, "style", node, mjs_style_finalizer);
-		addmethod(J, "toString", mjs_style_toString, 0);
+		addmethod(J, "style.toString", mjs_style_toString, 0);
 		addproperty(J, "background", mjs_style_get_property_background, mjs_style_set_property_background);
 		addproperty(J, "backgroundClip", mjs_style_get_property_backgroundClip, mjs_style_set_property_backgroundClip);
 		addproperty(J, "backgroundColor", mjs_style_get_property_backgroundColor, mjs_style_set_property_backgroundColor);

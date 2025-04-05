@@ -3971,10 +3971,12 @@ mjs_push_element(js_State *J, void *node)
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-		dom_node_ref((dom_node *)node);
+		if (node) {
+			dom_node_ref((dom_node *)node);
 
-		attr_save_in_map(map_privates, node, el_private);
-		attr_save_in_map(map_elements, el_private, node);
+			attr_save_in_map(map_privates, node, el_private);
+			attr_save_in_map(map_elements, el_private, node);
+		}
 	}
 
 	js_newobject(J);
@@ -3982,36 +3984,36 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		js_copy(J, 0);
 		el_private->thisval = js_ref(J);
 		js_newuserdata(J, "element", el_private, mjs_element_finalizer);
-		addmethod(J, "addEventListener", mjs_element_addEventListener, 3);
-		addmethod(J, "append",mjs_element_append, 1);
-		addmethod(J, "appendChild",mjs_element_appendChild, 1);
-		addmethod(J, "blur",		mjs_element_blur, 0);
-		addmethod(J, "click",		mjs_element_click, 0);
-		addmethod(J, "cloneNode",	mjs_element_cloneNode, 1);
-		addmethod(J, "closest",	mjs_element_closest, 1);
-		addmethod(J, "contains",	mjs_element_contains, 1);
-		addmethod(J, "dispatchEvent",	mjs_element_dispatchEvent, 1);
-		addmethod(J, "focus",		mjs_element_focus, 0);
-		addmethod(J, "getAttribute",	mjs_element_getAttribute, 1);
-		addmethod(J, "getAttributeNode",	mjs_element_getAttributeNode, 1);
-		addmethod(J, "getBoundingClientRect",	mjs_element_getBoundingClientRect, 0);
-		addmethod(J, "getElementsByTagName",	mjs_element_getElementsByTagName, 1);
-		addmethod(J, "hasAttribute",	mjs_element_hasAttribute, 1);
-		addmethod(J, "hasAttributes",	mjs_element_hasAttributes, 0);
-		addmethod(J, "hasChildNodes",	mjs_element_hasChildNodes, 0);
-		addmethod(J, "insertBefore",	mjs_element_insertBefore, 2);
-		addmethod(J, "isEqualNode",	mjs_element_isEqualNode, 1);
-		addmethod(J, "isSameNode",		mjs_element_isSameNode, 1);
-		addmethod(J, "matches",		mjs_element_matches, 1);
-		addmethod(J, "querySelector",	mjs_element_querySelector, 1);
-		addmethod(J, "querySelectorAll",	mjs_element_querySelectorAll, 1);
-		addmethod(J, "remove",		mjs_element_remove, 0);
-		addmethod(J, "removeAttribute",	mjs_element_removeAttribute, 1);
-		addmethod(J, "removeChild",	mjs_element_removeChild, 1);
-		addmethod(J, "removeEventListener", mjs_element_removeEventListener, 3);
-		addmethod(J, "replaceWith", mjs_element_replaceWith, 1);
-		addmethod(J, "setAttribute",	mjs_element_setAttribute, 2);
-		addmethod(J, "toString",		mjs_element_toString, 0);
+		addmethod(J, "Element.prototype.addEventListener", mjs_element_addEventListener, 3);
+		addmethod(J, "Element.prototype.append",mjs_element_append, 1);
+		addmethod(J, "Element.prototype.appendChild",mjs_element_appendChild, 1);
+		addmethod(J, "Element.prototype.blur",		mjs_element_blur, 0);
+		addmethod(J, "Element.prototype.click",		mjs_element_click, 0);
+		addmethod(J, "Element.prototype.cloneNode",	mjs_element_cloneNode, 1);
+		addmethod(J, "Element.prototype.closest",	mjs_element_closest, 1);
+		addmethod(J, "Element.prototype.contains",	mjs_element_contains, 1);
+		addmethod(J, "Element.prototype.dispatchEvent",	mjs_element_dispatchEvent, 1);
+		addmethod(J, "Element.prototype.focus",		mjs_element_focus, 0);
+		addmethod(J, "Element.prototype.getAttribute",	mjs_element_getAttribute, 1);
+		addmethod(J, "Element.prototype.getAttributeNode",	mjs_element_getAttributeNode, 1);
+		addmethod(J, "Element.prototype.getBoundingClientRect",	mjs_element_getBoundingClientRect, 0);
+		addmethod(J, "Element.prototype.getElementsByTagName",	mjs_element_getElementsByTagName, 1);
+		addmethod(J, "Element.prototype.hasAttribute",	mjs_element_hasAttribute, 1);
+		addmethod(J, "Element.prototype.hasAttributes",	mjs_element_hasAttributes, 0);
+		addmethod(J, "Element.prototype.hasChildNodes",	mjs_element_hasChildNodes, 0);
+		addmethod(J, "Element.prototype.insertBefore",	mjs_element_insertBefore, 2);
+		addmethod(J, "Element.prototype.isEqualNode",	mjs_element_isEqualNode, 1);
+		addmethod(J, "Element.prototype.isSameNode",		mjs_element_isSameNode, 1);
+		addmethod(J, "Element.prototype.matches",		mjs_element_matches, 1);
+		addmethod(J, "Element.prototype.querySelector",	mjs_element_querySelector, 1);
+		addmethod(J, "Element.prototype.querySelectorAll",	mjs_element_querySelectorAll, 1);
+		addmethod(J, "Element.prototype.remove",		mjs_element_remove, 0);
+		addmethod(J, "Element.prototype.removeAttribute",	mjs_element_removeAttribute, 1);
+		addmethod(J, "Element.prototype.removeChild",	mjs_element_removeChild, 1);
+		addmethod(J, "Element.prototype.removeEventListener", mjs_element_removeEventListener, 3);
+		addmethod(J, "Element.prototype.replaceWith", mjs_element_replaceWith, 1);
+		addmethod(J, "Element.prototype.setAttribute",	mjs_element_setAttribute, 2);
+		addmethod(J, "Element.prototype.toString",		mjs_element_toString, 0);
 
 		addproperty(J, "attributes",	mjs_element_get_property_attributes, NULL);
 		addproperty(J, "checked",	mjs_element_get_property_checked, mjs_element_set_property_checked);
@@ -4065,14 +4067,38 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	}
 }
 
+static void
+mjs_element_fun(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	js_pushundefined(J);
+}
+
+static void
+mjs_element_constructor(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	mjs_push_element(J, NULL);
+}
+
 int
 mjs_element_init(js_State *J)
 {
-#if 0
-	mjs_push_node(J, NULL);
+#if 1
+	js_pushglobal(J);
+	js_newcconstructor(J, mjs_element_fun, mjs_element_constructor, "Element", 1);
 	js_defglobal(J, "Element", JS_DONTENUM);
-#endif
 	return 0;
+#endif
+#if 0
+	mjs_push_element(J, NULL);
+	js_defglobal(J, "Element", JS_DONTENUM);
+	return 0;
+#endif
 }
 
 void

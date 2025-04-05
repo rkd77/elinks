@@ -59,7 +59,7 @@ mjs_domparser_constructor(js_State *J)
 #endif
 	js_newobject(J);
 	{
-		addmethod(J, "parseFromString", mjs_domparser_parseFromString, 2);
+		addmethod(J, "DOMParser.prototype.parseFromString", mjs_domparser_parseFromString, 2);
 	}
 }
 

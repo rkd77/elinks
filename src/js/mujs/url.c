@@ -585,7 +585,7 @@ mjs_url_constructor(js_State *J)
 	js_newobject(J);
 	{
 		js_newuserdata(J, "URL", url, mjs_url_finalizer);
-		addmethod(J, "toString", mjs_url_toString, 0);
+		addmethod(J, "URL.prototype.toString", mjs_url_toString, 0);
 
 		addproperty(J, "hash",	mjs_url_get_property_hash, mjs_url_set_property_hash);
 		addproperty(J, "host",	mjs_url_get_property_host, mjs_url_set_property_host);

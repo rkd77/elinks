@@ -333,7 +333,7 @@ mjs_customEvent_constructor(js_State *J)
 	js_newobject(J);
 	{
 		js_newuserdata(J, "event", event, mjs_customEvent_finalizer);
-		addmethod(J, "preventDefault", mjs_customEvent_preventDefault, 0);
+		addmethod(J, "CustomEvent.prototype.preventDefault", mjs_customEvent_preventDefault, 0);
 		addproperty(J, "bubbles", mjs_customEvent_get_property_bubbles, NULL);
 		addproperty(J, "cancelable", mjs_customEvent_get_property_cancelable, NULL);
 //		addproperty(J, "composed", mjs_customEvent_get_property_composed, NULL);

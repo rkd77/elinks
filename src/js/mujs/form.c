@@ -814,9 +814,9 @@ mjs_push_form_object(js_State *J, struct form *form)
 	{
 		js_newuserdata(J, "form", form, mjs_form_finalizer);
 
-		addmethod(J, "reset", mjs_form_reset, 0);
-		addmethod(J, "submit", mjs_form_submit, 0);
-		addmethod(J, "toString", mjs_form_toString, 0);
+		addmethod(J, "form.reset", mjs_form_reset, 0);
+		addmethod(J, "form.submit", mjs_form_submit, 0);
+		addmethod(J, "form.toString", mjs_form_toString, 0);
 
 		addproperty(J, "action", mjs_form_get_property_action, mjs_form_set_property_action);
 		addproperty(J, "elements", mjs_form_get_property_elements, NULL);

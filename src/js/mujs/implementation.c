@@ -63,7 +63,7 @@ mjs_push_implementation(js_State *J)
 
 	js_newobject(J);
 	{
-		addmethod(J, "createHTMLDocument", mjs_implementation_createHTMLDocument, 1);
-		addmethod(J, "toString", mjs_implementation_toString, 0);
+		addmethod(J, "Implementation.prototype.createHTMLDocument", mjs_implementation_createHTMLDocument, 1);
+		addmethod(J, "Implementation.prototype.toString", mjs_implementation_toString, 0);
 	}
 }

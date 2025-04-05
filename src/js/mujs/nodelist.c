@@ -154,8 +154,8 @@ mjs_push_nodelist(js_State *J, void *node)
 	{
 		js_newuserdata(J, "nodelist", node, mjs_nodeList_finalizer);
 //		addproperty(J, "length", mjs_nodeList_get_property_length, NULL);
-		addmethod(J, "item", mjs_nodeList_item, 1);
-		addmethod(J, "toString", mjs_nodeList_toString, 0);
+		addmethod(J, "Nodelist.prototype.item", mjs_nodeList_item, 1);
+		addmethod(J, "Nodelist.prototype.toString", mjs_nodeList_toString, 0);
 		mjs_nodeList_set_items(J, node);
 	}
 	//attr_save_in_map(map_nodelist, node, node);

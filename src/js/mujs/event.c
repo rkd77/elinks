@@ -237,7 +237,7 @@ mjs_event_constructor(js_State *J)
 	js_newobject(J);
 	{
 		js_newuserdata(J, "event", event, mjs_event_finalizer);
-		addmethod(J, "preventDefault", mjs_event_preventDefault, 0);
+		addmethod(J, "Event.prototype.preventDefault", mjs_event_preventDefault, 0);
 		addproperty(J, "bubbles", mjs_event_get_property_bubbles, NULL);
 		addproperty(J, "cancelable", mjs_event_get_property_cancelable, NULL);
 //		addproperty(J, "composed", mjs_event_get_property_composed, NULL);
