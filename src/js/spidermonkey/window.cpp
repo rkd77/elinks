@@ -230,6 +230,7 @@ static bool window_removeEventListener(JSContext *ctx, unsigned int argc, JS::Va
 static bool window_scrollBy(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_scrollByLines(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_scrollByPages(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool window_scrollTo(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_setInterval(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_toString(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -243,9 +244,10 @@ const spidermonkeyFunctionSpec window_funcs[] = {
 	{ "open",	window_open,		3 },
 	{ "postMessage",	window_postMessage,	3 },
 	{ "removeEventListener", window_removeEventListener, 3 },
-	{ "scrollBy",	window_scrollBy, 1 },
+	{ "scrollBy",	window_scrollBy, 2 },
 	{ "scrollByLines",	window_scrollByLines, 1 },
 	{ "scrollByPages",	window_scrollByPages, 1 },
+	{ "scrollTo",	window_scrollTo, 2 },
 	{ "setInterval",	window_setInterval,	2 },
 	{ "setTimeout",	window_setTimeout,	2 },
 	{ "toString",	window_toString,	0 },
@@ -751,6 +753,53 @@ window_scrollByPages(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	int steps = args[0].toInt32();
 	vertical_scroll(ses, doc_view, steps * doc_view->box.height);
+
+	return true;
+}
+
+/* @window_funcs{"scrollTo"} */
+static bool
+window_scrollTo(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	if (!JS_InstanceOf(ctx, hobj, &window_class, &args)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct session *ses = doc_view->session;
+	struct terminal *term = ses->tab->term;
+
+	args.rval().setUndefined();
+
+	if (argc == 2) {
+		int x = args[0].toInt32();
+		int y = args[1].toInt32();
+		int sx = (x + term->cell_width - 1) / term->cell_width;
+		int sy = (y + term->cell_height - 1) / term->cell_height;
+
+		vertical_scroll(ses, doc_view, sy - doc_view->vs->y);
+		horizontal_scroll(ses, doc_view, sx - doc_view->vs->x);
+
+		return true;
+	}
 
 	return true;
 }
