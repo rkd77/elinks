@@ -272,6 +272,36 @@ end:
 	return ret;
 }
 
+/* @window_funcs{"scrollBy"} */
+JSValue
+js_window_scrollBy(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct session *ses = doc_view->session;
+	struct terminal *term = ses->tab->term;
+
+	if (argc == 2) {
+		int dx = 0;
+		int dy = 0;
+
+		JS_ToInt32(ctx, &dx, argv[0]);
+		JS_ToInt32(ctx, &dy, argv[1]);
+		int sx = (dx + term->cell_width - 1) / term->cell_width;
+		int sy = (dy + term->cell_height - 1) / term->cell_height;
+
+		vertical_scroll(ses, doc_view, sy);
+		horizontal_scroll(ses, doc_view, sx);
+	}
+
+	return JS_UNDEFINED;
+}
+
 /* @window_funcs{"scrollByLines"} */
 JSValue
 js_window_scrollByLines(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
@@ -1050,6 +1080,7 @@ static const JSCFunctionListEntry js_window_proto_funcs[] = {
 	JS_CFUNC_DEF("open", 3, js_window_open),
 	JS_CFUNC_DEF("postMessage", 3, js_window_postMessage),
 	JS_CFUNC_DEF("removeEventListener", 3, js_window_removeEventListener),
+	JS_CFUNC_DEF("scrollBy", 2, js_window_scrollBy),
 	JS_CFUNC_DEF("scrollByLines", 1, js_window_scrollByLines),
 	JS_CFUNC_DEF("scrollByPages", 1, js_window_scrollByPages),
 	JS_CFUNC_DEF("setInterval", 2, js_window_setInterval),
