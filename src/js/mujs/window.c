@@ -590,6 +590,30 @@ mjs_window_scrollByPages(js_State *J)
 }
 
 static void
+mjs_window_scrollTo(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct session *ses = doc_view->session;
+	struct terminal *term = ses->tab->term;
+
+	if (js_isnumber(J, 1) && js_isnumber(J, 2)) {
+		int x = js_toint32(J, 1);
+		int y = js_toint32(J, 2);
+		int sx = (x + term->cell_width - 1) / term->cell_width;
+		int sy = (y + term->cell_height - 1) / term->cell_height;
+
+		vertical_scroll(ses, doc_view, sy - doc_view->vs->y);
+		horizontal_scroll(ses, doc_view, sx - doc_view->vs->x);
+	}
+	js_pushundefined(J);
+}
+
+static void
 mjs_window_setInterval(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -891,6 +915,7 @@ mjs_window_init(js_State *J)
 		addmethod(J, "window.scrollBy", mjs_window_scrollBy, 2);
 		addmethod(J, "window.scrollByLines", mjs_window_scrollByLines, 1);
 		addmethod(J, "window.scrollByPages", mjs_window_scrollByPages, 1);
+		addmethod(J, "window.scrollTo", mjs_window_scrollTo, 2);
 		addmethod(J, "window.setInterval", mjs_window_setInterval, 2);
 		addmethod(J, "window.setTimeout", mjs_window_setTimeout, 2);
 		addmethod(J, "window.toString", mjs_window_toString, 0);
@@ -943,6 +968,7 @@ mjs_push_window(js_State *J, struct view_state *vs)
 		addmethod(J, "window.scrollBy", mjs_window_scrollBy, 2);
 		addmethod(J, "window.scrollByLines", mjs_window_scrollByLines, 1);
 		addmethod(J, "window.scrollByPages", mjs_window_scrollByPages, 1);
+		addmethod(J, "window.scrollTo", mjs_window_scrollTo, 2);
 		addmethod(J, "window.setInterval", mjs_window_setInterval, 2);
 		addmethod(J, "window.setTimeout", mjs_window_setTimeout, 2);
 		addmethod(J, "window.toString", mjs_window_toString, 0);
