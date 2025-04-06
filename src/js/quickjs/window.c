@@ -295,6 +295,29 @@ js_window_scrollByLines(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	return JS_UNDEFINED;
 }
 
+/* @window_funcs{"scrollByPages"} */
+JSValue
+js_window_scrollByPages(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct session *ses = doc_view->session;
+
+	if (argc > 0) {
+		int steps = 0;
+
+		JS_ToInt32(ctx, &steps, argv[0]);
+		vertical_scroll(ses, doc_view, steps * doc_view->box.height);
+	}
+
+	return JS_UNDEFINED;
+}
+
 /* @window_funcs{"setInterval"} */
 JSValue
 js_window_setInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
@@ -1028,6 +1051,7 @@ static const JSCFunctionListEntry js_window_proto_funcs[] = {
 	JS_CFUNC_DEF("postMessage", 3, js_window_postMessage),
 	JS_CFUNC_DEF("removeEventListener", 3, js_window_removeEventListener),
 	JS_CFUNC_DEF("scrollByLines", 1, js_window_scrollByLines),
+	JS_CFUNC_DEF("scrollByPages", 1, js_window_scrollByPages),
 	JS_CFUNC_DEF("setInterval", 2, js_window_setInterval),
 	JS_CFUNC_DEF("setTimeout", 2, js_window_setTimeout),
 	JS_CFUNC_DEF("toString", 0, js_window_toString)
