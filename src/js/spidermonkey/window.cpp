@@ -628,7 +628,7 @@ end:
 	return true;
 }
 
-/* @window_funcs{"scrollByLines"} */
+/* @window_funcs{"scrollBy"} */
 static bool
 window_scrollBy(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
