@@ -23,7 +23,7 @@ and some files with .txt extension.
 8) repeat previous session, go to the same pages, etc.
 
 If you want to use https use browser scripting to replace
-'https' with 'http' in follow_url.
+'https' with 'http' in follow_url and pre_format_html.
 
 Enjoy,
 Witek
