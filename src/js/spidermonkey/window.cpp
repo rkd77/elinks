@@ -228,6 +228,7 @@ static bool window_open(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_postMessage(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_scrollByLines(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool window_scrollByPages(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_setInterval(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_toString(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -242,6 +243,7 @@ const spidermonkeyFunctionSpec window_funcs[] = {
 	{ "postMessage",	window_postMessage,	3 },
 	{ "removeEventListener", window_removeEventListener, 3 },
 	{ "scrollByLines",	window_scrollByLines, 1 },
+	{ "scrollByPages",	window_scrollByPages, 1 },
 	{ "setInterval",	window_setInterval,	2 },
 	{ "setTimeout",	window_setTimeout,	2 },
 	{ "toString",	window_toString,	0 },
@@ -660,6 +662,46 @@ window_scrollByLines(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	int steps = args[0].toInt32();
 	vertical_scroll(ses, doc_view, steps);
+
+	return true;
+}
+
+/* @window_funcs{"scrollByPages"} */
+static bool
+window_scrollByPages(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	if (!JS_InstanceOf(ctx, hobj, &window_class, &args)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct session *ses = doc_view->session;
+
+	args.rval().setUndefined();
+
+	if (argc != 1)
+		return true;
+
+	int steps = args[0].toInt32();
+	vertical_scroll(ses, doc_view, steps * doc_view->box.height);
 
 	return true;
 }
