@@ -227,6 +227,7 @@ static bool window_getComputedStyle(JSContext *ctx, unsigned int argc, JS::Value
 static bool window_open(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_postMessage(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool window_scrollBy(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_scrollByLines(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_scrollByPages(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_setInterval(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -242,6 +243,7 @@ const spidermonkeyFunctionSpec window_funcs[] = {
 	{ "open",	window_open,		3 },
 	{ "postMessage",	window_postMessage,	3 },
 	{ "removeEventListener", window_removeEventListener, 3 },
+	{ "scrollBy",	window_scrollBy, 1 },
 	{ "scrollByLines",	window_scrollByLines, 1 },
 	{ "scrollByPages",	window_scrollByPages, 1 },
 	{ "setInterval",	window_setInterval,	2 },
@@ -622,6 +624,53 @@ window_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 end:
 	done_uri(uri);
 	mem_free_if(frame);
+
+	return true;
+}
+
+/* @window_funcs{"scrollByLines"} */
+static bool
+window_scrollBy(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	if (!JS_InstanceOf(ctx, hobj, &window_class, &args)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct session *ses = doc_view->session;
+	struct terminal *term = ses->tab->term;
+
+	args.rval().setUndefined();
+
+	if (argc == 2) {
+		int dx = args[0].toInt32();
+		int dy = args[1].toInt32();
+		int sx = (dx + term->cell_width - 1) / term->cell_width;
+		int sy = (dy + term->cell_height - 1) / term->cell_height;
+
+		vertical_scroll(ses, doc_view, sy);
+		horizontal_scroll(ses, doc_view, sx);
+
+		return true;
+	}
 
 	return true;
 }

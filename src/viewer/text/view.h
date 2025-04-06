@@ -47,6 +47,7 @@ enum frame_event_status scroll_down(struct session *ses, struct document_view *d
 enum frame_event_status scroll_left(struct session *ses, struct document_view *doc_view);
 enum frame_event_status scroll_right(struct session *ses, struct document_view *doc_view);
 enum frame_event_status horizontal_scroll_extended(struct session *ses, struct document_view *doc_view, int steps, int extended);
+enum frame_event_status horizontal_scroll(struct session *ses, struct document_view *doc_view, int steps);
 enum frame_event_status vertical_scroll(struct session *ses, struct document_view *doc_view, int steps);
 
 enum frame_event_status move_document_start(struct session *ses, struct document_view *doc_view);

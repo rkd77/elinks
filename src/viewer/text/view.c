@@ -390,7 +390,7 @@ horizontal_scroll_extended(struct session *ses, struct document_view *doc_view, 
 }
 
 /*! @a steps > 0 -> right */
-static enum frame_event_status
+enum frame_event_status
 horizontal_scroll(struct session *ses, struct document_view *doc_view, int steps)
 {
 	assert(ses && doc_view && doc_view->vs && doc_view->document);
