@@ -65,6 +65,8 @@ static bool window_get_property_innerWidth(JSContext *cx, unsigned int argc, JS:
 static bool window_get_property_location(JSContext *cx, unsigned int argc, JS::Value *vp);
 static bool window_set_property_location(JSContext *cx, unsigned int argc, JS::Value *vp);
 static bool window_get_property_parent(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool window_get_property_scrollX(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool window_get_property_scrollY(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool window_get_property_self(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool window_get_property_status(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool window_set_property_status(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -187,6 +189,8 @@ JSPropertySpec window_props[] = {
 	JS_PSG("innerWidth",	window_get_property_innerWidth, JSPROP_ENUMERATE),
 	JS_PSGS("location",	window_get_property_location, window_set_property_location, JSPROP_ENUMERATE),
 	JS_PSG("parent",	window_get_property_parent, JSPROP_ENUMERATE),
+	JS_PSG("scrollX",	window_get_property_scrollX, JSPROP_ENUMERATE),
+	JS_PSG("scrollY",	window_get_property_scrollY, JSPROP_ENUMERATE),
 	JS_PSG("self",	window_get_property_self, JSPROP_ENUMERATE),
 	JS_PSGS("status",	window_get_property_status, window_set_property_status, 0),
 	JS_PSG("top",	window_get_property_top, JSPROP_ENUMERATE),
@@ -1264,6 +1268,74 @@ window_get_property_parent(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	 * INCORRECT but works for the most common cases of just two
 	 * frames. Better something than nothing. */
 	args.rval().setUndefined();
+
+	return true;
+}
+
+static bool
+window_get_property_scrollX(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	if (!JS_InstanceOf(ctx, hobj, &window_class, &args)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct session *ses = doc_view->session;
+	struct terminal *term = ses->tab->term;
+
+	args.rval().setInt32(doc_view->vs->x * term->cell_width);
+
+	return true;
+}
+
+static bool
+window_get_property_scrollY(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	if (!JS_InstanceOf(ctx, hobj, &window_class, &args)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct session *ses = doc_view->session;
+	struct terminal *term = ses->tab->term;
+
+	args.rval().setInt32(doc_view->vs->y * term->cell_height);
 
 	return true;
 }
