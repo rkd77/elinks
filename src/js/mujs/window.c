@@ -581,6 +581,19 @@ mjs_window_scrollBy(js_State *J)
 
 		vertical_scroll(ses, doc_view, sy);
 		horizontal_scroll(ses, doc_view, sx);
+	} else if (js_isobject(J, 1)) {
+		js_getproperty(J, 1, "top");
+		int top = js_toint32(J, -1);
+		js_pop(J, 1);
+		js_getproperty(J, 1, "left");
+		int left = js_toint32(J, -1);
+		js_pop(J, 1);
+
+		int sx = (left + term->cell_width - 1) / term->cell_width;
+		int sy = (top + term->cell_height - 1) / term->cell_height;
+
+		vertical_scroll(ses, doc_view, sy);
+		horizontal_scroll(ses, doc_view, sx);
 	}
 	js_pushundefined(J);
 }
@@ -636,6 +649,19 @@ mjs_window_scrollTo(js_State *J)
 		int y = js_toint32(J, 2);
 		int sx = (x + term->cell_width - 1) / term->cell_width;
 		int sy = (y + term->cell_height - 1) / term->cell_height;
+
+		vertical_scroll(ses, doc_view, sy - doc_view->vs->y);
+		horizontal_scroll(ses, doc_view, sx - doc_view->vs->x);
+	} else if (js_isobject(J, 1)) {
+		js_getproperty(J, 1, "top");
+		int top = js_toint32(J, -1);
+		js_pop(J, 1);
+		js_getproperty(J, 1, "left");
+		int left = js_toint32(J, -1);
+		js_pop(J, 1);
+
+		int sx = (left + term->cell_width - 1) / term->cell_width;
+		int sy = (top + term->cell_height - 1) / term->cell_height;
 
 		vertical_scroll(ses, doc_view, sy - doc_view->vs->y);
 		horizontal_scroll(ses, doc_view, sx - doc_view->vs->x);
