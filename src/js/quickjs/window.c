@@ -749,6 +749,38 @@ js_window_get_property_parent(JSContext *ctx, JSValueConst this_val)
 }
 
 static JSValue
+js_window_get_property_scrollX(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct session *ses = doc_view->session;
+	struct terminal *term = ses->tab->term;
+
+	return JS_NewInt32(ctx, doc_view->vs->x * term->cell_width);
+}
+
+static JSValue
+js_window_get_property_scrollY(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct session *ses = doc_view->session;
+	struct terminal *term = ses->tab->term;
+
+	return JS_NewInt32(ctx, doc_view->vs->y * term->cell_height);
+}
+
+static JSValue
 js_window_get_property_self(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1109,6 +1141,8 @@ static const JSCFunctionListEntry js_window_proto_funcs[] = {
 	JS_CGETSET_DEF("innerWidth", js_window_get_property_innerWidth, NULL),
 	JS_CGETSET_DEF("location", js_window_get_property_location, js_window_set_property_location),
 	JS_CGETSET_DEF("parent", js_window_get_property_parent, NULL),
+	JS_CGETSET_DEF("scrollX", js_window_get_property_scrollX, NULL),
+	JS_CGETSET_DEF("scrollY", js_window_get_property_scrollY, NULL),
 	JS_CGETSET_DEF("self", js_window_get_property_self, NULL),
 	JS_CGETSET_DEF("status", js_window_get_property_status, js_window_set_property_status),
 	JS_CGETSET_DEF("top", js_window_get_property_top, NULL),
