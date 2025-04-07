@@ -379,6 +379,15 @@ js_window_scrollTo(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	return JS_UNDEFINED;
 }
 
+/* @window_funcs{"scroll"} */
+JSValue
+js_window_scroll(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return js_window_scrollTo(ctx, this_val, argc, argv);
+}
 
 /* @window_funcs{"setInterval"} */
 JSValue
@@ -1112,6 +1121,7 @@ static const JSCFunctionListEntry js_window_proto_funcs[] = {
 	JS_CFUNC_DEF("open", 3, js_window_open),
 	JS_CFUNC_DEF("postMessage", 3, js_window_postMessage),
 	JS_CFUNC_DEF("removeEventListener", 3, js_window_removeEventListener),
+	JS_CFUNC_DEF("scroll", 2, js_window_scroll),
 	JS_CFUNC_DEF("scrollBy", 2, js_window_scrollBy),
 	JS_CFUNC_DEF("scrollByLines", 1, js_window_scrollByLines),
 	JS_CFUNC_DEF("scrollByPages", 1, js_window_scrollByPages),
