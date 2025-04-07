@@ -614,6 +614,15 @@ mjs_window_scrollTo(js_State *J)
 }
 
 static void
+mjs_window_scroll(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	mjs_window_scrollTo(J);
+}
+
+static void
 mjs_window_setInterval(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -912,6 +921,7 @@ mjs_window_init(js_State *J)
 		addmethod(J, "window.open", mjs_window_open, 3);
 		addmethod(J, "window.postMessage", mjs_window_postMessage, 3);
 		addmethod(J, "window.removeEventListener", mjs_window_removeEventListener, 3);
+		addmethod(J, "window.scroll", mjs_window_scroll, 2);
 		addmethod(J, "window.scrollBy", mjs_window_scrollBy, 2);
 		addmethod(J, "window.scrollByLines", mjs_window_scrollByLines, 1);
 		addmethod(J, "window.scrollByPages", mjs_window_scrollByPages, 1);
@@ -965,6 +975,7 @@ mjs_push_window(js_State *J, struct view_state *vs)
 		addmethod(J, "window.open", mjs_window_open, 3);
 		addmethod(J, "window.postMessage", mjs_window_postMessage, 3);
 		addmethod(J, "window.removeEventListener", mjs_window_removeEventListener, 3);
+		addmethod(J, "window.scroll", mjs_window_scroll, 2);
 		addmethod(J, "window.scrollBy", mjs_window_scrollBy, 2);
 		addmethod(J, "window.scrollByLines", mjs_window_scrollByLines, 1);
 		addmethod(J, "window.scrollByPages", mjs_window_scrollByPages, 1);
