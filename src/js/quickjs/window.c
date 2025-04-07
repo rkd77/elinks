@@ -297,6 +297,23 @@ js_window_scrollBy(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 
 		vertical_scroll(ses, doc_view, sy);
 		horizontal_scroll(ses, doc_view, sx);
+
+		return JS_UNDEFINED;
+	}
+
+	if (argc == 1) {
+		int top = 0;
+		int left = 0;
+		JSValue r = JS_GetPropertyStr(ctx, argv[0], "top");
+		JS_ToInt32(ctx, &top, r);
+		r = JS_GetPropertyStr(ctx, argv[0], "left");
+		JS_ToInt32(ctx, &left, r);
+
+		int sx = (left + term->cell_width - 1) / term->cell_width;
+		int sy = (top + term->cell_height - 1) / term->cell_height;
+
+		vertical_scroll(ses, doc_view, sy);
+		horizontal_scroll(ses, doc_view, sx);
 	}
 
 	return JS_UNDEFINED;
@@ -374,6 +391,24 @@ js_window_scrollTo(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 
 		vertical_scroll(ses, doc_view, sy - doc_view->vs->y);
 		horizontal_scroll(ses, doc_view, sx - doc_view->vs->x);
+
+		return JS_UNDEFINED;
+	}
+
+	if (argc == 1) {
+		int top = 0;
+		int left = 0;
+		JSValue r = JS_GetPropertyStr(ctx, argv[0], "top");
+		JS_ToInt32(ctx, &top, r);
+		r = JS_GetPropertyStr(ctx, argv[0], "left");
+		JS_ToInt32(ctx, &left, r);
+
+		int sx = (left + term->cell_width - 1) / term->cell_width;
+		int sy = (top + term->cell_height - 1) / term->cell_height;
+
+		vertical_scroll(ses, doc_view, sy - doc_view->vs->y);
+		horizontal_scroll(ses, doc_view, sx - doc_view->vs->x);
+
 	}
 
 	return JS_UNDEFINED;
