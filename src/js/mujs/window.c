@@ -237,6 +237,36 @@ mjs_window_get_property_parent(js_State *J)
 }
 
 static void
+mjs_window_get_property_scrollX(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct session *ses = doc_view->session;
+	struct terminal *term = ses->tab->term;
+
+	js_pushnumber(J, doc_view->vs->x * term->cell_width);
+}
+
+static void
+mjs_window_get_property_scrollY(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct session *ses = doc_view->session;
+	struct terminal *term = ses->tab->term;
+
+	js_pushnumber(J, doc_view->vs->y * term->cell_height);
+}
+
+static void
 mjs_window_get_property_self(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -936,6 +966,8 @@ mjs_window_init(js_State *J)
 		addproperty(J, "window.innerWidth", mjs_window_get_property_innerWidth, NULL);
 		addproperty(J, "window.location", mjs_window_get_property_location, mjs_window_set_property_location);
 		addproperty(J, "window.parent", mjs_window_get_property_parent, NULL);
+		addproperty(J, "window.scrollX", mjs_window_get_property_scrollX, NULL);
+		addproperty(J, "window.scrollY", mjs_window_get_property_scrollY, NULL);
 		addproperty(J, "window.self", mjs_window_get_property_self, NULL);
 		addproperty(J, "window.status", mjs_window_get_property_status, mjs_window_set_property_status);
 		addproperty(J, "window.top", mjs_window_get_property_top, NULL);
@@ -990,6 +1022,8 @@ mjs_push_window(js_State *J, struct view_state *vs)
 		addproperty(J, "innerWidth", mjs_window_get_property_innerWidth, NULL);
 		addproperty(J, "location", mjs_window_get_property_location, mjs_window_set_property_location);
 		addproperty(J, "parent", mjs_window_get_property_parent, NULL);
+		addproperty(J, "scrollX", mjs_window_get_property_scrollX, NULL);
+		addproperty(J, "scrollY", mjs_window_get_property_scrollY, NULL);
 		addproperty(J, "self", mjs_window_get_property_self, NULL);
 		addproperty(J, "status", mjs_window_get_property_status, mjs_window_set_property_status);
 		addproperty(J, "top", mjs_window_get_property_top, NULL);
