@@ -690,6 +690,24 @@ window_scrollBy(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return true;
 	}
 
+	if (argc == 1) {
+		int top = 0;
+		int left = 0;
+		JS::RootedValue v(ctx);
+		JS::RootedObject v_obj(ctx, &args[0].toObject());
+
+		if (JS_GetProperty(ctx, v_obj, "top", &v)) {
+			top = v.toInt32();
+		}
+		if (JS_GetProperty(ctx, v_obj, "left", &v)) {
+			left = v.toInt32();
+		}
+		int sx = (left + term->cell_width - 1) / term->cell_width;
+		int sy = (top + term->cell_height - 1) / term->cell_height;
+
+		vertical_scroll(ses, doc_view, sy);
+		horizontal_scroll(ses, doc_view, sx);
+	}
 	return true;
 }
 
@@ -815,6 +833,25 @@ window_scrollTo(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		horizontal_scroll(ses, doc_view, sx - doc_view->vs->x);
 
 		return true;
+	}
+
+	if (argc == 1) {
+		int top = 0;
+		int left = 0;
+		JS::RootedValue v(ctx);
+		JS::RootedObject v_obj(ctx, &args[0].toObject());
+
+		if (JS_GetProperty(ctx, v_obj, "top", &v)) {
+			top = v.toInt32();
+		}
+		if (JS_GetProperty(ctx, v_obj, "left", &v)) {
+			left = v.toInt32();
+		}
+		int sx = (left + term->cell_width - 1) / term->cell_width;
+		int sy = (top + term->cell_height - 1) / term->cell_height;
+
+		vertical_scroll(ses, doc_view, sy - doc_view->vs->y);
+		horizontal_scroll(ses, doc_view, sx - doc_view->vs->x);
 	}
 
 	return true;
