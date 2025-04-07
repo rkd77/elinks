@@ -227,6 +227,7 @@ static bool window_getComputedStyle(JSContext *ctx, unsigned int argc, JS::Value
 static bool window_open(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_postMessage(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool window_scroll(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_scrollBy(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_scrollByLines(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_scrollByPages(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -244,6 +245,7 @@ const spidermonkeyFunctionSpec window_funcs[] = {
 	{ "open",	window_open,		3 },
 	{ "postMessage",	window_postMessage,	3 },
 	{ "removeEventListener", window_removeEventListener, 3 },
+	{ "scroll",	window_scroll, 2 },
 	{ "scrollBy",	window_scrollBy, 2 },
 	{ "scrollByLines",	window_scrollByLines, 1 },
 	{ "scrollByPages",	window_scrollByPages, 1 },
@@ -630,6 +632,16 @@ end:
 	return true;
 }
 
+/* @window_funcs{"scroll"} */
+static bool
+window_scroll(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return window_scrollTo(ctx, argc, rval);
+}
+
 /* @window_funcs{"scrollBy"} */
 static bool
 window_scrollBy(JSContext *ctx, unsigned int argc, JS::Value *rval)
@@ -803,7 +815,6 @@ window_scrollTo(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	return true;
 }
-
 
 /* @window_funcs{"setInterval"} */
 static bool
