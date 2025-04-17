@@ -53,6 +53,7 @@
 #include "protocol/curl/ftpes.h"
 #include "protocol/curl/http.h"
 #include "protocol/curl/sftp.h"
+#include "protocol/header.h"
 #include "protocol/http/http.h"
 #include "protocol/http/post.h"
 #include "protocol/uri.h"
@@ -437,6 +438,17 @@ http_curl_got_header(void *stream, void *buf, size_t len)
 			mem_free_set(&conn->cached->content_type, NULL);
 		}
 next:
+#ifdef CONFIG_COOKIES
+		if (conn->cached && conn->cached->head) {
+			char *ch = conn->cached->head;
+			char *cookie;
+
+			while ((cookie = parse_header(ch, "Set-Cookie", &ch))) {
+				set_cookie(conn->uri, cookie);
+				mem_free(cookie);
+			}
+		}
+#endif
 		done_string(&http->headers);
 		init_string(&http->headers);
 	}
