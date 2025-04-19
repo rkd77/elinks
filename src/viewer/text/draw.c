@@ -454,6 +454,9 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 			int found = vs->plain;
 
 			if (!found) {
+				if (im.y >= doc_view->document->height) {
+					continue;
+				}
 				for (;x < data[im.y].length; x++) {
 					if (im.image_number == data[im.y].ch.chars[x].number) {
 						found = 1;
