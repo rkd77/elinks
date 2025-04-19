@@ -454,6 +454,14 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 				continue;
 			}
 
+			if (im.y + box->y >= vs->y + box->height) {
+				continue;
+			}
+
+			if (im.y + box->y + ((im.height + term->cell_height - 1) / term->cell_height) < vs->y) {
+				continue;
+			}
+
 			int x = 0;
 			int found = vs->plain;
 
@@ -468,14 +476,6 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 				if (!found) {
 					continue;
 				}
-			}
-
-			if (im.y + box->y >= vs->y + box->height) {
-				continue;
-			}
-
-			if (im.y + box->y + ((im.height + term->cell_height - 1) / term->cell_height) < vs->y) {
-				continue;
 			}
 			im.x += x;
 
