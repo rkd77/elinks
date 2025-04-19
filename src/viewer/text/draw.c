@@ -450,13 +450,14 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 
 			copy_struct(&im, im2);
 
+			if (im.y >= doc_view->document->height) {
+				continue;
+			}
+
 			int x = 0;
 			int found = vs->plain;
 
 			if (!found) {
-				if (im.y >= doc_view->document->height) {
-					continue;
-				}
 				for (;x < data[im.y].length; x++) {
 					if (im.image_number == data[im.y].ch.chars[x].number) {
 						found = 1;
