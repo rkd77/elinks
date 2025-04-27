@@ -588,6 +588,10 @@ do_follow_url(struct session *ses, struct uri *uri, char *target,
 	struct uri *referrer = NULL;
 	protocol_external_handler_T *external_handler;
 
+	if (cache_mode == CACHE_MODE_NORMAL && get_opt_bool("document.browse.links.follow_reload", ses)) {
+		cache_mode = CACHE_MODE_FORCE_RELOAD;
+	}
+
 	if (!uri) {
 		print_error_dialog(ses, connection_state(S_BAD_URL), uri, PRI_CANCEL);
 		return;

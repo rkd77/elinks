@@ -330,6 +330,11 @@ static union option_info config_options_info[] = {
 		N_("Highlight links to directories in FTP and local directory "
 		"listing.")),
 
+	INIT_OPT_BOOL("document.browse.links", N_("Force reload when follow"),
+		"follow_reload", OPT_ZERO, 0,
+		N_("When enabled, following links, clicking the left mouse button on links, etc. will force reloading. "
+		"The same as the link-follow-reload action.")),
+
 	INIT_OPT_INT("document.browse.links", N_("Handling of hierbox's \"Go to\" button"),
 		"hierbox_goto", OPT_ZERO, 0, 3, 0,
 		N_("Define how to handle hierbox's \"Go to\" button (for example in bookmarks manager):\n"
@@ -378,6 +383,7 @@ static union option_info config_options_info[] = {
 		"missing_fragment", OPT_ZERO, 1,
 		N_("Open a message box when document has no tag with given "
 		"id.")),
+
 
 	INIT_OPT_INT("document.browse.links", N_("Number keys select links"),
 		"number_keys_select_link", OPT_ZERO, 0, 2, 1,
