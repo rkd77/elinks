@@ -41,6 +41,7 @@
 static off_t
 parse_ftp_number(char **src, char *end, off_t from, off_t to)
 {
+	ELOG
 	off_t number = 0;
 	char *pos = *src;
 
@@ -73,6 +74,7 @@ enum ftp_eplf {
 static struct ftp_file_info *
 parse_ftp_eplf_response(struct ftp_file_info *info, char *src, int len)
 {
+	ELOG
 	/* Skip the '+'-char which starts the line. */
 	char *end = src + len;
 	char *pos = src++;
@@ -136,6 +138,7 @@ enum ftp_unix {
 static int
 parse_ftp_unix_permissions(const char *src, int len)
 {
+	ELOG
 	mode_t perms = 0;
 
 	if (len != 9
@@ -213,6 +216,7 @@ parse_ftp_unix_permissions(const char *src, int len)
 static struct ftp_file_info *
 parse_ftp_unix_response(struct ftp_file_info *info, char *src, int len)
 {
+	ELOG
 	char *end = src + len;
 	char *pos;
 	struct tm mtime;
@@ -407,6 +411,7 @@ parse_ftp_unix_response(struct ftp_file_info *info, char *src, int len)
 static int
 parse_ftp_vms_permissions(const char *src, int len)
 {
+	ELOG
 	int perms = 0;
 	int pos;
 
@@ -429,6 +434,7 @@ parse_ftp_vms_permissions(const char *src, int len)
 static struct ftp_file_info *
 parse_ftp_vms_response(struct ftp_file_info *info, char *src, int len)
 {
+	ELOG
 	char *end = src + len;
 	char *pos;
 
@@ -520,6 +526,7 @@ parse_ftp_vms_response(struct ftp_file_info *info, char *src, int len)
 struct ftp_file_info *
 parse_ftp_winnt_response(struct ftp_file_info *info, char *src, int len)
 {
+	ELOG
 	struct tm mtime;
 	char *end = src + len;
 
@@ -599,6 +606,7 @@ parse_ftp_winnt_response(struct ftp_file_info *info, char *src, int len)
 struct ftp_file_info *
 parse_ftp_file_info(struct ftp_file_info *info, char *src, int len)
 {
+	ELOG
 	assert(info && src && len > 0);
 	if_assert_failed return NULL;
 

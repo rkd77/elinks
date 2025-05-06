@@ -37,6 +37,7 @@
 static void
 convert_single_line(struct string *ret, struct string *line)
 {
+	ELOG
 	if (line->length >= 3 && !strncmp(line->source, "###", 3)) {
 		add_to_string(ret, "<h3>");
 		add_html_to_string(ret, line->source + 3, line->length - 3);
@@ -161,6 +162,7 @@ void
 render_gemini_document(struct cache_entry *cached, struct document *document,
 		      struct string *buffer)
 {
+	ELOG
 	int preformat = 0;
 	int in_list = 0;
 	int i = 0;

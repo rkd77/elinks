@@ -19,6 +19,7 @@
 static inline void
 debug_cookie_parser(struct cookie_str *cstr, char *pos, int ws, int eq)
 {
+	ELOG
 	int namelen = int_max(cstr->nam_end - cstr->str, 0);
 	int valuelen = int_max(cstr->val_end - cstr->val_start, 0);
 
@@ -41,6 +42,7 @@ debug_cookie_parser(struct cookie_str *cstr, char *pos, int ws, int eq)
 struct cookie_str *
 parse_cookie_str(struct cookie_str *cstr, char *str)
 {
+	ELOG
 	memset(cstr, 0, sizeof(*cstr));
 	cstr->str = str;
 

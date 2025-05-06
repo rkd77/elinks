@@ -50,6 +50,7 @@ const struct open_in_new open_in_new[] = {
 int
 can_open_in_new(struct terminal *term)
 {
+	ELOG
 	int i, possibilities = 0;
 
 	foreach_open_in_new (i, term->environment) {
@@ -63,6 +64,7 @@ void
 open_new_window(struct terminal *term, char *exe_name,
 		term_env_type_T environment, char *param)
 {
+	ELOG
 	char *command = NULL;
 	int i;
 

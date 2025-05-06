@@ -99,6 +99,7 @@ static void ontimeout_run(void *data);
 char *
 normalize(char *value)
 {
+	ELOG
 	char *ret = value;
 	size_t index = strspn(ret, "\r\n\t ");
 	ret += index;
@@ -120,6 +121,7 @@ normalize(char *value)
 static void
 mjs_xhr_finalizer(js_State *J, void *data)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -164,6 +166,7 @@ mjs_xhr_finalizer(js_State *J, void *data)
 static void
 mjs_xhr_static_get_property_UNSENT(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -173,6 +176,7 @@ mjs_xhr_static_get_property_UNSENT(js_State *J)
 static void
 mjs_xhr_static_get_property_OPENED(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -182,6 +186,7 @@ mjs_xhr_static_get_property_OPENED(js_State *J)
 static void
 mjs_xhr_static_get_property_HEADERS_RECEIVED(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -191,6 +196,7 @@ mjs_xhr_static_get_property_HEADERS_RECEIVED(js_State *J)
 static void
 mjs_xhr_static_get_property_LOADING(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -201,6 +207,7 @@ mjs_xhr_static_get_property_LOADING(js_State *J)
 static void
 mjs_xhr_static_get_property_DONE(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -220,6 +227,7 @@ static void mjs_xhr_setRequestHeader(js_State *J);
 static void
 mjs_xhr_abort(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -234,6 +242,7 @@ mjs_xhr_abort(js_State *J)
 static void
 mjs_xhr_addEventListener(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -283,6 +292,7 @@ mjs_xhr_addEventListener(js_State *J)
 static void
 mjs_xhr_removeEventListener(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -329,6 +339,7 @@ mjs_xhr_removeEventListener(js_State *J)
 static void
 mjs_xhr_getAllResponseHeaders(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -351,6 +362,7 @@ mjs_xhr_getAllResponseHeaders(js_State *J)
 static void
 mjs_xhr_getResponseHeader(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -377,6 +389,7 @@ mjs_xhr_getResponseHeader(js_State *J)
 static void
 mjs_xhr_open(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -509,6 +522,7 @@ mjs_xhr_open(js_State *J)
 static void
 mjs_xhr_overrideMimeType(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -519,6 +533,7 @@ mjs_xhr_overrideMimeType(js_State *J)
 static void
 onload_run(void *data)
 {
+	ELOG
 	struct mjs_xhr *xhr = (struct mjs_xhr *)data;
 
 	if (xhr && ecmascript_found(xhr->interpreter)) {
@@ -550,6 +565,7 @@ onload_run(void *data)
 static void
 onloadend_run(void *data)
 {
+	ELOG
 	struct mjs_xhr *xhr = (struct mjs_xhr *)data;
 
 	if (xhr && ecmascript_found(xhr->interpreter)) {
@@ -581,6 +597,7 @@ onloadend_run(void *data)
 static void
 onreadystatechange_run(void *data)
 {
+	ELOG
 	struct mjs_xhr *xhr = (struct mjs_xhr *)data;
 
 	if (xhr && ecmascript_found(xhr->interpreter)) {
@@ -612,6 +629,7 @@ onreadystatechange_run(void *data)
 static void
 ontimeout_run(void *data)
 {
+	ELOG
 	struct mjs_xhr *xhr = (struct mjs_xhr *)data;
 
 	if (xhr && ecmascript_found(xhr->interpreter)) {
@@ -643,6 +661,7 @@ ontimeout_run(void *data)
 static void
 mjs_xhr_loading_callback(struct download *download, struct mjs_xhr *xhr)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -682,6 +701,7 @@ mjs_xhr_loading_callback(struct download *download, struct mjs_xhr *xhr)
 static size_t
 write_data(void *ptr, size_t size, size_t nmemb, void *stream)
 {
+	ELOG
 	struct mjs_xhr *xhr = (struct mjs_xhr *)stream;
 
 	size_t length = xhr->responseLength;
@@ -703,6 +723,7 @@ write_data(void *ptr, size_t size, size_t nmemb, void *stream)
 static void
 mjs_xhr_send(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -819,6 +840,7 @@ mjs_xhr_send(js_State *J)
 static bool
 valid_header(const char *header)
 {
+	ELOG
 	if (!*header) {
 		return false;
 	}
@@ -834,6 +856,7 @@ valid_header(const char *header)
 static bool
 forbidden_header(const char *header)
 {
+	ELOG
 	const char *bad[] = {
 		"Accept-Charset"
 		"Accept-Encoding",
@@ -879,6 +902,7 @@ forbidden_header(const char *header)
 static void
 mjs_xhr_setRequestHeader(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -924,6 +948,7 @@ mjs_xhr_setRequestHeader(js_State *J)
 static void
 mjs_xhr_get_property_onabort(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -939,6 +964,7 @@ mjs_xhr_get_property_onabort(js_State *J)
 static void
 mjs_xhr_set_property_onabort(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -960,6 +986,7 @@ mjs_xhr_set_property_onabort(js_State *J)
 static void
 mjs_xhr_get_property_onerror(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -975,6 +1002,7 @@ mjs_xhr_get_property_onerror(js_State *J)
 static void
 mjs_xhr_set_property_onerror(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -996,6 +1024,7 @@ mjs_xhr_set_property_onerror(js_State *J)
 static void
 mjs_xhr_get_property_onload(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1011,6 +1040,7 @@ mjs_xhr_get_property_onload(js_State *J)
 static void
 mjs_xhr_set_property_onload(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1032,6 +1062,7 @@ mjs_xhr_set_property_onload(js_State *J)
 static void
 mjs_xhr_get_property_onloadend(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1047,6 +1078,7 @@ mjs_xhr_get_property_onloadend(js_State *J)
 static void
 mjs_xhr_set_property_onloadend(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1068,6 +1100,7 @@ mjs_xhr_set_property_onloadend(js_State *J)
 static void
 mjs_xhr_get_property_onloadstart(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1083,6 +1116,7 @@ mjs_xhr_get_property_onloadstart(js_State *J)
 static void
 mjs_xhr_set_property_onloadstart(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1104,6 +1138,7 @@ mjs_xhr_set_property_onloadstart(js_State *J)
 static void
 mjs_xhr_get_property_onprogress(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1119,6 +1154,7 @@ mjs_xhr_get_property_onprogress(js_State *J)
 static void
 mjs_xhr_set_property_onprogress(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1140,6 +1176,7 @@ mjs_xhr_set_property_onprogress(js_State *J)
 static void
 mjs_xhr_get_property_onreadystatechange(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1155,6 +1192,7 @@ mjs_xhr_get_property_onreadystatechange(js_State *J)
 static void
 mjs_xhr_set_property_onreadystatechange(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1176,6 +1214,7 @@ mjs_xhr_set_property_onreadystatechange(js_State *J)
 static void
 mjs_xhr_get_property_ontimeout(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1191,6 +1230,7 @@ mjs_xhr_get_property_ontimeout(js_State *J)
 static void
 mjs_xhr_set_property_ontimeout(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1212,6 +1252,7 @@ mjs_xhr_set_property_ontimeout(js_State *J)
 static void
 mjs_xhr_get_property_readyState(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1227,6 +1268,7 @@ mjs_xhr_get_property_readyState(js_State *J)
 static void
 mjs_xhr_get_property_response(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1242,6 +1284,7 @@ mjs_xhr_get_property_response(js_State *J)
 static void
 mjs_xhr_get_property_responseText(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1262,6 +1305,7 @@ mjs_xhr_get_property_responseText(js_State *J)
 static void
 mjs_xhr_get_property_responseType(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1277,6 +1321,7 @@ mjs_xhr_get_property_responseType(js_State *J)
 static void
 mjs_xhr_get_property_responseURL(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1292,6 +1337,7 @@ mjs_xhr_get_property_responseURL(js_State *J)
 static void
 mjs_xhr_get_property_status(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1307,6 +1353,7 @@ mjs_xhr_get_property_status(js_State *J)
 static void
 mjs_xhr_get_property_statusText(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1322,6 +1369,7 @@ mjs_xhr_get_property_statusText(js_State *J)
 static void
 mjs_xhr_get_property_upload(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1337,6 +1385,7 @@ mjs_xhr_get_property_upload(js_State *J)
 static void
 mjs_xhr_get_property_timeout(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1352,6 +1401,7 @@ mjs_xhr_get_property_timeout(js_State *J)
 static void
 mjs_xhr_get_property_withCredentials(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1367,6 +1417,7 @@ mjs_xhr_get_property_withCredentials(js_State *J)
 static void
 mjs_xhr_set_property_responseType(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1384,6 +1435,7 @@ mjs_xhr_set_property_responseType(js_State *J)
 static void
 mjs_xhr_set_property_timeout(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1401,6 +1453,7 @@ mjs_xhr_set_property_timeout(js_State *J)
 static void
 mjs_xhr_set_property_withCredentials(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1429,6 +1482,7 @@ mjs_xhr_set_property_withCredentials(js_State *J)
 static void
 mjs_xhr_fun(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1438,6 +1492,7 @@ mjs_xhr_fun(js_State *J)
 static void
 mjs_xhr_constructor(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1500,6 +1555,7 @@ mjs_xhr_constructor(js_State *J)
 int
 mjs_xhr_init(js_State *J)
 {
+	ELOG
 	js_pushglobal(J);
 	js_newcconstructor(J, mjs_xhr_fun, mjs_xhr_constructor, "XMLHttpRequest", 0);
 	js_defglobal(J, "XMLHttpRequest", JS_DONTENUM);

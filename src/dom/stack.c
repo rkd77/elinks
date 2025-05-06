@@ -23,6 +23,7 @@
 static inline struct dom_stack_state *
 realloc_dom_stack_states(struct dom_stack_state **states, size_t size)
 {
+	ELOG
 	return (struct dom_stack_state *)mem_align_alloc(states, size, size + 1,
 			       DOM_STACK_STATE_GRANULARITY);
 }
@@ -30,6 +31,7 @@ realloc_dom_stack_states(struct dom_stack_state **states, size_t size)
 static inline struct dom_stack_state *
 realloc_dom_stack_context(struct dom_stack_context ***contexts, size_t size)
 {
+	ELOG
 	return (struct dom_stack_state *)mem_align_alloc(contexts, size, size + 1,
 			       DOM_STACK_STATE_GRANULARITY);
 }
@@ -37,6 +39,7 @@ realloc_dom_stack_context(struct dom_stack_context ***contexts, size_t size)
 static inline char *
 realloc_dom_stack_state_objects(struct dom_stack_context *context, size_t depth)
 {
+	ELOG
 #ifdef DEBUG_MEMLEAK
 	return (char *)mem_align_alloc__(__FILE__, __LINE__, (void **) &context->state_objects,
 			       depth, depth + 1,
@@ -53,6 +56,7 @@ realloc_dom_stack_state_objects(struct dom_stack_context *context, size_t depth)
 void
 init_dom_stack(struct dom_stack *stack, /*enum dom_stack_flag*/ unsigned int flags)
 {
+	ELOG
 	assert(stack);
 
 	memset(stack, 0, sizeof(*stack));
@@ -63,6 +67,7 @@ init_dom_stack(struct dom_stack *stack, /*enum dom_stack_flag*/ unsigned int fla
 void
 done_dom_stack(struct dom_stack *stack)
 {
+	ELOG
 	int i;
 
 	assert(stack);
@@ -82,6 +87,7 @@ struct dom_stack_context *
 add_dom_stack_context(struct dom_stack *stack, void *data,
 		      struct dom_stack_context_info *context_info)
 {
+	ELOG
 	struct dom_stack_context *context;
 
 	if (!realloc_dom_stack_context(&stack->contexts, stack->contexts_size))
@@ -101,6 +107,7 @@ add_dom_stack_context(struct dom_stack *stack, void *data,
 void
 done_dom_stack_context(struct dom_stack *stack, struct dom_stack_context *context)
 {
+	ELOG
 	size_t i;
 
 	mem_free_if(context->state_objects);
@@ -132,6 +139,7 @@ static int
 call_dom_stack_callbacks(struct dom_stack *stack, struct dom_stack_state *state,
 			 enum dom_stack_action action)
 {
+	ELOG
 	int free_node = 0;
 	int i;
 
@@ -176,6 +184,7 @@ call_dom_stack_callbacks(struct dom_stack *stack, struct dom_stack_state *state,
 enum dom_code
 push_dom_node(struct dom_stack *stack, struct dom_node *node)
 {
+	ELOG
 	struct dom_stack_state *state;
 	int i;
 
@@ -218,6 +227,7 @@ push_dom_node(struct dom_stack *stack, struct dom_node *node)
 void
 pop_dom_node(struct dom_stack *stack)
 {
+	ELOG
 	struct dom_stack_state *state;
 	int i;
 
@@ -254,6 +264,7 @@ void
 pop_dom_nodes(struct dom_stack *stack, enum dom_node_type type,
 	      struct dom_string *string)
 {
+	ELOG
 	struct dom_stack_state *state;
 
 	assert(stack);
@@ -268,6 +279,7 @@ pop_dom_nodes(struct dom_stack *stack, enum dom_node_type type,
 void
 pop_dom_state(struct dom_stack *stack, struct dom_stack_state *target)
 {
+	ELOG
 	struct dom_stack_state *state;
 	unsigned int pos;
 
@@ -293,6 +305,7 @@ struct dom_stack_state *
 search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
 		 struct dom_string *string)
 {
+	ELOG
 	struct dom_stack_state *state;
 	int pos;
 
@@ -359,6 +372,7 @@ static struct dom_stack_context_info dom_stack_walk_context_info = {
 void
 walk_dom_nodes(struct dom_stack *stack, struct dom_node *root)
 {
+	ELOG
 	struct dom_stack_context *context;
 
 	assert(root && stack);
@@ -451,6 +465,7 @@ walk_dom_nodes(struct dom_stack *stack, struct dom_node *root)
 static inline char *
 compress_string(char *string, unsigned int length)
 {
+	ELOG
 	struct string buffer;
 	unsigned char escape[2] = "\\";
 
@@ -476,6 +491,7 @@ compress_string(char *string, unsigned int length)
 static void
 set_enhanced_dom_node_value(struct dom_string *string, struct dom_node *node)
 {
+	ELOG
 	struct dom_string *value;
 
 	assert(node);
@@ -510,6 +526,7 @@ static unsigned char indent_string[] =
 enum dom_code
 dom_stack_trace_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 {
+	ELOG
 	struct dom_string *value = &node->string;
 	struct dom_string *name = get_dom_node_name(node);
 
@@ -525,6 +542,7 @@ dom_stack_trace_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 enum dom_code
 dom_stack_trace_id_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
+	ELOG
 	struct dom_string value;
 	struct dom_string *name;
 	struct dom_string *id;
@@ -549,6 +567,7 @@ dom_stack_trace_id_leaf(struct dom_stack *stack, struct dom_node *node, void *da
 enum dom_code
 dom_stack_trace_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
+	ELOG
 	struct dom_string *name;
 	struct dom_string value;
 
@@ -571,6 +590,7 @@ dom_stack_trace_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 enum dom_code
 dom_stack_trace_branch(struct dom_stack *stack, struct dom_node *node, void *data)
 {
+	ELOG
 	struct dom_string *name;
 	struct dom_string *id;
 

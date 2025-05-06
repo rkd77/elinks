@@ -51,6 +51,7 @@ static JSClassID js_history_class_id;
 static JSValue
 js_history_back(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -74,6 +75,7 @@ js_history_back(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *a
 static JSValue
 js_history_forward(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -93,6 +95,7 @@ js_history_forward(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 static JSValue
 js_history_go(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -130,6 +133,7 @@ js_history_go(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *arg
 static JSValue
 js_history_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -152,6 +156,7 @@ static JSClassDef js_history_class = {
 int
 js_history_init(JSContext *ctx)
 {
+	ELOG
 	JSValue history_proto;
 
 	/* create the history class */

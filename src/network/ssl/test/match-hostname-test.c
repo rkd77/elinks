@@ -16,23 +16,27 @@
 int
 get_ctl_handle()
 {
+	ELOG
 	return -1;
 }
 
 char *
 gettext(const char *text)
 {
+	ELOG
 	return (char *)text;
 }
 
 int
 os_default_charset(void)
 {
+	ELOG
 	return -1;
 }
 
 struct match_hostname_pattern_test_case
 {
+	ELOG
 	const char *pattern;
 	const char *hostname;
 	int match;
@@ -64,6 +68,7 @@ static const struct match_hostname_pattern_test_case match_hostname_pattern_test
 int
 main(void)
 {
+	ELOG
 	const struct match_hostname_pattern_test_case *test;
 	int count_ok = 0;
 	int count_fail = 0;

@@ -18,6 +18,7 @@ static unsigned char base64_chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmno
 unsigned char *
 base64_encode(unsigned char *in)
 {
+	ELOG
 	assert(in && *in);
 	if_assert_failed return NULL;
 
@@ -27,6 +28,7 @@ base64_encode(unsigned char *in)
 unsigned char *
 base64_encode_bin(unsigned char *in, int inlen, int *outlen)
 {
+	ELOG
 	unsigned char *out;
 	unsigned char *outstr;
 
@@ -66,6 +68,7 @@ base64_encode_bin(unsigned char *in, int inlen, int *outlen)
 unsigned char *
 base64_decode(const unsigned char *in)
 {
+	ELOG
 	assert(in && *in);
 	if_assert_failed return NULL;
 
@@ -82,6 +85,7 @@ base64_decode(const unsigned char *in)
 unsigned char *
 base64_decode_bin(const unsigned char *in, int inlen, int *outlen)
 {
+	ELOG
 	static unsigned char is_base64_char[256]; /* static to force initialization at zero */
 	static unsigned char decode[256];
 	unsigned char *out;

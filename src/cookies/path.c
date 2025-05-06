@@ -6,6 +6,7 @@
 int
 is_path_prefix(char *cookiepath, char *requestpath)
 {
+	//ELOG
 	int dl = strlen(cookiepath);
 
 	if (!dl) return 1;

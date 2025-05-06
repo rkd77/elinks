@@ -81,6 +81,7 @@ static const struct http_code http_code[] = {
 static int
 compare_http_codes(const void *key, const void *element)
 {
+	ELOG
 	int first = (intptr_t) key;
 	int second = ((const struct http_code *) element)->num;
 
@@ -90,6 +91,7 @@ compare_http_codes(const void *key, const void *element)
 static const char *
 http_code_to_string(int code)
 {
+	ELOG
 	const struct http_code *element
 		= (const struct http_code *)bsearch((void *) (intptr_t) code, http_code,
 			  sizeof_array(http_code),
@@ -106,6 +108,7 @@ http_code_to_string(int code)
 static char *
 get_http_error_document(struct terminal *term, struct uri *uri, int code)
 {
+	ELOG
 	const char *codestr = http_code_to_string(code);
 	char *title = asprintfa(_("HTTP error %03d", term), code);
 	struct string string;
@@ -165,6 +168,7 @@ struct http_error_info {
 static void
 show_http_error_document(struct session *ses, void *data)
 {
+	ELOG
 	struct http_error_info *info = (struct http_error_info *)data;
 	struct terminal *term = ses->tab->term;
 	struct cache_entry *cached = find_in_cache(info->uri);
@@ -202,6 +206,7 @@ show_http_error_document(struct session *ses, void *data)
 void
 http_error_document(struct connection *conn, int code)
 {
+	ELOG
 	struct http_error_info *info;
 
 	assert(conn && conn->uri);

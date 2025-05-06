@@ -77,6 +77,7 @@ static enum frame_event_status move_clipboard_pos(struct session *ses, struct do
 void
 detach_formatted(struct document_view *doc_view)
 {
+	ELOG
 	assert(doc_view);
 	if_assert_failed return;
 
@@ -100,6 +101,7 @@ detach_formatted(struct document_view *doc_view)
 static void
 move_down(struct session *ses, struct document_view *doc_view, int type, int overlap)
 {
+	ELOG
 	int newpos;
 
 	assert(ses && doc_view && doc_view->vs);
@@ -130,6 +132,7 @@ move_down(struct session *ses, struct document_view *doc_view, int type, int ove
 static enum frame_event_status
 move_part_page_down(struct session *ses, struct document_view *doc_view, int overlap)
 {
+	ELOG
 	int oldy = doc_view->vs->y;
 	int count = eat_kbd_repeat_count(ses);
 
@@ -143,18 +146,21 @@ move_part_page_down(struct session *ses, struct document_view *doc_view, int ove
 enum frame_event_status
 move_page_down(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	return move_part_page_down(ses, doc_view, get_opt_int("document.browse.scrolling.vertical_overlap", ses));
 }
 
 enum frame_event_status
 move_half_page_down(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	return move_part_page_down(ses, doc_view, doc_view->box.height / 2);
 }
 
 enum frame_event_status
 move_current_top(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	return move_part_page_down(ses, doc_view, doc_view->box.height - ses->tab->y + 1);
 }
 
@@ -163,6 +169,7 @@ move_current_top(struct session *ses, struct document_view *doc_view)
 static void
 move_up(struct session *ses, struct document_view *doc_view, int type, int overlap)
 {
+	ELOG
 	assert(ses && doc_view && doc_view->vs);
 	if_assert_failed return;
 
@@ -191,6 +198,7 @@ move_up(struct session *ses, struct document_view *doc_view, int type, int overl
 enum frame_event_status
 move_part_page_up(struct session *ses, struct document_view *doc_view, int overlap)
 {
+	ELOG
 	int oldy = doc_view->vs->y;
 	int count = eat_kbd_repeat_count(ses);
 
@@ -204,12 +212,14 @@ move_part_page_up(struct session *ses, struct document_view *doc_view, int overl
 enum frame_event_status
 move_page_up(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	return move_part_page_up(ses, doc_view, get_opt_int("document.browse.scrolling.vertical_overlap", ses));
 }
 
 enum frame_event_status
 move_half_page_up(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	return move_part_page_up(ses, doc_view, doc_view->box.height / 2);
 }
 
@@ -217,6 +227,7 @@ enum frame_event_status
 move_link(struct session *ses, struct document_view *doc_view, int direction,
 	  int wraparound_bound, int wraparound_link)
 {
+	ELOG
 	int wraparound = 0;
 	int count;
 	int cur = doc_view->vs->current_link;
@@ -294,6 +305,7 @@ move_link(struct session *ses, struct document_view *doc_view, int direction,
 enum frame_event_status
 move_link_dir(struct session *ses, struct document_view *doc_view, int dir_x, int dir_y)
 {
+	ELOG
 	int count;
 
 	assert(ses && doc_view && doc_view->vs && doc_view->document);
@@ -327,6 +339,7 @@ move_link_dir(struct session *ses, struct document_view *doc_view, int dir_x, in
 enum frame_event_status
 vertical_scroll(struct session *ses, struct document_view *doc_view, int steps)
 {
+	ELOG
 	int y;
 
 	assert(ses && doc_view && doc_view->vs && doc_view->document);
@@ -362,6 +375,7 @@ vertical_scroll(struct session *ses, struct document_view *doc_view, int steps)
 enum frame_event_status
 horizontal_scroll_extended(struct session *ses, struct document_view *doc_view, int steps, int extended)
 {
+	ELOG
 	int x, max;
 
 	assert(ses && doc_view && doc_view->vs && doc_view->document);
@@ -393,6 +407,7 @@ horizontal_scroll_extended(struct session *ses, struct document_view *doc_view, 
 enum frame_event_status
 horizontal_scroll(struct session *ses, struct document_view *doc_view, int steps)
 {
+	ELOG
 	assert(ses && doc_view && doc_view->vs && doc_view->document);
 	if_assert_failed return FRAME_EVENT_OK;
 
@@ -403,6 +418,7 @@ horizontal_scroll(struct session *ses, struct document_view *doc_view, int steps
 enum frame_event_status
 scroll_up(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	int steps = eat_kbd_repeat_count(ses);
 
 	if (!steps)
@@ -414,6 +430,7 @@ scroll_up(struct session *ses, struct document_view *doc_view)
 enum frame_event_status
 scroll_down(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	int steps = eat_kbd_repeat_count(ses);
 
 	if (!steps)
@@ -425,6 +442,7 @@ scroll_down(struct session *ses, struct document_view *doc_view)
 enum frame_event_status
 scroll_left(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	int steps = eat_kbd_repeat_count(ses);
 
 	if (!steps)
@@ -436,6 +454,7 @@ scroll_left(struct session *ses, struct document_view *doc_view)
 enum frame_event_status
 scroll_right(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	int steps = eat_kbd_repeat_count(ses);
 
 	if (!steps)
@@ -448,6 +467,7 @@ scroll_right(struct session *ses, struct document_view *doc_view)
 static enum frame_event_status
 scroll_mouse_up(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	int steps = get_opt_int("document.browse.scrolling.vertical_step", ses);
 
 	return vertical_scroll(ses, doc_view, -steps);
@@ -456,6 +476,7 @@ scroll_mouse_up(struct session *ses, struct document_view *doc_view)
 static enum frame_event_status
 scroll_mouse_down(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	int steps = get_opt_int("document.browse.scrolling.vertical_step", ses);
 
 	return vertical_scroll(ses, doc_view, steps);
@@ -464,6 +485,7 @@ scroll_mouse_down(struct session *ses, struct document_view *doc_view)
 static enum frame_event_status
 scroll_mouse_left(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	int steps = get_opt_int("document.browse.scrolling.horizontal_step", ses);
 
 	return horizontal_scroll(ses, doc_view, -steps);
@@ -472,6 +494,7 @@ scroll_mouse_left(struct session *ses, struct document_view *doc_view)
 static enum frame_event_status
 scroll_mouse_right(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	int steps = get_opt_int("document.browse.scrolling.horizontal_step", ses);
 
 	return horizontal_scroll(ses, doc_view, steps);
@@ -481,6 +504,7 @@ scroll_mouse_right(struct session *ses, struct document_view *doc_view)
 enum frame_event_status
 move_document_start(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	assert(ses && doc_view && doc_view->vs);
 	if_assert_failed return FRAME_EVENT_OK;
 
@@ -499,6 +523,7 @@ move_document_start(struct session *ses, struct document_view *doc_view)
 enum frame_event_status
 move_document_end(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	int max_height;
 
 	assert(ses && doc_view && doc_view->vs && doc_view->document);
@@ -525,6 +550,7 @@ move_document_end(struct session *ses, struct document_view *doc_view)
 enum frame_event_status
 set_frame(struct session *ses, struct document_view *doc_view, int xxxx)
 {
+	ELOG
 	assert(ses && ses->doc_view && doc_view && doc_view->vs);
 	if_assert_failed return FRAME_EVENT_OK;
 
@@ -539,6 +565,7 @@ set_frame(struct session *ses, struct document_view *doc_view, int xxxx)
 void
 toggle_plain_html(struct session *ses, struct document_view *doc_view, int xxxx)
 {
+	ELOG
 	assert(ses && doc_view && ses->tab && ses->tab->term);
 	if_assert_failed return;
 
@@ -554,6 +581,7 @@ toggle_plain_html(struct session *ses, struct document_view *doc_view, int xxxx)
 void
 toggle_wrap_text(struct session *ses, struct document_view *doc_view, int xxxx)
 {
+	ELOG
 	assert(ses && doc_view && ses->tab && ses->tab->term);
 	if_assert_failed return;
 
@@ -573,6 +601,7 @@ toggle_wrap_text(struct session *ses, struct document_view *doc_view, int xxxx)
 enum frame_event_status
 move_cursor(struct session *ses, struct document_view *doc_view, int x, int y)
 {
+	ELOG
 	enum frame_event_status status = FRAME_EVENT_REFRESH;
 	struct terminal *term = ses->tab->term;
 	struct el_box *box = &doc_view->box;
@@ -632,6 +661,7 @@ static enum frame_event_status
 move_cursor_rel_count(struct session *ses, struct document_view *view,
 		      int rx, int ry, int count)
 {
+	ELOG
 	enum frame_event_status status;
 	int x, y;
 
@@ -645,6 +675,7 @@ static enum frame_event_status
 move_cursor_rel(struct session *ses, struct document_view *view,
 	        int rx, int ry)
 {
+	ELOG
 	int count = eat_kbd_repeat_count(ses);
 
 	int_lower_bound(&count, 1);
@@ -655,30 +686,35 @@ move_cursor_rel(struct session *ses, struct document_view *view,
 enum frame_event_status
 move_cursor_left(struct session *ses, struct document_view *view)
 {
+	ELOG
 	return move_cursor_rel(ses, view, -1, 0);
 }
 
 enum frame_event_status
 move_cursor_right(struct session *ses, struct document_view *view)
 {
+	ELOG
 	return move_cursor_rel(ses, view, 1, 0);
 }
 
 enum frame_event_status
 move_cursor_up(struct session *ses, struct document_view *view)
 {
+	ELOG
 	return move_cursor_rel(ses, view, 0, -1);
 }
 
 enum frame_event_status
 move_cursor_down(struct session *ses, struct document_view *view)
 {
+	ELOG
 	return move_cursor_rel(ses, view, 0, 1);
 }
 
 enum frame_event_status
 move_link_up_line(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	struct document *document;
 	struct view_state *vs;
 	struct el_box *box;
@@ -744,6 +780,7 @@ move_link_up_line(struct session *ses, struct document_view *doc_view)
 enum frame_event_status
 move_link_down_line(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	struct document *document;
 	struct view_state *vs;
 	struct el_box *box;
@@ -806,6 +843,7 @@ move_link_down_line(struct session *ses, struct document_view *doc_view)
 enum frame_event_status
 move_link_prev_line(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	struct view_state *vs;
 	struct document *document;
 	struct el_box *box;
@@ -886,6 +924,7 @@ move_link_prev_line(struct session *ses, struct document_view *doc_view)
 enum frame_event_status
 move_link_next_line(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	struct view_state *vs;
 	struct document *document;
 	struct el_box *box;
@@ -964,6 +1003,7 @@ move_link_next_line(struct session *ses, struct document_view *doc_view)
 enum frame_event_status
 move_cursor_line_start(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	struct view_state *vs;
 	struct el_box *box;
 	int x;
@@ -980,6 +1020,7 @@ move_cursor_line_start(struct session *ses, struct document_view *doc_view)
 static enum frame_event_status
 move_clipboard_pos(struct session *ses, struct document_view *view, enum frame_event_status status)
 {
+	ELOG
 	struct document *document = view->document;
 	int xoffset, yoffset, x, y;
 
@@ -1001,6 +1042,7 @@ move_clipboard_pos(struct session *ses, struct document_view *view, enum frame_e
 static enum frame_event_status
 copy_to_clipboard2(struct document_view *doc_view)
 {
+	ELOG
 	struct document *document = doc_view->document;
 	struct string data;
 	int starty, endy, startx, y, endx;
@@ -1089,6 +1131,7 @@ copy_to_clipboard2(struct document_view *doc_view)
 enum frame_event_status
 mark_clipboard(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	struct document *document = doc_view->document;
 
 	int xoffset = doc_view->vs->x - doc_view->box.x;
@@ -1135,6 +1178,7 @@ copy_current_link_to_clipboard(struct session *ses,
 			       struct document_view *doc_view,
 			       int xxx)
 {
+	ELOG
 	struct link *link;
 	struct uri *uri;
 	char *uristring;
@@ -1159,6 +1203,7 @@ copy_current_link_to_clipboard(struct session *ses,
 enum frame_event_status
 copy_to_clipboard(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	if (doc_view && doc_view->document && doc_view->document->clipboard_status != CLIPBOARD_NONE) {
 		return copy_to_clipboard2(doc_view);
 	}
@@ -1169,6 +1214,7 @@ copy_to_clipboard(struct session *ses, struct document_view *doc_view)
 int
 try_jump_to_link_number(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	int link_number = eat_kbd_repeat_count(ses) - 1;
 
 	if (link_number < 0) return 1;
@@ -1189,6 +1235,7 @@ enum frame_event_status
 try_mark_key(struct session *ses, struct document_view *doc_view,
 	     struct term_event *ev)
 {
+	ELOG
 	term_event_key_T key = get_kbd_key(ev);
 	unsigned char mark;
 
@@ -1229,6 +1276,7 @@ try_mark_key(struct session *ses, struct document_view *doc_view,
 void
 open_link_dialog(struct session *ses)
 {
+	ELOG
 	input_dialog(ses->tab->term, NULL,
 		N_("Go to link"), N_("Enter link number"),
 		ses, NULL, MAX_STR_LEN, "", 0, 0, NULL,
@@ -1239,6 +1287,7 @@ static enum frame_event_status
 try_prefix_key(struct session *ses, struct document_view *doc_view,
 	       struct term_event *ev)
 {
+	ELOG
 	struct document *document = doc_view->document;
 	struct document_options *doc_opts = &document->options;
 	int digit = get_kbd_key(ev) - '0';
@@ -1300,6 +1349,7 @@ static enum frame_event_status
 try_form_action(struct session *ses, struct document_view *doc_view,
 		struct link *link, struct term_event *ev)
 {
+	ELOG
 	enum frame_event_status status = FRAME_EVENT_OK;
 
 	assert(link);
@@ -1354,6 +1404,7 @@ try_form_action(struct session *ses, struct document_view *doc_view,
 static enum frame_event_status
 frame_ev_kbd(struct session *ses, struct document_view *doc_view, struct term_event *ev)
 {
+	ELOG
 	enum frame_event_status status = FRAME_EVENT_IGNORED;
 	int accesskey_priority;
 	struct link *link = get_current_link(doc_view);
@@ -1400,6 +1451,7 @@ frame_ev_kbd(struct session *ses, struct document_view *doc_view, struct term_ev
 static enum frame_event_status
 frame_ev_mouse(struct session *ses, struct document_view *doc_view, struct term_event *ev)
 {
+	ELOG
 	int x = ev->info.mouse.x;
 	int y = ev->info.mouse.y;
 	struct link *link;
@@ -1477,6 +1529,7 @@ frame_ev_mouse(struct session *ses, struct document_view *doc_view, struct term_
 static enum frame_event_status
 frame_ev(struct session *ses, struct document_view *doc_view, struct term_event *ev)
 {
+	ELOG
 	assertm(doc_view && doc_view->document, "document not formatted");
 	if_assert_failed return FRAME_EVENT_IGNORED;
 
@@ -1501,6 +1554,7 @@ frame_ev(struct session *ses, struct document_view *doc_view, struct term_event 
 struct document_view *
 current_frame(struct session *ses)
 {
+	ELOG
 	struct document_view *doc_view = NULL;
 	int current_frame_number;
 
@@ -1535,6 +1589,7 @@ static enum frame_event_status
 send_to_frame(struct session *ses, struct document_view *doc_view,
 	      struct term_event *ev)
 {
+	ELOG
 	enum frame_event_status status;
 
 	assert(ses && ses->tab && ses->tab->term && ev);
@@ -1555,6 +1610,7 @@ static int
 do_mouse_event(struct session *ses, struct term_event *ev,
 	       struct document_view *doc_view)
 {
+	ELOG
 	struct term_event evv;
 	struct document_view *matched = NULL, *first = doc_view;
 
@@ -1599,6 +1655,7 @@ do_mouse_event(struct session *ses, struct term_event *ev,
 static int
 is_mouse_on_tab_bar(struct session *ses, struct term_event_mouse *mouse)
 {
+	ELOG
 	struct terminal *term = ses->tab->term;
 	int y;
 
@@ -1613,6 +1670,7 @@ static struct session *
 send_mouse_event(struct session *ses, struct document_view *doc_view,
 		 struct term_event *ev)
 {
+	ELOG
 	struct terminal *term = ses->tab->term;
 	struct term_event_mouse *mouse = &ev->info.mouse;
 
@@ -1687,6 +1745,7 @@ static void
 try_typeahead(struct session *ses, struct document_view *doc_view,
               struct term_event *ev, main_action_T action_id)
 {
+	ELOG
 	switch (get_opt_int("document.browse.search.typeahead", ses)) {
 		case 0:
 			return;
@@ -1712,6 +1771,7 @@ try_typeahead(struct session *ses, struct document_view *doc_view,
 static enum frame_event_status
 try_menu(struct session *ses, struct term_event *ev)
 {
+	ELOG
 	struct window *win;
 
 	get_kbd_modifier(ev) &= ~KBD_MOD_ALT;
@@ -1738,6 +1798,7 @@ static struct session *
 send_kbd_event(struct session *ses, struct document_view *doc_view,
 	       struct term_event *ev)
 {
+	ELOG
 	int event;
 	main_action_T action_id;
 
@@ -1802,6 +1863,7 @@ quit:
 void
 send_event(struct session *ses, struct term_event *ev)
 {
+	ELOG
 	assert(ses && ev);
 	if_assert_failed return;
 
@@ -1826,6 +1888,7 @@ enum frame_event_status
 download_link(struct session *ses, struct document_view *doc_view,
 	      action_id_T action_id)
 {
+	ELOG
 	struct link *link = get_current_link(doc_view);
 	void (*download)(void *ses, char *file) = start_download;
 
@@ -1864,6 +1927,7 @@ download_link(struct session *ses, struct document_view *doc_view,
 enum frame_event_status
 view_image(struct session *ses, struct document_view *doc_view, int xxxx)
 {
+	ELOG
 	struct link *link = get_current_link(doc_view);
 
 	if (link && link->where_img)
@@ -1875,6 +1939,7 @@ view_image(struct session *ses, struct document_view *doc_view, int xxxx)
 enum frame_event_status
 save_as(struct session *ses, struct document_view *doc_view, int magic)
 {
+	ELOG
 	assert(ses);
 	if_assert_failed return FRAME_EVENT_OK;
 
@@ -1898,6 +1963,7 @@ static void
 save_formatted_finish(struct terminal *term, int h,
 		      void *data, download_flags_T flags)
 {
+	ELOG
 	struct document *document = (struct document *)data;
 
 	assert(term && document);
@@ -1914,6 +1980,7 @@ save_formatted_finish(struct terminal *term, int h,
 static void
 save_formatted(void *data, char *file)
 {
+	ELOG
 	struct session *ses = (struct session *)data;
 	struct document_view *doc_view;
 
@@ -1931,6 +1998,7 @@ save_formatted(void *data, char *file)
 enum frame_event_status
 save_formatted_dlg(struct session *ses, struct document_view *doc_view, int xxxx)
 {
+	ELOG
 	query_file(ses, doc_view->vs->uri, ses, save_formatted, NULL, 1);
 	return FRAME_EVENT_OK;
 }

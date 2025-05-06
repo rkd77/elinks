@@ -73,6 +73,7 @@ struct language languages[] = {
 int
 iso639_to_language(char *iso639)
 {
+	ELOG
 	char *l = stracpy(iso639);
 	char *p;
 	int i, ll;
@@ -136,6 +137,7 @@ int system_language = 0;
 const char *
 language_to_iso639(int language)
 {
+	ELOG
 	/* Language is "system", we need to extract the index from
 	 * the environment */
 	if (language == 0) {
@@ -150,6 +152,7 @@ language_to_iso639(int language)
 int
 name_to_language(const char *name)
 {
+	ELOG
 	int i;
 
 	for (i = 0; languages[i].name; i++) {
@@ -163,12 +166,14 @@ name_to_language(const char *name)
 char *
 language_to_name(int language)
 {
+	ELOG
 	return languages[language].name;
 }
 
 int
 get_system_language_index(void)
 {
+	ELOG
 	char *l;
 
 	/* At this point current_language must be "system" yet. */
@@ -188,6 +193,7 @@ int current_language = 0;
 void
 set_language(int language)
 {
+	ELOG
 	char *p;
 
 	if (!system_language)
@@ -226,11 +232,13 @@ set_language(int language)
 static void
 init_gettext(struct module *module)
 {
+	ELOG
 }
 
 static void
 done_gettext(struct module *module)
 {
+	ELOG
 	if (LANGUAGE) {
 		free(LANGUAGE);
 		LANGUAGE = NULL;

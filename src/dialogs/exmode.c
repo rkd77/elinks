@@ -41,6 +41,7 @@ static int
 exmode_action_handler(struct session *ses, char *command,
 		      char *args)
 {
+	ELOG
 	main_action_T action_id = get_action_from_string(KEYMAP_MAIN, command);
 
 	if (action_id == ACT_MAIN_NONE) return 0;
@@ -63,6 +64,7 @@ static int
 exmode_confcmd_handler(struct session *ses, char *command,
 			char *args)
 {
+	ELOG
 	enum parse_error err;
 
 	assert(ses && command && args);
@@ -86,6 +88,7 @@ static const exmode_handler_T exmode_handlers[] = {
 static void
 exmode_exec(struct session *ses, char buffer[INPUT_LINE_BUFFER_SIZE])
 {
+	ELOG
 	/* First look it up as action, then try it as an event (but the event
 	 * part should be thought out somehow yet, I s'pose... let's leave it
 	 * off for now). Then try to evaluate it as configfile command. Then at
@@ -112,6 +115,7 @@ exmode_exec(struct session *ses, char buffer[INPUT_LINE_BUFFER_SIZE])
 void
 try_exmode_exec(struct session *ses, const char *val)
 {
+	ELOG
 	char *next;
 	struct string res;
 	struct string inp;
@@ -174,6 +178,7 @@ try_exmode_exec(struct session *ses, const char *val)
 static enum input_line_code
 exmode_input_handler(struct input_line *input_line, int action_id)
 {
+	ELOG
 	switch (action_id) {
 		case ACT_EDIT_ENTER:
 			exmode_exec(input_line->ses, input_line->buffer);
@@ -187,6 +192,7 @@ exmode_input_handler(struct input_line *input_line, int action_id)
 void
 exmode_start(struct session *ses)
 {
+	ELOG
 	input_field_line(ses, ":", NULL, &exmode_history, exmode_input_handler);
 }
 
@@ -194,12 +200,14 @@ exmode_start(struct session *ses)
 static void
 init_exmode(struct module *module)
 {
+	ELOG
 	load_input_history(&exmode_history, EXMODE_HISTORY_FILENAME);
 }
 
 static void
 done_exmode(struct module *module)
 {
+	ELOG
 	save_input_history(&exmode_history, EXMODE_HISTORY_FILENAME);
 	free_list(exmode_history.entries);
 }

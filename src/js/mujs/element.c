@@ -91,6 +91,7 @@ static void mjs_element_set_property_textContent(js_State *J);
 void *
 mjs_getprivate(js_State *J, int idx)
 {
+	ELOG
 	struct mjs_element_private *priv = (struct mjs_element_private *)js_touserdata(J, idx, "element");
 
 	if (!priv) {
@@ -103,6 +104,7 @@ mjs_getprivate(js_State *J, int idx)
 void *
 mjs_getprivate_any(js_State *J, int idx)
 {
+	ELOG
 	if (js_isuserdata(J, idx, "element")) {
 		return mjs_getprivate(J, idx);
 	}
@@ -121,6 +123,7 @@ mjs_getprivate_any(js_State *J, int idx)
 static void
 mjs_element_get_property_attributes(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -144,6 +147,7 @@ mjs_element_get_property_attributes(js_State *J)
 static void
 mjs_element_get_property_checked(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -208,6 +212,7 @@ mjs_element_get_property_checked(js_State *J)
 static void
 mjs_element_get_property_children(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -234,6 +239,7 @@ mjs_element_get_property_children(js_State *J)
 static void
 mjs_element_get_property_childElementCount(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -262,6 +268,7 @@ mjs_element_get_property_childElementCount(js_State *J)
 static void
 mjs_element_get_property_childNodes(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -288,6 +295,7 @@ mjs_element_get_property_childNodes(js_State *J)
 static void
 mjs_element_get_property_classList(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -319,6 +327,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_get_property_className(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -350,6 +359,7 @@ mjs_element_get_property_className(js_State *J)
 static void
 mjs_element_get_property_contentDocument(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -429,6 +439,7 @@ mjs_element_get_property_contentDocument(js_State *J)
 static void
 mjs_element_get_property_contentWindow(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -502,6 +513,7 @@ mjs_element_get_property_contentWindow(js_State *J)
 static void
 mjs_element_get_property_clientHeight(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -562,6 +574,7 @@ mjs_element_get_property_clientHeight(js_State *J)
 static void
 mjs_element_get_property_clientLeft(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -571,6 +584,7 @@ mjs_element_get_property_clientLeft(js_State *J)
 static void
 mjs_element_get_property_clientTop(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -580,6 +594,7 @@ mjs_element_get_property_clientTop(js_State *J)
 static void
 mjs_element_get_property_clientWidth(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -641,6 +656,7 @@ mjs_element_get_property_clientWidth(js_State *J)
 static void
 mjs_element_get_property_dataset(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -657,6 +673,7 @@ mjs_element_get_property_dataset(js_State *J)
 static void
 mjs_element_get_property_dir(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -692,6 +709,7 @@ mjs_element_get_property_dir(js_State *J)
 static void
 mjs_element_get_property_firstChild(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -721,6 +739,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_get_property_firstElementChild(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -782,6 +801,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_get_property_height(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -810,6 +830,7 @@ mjs_element_get_property_height(js_State *J)
 static void
 mjs_element_get_property_href(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -841,6 +862,7 @@ mjs_element_get_property_href(js_State *J)
 static void
 mjs_element_get_property_id(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -872,6 +894,7 @@ mjs_element_get_property_id(js_State *J)
 static void
 mjs_element_get_property_lang(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -902,6 +925,7 @@ mjs_element_get_property_lang(js_State *J)
 static void
 mjs_element_get_property_lastChild(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -931,6 +955,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_get_property_lastElementChild(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -991,6 +1016,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_get_property_name(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1022,6 +1048,7 @@ mjs_element_get_property_name(js_State *J)
 static void
 mjs_element_get_property_nextElementSibling(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1070,6 +1097,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_get_property_nodeName(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1096,6 +1124,7 @@ mjs_element_get_property_nodeName(js_State *J)
 static void
 mjs_element_get_property_nodeType(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1121,6 +1150,7 @@ mjs_element_get_property_nodeType(js_State *J)
 static void
 mjs_element_get_property_nodeValue(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1147,6 +1177,7 @@ mjs_element_get_property_nodeValue(js_State *J)
 static void
 mjs_element_set_property_nodeValue(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1181,6 +1212,7 @@ mjs_element_set_property_nodeValue(js_State *J)
 static void
 mjs_element_get_property_nextSibling(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1210,6 +1242,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_get_property_offsetHeight(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1219,6 +1252,7 @@ mjs_element_get_property_offsetHeight(js_State *J)
 static void
 mjs_element_get_property_offsetLeft(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1287,6 +1321,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_get_property_offsetParent(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1316,6 +1351,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_get_property_offsetTop(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1384,6 +1420,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_get_property_offsetWidth(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1393,6 +1430,7 @@ mjs_element_get_property_offsetWidth(js_State *J)
 static void
 mjs_element_get_property_ownerDocument(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1404,6 +1442,7 @@ mjs_element_get_property_ownerDocument(js_State *J)
 static void
 mjs_element_get_property_parentElement(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1433,6 +1472,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_get_property_parentNode(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1462,6 +1502,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_get_property_previousElementSibling(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1510,6 +1551,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_get_property_previousSibling(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1539,6 +1581,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_get_property_src(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1570,6 +1613,7 @@ mjs_element_get_property_src(js_State *J)
 static void
 mjs_element_get_property_style(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1586,6 +1630,7 @@ mjs_element_get_property_style(js_State *J)
 static void
 mjs_element_get_property_tagName(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1610,6 +1655,7 @@ mjs_element_get_property_tagName(js_State *J)
 static void
 mjs_element_get_property_title(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1640,6 +1686,7 @@ mjs_element_get_property_title(js_State *J)
 static void
 mjs_element_get_property_value(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1703,6 +1750,7 @@ mjs_element_get_property_value(js_State *J)
 static void
 mjs_element_get_property_innerHtml(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1726,6 +1774,7 @@ mjs_element_get_property_innerHtml(js_State *J)
 static void
 mjs_element_get_property_outerHtml(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1749,6 +1798,7 @@ mjs_element_get_property_outerHtml(js_State *J)
 static void
 mjs_element_get_property_width(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1777,6 +1827,7 @@ mjs_element_get_property_width(js_State *J)
 static void
 mjs_element_get_property_textContent(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1801,6 +1852,7 @@ mjs_element_get_property_textContent(js_State *J)
 static void
 mjs_element_set_property_checked(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1870,6 +1922,7 @@ mjs_element_set_property_checked(js_State *J)
 static void
 mjs_element_set_property_className(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1903,6 +1956,7 @@ mjs_element_set_property_className(js_State *J)
 static void
 mjs_element_set_property_dir(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1938,6 +1992,7 @@ mjs_element_set_property_dir(js_State *J)
 static void
 mjs_element_set_property_href(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1970,6 +2025,7 @@ mjs_element_set_property_href(js_State *J)
 static void
 mjs_element_set_property_id(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2002,6 +2058,7 @@ mjs_element_set_property_id(js_State *J)
 static void
 mjs_element_set_property_innerHtml(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2159,6 +2216,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_set_property_innerText(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2168,6 +2226,7 @@ mjs_element_set_property_innerText(js_State *J)
 static void
 mjs_element_set_property_lang(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2200,6 +2259,7 @@ mjs_element_set_property_lang(js_State *J)
 static void
 mjs_element_set_property_outerHtml(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2370,6 +2430,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_set_property_textContent(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2402,6 +2463,7 @@ mjs_element_set_property_textContent(js_State *J)
 static void
 mjs_element_set_property_title(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2435,6 +2497,7 @@ mjs_element_set_property_title(js_State *J)
 static void
 mjs_element_set_property_value(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2518,6 +2581,7 @@ mjs_element_set_property_value(js_State *J)
 static xmlpp::Element*
 el_add_child_element_common(xmlNode* child, xmlNode* node)
 {
+	ELOG
 	if (!node) {
 		xmlFreeNode(child);
 		throw xmlpp::internal_error("Could not add child element node");
@@ -2531,6 +2595,7 @@ el_add_child_element_common(xmlNode* child, xmlNode* node)
 static void
 mjs_element_addEventListener(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2617,6 +2682,7 @@ ex:
 static void
 mjs_element_removeEventListener(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2681,6 +2747,7 @@ mjs_element_removeEventListener(js_State *J)
 static void
 mjs_element_append(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2756,6 +2823,7 @@ mjs_element_append(js_State *J)
 static void
 mjs_element_appendChild(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2793,6 +2861,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_blur(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2804,6 +2873,7 @@ mjs_element_blur(js_State *J)
 static void
 mjs_element_click(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2859,6 +2929,7 @@ mjs_element_click(js_State *J)
 static void
 mjs_element_cloneNode(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2889,6 +2960,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static bool
 isAncestor(dom_node *el, dom_node *node)
 {
+	ELOG
 	dom_node *prev_next = NULL;
 	while (node) {
 		dom_exception exc;
@@ -2917,6 +2989,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_closest(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2999,6 +3072,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_contains(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3063,6 +3137,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_focus(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3110,6 +3185,7 @@ mjs_element_focus(js_State *J)
 static void
 mjs_element_getAttribute(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3152,6 +3228,7 @@ mjs_element_getAttribute(js_State *J)
 static void
 mjs_element_getAttributeNode(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3191,6 +3268,7 @@ mjs_element_getAttributeNode(js_State *J)
 static void
 mjs_element_getBoundingClientRect(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3266,6 +3344,7 @@ ret:
 static void
 mjs_element_getElementsByTagName(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3306,6 +3385,7 @@ mjs_element_getElementsByTagName(js_State *J)
 static void
 mjs_element_hasAttribute(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3345,6 +3425,7 @@ mjs_element_hasAttribute(js_State *J)
 static void
 mjs_element_hasAttributes(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3370,6 +3451,7 @@ mjs_element_hasAttributes(js_State *J)
 static void
 mjs_element_hasChildNodes(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3395,6 +3477,7 @@ mjs_element_hasChildNodes(js_State *J)
 static void
 mjs_element_insertBefore(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3431,6 +3514,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_isEqualNode(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3471,6 +3555,7 @@ mjs_element_isEqualNode(js_State *J)
 static void
 mjs_element_isSameNode(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3489,6 +3574,7 @@ mjs_element_isSameNode(js_State *J)
 static void
 mjs_element_matches(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3513,6 +3599,7 @@ mjs_element_matches(js_State *J)
 static void
 mjs_element_querySelector(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3545,6 +3632,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_querySelectorAll(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3583,6 +3671,7 @@ mjs_element_querySelectorAll(js_State *J)
 static void
 mjs_element_remove(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3623,6 +3712,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_removeAttribute(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3657,6 +3747,7 @@ mjs_element_removeAttribute(js_State *J)
 static void
 mjs_element_removeChild(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3689,6 +3780,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_replaceWith(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3832,6 +3924,7 @@ out:
 static void
 mjs_element_setAttribute(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3890,6 +3983,7 @@ mjs_element_setAttribute(js_State *J)
 static void
 mjs_element_toString(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3901,6 +3995,7 @@ void *map_elements;
 static void
 mjs_element_finalizer(js_State *J, void *priv)
 {
+	ELOG
 	struct mjs_element_private *el_private = (struct mjs_element_private *)priv;
 
 	if (el_private) {
@@ -3939,6 +4034,7 @@ void *map_privates;
 void
 mjs_push_element(js_State *J, void *node)
 {
+	ELOG
 	NODEINFO(node);
 	struct mjs_element_private *el_private = NULL;
 
@@ -4070,6 +4166,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_element_fun(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -4079,6 +4176,7 @@ mjs_element_fun(js_State *J)
 static void
 mjs_element_constructor(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -4088,6 +4186,7 @@ mjs_element_constructor(js_State *J)
 int
 mjs_element_init(js_State *J)
 {
+	ELOG
 #if 1
 	js_pushglobal(J);
 	js_newcconstructor(J, mjs_element_fun, mjs_element_constructor, "Element", 1);
@@ -4104,6 +4203,7 @@ mjs_element_init(js_State *J)
 void
 check_element_event(void *interp, void *elem, const char *event_name, struct term_event *ev)
 {
+	ELOG
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)interp;
 	js_State *J = (js_State *)interpreter->backend_data;
 	void *second = attr_find_in_map(map_privates, elem);
@@ -4140,6 +4240,7 @@ check_element_event(void *interp, void *elem, const char *event_name, struct ter
 static void
 mjs_element_dispatchEvent(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -4164,6 +4265,7 @@ mjs_element_dispatchEvent(js_State *J)
 static void
 element_event_handler(dom_event *event, void *pw)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

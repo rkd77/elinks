@@ -27,6 +27,7 @@ static JSClassID js_navigator_class_id;
 static JSValue
 js_navigator_get_property_appCodeName(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -39,6 +40,7 @@ js_navigator_get_property_appCodeName(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_navigator_get_property_appName(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -51,6 +53,7 @@ js_navigator_get_property_appName(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_navigator_get_property_appVersion(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -63,6 +66,7 @@ js_navigator_get_property_appVersion(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_navigator_get_property_language(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -80,6 +84,7 @@ js_navigator_get_property_language(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_navigator_get_property_platform(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -92,6 +97,7 @@ js_navigator_get_property_platform(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_navigator_get_property_userAgent(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -130,6 +136,7 @@ js_navigator_get_property_userAgent(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_navigator_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -155,6 +162,7 @@ static JSClassDef js_navigator_class = {
 int
 js_navigator_init(JSContext *ctx)
 {
+	ELOG
 	JSValue navigator_proto;
 
 	/* create the navigator class */

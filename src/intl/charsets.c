@@ -150,6 +150,7 @@ static iconv_t iconv_cd = (iconv_t)-1;
 static void
 free_translation_table(struct conv_table *p)
 {
+	ELOG
 	int i;
 
 	for (i = 0; i < 256; i++)
@@ -169,6 +170,7 @@ static const char no_str[] = "*";
 static void
 new_translation_table(struct conv_table *p)
 {
+	ELOG
 	int i;
 
 	for (i = 0; i < 256; i++)
@@ -212,6 +214,7 @@ struct el_codepoints {
 static int
 is_codepoint_supported(unicode_val_T u)
 {
+	ELOG
 	int first, last, middle;
 
 	if (codepoints.size == -1)
@@ -236,6 +239,7 @@ is_codepoint_supported(unicode_val_T u)
 int
 codepoint_replacement(unicode_val_T u)
 {
+	ELOG
 	int s;
 
 	if (is_codepoint_supported(u))
@@ -258,6 +262,7 @@ static const unicode_val_T strange_chars[32] = {
 const char *
 u2cp_(unicode_val_T u, int to, enum nbsp_mode nbsp_mode)
 {
+	ELOG
 	int j;
 	int s;
 
@@ -300,6 +305,7 @@ static char utf_buffer[7];
 NONSTATIC_INLINE char *
 encode_utf8(unicode_val_T u)
 {
+	ELOG
 #ifdef CONFIG_CODEPOINT
 	if (!is_codepoint_supported(u)) {
 		int s;
@@ -357,12 +363,14 @@ static const char utf8char_len_tab[256] = {
 NONSTATIC_INLINE int
 utf8charlen(const char *p)
 {
+	ELOG
 	return p ? utf8char_len_tab[(unsigned char)*p] : 0;
 }
 
 int
 strlen_utf8(char **str)
 {
+	ELOG
 	char *s = *str;
 	char *end = strchr(s, '\0');
 	int x;
@@ -384,6 +392,7 @@ strlen_utf8(char **str)
 char *
 utf8_prevchar(char *current, int pos, char *start)
 {
+	ELOG
 	if (current == NULL || start == NULL || pos < 0)
 		return NULL;
 	while (pos > 0 && current != start) {
@@ -399,6 +408,7 @@ utf8_prevchar(char *current, int pos, char *start)
 int
 utf8_char2cells(const char *utf8_char_const, char *end)
 {
+	ELOG
 	unicode_val_T u;
 	char *utf8_char = (char *)utf8_char_const;
 
@@ -418,6 +428,7 @@ utf8_char2cells(const char *utf8_char_const, char *end)
 int
 utf8_ptr2cells(const char *string, char *end)
 {
+	ELOG
 	int charlen, cell, cells = 0;
 
 	if (end == NULL)
@@ -446,6 +457,7 @@ utf8_ptr2cells(const char *string, char *end)
 int
 utf8_ptr2chars(char *string, char *end)
 {
+	ELOG
 	int charlen, chars = 0;
 
 	if (end == NULL)
@@ -473,6 +485,7 @@ utf8_ptr2chars(char *string, char *end)
 int
 utf8_cells2bytes(const char *string, int max_cells, char *end)
 {
+	ELOG
 	unsigned int bytes = 0, cells = 0;
 
 	assert(max_cells>=0);
@@ -517,6 +530,7 @@ char *
 utf8_step_forward(char *string, char *end,
 		  int max, enum utf8_step way, int *count)
 {
+	ELOG
 	int steps = 0;
 	char *current = string;
 
@@ -585,6 +599,7 @@ char *
 utf8_step_backward(char *string, char *start,
 		   int max, enum utf8_step way, int *count)
 {
+	ELOG
 	int steps = 0;
 	char *current = string;
 
@@ -681,6 +696,7 @@ invalid_arg:
 NONSTATIC_INLINE int
 unicode_to_cell(unicode_val_T c)
 {
+	ELOG
 	int s;
 
 	if (!is_codepoint_supported(c)) {
@@ -716,6 +732,7 @@ unicode_to_cell(unicode_val_T c)
 unicode_val_T
 unicode_fold_label_case(unicode_val_T c)
 {
+	ELOG
 #if __STDC_ISO_10646__ && HAVE_WCTYPE_H
 	return towlower(c);
 #else  /* !(__STDC_ISO_10646__ && HAVE_WCTYPE_H) */
@@ -734,6 +751,7 @@ unicode_fold_label_case(unicode_val_T c)
 NONSTATIC_INLINE unicode_val_T
 utf8_to_unicode(char **string, const char *end)
 {
+	ELOG
 	unsigned char *str = (unsigned char *)*string;
 	unicode_val_T u;
 	int length;
@@ -819,6 +837,7 @@ invalid_utf8:
 static unicode_val_T
 cp2u_shared(const struct codepage_desc *from, unsigned char c)
 {
+	ELOG
 	unicode_val_T u = from->highhalf[c - 0x80];
 
 	if (u == 0xFFFF) u = UCS_REPLACEMENT_CHARACTER;
@@ -829,6 +848,7 @@ cp2u_shared(const struct codepage_desc *from, unsigned char c)
 unicode_val_T
 cp2u(int from, unsigned char c)
 {
+	ELOG
 	from &= ~SYSTEM_CHARSET_FLAG;
 
 	/* UTF-8 is a multibyte codepage and cannot be handled with
@@ -844,6 +864,7 @@ cp2u(int from, unsigned char c)
 const char *
 cp2utf8(int from, int c)
 {
+	ELOG
 	from &= ~SYSTEM_CHARSET_FLAG;
 
 	if (is_cp_ptr_utf8(&codepages[from]) || c < 128)
@@ -855,6 +876,7 @@ cp2utf8(int from, int c)
 unicode_val_T
 cp_to_unicode(int codepage, char **string, const char *end)
 {
+	ELOG
 	unicode_val_T ret;
 
 	if (is_cp_utf8(codepage))
@@ -871,6 +893,7 @@ cp_to_unicode(int codepage, char **string, const char *end)
 static void
 add_utf8(struct conv_table *ct, unicode_val_T u, const char *str)
 {
+	ELOG
 	unsigned char *p = (unsigned char *)encode_utf8(u);
 
 	while (p[1]) {
@@ -902,6 +925,7 @@ int utf_table_init = 1;
 static void
 free_utf_table(void)
 {
+	ELOG
 	int i;
 
 	/* Cast away const.  */
@@ -912,6 +936,7 @@ free_utf_table(void)
 static struct conv_table *
 get_translation_table_to_utf8(int from)
 {
+	ELOG
 	int i;
 	static int lfr = -1;
 
@@ -965,6 +990,7 @@ static int first = 1;
 void
 free_conv_table(void)
 {
+	ELOG
 	if (!utf_table_init) free_utf_table();
 	if (first) {
 		memset(table, 0, sizeof(table));
@@ -983,6 +1009,7 @@ free_conv_table(void)
 struct conv_table *
 get_translation_table(int from, int to)
 {
+	ELOG
 	static int lfr = -1;
 	static int lto = -1;
 
@@ -1055,6 +1082,7 @@ get_translation_table(int from, int to)
 static inline int
 xxstrcmp(const char *s1, const char *s2, int l2)
 {
+	ELOG
 	while (l2) {
 		if (*s1 > *s2) return 1;
 		if (*s1 < *s2) return -1;
@@ -1085,6 +1113,7 @@ struct entity_cache {
 static int
 hits_cmp(const void *v1, const void *v2)
 {
+	ELOG
 	const struct entity_cache *a = (const struct entity_cache *)v1, *b = (const struct entity_cache *)v2;
 
 	if (a->hits == b->hits) return 0;
@@ -1095,6 +1124,7 @@ hits_cmp(const void *v1, const void *v2)
 static int
 compare_entities(const void *key_, const void *element_)
 {
+	ELOG
 	struct string *key = (struct string *) key_;
 	struct entity *element = (struct entity *) element_;
 	int length = key->length;
@@ -1107,6 +1137,7 @@ compare_entities(const void *key_, const void *element_)
 const char *
 get_entity_string(const char *str, const int strlen, int encoding)
 {
+	ELOG
 #define ENTITY_CACHE_SIZE 10	/* 10 seems a good value. */
 #define ENTITY_CACHE_MAXLEN 9   /* entities with length >= ENTITY_CACHE_MAXLEN or == 1
 			           will go in [0] table */
@@ -1284,6 +1315,7 @@ convert_string(struct conv_table *convert_table,
 	       void (*callback)(void *data, char *buf, int buflen),
 	       void *callback_data)
 {
+	ELOG
 	char *buffer;
 	int bufferpos = 0;
 	int charspos = 0;
@@ -1500,6 +1532,7 @@ flush:
 int
 get_cp_index(const char *name)
 {
+	ELOG
 	int i, a;
 	int syscp = 0;
 
@@ -1556,6 +1589,7 @@ static unsigned int i_alias = 0;
 void
 charsets_list_reset(void)
 {
+	ELOG
 	i_name = 0;
 	i_alias = 0;
 }
@@ -1565,6 +1599,7 @@ charsets_list_reset(void)
 struct fastfind_key_value *
 charsets_list_next(void)
 {
+	ELOG
 	static struct fastfind_key_value kv;
 
 	if (!codepages[i_name].name) return NULL;
@@ -1590,6 +1625,7 @@ static struct fastfind_index ff_charsets_index
 int
 get_cp_index(const char *name)
 {
+	ELOG
 	const struct codepage_desc *codepage;
 	int syscp = 0;
 
@@ -1632,6 +1668,7 @@ get_cp_index(const char *name)
 static int
 cmpint(const void *a, const void *b)
 {
+	ELOG
 	if (* (int *) a < * (int *) b)
 		return -1;
 	else if (* (int *) a == * (int *) b)
@@ -1643,6 +1680,7 @@ cmpint(const void *a, const void *b)
 void
 make_codepoints(void)
 {
+	ELOG
 	int tty;
 	struct unimapdesc table;
 	int res;
@@ -1690,6 +1728,7 @@ make_codepoints(void)
 void
 make_codepoints(void)
 {
+	ELOG
 	codepoints.size = -1;
 }
 #endif
@@ -1697,6 +1736,7 @@ make_codepoints(void)
 void
 init_charsets_lookup(void)
 {
+	ELOG
 	make_codepoints();
 #ifdef USE_FASTFIND
 	fastfind_index(&ff_charsets_index, FF_COMPRESS);
@@ -1706,6 +1746,7 @@ init_charsets_lookup(void)
 void
 free_charsets_lookup(void)
 {
+	ELOG
 #ifdef USE_FASTFIND
 	fastfind_done(&ff_charsets_index);
 #endif
@@ -1719,6 +1760,7 @@ free_charsets_lookup(void)
 const char *
 get_cp_name(int cp_index)
 {
+	ELOG
 	if (cp_index < 0) return "none";
 	if (cp_index & SYSTEM_CHARSET_FLAG) return "System";
 
@@ -1731,6 +1773,7 @@ get_cp_name(int cp_index)
 const char *
 get_cp_config_name(int cp_index)
 {
+	ELOG
 	if (cp_index < 0) return "none";
 	if (cp_index & SYSTEM_CHARSET_FLAG) return "System";
 	if (!codepages[cp_index].aliases) return NULL;
@@ -1744,6 +1787,7 @@ get_cp_config_name(int cp_index)
 const char *
 get_cp_mime_name(int cp_index)
 {
+	ELOG
 	if (cp_index < 0) return "none";
 	cp_index &= ~SYSTEM_CHARSET_FLAG;
 	if (!codepages[cp_index].aliases) return NULL;
@@ -1754,6 +1798,7 @@ get_cp_mime_name(int cp_index)
 int
 is_cp_utf8(int cp_index)
 {
+	ELOG
 	cp_index &= ~SYSTEM_CHARSET_FLAG;
 	return is_cp_ptr_utf8(&codepages[cp_index]);
 }
@@ -1762,6 +1807,7 @@ is_cp_utf8(int cp_index)
 const uint16_t *
 get_cp_highhalf(const char *name)
 {
+	ELOG
 	int cp = get_cp_index(name);
 
 	if (cp < 0) return NULL;

@@ -94,6 +94,7 @@ static void free_options_tree(LIST_OF(struct option) *, int recursive);
 static void
 check_caption(char *caption)
 {
+	ELOG
 	int len;
 	unsigned char c;
 
@@ -122,6 +123,7 @@ check_caption(char *caption)
 static void
 check_description(char *desc)
 {
+	ELOG
 	int len;
 	unsigned char c;
 
@@ -152,6 +154,7 @@ check_description(char *desc)
 static void
 debug_check_option_syntax(struct option *option)
 {
+	ELOG
 	if (!option) return;
 	check_caption(option->capt);
 	check_description(option->desc);
@@ -186,6 +189,7 @@ static int no_autocreate = 0;
 struct option *
 get_opt_rec(struct option *tree, const char *name_)
 {
+	ELOG
 	struct option *option;
 	char *aname = stracpy(name_);
 	char *name = aname;
@@ -259,6 +263,7 @@ get_opt_rec(struct option *tree, const char *name_)
 struct option *
 get_opt_rec_real(struct option *tree, const char *name)
 {
+	ELOG
 	struct option *opt;
 
 	no_autocreate = 1;
@@ -278,6 +283,7 @@ get_opt_rec_real(struct option *tree, const char *name)
 struct option *
 indirect_option(struct option *alias)
 {
+	ELOG
 	struct option *real;
 
 	if (alias->type != OPT_ALIAS) return alias; /* not an error */
@@ -300,6 +306,7 @@ get_opt_(
 #endif
 	 struct option *tree, const char *name, struct session *ses)
 {
+	ELOG
 	struct option *opt = NULL;
 
 	/* If given a session and the option is shadowed in that session's
@@ -371,6 +378,7 @@ get_opt_(
 static void
 add_opt_sort(struct option *tree, struct option *option, int abi)
 {
+	ELOG
 	LIST_OF(struct option) *cat = tree->value.tree;
 	LIST_OF(struct listbox_item) *bcat = &tree->box_item->child;
 	struct option *pos;
@@ -453,6 +461,7 @@ append:
 static void
 add_opt_rec(struct option *tree, const char *path, struct option *option)
 {
+	ELOG
 	int abi = 0;
 
 	assert(path && option && tree);
@@ -502,6 +511,7 @@ add_opt_rec(struct option *tree, const char *path, struct option *option)
 static inline struct listbox_item *
 init_option_listbox_item(struct option *option)
 {
+	ELOG
 	struct listbox_item *item = (struct listbox_item *)mem_calloc(1, sizeof(*item));
 
 	if (!item) return NULL;
@@ -520,6 +530,7 @@ add_opt(struct option *tree, const char *path, const char *capt,
 	const char *name, option_flags_T flags, enum option_type type,
 	long min, long max, intptr_t value, const char *desc)
 {
+	ELOG
 	struct option *option = (struct option *)mem_calloc(1, sizeof(*option));
 
 	if (!option) return NULL;
@@ -594,6 +605,7 @@ add_opt(struct option *tree, const char *path, const char *capt,
 static void
 done_option(struct option *option)
 {
+	ELOG
 	switch (option->type) {
 		case OPT_STRING:
 			mem_free_if(option->value.string);
@@ -630,6 +642,7 @@ done_option(struct option *option)
 static void
 delete_option_do(struct option *option, int recursive)
 {
+	ELOG
 	if (option->next) {
 		del_from_list(option);
 		option->prev = option->next = NULL;
@@ -661,6 +674,7 @@ delete_option_do(struct option *option, int recursive)
 void
 mark_option_as_deleted(struct option *option)
 {
+	ELOG
 	if (option->type == OPT_TREE) {
 		struct option *unmarked;
 
@@ -679,6 +693,7 @@ mark_option_as_deleted(struct option *option)
 void
 delete_option(struct option *option)
 {
+	ELOG
 	delete_option_do(option, 1);
 }
 
@@ -686,6 +701,7 @@ delete_option(struct option *option)
 struct option *
 copy_option(struct option *template_, int flags)
 {
+	ELOG
 	struct option *option = (struct option *)mem_calloc(1, sizeof(*option));
 
 	if (!option) return NULL;
@@ -725,6 +741,7 @@ struct option *
 get_option_shadow(struct option *option, struct option *tree,
                   struct option *shadow_tree)
 {
+	ELOG
 
 	struct option *shadow_option = NULL;
 
@@ -767,6 +784,7 @@ get_option_shadow(struct option *option, struct option *tree,
 LIST_OF(struct option) *
 init_options_tree(void)
 {
+	ELOG
 	LIST_OF(struct option) *ptr = (LIST_OF(struct option) *)mem_alloc(sizeof(*ptr));
 
 	if (ptr) init_list(*ptr);
@@ -777,6 +795,7 @@ init_options_tree(void)
 static inline void
 register_autocreated_options(void)
 {
+	ELOG
 	/* TODO: Use table-driven initialization. --jonas */
 	get_opt_int("terminal.linux.type", NULL) = TERM_LINUX;
 	get_opt_int("terminal.linux.colors", NULL) = COLOR_MODE_16;
@@ -837,6 +856,7 @@ extern union option_info cmdline_options_info[];
 static int
 change_hook_cache(struct session *ses, struct option *current, struct option *changed)
 {
+	ELOG
 	shrink_memory(0);
 	return 0;
 }
@@ -844,6 +864,7 @@ change_hook_cache(struct session *ses, struct option *current, struct option *ch
 static int
 change_hook_connection(struct session *ses, struct option *current, struct option *changed)
 {
+	ELOG
 	register_check_queue();
 	return 0;
 }
@@ -851,6 +872,7 @@ change_hook_connection(struct session *ses, struct option *current, struct optio
 static int
 change_hook_html(struct session *ses, struct option *current, struct option *changed)
 {
+	ELOG
 	foreach (ses, sessions) ses->tab->resize = 1;
 
 	return 0;
@@ -859,6 +881,7 @@ change_hook_html(struct session *ses, struct option *current, struct option *cha
 static int
 change_hook_insert_mode(struct session *ses, struct option *current, struct option *changed)
 {
+	ELOG
 	update_status();
 	return 0;
 }
@@ -866,6 +889,7 @@ change_hook_insert_mode(struct session *ses, struct option *current, struct opti
 static int
 change_hook_active_link(struct session *ses, struct option *current, struct option *changed)
 {
+	ELOG
 	update_cached_document_options(ses);
 	return 0;
 }
@@ -873,6 +897,7 @@ change_hook_active_link(struct session *ses, struct option *current, struct opti
 static int
 change_hook_terminal(struct session *ses, struct option *current, struct option *changed)
 {
+	ELOG
 	cls_redraw_all_terminals();
 	return 0;
 }
@@ -880,6 +905,7 @@ change_hook_terminal(struct session *ses, struct option *current, struct option 
 static int
 change_hook_ui(struct session *ses, struct option *current, struct option *changed)
 {
+	ELOG
 	update_status();
 	return 0;
 }
@@ -887,6 +913,7 @@ change_hook_ui(struct session *ses, struct option *current, struct option *chang
 static int
 change_hook_ui_double_esc(struct session *ses, struct option *current, struct option *changed)
 {
+	ELOG
 	ui_double_esc = changed->value.number;
 	return 0;
 }
@@ -895,6 +922,7 @@ change_hook_ui_double_esc(struct session *ses, struct option *current, struct op
 static int
 change_hook_ui_mouse_disable(struct session *ses, struct option *current, struct option *changed)
 {
+	ELOG
 	char *xdg_config_home = get_xdg_config_home();
 	char *lock_filename = straconcat(empty_string_or_(xdg_config_home), "mouse.lock", (char *)NULL);
 
@@ -931,6 +959,7 @@ change_hook_ui_mouse_disable(struct session *ses, struct option *current, struct
 static void
 update_visibility(LIST_OF(struct option) *tree, int show)
 {
+	ELOG
 	struct option *opt;
 
 	foreach (opt, *tree) {
@@ -955,6 +984,7 @@ update_visibility(LIST_OF(struct option) *tree, int show)
 static int
 change_hook_stemplate(struct session *ses, struct option *current, struct option *changed)
 {
+	ELOG
 	update_visibility(config_options->value.tree, changed->value.number);
 	return 0;
 }
@@ -962,6 +992,7 @@ change_hook_stemplate(struct session *ses, struct option *current, struct option
 static int
 change_hook_language(struct session *ses, struct option *current, struct option *changed)
 {
+	ELOG
 #ifdef CONFIG_NLS
 	set_language(changed->value.number);
 #endif
@@ -994,6 +1025,7 @@ static const struct change_hook_info change_hooks[] = {
 void
 init_options(void)
 {
+	ELOG
 	cmdline_options = add_opt_tree_tree(&options_root, "", "",
 					    "cmdline", OPT_ZERO, "");
 	register_options(cmdline_options_info, cmdline_options);
@@ -1014,6 +1046,7 @@ init_options(void)
 static void
 free_options_tree(LIST_OF(struct option) *tree, int recursive)
 {
+	ELOG
 	while (!list_empty(*tree))
 		delete_option_do((struct option *)tree->next, recursive);
 }
@@ -1021,6 +1054,7 @@ free_options_tree(LIST_OF(struct option) *tree, int recursive)
 void
 done_options(void)
 {
+	ELOG
 	done_domain_trees();
 	unregister_options(config_options_info, config_options);
 	unregister_options(cmdline_options_info, cmdline_options);
@@ -1032,6 +1066,7 @@ done_options(void)
 void
 register_change_hooks(const struct change_hook_info *change_hooks)
 {
+	ELOG
 	int i;
 
 	for (i = 0; change_hooks[i].name; i++) {
@@ -1057,6 +1092,7 @@ register_change_hooks(const struct change_hook_info *change_hooks)
 void
 prepare_mustsave_flags(LIST_OF(struct option) *tree, int set_all)
 {
+	ELOG
 	struct option *option;
 
 	foreach (option, *tree) {
@@ -1079,6 +1115,7 @@ prepare_mustsave_flags(LIST_OF(struct option) *tree, int set_all)
 void
 untouch_options(LIST_OF(struct option) *tree)
 {
+	ELOG
 	struct option *option;
 
 	foreach (option, *tree) {
@@ -1093,6 +1130,7 @@ untouch_options(LIST_OF(struct option) *tree)
 static int
 check_nonempty_tree(LIST_OF(struct option) *options)
 {
+	ELOG
 	struct option *opt;
 
 	foreach (opt, *options) {
@@ -1115,6 +1153,7 @@ smart_config_string(struct string *str, int print_comment, int i18n,
 		    void (*fn)(struct string *, struct option *,
 			       char *, int, int, int, int))
 {
+	ELOG
 	struct option *option;
 
 	foreach (option, *options) {
@@ -1201,6 +1240,7 @@ smart_config_string(struct string *str, int print_comment, int i18n,
 void
 update_options_visibility(void)
 {
+	ELOG
 	update_visibility(config_options->value.tree,
 			  get_opt_bool("config.show_template", NULL));
 }
@@ -1208,6 +1248,7 @@ update_options_visibility(void)
 void
 toggle_option(struct session *ses, struct option *option)
 {
+	ELOG
 	long number = option->value.number + 1;
 
 	assert(option->type == OPT_BOOL || option->type == OPT_INT);
@@ -1222,6 +1263,7 @@ toggle_option(struct session *ses, struct option *option)
 void
 call_change_hooks(struct session *ses, struct option *current, struct option *option)
 {
+	ELOG
 	/* This boolean thing can look a little weird - it
 	 * basically says that we should proceed when there's
 	 * no change_hook or there's one and its return value
@@ -1238,6 +1280,7 @@ call_change_hooks(struct session *ses, struct option *current, struct option *op
 void
 option_changed(struct session *ses, struct option *option)
 {
+	ELOG
 	option->flags |= OPT_TOUCHED;
 	/* Notify everyone out there! */
 	call_change_hooks(ses, option, option);
@@ -1248,6 +1291,7 @@ int
 commit_option_values(struct option_resolver *resolvers,
 		     struct option *root, union option_value *values, int size)
 {
+	ELOG
 	int touched = 0;
 	int i;
 
@@ -1288,6 +1332,7 @@ checkout_option_values(struct option_resolver *resolvers,
 		       struct option *root,
 		       union option_value *values, int size)
 {
+	ELOG
 	int i;
 
 	for (i = 0; i < size; i++) {
@@ -1310,6 +1355,7 @@ checkout_option_values(struct option_resolver *resolvers,
 void
 register_options(union option_info info[], struct option *tree)
 {
+	ELOG
 	int i;
 	static const struct option zero = INIT_OPTION(
 		NULL, OPT_ZERO, OPT_BOOL, 0, 0, 0, NULL, NULL);
@@ -1408,6 +1454,7 @@ register_options(union option_info info[], struct option *tree)
 void
 unregister_options(union option_info info[], struct option *tree)
 {
+	ELOG
 	int i = 0;
 
 	/* We need to remove the options in inverse order to the order how we
@@ -1422,18 +1469,21 @@ unregister_options(union option_info info[], struct option *tree)
 int
 get_https_by_default(void)
 {
+	ELOG
 	return get_opt_bool("connection.ssl.https_by_default", NULL);
 }
 
 const char *
 get_default_protocol(void)
 {
+	ELOG
 	return get_opt_str("protocol.default_protocol", NULL);
 }
 
 color_mode_T
 get_color_mode(struct option *term_spec)
 {
+	ELOG
 #ifdef CONFIG_TERMINFO
 	if (get_cmd_opt_bool("terminfo")) {
 		int max_colors = terminfo_max_colors();

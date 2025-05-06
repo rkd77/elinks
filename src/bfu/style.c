@@ -30,6 +30,7 @@ static struct hash *bfu_colors = NULL;
 struct color_pair *
 get_bfu_color(struct terminal *term, const char *stylename)
 {
+	ELOG
 	static color_mode_T last_color_mode;
 	struct bfu_color_entry *entry;
 	int stylenamelen;
@@ -100,6 +101,7 @@ get_bfu_color(struct terminal *term, const char *stylename)
 void
 done_bfu_colors(void)
 {
+	ELOG
 	struct hash_item *item;
 	int i;
 

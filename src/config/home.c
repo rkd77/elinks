@@ -31,6 +31,7 @@ static char *xdg_config_home = NULL;
 static inline void
 strip_trailing_dir_sep(char *path)
 {
+	ELOG
 	int i;
 
 	for (i = strlen(path) - 1; i > 0; i--)
@@ -54,6 +55,7 @@ strip_trailing_dir_sep(char *path)
 static char *
 path_skip_root(const char *file_name)
 {
+	ELOG
 #if defined _WIN32 || defined __WIN32__ || defined __EMX__ || defined __DJGPP__
 	/* Skip \\server\share or //server/share */
 
@@ -106,6 +108,7 @@ path_skip_root(const char *file_name)
 static int
 mkdir_with_parents(const char *pathname, mode_t mode)
 {
+	ELOG
 	char *fn = stracpy(pathname);
 	char *p;
 
@@ -165,6 +168,7 @@ static char *
 test_confdir(const char *home, const char *path,
 	     char *error_message)
 {
+	ELOG
 	struct stat st;
 	char *confdir;
 
@@ -212,12 +216,14 @@ test_confdir(const char *home, const char *path,
 char *
 get_xdg_config_home(void)
 {
+	ELOG
 	return xdg_config_home;
 }
 
 static char *
 get_xdg_config_home_internal(void)
 {
+	ELOG
 	char *config_dir = NULL;
 	char *elinks_confdir;
 	char *pa;
@@ -289,6 +295,7 @@ end:
 static char *
 elinks_dirname(char *path)
 {
+	ELOG
 	int i;
 	char *dir;
 
@@ -309,6 +316,7 @@ elinks_dirname(char *path)
 static char *
 get_home(void)
 {
+	ELOG
 	char *home_elinks;
 	char *envhome = getenv("HOME_ETC") ?: getenv("HOME");
 	char *home = NULL;
@@ -351,6 +359,7 @@ end:
 void
 init_home(void)
 {
+	ELOG
 	first_use = 1;
 	xdg_config_home = get_xdg_config_home_internal();
 	if (!xdg_config_home) {
@@ -366,5 +375,6 @@ init_home(void)
 void
 done_home(void)
 {
+	ELOG
 	mem_free_set(&xdg_config_home, NULL);
 }

@@ -24,6 +24,7 @@
 static inline int
 find_hotkey_pos(char *text)
 {
+	ELOG
 	if (text && *text) {
 		char *p = strchr(text, '~');
 
@@ -36,6 +37,7 @@ find_hotkey_pos(char *text)
 void
 init_hotkeys(struct terminal *term, struct menu *menu)
 {
+	ELOG
 	struct menu_item *mi;
 
 #ifdef CONFIG_DEBUG
@@ -98,6 +100,7 @@ init_hotkeys(struct terminal *term, struct menu *menu)
 void
 clear_hotkeys_cache(struct menu *menu)
 {
+	ELOG
 	struct menu_item *item;
 
 	foreach_menu_item(item, menu->items) {
@@ -110,6 +113,7 @@ clear_hotkeys_cache(struct menu *menu)
 void
 refresh_hotkeys(struct terminal *term, struct menu *menu)
 {
+	ELOG
 #ifdef CONFIG_NLS
  	if (current_language != menu->lang) {
 		clear_hotkeys_cache(menu);
@@ -125,6 +129,7 @@ static int
 check_hotkeys_common(struct menu *menu, term_event_char_T hotkey, struct terminal *term,
 		     int check_mode)
 {
+	ELOG
 #ifdef CONFIG_UTF8
 	unicode_val_T key = unicode_fold_label_case(hotkey);
 	int codepage = get_terminal_codepage(term);
@@ -202,6 +207,7 @@ check_hotkeys_common(struct menu *menu, term_event_char_T hotkey, struct termina
 int
 check_hotkeys(struct menu *menu, term_event_char_T key, struct terminal *term)
 {
+	ELOG
 	return check_hotkeys_common(menu, key, term, 0);
 }
 
@@ -212,5 +218,6 @@ check_hotkeys(struct menu *menu, term_event_char_T key, struct terminal *term)
 int
 check_not_so_hot_keys(struct menu *menu, term_event_char_T key, struct terminal *term)
 {
+	ELOG
 	return check_hotkeys_common(menu, key, term, 1);
 }

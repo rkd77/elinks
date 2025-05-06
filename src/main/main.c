@@ -74,6 +74,7 @@ static int init_o = 0;
 static void
 check_stdio(LIST_OF(struct string_list_item) *url_list)
 {
+	ELOG
 	assert(!remote_session_flags);
 
 	if (program.testjs) {
@@ -105,6 +106,7 @@ check_stdio(LIST_OF(struct string_list_item) *url_list)
 static void
 check_cwd(void)
 {
+	ELOG
 	char *cwd = get_cwd();
 
 	if (!cwd || !file_is_dir(cwd)) {
@@ -120,6 +122,7 @@ check_cwd(void)
 void
 parse_options_again(void)
 {
+	ELOG
 	if (!init_o) {
 		load_config();
 		update_options_visibility();
@@ -138,6 +141,7 @@ parse_options_again(void)
 static void
 init(void)
 {
+	ELOG
 	INIT_LIST_OF(struct string_list_item, url_list);
 	int fd = -1;
 	enum retval ret;
@@ -288,6 +292,7 @@ init(void)
 static void
 terminate_all_subsystems(void)
 {
+	ELOG
 	done_interlink();
 	check_bottom_halves();
 	abort_all_downloads();
@@ -341,6 +346,7 @@ terminate_all_subsystems(void)
 void
 shrink_memory(int whole)
 {
+	ELOG
 	shrink_dns_cache(whole);
 	shrink_format_cache(whole);
 	garbage_collection(whole);
@@ -350,6 +356,7 @@ shrink_memory(int whole)
 static void
 check_if_root(void)
 {
+	ELOG
 	if (!getuid() || !geteuid()) {
 		fprintf(stderr, "%s\n\n"
 				"Permission to run this program as root "
@@ -365,6 +372,7 @@ check_if_root(void)
 int
 main(int argc, char *argv[])
 {
+	ELOG
 	check_if_root();
 
 	program.terminate = 0;

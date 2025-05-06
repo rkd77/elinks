@@ -53,6 +53,7 @@
 static inline int
 check_document_fragment(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	struct document *document = doc_view->document;
 	struct uri *uri = doc_view->vs->uri;
 	int vy;
@@ -101,6 +102,7 @@ static void
 draw_frame_lines(struct terminal *term, struct frameset_desc *frameset_desc,
 		 int xp, int yp, struct color_pair *colors)
 {
+	ELOG
 	int y, j;
 
 	assert(term && frameset_desc && frameset_desc->frame_desc);
@@ -176,6 +178,7 @@ draw_frame_lines(struct terminal *term, struct frameset_desc *frameset_desc,
 static void
 draw_clipboard(struct terminal *term, struct document_view *doc_view)
 {
+	ELOG
 	struct document *document = doc_view->document;
 	struct color_pair *color;
 	int starty, startx, endy, endx, x, y, xoffset, yoffset;
@@ -224,6 +227,7 @@ draw_clipboard(struct terminal *term, struct document_view *doc_view)
 static void
 draw_view_status(struct session *ses, struct document_view *doc_view, int active)
 {
+	ELOG
 	struct terminal *term = ses->tab->term;
 
 	draw_forms(term, doc_view);
@@ -239,6 +243,7 @@ draw_view_status(struct session *ses, struct document_view *doc_view, int active
 static void
 check_link_under_cursor(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	int x = ses->tab->x;
 	int y = ses->tab->y;
 	struct el_box *box = &doc_view->box;
@@ -256,6 +261,7 @@ check_link_under_cursor(struct session *ses, struct document_view *doc_view)
 static void
 draw_doc(struct session *ses, struct document_view *doc_view, int active)
 {
+	ELOG
 	struct color_pair color;
 	struct view_state *vs;
 	struct terminal *term;
@@ -501,6 +507,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 static void
 draw_frames(struct session *ses)
 {
+	ELOG
 	struct document_view *doc_view, *current_doc_view;
 	int *l;
 	int n, d;
@@ -546,6 +553,7 @@ draw_frames(struct session *ses)
 void
 draw_formatted(struct session *ses, int rerender)
 {
+	ELOG
 	assert(ses && ses->tab);
 	if_assert_failed return;
 
@@ -589,6 +597,7 @@ draw_formatted(struct session *ses, int rerender)
 void
 refresh_view(struct session *ses, struct document_view *doc_view, int frames)
 {
+	ELOG
 	/* If refresh_view() is being called because the value of a
 	 * form field has changed, @ses might not be in the current
 	 * tab: consider SELECT pop-ups behind which -remote loads

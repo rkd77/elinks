@@ -24,6 +24,7 @@ char system_name[MAX_STR_LEN];
 static int
 got_it_from_uname_command(void)
 {
+	ELOG
 	FILE *f;
 	char *p;
 
@@ -55,6 +56,7 @@ got_it_from_uname_command(void)
 void
 get_system_name(void)
 {
+	ELOG
 #if defined(HAVE_SYS_UTSNAME_H) && defined(HAVE_UNAME)
 	struct utsname name;
 

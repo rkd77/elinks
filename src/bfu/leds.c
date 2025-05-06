@@ -138,6 +138,7 @@ static union option_info led_options[] = {
 void
 init_leds(struct module *module)
 {
+	ELOG
 	timer_duration_backup = 0;
 
 	/* We can't setup timer here, because we may not manage to startup in
@@ -148,12 +149,14 @@ init_leds(struct module *module)
 void
 done_leds(struct module *module)
 {
+	ELOG
 	kill_timer(&redraw_timer);
 }
 
 void
 set_led_value(struct led *led, unsigned char value)
 {
+	ELOG
 	if (value != led->value__) {
 		led->value__ = value;
 		led->value_changed__ = 1;
@@ -163,12 +166,14 @@ set_led_value(struct led *led, unsigned char value)
 unsigned char
 get_led_value(struct led *led)
 {
+	ELOG
 	return led->value__;
 }
 
 void
 unset_led_value(struct led *led)
 {
+	ELOG
 	set_led_value(led, '-');
 }
 
@@ -176,6 +181,7 @@ unset_led_value(struct led *led)
 void
 init_led_panel(struct led_panel *leds)
 {
+	ELOG
 	int i;
 
 	for (i = 0; i < LEDS_COUNT; i++) {
@@ -187,6 +193,7 @@ init_led_panel(struct led_panel *leds)
 static int
 draw_timer(struct terminal *term, int xpos, int ypos, struct color_pair *color)
 {
+	ELOG
 	char s[64];
 	int i, length;
 
@@ -202,6 +209,7 @@ draw_timer(struct terminal *term, int xpos, int ypos, struct color_pair *color)
 static int
 draw_show_ip(struct session *ses, int xpos, int ypos, struct color_pair *color)
 {
+	ELOG
 	if (ses->doc_view && ses->doc_view->document && ses->doc_view->document->ip) {
 		struct terminal *term = ses->tab->term;
 		char *s = ses->doc_view->document->ip;
@@ -219,6 +227,7 @@ draw_show_ip(struct session *ses, int xpos, int ypos, struct color_pair *color)
 static int
 draw_show_mem(struct session *ses, int xpos, int ypos, struct color_pair *color)
 {
+	ELOG
 	struct terminal *term = ses->tab->term;
 	struct string text;
 	int i;
@@ -241,6 +250,7 @@ draw_show_mem(struct session *ses, int xpos, int ypos, struct color_pair *color)
 static int
 draw_temperature(struct session *ses, int xpos, int ypos, struct color_pair *color)
 {
+	ELOG
 	struct terminal *term = ses->tab->term;
 	int temp = 0;
 	int ret;
@@ -291,6 +301,7 @@ draw_temperature(struct session *ses, int xpos, int ypos, struct color_pair *col
 static int
 draw_clock(struct terminal *term, int xpos, int ypos, struct color_pair *color)
 {
+	ELOG
 	char s[64];
 	time_t curtime = time(NULL);
 	struct tm *loctime = localtime(&curtime);
@@ -308,6 +319,7 @@ draw_clock(struct terminal *term, int xpos, int ypos, struct color_pair *color)
 static milliseconds_T
 compute_redraw_interval(void)
 {
+	ELOG
 	if (are_there_downloads())
 		return 100;
 
@@ -323,6 +335,7 @@ compute_redraw_interval(void)
 void
 draw_leds(struct session *ses)
 {
+	ELOG
 	struct terminal *term = ses->tab->term;
 	struct color_pair *led_color = NULL;
 	int i;
@@ -408,6 +421,7 @@ end:
 static int
 sync_leds(struct session *ses)
 {
+	ELOG
 	int i;
 	int timer_duration;
 
@@ -440,6 +454,7 @@ sync_leds(struct session *ses)
 static void
 update_download_led(struct session *ses)
 {
+	ELOG
 	struct session_status *status = &ses->status;
 
 	if (are_there_downloads()) {
@@ -463,6 +478,7 @@ update_download_led(struct session *ses)
 static void
 redraw_leds(void *xxx)
 {
+	ELOG
 	struct terminal *term;
 	milliseconds_T delay;
 
@@ -502,6 +518,7 @@ redraw_leds(void *xxx)
 void
 menu_leds_info(struct terminal *term, void *xxx, void *xxxx)
 {
+	ELOG
 	/* If LEDs ever get more dynamic we might have to change this, but it
 	 * should do for now. --jonas */
 	info_box(term, MSGBOX_FREE_TEXT | MSGBOX_SCROLLABLE,
@@ -524,6 +541,7 @@ menu_leds_info(struct terminal *term, void *xxx, void *xxxx)
 struct led *
 register_led(struct session *ses, int number)
 {
+	ELOG
 	struct led *led;
 
 	if (number >= LEDS_COUNT || number < 0)
@@ -541,6 +559,7 @@ register_led(struct session *ses, int number)
 void
 unregister_led(struct led *led)
 {
+	ELOG
 	assertm(led->used__, "Attempted to unregister unused led!");
 	led->used__ = 0;
 	unset_led_value(led);

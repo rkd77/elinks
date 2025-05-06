@@ -25,6 +25,7 @@
 static void
 mjs_tokenlist_add(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -60,6 +61,7 @@ mjs_tokenlist_add(js_State *J)
 static void
 mjs_tokenlist_contains(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -96,6 +98,7 @@ mjs_tokenlist_contains(js_State *J)
 static void
 mjs_tokenlist_remove(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -131,6 +134,7 @@ mjs_tokenlist_remove(js_State *J)
 static void
 mjs_tokenlist_toggle(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -174,6 +178,7 @@ mjs_tokenlist_toggle(js_State *J)
 static void
 mjs_tokenlist_toString(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -183,6 +188,7 @@ mjs_tokenlist_toString(js_State *J)
 static void
 mjs_tokenlist_finalizer(js_State *J, void *node)
 {
+	ELOG
 	dom_tokenlist *tl = (dom_tokenlist *)(node);
 
 	if (tl) {
@@ -193,6 +199,7 @@ mjs_tokenlist_finalizer(js_State *J, void *node)
 void
 mjs_push_tokenlist(js_State *J, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

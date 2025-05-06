@@ -92,6 +92,7 @@ static int readok = 1;
 static void
 read_bookmarks_xbel(FILE *f)
 {
+	ELOG
 	char in_buffer[BUFSIZ];
 	XML_Parser p;
 	int done = 0;
@@ -149,6 +150,7 @@ static void
 write_bookmarks_xbel(struct secure_save_info *ssi,
 		     LIST_OF(struct bookmarks) *bookmarks_list)
 {
+	ELOG
 	int folder_state = get_opt_bool("bookmarks.folder_state", NULL);
 	/* We check for readok in filename_bookmarks_xbel(). */
 
@@ -168,6 +170,7 @@ write_bookmarks_xbel(struct secure_save_info *ssi,
 static const char *
 filename_bookmarks_xbel(int writing)
 {
+	ELOG
 	if (writing && !readok) return NULL;
 	return BOOKMARKS_XBEL_FILENAME;
 }
@@ -175,6 +178,7 @@ filename_bookmarks_xbel(int writing)
 static void
 indentation(struct secure_save_info *ssi, int num)
 {
+	ELOG
 	int i;
 
 	for (i = 0; i < num; i++)
@@ -184,6 +188,7 @@ indentation(struct secure_save_info *ssi, int num)
 static void
 print_xml_entities(struct secure_save_info *ssi, const char *str)
 {
+	ELOG
 	struct string entitized = NULL_STRING;
 
 	if (init_string(&entitized)
@@ -202,6 +207,7 @@ write_bookmarks_list(struct secure_save_info *ssi,
 		     LIST_OF(struct bookmark) *bookmarks_list,
 		     int n, int folder_state)
 {
+	ELOG
 	struct bookmark *bm;
 
 	foreach (bm, *bookmarks_list) {
@@ -248,6 +254,7 @@ write_bookmarks_list(struct secure_save_info *ssi,
 static void
 on_element_open(void *data, const char *name, const char **attr)
 {
+	ELOG
 	struct tree_node *node;
 
 	node = new_node(current_node);
@@ -298,12 +305,14 @@ on_element_open(void *data, const char *name, const char **attr)
 static void
 on_element_close(void *data, const char *name)
 {
+	ELOG
 	current_node = current_node->parent;
 }
 
 static char *
 delete_whites(const char *s)
 {
+	ELOG
 	char *r;
 	int last_was_space = 0, c = 0, i;
 	int len = strlen(s);
@@ -344,6 +353,7 @@ delete_whites(const char *s)
 static void
 on_text(void *data, const XML_Char *text, int len)
 {
+	ELOG
 	char *tmp;
 	int len2 = 0;
 
@@ -370,6 +380,7 @@ xbeltree_to_bookmarks_list(const struct read_bookmarks_xbel *preload,
 			   struct tree_node *node,
 			   struct bookmark *current_parent)
 {
+	ELOG
 	struct bookmark *tmp;
 	struct tree_node *title;
 	static struct bookmark *lastbm;
@@ -456,6 +467,7 @@ xbeltree_to_bookmarks_list(const struct read_bookmarks_xbel *preload,
 static void
 free_xbeltree(struct tree_node *node)
 {
+	ELOG
 	struct tree_node *next_node;
 
 	while (node) {
@@ -473,6 +485,7 @@ free_xbeltree(struct tree_node *node)
 static struct tree_node *
 get_child(struct tree_node *node, const char *name)
 {
+	ELOG
 	struct tree_node *ret;
 
 	if (!node) return NULL;
@@ -492,6 +505,7 @@ get_child(struct tree_node *node, const char *name)
 static char *
 get_attribute_value(struct tree_node *node, const char *name)
 {
+	ELOG
 	struct attributes *attribute;
 
 	foreach (attribute, node->attrs) {
@@ -506,6 +520,7 @@ get_attribute_value(struct tree_node *node, const char *name)
 static struct tree_node *
 new_node(struct tree_node *parent)
 {
+	ELOG
 	struct tree_node *node;
 
 	node = (struct tree_node *)mem_calloc(1, sizeof(*node));
@@ -520,6 +535,7 @@ new_node(struct tree_node *parent)
 static void
 free_node(struct tree_node *node)
 {
+	ELOG
 	struct attributes *attribute;
 
 	foreach (attribute, node->attrs) {

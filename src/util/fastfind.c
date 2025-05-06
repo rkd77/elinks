@@ -221,6 +221,7 @@ struct fastfind_info {
 static void
 FF_DBG_search_stats(struct fastfind_info *info, int key_len)
 {
+	ELOG
 	info->debug.searches++;
 	info->debug.total_key_len += key_len;
 	info->debug.teststmp = info->debug.tests;
@@ -231,6 +232,7 @@ FF_DBG_search_stats(struct fastfind_info *info, int key_len)
 static void
 FF_DBG_dump_stats(struct fastfind_info *info)
 {
+	ELOG
 	fprintf(stderr, "------ FastFind Statistics ------\n");
 	fprintf(stderr, "Comment     : %s\n", info->debug.comment);
 	fprintf(stderr, "Case-aware  : %s\n", info->case_aware ? "yes" : "no");
@@ -287,6 +289,7 @@ FF_DBG_dump_stats(struct fastfind_info *info)
 static struct fastfind_info *
 init_fastfind(struct fastfind_index *index, fastfind_flags_T flags)
 {
+	ELOG
 	struct fastfind_info *info = (struct fastfind_info *)mem_calloc(1, sizeof(*info));
 
 	index->handle = info;
@@ -307,6 +310,7 @@ init_fastfind(struct fastfind_index *index, fastfind_flags_T flags)
 static int
 alloc_ff_data(struct fastfind_info *info)
 {
+	ELOG
 	struct ff_data *data;
 
 	assert(info->count < FF_MAX_KEYS);
@@ -327,6 +331,7 @@ alloc_ff_data(struct fastfind_info *info)
 static void
 add_to_ff_data(void *p, int key_len, struct fastfind_info *info)
 {
+	ELOG
 	struct ff_data *data = &info->data[info->pointers_count++];
 
 	/* Record new pointer and key len, used in search */
@@ -338,6 +343,7 @@ add_to_ff_data(void *p, int key_len, struct fastfind_info *info)
 static int
 alloc_leafset(struct fastfind_info *info)
 {
+	ELOG
 	struct ff_node **leafsets;
 	struct ff_node *leafset;
 
@@ -366,6 +372,7 @@ alloc_leafset(struct fastfind_info *info)
 static inline int
 char2idx(unsigned char c, struct fastfind_info *info)
 {
+	ELOG
 	char *idx = (char *)memchr(info->uniq_chars, c, info->uniq_chars_count);
 
 	if (idx) return (idx - info->uniq_chars);
@@ -376,6 +383,7 @@ char2idx(unsigned char c, struct fastfind_info *info)
 static inline void
 init_idxtab(struct fastfind_info *info)
 {
+	ELOG
 	int i;
 
 	for (i = 0; i < FF_MAX_CHARS; i++)
@@ -386,6 +394,7 @@ static inline void
 compress_node(struct ff_node *leafset, struct fastfind_info *info,
 	      int i, int pos)
 {
+	ELOG
 	struct ff_node_c *new_ = (struct ff_node_c *)mem_alloc(sizeof(*new_));
 
 	if (!new_) return;
@@ -405,6 +414,7 @@ compress_node(struct ff_node *leafset, struct fastfind_info *info,
 static void
 compress_tree(struct ff_node *leafset, struct fastfind_info *info)
 {
+	ELOG
 	int cnt = 0;
 	int pos = 0;
 	int i;
@@ -442,6 +452,7 @@ compress_tree(struct ff_node *leafset, struct fastfind_info *info)
 struct fastfind_index *
 fastfind_index(struct fastfind_index *index, fastfind_flags_T flags)
 {
+	ELOG
 	struct fastfind_key_value *p;
 	struct fastfind_info *info;
 
@@ -596,6 +607,7 @@ void *
 fastfind_search(struct fastfind_index *index,
 		const char *key, int key_len)
 {
+	ELOG
 	struct ff_node *current;
 	struct fastfind_info *info;
 
@@ -638,6 +650,7 @@ fastfind_search(struct fastfind_index *index,
 void
 fastfind_done(struct fastfind_index *index)
 {
+	ELOG
 	struct fastfind_info *info;
 
 	assert(index);
@@ -744,6 +757,7 @@ struct list *internal_pointer;
 void
 reset_list(void)
 {
+	ELOG
 	internal_pointer = list;
 }
 
@@ -754,6 +768,7 @@ reset_list(void)
 struct fastfind_key_value *
 next_in_list(void)
 {
+	ELOG
 	static struct fastfind_key_value kv;
 
 	if (!internal_pointer->tag) return NULL;
@@ -772,6 +787,7 @@ static struct fastfind_index ff_index
 int
 main(int argc, char **argv)
 {
+	ELOG
 	char *key = argv[1];
 	struct list *result;
 

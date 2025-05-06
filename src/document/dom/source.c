@@ -62,6 +62,7 @@ struct source_renderer {
 static inline void
 render_dom_flush(struct dom_renderer *renderer, char *string)
 {
+	ELOG
 	struct source_renderer *data = (struct source_renderer *)renderer->data;
 	struct screen_char *template_ = &data->styles[DOM_NODE_TEXT];
 	int length = string - renderer->position;
@@ -80,6 +81,7 @@ static inline void
 render_dom_node_text(struct dom_renderer *renderer, struct screen_char *template_,
 		     struct dom_node *node)
 {
+	ELOG
 	char *string = node->string.string;
 	int length = node->string.length;
 
@@ -101,6 +103,7 @@ render_dom_node_text(struct dom_renderer *renderer, struct screen_char *template
 static inline void
 render_dom_node_enhanced_text(struct dom_renderer *renderer, struct dom_node *node)
 {
+	ELOG
 	struct source_renderer *data = renderer->data;
 	regex_t *regex = &data->url_regex;
 	regmatch_t regmatch;
@@ -148,6 +151,7 @@ render_dom_node_enhanced_text(struct dom_renderer *renderer, struct dom_node *no
 static enum dom_code
 render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
+	ELOG
 	struct dom_renderer *renderer = (struct dom_renderer *)stack->current->data;
 	struct source_renderer *data = (struct source_renderer *)renderer->data;
 
@@ -170,6 +174,7 @@ render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *xxx
 static enum dom_code
 render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
+	ELOG
 	struct dom_renderer *renderer = (struct dom_renderer *)stack->current->data;
 	struct source_renderer *data = (struct source_renderer *)renderer->data;
 
@@ -183,6 +188,7 @@ render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *
 static enum dom_code
 render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
+	ELOG
 	struct dom_renderer *renderer = (struct dom_renderer *)stack->current->data;
 	struct source_renderer *data = (struct source_renderer *)renderer->data;
 	struct dom_stack_state *state = get_dom_stack_top(stack);
@@ -210,6 +216,7 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 static void
 set_base_uri(struct dom_renderer *renderer, char *value, size_t valuelen)
 {
+	ELOG
 	char *href = memacpy(value, valuelen);
 	char *uristring;
 	struct uri *uri;
@@ -231,6 +238,7 @@ set_base_uri(struct dom_renderer *renderer, char *value, size_t valuelen)
 static enum dom_code
 render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
+	ELOG
 	struct dom_renderer *renderer = (struct dom_renderer *)stack->current->data;
 	struct source_renderer *data = (struct source_renderer *)renderer->data;
 	struct screen_char *template_ = &data->styles[node->type];
@@ -307,6 +315,7 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 static enum dom_code
 render_dom_cdata_source(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
+	ELOG
 	struct dom_renderer *renderer = (struct dom_renderer *)stack->current->data;
 	struct source_renderer *data = (struct source_renderer *)renderer->data;
 	char *string = node->string.string;
@@ -330,6 +339,7 @@ render_dom_cdata_source(struct dom_stack *stack, struct dom_node *node, void *xx
 static enum dom_code
 render_dom_document_start(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
+	ELOG
 	struct dom_renderer *renderer = (struct dom_renderer *)stack->current->data;
 	struct document *document = renderer->document;
 	struct source_renderer *data;
@@ -391,6 +401,7 @@ render_dom_document_start(struct dom_stack *stack, struct dom_node *node, void *
 static enum dom_code
 render_dom_document_end(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
+	ELOG
 	struct dom_renderer *renderer = (struct dom_renderer *)stack->current->data;
 	struct source_renderer *data = (struct source_renderer *)renderer->data;
 

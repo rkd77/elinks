@@ -93,6 +93,7 @@ static void done_dns_lookup(struct dnsquery *query, enum dns_result res);
 static struct dnsentry *
 find_in_dns_cache(char *name)
 {
+	ELOG
 	struct dnsentry *dnsentry;
 
 	foreach (dnsentry, dns_cache)
@@ -107,6 +108,7 @@ find_in_dns_cache(char *name)
 static void
 add_to_dns_cache(char *name, struct sockaddr_storage *addr, int addrno)
 {
+	ELOG
 	int namelen = strlen(name);
 	struct dnsentry *dnsentry;
 	int size;
@@ -136,6 +138,7 @@ add_to_dns_cache(char *name, struct sockaddr_storage *addr, int addrno)
 static void
 del_dns_cache_entry(struct dnsentry *dnsentry)
 {
+	ELOG
 	del_from_list(dnsentry);
 	mem_free_if(dnsentry->addr);
 	mem_free(dnsentry);
@@ -148,6 +151,7 @@ enum dns_result
 do_real_lookup(char *name, struct sockaddr_storage **addrs, int *addrno,
 	       int in_thread)
 {
+	ELOG
 #ifdef CONFIG_IPV6
 	struct addrinfo hint, *ai, *ai_cur;
 #else
@@ -257,6 +261,7 @@ do_real_lookup(char *name, struct sockaddr_storage **addrs, int *addrno,
 static enum dns_result
 write_dns_data(int h, void *data, size_t datalen)
 {
+	ELOG
 	size_t done = 0;
 
 	do {
@@ -274,6 +279,7 @@ write_dns_data(int h, void *data, size_t datalen)
 static void
 async_dns_writer(void *data, int h)
 {
+	ELOG
 	char *name = (char *) data;
 	struct sockaddr_storage *addrs;
 	int addrno, i;
@@ -304,6 +310,7 @@ async_dns_writer(void *data, int h)
 static enum dns_result
 read_dns_data(int h, void *data, size_t datalen)
 {
+	ELOG
 	size_t done = 0;
 
 	do {
@@ -321,6 +328,7 @@ read_dns_data(int h, void *data, size_t datalen)
 static void
 async_dns_reader(struct dnsquery *query)
 {
+	ELOG
 	enum dns_result result = DNS_ERROR;
 	int i;
 
@@ -355,12 +363,14 @@ done:
 static void
 async_dns_error(struct dnsquery *query)
 {
+	ELOG
 	done_dns_lookup(query, DNS_ERROR);
 }
 
 static int
 init_async_dns_lookup(struct dnsquery *dnsquery, int force_async)
 {
+	ELOG
 	if (!force_async && !get_opt_bool("connection.async_dns", NULL)) {
 		dnsquery->h = -1;
 		return 0;
@@ -380,6 +390,7 @@ init_async_dns_lookup(struct dnsquery *dnsquery, int force_async)
 static void
 done_async_dns_lookup(struct dnsquery *dnsquery)
 {
+	ELOG
 	if (dnsquery->h == -1) return;
 
 	clear_handlers(dnsquery->h);
@@ -395,6 +406,7 @@ done_async_dns_lookup(struct dnsquery *dnsquery)
 static enum dns_result
 do_lookup(struct dnsquery *query, int force_async)
 {
+	ELOG
 	enum dns_result result;
 
 	/* DBG("starting lookup for %s", query->name); */
@@ -413,6 +425,7 @@ do_lookup(struct dnsquery *query, int force_async)
 static enum dns_result
 do_queued_lookup(struct dnsquery *query)
 {
+	ELOG
 #ifdef THREAD_SAFE_LOOKUP
 	query->next_in_queue = NULL;
 
@@ -434,6 +447,7 @@ do_queued_lookup(struct dnsquery *query)
 static void
 done_dns_lookup(struct dnsquery *query, enum dns_result result)
 {
+	ELOG
 	struct dnsentry *dnsentry;
 
 	/* DBG("end lookup %s (%d)", query->name, res); */
@@ -483,6 +497,7 @@ static enum dns_result
 init_dns_lookup(char *name, void **queryref,
 		dns_callback_T done, void *data)
 {
+	ELOG
 	struct dnsquery *query;
 	int namelen = strlen(name);
 
@@ -509,6 +524,7 @@ enum dns_result
 find_host(char *name, void **queryref,
 	  dns_callback_T done, void *data, int no_cache)
 {
+	ELOG
 	struct dnsentry *dnsentry;
 
 	assert(queryref);
@@ -542,6 +558,7 @@ find_host(char *name, void **queryref,
 void
 kill_dns_request(void **queryref)
 {
+	ELOG
 	struct dnsquery *query = (struct dnsquery *)*queryref;
 
 	assert(query);
@@ -553,6 +570,7 @@ kill_dns_request(void **queryref)
 void
 shrink_dns_cache(int whole)
 {
+	ELOG
 	struct dnsentry *dnsentry, *next;
 
 	if (whole) {

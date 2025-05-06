@@ -28,6 +28,7 @@ void *map_rev_attributes;
 static void
 mjs_attributes_set_items(js_State *J, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -88,6 +89,7 @@ next:
 static void
 mjs_attributes_get_property_length(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -122,6 +124,7 @@ mjs_attributes_get_property_length(js_State *J)
 static void
 mjs_push_attributes_item2(js_State *J, int idx)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -152,6 +155,7 @@ mjs_push_attributes_item2(js_State *J, int idx)
 static void
 mjs_attributes_item(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -163,6 +167,7 @@ mjs_attributes_item(js_State *J)
 static void
 mjs_push_attributes_namedItem2(js_State *J, const char *str)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -200,6 +205,7 @@ mjs_push_attributes_namedItem2(js_State *J, const char *str)
 static void
 mjs_attributes_getNamedItem(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -211,6 +217,7 @@ mjs_attributes_getNamedItem(js_State *J)
 static void
 mjs_attributes_toString(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -220,6 +227,7 @@ mjs_attributes_toString(js_State *J)
 static void
 mjs_attributes_finalizer(js_State *J, void *node)
 {
+	ELOG
 	attr_erase_from_map(map_attributes, node);
 
 	if (node) {
@@ -233,6 +241,7 @@ mjs_attributes_finalizer(js_State *J, void *node)
 void
 mjs_push_attributes(js_State *J, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

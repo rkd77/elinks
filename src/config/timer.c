@@ -23,6 +23,7 @@ static timer_id_T periodic_save_timer = TIMER_ID_UNDEF;
 static void
 periodic_save_handler(void *xxx)
 {
+	ELOG
 	static int periodic_save_event_id = EVENT_NONE;
 	milliseconds_T interval;
 
@@ -51,6 +52,7 @@ static int
 periodic_save_change_hook(struct session *ses, struct option *current,
 			  struct option *changed)
 {
+	ELOG
 	if (get_cmd_opt_bool("anonymous")) return 0;
 
 	kill_timer(&periodic_save_timer);
@@ -63,6 +65,7 @@ periodic_save_change_hook(struct session *ses, struct option *current,
 static void
 init_timer(struct module *module)
 {
+	ELOG
 	static const struct change_hook_info timer_change_hooks[] = {
 		{ "infofiles.save_interval", periodic_save_change_hook },
 		{ NULL,	NULL },
@@ -75,6 +78,7 @@ init_timer(struct module *module)
 static void
 done_timer(struct module *module)
 {
+	ELOG
 	kill_timer(&periodic_save_timer);
 }
 

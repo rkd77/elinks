@@ -114,6 +114,7 @@ static int session_info_id = 1;
 static struct session_info *
 get_session_info(int id)
 {
+	ELOG
 	struct session_info *info;
 
 	foreach (info, session_info) {
@@ -136,6 +137,7 @@ get_session_info(int id)
 static void
 done_session_info(struct session_info *info)
 {
+	ELOG
 	del_from_list(info);
 	kill_timer(&info->timer);
 
@@ -147,6 +149,7 @@ done_session_info(struct session_info *info)
 void
 done_saved_session_info(void)
 {
+	ELOG
 	while (!list_empty(session_info))
 		done_session_info((struct session_info *)session_info.next);
 }
@@ -156,6 +159,7 @@ done_saved_session_info(void)
 static void
 session_info_timeout(int id)
 {
+	ELOG
 	struct session_info *info = get_session_info(id);
 
 	if (!info) return;
@@ -168,6 +172,7 @@ int
 add_session_info(struct session *ses, struct uri *uri, struct uri *referrer,
 		 cache_mode_T cache_mode, enum task_type task)
 {
+	ELOG
 	struct session_info *info = (struct session_info *)mem_calloc(1, sizeof(*info));
 
 	if (!info) return -1;
@@ -194,6 +199,7 @@ add_session_info(struct session *ses, struct uri *uri, struct uri *referrer,
 static struct session *
 init_saved_session(struct terminal *term, int id)
 {
+	ELOG
 	struct session_info *info = get_session_info(id);
 	struct session *ses;
 
@@ -227,6 +233,7 @@ init_saved_session(struct terminal *term, int id)
 static struct session *
 get_master_session(void)
 {
+	ELOG
 	struct session *ses;
 
 	foreach (ses, sessions)
@@ -243,6 +250,7 @@ get_master_session(void)
 struct download *
 get_current_download(struct session *ses)
 {
+	ELOG
 	struct download *download = NULL;
 
 	if (!ses) return NULL;
@@ -268,6 +276,7 @@ get_current_download(struct session *ses)
 static void
 done_retry_connection_without_verification(void *data)
 {
+	ELOG
 	struct delayed_open *deo = (struct delayed_open *)data;
 
 	if (deo) {
@@ -279,6 +288,7 @@ done_retry_connection_without_verification(void *data)
 static void
 retry_connection_without_verification(void *data)
 {
+	ELOG
 	struct delayed_open *deo = (struct delayed_open *)data;
 
 	if (deo) {
@@ -295,6 +305,7 @@ void
 print_error_dialog(struct session *ses, struct connection_state state,
 		   struct uri *uri, connection_priority_T priority)
 {
+	ELOG
 	struct string msg;
 	char *uristring;
 
@@ -348,6 +359,7 @@ print_error_dialog(struct session *ses, struct connection_state state,
 static void
 abort_files_load(struct session *ses, int interrupt)
 {
+	ELOG
 	while (1) {
 		struct file_to_load *ftl;
 		int more = 0;
@@ -367,6 +379,7 @@ abort_files_load(struct session *ses, int interrupt)
 void
 free_files(struct session *ses)
 {
+	ELOG
 	struct file_to_load *ftl;
 
 	abort_files_load(ses, 0);
@@ -387,6 +400,7 @@ static void
 request_frame(struct session *ses, char *name,
 	      struct uri *uri, int depth)
 {
+	ELOG
 	struct location *loc = cur_loc(ses);
 	struct frame *frame;
 
@@ -430,6 +444,7 @@ static void
 request_iframe(struct session *ses, char *name,
 	      struct uri *uri, int depth)
 {
+	ELOG
 	struct location *loc = cur_loc(ses);
 	struct frame *iframe;
 
@@ -464,6 +479,7 @@ request_iframe(struct session *ses, char *name,
 static void
 request_frameset(struct session *ses, struct frameset_desc *frameset_desc, int depth)
 {
+	ELOG
 	int i;
 
 	if (depth > HTML_MAX_FRAME_DEPTH) return;
@@ -485,6 +501,7 @@ request_frameset(struct session *ses, struct frameset_desc *frameset_desc, int d
 static void
 request_iframes(struct session *ses, struct iframeset_desc *iframeset_desc, int depth)
 {
+	ELOG
 	int i;
 
 	if (depth > HTML_MAX_FRAME_DEPTH) return;
@@ -505,6 +522,7 @@ request_iframes(struct session *ses, struct iframeset_desc *iframeset_desc, int 
 static inline void
 load_css_imports(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	struct document *document = doc_view->document;
 	struct uri *uri;
 	int index;
@@ -523,6 +541,7 @@ load_css_imports(struct session *ses, struct document_view *doc_view)
 static void
 load_images(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	struct document *document = doc_view->document;
 	struct uri *uri;
 	int index;
@@ -541,6 +560,7 @@ load_images(struct session *ses, struct document_view *doc_view)
 static inline void
 load_ecmascript_imports(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	struct document *document = doc_view->document;
 	struct uri *uri;
 	int index;
@@ -558,6 +578,7 @@ load_ecmascript_imports(struct session *ses, struct document_view *doc_view)
 static void
 load_iframes(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	struct document *document = doc_view->document;
 
 	if (!document || !document->iframeset_desc) return;
@@ -568,6 +589,7 @@ load_iframes(struct session *ses, struct document_view *doc_view)
 NONSTATIC_INLINE void
 load_frames(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	struct document *document = doc_view->document;
 
 	if (!document || !document->frame_desc) return;
@@ -585,6 +607,7 @@ load_frames(struct session *ses, struct document_view *doc_view)
 void
 display_timer(struct session *ses)
 {
+	ELOG
 	timeval_T start, stop, duration;
 	milliseconds_T t;
 
@@ -605,6 +628,7 @@ display_timer(struct session *ses)
 void
 load_common(struct session *ses)
 {
+	ELOG
 	load_frames(ses, ses->doc_view);
 	load_css_imports(ses, ses->doc_view);
 	load_ecmascript_imports(ses, ses->doc_view);
@@ -626,6 +650,7 @@ INIT_LIST_OF(struct questions_entry, questions_queue);
 void
 check_questions_queue(struct session *ses)
 {
+	ELOG
 	while (!list_empty(questions_queue)) {
 		struct questions_entry *q = (struct questions_entry *)questions_queue.next;
 
@@ -638,6 +663,7 @@ check_questions_queue(struct session *ses)
 void
 add_questions_entry(void (*callback)(struct session *, void *), void *data)
 {
+	ELOG
 	struct questions_entry *q = (struct questions_entry *)mem_alloc(sizeof(*q));
 
 	if (!q) return;
@@ -651,6 +677,7 @@ add_questions_entry(void (*callback)(struct session *, void *), void *data)
 void
 maybe_pre_format_html(struct cache_entry *cached, struct session *ses)
 {
+	ELOG
 	struct fragment *fragment;
 	static int pre_format_html_event = EVENT_NONE;
 
@@ -700,6 +727,7 @@ unlock_and_return:
 static int
 check_incomplete_redirects(struct cache_entry *cached)
 {
+	ELOG
 	assert(cached);
 
 	cached = follow_cached_redirects(cached);
@@ -715,6 +743,7 @@ check_incomplete_redirects(struct cache_entry *cached)
 int
 session_is_loading(struct session *ses)
 {
+	ELOG
 	struct download *download = get_current_download(ses);
 
 	if (!download) return 0;
@@ -757,6 +786,7 @@ doc_rerender_after_document_update(struct session *ses) {
 void
 doc_loading_callback(struct download *download, struct session *ses)
 {
+	ELOG
 	int submit = 0;
 
 	if (is_in_result_state(download->state)) {
@@ -827,6 +857,7 @@ doc_loading_callback(struct download *download, struct session *ses)
 static void
 file_loading_callback(struct download *download, struct file_to_load *ftl)
 {
+	ELOG
 	if (ftl->download.cached && ftl->cached != ftl->download.cached) {
 		if (ftl->cached) object_unlock(ftl->cached);
 		ftl->cached = ftl->download.cached;
@@ -853,6 +884,7 @@ file_loading_callback(struct download *download, struct file_to_load *ftl)
 static struct file_to_load *
 request_additional_file(struct session *ses, const char *name, struct uri *uri, int pri)
 {
+	ELOG
 	struct file_to_load *ftl;
 
 	if (uri->protocol == PROTOCOL_UNKNOWN) {
@@ -897,6 +929,7 @@ request_additional_file(struct session *ses, const char *name, struct uri *uri, 
 static void
 load_additional_file(struct file_to_load *ftl, cache_mode_T cache_mode)
 {
+	ELOG
 	struct document_view *doc_view = ftl->ses->doc_view;
 	struct uri *referrer = doc_view && doc_view->document
 			     ? doc_view->document->uri : NULL;
@@ -907,6 +940,7 @@ load_additional_file(struct file_to_load *ftl, cache_mode_T cache_mode)
 void
 process_file_requests(struct session *ses)
 {
+	ELOG
 	if (ses->status.processing_file_requests) return;
 	ses->status.processing_file_requests = 1;
 
@@ -934,6 +968,7 @@ process_file_requests(struct session *ses)
 static void
 dialog_goto_url_open(void *data)
 {
+	ELOG
 	dialog_goto_url((struct session *) data, NULL);
 }
 
@@ -942,6 +977,7 @@ dialog_goto_url_open(void *data)
 static int
 setup_first_session(struct session *ses, struct uri *uri)
 {
+	ELOG
 	/* [gettext_accelerator_context(setup_first_session)] */
 	struct terminal *term = ses->tab->term;
 
@@ -1028,6 +1064,7 @@ setup_first_session(struct session *ses, struct uri *uri)
 static void
 setup_session(struct session *ses, struct uri *uri, struct session *base)
 {
+	ELOG
 	if (base && !get_opt_bool("document.browse.search.reset", NULL)) {
 		ses->search_word = null_or_stracpy(base->search_word);
 	}
@@ -1061,6 +1098,7 @@ struct session *
 init_session(struct session *base_session, struct terminal *term,
 	     struct uri *uri, int in_background)
 {
+	ELOG
 	struct session *ses = (struct session *)mem_calloc(1, sizeof(*ses));
 
 	if (!ses) return NULL;
@@ -1129,6 +1167,7 @@ static void
 init_remote_session(struct session *ses, remote_session_flags_T *remote_ptr,
 		    struct uri *uri)
 {
+	ELOG
 	remote_session_flags_T remote = *remote_ptr;
 
 	if (remote & SES_REMOTE_CURRENT_TAB) {
@@ -1223,6 +1262,7 @@ struct string *
 encode_session_info(struct string *info,
 		    LIST_OF(struct string_list_item) *url_list)
 {
+	ELOG
 	struct string_list_item *url;
 
 	if (!init_string(info)) return NULL;
@@ -1253,6 +1293,7 @@ encode_session_info(struct string *info,
 int
 decode_session_info(struct terminal *term, struct terminal_info *info)
 {
+	ELOG
 	int len = info->length;
 	struct session *base_session = NULL;
 	remote_session_flags_T remote = 0;
@@ -1375,6 +1416,7 @@ decode_session_info(struct terminal *term, struct terminal_info *info)
 void
 abort_loading(struct session *ses, int interrupt)
 {
+	ELOG
 	if (have_location(ses)) {
 		struct location *loc = cur_loc(ses);
 
@@ -1387,6 +1429,7 @@ abort_loading(struct session *ses, int interrupt)
 static void
 destroy_session(struct session *ses)
 {
+	ELOG
 	struct document_view *doc_view;
 
 	assert(ses);
@@ -1444,6 +1487,7 @@ destroy_session(struct session *ses)
 void
 reload(struct session *ses, cache_mode_T cache_mode)
 {
+	ELOG
 	reload_frame(ses, NULL, cache_mode);
 }
 
@@ -1451,6 +1495,7 @@ void
 reload_frame(struct session *ses, char *name,
              cache_mode_T cache_mode)
 {
+	ELOG
 	abort_loading(ses, 0);
 
 	if (cache_mode == CACHE_MODE_INCREMENT) {
@@ -1497,6 +1542,7 @@ reload_frame(struct session *ses, char *name,
 struct frame *
 ses_find_frame(struct session *ses, const char *name)
 {
+	ELOG
 	struct location *loc = cur_loc(ses);
 	struct frame *frame;
 
@@ -1513,6 +1559,7 @@ ses_find_frame(struct session *ses, const char *name)
 struct frame *
 ses_find_iframe(struct session *ses, char *name)
 {
+	ELOG
 	struct location *loc = cur_loc(ses);
 	struct frame *iframe;
 
@@ -1530,6 +1577,7 @@ ses_find_iframe(struct session *ses, char *name)
 void
 set_session_referrer(struct session *ses, struct uri *referrer)
 {
+	ELOG
 	if (ses->referrer) done_uri(ses->referrer);
 	ses->referrer = referrer ? get_uri_reference(referrer) : NULL;
 }
@@ -1537,6 +1585,7 @@ set_session_referrer(struct session *ses, struct uri *referrer)
 static void
 tabwin_func(struct window *tab, struct term_event *ev)
 {
+	ELOG
 	struct session *ses = (struct session *)tab->data;
 
 	switch (ev->ev) {
@@ -1578,6 +1627,7 @@ tabwin_func(struct window *tab, struct term_event *ev)
 char *
 get_current_url(struct session *ses, char *str, size_t str_size)
 {
+	ELOG
 	struct uri *uri;
 	int length;
 
@@ -1604,6 +1654,7 @@ get_current_url(struct session *ses, char *str, size_t str_size)
 char *
 get_current_title(struct session *ses, char *str, size_t str_size)
 {
+	ELOG
 	struct document_view *doc_view = current_frame(ses);
 
 	assert(str && str_size > 0);
@@ -1624,6 +1675,7 @@ get_current_title(struct session *ses, char *str, size_t str_size)
 char *
 get_current_link_url(struct session *ses, char *str, size_t str_size)
 {
+	ELOG
 	struct link *link = get_current_session_link(ses);
 
 	assert(str && str_size > 0);
@@ -1640,6 +1692,7 @@ get_current_link_url(struct session *ses, char *str, size_t str_size)
 char *
 get_current_link_name(struct session *ses, char *str, size_t str_size)
 {
+	ELOG
 	struct link *link = get_current_session_link(ses);
 	char *where, *name = NULL;
 
@@ -1665,6 +1718,7 @@ get_current_link_name(struct session *ses, char *str, size_t str_size)
 struct link *
 get_current_link_in_view(struct document_view *doc_view)
 {
+	ELOG
 	struct link *link = get_current_link(doc_view);
 
 	return link && !link_is_form(link) ? link : NULL;
@@ -1674,6 +1728,7 @@ get_current_link_in_view(struct document_view *doc_view)
 struct link *
 get_current_session_link(struct session *ses)
 {
+	ELOG
 	return get_current_link_in_view(current_frame(ses));
 }
 
@@ -1681,6 +1736,7 @@ get_current_session_link(struct session *ses)
 int
 eat_kbd_repeat_count(struct session *ses)
 {
+	ELOG
 	int count = ses->kbdprefix.repeat_count;
 
 	set_kbd_repeat_count(ses, 0);
@@ -1694,6 +1750,7 @@ eat_kbd_repeat_count(struct session *ses)
 int
 set_kbd_repeat_count(struct session *ses, int new_count)
 {
+	ELOG
 	int old_count = ses->kbdprefix.repeat_count;
 
 	if (new_count == old_count)
@@ -1721,5 +1778,6 @@ set_kbd_repeat_count(struct session *ses, int new_count)
 char *
 get_ui_clipboard_file(void)
 {
+	ELOG
 	return get_opt_str("ui.clipboard_file", NULL);
 }

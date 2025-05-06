@@ -27,6 +27,7 @@
 static void
 invoke_menu_callback(struct terminal *term, void *data, void *ses)
 {
+	ELOG
 	PyObject *callback = (PyObject *)data;
 	struct session *saved_python_ses = python_ses;
 	PyObject *result;
@@ -71,6 +72,7 @@ type -- A constant specifying the type of menu to display. By default\n\
 PyObject *
 python_menu(PyObject *self, PyObject *args, PyObject *kwargs)
 {
+	ELOG
 	PyObject *items;
 	enum python_menu_type menu_type = PYTHON_MENU_DEFAULT;
 	Py_ssize_t length;

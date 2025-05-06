@@ -171,6 +171,7 @@ static void
 dump_short_info(struct alloc_header *ah, const char *file, int line,
 		const char *type)
 {
+	ELOG
 	fprintf(stderr, "%p", PTR_AH2BASE(ah)), fflush(stderr);
 	fprintf(stderr, ":%d", ah->size), fflush(stderr);
 	if (type && *type) fprintf(stderr, " %s", type), fflush(stderr);
@@ -188,6 +189,7 @@ static void
 dump_info(struct alloc_header *ah, const char *info,
 	  const char *file, int line, const char *type)
 {
+	ELOG
 	fprintf(stderr, "%p", PTR_AH2BASE(ah)); fflush(stderr);
 	/* In some extreme cases, we may core here, as 'ah' can no longer point
 	 * to valid memory area (esp. when used in debug_mem_free()). */
@@ -217,6 +219,7 @@ static inline int
 bad_ah_sanity(struct alloc_header *ah, const char *info,
 	      const char *file, int line)
 {
+	ELOG
 	if (!ah) return 1;
 	if (ah->magic != AH_SANITY_MAGIC) {
 		dump_info(ah, info, file, line, "bad alloc_header block");
@@ -232,6 +235,7 @@ static inline int
 bad_xflow_magic(struct alloc_header *ah, const char *info,
 		const char *file, int line)
 {
+	ELOG
 	if (!ah) return 1;
 
 	if (*PTR_OVERFLOW_MAGIC(ah) != XFLOW_MAGIC) {
@@ -252,6 +256,7 @@ bad_xflow_magic(struct alloc_header *ah, const char *info,
 void
 check_memory_leaks(void)
 {
+	ELOG
 	struct alloc_header *ah;
 
 	if (!mem_stats.amount) {
@@ -285,6 +290,7 @@ static int alloc_try = 0;
 static int
 patience(const char *file, int line, const char *of)
 {
+	ELOG
 	errfile = file;
 	errline = line;
 
@@ -313,6 +319,7 @@ patience(const char *file, int line, const char *of)
 void *
 debug_mem_alloc(const char *file, int line, size_t size)
 {
+	ELOG
 	struct alloc_header *ah;
 	size_t true_size;
 
@@ -353,6 +360,7 @@ debug_mem_alloc(const char *file, int line, size_t size)
 void *
 debug_mem_calloc(const char *file, int line, size_t eltcount, size_t eltsize)
 {
+	ELOG
 	struct alloc_header *ah;
 	size_t size = eltcount * eltsize;
 	size_t true_size;
@@ -400,6 +408,7 @@ debug_mem_calloc(const char *file, int line, size_t eltcount, size_t eltsize)
 void
 debug_mem_free(const char *file, int line, void *ptr)
 {
+	ELOG
 	struct alloc_header *ah;
 	int ok = 1;
 
@@ -471,6 +480,7 @@ debug_mem_free(const char *file, int line, void *ptr)
 void *
 debug_mem_realloc(const char *file, int line, void *ptr, size_t size)
 {
+	ELOG
 	struct alloc_header *ah, *ah2;
 	size_t true_size;
 
@@ -540,6 +550,7 @@ debug_mem_realloc(const char *file, int line, void *ptr, size_t size)
 void
 set_mem_comment(void *ptr, const char *str, int len)
 {
+	ELOG
 	struct alloc_header *ah;
 
 	ah = PTR_BASE2AH(ptr);

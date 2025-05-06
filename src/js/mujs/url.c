@@ -28,6 +28,7 @@ struct eljs_url {
 static void
 mjs_url_finalizer(js_State *J, void *val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -50,6 +51,7 @@ mjs_url_finalizer(js_State *J, void *val)
 static void
 mjs_url_get_property_hash(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -76,6 +78,7 @@ mjs_url_get_property_hash(js_State *J)
 static void
 mjs_url_get_property_host(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -101,6 +104,7 @@ mjs_url_get_property_host(js_State *J)
 static void
 mjs_url_get_property_hostname(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -126,6 +130,7 @@ mjs_url_get_property_hostname(js_State *J)
 static void
 mjs_url_get_property_href(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -151,6 +156,7 @@ mjs_url_get_property_href(js_State *J)
 static void
 mjs_url_get_property_origin(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -176,6 +182,7 @@ mjs_url_get_property_origin(js_State *J)
 static void
 mjs_url_get_property_pathname(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -202,6 +209,7 @@ mjs_url_get_property_pathname(js_State *J)
 static void
 mjs_url_get_property_port(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -226,6 +234,7 @@ mjs_url_get_property_port(js_State *J)
 static void
 mjs_url_get_property_protocol(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -255,6 +264,7 @@ mjs_url_get_property_protocol(js_State *J)
 static void
 mjs_url_get_property_search(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -282,6 +292,7 @@ mjs_url_get_property_search(js_State *J)
 static void
 mjs_url_set_property_hash(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -311,6 +322,7 @@ mjs_url_set_property_hash(js_State *J)
 static void
 mjs_url_set_property_host(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -340,6 +352,7 @@ mjs_url_set_property_host(js_State *J)
 static void
 mjs_url_set_property_hostname(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -369,6 +382,7 @@ mjs_url_set_property_hostname(js_State *J)
 static void
 mjs_url_set_property_href(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -404,6 +418,7 @@ mjs_url_set_property_href(js_State *J)
 static void
 mjs_url_set_property_pathname(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -433,6 +448,7 @@ mjs_url_set_property_pathname(js_State *J)
 static void
 mjs_url_set_property_port(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -462,6 +478,7 @@ mjs_url_set_property_port(js_State *J)
 static inline int
 get_protocol_length(const char *url)
 {
+	ELOG
 	char *end = (char *) url;
 
 	/* Seek the end of the protocol name if any. */
@@ -484,6 +501,7 @@ get_protocol_length(const char *url)
 static void
 mjs_url_set_property_protocol(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -514,6 +532,7 @@ mjs_url_set_property_protocol(js_State *J)
 static void
 mjs_url_set_property_search(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -542,6 +561,7 @@ mjs_url_set_property_search(js_State *J)
 static void
 mjs_url_toString(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -551,6 +571,7 @@ mjs_url_toString(js_State *J)
 static void
 mjs_url_fun(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -560,6 +581,7 @@ mjs_url_fun(js_State *J)
 static void
 mjs_url_constructor(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -602,6 +624,7 @@ mjs_url_constructor(js_State *J)
 int
 mjs_url_init(js_State *J)
 {
+	ELOG
 	js_pushglobal(J);
 	js_newcconstructor(J, mjs_url_fun, mjs_url_constructor, "URL", 0);
 	js_defglobal(J, "URL", JS_DONTENUM);

@@ -145,6 +145,7 @@ static union option_info dgi_options[] = {
 static inline void
 done_dgi_entry(struct dgi_entry *entry)
 {
+	ELOG
 	if (!entry) return;
 	mem_free_if(entry->type);
 	mem_free_if(entry->inpext);
@@ -157,6 +158,7 @@ done_dgi_entry(struct dgi_entry *entry)
 static inline struct dgi_entry *
 init_dgi_entry(char *type, char *inpext, char *outext, char *command)
 {
+	ELOG
 	struct dgi_entry *entry;
 	int commandlen = strlen(command);
 
@@ -180,6 +182,7 @@ init_dgi_entry(char *type, char *inpext, char *outext, char *command)
 static inline void
 add_dgi_entry(struct dgi_entry *entry, char *type, int typelen)
 {
+	ELOG
 	struct dgi_hash_item *mitem;
 	struct hash_item *item;
 
@@ -217,6 +220,7 @@ add_dgi_entry(struct dgi_entry *entry, char *type, int typelen)
 static void
 parse_dgi_file(char *filename)
 {
+	ELOG
 	FILE *file = fopen(filename, "rb");
 	char *line = NULL;
 	size_t linelen = MAX_STR_LEN;
@@ -300,6 +304,7 @@ parse_dgi_file(char *filename)
 static struct hash *
 init_dgi_map(void)
 {
+	ELOG
 	dgi_map = init_hash8();
 
 	if (!dgi_map) return NULL;
@@ -312,6 +317,7 @@ init_dgi_map(void)
 static void
 done_dgi(struct module *module)
 {
+	ELOG
 	struct hash_item *item;
 	int i;
 
@@ -338,6 +344,7 @@ done_dgi(struct module *module)
 static int
 change_hook_dgi(struct session *ses, struct option *current, struct option *changed)
 {
+	ELOG
 	if (changed == &get_opt_dgi(DGI_MIME_CFG)
 	    || (changed == &get_opt_dgi(DGI_ENABLE)
 		&& !get_dgi_enable())) {
@@ -350,6 +357,7 @@ change_hook_dgi(struct session *ses, struct option *current, struct option *chan
 static void
 init_dgi(struct module *module)
 {
+	ELOG
 	static const struct change_hook_info mimetypes_change_hooks[] = {
 		{ "mime.dgi.enable",	change_hook_dgi },
 		{ "mime.dgi.mime_cfg",	change_hook_dgi },
@@ -367,6 +375,7 @@ init_dgi(struct module *module)
 static struct dgi_entry *
 check_entries(struct dgi_hash_item *item)
 {
+	ELOG
 	struct dgi_entry *entry;
 
 	foreach (entry, item->entries) {
@@ -379,6 +388,7 @@ check_entries(struct dgi_hash_item *item)
 static struct dgi_entry *
 get_dgi_entry(char *type)
 {
+	ELOG
 	struct dgi_entry *entry;
 	struct hash_item *item;
 
@@ -418,6 +428,7 @@ get_dgi_entry(char *type)
 struct mime_handler *
 get_mime_handler_dgi(char *type, int xwin)
 {
+	ELOG
 	struct dgi_entry *entry;
 	struct mime_handler *handler;
 	char *program;

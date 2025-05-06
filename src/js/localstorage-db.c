@@ -17,6 +17,7 @@
 int
 db_prepare_structure(char *db_name)
 {
+	ELOG
 	sqlite3_stmt *stmt;
 	sqlite3 *db;
 	int rc = sqlite3_open(db_name, &db);
@@ -38,6 +39,7 @@ db_prepare_structure(char *db_name)
 int
 db_delete_from(char *db_name, const char *key)
 {
+	ELOG
 	sqlite3_stmt *stmt;
 	sqlite3 *db;
 	int rc;
@@ -64,6 +66,7 @@ db_delete_from(char *db_name, const char *key)
 int
 db_insert_into(char *db_name, const char *key, const char *value)
 {
+	ELOG
 	sqlite3_stmt *stmt;
 	sqlite3 *db;
 	int rc;
@@ -90,6 +93,7 @@ db_insert_into(char *db_name, const char *key, const char *value)
 int
 db_update_set(char *db_name, const char *key, const char *value)
 {
+	ELOG
 	sqlite3_stmt *stmt;
 	sqlite3 *db;
 	int rc;
@@ -116,6 +120,7 @@ db_update_set(char *db_name, const char *key, const char *value)
 char *
 db_query_by_value(char *db_name, const char *value)
 {
+	ELOG
 	sqlite3_stmt *stmt;
 	sqlite3 *db;
 	int rc;
@@ -145,6 +150,7 @@ db_query_by_value(char *db_name, const char *value)
 char *
 db_query_by_key(char *db_name, const char *key)
 {
+	ELOG
 	sqlite3_stmt *stmt;
 	sqlite3 *db;
 	int rc;

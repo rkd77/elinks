@@ -46,6 +46,7 @@
 int
 is_xterm(void)
 {
+	ELOG
 	static int xt = -1;
 
 	if (xt == -1) xt = !!getenv("WINDOWID");
@@ -61,6 +62,7 @@ int winch_thread_running = 0;
 static void
 winch_thread(void)
 {
+	ELOG
 	/* A thread which regularly checks whether the size of
 	   window has changed. Then raise SIGWINCH or notifiy
 	   the thread responsible to handle this. */
@@ -88,6 +90,7 @@ winch_thread(void)
 static void
 winch(void *s)
 {
+	ELOG
 	unsigned char c;
 
 	while (can_read(winch_pipe[0]) && safe_read(winch_pipe[0], &c, 1) == 1);
@@ -97,6 +100,7 @@ winch(void *s)
 void
 handle_terminal_resize(int fd, void (*fn)())
 {
+	ELOG
 	if (!is_xterm()) return;
 	if (!winch_thread_running) {
 		if (c_pipe(winch_pipe) < 0) return;
@@ -109,12 +113,14 @@ handle_terminal_resize(int fd, void (*fn)())
 void
 unhandle_terminal_resize(int fd)
 {
+	ELOG
 	clear_handlers(winch_pipe[0]);
 }
 
 void
 get_terminal_size(int fd, int *x, int *y, int *cw, *ch)
 {
+	ELOG
 	if (is_xterm()) {
 #ifdef X2
 		/* int fd; */
@@ -168,6 +174,7 @@ get_terminal_size(int fd, int *x, int *y, int *cw, *ch)
 int
 exe(char *path)
 {
+	ELOG
 	int flags = P_SESSION;
 	int pid;
 	int ret = -1;
@@ -185,6 +192,7 @@ exe(char *path)
 char *
 get_clipboard_text(void)
 {
+	ELOG
 	PTIB tib;
 	PPIB pib;
 	HAB hab;
@@ -229,6 +237,7 @@ get_clipboard_text(void)
 void
 set_clipboard_text(char *data)
 {
+	ELOG
 	PTIB tib;
 	PPIB pib;
 	HAB hab;
@@ -264,6 +273,7 @@ set_clipboard_text(char *data)
 char *
 get_window_title(int codepage)
 {
+	ELOG
 #ifndef DEBUG_OS2
 	char *org_switch_title;
 	char *org_win_title = NULL;
@@ -312,6 +322,7 @@ get_window_title(int codepage)
 void
 set_window_title(char *title, int codepage)
 {
+	ELOG
 #ifndef DEBUG_OS2
 	static PTIB tib;
 	static PPIB pib;
@@ -356,6 +367,7 @@ set_window_title(char *title, int codepage)
 void
 set_window_title(int init, const char *url)
 {
+	ELOG
 	static char *org_switch_title;
 	static char *org_win_title;
 	static PTIB tib;
@@ -431,6 +443,7 @@ set_window_title(int init, const char *url)
 int
 resize_window(int x, int y, int old_width, int old_height)
 {
+	ELOG
 	A_DECL(VIOMODEINFO, vmi);
 
 	resize_count++;
@@ -471,6 +484,7 @@ struct os2_mouse_spec {
 void
 mouse_thread(void *p)
 {
+	ELOG
 	int status;
 	struct os2_mouse_spec *oms = p;
 	A_DECL(HMOU, mh);
@@ -541,6 +555,7 @@ ret:
 void
 mouse_handle(struct os2_mouse_spec *oms)
 {
+	ELOG
 	ssize_t r = safe_read(oms->p[0], oms->buffer + oms->bufptr,
 		          sizeof(struct interlink_event) - oms->bufptr);
 
@@ -560,6 +575,7 @@ void *
 handle_mouse(int cons, void (*fn)(void *, char *, int),
 	     void *data)
 {
+	ELOG
 	struct os2_mouse_spec *oms;
 
 	if (is_xterm()) return NULL;
@@ -589,6 +605,7 @@ handle_mouse(int cons, void (*fn)(void *, char *, int),
 void
 unhandle_mouse(void *om)
 {
+	ELOG
 	struct os2_mouse_spec *oms = om;
 
 	want_draw();
@@ -601,16 +618,19 @@ unhandle_mouse(void *om)
 void
 suspend_mouse(void *om)
 {
+	ELOG
 }
 
 void
 resume_mouse(void *om)
 {
+	ELOG
 }
 
 void
 want_draw(void)
 {
+	ELOG
 	A_DECL(NOPTRRECT, pa);
 #ifdef HAVE_SYS_FMUTEX_H
 	if (mouse_mutex_init) _fmutex_request(&mouse_mutex, _FMR_IGNINT);
@@ -636,6 +656,7 @@ want_draw(void)
 void
 done_draw(void)
 {
+	ELOG
 #ifdef HAVE_SYS_FMUTEX_H
 	if (mouse_mutex_init) _fmutex_release(&mouse_mutex);
 #endif
@@ -647,6 +668,7 @@ done_draw(void)
 int
 get_ctl_handle(void)
 {
+	ELOG
 	return get_input_handle();
 }
 
@@ -654,6 +676,7 @@ get_ctl_handle(void)
 int
 get_system_env(void)
 {
+	ELOG
 	int env = get_common_env();
 
 	/* !!! FIXME: telnet */
@@ -666,6 +689,7 @@ get_system_env(void)
 void
 set_highpri(void)
 {
+	ELOG
 	DosSetPriority(PRTYS_PROCESS, PRTYC_FOREGROUNDSERVER, 0, 0);
 }
 
@@ -673,6 +697,7 @@ set_highpri(void)
 int
 can_open_os_shell(int environment)
 {
+	ELOG
 	if (environment & ENV_XWIN) return 0;
 	return 1;
 }
@@ -683,6 +708,7 @@ can_open_os_shell(int environment)
 int
 start_thread(void (*fn)(void *, int), void *ptr, int l)
 {
+	ELOG
 	int p[2];
 	struct tdata *t;
 
@@ -713,6 +739,7 @@ int ti = -1;
 void
 input_thread(void *p)
 {
+	ELOG
 	unsigned char c[2];
 	int h = (int) p;
 
@@ -748,6 +775,7 @@ input_thread(void *p)
 int
 get_input_handle(void)
 {
+	ELOG
 	int fd[2];
 
 	if (ti != -1) return ti;
@@ -768,6 +796,7 @@ get_input_handle(void)
 int
 open_prealloc(char *name, int flags, int mode, off_t siz)
 {
+	ELOG
 	/* This is good for OS/2, where this will prevent file fragmentation,
 	 * preallocating the desired file size upon open(). */
 	return open(name, flags | O_SIZE, mode, (unsigned long) siz);
@@ -776,6 +805,7 @@ open_prealloc(char *name, int flags, int mode, off_t siz)
 void
 prealloc_truncate(int h, off_t siz)
 {
+	ELOG
 	ftruncate(h, siz);
 }
 #endif

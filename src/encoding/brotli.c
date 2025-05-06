@@ -46,6 +46,7 @@ struct br_enc_data {
 static int
 brotli_open(struct stream_encoded *stream, int fd)
 {
+	ELOG
 	struct br_enc_data *data = (struct br_enc_data *)mem_calloc(1, sizeof(*data));
 
 	stream->data = NULL;
@@ -76,6 +77,7 @@ static char *brotli_decode_buffer(struct stream_encoded *st, char *datac, int le
 static int
 brotli_read(struct stream_encoded *stream, char *buf, int len)
 {
+	ELOG
 	struct br_enc_data *data = (struct br_enc_data *) stream->data;
 
 	if (!data) return -1;
@@ -128,6 +130,7 @@ brotli_read(struct stream_encoded *stream, char *buf, int len)
 static char *
 brotli_decode_buffer(struct stream_encoded *st, char *datac, int len, int *new_len)
 {
+	ELOG
 	uint8_t *data = (uint8_t *)datac;
 
 	struct br_enc_data *enc_data = (struct br_enc_data *)st->data;
@@ -176,6 +179,7 @@ brotli_decode_buffer(struct stream_encoded *st, char *datac, int len, int *new_l
 static void
 brotli_close(struct stream_encoded *stream)
 {
+	ELOG
 	struct br_enc_data *data = (struct br_enc_data *) stream->data;
 
 	if (data) {
@@ -191,6 +195,7 @@ brotli_close(struct stream_encoded *stream)
 const char *
 get_brotli_version(void)
 {
+	ELOG
 	static char version[16];
 
 	if (!version[0]) {

@@ -50,6 +50,7 @@
 static inline int
 end_of_dir(unsigned char c)
 {
+	ELOG
 	/* This used to check for c == ';' as well.  But section 3.3
 	 * of RFC 2396 explicitly says that parameters in a path
 	 * segment "are not significant to the parsing of relative
@@ -60,6 +61,7 @@ end_of_dir(unsigned char c)
 static inline int
 is_uri_dir_sep(const struct uri *uri, unsigned char pos)
 {
+	ELOG
 	return (uri->protocol == PROTOCOL_FILE ? dir_sep(pos) : pos == '/');
 }
 
@@ -67,6 +69,7 @@ is_uri_dir_sep(const struct uri *uri, unsigned char pos)
 int
 is_in_domain(char *domain, char *server, int server_len)
 {
+	ELOG
 	int domain_len = strlen(domain);
 	int len;
 
@@ -86,6 +89,7 @@ is_in_domain(char *domain, char *server, int server_len)
 int
 is_ip_address(const char *address, int addresslen)
 {
+	ELOG
 	/* The @address has well defined limits so it would be a shame to
 	 * allocate it. */
 	char buffer[IP_ADDRESS_BUFFER_SIZE];
@@ -122,6 +126,7 @@ is_ip_address(const char *address, int addresslen)
 int
 end_with_known_tld(const char *s, int slen)
 {
+	ELOG
 	int i;
 	static const char *const tld[] =
 	{ "com", "edu", "net",
@@ -149,6 +154,7 @@ end_with_known_tld(const char *s, int slen)
 static int
 check_whether_file_exists(char *name)
 {
+	ELOG
 	/* Check POST_CHAR etc ... */
 	static const char chars[] = POST_CHAR_S "#?";
 	int i;
@@ -179,6 +185,7 @@ check_whether_file_exists(char *name)
 static void
 encode_file_uri_string(struct string *string, char *uristring)
 {
+	ELOG
 	int filenamelen = check_whether_file_exists(uristring);
 
 	encode_uri_string(string, uristring, filenamelen, 0);
@@ -189,6 +196,7 @@ encode_file_uri_string(struct string *string, char *uristring)
 static inline int
 get_protocol_length(const char *url)
 {
+	ELOG
 	char *end = (char *) url;
 
 	/* Seek the end of the protocol name if any. */
@@ -211,6 +219,7 @@ get_protocol_length(const char *url)
 uri_errno_T
 parse_uri(struct uri *uri, char *uristring)
 {
+	ELOG
 	char *prefix_end, *host_end;
 #ifdef CONFIG_IPV6
 	char *lbracket, *rbracket;
@@ -433,6 +442,7 @@ parse_uri(struct uri *uri, char *uristring)
 int
 get_uri_port(const struct uri *uri)
 {
+	ELOG
 	if (uri->port && uri->portlen) {
 		const char *end = uri->port;
 		int port = strtol(uri->port, (char **) &end, 10);
@@ -452,6 +462,7 @@ static inline int
 compare_component(const char *a, int alen,
 		  const char *b, int blen)
 {
+	ELOG
 	/* Check that the length and the strings are both set or unset */
 	if (alen != blen || !!a != !!b) return 0;
 
@@ -468,6 +479,7 @@ int
 compare_uri(const struct uri *a, const struct uri *b,
 	    uri_component_T components)
 {
+	ELOG
 	if (a == b) return 1;
 	if (!components) return 0;
 
@@ -498,6 +510,7 @@ struct string *
 add_uri_to_string(struct string *string, const struct uri *uri,
 		  uri_component_T components)
 {
+	ELOG
 	/* Custom or unknown keep the URI untouched. */
 	if (uri->protocol == PROTOCOL_UNKNOWN)
 		return add_to_string(string, struri(uri));
@@ -686,6 +699,7 @@ add_uri_to_string(struct string *string, const struct uri *uri,
 char *
 get_uri_string(const struct uri *uri, uri_component_T components)
 {
+	ELOG
 	struct string string;
 
 	if (init_string(&string)
@@ -701,6 +715,7 @@ struct string *
 add_string_uri_to_string(struct string *string, char *uristring,
 			 uri_component_T components)
 {
+	ELOG
 	struct uri uri;
 
 	if (parse_uri(&uri, uristring) != URI_ERRNO_OK)
@@ -716,6 +731,7 @@ add_string_uri_to_string(struct string *string, char *uristring,
 char *
 normalize_uri(struct uri *uri, char *uristring)
 {
+	ELOG
 	char *parse_string = uristring;
 	char *src, *dest, *path;
 	int need_slash = 0, keep_dslash = 1;
@@ -834,6 +850,7 @@ normalize_uri(struct uri *uri, char *uristring)
 static struct uri *
 transform_file_url(struct uri *uri, const char *cwd)
 {
+	ELOG
 	char *path = uri->data;
 
 	assert(uri->protocol == PROTOCOL_FILE && uri->data);
@@ -895,6 +912,7 @@ static char *translate_url(const char *url, char *cwd);
 char *
 join_urls(struct uri *base, const char *rel)
 {
+	ELOG
 	char *uristring, *path;
 	int add_slash = 0;
 	int translate = 0;
@@ -1029,6 +1047,7 @@ join_urls(struct uri *base, const char *rel)
 static protocol_T
 find_uri_protocol(char *newurl)
 {
+	ELOG
 	char *ch;
 
 	/* First see if it is a file so filenames that look like hostnames
@@ -1098,6 +1117,7 @@ find_uri_protocol(char *newurl)
 static char *
 translate_url(const char *url, char *cwd)
 {
+	ELOG
 	char *newurl;
 	struct uri uri;
 	uri_errno_T uri_errno, prev_errno = URI_ERRNO_EMPTY;
@@ -1319,6 +1339,7 @@ parse_uri:
 struct uri *
 get_composed_uri(struct uri *uri, uri_component_T components)
 {
+	ELOG
 	char *string;
 
 	assert(uri);
@@ -1336,6 +1357,7 @@ get_composed_uri(struct uri *uri, uri_component_T components)
 struct uri *
 get_translated_uri(char *uristring, char *cwd)
 {
+	ELOG
 	struct uri *uri;
 
 	uristring = translate_url(uristring, cwd);
@@ -1355,6 +1377,7 @@ get_translated_uri(char *uristring, char *cwd)
 char *
 get_extension_from_uri(struct uri *uri)
 {
+	ELOG
 	char *extension = NULL;
 	int afterslash = 1;
 	char *pos = uri->data;
@@ -1395,6 +1418,7 @@ get_extension_from_uri(struct uri *uri)
 static inline int
 safe_char(unsigned char c)
 {
+	ELOG
 	/* RFC 2396, Page 8, Section 2.3 ;-) */
 	return isident(c) || c == '.' || c == '!' || c == '~'
 	       || c == '*' || c == '\''|| c == '(' || c == ')';
@@ -1404,6 +1428,7 @@ void
 encode_uri_string(struct string *string, const char *name, int namelen,
 		  int convert_slashes)
 {
+	ELOG
 	char n[4];
 	const char *end;
 
@@ -1432,6 +1457,7 @@ encode_uri_string(struct string *string, const char *name, int namelen,
 void
 encode_uri_string_percent(struct string *string, const char *name, int namelen)
 {
+	ELOG
 	char n[4];
 	const char *end;
 
@@ -1455,6 +1481,7 @@ encode_uri_string_percent(struct string *string, const char *name, int namelen)
 void
 encode_win32_uri_string(struct string *string, char *name, int namelen)
 {
+	ELOG
 	char n[4];
 	char *end;
 
@@ -1481,6 +1508,7 @@ encode_win32_uri_string(struct string *string, char *name, int namelen)
 void
 decode_uri(char *src)
 {
+	ELOG
 	char *dst = src;
 	unsigned char c;
 
@@ -1519,6 +1547,7 @@ decode_uri(char *src)
 void
 decode_uri_string(struct string *string)
 {
+	ELOG
 	decode_uri(string->source);
 	string->length = strlen(string->source);
 }
@@ -1526,6 +1555,7 @@ decode_uri_string(struct string *string)
 void
 decode_uri_for_display(char *src)
 {
+	ELOG
 	decode_uri(src);
 
 	for (; *src; src++)
@@ -1536,6 +1566,7 @@ decode_uri_for_display(char *src)
 void
 decode_uri_string_for_display(struct string *string)
 {
+	ELOG
 	decode_uri_for_display(string->source);
 	string->length = strlen(string->source);
 }
@@ -1552,6 +1583,7 @@ decode_uri_string_for_display(struct string *string)
 struct uri *
 add_to_uri_list(struct uri_list *list, struct uri *uri)
 {
+	ELOG
 	if (!realloc_uri_list(list))
 		return NULL;
 
@@ -1563,6 +1595,7 @@ add_to_uri_list(struct uri_list *list, struct uri *uri)
 void
 free_uri_list(struct uri_list *list)
 {
+	ELOG
 	struct uri *uri;
 	int index;
 
@@ -1594,6 +1627,7 @@ static struct uri_cache uri_cache;
 static inline void
 check_uri_sanity(struct uri *uri)
 {
+	ELOG
 	int pos;
 
 	for (pos = 0; pos < uri->protocollen; pos++)
@@ -1613,6 +1647,7 @@ error:
 static inline struct uri_cache_entry *
 get_uri_cache_entry(char *string, int length)
 {
+	ELOG
 	struct uri_cache_entry *entry;
 	struct hash_item *item;
 
@@ -1645,6 +1680,7 @@ get_uri_cache_entry(char *string, int length)
 struct uri *
 get_uri(char *string, uri_component_T components)
 {
+	ELOG
 	struct uri_cache_entry *entry;
 
 	assert(string);
@@ -1681,6 +1717,7 @@ get_uri(char *string, uri_component_T components)
 void
 done_uri(struct uri *uri)
 {
+	ELOG
 	char *string = struri(uri);
 	int length = strlen(string);
 	struct hash_item *item;

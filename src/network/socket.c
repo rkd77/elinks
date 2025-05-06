@@ -88,6 +88,7 @@ static INIT_LIST_OF(struct socket_weak_ref, socket_weak_refs);
 static void
 debug_transfer_log(char *data, int len)
 {
+	ELOG
 	int fd = open(DEBUG_TRANSFER_LOGFILE, O_WRONLY | O_APPEND | O_CREAT, 0622);
 
 	if (fd == -1) return;
@@ -107,6 +108,7 @@ static struct connect_info *
 init_connection_info(struct uri *uri, struct socket *socket,
 		     socket_connect_T connect_done)
 {
+	ELOG
 	struct connect_info *connect_info = (struct connect_info *)mem_calloc(1, sizeof(*connect_info));
 
 	if (!connect_info) return NULL;
@@ -124,6 +126,7 @@ init_connection_info(struct uri *uri, struct socket *socket,
 static void
 done_connection_info(struct socket *socket)
 {
+	ELOG
 	struct connect_info *connect_info = socket->connect_info;
 
 	assert(socket->connect_info);
@@ -138,6 +141,7 @@ done_connection_info(struct socket *socket)
 struct socket *
 init_socket(void *conn, struct socket_operations *ops)
 {
+	ELOG
 	struct socket *socket;
 
 	socket = (struct socket *)mem_calloc(1, sizeof(*socket));
@@ -153,6 +157,7 @@ init_socket(void *conn, struct socket_operations *ops)
 void
 done_socket(struct socket *socket)
 {
+	ELOG
 	struct socket_weak_ref *ref;
 
 	close_socket(socket);
@@ -172,6 +177,7 @@ done_socket(struct socket *socket)
 void
 close_socket(struct socket *socket)
 {
+	ELOG
 	if (socket->fd == -1) return;
 #ifdef CONFIG_SSL
 	if (socket->ssl) ssl_close(socket);
@@ -184,12 +190,14 @@ close_socket(struct socket *socket)
 void
 dns_exception(struct socket *socket)
 {
+	ELOG
 	connect_socket(socket, connection_state(S_EXCEPT));
 }
 
 static void
 exception(struct socket *socket)
 {
+	ELOG
 	socket->ops->retry(socket, connection_state(S_EXCEPT));
 }
 
@@ -197,6 +205,7 @@ exception(struct socket *socket)
 void
 timeout_socket(struct socket *socket)
 {
+	ELOG
 	if (!socket->connect_info) {
 		socket->ops->retry(socket, connection_state(S_TIMEOUT));
 		return;
@@ -222,6 +231,7 @@ timeout_socket(struct socket *socket)
 static void
 dns_found(struct socket *socket, struct sockaddr_storage *addr, int addrlen)
 {
+	ELOG
 	struct connect_info *connect_info = socket->connect_info;
 	int size;
 
@@ -257,6 +267,7 @@ void
 make_connection(struct socket *socket, struct uri *uri,
 		socket_connect_T connect_done, int no_cache)
 {
+	ELOG
 	char *host = get_uri_string(uri, URI_DNS_HOST);
 	struct connect_info *connect_info;
 	enum dns_result result;
@@ -307,6 +318,7 @@ make_connection(struct socket *socket, struct uri *uri,
 int
 get_pasv_socket(struct socket *ctrl_socket, struct sockaddr_storage *addr)
 {
+	ELOG
 	struct sockaddr_in bind_addr4;
 	struct sockaddr *bind_addr;
 	struct sockaddr *pasv_addr = (struct sockaddr *) addr;
@@ -386,6 +398,7 @@ sock_error:
 static inline int
 check_if_local_address6(struct sockaddr_in6 *addr)
 {
+	ELOG
 	struct ifaddrs *ifaddrs;
 	int local = IN6_IS_ADDR_LOOPBACK(&(addr->sin6_addr));
 
@@ -423,6 +436,7 @@ check_if_local_address6(struct sockaddr_in6 *addr)
 static inline int
 check_if_local_address4(struct sockaddr_in *addr)
 {
+	ELOG
 	struct ifaddrs *ifaddrs;
 	int local = (ntohl(addr->sin_addr.s_addr) >> 24) == IN_LOOPBACKNET;
 
@@ -454,6 +468,7 @@ void
 complete_connect_socket(struct socket *socket, struct uri *uri,
 			socket_connect_T done)
 {
+	ELOG
 	struct connect_info *connect_info = socket->connect_info;
 
 	if (connect_info && connect_info->uri) {
@@ -503,6 +518,7 @@ complete_connect_socket(struct socket *socket, struct uri *uri,
 static void
 connected(struct socket *socket)
 {
+	ELOG
 	int err = 0;
 	struct connection_state state = connection_state(0);
 	socklen_t len = sizeof(err);
@@ -547,6 +563,7 @@ static struct sockaddr_in6 sa6_bind;
 static void
 init_bind_address(void)
 {
+	ELOG
 #ifdef HAVE_INET_PTON
 	char *bind_address = get_cmd_opt_str("bind-address");
 	to_bind = (bind_address && *bind_address);
@@ -575,6 +592,7 @@ init_bind_address(void)
 void
 connect_socket(struct socket *csocket, struct connection_state state)
 {
+	ELOG
 	static int initialized;
 	int sock = -1;
 	struct connect_info *connect_info = csocket->connect_info;
@@ -791,6 +809,7 @@ struct write_buffer {
 static int
 generic_write(struct socket *socket, char *data, int len)
 {
+	ELOG
 	int wr = safe_write(socket->fd, data, len);
 
 	if (!wr) return SOCKET_CANT_WRITE;
@@ -807,6 +826,7 @@ generic_write(struct socket *socket, char *data, int len)
 static void
 write_select(struct socket *socket)
 {
+	ELOG
 	struct write_buffer *wb = (struct write_buffer *)socket->write_buffer;
 	int wr;
 
@@ -887,6 +907,7 @@ void
 write_to_socket(struct socket *socket, char *data, int len,
 		struct connection_state state, socket_write_T write_done)
 {
+	ELOG
 	select_handler_T read_handler;
 	struct write_buffer *wb;
 
@@ -927,6 +948,7 @@ write_to_socket(struct socket *socket, char *data, int len,
 static ssize_t
 generic_read(struct socket *socket, char *data, int len)
 {
+	ELOG
 	ssize_t rd = safe_read(socket->fd, data, len);
 
 	if (!rd) return SOCKET_CANT_READ;
@@ -943,6 +965,7 @@ generic_read(struct socket *socket, char *data, int len)
 static void
 read_select(struct socket *socket)
 {
+	ELOG
 	struct read_buffer *rb = socket->read_buffer;
 	ssize_t rd;
 
@@ -1022,6 +1045,7 @@ read_select(struct socket *socket)
 struct read_buffer *
 alloc_read_buffer(struct socket *socket)
 {
+	ELOG
 	struct read_buffer *rb;
 
 	rb = (struct read_buffer *)mem_calloc(1, RD_SIZE(rb, 0));
@@ -1043,6 +1067,7 @@ void
 read_from_socket(struct socket *socket, struct read_buffer *buffer,
 		 struct connection_state state, socket_read_T done)
 {
+	ELOG
 	const int is_buffer_new = (buffer != socket->read_buffer);
 	struct socket_weak_ref ref;
 	select_handler_T write_handler;
@@ -1080,6 +1105,7 @@ read_from_socket(struct socket *socket, struct read_buffer *buffer,
 static void
 read_response_from_socket(struct socket *socket)
 {
+	ELOG
 	struct read_buffer *rb = alloc_read_buffer(socket);
 
 	if (rb) read_from_socket(socket, rb, connection_state(S_SENT),
@@ -1091,6 +1117,7 @@ request_from_socket(struct socket *socket, char *data, int datalen,
 		    struct connection_state state, enum socket_state sock_state,
 		    socket_read_T read_done)
 {
+	ELOG
 	socket->read_done = read_done;
 	socket->state = sock_state;
 	write_to_socket(socket, data, datalen, state,
@@ -1100,6 +1127,7 @@ request_from_socket(struct socket *socket, char *data, int datalen,
 void
 kill_buffer_data(struct read_buffer *rb, int n)
 {
+	ELOG
 	assertm(n >= 0 && n <= rb->length, "bad number of bytes: %d", n);
 	if_assert_failed { rb->length = 0;  return; }
 

@@ -23,6 +23,7 @@
 static void
 mjs_history_back(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -44,6 +45,7 @@ mjs_history_back(js_State *J)
 static void
 mjs_history_forward(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -61,6 +63,7 @@ mjs_history_forward(js_State *J)
 static void
 mjs_history_go(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -90,6 +93,7 @@ mjs_history_go(js_State *J)
 static void
 mjs_history_toString(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -99,6 +103,7 @@ mjs_history_toString(js_State *J)
 int
 mjs_history_init(js_State *J)
 {
+	ELOG
 	js_newobject(J);
 	{
 		addmethod(J, "history.back", mjs_history_back, 0);

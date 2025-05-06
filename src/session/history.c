@@ -27,6 +27,7 @@
 static inline void
 free_history(LIST_OF(struct location) *history)
 {
+	ELOG
 	while (!list_empty(*history)) {
 		struct location *loc = (struct location *)history->next;
 
@@ -40,6 +41,7 @@ free_history(LIST_OF(struct location) *history)
 void
 create_history(struct ses_history *history)
 {
+	ELOG
 	init_list(history->history);
 	history->current = NULL;
 }
@@ -48,6 +50,7 @@ create_history(struct ses_history *history)
 void
 destroy_history(struct ses_history *history)
 {
+	ELOG
 	free_history(&history->history);
 	history->current = NULL;
 }
@@ -56,6 +59,7 @@ destroy_history(struct ses_history *history)
 void
 clean_unhistory(struct ses_history *history)
 {
+	ELOG
 	if (!history->current) return;
 
 	while (list_has_next(history->history, history->current)) {
@@ -70,6 +74,7 @@ clean_unhistory(struct ses_history *history)
 void
 add_to_history(struct ses_history *history, struct location *loc)
 {
+	ELOG
 	if (!history->current) {
 		add_to_list(history->history, loc);
 	} else {
@@ -83,6 +88,7 @@ add_to_history(struct ses_history *history, struct location *loc)
 void
 del_from_history(struct ses_history *history, struct location *loc)
 {
+	ELOG
 	if (history->current == loc)
 		history->current = loc->prev;
 
@@ -98,6 +104,7 @@ del_from_history(struct ses_history *history, struct location *loc)
 void
 ses_history_move(struct session *ses)
 {
+	ELOG
 	struct location *loc;
 
 	/* Prepare. */
@@ -142,6 +149,7 @@ ses_history_move(struct session *ses)
 void
 go_history(struct session *ses, struct location *loc)
 {
+	ELOG
 	ses->reloadlevel = CACHE_MODE_NORMAL;
 
 	if (ses->task.type) {
@@ -168,6 +176,7 @@ go_history(struct session *ses, struct location *loc)
 int
 go_history_by_n(struct session *ses, int n)
 {
+	ELOG
 	struct location *loc = cur_loc(ses);
 
 	if (!loc)
@@ -192,6 +201,7 @@ go_history_by_n(struct session *ses, int n)
 void
 go_back(struct session *ses)
 {
+	ELOG
 	go_history_by_n(ses, -1);
 }
 
@@ -200,5 +210,6 @@ go_back(struct session *ses)
 void
 go_unback(struct session *ses)
 {
+	ELOG
 	go_history_by_n(ses, 1);
 }

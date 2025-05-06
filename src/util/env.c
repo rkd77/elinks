@@ -26,6 +26,7 @@
 int
 env_set(const char *name, const char *value, int length)
 {
+	ELOG
 	int true_length, substring = 0;
 
 	if (!value || !name || !*name) return -1;

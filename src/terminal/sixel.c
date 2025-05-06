@@ -107,6 +107,7 @@ static sixel_allocator_t *el_sixel_allocator;
 static void
 init_allocator(void)
 {
+	ELOG
 	static int initialized = 0;
 	if (!initialized) {
 		sixel_allocator_new(&el_sixel_allocator, el_sixel_malloc, el_sixel_calloc, el_sixel_realloc, el_sixel_free);
@@ -126,6 +127,7 @@ init_allocator(void)
 static int
 sixel_write_callback(char *data, int size, void *priv)
 {
+	ELOG
 	struct string *text = priv;
 
 	add_bytes_to_string(text, data, size);
@@ -139,6 +141,7 @@ sixel_encoder_output_without_macro(
     sixel_output_t      /* in */ *output,
     sixel_encoder_t     /* in */ *encoder)
 {
+	ELOG
     SIXELSTATUS status = SIXEL_OK;
     static unsigned char *p;
     int depth;
@@ -231,6 +234,7 @@ sixel_encoder_output_with_macro(
     sixel_output_t  /* in */ *output,
     sixel_encoder_t /* in */ *encoder)
 {
+	ELOG
     SIXELSTATUS status = SIXEL_OK;
     enum { message_buffer_size = 256 };
     char buffer[message_buffer_size];
@@ -320,6 +324,7 @@ sixel_prepare_monochrome_palette(
     sixel_dither_t  /* out */ **dither,
      int            /* in */  finvert)
 {
+	ELOG
     SIXELSTATUS status = SIXEL_FALSE;
 
     if (finvert) {
@@ -347,6 +352,7 @@ sixel_prepare_builtin_palette(
     sixel_dither_t /* out */ **dither,
     int            /* in */  builtin_palette)
 {
+	ELOG
     SIXELSTATUS status = SIXEL_FALSE;
 
     *dither = sixel_dither_get(builtin_palette);
@@ -370,6 +376,7 @@ sixel_prepare_specified_palette(
     sixel_dither_t  /* out */   **dither,
     sixel_encoder_t /* in */    *encoder)
 {
+	ELOG
     SIXELSTATUS status = SIXEL_FALSE;
     sixel_callback_context_for_mapfile_t callback_context;
 
@@ -405,6 +412,7 @@ sixel_encoder_prepare_palette(
     sixel_frame_t   *frame,    /* input frame object */
     sixel_dither_t  **dither)  /* dither object to be created from the frame */
 {
+	ELOG
     SIXELSTATUS status = SIXEL_FALSE;
     int histogram_colors;
 
@@ -536,6 +544,7 @@ sixel_encoder_do_clip(
     sixel_encoder_t /* in */    *encoder,   /* encoder object */
     sixel_frame_t   /* in */    *frame)     /* frame object to be resized */
 {
+	ELOG
     SIXELSTATUS status = SIXEL_FALSE;
     int src_width;
     int src_height;
@@ -594,6 +603,7 @@ sixel_encoder_do_resize(
     sixel_encoder_t /* in */    *encoder,   /* encoder object */
     sixel_frame_t   /* in */    *frame)     /* frame object to be resized */
 {
+	ELOG
     SIXELSTATUS status = SIXEL_FALSE;
     int src_width;
     int src_height;
@@ -650,6 +660,7 @@ sixel_encoder_encode_frame(
     sixel_frame_t   *frame,
     sixel_output_t  *output)
 {
+	ELOG
     SIXELSTATUS status = SIXEL_FALSE;
     sixel_dither_t *dither = NULL;
     //int height;
@@ -801,6 +812,7 @@ end:
 void
 try_to_draw_images(struct terminal *term)
 {
+	ELOG
 	struct image *im;
 
 	if (!term->sixel) {
@@ -828,6 +840,7 @@ try_to_draw_images(struct terminal *term)
 void
 delete_image(struct image *im)
 {
+	ELOG
 	del_from_list(im);
 	done_string(&im->pixels);
 	mem_free(im);
@@ -836,6 +849,7 @@ delete_image(struct image *im)
 int
 add_image_to_document(struct document *doc, struct string *pixels, int lineno, struct image **imagine)
 {
+	ELOG
 	unsigned char *indexed_pixels = NULL;
 	unsigned char *palette = NULL;
 	sixel_decoder_t *decoder = NULL;
@@ -921,6 +935,7 @@ end:
 struct image *
 copy_frame(struct image *src, struct el_box *box, int cell_width, int cell_height, int dx, int dy)
 {
+	ELOG
 	sixel_decoder_t *decoder = NULL;
 	sixel_encoder_t *encoder = NULL;
 	sixel_output_t *output = NULL;
@@ -1044,6 +1059,7 @@ end:
 unsigned char *
 el_sixel_get_image(char *data, int length, int *outlen)
 {
+	ELOG
 	SIXELSTATUS status = SIXEL_FALSE;
 	sixel_encoder_t *encoder = NULL;
 	unsigned char *ret = NULL;

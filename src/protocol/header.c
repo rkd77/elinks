@@ -143,6 +143,7 @@
 char *
 parse_header(char *head, const char *item, char **ptr)
 {
+	ELOG
 	char *pos = head;
 
 	if (!pos) return NULL;
@@ -234,6 +235,7 @@ parse_header(char *head, const char *item, char **ptr)
 enum parse_header_param
 parse_header_param(char *str, const char *name, char **ret, int content_disposition)
 {
+	ELOG
 	char *p = str;
 	int namelen, plen = 0;
 
@@ -301,6 +303,7 @@ a:
 char *
 get_header_param(char *e, const char *name)
 {
+	ELOG
 	char *n, *start;
 
 again:

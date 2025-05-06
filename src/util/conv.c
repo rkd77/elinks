@@ -54,6 +54,7 @@ elinks_ulongcat(char *s, unsigned int *slen,
 		unsigned char fillchar, unsigned int base,
 		unsigned int upper)
 {
+	ELOG
 	static const char unum[]= "0123456789ABCDEF";
 	static const char lnum[]= "0123456789abcdef";
 	const char *to_num = (upper ? unum : lnum);
@@ -112,6 +113,7 @@ elinks_longcat(char *s, unsigned int *slen,
 	       unsigned char fillchar, unsigned int base,
 	       unsigned int upper)
 {
+	ELOG
 	char *p = s;
 
 	if (number < 0 && width > 0) {
@@ -129,6 +131,7 @@ elinks_longcat(char *s, unsigned int *slen,
 struct string *
 add_long_to_string(struct string *string, long long number)
 {
+	ELOG
 	char buffer[64];
 	int length = 0;
 	int width;
@@ -146,6 +149,7 @@ add_long_to_string(struct string *string, long long number)
 struct string *
 add_knum_to_string(struct string *string, long long num)
 {
+	ELOG
 	int ret;
 	char t[64];
 	int tlen = 0;
@@ -173,6 +177,7 @@ add_knum_to_string(struct string *string, long long num)
 struct string *
 add_xnum_to_string(struct string *string, long long xnum)
 {
+	ELOG
 	char suff[3] = "\0i";
 	off_t d = -1;
 
@@ -206,6 +211,7 @@ add_xnum_to_string(struct string *string, long long xnum)
 struct string *
 add_duration_to_string(struct string *string, long seconds)
 {
+	ELOG
 	char q[64];
 	int qlen = 0;
 
@@ -241,6 +247,7 @@ add_duration_to_string(struct string *string, long seconds)
 struct string *
 add_timeval_to_string(struct string *string, timeval_T *timeval)
 {
+	ELOG
 	return add_duration_to_string(string, timeval_to_seconds(timeval));
 }
 
@@ -249,6 +256,7 @@ struct string *
 add_date_to_string(struct string *string, const char *fmt,
 		   const time_t *date)
 {
+	ELOG
 	char buffer[MAX_STR_LEN];
 	time_t when_time = date ? *date : time(NULL);
 	struct tm *when_local = localtime(&when_time);
@@ -269,6 +277,7 @@ struct string *
 add_string_replace(struct string *string, char *src, int len,
 		   unsigned char replaceable, unsigned char replacement)
 {
+	ELOG
 	int oldlength = string->length;
 
 	if (!add_bytes_to_string(string, src, len))
@@ -284,6 +293,7 @@ add_string_replace(struct string *string, char *src, int len,
 struct string *
 add_html_to_string(struct string *string, const char *src2, int len)
 {
+	ELOG
 	const unsigned char *src = (const unsigned char *)src2;
 
 	for (; len; len--, src++) {
@@ -312,6 +322,7 @@ struct string *
 add_cp_html_to_string(struct string *string, int src_codepage,
 		      const char *src, int len)
 {
+	ELOG
 	const char *const end = src + len;
 	unicode_val_T unicode;
 
@@ -346,6 +357,7 @@ add_cp_html_to_string(struct string *string, int src_codepage,
 struct string *
 add_quoted_to_string(struct string *string, const char *src, int len)
 {
+	ELOG
 	for (; len; len--, src++) {
 		if (isquote(*src) || *src == '\\')
 			add_char_to_string(string, '\\');
@@ -358,6 +370,7 @@ add_quoted_to_string(struct string *string, const char *src, int len)
 struct string *
 add_shell_quoted_to_string(struct string *string, const char *src, int len)
 {
+	ELOG
 	add_char_to_string(string, '\'');
 	for (; len; len--, ++src)
 		if (*src == '\'')
@@ -372,6 +385,7 @@ add_shell_quoted_to_string(struct string *string, const char *src, int len)
 struct string *
 add_shell_safe_to_string(struct string *string, const char *cmd, int cmdlen)
 {
+	ELOG
 	int prev_safe = 0;
 
 	for (; cmdlen; cmdlen--, cmd++) {
@@ -395,6 +409,7 @@ add_shell_safe_to_string(struct string *string, const char *cmd, int cmdlen)
 long
 strtolx(char *str, char **end)
 {
+	ELOG
 	long num;
 	unsigned char postfix;
 
@@ -424,6 +439,7 @@ strtolx(char *str, char **end)
 int
 month2num(const char *str)
 {
+	ELOG
 	char month[3] = { (char)(str[0]|32), (char)(str[1]|32), (char)(str[2]|32) };
 
 	switch (month[0]) {
@@ -475,6 +491,7 @@ month2num(const char *str)
 void
 clr_spaces(char *str2)
 {
+	ELOG
 	unsigned char *s;
 	unsigned char *str = (unsigned char *)str2;
 	unsigned char *dest = str;
@@ -502,6 +519,7 @@ clr_spaces(char *str2)
 void
 sanitize_title(char *title)
 {
+	ELOG
 	int len = strlen(title);
 
 	if (!len) return;
@@ -518,6 +536,7 @@ sanitize_title(char *title)
 int
 sanitize_url(char *url)
 {
+	ELOG
 	int len = strlen(url);
 
 	if (!len) return 1;
@@ -598,6 +617,7 @@ int c_toupper(int c) {
 
 int c_isupper (int c)
 {
+	ELOG
 	switch (c)
 	{
 		case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
@@ -613,6 +633,7 @@ int c_isupper (int c)
 
 int c_islower (int c)
 {
+	ELOG
 	switch (c)
 	{
 		case 'a': case 'b': case 'c': case 'd': case 'e': case 'f':

@@ -27,24 +27,28 @@
 static void
 lock_formhist_data(struct listbox_item *item)
 {
+	ELOG
 	object_lock((struct formhist_data *) item->udata);
 }
 
 static void
 unlock_formhist_data(struct listbox_item *item)
 {
+	ELOG
 	object_unlock((struct formhist_data *) item->udata);
 }
 
 static int
 is_formhist_data_used(struct listbox_item *item)
 {
+	ELOG
 	return is_object_used((struct formhist_data *) item->udata);
 }
 
 static char *
 get_formhist_data_text(struct listbox_item *item, struct terminal *term)
 {
+	ELOG
 	struct formhist_data *formhist_data = (struct formhist_data *)item->udata;
 
 	return stracpy(formhist_data->url);
@@ -53,6 +57,7 @@ get_formhist_data_text(struct listbox_item *item, struct terminal *term)
 static char *
 get_formhist_data_info(struct listbox_item *item, struct terminal *term)
 {
+	ELOG
 	struct formhist_data *formhist_data = (struct formhist_data *)item->udata;
 	struct string info;
 	struct submitted_value *sv;
@@ -88,6 +93,7 @@ get_formhist_data_info(struct listbox_item *item, struct terminal *term)
 static struct uri *
 get_formhist_data_uri(struct listbox_item *item)
 {
+	ELOG
 	struct formhist_data *formhist_data = (struct formhist_data *)item->udata;
 
 	return get_uri(formhist_data->url, URI_NONE);
@@ -96,18 +102,21 @@ get_formhist_data_uri(struct listbox_item *item)
 static struct listbox_item *
 get_formhist_data_root(struct listbox_item *item)
 {
+	ELOG
 	return NULL;
 }
 
 static int
 can_delete_formhist_data(struct listbox_item *item)
 {
+	ELOG
 	return 1;
 }
 
 static void
 delete_formhist_data(struct listbox_item *item, int last)
 {
+	ELOG
 	struct formhist_data *formhist_data = (struct formhist_data *)item->udata;
 
 	assert(!is_object_used(formhist_data));
@@ -161,6 +170,7 @@ static widget_handler_status_T
 push_login_button(struct dialog_data *dlg_data,
 		  struct widget_data *button)
 {
+	ELOG
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct formhist_data *formhist_data;
 	struct terminal *term = dlg_data->win->term;
@@ -186,6 +196,7 @@ static widget_handler_status_T
 push_toggle_dontsave_button(struct dialog_data *dlg_data,
 			    struct widget_data *button)
 {
+	ELOG
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct formhist_data *formhist_data;
 
@@ -200,6 +211,7 @@ push_toggle_dontsave_button(struct dialog_data *dlg_data,
 static widget_handler_status_T
 push_save_button(struct dialog_data *dlg_data, struct widget_data *button)
 {
+	ELOG
 	save_formhist_to_file();
 	return EVENT_PROCESSED;
 }
@@ -224,6 +236,7 @@ struct_hierbox_browser(
 void
 formhist_manager(struct session *ses)
 {
+	ELOG
 	load_formhist_from_file();
 	hierbox_browser(&formhist_browser, ses);
 }

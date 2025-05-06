@@ -32,12 +32,14 @@
 int
 is_xterm(void)
 {
+	ELOG
 	return 0;
 }
 
 int
 get_system_env(void)
 {
+	ELOG
 	int env = get_common_env();
 	char *term = getenv("TERM");
 
@@ -66,6 +68,7 @@ INIT_LIST_OF(struct active_thread, active_threads);
 int32
 started_thr(void *data)
 {
+	ELOG
 	struct active_thread *thrd = data;
 
 	thrd->fn(thrd->data);
@@ -80,6 +83,7 @@ started_thr(void *data)
 int
 start_thr(void (*fn)(void *), void *data, char *name)
 {
+	ELOG
 	struct active_thread *thrd;
 	int tid;
 
@@ -114,6 +118,7 @@ rel:
 void
 terminate_osdep(void)
 {
+	ELOG
 	LIST_OF(struct active_thread) *p;
 	struct active_thread *thrd;
 
@@ -132,6 +137,7 @@ terminate_osdep(void)
 int
 start_thread(void (*fn)(void *, int), void *ptr, int l)
 {
+	ELOG
 	int p[2];
 	struct tdata *t;
 
@@ -159,6 +165,7 @@ int inth;
 void
 input_handle_th(void *p)
 {
+	ELOG
 	char c;
 	int b = 0;
 
@@ -169,6 +176,7 @@ input_handle_th(void *p)
 int
 get_input_handle(void)
 {
+	ELOG
 	static int h = -1;
 
 	if (h >= 0) return h;
@@ -184,12 +192,14 @@ get_input_handle(void)
 void
 block_stdin(void)
 {
+	ELOG
 	suspend_thread(inth);
 }
 
 void
 unblock_stdin(void)
 {
+	ELOG
 	resume_thread(inth);
 }
 
@@ -201,6 +211,7 @@ int ohpipe[2];
 void
 output_handle_th(void *p)
 {
+	ELOG
 	char *c = malloc(O_BUF);
 	int r, b = 0;
 
@@ -213,6 +224,7 @@ output_handle_th(void *p)
 int
 get_output_handle(void)
 {
+	ELOG
 	static int h = -1;
 
 	if (h >= 0) return h;
@@ -232,6 +244,7 @@ get_output_handle(void)
 int
 exe(char *path)
 {
+	ELOG
 	pid_t pid = fork();
 
 	if (!pid) {

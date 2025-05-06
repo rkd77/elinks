@@ -36,6 +36,7 @@ void
 report_scripting_error(struct module *module, struct session *ses,
 		       const char *msg)
 {
+	ELOG
 	struct terminal *term;
 	struct string string;
 

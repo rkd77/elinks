@@ -68,6 +68,7 @@ typedef struct JSString JSString;
 static JSValue
 unicode_to_value(JSContext *ctx, unicode_val_T u)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -96,6 +97,7 @@ unicode_to_value(JSContext *ctx, unicode_val_T u)
 static int
 string_get(const JSString *p, int idx)
 {
+	ELOG
 	return p->is_wide_char ? p->u.str16[idx] : p->u.str8[idx];
 }
 
@@ -104,6 +106,7 @@ string_get(const JSString *p, int idx)
 static unicode_val_T
 js_value_to_accesskey(JSValueConst val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -137,6 +140,7 @@ js_value_to_accesskey(JSValueConst val)
 static JSValue
 js_input_get_property_accessKey(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -193,6 +197,7 @@ js_input_get_property_accessKey(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_input_set_property_accessKey(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -251,6 +256,7 @@ js_input_set_property_accessKey(JSContext *ctx, JSValueConst this_val, JSValue v
 static JSValue
 js_input_get_property_alt(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -291,6 +297,7 @@ js_input_get_property_alt(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_input_set_property_alt(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -341,6 +348,7 @@ js_input_set_property_alt(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_input_get_property_checked(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -361,6 +369,7 @@ js_input_get_property_checked(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_input_set_property_checked(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -406,6 +415,7 @@ js_input_set_property_checked(JSContext *ctx, JSValueConst this_val, JSValue val
 static JSValue
 js_input_get_property_defaultChecked(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -445,6 +455,7 @@ js_input_get_property_defaultChecked(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_input_get_property_defaultValue(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -484,6 +495,7 @@ js_input_get_property_defaultValue(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_input_get_property_disabled(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -525,6 +537,7 @@ js_input_get_property_disabled(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_input_set_property_disabled(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -571,6 +584,7 @@ js_input_set_property_disabled(JSContext *ctx, JSValueConst this_val, JSValue va
 static JSValue
 js_input_get_property_form(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -598,6 +612,7 @@ js_input_get_property_form(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_input_get_property_maxLength(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -638,6 +653,7 @@ js_input_get_property_maxLength(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_input_set_property_maxLength(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -681,6 +697,7 @@ js_input_set_property_maxLength(JSContext *ctx, JSValueConst this_val, JSValue v
 static JSValue
 js_input_get_property_name(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -723,6 +740,7 @@ js_input_get_property_name(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_input_set_property_name(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -774,6 +792,7 @@ js_input_set_property_name(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_input_get_property_readonly(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -816,6 +835,7 @@ js_input_get_property_readonly(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_input_set_property_readonly(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -862,6 +882,7 @@ js_input_set_property_readonly(JSContext *ctx, JSValueConst this_val, JSValue va
 static JSValue
 js_input_get_property_selectedIndex(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -907,6 +928,7 @@ js_input_get_property_selectedIndex(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_input_set_property_selectedIndex(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -959,6 +981,7 @@ js_input_set_property_selectedIndex(JSContext *ctx, JSValueConst this_val, JSVal
 static JSValue
 js_input_get_property_size(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -999,6 +1022,7 @@ js_input_get_property_size(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_input_get_property_src(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1049,6 +1073,7 @@ js_input_get_property_src(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_input_set_property_src(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1109,6 +1134,7 @@ js_input_set_property_src(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_input_get_property_tabIndex(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1160,6 +1186,7 @@ js_input_get_property_tabIndex(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_input_get_property_type(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1217,6 +1244,7 @@ js_input_get_property_type(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_input_get_property_value(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1239,6 +1267,7 @@ js_input_get_property_value(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_input_set_property_value(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1300,6 +1329,7 @@ js_input_set_property_value(JSContext *ctx, JSValueConst this_val, JSValue val)
 static struct form_state *
 js_input_get_form_state(JSContext *ctx, JSValueConst jsinput)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1314,6 +1344,7 @@ js_input_get_form_state(JSContext *ctx, JSValueConst jsinput)
 static JSValue
 js_input_blur(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1328,6 +1359,7 @@ js_input_blur(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *arg
 static JSValue
 js_input_click(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1379,6 +1411,7 @@ js_input_click(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *ar
 static JSValue
 js_input_focus(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1424,6 +1457,7 @@ js_input_focus(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *ar
 static JSValue
 js_input_select(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1437,6 +1471,7 @@ js_input_select(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *a
 JSValue
 js_get_input_object(JSContext *ctx, struct form_state *fs)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1446,6 +1481,7 @@ js_get_input_object(JSContext *ctx, struct form_state *fs)
 static JSValue
 js_input_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1482,6 +1518,7 @@ static const JSCFunctionListEntry js_input_proto_funcs[] = {
 void
 quickjs_detach_form_state(struct form_state *fs)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1497,6 +1534,7 @@ quickjs_detach_form_state(struct form_state *fs)
 void
 quickjs_moved_form_state(struct form_state *fs)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1513,6 +1551,7 @@ quickjs_moved_form_state(struct form_state *fs)
 static
 void js_input_finalizer(JSRuntime *rt, JSValue val)
 {
+	ELOG
 	REF_JS(val);
 
 	struct form_state *fs = (struct form_state *)JS_GetOpaque(val, js_input_class_id);
@@ -1531,6 +1570,7 @@ static JSClassDef js_input_class = {
 static JSValue
 js_input_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
+	ELOG
 	REF_JS(new_target);
 
 	JSValue obj = JS_UNDEFINED;
@@ -1559,6 +1599,7 @@ fail:
 int
 js_input_init(JSContext *ctx, JSValue global_obj)
 {
+	ELOG
 	REF_JS(global_obj);
 
 	JSValue input_proto, input_class;
@@ -1586,6 +1627,7 @@ js_input_init(JSContext *ctx, JSValue global_obj)
 JSValue
 getInput(JSContext *ctx, struct form_state *fs)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

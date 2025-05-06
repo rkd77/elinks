@@ -104,6 +104,7 @@ struct module fsp_protocol_module = struct_module(
 static void
 fsp_error(struct connection_state error)
 {
+	ELOG
 	if (is_system_error(error))
 		printf("S%d\n", (int) error.syserr);
 	else
@@ -122,6 +123,7 @@ fsp_error(struct connection_state error)
 static int
 compare(const void *av, const void *bv)
 {
+	ELOG
 	const FSP_RDENTRY *a = (const FSP_RDENTRY *)av, *b = (const FSP_RDENTRY *)bv;
 	int res = ((b->type == FSP_RDTYPE_DIR) - (a->type == FSP_RDTYPE_DIR));
 
@@ -133,6 +135,7 @@ compare(const void *av, const void *bv)
 static void
 display_entry(const FSP_RDENTRY *fentry, const char dircolor[])
 {
+	ELOG
 	struct string string;
 
 	/* fentry->name is a fixed-size array and is followed by other
@@ -200,6 +203,7 @@ display_entry(const FSP_RDENTRY *fentry, const char dircolor[])
 static void
 sort_and_display_entries(FSP_DIR *dir, const char dircolor[])
 {
+	ELOG
 	/* fsp_readdir_native in fsplib 0.9 and earlier requires
 	 * the third parameter to point to a non-null pointer
 	 * even though it does not dereference that pointer
@@ -238,6 +242,7 @@ sort_and_display_entries(FSP_DIR *dir, const char dircolor[])
 static void
 fsp_directory(FSP_SESSION *ses, struct uri *uri)
 {
+	ELOG
 	struct string buf;
 	FSP_DIR *dir;
 	char *data = get_uri_string(uri, URI_DATA);
@@ -274,6 +279,7 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 static void
 do_fsp(struct connection *conn)
 {
+	ELOG
 	FSP_SESSION *ses;
 	struct stat sb;
 	struct uri *uri = conn->uri;
@@ -385,6 +391,7 @@ out:
 static void
 prompt_username_pw(struct connection *conn)
 {
+	ELOG
 	add_auth_entry(conn->uri, "FSP", NULL, NULL, 0);
 	abort_connection(conn, connection_state(S_OK));
 }
@@ -392,6 +399,7 @@ prompt_username_pw(struct connection *conn)
 static void
 fsp_got_error(struct socket *socket, struct read_buffer *rb)
 {
+	ELOG
 	int len = rb->length;
 	struct connection *conn = (struct connection *)socket->conn;
 	struct connection_state error;
@@ -434,6 +442,7 @@ fsp_got_error(struct socket *socket, struct read_buffer *rb)
 static void
 fsp_got_data(struct socket *socket, struct read_buffer *rb)
 {
+	ELOG
 	int len = rb->length;
 	struct connection *conn = (struct connection *)socket->conn;
 
@@ -460,6 +469,7 @@ fsp_got_data(struct socket *socket, struct read_buffer *rb)
 static void
 fsp_got_header(struct socket *socket, struct read_buffer *rb)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 	struct read_buffer *buf;
 	int error = 0;
@@ -529,6 +539,7 @@ fsp_got_header(struct socket *socket, struct read_buffer *rb)
 void
 fsp_protocol_handler(struct connection *conn)
 {
+	ELOG
 	int fsp_pipe[2] = { -1, -1 };
 	int header_pipe[2] = { -1, -1 };
 	pid_t cpid;

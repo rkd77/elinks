@@ -27,6 +27,7 @@ static struct option *
 get_domain_option(char *domain_name, int domain_len,
                   const char *name)
 {
+	ELOG
 	struct option *opt, *longest_match_opt = NULL;
 	struct domain_tree *longest_match = NULL;
 	struct domain_tree *domain;
@@ -48,6 +49,7 @@ get_domain_option(char *domain_name, int domain_len,
 struct option *
 get_domain_option_from_session(const char *name, struct session *ses)
 {
+	ELOG
 	struct uri *uri;
 
 	assert(ses);
@@ -68,6 +70,7 @@ get_domain_option_from_session(const char *name, struct session *ses)
 struct option *
 get_domain_tree(char *domain_name)
 {
+	ELOG
 	struct domain_tree *domain;
 	int domain_len;
 
@@ -101,6 +104,7 @@ get_domain_tree(char *domain_name)
 void
 done_domain_trees(void)
 {
+	ELOG
 	struct domain_tree *domain, *next;
 
 	foreachsafe (domain, next, domain_trees) {

@@ -19,6 +19,7 @@
 void
 display_widget(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	if (widget_data->widget->ops->display)
 		widget_data->widget->ops->display(dlg_data, widget_data);
 }

@@ -124,6 +124,7 @@ struct scanner_info css_scanner_info = {
 static inline void
 scan_css_token(struct scanner *scanner, struct scanner_token *token)
 {
+	ELOG
 	const char *string = scanner->position;
 	unsigned char first_char = *string;
 	/*enum css_token_type*/ unsigned int type = CSS_TOKEN_GARBAGE;
@@ -360,6 +361,7 @@ scan_css_token(struct scanner *scanner, struct scanner_token *token)
 static struct scanner_token *
 scan_css_tokens(struct scanner *scanner)
 {
+	ELOG
 	struct scanner_token *table_end = scanner->table + SCANNER_TOKENS;
 	struct scanner_token *current;
 

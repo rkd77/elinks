@@ -93,6 +93,7 @@ static css_error node_presentational_hint(void *pw, void *node,
 static css_error node_presentational_hint(void *pw, void *node,
 		uint32_t *nhints, css_hint **hints)
 {
+	ELOG
 //fprintf(stderr, "%s: node=%s\n", __FUNCTION__, node);
 //	UNUSED(pw);
 //	UNUSED(node);
@@ -104,12 +105,14 @@ static css_error node_presentational_hint(void *pw, void *node,
 static css_error
 resolve_url_empty(void *pw, const char *base, lwc_string *rel, lwc_string **abs)
 {
+	ELOG
 	return CSS_OK;
 }
 
 css_error
 resolve_url(void *pw, const char *base, lwc_string *rel, lwc_string **abs)
 {
+	ELOG
 	lwc_error lerror;
 
 	char *url = straconcat(base, lwc_string_data(rel), NULL);
@@ -143,6 +146,7 @@ resolve_url(void *pw, const char *base, lwc_string *rel, lwc_string **abs)
 css_stylesheet *nscss_create_inline_style(const uint8_t *data, size_t len,
 		const char *charset, const char *url, bool allow_quirks)
 {
+	ELOG
 	css_stylesheet_params params;
 	css_stylesheet *sheet;
 	css_error error;
@@ -238,6 +242,7 @@ nscss_dom_user_data_handler(dom_node_operation operation,
 		dom_string *key, void *data, struct dom_node *src,
 		struct dom_node *dst)
 {
+	ELOG
 	css_error error;
 
 	if (dom_string_isequal(corestring_dom___ns_key_libcss_node_data,
@@ -296,6 +301,7 @@ css_select_results *nscss_get_style(nscss_select_ctx *ctx, dom_node *n,
 		const css_unit_ctx *unit_len_ctx,
 		const css_stylesheet *inline_style)
 {
+	ELOG
 	css_computed_style *composed;
 	css_select_results *styles;
 	int pseudo_element;
@@ -375,6 +381,7 @@ css_computed_style *nscss_get_blank_style(nscss_select_ctx *ctx,
 		const css_unit_ctx *unit_len_ctx,
 		const css_computed_style *parent)
 {
+	ELOG
 	css_computed_style *partial, *composed;
 	css_error error;
 
@@ -413,6 +420,7 @@ css_computed_style *nscss_get_blank_style(nscss_select_ctx *ctx,
  */
 css_error node_name(void *pw, void *node, css_qname *qname)
 {
+	ELOG
 	dom_node *n = node;
 	dom_string *name;
 	dom_exception err;
@@ -451,6 +459,7 @@ css_error node_name(void *pw, void *node, css_qname *qname)
 css_error node_classes(void *pw, void *node,
 		lwc_string ***classes, uint32_t *n_classes)
 {
+	ELOG
 	dom_node *n = node;
 	dom_exception err;
 
@@ -475,6 +484,7 @@ css_error node_classes(void *pw, void *node,
  */
 css_error node_id(void *pw, void *node, lwc_string **id)
 {
+	ELOG
 	dom_node *n = node;
 	dom_string *attr;
 	dom_exception err;
@@ -512,6 +522,7 @@ css_error node_id(void *pw, void *node, lwc_string **id)
 css_error named_ancestor_node(void *pw, void *node,
 		const css_qname *qname, void **ancestor)
 {
+	ELOG
 	dom_element_named_ancestor_node(node, qname->name,
 			(struct dom_element **)ancestor);
 #ifdef ECMASCRIPT_DEBUG
@@ -536,6 +547,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 css_error named_parent_node(void *pw, void *node,
 		const css_qname *qname, void **parent)
 {
+	ELOG
 	dom_element_named_parent_node(node, qname->name,
 			(struct dom_element **)parent);
 #ifdef ECMASCRIPT_DEBUG
@@ -560,6 +572,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 css_error named_sibling_node(void *pw, void *node,
 		const css_qname *qname, void **sibling)
 {
+	ELOG
 	dom_node *n = node;
 	dom_node *prev;
 	dom_exception err;
@@ -643,6 +656,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 css_error named_generic_sibling_node(void *pw, void *node,
 		const css_qname *qname, void **sibling)
 {
+	ELOG
 	dom_node *n = node;
 	dom_node *prev;
 	dom_exception err;
@@ -720,6 +734,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
  */
 css_error parent_node(void *pw, void *node, void **parent)
 {
+	ELOG
 	dom_element_parent_node(node, (struct dom_element **)parent);
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
@@ -741,6 +756,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
  */
 css_error sibling_node(void *pw, void *node, void **sibling)
 {
+	ELOG
 	dom_node *n = node;
 	dom_node *prev;
 	dom_exception err;
@@ -810,6 +826,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 css_error node_has_name(void *pw, void *node,
 		const css_qname *qname, bool *match)
 {
+	ELOG
 	nscss_select_ctx *ctx = pw;
 	dom_node *n = node;
 
@@ -845,6 +862,7 @@ css_error node_has_name(void *pw, void *node,
 css_error node_has_class(void *pw, void *node,
 		lwc_string *name, bool *match)
 {
+	ELOG
 	dom_node *n = node;
 
 	/** \todo: Ensure that libdom performs case-insensitive
@@ -868,6 +886,7 @@ css_error node_has_class(void *pw, void *node,
 css_error node_has_id(void *pw, void *node,
 		lwc_string *name, bool *match)
 {
+	ELOG
 	dom_node *n = node;
 	dom_string *attr;
 	dom_exception err;
@@ -903,6 +922,7 @@ css_error node_has_id(void *pw, void *node,
 css_error node_has_attribute(void *pw, void *node,
 		const css_qname *qname, bool *match)
 {
+	ELOG
 	dom_node *n = node;
 	dom_string *name;
 	dom_exception err;
@@ -941,6 +961,7 @@ css_error node_has_attribute_equal(void *pw, void *node,
 		const css_qname *qname, lwc_string *value,
 		bool *match)
 {
+	ELOG
 	dom_node *n = node;
 	dom_string *name;
 	dom_string *atr_val;
@@ -993,6 +1014,7 @@ css_error node_has_attribute_dashmatch(void *pw, void *node,
 		const css_qname *qname, lwc_string *value,
 		bool *match)
 {
+	ELOG
 	dom_node *n = node;
 	dom_string *name;
 	dom_string *atr_val;
@@ -1058,6 +1080,7 @@ css_error node_has_attribute_includes(void *pw, void *node,
 		const css_qname *qname, lwc_string *value,
 		bool *match)
 {
+	ELOG
 	dom_node *n = node;
 	dom_string *name;
 	dom_string *atr_val;
@@ -1129,6 +1152,7 @@ css_error node_has_attribute_prefix(void *pw, void *node,
 		const css_qname *qname, lwc_string *value,
 		bool *match)
 {
+	ELOG
 	dom_node *n = node;
 	dom_string *name;
 	dom_string *atr_val;
@@ -1193,6 +1217,7 @@ css_error node_has_attribute_suffix(void *pw, void *node,
 		const css_qname *qname, lwc_string *value,
 		bool *match)
 {
+	ELOG
 	dom_node *n = node;
 	dom_string *name;
 	dom_string *atr_val;
@@ -1261,6 +1286,7 @@ css_error node_has_attribute_substring(void *pw, void *node,
 		const css_qname *qname, lwc_string *value,
 		bool *match)
 {
+	ELOG
 	dom_node *n = node;
 	dom_string *name;
 	dom_string *atr_val;
@@ -1328,6 +1354,7 @@ css_error node_has_attribute_substring(void *pw, void *node,
  */
 css_error node_is_root(void *pw, void *node, bool *match)
 {
+	ELOG
 	dom_node *n = node;
 	dom_node *parent;
 	dom_node_type type;
@@ -1364,6 +1391,7 @@ node_count_siblings_check(dom_node *node,
 			  bool check_name,
 			  dom_string *name)
 {
+	ELOG
 	dom_node_type type;
 	int ret = 0;
 	dom_exception exc;
@@ -1410,6 +1438,7 @@ node_count_siblings_check(dom_node *node,
 css_error node_count_siblings(void *pw, void *n, bool same_name,
 		bool after, int32_t *count)
 {
+	ELOG
 	int32_t cnt = 0;
 	dom_exception exc;
 	dom_string *node_name = NULL;
@@ -1480,6 +1509,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
  */
 css_error node_is_empty(void *pw, void *node, bool *match)
 {
+	ELOG
 	dom_node *n = node, *next;
 	dom_exception err;
 
@@ -1541,6 +1571,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
  */
 css_error node_is_link(void *pw, void *n, bool *match)
 {
+	ELOG
 	dom_node *node = n;
 	dom_exception exc;
 	dom_string *node_name = NULL;
@@ -1580,6 +1611,7 @@ css_error node_is_link(void *pw, void *n, bool *match)
  */
 css_error node_is_visited(void *pw, void *node, bool *match)
 {
+	ELOG
 #if 0
 	nscss_select_ctx *ctx = pw;
 	nsurl *url;
@@ -1651,6 +1683,7 @@ css_error node_is_visited(void *pw, void *node, bool *match)
  */
 css_error node_is_hover(void *pw, void *node, bool *match)
 {
+	ELOG
 	/** \todo Support hovering */
 
 	*match = false;
@@ -1670,6 +1703,7 @@ css_error node_is_hover(void *pw, void *node, bool *match)
  */
 css_error node_is_active(void *pw, void *node, bool *match)
 {
+	ELOG
 	/** \todo Support active nodes */
 
 	*match = false;
@@ -1689,6 +1723,7 @@ css_error node_is_active(void *pw, void *node, bool *match)
  */
 css_error node_is_focus(void *pw, void *node, bool *match)
 {
+	ELOG
 	/** \todo Support focussed nodes */
 
 	*match = false;
@@ -1708,6 +1743,7 @@ css_error node_is_focus(void *pw, void *node, bool *match)
  */
 css_error node_is_enabled(void *pw, void *node, bool *match)
 {
+	ELOG
 	/** \todo Support enabled nodes */
 
 	*match = false;
@@ -1727,6 +1763,7 @@ css_error node_is_enabled(void *pw, void *node, bool *match)
  */
 css_error node_is_disabled(void *pw, void *node, bool *match)
 {
+	ELOG
 	/** \todo Support disabled nodes */
 
 	*match = false;
@@ -1746,6 +1783,7 @@ css_error node_is_disabled(void *pw, void *node, bool *match)
  */
 css_error node_is_checked(void *pw, void *node, bool *match)
 {
+	ELOG
 	/** \todo Support checked nodes */
 
 	*match = false;
@@ -1765,6 +1803,7 @@ css_error node_is_checked(void *pw, void *node, bool *match)
  */
 css_error node_is_target(void *pw, void *node, bool *match)
 {
+	ELOG
 	/** \todo Support target */
 
 	*match = false;
@@ -1786,6 +1825,7 @@ css_error node_is_target(void *pw, void *node, bool *match)
 css_error node_is_lang(void *pw, void *node,
 		lwc_string *lang, bool *match)
 {
+	ELOG
 	/** \todo Support languages */
 
 	*match = false;
@@ -1804,6 +1844,7 @@ css_error node_is_lang(void *pw, void *node,
  */
 css_error ua_default_for_property(void *pw, uint32_t property, css_hint *hint)
 {
+	ELOG
 	UNUSED(pw);
 
 	if (property == CSS_PROP_COLOR) {
@@ -1830,6 +1871,7 @@ css_error ua_default_for_property(void *pw, uint32_t property, css_hint *hint)
 css_error
 set_libcss_node_data(void *pw, void *node, void *libcss_node_data)
 {
+	ELOG
 	dom_node *n = node;
 	dom_exception err;
 	void *old_node_data = NULL;
@@ -1856,6 +1898,7 @@ set_libcss_node_data(void *pw, void *node, void *libcss_node_data)
 css_error
 get_libcss_node_data(void *pw, void *node, void **libcss_node_data)
 {
+	ELOG
 	dom_node *n = node;
 	dom_exception err;
 
@@ -1873,6 +1916,7 @@ get_libcss_node_data(void *pw, void *node, void **libcss_node_data)
 static void
 apply_color(struct html_context *html_context, struct html_element *html_element, css_color color_shade)
 {
+	ELOG
 	if (use_document_fg_colors(html_context->options)) {
 		html_element->attr.style.color.foreground = color_shade & 0x00ffffff;
 	}
@@ -1881,6 +1925,7 @@ apply_color(struct html_context *html_context, struct html_element *html_element
 static void
 apply_background_color(struct html_context *html_context, struct html_element *html_element, css_color color_shade)
 {
+	ELOG
 	if (use_document_bg_colors(html_context->options)) {
 		html_element->attr.style.color.background = color_shade & 0x00ffffff;
 	}
@@ -1890,6 +1935,7 @@ static void
 apply_font_attribute(struct html_context *html_context,
 			 struct html_element *element, bool underline, bool bold, bool strike)
 {
+	ELOG
 	int add = 0;
 	int rem = 0;
 	if (underline) {
@@ -1917,6 +1963,7 @@ apply_font_attribute(struct html_context *html_context,
 static void
 apply_list_style(struct html_context *html_context, struct html_element *element, uint8_t list_type)
 {
+	ELOG
 	element->parattr.list_number = 1;
 
 	switch (list_type) {
@@ -1977,6 +2024,7 @@ apply_list_style(struct html_context *html_context, struct html_element *element
 static void
 apply_display(struct html_context *html_context, struct html_element *element, uint8_t display)
 {
+	ELOG
 	switch (display) {
 		case CSS_DISPLAY_INLINE:
 //			element->linebreak = 0;
@@ -2000,6 +2048,7 @@ apply_display(struct html_context *html_context, struct html_element *element, u
 static void
 apply_text_align(struct html_context *html_context, struct html_element *element, uint8_t text_align)
 {
+	ELOG
 	switch (text_align) {
 	case CSS_TEXT_ALIGN_LEFT:
 		element->parattr.align = ALIGN_LEFT;
@@ -2022,6 +2071,7 @@ apply_text_align(struct html_context *html_context, struct html_element *element
 static void
 apply_font_style(struct html_context *html_context, struct html_element *element, uint8_t font_style)
 {
+	ELOG
 	int add = 0;
 	int rem = 0;
 
@@ -2043,6 +2093,7 @@ apply_font_style(struct html_context *html_context, struct html_element *element
 static bool
 is_bold(int val)
 {
+	ELOG
 	switch (val) {
 	case CSS_FONT_WEIGHT_100:
 	case CSS_FONT_WEIGHT_200:
@@ -2065,6 +2116,7 @@ is_bold(int val)
 void
 select_css(struct html_context *html_context, struct html_element *html_element)
 {
+	ELOG
 	css_error code;
 	uint8_t color_type;
 	css_color color_shade;
@@ -2223,6 +2275,7 @@ end:
 static css_error
 handle_import(void *pw, css_stylesheet *parent, lwc_string *url)
 {
+	ELOG
 	struct html_context *html_context = (struct html_context *)pw;
 	char *uristring = memacpy(lwc_string_data(url), lwc_string_length(url));
 	struct uri *uri;
@@ -2254,6 +2307,7 @@ handle_import(void *pw, css_stylesheet *parent, lwc_string *url)
 static void
 parse_css_common(struct html_context *html_context, const char *text, int length, struct uri *uri)
 {
+	ELOG
 	css_error code;
 	size_t size;
 	uint32_t count;
@@ -2333,6 +2387,7 @@ parse_css_common(struct html_context *html_context, const char *text, int length
 void
 parse_css(struct html_context *html_context, char *name)
 {
+	ELOG
 	int offset = name - html_context->document->text.source;
 	dom_node *el = (dom_node *)find_in_map(html_context->document->element_map, offset);
 	dom_node *n, *next;
@@ -2402,6 +2457,7 @@ end:
 void
 import_css2(struct html_context *html_context, struct uri *uri)
 {
+	ELOG
 	/* Do we have it in the cache? (TODO: CSS cache) */
 	struct cache_entry *cached;
 	struct fragment *fragment;
@@ -2425,6 +2481,7 @@ import_css2(struct html_context *html_context, struct uri *uri)
 static void
 import_css_file(struct html_context *html_context, const char *url, int urllen)
 {
+	ELOG
 	char *xdg_config_home = get_xdg_config_home();
 	struct string string, filename;
 
@@ -2449,6 +2506,7 @@ import_css_file(struct html_context *html_context, const char *url, int urllen)
 static void
 import_default_css(struct html_context *html_context)
 {
+	ELOG
 	char *url = get_opt_str("document.css.stylesheet", NULL);
 
 	if (!*url) return;
@@ -2459,6 +2517,7 @@ import_default_css(struct html_context *html_context)
 void *
 el_match_selector(const char *selector, void *node)
 {
+	ELOG
 	struct string text;
 	css_error code;
 	//size_t size;

@@ -44,6 +44,7 @@ static INIT_LIST_OF(struct timer, timers);
 int
 get_timers_count(void)
 {
+	ELOG
 	return list_size(&timers);
 
 }
@@ -63,6 +64,7 @@ extern int event_enabled;
 static void
 timer_callback(int h, short ev, void *data)
 {
+	ELOG
 	struct timer *tm = (struct timer *)data;
 	tm->func(tm->data);
 	kill_timer(&tm);
@@ -73,6 +75,7 @@ timer_callback(int h, short ev, void *data)
 static inline
 struct event *timer_event(struct timer *tm)
 {
+	ELOG
 	return (struct event *)((char *)tm - sizeof_struct_event);
 }
 #endif
@@ -80,6 +83,7 @@ struct event *timer_event(struct timer *tm)
 void
 check_timers(timeval_T *last_time)
 {
+	ELOG
 	timeval_T now;
 	timeval_T interval;
 	struct timer *timer;
@@ -123,6 +127,7 @@ check_timers(timeval_T *last_time)
 static void
 set_event_for_timer(timer_id_T tm)
 {
+	ELOG
 	struct timeval tv;
 	struct event *ev = timer_event(tm);
 	timeout_set(ev, timer_callback, tm);
@@ -154,6 +159,7 @@ set_event_for_timer(timer_id_T tm)
 void
 install_timer(timer_id_T *id, milliseconds_T delay, void (*func)(void *), void *data)
 {
+	ELOG
 	struct timer *new_timer, *timer;
 
 	assert(id && delay >= 0);
@@ -189,6 +195,7 @@ install_timer(timer_id_T *id, milliseconds_T delay, void (*func)(void *), void *
 void
 kill_timer(timer_id_T *id)
 {
+	ELOG
 	struct timer *timer;
 
 	assert(id != NULL);
@@ -213,6 +220,7 @@ kill_timer(timer_id_T *id)
 int
 get_next_timer_time(timeval_T *t)
 {
+	ELOG
 	if (!list_empty(timers)) {
 		timeval_copy(t, &((struct timer *) &timers)->next->interval);
 		return 1;
@@ -225,6 +233,7 @@ get_next_timer_time(timeval_T *t)
 void
 set_events_for_timer(void)
 {
+	ELOG
 #ifdef USE_LIBEVENT
 	timer_id_T tm;
 

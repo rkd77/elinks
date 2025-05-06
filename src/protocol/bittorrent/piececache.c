@@ -58,6 +58,7 @@ static inline void
 set_bittorrent_piece_cache_remaining(struct bittorrent_piece_cache *cache,
 				     uint32_t piece, int remaining)
 {
+	ELOG
 	cache->entries[piece].remaining = remaining > 0 ? 1 : 0;
 	cache->remaining_pieces += remaining;
 	cache->loading_pieces   += -remaining;
@@ -67,6 +68,7 @@ static inline void
 set_bittorrent_piece_cache_completed(struct bittorrent_piece_cache *cache,
 				     uint32_t piece)
 {
+	ELOG
 	cache->entries[piece].completed = 1;
 	cache->entries[piece].remaining = 0;
 	cache->loading_pieces--;
@@ -77,6 +79,7 @@ set_bittorrent_piece_cache_completed(struct bittorrent_piece_cache *cache,
 static void
 handle_bittorrent_mode_changes(struct bittorrent_connection *bittorrent)
 {
+	ELOG
 	struct bittorrent_piece_cache *cache = bittorrent->cache;
 
 	if (cache->completed_pieces == bittorrent->meta.pieces
@@ -117,6 +120,7 @@ static struct bittorrent_peer_request *
 find_bittorrent_free_list_peer_request(struct bittorrent_piece_cache *cache,
 				       struct bittorrent_peer_connection *peer)
 {
+	ELOG
 	struct bittorrent_peer_request *request;
 	uint32_t piece = BITTORRENT_PIECE_UNDEF;
 
@@ -142,6 +146,7 @@ find_bittorrent_free_list_peer_request(struct bittorrent_piece_cache *cache,
 static inline int
 randomize(size_t scale)
 {
+	ELOG
 	double random = (double) rand() / RAND_MAX;
 	int index = random * (scale - 1);
 
@@ -153,6 +158,7 @@ static uint32_t
 find_random_in_bittorrent_piece_cache(struct bittorrent_piece_cache *cache,
 				      struct bittorrent_peer_connection *peer)
 {
+	ELOG
 	uint32_t pieces[] = {
 		BITTORRENT_PIECE_UNDEF, BITTORRENT_PIECE_UNDEF,
 		BITTORRENT_PIECE_UNDEF, BITTORRENT_PIECE_UNDEF,
@@ -225,6 +231,7 @@ static uint32_t
 find_rarest_in_bittorrent_piece_cache(struct bittorrent_piece_cache *cache,
 				      struct bittorrent_peer_connection *peer)
 {
+	ELOG
 	uint32_t pieces[] = {
 		BITTORRENT_PIECE_UNDEF, BITTORRENT_PIECE_UNDEF,
 		BITTORRENT_PIECE_UNDEF, BITTORRENT_PIECE_UNDEF,
@@ -282,6 +289,7 @@ find_rarest_in_bittorrent_piece_cache(struct bittorrent_piece_cache *cache,
 static struct bittorrent_peer_request *
 find_clonable_bittorrent_peer_request(struct bittorrent_peer_connection *peer)
 {
+	ELOG
 	struct bittorrent_piece_cache *cache = peer->bittorrent->cache;
 	struct bittorrent_peer_connection *active_peer;
 	struct bittorrent_peer_request *clone = NULL;
@@ -322,6 +330,7 @@ find_clonable_bittorrent_peer_request(struct bittorrent_peer_connection *peer)
 static struct bittorrent_peer_request *
 clone_bittorrent_peer_request(struct bittorrent_peer_request *request)
 {
+	ELOG
 	struct bittorrent_peer_request *clone;
 
 	clone = (struct bittorrent_peer_request *)mem_alloc(sizeof(*clone));
@@ -345,6 +354,7 @@ add_piece_to_bittorrent_free_list(struct bittorrent_piece_cache *cache,
 				  struct bittorrent_connection *bittorrent,
 				  uint32_t piece)
 {
+	ELOG
 	struct bittorrent_peer_request *request, *next;
 	uint32_t request_length, piece_length, piece_offset;
 	INIT_LIST_OF(struct bittorrent_peer_request, requests);
@@ -416,6 +426,7 @@ add_piece_to_bittorrent_free_list(struct bittorrent_piece_cache *cache,
 struct bittorrent_peer_request *
 find_bittorrent_peer_request(struct bittorrent_peer_connection *peer)
 {
+	ELOG
 	struct bittorrent_connection *bittorrent = peer->bittorrent;
 	struct bittorrent_piece_cache *cache = bittorrent->cache;
 	struct bittorrent_peer_request *request;
@@ -478,6 +489,7 @@ static void
 clear_cloned_bittorrent_peer_request(struct bittorrent_connection *bittorrent,
 				     struct bittorrent_peer_request *request)
 {
+	ELOG
 	struct bittorrent_peer_request *single_clone = NULL;
 	struct bittorrent_peer_connection *peer;
 
@@ -503,6 +515,7 @@ static void
 add_request_to_bittorrent_piece_cache(struct bittorrent_connection *bittorrent,
 				      struct bittorrent_peer_request *request)
 {
+	ELOG
 	del_from_list(request);
 	if (!request->cloned) {
 		/* fixme: ensure that the free list is sorted by piece the
@@ -521,6 +534,7 @@ void
 add_requests_to_bittorrent_piece_cache(struct bittorrent_peer_connection *peer,
 				       struct bittorrent_peer_status *status)
 {
+	ELOG
 	struct bittorrent_peer_request *request, *next;
 
 	foreachsafe (request, next, status->requests) {
@@ -537,6 +551,7 @@ void
 update_bittorrent_piece_cache(struct bittorrent_peer_connection *peer,
 			      uint32_t piece)
 {
+	ELOG
 	struct bittorrent_piece_cache *cache = peer->bittorrent->cache;
 
 	assert(piece <= peer->bittorrent->meta.pieces);
@@ -553,6 +568,7 @@ update_bittorrent_piece_cache(struct bittorrent_peer_connection *peer,
 void
 update_bittorrent_piece_cache_from_bitfield(struct bittorrent_peer_connection *peer)
 {
+	ELOG
 	uint32_t piece;
 
 	assert(peer->bitfield->bitsize == peer->bittorrent->meta.pieces);
@@ -565,6 +581,7 @@ update_bittorrent_piece_cache_from_bitfield(struct bittorrent_peer_connection *p
 void
 remove_bittorrent_peer_from_piece_cache(struct bittorrent_peer_connection *peer)
 {
+	ELOG
 	struct bittorrent_piece_cache *cache = peer->bittorrent->cache;
 	unsigned int piece;
 
@@ -591,6 +608,7 @@ remove_bittorrent_peer_from_piece_cache(struct bittorrent_peer_connection *peer)
 static enum bittorrent_state
 create_bittorrent_path(char *path)
 {
+	ELOG
 	int ret = mkalldirs(path);
 
 	return (ret ? BITTORRENT_STATE_ERROR : BITTORRENT_STATE_OK);
@@ -600,6 +618,7 @@ create_bittorrent_path(char *path)
 static void
 remove_bittorrent_path(struct bittorrent_meta *meta, char *path)
 {
+	ELOG
 	char *root = strstr(path, meta->name);
 	int pos;
 
@@ -628,6 +647,7 @@ remove_bittorrent_path(struct bittorrent_meta *meta, char *path)
 static char *
 get_bittorrent_file_name(struct bittorrent_meta *meta, struct bittorrent_file *file)
 {
+	ELOG
 	char *name;
 
 	name = expand_tilde(get_opt_str("document.download.directory", NULL));
@@ -654,6 +674,7 @@ static int
 open_bittorrent_file(struct bittorrent_meta *meta, struct bittorrent_file *file,
 		     enum bittorrent_translation trans, off_t offset)
 {
+	ELOG
 	char *name = get_bittorrent_file_name(meta, file);
 	off_t seek_result;
 	int fd;
@@ -702,6 +723,7 @@ bittorrent_file_piece_translation(struct bittorrent_meta *meta,
 				  uint32_t piece,
 				  enum bittorrent_translation trans)
 {
+	ELOG
 	struct bittorrent_file *file;
 	uint32_t piece_length = get_bittorrent_piece_length(meta, piece);
 	uint32_t piece_offset = 0;
@@ -855,6 +877,7 @@ static void
 cancel_cloned_bittorrent_peer_requests(struct bittorrent_connection *bittorrent,
 				       struct bittorrent_peer_request *request)
 {
+	ELOG
 	struct bittorrent_peer_connection *peer;
 
 	foreach (peer, bittorrent->peers) {
@@ -879,6 +902,7 @@ add_to_bittorrent_piece_cache(struct bittorrent_peer_connection *peer,
 			      char *data, uint32_t datalen,
 			      int *write_errno)
 {
+	ELOG
 	struct bittorrent_connection *bittorrent = peer->bittorrent;
 	struct bittorrent_meta *meta = &bittorrent->meta;
 	struct bittorrent_piece_cache *cache = bittorrent->cache;
@@ -969,6 +993,7 @@ char *
 get_bittorrent_piece_cache_data(struct bittorrent_connection *bittorrent,
 				uint32_t piece)
 {
+	ELOG
 	struct bittorrent_piece_cache *cache = bittorrent->cache;
 	struct bittorrent_piece_cache_entry *entry;
 	enum bittorrent_state state;
@@ -1002,6 +1027,7 @@ get_bittorrent_piece_cache_data(struct bittorrent_connection *bittorrent,
 static void
 done_bittorrent_resume(struct bittorrent_piece_cache *cache)
 {
+	ELOG
 	if (cache->resume_fd == -1)
 		return;
 
@@ -1015,6 +1041,7 @@ done_bittorrent_resume(struct bittorrent_piece_cache *cache)
 static int
 prepare_partial_bittorrent_download(struct bittorrent_connection *bittorrent)
 {
+	ELOG
 	struct bittorrent_piece_cache *cache = bittorrent->cache;
 	off_t est_length = 0;
 	off_t completed = 0;
@@ -1068,6 +1095,7 @@ prepare_partial_bittorrent_download(struct bittorrent_connection *bittorrent)
 static void
 end_bittorrent_resume(struct bittorrent_connection *bittorrent)
 {
+	ELOG
 	struct bittorrent_piece_cache *cache = bittorrent->cache;
 
 	done_bittorrent_resume(bittorrent->cache);
@@ -1085,6 +1113,7 @@ end_bittorrent_resume(struct bittorrent_connection *bittorrent)
 static void
 bittorrent_resume_writer(void *data, int fd)
 {
+	ELOG
 	struct bittorrent_piece_cache cache;
 	struct bittorrent_meta meta;
 	struct bittorrent_const_string metafile;
@@ -1144,6 +1173,7 @@ bittorrent_resume_writer(void *data, int fd)
 static void
 bittorrent_resume_reader(struct bittorrent_connection *bittorrent)
 {
+	ELOG
 	struct bittorrent_piece_cache *cache = bittorrent->cache;
 	char completed[MAX_STR_LEN];
 	ssize_t size, pos;
@@ -1184,6 +1214,7 @@ static void
 start_bittorrent_resume(struct bittorrent_connection *bittorrent,
 			struct bittorrent_const_string *meta)
 {
+	ELOG
 	struct bittorrent_piece_cache *cache = bittorrent->cache;
 	struct string info;
 
@@ -1228,6 +1259,7 @@ start_bittorrent_resume(struct bittorrent_connection *bittorrent,
 void
 update_bittorrent_piece_cache_state(struct bittorrent_connection *bittorrent)
 {
+	ELOG
 	struct bittorrent_piece_cache *cache = bittorrent->cache;
 	struct bittorrent_piece_cache_entry *entry, *next;
 	off_t cache_size = get_opt_int("protocol.bittorrent.piece_cache_size",
@@ -1263,6 +1295,7 @@ enum bittorrent_state
 init_bittorrent_piece_cache(struct bittorrent_connection *bittorrent,
 			    struct bittorrent_const_string *metafile)
 {
+	ELOG
 	struct bittorrent_piece_cache *cache;
 	uint32_t pieces = bittorrent->meta.pieces;
 	size_t cache_entry_size = sizeof(*cache->entries) * pieces;
@@ -1303,6 +1336,7 @@ init_bittorrent_piece_cache(struct bittorrent_connection *bittorrent,
 static void
 delete_bittorrent_files(struct bittorrent_connection *bittorrent)
 {
+	ELOG
 	struct bittorrent_meta *meta = &bittorrent->meta;
 	struct bittorrent_file *file;
 
@@ -1327,6 +1361,7 @@ delete_bittorrent_files(struct bittorrent_connection *bittorrent)
 void
 done_bittorrent_piece_cache(struct bittorrent_connection *bittorrent)
 {
+	ELOG
 	struct bittorrent_piece_cache *cache = bittorrent->cache;
 	uint32_t piece;
 

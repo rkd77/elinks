@@ -33,6 +33,7 @@ js_html_document_user_data_handler(dom_node_operation operation,
 				struct dom_node *src,
 				struct dom_node *dst)
 {
+	ELOG
 	if (dom_string_isequal(corestring_dom___ns_key_html_content_data,
 			       key) == false) {
 		return;
@@ -82,6 +83,7 @@ js_html_document_user_data_handler(dom_node_operation operation,
 void *
 document_parse_text(const char *charset, const char *data, size_t length)
 {
+	ELOG
 	dom_hubbub_parser *parser = NULL;
 	dom_hubbub_error error;
 	dom_hubbub_parser_params params;
@@ -131,6 +133,7 @@ document_parse_text(const char *charset, const char *data, size_t length)
 void *
 document_parse(struct document *document, struct string *source)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -142,6 +145,7 @@ document_parse(struct document *document, struct string *source)
 void
 free_document(void *doc)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -159,6 +163,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 void
 add_lowercase_to_string(struct string *buf, const char *str, int len)
 {
+	ELOG
 	char *tmp = memacpy(str, len);
 	int i;
 
@@ -178,6 +183,7 @@ add_lowercase_to_string(struct string *buf, const char *str, int len)
 bool
 convert_key_to_dom_string(term_event_key_T key, dom_string **res)
 {
+	ELOG
 	bool is_special = key <= 0x001F || (0x007F <= key && key <= 0x009F);
 	dom_string *dom_key = NULL;
 	dom_exception exc;
@@ -346,6 +352,7 @@ static lwc_string *keyb_lwc[KEYB_COUNT];
 void
 keybstrings_init(void)
 {
+	ELOG
 	int i;
 
 	for (i = 0; i < KEYB_COUNT; i++) {
@@ -360,6 +367,7 @@ keybstrings_init(void)
 void
 keybstrings_fini(void)
 {
+	ELOG
 	int i;
 
 	for (i = 0; i < KEYB_COUNT; i++) {
@@ -372,6 +380,7 @@ keybstrings_fini(void)
 unicode_val_T
 convert_dom_string_to_keycode(dom_string *dom_key)
 {
+	ELOG
 	if (!dom_key) {
 		return 0;
 	}

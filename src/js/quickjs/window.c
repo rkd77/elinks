@@ -68,6 +68,7 @@ extern struct term_event last_event;
 static void
 js_window_finalize(JSRuntime *rt, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -93,6 +94,7 @@ js_window_finalize(JSRuntime *rt, JSValue val)
 void
 detach_js_view_state(struct view_state *vs)
 {
+	ELOG
 	assert(vs);
 	if_assert_failed return;
 
@@ -114,6 +116,7 @@ detach_js_view_state(struct view_state *vs)
 static void
 js_window_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -145,6 +148,7 @@ js_window_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 JSValue
 js_window_open(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -276,6 +280,7 @@ end:
 JSValue
 js_window_scrollBy(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -323,6 +328,7 @@ js_window_scrollBy(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 JSValue
 js_window_scrollByLines(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -346,6 +352,7 @@ js_window_scrollByLines(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 JSValue
 js_window_scrollByPages(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -369,6 +376,7 @@ js_window_scrollByPages(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 JSValue
 js_window_scrollTo(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -418,6 +426,7 @@ js_window_scrollTo(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 JSValue
 js_window_scroll(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -428,6 +437,7 @@ js_window_scroll(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *
 JSValue
 js_window_setInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -487,6 +497,7 @@ js_window_setInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 JSValue
 js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -545,6 +556,7 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 JSValue
 js_window_clearInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -578,6 +590,7 @@ js_window_clearInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 JSValue
 js_window_clearTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -610,6 +623,7 @@ js_window_clearTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 JSValue
 js_window_getComputedStyle(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -629,6 +643,7 @@ js_window_getComputedStyle(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 static JSValue
 js_window_get_property_closed(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -640,6 +655,7 @@ js_window_get_property_closed(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_window_get_property_event(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -651,6 +667,7 @@ js_window_get_property_event(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_window_get_property_innerHeight(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -679,6 +696,7 @@ js_window_get_property_innerHeight(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_window_get_property_innerWidth(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -707,6 +725,7 @@ js_window_get_property_innerWidth(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_window_get_property_location(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -727,6 +746,7 @@ js_window_get_property_location(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_window_set_property_location(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -764,6 +784,7 @@ js_window_set_property_location(JSContext *ctx, JSValueConst this_val, JSValue v
 static JSValue
 js_window_get_property_parent(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -786,6 +807,7 @@ js_window_get_property_parent(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_window_get_property_scrollX(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -802,6 +824,7 @@ js_window_get_property_scrollX(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_window_get_property_scrollY(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -818,6 +841,7 @@ js_window_get_property_scrollY(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_window_get_property_self(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -831,6 +855,7 @@ js_window_get_property_self(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_window_get_property_status(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -842,6 +867,7 @@ js_window_get_property_status(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_window_set_property_status(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -872,6 +898,7 @@ js_window_set_property_status(JSContext *ctx, JSValueConst this_val, JSValue val
 static JSValue
 js_window_get_property_top(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -919,6 +946,7 @@ js_window_get_property_top(JSContext *ctx, JSValueConst this_val)
 JSValue
 js_window_alert(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -955,6 +983,7 @@ js_window_alert(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *a
 static JSValue
 js_window_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -966,6 +995,7 @@ js_window_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 static JSValue
 js_window_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1028,6 +1058,7 @@ js_window_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 static JSValue
 js_window_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1077,6 +1108,7 @@ js_window_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, J
 static void
 onmessage_run(void *data)
 {
+	ELOG
 	struct el_message *mess = (struct el_message *)data;
 
 	if (mess) {
@@ -1120,6 +1152,7 @@ onmessage_run(void *data)
 static JSValue
 js_window_postMessage(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1209,6 +1242,7 @@ static JSClassDef js_window_class = {
 int
 js_window_init(JSContext *ctx)
 {
+	ELOG
 	JSValue window_proto;
 
 	/* create the window class */
@@ -1235,6 +1269,7 @@ js_window_init(JSContext *ctx)
 JSValue
 getWindow(JSContext *ctx, struct view_state *vs)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

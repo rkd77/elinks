@@ -61,6 +61,7 @@ void *map_rev_nodelist2;
 static JSValue
 js_nodeList2_get_property_length(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -75,6 +76,7 @@ js_nodeList2_get_property_length(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_nodeList2_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -92,6 +94,7 @@ js_nodeList2_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst 
 static JSValue
 js_nodeList2_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -113,6 +116,7 @@ static JSClassDef js_nodelist2_class = {
 JSValue
 getNodeList2(JSContext *ctx, void *nodes)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

@@ -20,6 +20,7 @@
 void
 redraw_windows(enum windows_to_redraw which, struct window *win)
 {
+	ELOG
 	struct terminal *term = win->term;
 	struct term_event ev;
 	struct window *end;
@@ -60,6 +61,7 @@ redraw_windows(enum windows_to_redraw which, struct window *win)
 void
 add_window(struct terminal *term, window_handler_T handler, void *data)
 {
+	ELOG
 	struct term_event ev;
 	struct window *win = (struct window *)mem_calloc(1, sizeof(*win));
 
@@ -84,6 +86,7 @@ add_window(struct terminal *term, window_handler_T handler, void *data)
 void
 delete_window(struct window *win)
 {
+	ELOG
 	struct term_event ev;
 
 	/* Updating the status when destroying tabs needs this before the win
@@ -99,6 +102,7 @@ delete_window(struct window *win)
 void
 delete_window_ev(struct window *win, struct term_event *ev)
 {
+	ELOG
 	struct window *w;
 
 	w = list_has_next(win->term->windows, win) ? win->next : NULL;
@@ -118,6 +122,7 @@ delete_window_ev(struct window *win, struct term_event *ev)
 void
 get_parent_ptr(struct window *win, int *x, int *y)
 {
+	ELOG
 	struct window *parent = win->next;
 
 	if (parent->type == WINDOW_TAB)
@@ -142,6 +147,7 @@ struct ewd {
 static void
 empty_window_handler(struct window *win, struct term_event *ev)
 {
+	ELOG
 	struct terminal *term = win->term;
 	struct ewd *ewd = (struct ewd *)win->data;
 	void (*fn)(void *) = ewd->fn;
@@ -173,6 +179,7 @@ empty_window_handler(struct window *win, struct term_event *ev)
 void
 add_empty_window(struct terminal *term, void (*fn)(void *), void *data)
 {
+	ELOG
 	struct ewd *ewd = (struct ewd *)mem_alloc(sizeof(*ewd));
 
 	if (!ewd) return;
@@ -187,6 +194,7 @@ add_empty_window(struct terminal *term, void (*fn)(void *), void *data)
 void
 assert_window_stacking(struct terminal *term)
 {
+	ELOG
 	enum { WANT_ANY, WANT_TAB, WANT_NONE } want = WANT_ANY;
 	const struct window *win;
 	const struct window *main_menu_win;
@@ -217,6 +225,7 @@ assert_window_stacking(struct terminal *term)
 void
 set_dlg_window_ptr(struct dialog_data *dlg_data, struct window *window, int x, int y)
 {
+	ELOG
 	struct el_box *box = &dlg_data->real_box;
 
 	if (box->height) {
@@ -233,6 +242,7 @@ set_dlg_window_ptr(struct dialog_data *dlg_data, struct window *window, int x, i
 int
 would_window_receive_keypresses(const struct window *win)
 {
+	ELOG
 	struct terminal *const term = win->term;
 	const struct window *selected;
 

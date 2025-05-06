@@ -14,6 +14,7 @@
 static const char *
 get_name_lua(struct module *xxx)
 {
+	ELOG
 	static char elluaversion[32];
 	strncpy(elluaversion, LUA_RELEASE, 31);
 

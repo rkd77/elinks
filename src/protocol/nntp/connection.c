@@ -42,6 +42,7 @@ static void nntp_send_command(struct connection *conn);
 static enum nntp_target
 get_nntp_target(char *data, int datalen)
 {
+	ELOG
 	enum nntp_target target = NNTP_TARGET_ARTICLE_NUMBER;
 	int pos;
 
@@ -78,6 +79,7 @@ static int
 init_nntp_article_range(struct nntp_connection_info *nntp,
 			char *data, int datalen)
 {
+	ELOG
 	long start_number, end_number;
 	char *end;
 
@@ -102,6 +104,7 @@ init_nntp_article_range(struct nntp_connection_info *nntp,
 static struct nntp_connection_info *
 init_nntp_connection_info(struct connection *conn)
 {
+	ELOG
 	struct uri *uri = conn->uri;
 	struct nntp_connection_info *nntp;
 	char *groupend;
@@ -204,6 +207,7 @@ init_nntp_connection_info(struct connection *conn)
 static void
 nntp_quit(struct connection *conn)
 {
+	ELOG
 	struct nntp_connection_info *info;
 
 	assert(conn->info == NULL);
@@ -229,6 +233,7 @@ nntp_quit(struct connection *conn)
 static void
 nntp_end_request(struct connection *conn, struct connection_state state)
 {
+	ELOG
 	struct nntp_connection_info *nntp = (struct nntp_connection_info *)conn->info;
 
 	if (nntp->target == NNTP_TARGET_QUIT) {
@@ -255,6 +260,7 @@ nntp_end_request(struct connection *conn, struct connection_state state)
 static void
 read_nntp_data(struct socket *socket, struct read_buffer *rb)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 
 	if (socket->state == SOCKET_CLOSED) {
@@ -282,6 +288,7 @@ read_nntp_data(struct socket *socket, struct read_buffer *rb)
 static struct connection_state
 get_nntp_connection_state(nntp_code_T code)
 {
+	ELOG
 	switch (code) {
 	case NNTP_CODE_400_GOODBYE:		return connection_state(S_NNTP_SERVER_HANG_UP);
 	case NNTP_CODE_411_GROUP_UNKNOWN:	return connection_state(S_NNTP_GROUP_UNKNOWN);
@@ -314,6 +321,7 @@ get_nntp_connection_state(nntp_code_T code)
 static void
 nntp_got_response(struct socket *socket, struct read_buffer *rb)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 	struct nntp_connection_info *nntp = (struct nntp_connection_info *)conn->info;
 
@@ -373,6 +381,7 @@ nntp_got_response(struct socket *socket, struct read_buffer *rb)
 static void
 nntp_get_response(struct socket *socket)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 	struct read_buffer *rb = alloc_read_buffer(conn->socket);
 
@@ -390,6 +399,7 @@ nntp_get_response(struct socket *socket)
 static enum nntp_command
 get_nntp_command(struct nntp_connection_info *nntp)
 {
+	ELOG
 	/* The more logical approach of making the switch noodle use the target
 	 * actually will make it bigger altho' assertions of invalid states
 	 * would be easier. I chose to make it simpler for now. --jonas */
@@ -474,6 +484,7 @@ get_nntp_command(struct nntp_connection_info *nntp)
 static void
 add_nntp_command_to_string(struct string *req, struct nntp_connection_info *nntp)
 {
+	ELOG
 	switch (nntp->command) {
 	case NNTP_COMMAND_GROUP:
 		add_to_string(req, "GROUP ");
@@ -524,6 +535,7 @@ add_nntp_command_to_string(struct string *req, struct nntp_connection_info *nntp
 static void
 nntp_send_command(struct connection *conn)
 {
+	ELOG
 	struct nntp_connection_info *nntp = (struct nntp_connection_info *)conn->info;
 	struct string req;
 
@@ -554,6 +566,7 @@ nntp_send_command(struct connection *conn)
 void
 nntp_protocol_handler(struct connection *conn)
 {
+	ELOG
 	if (!init_nntp_connection_info(conn))
 		return;
 
@@ -583,6 +596,7 @@ nntp_protocol_handler(struct connection *conn)
 void
 news_protocol_handler(struct connection *conn)
 {
+	ELOG
 	const char *protocol;
 	char *server = get_nntp_server();
 	struct string location;

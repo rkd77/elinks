@@ -44,6 +44,7 @@ struct deflate_enc_data {
 static int
 deflate_open(int window_size, struct stream_encoded *stream, int fd)
 {
+	ELOG
 	/* A zero-initialized z_stream.  The compiler ensures that all
 	 * pointer members in it are null.  (Can't do this with memset
 	 * because C99 does not require all-bits-zero to be a null
@@ -89,6 +90,7 @@ deflate_open(int window_size, struct stream_encoded *stream, int fd)
 static int
 deflate_gzip_open(struct stream_encoded *stream, int fd)
 {
+	ELOG
 	/* detect gzip header, else assume zlib header */
 	return deflate_open(MAX_WBITS + 32, stream, fd);
 }
@@ -98,6 +100,7 @@ static char *deflate_gzip_decode_buffer(struct stream_encoded *st, char *data, i
 static int
 deflate_read(struct stream_encoded *stream, char *buf, int len)
 {
+	ELOG
 	struct deflate_enc_data *data = (struct deflate_enc_data *) stream->data;
 
 	if (!data) return -1;
@@ -150,6 +153,7 @@ deflate_read(struct stream_encoded *stream, char *buf, int len)
 static char *
 deflate_decode_buffer(struct stream_encoded *st, int window_size, char *datac, int len, int *new_len)
 {
+	ELOG
 	unsigned char *data = (unsigned char *)datac;
 	struct deflate_enc_data *enc_data = (struct deflate_enc_data *) st->data;
 	z_stream *stream = &enc_data->deflate_stream;
@@ -212,6 +216,7 @@ restart2:
 static char *
 deflate_gzip_decode_buffer(struct stream_encoded *st, char *data, int len, int *new_len)
 {
+	ELOG
 	/* detect gzip header, else assume zlib header */
 	return deflate_decode_buffer(st, MAX_WBITS + 32, data, len, new_len);
 }
@@ -219,6 +224,7 @@ deflate_gzip_decode_buffer(struct stream_encoded *st, char *data, int len, int *
 static void
 deflate_close(struct stream_encoded *stream)
 {
+	ELOG
 	struct deflate_enc_data *data = (struct deflate_enc_data *) stream->data;
 
 	if (data) {
@@ -236,6 +242,7 @@ deflate_close(struct stream_encoded *stream)
 const char *
 get_gzip_version(void)
 {
+	ELOG
 	return zlibVersion();
 }
 

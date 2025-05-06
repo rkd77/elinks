@@ -33,6 +33,7 @@
 static void
 display_codepage(struct terminal *term, void *name_, void *xxx)
 {
+	ELOG
 	char *name = (char *)name_;
 	struct option *opt = get_opt_rec(term->spec, "charset");
 	int index = get_cp_index(name);
@@ -50,6 +51,7 @@ display_codepage(struct terminal *term, void *name_, void *xxx)
 void
 charset_list(struct terminal *term, void *xxx, void *ses_)
 {
+	ELOG
 	struct session *ses = (struct session *)ses_;
 	int i, items;
 	int sel = 0;
@@ -122,6 +124,7 @@ static struct option_resolver resolvers[] = {
 static widget_handler_status_T
 push_ok_button(struct dialog_data *dlg_data, struct widget_data *button)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	union option_value *values = (union option_value *)dlg_data->dlg->udata;
 
@@ -138,6 +141,7 @@ push_ok_button(struct dialog_data *dlg_data, struct widget_data *button)
 static widget_handler_status_T
 push_save_button(struct dialog_data *dlg_data, struct widget_data *button)
 {
+	ELOG
 	push_ok_button(dlg_data, button);
 	write_config(dlg_data->win->term);
 
@@ -169,6 +173,7 @@ push_save_button(struct dialog_data *dlg_data, struct widget_data *button)
 void
 terminal_options(struct terminal *term, void *xxx, struct session *ses)
 {
+	ELOG
 	/* [gettext_accelerator_context(terminal_options)] */
 	struct dialog *dlg;
 	union option_value *values;
@@ -257,6 +262,7 @@ terminal_options(struct terminal *term, void *xxx, struct session *ses)
 static void
 menu_set_language(struct terminal *term, void *pcp_, void *xxx)
 {
+	ELOG
 	int pcp = (intptr_t) pcp_;
 
 	set_language(pcp);
@@ -267,6 +273,7 @@ menu_set_language(struct terminal *term, void *pcp_, void *xxx)
 void
 menu_language_list(struct terminal *term, void *xxx, void *ses)
 {
+	ELOG
 #ifdef CONFIG_NLS
 	int i;
 	struct menu_item *mi = new_menu(FREE_LIST);
@@ -290,6 +297,7 @@ static char height_str[4];
 static void
 push_resize_button(void *data)
 {
+	ELOG
 	struct terminal *term = (struct terminal *)data;
 	char str[MAX_STR_LEN];
 
@@ -303,6 +311,7 @@ push_resize_button(void *data)
 void
 resize_terminal_dialog(struct terminal *term)
 {
+	ELOG
 	/* [gettext_accelerator_context(resize_terminal_dialog)] */
 	struct dialog *dlg;
 	int width = int_min(term->width, 999);

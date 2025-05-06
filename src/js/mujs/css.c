@@ -25,6 +25,7 @@
 static void
 mjs_CSSStyleDeclaration_get_property_length(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -35,6 +36,7 @@ mjs_CSSStyleDeclaration_get_property_length(js_State *J)
 static void
 mjs_push_CSSStyleDeclaration_item2(js_State *J, int idx)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -45,6 +47,7 @@ mjs_push_CSSStyleDeclaration_item2(js_State *J, int idx)
 static void
 mjs_CSSStyleDeclaration_getPropertyValue(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -54,6 +57,7 @@ mjs_CSSStyleDeclaration_getPropertyValue(js_State *J)
 static void
 mjs_CSSStyleDeclaration_item(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -64,6 +68,7 @@ mjs_CSSStyleDeclaration_item(js_State *J)
 static void
 mjs_push_CSSStyleDeclaration_namedItem2(js_State *J, const char *str)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -74,6 +79,7 @@ mjs_push_CSSStyleDeclaration_namedItem2(js_State *J, const char *str)
 static void
 mjs_CSSStyleDeclaration_namedItem(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -83,6 +89,7 @@ mjs_CSSStyleDeclaration_namedItem(js_State *J)
 static void
 mjs_CSSStyleDeclaration_set_items(js_State *J, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -97,6 +104,7 @@ mjs_CSSStyleDeclaration_set_items(js_State *J, void *node)
 static void
 mjs_CSSStyleDeclaration_toString(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -106,11 +114,13 @@ mjs_CSSStyleDeclaration_toString(js_State *J)
 static void
 mjs_CSSStyleDeclaration_finalizer(js_State *J, void *node)
 {
+	ELOG
 }
 
 void
 mjs_push_CSSStyleDeclaration(js_State *J, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

@@ -9,6 +9,7 @@
 
 int main(int argc, char * argv[])
 {
+	ELOG
     int i;
     char * kvpairs[NUMKVPAIRS];
     char value[VALSIZE];

@@ -57,6 +57,7 @@ struct module dgi_protocol_module = struct_module(
 static struct mime_handler *
 find_dgi(const char *name)
 {
+	ELOG
 	const char *last = strrchr(name, '/');
 	struct mime_handler *handler;
 
@@ -81,6 +82,7 @@ find_dgi(const char *name)
 static void
 write_request_to_file(struct connection *conn, const char *filename)
 {
+	ELOG
 	if (!conn->uri->post) {
 		return;
 	}
@@ -108,6 +110,7 @@ enum dgi_state {
 static void
 prepare_command(char *program, const char *filename, const char *query, char *inpext, char *outext, struct string *cmd, char **inp, char **out, char **queryfile)
 {
+	ELOG
 	const char *ch;
 	enum dgi_state state = NORMAL;
 
@@ -257,6 +260,7 @@ prepare_command(char *program, const char *filename, const char *query, char *in
 void
 dgi_protocol_handler(struct connection *conn)
 {
+	ELOG
 #define NUMKVPAIRS 16
 	char *query;
 	struct connection_state state = connection_state(S_OK);
@@ -379,6 +383,7 @@ dgi_protocol_handler(struct connection *conn)
 int
 execute_dgi(struct connection *conn)
 {
+	ELOG
 	char *script;
 	struct mime_handler *handler;
 	struct string command;

@@ -163,6 +163,7 @@ static int transcmp(const void *p1, const void *p2);
 static int
 transcmp(const void *p1, const void *p2)
 {
+	ELOG
 	const struct known_translation_t *s1;
 	const struct known_translation_t *s2;
 	int result;
@@ -291,6 +292,7 @@ char *
 dcigettext__(const char *domainname, const char *msgid1, const char *msgid2,
 	   int plural, unsigned long int n, int category)
 {
+	ELOG
 #ifndef HAVE_ALLOCA
 	struct block_list *block_list = NULL;
 #endif
@@ -556,6 +558,7 @@ _nl_find_msg(struct loaded_l10nfile *domain_file,
 			       struct binding *domainbinding,
 			       const char *msgid, size_t *lengthp)
 {
+	ELOG
 	struct loaded_domain *domain;
 	size_t act;
 	char *result;
@@ -770,6 +773,7 @@ static char *
 plural_lookup(struct loaded_l10nfile *domain, unsigned long int n,
 	      const char *translation, size_t translation_len)
 {
+	ELOG
 	struct loaded_domain *domaindata =
 		(struct loaded_domain *) domain->data;
 	unsigned long int indexx;
@@ -802,6 +806,7 @@ plural_lookup(struct loaded_l10nfile *domain, unsigned long int n,
 static unsigned long int
 plural_eval(struct expression *pexp, unsigned long int n)
 {
+	ELOG
 	switch (pexp->nargs) {
 		case 0:
 			switch (pexp->operation) {
@@ -896,6 +901,7 @@ default:
 static const char *
 category_to_name(int category)
 {
+	ELOG
 	const char *retval;
 
 	switch (category) {
@@ -953,6 +959,7 @@ default:
 static const char *
 guess_category_value(int category, const char *categoryname)
 {
+	ELOG
 	const char *language;
 	const char *retval;
 

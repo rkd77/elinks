@@ -26,24 +26,28 @@
 static void
 lock_globhist_item(struct listbox_item *item)
 {
+	ELOG
 	object_lock((struct global_history_item *) item->udata);
 }
 
 static void
 unlock_globhist_item(struct listbox_item *item)
 {
+	ELOG
 	object_unlock((struct global_history_item *) item->udata);
 }
 
 static int
 is_globhist_item_used(struct listbox_item *item)
 {
+	ELOG
 	return is_object_used((struct global_history_item *) item->udata);
 }
 
 static char *
 get_globhist_item_text(struct listbox_item *box_item, struct terminal *term)
 {
+	ELOG
 	struct global_history_item *item = (struct global_history_item *)box_item->udata;
 	struct string info;
 
@@ -59,6 +63,7 @@ get_globhist_item_text(struct listbox_item *box_item, struct terminal *term)
 static char *
 get_globhist_item_info(struct listbox_item *box_item, struct terminal *term)
 {
+	ELOG
 	struct global_history_item *item = (struct global_history_item *)box_item->udata;
 	struct string info;
 
@@ -76,12 +81,14 @@ get_globhist_item_info(struct listbox_item *box_item, struct terminal *term)
 static struct listbox_item *
 get_globhist_item_root(struct listbox_item *box_item)
 {
+	ELOG
 	return NULL;
 }
 
 static struct uri *
 get_globhist_item_uri(struct listbox_item *item)
 {
+	ELOG
 	struct global_history_item *historyitem = (struct global_history_item *)item->udata;
 
 	return get_uri(historyitem->url, URI_NONE);
@@ -90,12 +97,14 @@ get_globhist_item_uri(struct listbox_item *item)
 static int
 can_delete_globhist_item(struct listbox_item *item)
 {
+	ELOG
 	return 1;
 }
 
 static void
 delete_globhist_item(struct listbox_item *item, int last)
 {
+	ELOG
 	struct global_history_item *historyitem = (struct global_history_item *)item->udata;
 
 	assert(!is_object_used(historyitem));
@@ -150,6 +159,7 @@ static const struct listbox_ops gh_listbox_ops = {
 static void
 history_search_do(void *data)
 {
+	ELOG
 	struct dialog *dlg = (struct dialog *)data;
 	struct listbox_item *item = (struct listbox_item *)globhist_browser.root.child.next;
 	struct listbox_data *box;
@@ -169,6 +179,7 @@ static void
 launch_search_dialog(struct terminal *term, struct dialog_data *parent,
 		     struct session *ses)
 {
+	ELOG
 	do_edit_dialog(term, 1, N_("Search history"), gh_last_searched_title,
 		       gh_last_searched_url, ses, parent, history_search_do,
 		       NULL, NULL, EDIT_DLG_SEARCH);
@@ -177,6 +188,7 @@ launch_search_dialog(struct terminal *term, struct dialog_data *parent,
 static widget_handler_status_T
 push_search_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	launch_search_dialog(dlg_data->win->term, dlg_data,
 			     (struct session *) dlg_data->dlg->udata);
 	return EVENT_PROCESSED;
@@ -187,6 +199,7 @@ push_search_button(struct dialog_data *dlg_data, struct widget_data *widget_data
 static widget_handler_status_T
 push_toggle_display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	int *display_type;
 
 	display_type = &get_opt_int("document.history.global.display_type",
@@ -205,6 +218,7 @@ static widget_handler_status_T
 push_bookmark_button(struct dialog_data *dlg_data,
 		     struct widget_data *some_useless_info_button)
 {
+	ELOG
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct terminal *term = dlg_data->win->term;
 	struct global_history_item *historyitem;
@@ -250,6 +264,7 @@ struct_hierbox_browser(
 void
 history_manager(struct session *ses)
 {
+	ELOG
 	mem_free_set(&gh_last_searched_title, NULL);
 	mem_free_set(&gh_last_searched_url, NULL);
 	hierbox_browser(&globhist_browser, ses);

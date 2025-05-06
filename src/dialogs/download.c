@@ -40,6 +40,7 @@
 static void
 undisplay_download(struct file_download *file_download)
 {
+	ELOG
 	/* We are maybe called from bottom halve so check consistency */
 	if (is_in_downloads_list(file_download) && file_download->dlg_data)
 		cancel_dialog(file_download->dlg_data, NULL);
@@ -48,6 +49,7 @@ undisplay_download(struct file_download *file_download)
 static void
 do_abort_download(struct file_download *file_download)
 {
+	ELOG
 	/* We are maybe called from bottom halve so check consistency */
 	if (is_in_downloads_list(file_download)) {
 		file_download->stop = 1;
@@ -58,6 +60,7 @@ do_abort_download(struct file_download *file_download)
 static widget_handler_status_T
 dlg_set_notify(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct file_download *file_download = (struct file_download *)dlg_data->dlg->udata;
 
 	file_download->notify = 1;
@@ -82,6 +85,7 @@ dlg_set_notify(struct dialog_data *dlg_data, struct widget_data *widget_data)
 static widget_handler_status_T
 dlg_abort_download(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct file_download *file_download = (struct file_download *)dlg_data->dlg->udata;
 
 	object_unlock(file_download);
@@ -92,6 +96,7 @@ dlg_abort_download(struct dialog_data *dlg_data, struct widget_data *widget_data
 static widget_handler_status_T
 push_delete_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct file_download *file_download = (struct file_download *)dlg_data->dlg->udata;
 
 	file_download->delete_ = 1;
@@ -107,6 +112,7 @@ push_delete_button(struct dialog_data *dlg_data, struct widget_data *widget_data
 static widget_handler_status_T
 dlg_undisplay_download(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct file_download *file_download = (struct file_download *)dlg_data->dlg->udata;
 
 	object_unlock(file_download);
@@ -118,6 +124,7 @@ dlg_undisplay_download(struct dialog_data *dlg_data, struct widget_data *widget_
 static void
 download_abort_function(struct dialog_data *dlg_data)
 {
+	ELOG
 	struct file_download *file_download = (struct file_download *)dlg_data->dlg->udata;
 
 	file_download->dlg_data = NULL;
@@ -127,6 +134,7 @@ download_abort_function(struct dialog_data *dlg_data)
 static void
 download_dialog_layouter(struct dialog_data *dlg_data)
 {
+	ELOG
 	struct file_download *file_download = (struct file_download *)dlg_data->dlg->udata;
 	struct terminal *term = dlg_data->win->term;
 	int w = dialog_max_width(term);
@@ -231,6 +239,7 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 static enum dlg_refresh_code
 refresh_file_download(struct dialog_data *dlg_data, void *data)
 {
+	ELOG
 	/* Always refresh (until we keep finished downloads) */
 	return are_there_downloads() ? REFRESH_DIALOG : REFRESH_STOP;
 }
@@ -239,6 +248,7 @@ void
 display_download(struct terminal *term, struct file_download *file_download,
 		 struct session *ses)
 {
+	ELOG
 	/* [gettext_accelerator_context(display_download)] */
 	struct dialog *dlg;
 	struct dialog_data *ret;
@@ -302,24 +312,28 @@ display_download(struct terminal *term, struct file_download *file_download,
 static void
 lock_file_download(struct listbox_item *item)
 {
+	ELOG
 	object_lock((struct file_download *) item->udata);
 }
 
 static void
 unlock_file_download(struct listbox_item *item)
 {
+	ELOG
 	object_unlock((struct file_download *) item->udata);
 }
 
 static int
 is_file_download_used(struct listbox_item *item)
 {
+	ELOG
 	return is_object_used((struct file_download *) item->udata);
 }
 
 static char *
 get_file_download_text(struct listbox_item *item, struct terminal *term)
 {
+	ELOG
 	struct file_download *file_download = (struct file_download *)item->udata;
 	char *uristring;
 
@@ -339,12 +353,14 @@ get_file_download_text(struct listbox_item *item, struct terminal *term)
 static char *
 get_file_download_info(struct listbox_item *item, struct terminal *term)
 {
+	ELOG
 	return NULL;
 }
 
 static struct uri *
 get_file_download_uri(struct listbox_item *item)
 {
+	ELOG
 	struct file_download *file_download = (struct file_download *)item->udata;
 
 	return get_uri_reference(file_download->uri);
@@ -353,18 +369,21 @@ get_file_download_uri(struct listbox_item *item)
 static struct listbox_item *
 get_file_download_root(struct listbox_item *item)
 {
+	ELOG
 	return NULL;
 }
 
 static int
 can_delete_file_download(struct listbox_item *item)
 {
+	ELOG
 	return 1;
 }
 
 static void
 delete_file_download(struct listbox_item *item, int last)
 {
+	ELOG
 	struct file_download *file_download = (struct file_download *)item->udata;
 
 	assert(!is_object_used(file_download));
@@ -380,6 +399,7 @@ static void
 draw_file_download(struct listbox_item *item, struct listbox_context *context,
 		   int x, int y, int width)
 {
+	ELOG
 	struct file_download *file_download = (struct file_download *)item->udata;
 	struct download *download = &file_download->download;
 	const char *stylename;
@@ -481,6 +501,7 @@ static const struct listbox_ops downloads_listbox_ops = {
 static widget_handler_status_T
 push_info_button(struct dialog_data *dlg_data, struct widget_data *button)
 {
+	ELOG
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct terminal *term = dlg_data->win->term;
 	struct session *ses = (struct session *)dlg_data->dlg->udata;
@@ -525,6 +546,7 @@ static struct_hierbox_browser(
 void
 download_manager(struct session *ses)
 {
+	ELOG
 	hierbox_browser(&download_browser, ses);
 
 	/* FIXME: It's workaround for bug 397. Real fix is needed. */
@@ -534,6 +556,7 @@ download_manager(struct session *ses)
 void
 init_download_display(struct file_download *file_download)
 {
+	ELOG
 	file_download->box_item = add_listbox_leaf(&download_browser, NULL,
 						   file_download);
 }
@@ -541,6 +564,7 @@ init_download_display(struct file_download *file_download)
 void
 done_download_display(struct file_download *file_download)
 {
+	ELOG
 	if (file_download->box_item) {
 		done_listbox_item(&download_browser, file_download->box_item);
 		file_download->box_item = NULL;

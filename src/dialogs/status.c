@@ -45,6 +45,7 @@ char *
 get_download_msg(struct download *download, struct terminal *term,
 		 int wide, int full, const char *separator)
 {
+	ELOG
 	if (!download_is_progressing(download)) {
 		/* DBG("%d -> %s", download->state, _(get_err_msg(download->state), term)); */
 		return stracpy(get_state_message(download->state, term));
@@ -67,6 +68,7 @@ get_download_msg(struct download *download, struct terminal *term,
 void
 update_status(void)
 {
+	ELOG
 	int show_title_bar = get_opt_bool("ui.show_title_bar", NULL);
 	int show_status_bar = get_opt_bool("ui.show_status_bar", NULL);
 	int show_tabs_bar = get_opt_int("ui.tabs.show_bar", NULL);
@@ -146,6 +148,7 @@ static char *
 get_current_link_info_and_title(struct session *ses,
 				struct document_view *doc_view)
 {
+	ELOG
 	char *link_info, *link_title, *ret = NULL;
 
 	link_info = get_current_link_info(ses, doc_view);
@@ -169,6 +172,7 @@ get_current_link_info_and_title(struct session *ses,
 static inline void
 display_status_bar(struct session *ses, struct terminal *term, int tabs_count)
 {
+	ELOG
 	char *msg = NULL;
 	unsigned int tab_info_len = 0;
 	struct download *download = get_current_download(ses);
@@ -287,6 +291,7 @@ display_status_bar(struct session *ses, struct terminal *term, int tabs_count)
 static inline void
 display_tab_bar(struct session *ses, struct terminal *term, int tabs_count)
 {
+	ELOG
 	struct color_pair *normal_color = get_bfu_color(term, "tabs.normal");
 	struct color_pair *selected_color = get_bfu_color(term, "tabs.selected");
 	struct color_pair *loading_color = get_bfu_color(term, "tabs.loading");
@@ -393,6 +398,7 @@ display_tab_bar(struct session *ses, struct terminal *term, int tabs_count)
 static inline void
 display_title_bar(struct session *ses, struct terminal *term)
 {
+	ELOG
 	struct document_view *doc_view;
 	struct document *document;
 	struct string title;
@@ -482,6 +488,7 @@ display_title_bar(struct session *ses, struct terminal *term)
 static inline void
 display_window_title(struct session *ses, struct terminal *term)
 {
+	ELOG
 	static struct session *last_ses;
 	struct session_status *status = &ses->status;
 	char *doc_title = NULL;
@@ -516,6 +523,7 @@ display_window_title(struct session *ses, struct terminal *term)
 static inline void
 display_leds(struct session *ses, struct session_status *status)
 {
+	ELOG
 	if (ses->doc_view && ses->doc_view->document) {
 		struct cache_entry *cached = ses->doc_view->document->cached;
 
@@ -547,6 +555,7 @@ display_leds(struct session *ses, struct session_status *status)
 void
 print_screen_status(struct session *ses)
 {
+	ELOG
 	struct terminal *term = ses->tab->term;
 	struct session_status *status = &ses->status;
 	int tabs_count = number_of_tabs(term);
@@ -580,6 +589,7 @@ print_screen_status(struct session *ses)
 static void
 print_screen_status_clear_timer(void *param)
 {
+	ELOG
 	struct session *ses = (struct session *)param;
 
 	ses->status_redraw_timer = TIMER_ID_UNDEF;
@@ -589,6 +599,7 @@ print_screen_status_clear_timer(void *param)
 void
 print_screen_status_delayed(struct session *ses)
 {
+	ELOG
 	/* Redraw after 100ms. */
 	if (ses->status_redraw_timer == TIMER_ID_UNDEF) {
 		install_timer(&ses->status_redraw_timer, 100, print_screen_status_clear_timer, ses);

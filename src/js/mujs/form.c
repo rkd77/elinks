@@ -44,6 +44,7 @@ static void
 mjs_push_form_control_object(js_State *J,
 			enum form_type type, struct form_state *fs)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -77,6 +78,7 @@ mjs_push_form_control_object(js_State *J,
 static void
 mjs_form_set_items(js_State *J, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -137,6 +139,7 @@ next:
 static void
 mjs_form_set_items2(js_State *J, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -185,6 +188,7 @@ next:
 static void
 mjs_form_elements_get_property_length(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -222,6 +226,7 @@ mjs_form_elements_get_property_length(js_State *J)
 static void
 mjs_form_elements_item2(js_State *J, int index)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -265,6 +270,7 @@ mjs_form_elements_item2(js_State *J, int index)
 static void
 mjs_form_elements_item(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -276,6 +282,7 @@ mjs_form_elements_item(js_State *J)
 static void
 mjs_form_elements_namedItem2(js_State *J, const char *string)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -323,6 +330,7 @@ mjs_form_elements_namedItem2(js_State *J, const char *string)
 static void
 mjs_form_elements_namedItem(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -338,6 +346,7 @@ mjs_form_elements_namedItem(js_State *J)
 static void
 mjs_form_elements_toString(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -347,6 +356,7 @@ mjs_form_elements_toString(js_State *J)
 static void
 mjs_form_get_property_action(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -371,6 +381,7 @@ mjs_form_get_property_action(js_State *J)
 static void
 mjs_form_set_property_action(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -408,6 +419,7 @@ mjs_form_set_property_action(js_State *J)
 static void
 mjs_elements_finalizer(js_State *J, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -419,6 +431,7 @@ mjs_elements_finalizer(js_State *J, void *node)
 void
 mjs_push_form_elements(js_State *J, struct form_view *fv)
 {
+	ELOG
 	js_newarray(J);
 	{
 		js_newuserdata(J, "form_view", fv, mjs_elements_finalizer);
@@ -437,6 +450,7 @@ mjs_push_form_elements(js_State *J, struct form_view *fv)
 static void
 mjs_form_get_property_elements(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -469,6 +483,7 @@ mjs_form_get_property_elements(js_State *J)
 static void
 mjs_form_get_property_encoding(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -505,6 +520,7 @@ mjs_form_get_property_encoding(js_State *J)
 static void
 mjs_form_set_property_encoding(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -542,6 +558,7 @@ mjs_form_set_property_encoding(js_State *J)
 static void
 mjs_form_get_property_length(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -565,6 +582,7 @@ mjs_form_get_property_length(js_State *J)
 static void
 mjs_form_get_property_method(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -601,6 +619,7 @@ mjs_form_get_property_method(js_State *J)
 static void
 mjs_form_set_property_method(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -636,6 +655,7 @@ mjs_form_set_property_method(js_State *J)
 static void
 mjs_form_get_property_name(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -660,6 +680,7 @@ mjs_form_get_property_name(js_State *J)
 static void
 mjs_form_set_property_name(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -691,6 +712,7 @@ mjs_form_set_property_name(js_State *J)
 static void
 mjs_form_get_property_target(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -714,6 +736,7 @@ mjs_form_get_property_target(js_State *J)
 static void
 mjs_form_set_property_target(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -746,6 +769,7 @@ mjs_form_set_property_target(js_State *J)
 static void
 mjs_form_reset(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -768,6 +792,7 @@ mjs_form_reset(js_State *J)
 static void
 mjs_form_submit(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -790,6 +815,7 @@ mjs_form_submit(js_State *J)
 static void
 mjs_form_toString(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -799,6 +825,7 @@ mjs_form_toString(js_State *J)
 static
 void mjs_form_finalizer(js_State *J, void *node)
 {
+	ELOG
 	struct form *form = (struct form *)node;
 
 	attr_erase_from_map(map_form, form);
@@ -807,6 +834,7 @@ void mjs_form_finalizer(js_State *J, void *node)
 void
 mjs_push_form_object(js_State *J, struct form *form)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

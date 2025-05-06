@@ -30,6 +30,7 @@ add_frameset_entry(struct frameset_desc *frameset_desc,
 		   struct frameset_desc *subframe,
 		   char *name, char *url)
 {
+	ELOG
 	struct frame_desc *frame_desc;
 	int offset;
 	static char about_blank[] = "about:blank";
@@ -65,6 +66,7 @@ add_frameset_entry(struct frameset_desc *frameset_desc,
 struct frameset_desc *
 create_frameset(struct frameset_param *fp)
 {
+	ELOG
 	struct frameset_desc *fd;
 	unsigned int size;
 
@@ -107,6 +109,7 @@ create_frameset(struct frameset_param *fp)
 static void
 add_frame_to_list(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	struct document_view *ses_doc_view;
 
 	assert(ses && doc_view);
@@ -131,6 +134,7 @@ static struct document_view *
 find_fd(struct session *ses, char *name,
 	int depth, int x, int y)
 {
+	ELOG
 	struct document_view *doc_view;
 
 	assert(ses && name);
@@ -168,6 +172,7 @@ static struct document_view *
 format_frame(struct session *ses, struct frame_desc *frame_desc,
 	     struct document_options *o, int depth)
 {
+	ELOG
 	struct view_state *vs;
 	struct document_view *doc_view;
 	int plain;
@@ -215,6 +220,7 @@ void
 format_frames(struct session *ses, struct frameset_desc *fsd,
 	      struct document_options *op, int depth)
 {
+	ELOG
 	struct document_options o;
 	int j, n;
 
@@ -300,6 +306,7 @@ format_frames(struct session *ses, struct frameset_desc *fsd,
 static int
 distribute_rows_or_cols(int *val_, int max_value, int *values, int values_count)
 {
+	ELOG
 	int i;
 	int divisor = 0;
 	int tmp_val;
@@ -344,6 +351,7 @@ distribute_rows_or_cols(int *val_, int max_value, int *values, int values_count)
 static int
 distribute_rows_or_cols_that_left(int *val_, int max_value, int *values, int values_count)
 {
+	ELOG
 	int i;
 	int val = *val_;
 	int *tmp_values;
@@ -393,6 +401,7 @@ static int
 extract_rows_or_cols_values(char *str, int max_value, int pixels_per_char,
 			    int **new_values, int *new_values_count)
 {
+	ELOG
 	char *tmp_str;
 	int *values = NULL;
 	int values_count = 0;
@@ -458,6 +467,7 @@ void
 parse_frame_widths(char *str, int max_value, int pixels_per_char,
 		   int **new_values, int *new_values_count)
 {
+	ELOG
 	int val, ret;
 	int *values;
 	int values_count;

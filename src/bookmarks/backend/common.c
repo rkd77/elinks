@@ -45,6 +45,7 @@ static int loaded_backend_num = -1;
 void
 bookmarks_read(void)
 {
+	ELOG
 	char *xdg_config_home = get_xdg_config_home();
 	int backend_num = get_opt_int("bookmarks.file_format", NULL);
 	struct bookmarks_backend *backend = bookmarks_backends[backend_num];
@@ -80,6 +81,7 @@ bookmarks_read(void)
 void
 bookmarks_write(LIST_OF(struct bookmark) *bookmarks_list)
 {
+	ELOG
 	int backend_num = get_opt_int("bookmarks.file_format", NULL);
 	struct bookmarks_backend *backend = bookmarks_backends[backend_num];
 	struct secure_save_info *ssi;

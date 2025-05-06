@@ -98,6 +98,7 @@ struct event_hook_info bookmark_hooks[] = {
 static enum evhook_status
 bookmark_change_hook(va_list ap, void *data)
 {
+	ELOG
 	struct bookmark *bookmark = va_arg(ap, struct bookmark *);
 
 	if (bookmark == bm_snapshot_last_folder)
@@ -111,6 +112,7 @@ static void bookmark_snapshot();
 static enum evhook_status
 bookmark_write_hook(va_list ap, void *data)
 {
+	ELOG
 	if (get_opt_bool("ui.sessions.snapshot", NULL)
 	    && !get_cmd_opt_bool("anonymous"))
 		bookmark_snapshot();
@@ -125,6 +127,7 @@ static int
 change_hook_folder_state(struct session *ses, struct option *current,
 			 struct option *changed)
 {
+	ELOG
 	if (!changed->value.number) {
 		/* We are to collapse all folders on exit; mark bookmarks dirty
 		 * to ensure that this will happen. */
@@ -137,6 +140,7 @@ change_hook_folder_state(struct session *ses, struct option *current,
 static void
 init_bookmarks(struct module *module)
 {
+	ELOG
 	static const struct change_hook_info bookmarks_change_hooks[] = {
 		{ "bookmarks.folder_state", change_hook_folder_state },
 		{ NULL,			    NULL },
@@ -152,6 +156,7 @@ static void
 free_bookmarks(LIST_OF(struct bookmark) *bookmarks_list,
 	       LIST_OF(struct listbox_item) *box_items)
 {
+	ELOG
 	struct bookmark *bm;
 
 	foreach (bm, *bookmarks_list) {
@@ -170,6 +175,7 @@ free_bookmarks(LIST_OF(struct bookmark) *bookmarks_list,
 static void
 done_bookmarks(struct module *module)
 {
+	ELOG
 	/* This is a clean shutdown, so delete the last snapshot. */
 	if (bm_snapshot_last_folder) delete_bookmark(bm_snapshot_last_folder);
 	bm_snapshot_last_folder = NULL;
@@ -198,12 +204,14 @@ struct module bookmarks_module = struct_module(
 void
 read_bookmarks(void)
 {
+	ELOG
 	bookmarks_read();
 }
 
 void
 write_bookmarks(void)
 {
+	ELOG
 	if (get_cmd_opt_bool("anonymous")) {
 		bookmarks_unset_dirty();
 		return;
@@ -219,18 +227,21 @@ write_bookmarks(void)
 void
 bookmarks_set_dirty(void)
 {
+	ELOG
 	bookmarks_dirty = 1;
 }
 
 void
 bookmarks_unset_dirty(void)
 {
+	ELOG
 	bookmarks_dirty = 0;
 }
 
 int
 bookmarks_are_dirty(void)
 {
+	ELOG
 	return (bookmarks_dirty == 1);
 }
 
@@ -239,6 +250,7 @@ bookmarks_are_dirty(void)
 static void
 done_bookmark(struct bookmark *bm)
 {
+	ELOG
 	done_listbox_item(&bookmark_browser, bm->box_item);
 
 	mem_free(bm->title);
@@ -249,6 +261,7 @@ done_bookmark(struct bookmark *bm)
 void
 delete_bookmark(struct bookmark *bm)
 {
+	ELOG
 	static int delete_bookmark_event_id = EVENT_NONE;
 
 	while (!list_empty(bm->child)) {
@@ -279,6 +292,7 @@ delete_bookmark(struct bookmark *bm)
 static void
 delete_folder_by_name(const char *foldername)
 {
+	ELOG
 	struct bookmark *bookmark, *next;
 
 	foreachsafe (bookmark, next, bookmarks) {
@@ -308,6 +322,7 @@ delete_folder_by_name(const char *foldername)
 static struct bookmark *
 init_bookmark(struct bookmark *root, const char *title, const char *url)
 {
+	ELOG
 	struct bookmark *bm;
 
 	bm = (struct bookmark *)mem_calloc(1, sizeof(*bm));
@@ -339,6 +354,7 @@ init_bookmark(struct bookmark *root, const char *title, const char *url)
 static void
 add_bookmark_item_to_bookmarks(struct bookmark *bm, struct bookmark *root, int place)
 {
+	ELOG
 	/* Actually add it */
 	if (place) {
 		if (root)
@@ -383,6 +399,7 @@ struct bookmark *
 add_bookmark(struct bookmark *root, int place, const char *title,
 	     const char *url)
 {
+	ELOG
 	enum listbox_item_type type;
 	struct bookmark *bm;
 
@@ -438,6 +455,7 @@ struct bookmark *
 add_bookmark_cp(struct bookmark *root, int place, int codepage,
 		const char *title, const char *url)
 {
+	ELOG
 	const int utf8_cp = get_cp_index("UTF-8");
 	struct conv_table *table;
 	char *utf8_title = NULL;
@@ -474,6 +492,7 @@ int
 update_bookmark(struct bookmark *bm, int codepage,
 		char *title, char *url)
 {
+	ELOG
 	static int update_bookmark_event_id = EVENT_NONE;
 	const int utf8_cp = get_cp_index("UTF-8");
 	struct conv_table *table;
@@ -544,6 +563,7 @@ update_bookmark(struct bookmark *bm, int codepage,
 struct bookmark *
 get_bookmark_by_name(struct bookmark *folder, char *title)
 {
+	ELOG
 	struct bookmark *bookmark;
 	LIST_OF(struct bookmark) *lh;
 
@@ -559,6 +579,7 @@ get_bookmark_by_name(struct bookmark *folder, char *title)
 struct bookmark *
 get_bookmark(char *url)
 {
+	ELOG
 	struct hash_item *item;
 
 	/** @todo Bug 1066: URLs in bookmark_cache should be UTF-8 */
@@ -575,6 +596,7 @@ get_bookmark(char *url)
 static void
 bookmark_terminal(struct terminal *term, struct bookmark *folder)
 {
+	ELOG
 	char title[MAX_STR_LEN], url[MAX_STR_LEN];
 	struct window *tab;
 	int term_cp = get_terminal_codepage(term);
@@ -603,6 +625,7 @@ bookmark_terminal(struct terminal *term, struct bookmark *folder)
 void
 bookmark_terminal_tabs(struct terminal *term, char *foldername)
 {
+	ELOG
 	struct bookmark *folder = add_bookmark(NULL, 1, foldername, NULL);
 
 	if (!folder) return;
@@ -613,6 +636,7 @@ bookmark_terminal_tabs(struct terminal *term, char *foldername)
 static void
 bookmark_all_terminals(struct bookmark *folder)
 {
+	ELOG
 	unsigned int n = 0;
 	struct terminal *term;
 
@@ -647,6 +671,7 @@ bookmark_all_terminals(struct bookmark *folder)
 char *
 get_auto_save_bookmark_foldername_utf8(void)
 {
+	ELOG
 	char *foldername;
 	int from_cp, to_cp;
 	struct conv_table *convert_table;
@@ -671,6 +696,7 @@ get_auto_save_bookmark_foldername_utf8(void)
 void
 bookmark_auto_save_tabs(struct terminal *term)
 {
+	ELOG
 	char *foldername; /* UTF-8 */
 
 	if (get_cmd_opt_bool("anonymous")
@@ -691,6 +717,7 @@ bookmark_auto_save_tabs(struct terminal *term)
 static void
 bookmark_snapshot(void)
 {
+	ELOG
 	struct string folderstring;
 	struct bookmark *folder;
 
@@ -729,6 +756,7 @@ bookmark_snapshot(void)
 void
 open_bookmark_folder(struct session *ses, char *foldername)
 {
+	ELOG
 	struct bookmark *bookmark;
 	struct bookmark *folder = NULL;
 	struct bookmark *current = NULL;

@@ -37,6 +37,7 @@
 static inline struct dom_node *
 add_sgml_document(struct sgml_parser *parser)
 {
+	ELOG
 	int allocated = parser->flags & SGML_PARSER_INCREMENTAL;
 	struct dom_node *node;
 
@@ -50,6 +51,7 @@ add_sgml_document(struct sgml_parser *parser)
 static inline struct dom_node *
 add_sgml_element(struct dom_stack *stack, struct dom_scanner_token *token)
 {
+	ELOG
 	struct sgml_parser *parser = (struct sgml_parser *)get_sgml_parser(stack);
 	struct dom_node *parent = get_dom_stack_top(stack)->node;
 	struct dom_stack_state *state;
@@ -80,6 +82,7 @@ static inline struct dom_node *
 add_sgml_attribute(struct dom_stack *stack,
 		   struct dom_scanner_token *token, struct dom_scanner_token *valtoken)
 {
+	ELOG
 	struct sgml_parser *parser = (struct sgml_parser *)get_sgml_parser(stack);
 	struct dom_node *parent = get_dom_stack_top(stack)->node;
 	struct dom_string *value = valtoken ? &valtoken->string : NULL;
@@ -109,6 +112,7 @@ static inline struct dom_node *
 add_sgml_proc_instruction(struct dom_stack *stack, struct dom_scanner_token *target,
 			  struct dom_scanner_token *data)
 {
+	ELOG
 	struct dom_node *parent = get_dom_stack_top(stack)->node;
 	struct dom_string *data_str = data ? &data->string : NULL;
 	struct dom_node *node;
@@ -139,6 +143,7 @@ add_sgml_proc_instruction(struct dom_stack *stack, struct dom_scanner_token *tar
 static inline struct dom_node *
 add_sgml_node(struct dom_stack *stack, enum dom_node_type type, struct dom_scanner_token *token)
 {
+	ELOG
 	struct dom_node *parent = get_dom_stack_top(stack)->node;
 	struct dom_node *node = add_dom_node(parent, type, &token->string);
 
@@ -159,6 +164,7 @@ add_sgml_node(struct dom_stack *stack, enum dom_node_type type, struct dom_scann
 static enum dom_code
 call_sgml_error_function(struct dom_stack *stack, struct dom_scanner_token *token)
 {
+	ELOG
 	struct sgml_parser *parser = (struct sgml_parser *)get_sgml_parser(stack);
 	unsigned int line = get_sgml_parser_line_number(parser);
 
@@ -178,6 +184,7 @@ check_sgml_incomplete(struct dom_scanner *scanner,
 		      struct dom_scanner_token *start,
 		      struct dom_scanner_token *token)
 {
+	ELOG
 	if (token && token->type == SGML_TOKEN_INCOMPLETE) {
 		token->string.length += token->string.string - start->string.string;
 		token->string.string = start->string.string;
@@ -201,6 +208,7 @@ check_sgml_incomplete(struct dom_scanner *scanner,
 static inline enum dom_code
 parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 {
+	ELOG
 	struct dom_scanner_token name;
 
 	while (dom_scanner_has_tokens(scanner)) {
@@ -277,6 +285,7 @@ parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 static enum dom_code
 parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 {
+	ELOG
 	struct dom_scanner_token target;
 
 	while (dom_scanner_has_tokens(scanner)) {
@@ -427,6 +436,7 @@ enum dom_code
 parse_sgml(struct sgml_parser *parser, char *buf, size_t bufsize,
 	   int complete)
 {
+	ELOG
 	struct dom_string source = INIT_DOM_STRING(buf, (unsigned int)bufsize);
 	struct dom_node *node;
 
@@ -467,6 +477,7 @@ struct sgml_parsing_state {
 enum dom_code
 sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 {
+	ELOG
 	struct sgml_parser *parser = (struct sgml_parser *)get_sgml_parser(stack);
 	struct sgml_parsing_state *parsing = (struct sgml_parsing_state *)data;
 	int count_lines = !!(parser->flags & SGML_PARSER_COUNT_LINES);
@@ -557,6 +568,7 @@ sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 enum dom_code
 sgml_parsing_pop(struct dom_stack *stack, struct dom_node *node, void *data)
 {
+	ELOG
 	struct sgml_parser *parser = (struct sgml_parser *)get_sgml_parser(stack);
 	struct sgml_parsing_state *parsing = (struct sgml_parsing_state *)data;
 
@@ -617,6 +629,7 @@ static struct dom_stack_context_info sgml_parsing_context_info = {
 unsigned int
 get_sgml_parser_line_number(struct sgml_parser *parser)
 {
+	ELOG
 	struct dom_stack_state *state;
 	struct sgml_parsing_state *pstate;
 
@@ -683,6 +696,7 @@ struct sgml_parser *
 init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 		 struct dom_string *uri, /*enum sgml_parser_flag*/ unsigned int flags)
 {
+	ELOG
 	struct sgml_parser *parser;
 	/*enum dom_stack_flag*/ unsigned int stack_flags = 0;
 
@@ -719,6 +733,7 @@ init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 void
 done_sgml_parser(struct sgml_parser *parser)
 {
+	ELOG
 	while (!dom_stack_is_empty(&parser->parsing))
 		pop_dom_node(&parser->parsing);
 	done_dom_stack(&parser->parsing);

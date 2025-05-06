@@ -10,24 +10,28 @@
 int
 get_https_by_default(void)
 {
+	ELOG
 	return 0;
 }
 
 const char *
 get_default_protocol(void)
 {
+	ELOG
 	return "file://";
 }
 
 char *
 gettext(const char *text)
 {
+	ELOG
 	return (char *)text;
 }
 
 int
 os_default_charset(void)
 {
+	ELOG
 	return -1;
 }
 
@@ -40,12 +44,14 @@ int current_charset;
 int
 get_ctl_handle()
 {
+	ELOG
 	return -1;
 }
 
 int
 main(int argc, char **argv)
 {
+	ELOG
 	/* FIXME: As more protocol tests are added this could start
 	 * taking arguments like --normalize-uri=<arg> etc. */
 	if (argc == 2) {

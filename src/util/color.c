@@ -38,6 +38,7 @@ static const struct color_spec *internal_pointer;
 static void
 colors_list_reset(void)
 {
+	ELOG
 	internal_pointer = color_specs;
 }
 
@@ -48,6 +49,7 @@ colors_list_reset(void)
 static struct fastfind_key_value *
 colors_list_next(void)
 {
+	ELOG
 	static struct fastfind_key_value kv;
 
 	if (!internal_pointer->name) return NULL;
@@ -68,6 +70,7 @@ static struct fastfind_index ff_colors_index
 void
 init_colors_lookup(void)
 {
+	ELOG
 #ifdef USE_FASTFIND
 	fastfind_index(&ff_colors_index, FF_COMPRESS | FF_LOCALE_INDEP);
 #endif
@@ -76,6 +79,7 @@ init_colors_lookup(void)
 void
 free_colors_lookup(void)
 {
+	ELOG
 #ifdef USE_FASTFIND
 	fastfind_done(&ff_colors_index);
 #endif
@@ -84,6 +88,7 @@ free_colors_lookup(void)
 int
 decode_color(const char *str, int slen, color_T *color)
 {
+	ELOG
 	if (*str == '#' && (slen == 7 || slen == 4)) {
 		char buffer[7];
 		char *end;
@@ -139,6 +144,7 @@ decode_hex_color:
 const char *
 get_color_string(color_T color, char hexcolor[8])
 {
+	ELOG
 	const struct color_spec *cs;
 
 	for (cs = color_specs; cs->name; cs++)
@@ -152,6 +158,7 @@ get_color_string(color_T color, char hexcolor[8])
 void
 color_to_string(color_T color, char str[8])
 {
+	ELOG
 	str[0]='#';
 	elinks_ulongcat(&str[1], NULL, (unsigned long) color, 6, '0', 16, 0);
 }

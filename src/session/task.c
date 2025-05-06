@@ -41,6 +41,7 @@ static void loading_callback(struct download *, struct session *);
 static void
 free_task(struct session *ses)
 {
+	ELOG
 	assertm(ses->task.type, "Session has no task");
 	if_assert_failed return;
 
@@ -55,6 +56,7 @@ free_task(struct session *ses)
 void
 abort_preloading(struct session *ses, int interrupt)
 {
+	ELOG
 	if (!ses->task.type) {
 		/* ses->task.target.frame must be freed in the
 		 * destroy_session() => abort_loading() =>
@@ -86,6 +88,7 @@ ses_load(struct session *ses, struct uri *uri, char *target_frame,
 	 struct location *target_location, cache_mode_T cache_mode,
 	 enum task_type task_type)
 {
+	ELOG
 	ses->loading.callback = (download_callback_T *) loading_callback;
 	ses->loading.data = ses;
 	ses->loading_uri = uri;
@@ -101,6 +104,7 @@ ses_load(struct session *ses, struct uri *uri, char *target_frame,
 static void
 post_yes(void *task_)
 {
+	ELOG
 	struct task *task = (struct task *)task_;
 
 	abort_preloading(task->ses, 0);
@@ -114,6 +118,7 @@ post_yes(void *task_)
 static void
 post_no(void *task_)
 {
+	ELOG
 	struct task *task = (struct task *)task_;
 
 	reload(task->ses, CACHE_MODE_NORMAL);
@@ -133,6 +138,7 @@ post_no(void *task_)
 static int
 check_malicious_uri(struct uri *uri)
 {
+	ELOG
 	char *user, *pos;
 	int warn = 0;
 
@@ -178,6 +184,7 @@ ses_goto(struct session *ses, struct uri *uri, char *target_frame,
 	 struct location *target_location, cache_mode_T cache_mode,
 	 enum task_type task_type, int redir)
 {
+	ELOG
 	/* [gettext_accelerator_context(ses_goto)] */
 	struct task *task;
 	int referrer_incomplete = 0;
@@ -307,6 +314,7 @@ ses_goto(struct session *ses, struct uri *uri, char *target_frame,
 struct view_state *
 ses_forward(struct session *ses, int loaded_in_frame)
 {
+	ELOG
 	struct location *loc = NULL;
 	struct view_state *vs;
 
@@ -390,6 +398,7 @@ x:
 static void
 ses_imgmap(struct session *ses)
 {
+	ELOG
 	struct cache_entry *cached = find_in_cache(ses->loading_uri);
 	struct document_view *doc_view = current_frame(ses);
 	struct fragment *fragment;
@@ -429,6 +438,7 @@ enum do_move {
 static enum do_move
 do_redirect(struct session *ses, struct download **download_p, struct cache_entry *cached)
 {
+	ELOG
 	enum task_type task = ses->task.type;
 
 	if (task == TASK_HISTORY && !have_location(ses))
@@ -484,6 +494,7 @@ do_redirect(struct session *ses, struct download **download_p, struct cache_entr
 static enum do_move
 do_move(struct session *ses, struct download **download_p)
 {
+	ELOG
 	struct cache_entry *cached;
 
 	assert(download_p && *download_p);
@@ -547,6 +558,7 @@ do_move(struct session *ses, struct download **download_p)
 static void
 loading_callback(struct download *download, struct session *ses)
 {
+	ELOG
 	enum do_move d;
 
 	assertm(ses->task.type, "loading_callback: no ses->task");
@@ -585,6 +597,7 @@ static void
 do_follow_url(struct session *ses, struct uri *uri, char *target,
 	      enum task_type task, cache_mode_T cache_mode, int do_referrer)
 {
+	ELOG
 	struct uri *referrer = NULL;
 	protocol_external_handler_T *external_handler;
 
@@ -654,6 +667,7 @@ static void
 follow_url(struct session *ses, struct uri *uri, char *target,
 	   enum task_type task, cache_mode_T cache_mode, int referrer)
 {
+	ELOG
 #ifdef CONFIG_SCRIPTING
 	static int follow_url_event_id = EVENT_NONE;
 	char *uristring;
@@ -695,6 +709,7 @@ follow_url(struct session *ses, struct uri *uri, char *target,
 void
 goto_uri(struct session *ses, struct uri *uri)
 {
+	ELOG
 	follow_url(ses, uri, NULL, TASK_FORWARD, CACHE_MODE_NORMAL, 0);
 }
 
@@ -702,12 +717,14 @@ void
 goto_uri_frame(struct session *ses, struct uri *uri,
 	       char *target, cache_mode_T cache_mode)
 {
+	ELOG
 	follow_url(ses, uri, target, TASK_FORWARD, cache_mode, 1);
 }
 
 void
 delayed_goto_uri_frame(void *data)
 {
+	ELOG
 	struct delayed_open *deo = (struct delayed_open *)data;
 	struct frame *frame;
 
@@ -727,6 +744,7 @@ delayed_goto_uri_frame(void *data)
 void
 map_selected(struct terminal *term, void *ld_, void *ses_)
 {
+	ELOG
 	struct link_def *ld = (struct link_def *)ld_;
 	struct session *ses = (struct session *)ses_;
 	struct uri *uri = get_uri(ld->link, URI_NONE);
@@ -739,6 +757,7 @@ map_selected(struct terminal *term, void *ld_, void *ses_)
 void
 goto_url(struct session *ses, char *url)
 {
+	ELOG
 	struct uri *uri = get_uri(url, URI_NONE);
 
 	goto_uri(ses, uri);
@@ -748,6 +767,7 @@ goto_url(struct session *ses, char *url)
 struct uri *
 get_hooked_uri(const char *uristring_, struct session *ses, char *cwd)
 {
+	ELOG
 	struct uri *uri;
 	char *uristring = stracpy(uristring_);
 
@@ -770,6 +790,7 @@ get_hooked_uri(const char *uristring_, struct session *ses, char *cwd)
 void
 goto_url_with_hook(struct session *ses, const char *url)
 {
+	ELOG
 	char *cwd = ses->tab->term->cwd;
 	struct uri *uri;
 
@@ -787,6 +808,7 @@ goto_url_with_hook(struct session *ses, const char *url)
 int
 goto_url_home(struct session *ses)
 {
+	ELOG
 	const char *homepage = get_opt_str("ui.sessions.homepage", ses);
 
 	if (!*homepage) homepage = getenv("WWW_HOME");
@@ -803,5 +825,6 @@ goto_url_home(struct session *ses)
 void
 goto_imgmap(struct session *ses, struct uri *uri, char *target)
 {
+	ELOG
 	follow_url(ses, uri, target, TASK_IMGMAP, CACHE_MODE_NORMAL, 1);
 }

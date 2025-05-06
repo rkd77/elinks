@@ -114,6 +114,7 @@ static void add_to_document_list(LIST_OF(struct document_list) *list, struct doc
 static void
 remove_document_from_format_cache(struct document *document)
 {
+	ELOG
 	struct document_list *item;
 
 	foreach (item, format_cache) {
@@ -128,6 +129,7 @@ remove_document_from_format_cache(struct document *document)
 static void
 move_document_to_top_of_format_cache(struct document *document)
 {
+	ELOG
 	struct document_list *item;
 
 	foreach (item, format_cache) {
@@ -142,6 +144,7 @@ move_document_to_top_of_format_cache(struct document *document)
 static void
 dump_format_cache(int line)
 {
+	ELOG
 	fprintf(stderr, "line=%d size=%ld", line, format_cache.size());
 	for (auto it = format_cache.begin(); it != format_cache.end(); it++) {
 		fprintf(stderr, " %p", *it);
@@ -155,6 +158,7 @@ dump_format_cache(int line)
 static void
 found_dns(void *data, struct sockaddr_storage *addr, int addrlen)
 {
+	ELOG
 	char buf[64];
 	const char *res;
 	struct sockaddr *s;
@@ -178,6 +182,7 @@ found_dns(void *data, struct sockaddr_storage *addr, int addrlen)
 static void
 get_ip(struct document *document)
 {
+	ELOG
 #ifdef HAVE_INET_NTOP
 	struct uri *uri = document->uri;
 	char *host = get_uri_string(uri, URI_DNS_HOST);
@@ -192,6 +197,7 @@ get_ip(struct document *document)
 struct document *
 init_document(struct cache_entry *cached, struct document_options *options)
 {
+	ELOG
 	struct document *document = (struct document *)mem_calloc(1, sizeof(*document));
 
 	if (!document) return NULL;
@@ -233,6 +239,7 @@ init_document(struct cache_entry *cached, struct document_options *options)
 static void
 free_frameset_desc(struct frameset_desc *frameset_desc)
 {
+	ELOG
 	int i;
 
 	for (i = 0; i < frameset_desc->n; i++) {
@@ -251,6 +258,7 @@ free_frameset_desc(struct frameset_desc *frameset_desc)
 static void
 free_iframeset_desc(struct iframeset_desc *iframeset_desc)
 {
+	ELOG
 	int i;
 
 	for (i = 0; i < iframeset_desc->n; i++) {
@@ -270,6 +278,7 @@ free_iframeset_desc(struct iframeset_desc *iframeset_desc)
 void
 done_link_members(struct link *link)
 {
+	ELOG
 	if (link->event_hooks) {
 		struct script_event_hook *evhook, *safety;
 
@@ -292,6 +301,7 @@ done_link_members(struct link *link)
 static void
 copy_link(struct link *dest, struct link *src)
 {
+	ELOG
 	dest->accesskey = src->accesskey;
 	dest->type = src->type;
 
@@ -347,6 +357,7 @@ copy_link(struct link *dest, struct link *src)
 static void
 copy_line(struct line *dest, struct line *src)
 {
+	ELOG
 	dest->length = src->length;
 	dest->ch.chars = mem_alloc(dest->length * sizeof(struct screen_char));
 
@@ -358,6 +369,7 @@ copy_line(struct line *dest, struct line *src)
 void
 reset_document(struct document *document)
 {
+	ELOG
 	assert(document);
 	if_assert_failed return;
 
@@ -439,6 +451,7 @@ reset_document(struct document *document)
 void
 done_document(struct document *document)
 {
+	ELOG
 	assert(document);
 	if_assert_failed return;
 
@@ -528,6 +541,7 @@ done_document(struct document *document)
 void
 release_document(struct document *document)
 {
+	ELOG
 	assert(document);
 	if_assert_failed return;
 
@@ -541,6 +555,7 @@ release_document(struct document *document)
 int
 find_tag(struct document *document, char *name, int namelen)
 {
+	ELOG
 	struct tag *tag;
 
 	foreach (tag, document->tags)
@@ -559,6 +574,7 @@ find_tag(struct document *document, char *name, int namelen)
 unsigned long
 get_document_css_magic(struct document *document)
 {
+	ELOG
 	unsigned long css_magic = 0;
 	struct uri *uri;
 	int index;
@@ -589,6 +605,7 @@ get_document_css_magic(struct document *document)
 void
 update_cached_document_options(struct session *ses)
 {
+	ELOG
 	struct document *document;
 	struct active_link_options active_link;
 	struct document_list *item;
@@ -612,6 +629,7 @@ update_cached_document_options(struct session *ses)
 static void
 add_to_document_list(LIST_OF(struct document_list) *list, struct document *document)
 {
+	ELOG
 	struct document_list *item = (struct document_list *)mem_alloc(sizeof(*item));
 
 	if (!item) {
@@ -624,6 +642,7 @@ add_to_document_list(LIST_OF(struct document_list) *list, struct document *docum
 struct document *
 get_cached_document(struct cache_entry *cached, struct document_options *options)
 {
+	ELOG
 	struct document *ret = NULL;
 	struct document_list *item, *it;
 	INIT_LIST_OF(struct document_list, to_remove);
@@ -665,6 +684,7 @@ get_cached_document(struct cache_entry *cached, struct document_options *options
 void
 shrink_format_cache(int whole)
 {
+	ELOG
 	struct document *document;
 	struct document_list *item, *it;
 	int format_cache_size = get_opt_int("document.cache.format.size", NULL);
@@ -720,12 +740,14 @@ shrink_format_cache(int whole)
 int
 get_format_cache_size(void)
 {
+	ELOG
 	return list_size(&format_cache);
 }
 
 int
 get_format_cache_used_count(void)
 {
+	ELOG
 	struct document_list *it;
 	struct document *document;
 	int i = 0;
@@ -740,6 +762,7 @@ get_format_cache_used_count(void)
 int
 get_format_cache_refresh_count(void)
 {
+	ELOG
 	struct document_list *it;
 	struct document *document;
 	int i = 0;
@@ -758,12 +781,14 @@ get_format_cache_refresh_count(void)
 static void
 init_documents(struct module *module)
 {
+	ELOG
 	init_tags_lookup();
 }
 
 static void
 done_documents(struct module *module)
 {
+	ELOG
 	free_tags_lookup();
 	free_table_cache();
 }
@@ -774,6 +799,7 @@ done_documents(struct module *module)
 static int
 comp_offset(const void *v1, const void *v2)
 {
+	ELOG
 	const struct offset_linknum *l1 = (const struct offset_linknum *)v1, *l2 = (const struct offset_linknum *)v2;
 
 	assert(l1 && l2);
@@ -793,6 +819,7 @@ comp_offset(const void *v1, const void *v2)
 static void
 sort_offset(struct document *document)
 {
+	ELOG
 	if (!document->nlinks) {
 		return;
 	}
@@ -814,6 +841,7 @@ sort_offset(struct document *document)
 int
 get_link_number_by_offset(struct document *document, int offset)
 {
+	ELOG
 	if (!document->links_sorted) {
 		sort_links(document);
 	}
@@ -835,6 +863,7 @@ get_link_number_by_offset(struct document *document, int offset)
 void
 insert_document_into_document(struct document *dest, struct document *src, int y)
 {
+	ELOG
 	if (!dest || !src || !src->height) {
 		return;
 	}
@@ -924,6 +953,7 @@ insert_document_into_document(struct document *dest, struct document *src, int y
 void
 remove_document_from_document(struct document *dest, struct document *src, int y)
 {
+	ELOG
 	if (!dest || !src || !src->height) {
 		return;
 	}

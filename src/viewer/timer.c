@@ -26,6 +26,7 @@ static int timer_duration = 0;
 int
 get_timer_duration(void)
 {
+	ELOG
 	return timer_duration;
 }
 
@@ -34,6 +35,7 @@ get_timer_duration(void)
 static void
 count_down(void *xxx)
 {
+	ELOG
 	struct keybinding *keybinding;
 
 	timer_duration--;
@@ -65,6 +67,7 @@ count_down(void *xxx)
 void
 reset_timer(void)
 {
+	ELOG
 	kill_timer(&countdown);
 
 	if (!get_opt_int("ui.timer.enable", NULL)) return;
@@ -76,12 +79,14 @@ reset_timer(void)
 static void
 init_timer(struct module *module)
 {
+	ELOG
 	reset_timer();
 }
 
 static void
 done_timer(struct module *module)
 {
+	ELOG
 	kill_timer(&countdown);
 }
 

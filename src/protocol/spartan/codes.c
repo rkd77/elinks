@@ -30,6 +30,7 @@
 static const char *
 spartan_code_to_string(int code)
 {
+	ELOG
 	switch (code) {
 		case 2:
 			return "OK";
@@ -47,6 +48,7 @@ spartan_code_to_string(int code)
 static char *
 get_spartan_error_document(struct terminal *term, struct uri *uri, const char *msg, int code)
 {
+	ELOG
 	const char *codestr = spartan_code_to_string(code);
 	char *title = asprintfa(_("spartan error %d", term), code);
 	struct string string;
@@ -94,6 +96,7 @@ get_spartan_error_document(struct terminal *term, struct uri *uri, const char *m
 static void
 show_spartan_error_document(struct session *ses, void *data)
 {
+	ELOG
 	struct spartan_error_info *info = (struct spartan_error_info *)data;
 	struct terminal *term = ses->tab->term;
 	struct cache_entry *cached = find_in_cache(info->uri);
@@ -131,6 +134,7 @@ show_spartan_error_document(struct session *ses, void *data)
 void
 spartan_error_document(struct connection *conn, const char *msg, int code)
 {
+	ELOG
 	struct spartan_error_info *info;
 
 	assert(conn && conn->uri);

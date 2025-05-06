@@ -33,6 +33,7 @@ static void transform_md5(uint32_t buf[4], uint32_t const in[16]);
 static void
 reverse_md5_bytes(unsigned char *buf, unsigned int longs)
 {
+	ELOG
 	uint32_t t;
 
 	do {
@@ -49,6 +50,7 @@ reverse_md5_bytes(unsigned char *buf, unsigned int longs)
 void
 init_md5(struct md5_context *ctx)
 {
+	ELOG
 	ctx->buf[0] = 0x67452301;
 	ctx->buf[1] = 0xefcdab89;
 	ctx->buf[2] = 0x98badcfe;
@@ -64,6 +66,7 @@ init_md5(struct md5_context *ctx)
 void
 update_md5(struct md5_context *ctx, const char *buf, unsigned long len)
 {
+	ELOG
 	uint32_t t;
 
 	/* Update bitcount */
@@ -113,6 +116,7 @@ update_md5(struct md5_context *ctx, const char *buf, unsigned long len)
 void
 done_md5(struct md5_context *ctx, md5_digest_bin_T digest)
 {
+	ELOG
 	unsigned int count;
 	unsigned char *p;
 
@@ -157,6 +161,7 @@ unsigned char *
 digest_md5(const char *data, unsigned long length,
 	   md5_digest_bin_T digest)
 {
+	ELOG
 	struct md5_context ctx;
 
 	init_md5(&ctx);
@@ -187,6 +192,7 @@ digest_md5(const char *data, unsigned long length,
 static void
 transform_md5(uint32_t buf[4], uint32_t const in[16])
 {
+	ELOG
 	uint32_t a, b, c, d;
 
 	a = buf[0];

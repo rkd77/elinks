@@ -25,6 +25,7 @@
 static void
 mjs_location_get_property_hash(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -60,6 +61,7 @@ mjs_location_get_property_hash(js_State *J)
 static void
 mjs_location_get_property_host(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -94,6 +96,7 @@ mjs_location_get_property_host(js_State *J)
 static void
 mjs_location_get_property_hostname(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -128,6 +131,7 @@ mjs_location_get_property_hostname(js_State *J)
 static void
 mjs_location_get_property_href(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -162,6 +166,7 @@ mjs_location_get_property_href(js_State *J)
 static void
 mjs_location_get_property_origin(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -196,6 +201,7 @@ mjs_location_get_property_origin(js_State *J)
 static void
 mjs_location_get_property_pathname(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -231,6 +237,7 @@ mjs_location_get_property_pathname(js_State *J)
 static void
 mjs_location_get_property_port(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -264,6 +271,7 @@ mjs_location_get_property_port(js_State *J)
 static void
 mjs_location_get_property_protocol(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -302,6 +310,7 @@ mjs_location_get_property_protocol(js_State *J)
 static void
 mjs_location_get_property_search(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -338,6 +347,7 @@ mjs_location_get_property_search(js_State *J)
 static void
 mjs_location_set_property_hash(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -368,6 +378,7 @@ mjs_location_set_property_hash(js_State *J)
 static void
 mjs_location_set_property_host(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -398,6 +409,7 @@ mjs_location_set_property_host(js_State *J)
 static void
 mjs_location_set_property_hostname(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -428,6 +440,7 @@ mjs_location_set_property_hostname(js_State *J)
 static void
 mjs_location_set_property_href(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -458,6 +471,7 @@ mjs_location_set_property_href(js_State *J)
 static void
 mjs_location_set_property_pathname(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -488,6 +502,7 @@ mjs_location_set_property_pathname(js_State *J)
 static void
 mjs_location_set_property_port(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -518,6 +533,7 @@ mjs_location_set_property_port(js_State *J)
 static void
 mjs_location_set_property_protocol(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -548,6 +564,7 @@ mjs_location_set_property_protocol(js_State *J)
 static void
 mjs_location_set_property_search(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -578,6 +595,7 @@ mjs_location_set_property_search(js_State *J)
 static void
 mjs_location_assign(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -609,6 +627,7 @@ mjs_location_assign(js_State *J)
 static void
 mjs_location_reload(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -633,6 +652,7 @@ mjs_location_reload(js_State *J)
 static void
 mjs_location_replace(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -674,6 +694,7 @@ mjs_location_replace(js_State *J)
 static void
 mjs_location_toString(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -683,6 +704,7 @@ mjs_location_toString(js_State *J)
 static void
 mjs_location_finalizer(js_State *J, void *n)
 {
+	ELOG
 	struct view_state *vs = (struct view_state *)n;
 
 	if (vs) {
@@ -693,6 +715,7 @@ mjs_location_finalizer(js_State *J, void *n)
 int
 mjs_location_init(js_State *J, struct view_state *vs)
 {
+	ELOG
 	js_newobject(J);
 	{
 		js_newuserdata(J, "location", vs, mjs_location_finalizer);
@@ -719,5 +742,6 @@ mjs_location_init(js_State *J, struct view_state *vs)
 void
 mjs_push_location(js_State *J, struct view_state *vs)
 {
+	ELOG
 	mjs_location_init(J, vs);
 }

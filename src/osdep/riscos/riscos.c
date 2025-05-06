@@ -15,5 +15,6 @@
 int
 is_xterm(void)
 {
+	ELOG
        return 1;
 }

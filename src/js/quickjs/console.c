@@ -27,6 +27,7 @@ static int failed_assertions;
 static JSValue
 js_console_assert(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -68,6 +69,7 @@ js_console_assert(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst 
 static JSValue
 js_console_log_common(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv, const char *log_filename)
 {
+	ELOG
 	REF_JS(this_val);
 
 	if (argc != 1 || !log_filename)
@@ -100,6 +102,7 @@ js_console_log_common(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 static JSValue
 js_console_log(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -111,6 +114,7 @@ js_console_log(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *ar
 static JSValue
 js_console_error(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -122,6 +126,7 @@ js_console_error(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *
 static JSValue
 js_console_warn(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -133,6 +138,7 @@ js_console_warn(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *a
 static JSValue
 js_console_exit(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -148,6 +154,7 @@ js_console_exit(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *a
 static JSValue
 js_console_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -172,6 +179,7 @@ static JSClassDef js_console_class = {
 int
 js_console_init(JSContext *ctx)
 {
+	ELOG
 	JSValue console_proto;
 
 	/* create the console class */

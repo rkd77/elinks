@@ -157,6 +157,7 @@ static INIT_LIST_OF(struct strerror_val, strerror_buf);
 char *
 get_state_message(struct connection_state state, struct terminal *term)
 {
+	ELOG
 	char *e;
 	struct strerror_val *s;
 	int len;
@@ -199,5 +200,6 @@ get_state_message(struct connection_state state, struct terminal *term)
 void
 done_state_message(void)
 {
+	ELOG
 	free_list(strerror_buf);
 }

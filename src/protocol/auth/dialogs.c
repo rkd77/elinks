@@ -31,6 +31,7 @@
 static void
 auth_ok(void *data)
 {
+	ELOG
 	struct dialog *dlg = (struct dialog *)data;
 	struct auth_entry *entry = (struct auth_entry *)dlg->udata2;
 	struct session *ses = (struct session *)dlg->udata;
@@ -90,6 +91,7 @@ auth_ok(void *data)
 static void
 auth_cancel(void *data)
 {
+	ELOG
 	struct auth_entry *entry = (struct auth_entry *)data;
 
 	entry->blocked = 0;
@@ -100,6 +102,7 @@ auth_cancel(void *data)
 void
 do_auth_dialog(struct session *ses, void *data)
 {
+	ELOG
 	/* [gettext_accelerator_context(do_auth_dialog)] */
 	struct dialog *dlg;
 	struct dialog_data *dlg_data;
@@ -172,24 +175,28 @@ do_auth_dialog(struct session *ses, void *data)
 static void
 lock_auth_entry(struct listbox_item *item)
 {
+	ELOG
 	object_lock((struct auth_entry *) item->udata);
 }
 
 static void
 unlock_auth_entry(struct listbox_item *item)
 {
+	ELOG
 	object_unlock((struct auth_entry *) item->udata);
 }
 
 static int
 is_auth_entry_used(struct listbox_item *item)
 {
+	ELOG
 	return is_object_used((struct auth_entry *) item->udata);
 }
 
 static char *
 get_auth_entry_text(struct listbox_item *item, struct terminal *term)
 {
+	ELOG
 	struct auth_entry *auth_entry = (struct auth_entry *)item->udata;
 
 	return get_uri_string(auth_entry->uri, URI_HTTP_AUTH);
@@ -198,6 +205,7 @@ get_auth_entry_text(struct listbox_item *item, struct terminal *term)
 static char *
 get_auth_entry_info(struct listbox_item *item, struct terminal *term)
 {
+	ELOG
 	struct auth_entry *auth_entry = (struct auth_entry *)item->udata;
 	struct string info;
 
@@ -231,6 +239,7 @@ get_auth_entry_info(struct listbox_item *item, struct terminal *term)
 static struct uri *
 get_auth_entry_uri(struct listbox_item *item)
 {
+	ELOG
 	struct auth_entry *auth_entry = (struct auth_entry *)item->udata;
 
 	return get_composed_uri(auth_entry->uri, URI_HTTP_AUTH);
@@ -239,18 +248,21 @@ get_auth_entry_uri(struct listbox_item *item)
 static struct listbox_item *
 get_auth_entry_root(struct listbox_item *box_item)
 {
+	ELOG
 	return NULL;
 }
 
 static int
 can_delete_auth_entry(struct listbox_item *item)
 {
+	ELOG
 	return 1;
 }
 
 static void
 delete_auth_entry(struct listbox_item *item, int last)
 {
+	ELOG
 	struct auth_entry *auth_entry = (struct auth_entry *)item->udata;
 
 	assert(!is_object_used(auth_entry));
@@ -318,5 +330,6 @@ struct_hierbox_browser(
 void
 auth_manager(struct session *ses)
 {
+	ELOG
 	hierbox_browser(&auth_browser, ses);
 }

@@ -43,6 +43,7 @@ static const struct mime_backend *const mime_backends[] = {
 char *
 get_content_type_backends(char *extension)
 {
+	ELOG
 	const struct mime_backend *backend;
 	int i;
 
@@ -61,6 +62,7 @@ get_content_type_backends(char *extension)
 struct mime_handler *
 get_mime_handler_backends(char *ctype, int have_x)
 {
+	ELOG
 	const struct mime_backend *backend;
 	int i;
 
@@ -79,6 +81,7 @@ get_mime_handler_backends(char *ctype, int have_x)
 char *
 get_next_path_filename(char **path_ptr, unsigned char separator)
 {
+	ELOG
 	char *path = *path_ptr;
 	char *filename = path;
 	int filenamelen;
@@ -112,6 +115,7 @@ struct mime_handler *
 init_mime_handler(char *program, char *description,
 		  const char *backend_name, int ask, int block)
 {
+	ELOG
 	int programlen = strlen(program);
 	struct mime_handler *handler;
 

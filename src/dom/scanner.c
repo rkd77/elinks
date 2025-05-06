@@ -18,6 +18,7 @@ int
 map_dom_scanner_string(struct dom_scanner *scanner,
 		   char *ident, char *end, int base_type)
 {
+	ELOG
 	const struct dom_scanner_string_mapping *mappings = scanner->info->mappings;
 	struct dom_string name = INIT_DOM_STRING(ident, (unsigned int)(end - ident));
 
@@ -34,6 +35,7 @@ map_dom_scanner_string(struct dom_scanner *scanner,
 struct dom_scanner_token *
 skip_dom_scanner_tokens(struct dom_scanner *scanner, int skipto, int precedence)
 {
+	ELOG
 	struct dom_scanner_token *token = get_dom_scanner_token(scanner);
 
 	/* Skip tokens while handling some basic precedens of special chars
@@ -53,6 +55,7 @@ skip_dom_scanner_tokens(struct dom_scanner *scanner, int skipto, int precedence)
 void
 dump_dom_scanner(struct dom_scanner *scanner)
 {
+	ELOG
 	unsigned char buffer[MAX_STR_LEN];
 	struct dom_scanner_token *token = scanner->current;
 	struct dom_scanner_token *table_end = scanner->table + scanner->tokens;
@@ -103,6 +106,7 @@ dump_dom_scanner(struct dom_scanner *scanner)
 struct dom_scanner_token *
 get_dom_scanner_token_debug(struct dom_scanner *scanner)
 {
+	ELOG
 	if (!dom_scanner_has_tokens(scanner)) return NULL;
 
 	dump_dom_scanner(scanner);
@@ -121,6 +125,7 @@ get_dom_scanner_token_debug(struct dom_scanner *scanner)
 static inline void
 init_dom_scanner_info(struct dom_scanner_info *scanner_info)
 {
+	ELOG
 	const struct dom_scan_table_info *info = scanner_info->scan_table_info;
 	int *scan_table = scanner_info->scan_table;
 	int i;
@@ -157,6 +162,7 @@ init_dom_scanner(struct dom_scanner *scanner, struct dom_scanner_info *scanner_i
 		 struct dom_string *string, int state, int count_lines, int complete,
 		 int check_complete, int detect_errors)
 {
+	ELOG
 	if (!scanner_info->initialized) {
 		init_dom_scanner_info(scanner_info);
 		scanner_info->initialized = 1;

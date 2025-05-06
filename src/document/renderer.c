@@ -56,6 +56,7 @@
 static void
 render_encoded_document(struct cache_entry *cached, struct document *document)
 {
+	ELOG
 	struct uri *uri = cached->uri;
 	stream_encoding_T encoding = ENCODING_NONE;
 	struct fragment *fragment = get_cache_fragment(cached);
@@ -152,6 +153,7 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 void
 compress_empty_lines(struct document *document)
 {
+	ELOG
 	int minus = 0;
 	int maxy = document->height;
 	int i,x,y;
@@ -251,6 +253,7 @@ void
 render_document(struct view_state *vs, struct document_view *doc_view,
 		struct document_options *options)
 {
+	ELOG
 	char *name;
 	struct document *document;
 	struct cache_entry *cached;
@@ -369,6 +372,7 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 void
 render_document_frames(struct session *ses, int no_cache)
 {
+	ELOG
 	struct document_options doc_opts;
 	struct document_view *doc_view;
 	struct document_view *current_doc_view = NULL;
@@ -460,6 +464,7 @@ render_document_frames(struct session *ses, int no_cache)
 static int
 comp_links(const void *v1, const void *v2)
 {
+	ELOG
 	const struct link *l1 = (const struct link *)v1, *l2 = (const struct link *)v2;
 
 	assert(l1 && l2);
@@ -487,6 +492,7 @@ comp_links(const void *v1, const void *v2)
 static int
 comp_ints(const void *v1, const void *v2)
 {
+	ELOG
 	const struct reverse_link_lookup *l1 = (const struct reverse_link_lookup *)v1, *l2 = (const struct reverse_link_lookup *)v2;
 
 	assert(l1 && l2);
@@ -507,6 +513,7 @@ comp_ints(const void *v1, const void *v2)
 void
 sort_links(struct document *document)
 {
+	ELOG
 	int i;
 
 	assert(document);
@@ -580,6 +587,7 @@ get_convert_table(char *head, int to_cp,
 		  int default_cp, int *from_cp,
 		  enum cp_status *cp_status, int ignore_server_cp)
 {
+	ELOG
 	char *part = head;
 	int cp_index = -1;
 

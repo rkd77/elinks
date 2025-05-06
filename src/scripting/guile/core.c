@@ -42,6 +42,7 @@
 void
 init_guile(struct module *module)
 {
+	ELOG
 	char *xdg_config_home = get_xdg_config_home();
 	SCM user_module;
 	char *path;

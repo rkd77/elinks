@@ -18,6 +18,7 @@ get_screen_char_template(struct screen_char *template_,
 			 struct document_options *options,
 			 struct text_style style)
 {
+	ELOG
 	template_->attr = 0;
 	template_->data = ' ';
 

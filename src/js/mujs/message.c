@@ -43,6 +43,7 @@ struct message_event {
 static
 void mjs_messageEvent_finalizer(js_State *J, void *val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -63,6 +64,7 @@ static int lastEventId;
 void
 mjs_push_messageEvent(js_State *J, char *data, char *origin, char *source)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -100,6 +102,7 @@ mjs_push_messageEvent(js_State *J, char *data, char *origin, char *source)
 static void
 mjs_messageEvent_get_property_bubbles(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -115,6 +118,7 @@ mjs_messageEvent_get_property_bubbles(js_State *J)
 static void
 mjs_messageEvent_get_property_cancelable(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -130,6 +134,7 @@ mjs_messageEvent_get_property_cancelable(js_State *J)
 static void
 mjs_messageEvent_get_property_composed(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -145,6 +150,7 @@ mjs_messageEvent_get_property_composed(js_State *J)
 static void
 mjs_messageEvent_get_property_data(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -160,6 +166,7 @@ mjs_messageEvent_get_property_data(js_State *J)
 static void
 mjs_messageEvent_get_property_defaultPrevented(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -175,6 +182,7 @@ mjs_messageEvent_get_property_defaultPrevented(js_State *J)
 static void
 mjs_messageEvent_get_property_lastEventId(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -190,6 +198,7 @@ mjs_messageEvent_get_property_lastEventId(js_State *J)
 static void
 mjs_messageEvent_get_property_origin(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -205,6 +214,7 @@ mjs_messageEvent_get_property_origin(js_State *J)
 static void
 mjs_messageEvent_get_property_source(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -220,6 +230,7 @@ mjs_messageEvent_get_property_source(js_State *J)
 static void
 mjs_messageEvent_get_property_type(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -235,6 +246,7 @@ mjs_messageEvent_get_property_type(js_State *J)
 static void
 mjs_messageEvent_preventDefault(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -253,6 +265,7 @@ mjs_messageEvent_preventDefault(js_State *J)
 static void
 mjs_messageEvent_fun(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -262,6 +275,7 @@ mjs_messageEvent_fun(js_State *J)
 static void
 mjs_messageEvent_constructor(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -321,6 +335,7 @@ mjs_messageEvent_constructor(js_State *J)
 int
 mjs_messageEvent_init(js_State *J)
 {
+	ELOG
 	js_pushglobal(J);
 	js_newcconstructor(J, mjs_messageEvent_fun, mjs_messageEvent_constructor, "MessageEvent", 0);
 	js_defglobal(J, "MessageEvent", JS_DONTENUM);

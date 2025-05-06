@@ -23,6 +23,7 @@
 static inline void
 do_script_hook_goto_url(struct session *ses, char **url)
 {
+	ELOG
 	int count;
 	dSP;	/* Keep in variables declaration block. */
 
@@ -66,6 +67,7 @@ do_script_hook_goto_url(struct session *ses, char **url)
 static enum evhook_status
 script_hook_goto_url(va_list ap, void *data)
 {
+	ELOG
 	char **url = va_arg(ap, char **);
 	struct session *ses = va_arg(ap, struct session *);
 
@@ -78,6 +80,7 @@ script_hook_goto_url(va_list ap, void *data)
 static inline void
 do_script_hook_follow_url(char **url)
 {
+	ELOG
 	int count;
 	dSP;	/* Keep in variables declaration block. */
 
@@ -114,6 +117,7 @@ do_script_hook_follow_url(char **url)
 static enum evhook_status
 script_hook_follow_url(va_list ap, void *data)
 {
+	ELOG
 	char **url = va_arg(ap, char **);
 
 	if (my_perl && *url)
@@ -126,6 +130,7 @@ static inline void
 do_script_hook_pre_format_html(char *url, struct cache_entry *cached,
 			       struct fragment *fragment)
 {
+	ELOG
 	int count;
 	dSP;	/* Keep in variables declaration block. */
 
@@ -159,6 +164,7 @@ do_script_hook_pre_format_html(char *url, struct cache_entry *cached,
 static enum evhook_status
 script_hook_pre_format_html(va_list ap, void *data)
 {
+	ELOG
 	struct session *ses = va_arg(ap, struct session *);
 	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
 	struct fragment *fragment = get_cache_fragment(cached);
@@ -175,6 +181,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 static inline void
 do_script_hook_get_proxy(char **new_proxy_url, char *url)
 {
+	ELOG
 	int count;
 	dSP;	/* Keep in variables declaration block. */
 
@@ -210,6 +217,7 @@ do_script_hook_get_proxy(char **new_proxy_url, char *url)
 static enum evhook_status
 script_hook_get_proxy(va_list ap, void *data)
 {
+	ELOG
 	char **new_proxy_url = va_arg(ap, char **);
 	char *url = va_arg(ap, char *);
 
@@ -222,6 +230,7 @@ script_hook_get_proxy(va_list ap, void *data)
 static inline void
 do_script_hook_quit(void)
 {
+	ELOG
 	dSP;
 
 	PUSHMARK(SP);
@@ -232,6 +241,7 @@ do_script_hook_quit(void)
 static enum evhook_status
 script_hook_quit(va_list ap, void *data)
 {
+	ELOG
 	if (my_perl)
 		do_script_hook_quit();
 

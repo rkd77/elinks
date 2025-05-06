@@ -80,18 +80,21 @@ do {                                                                    \
 int
 is_xterm(void)
 {
+	ELOG
 	return 0;
 }
 
 int
 get_system_env(void)
 {
+	ELOG
 	return (0);
 }
 
 int
 set_nonblocking_fd(int fd)
 {
+	ELOG
 #ifdef O_NONBLOCK
 	int rs;
 	EINTRLOOP(rs, fcntl(fd, F_SETFL, O_NONBLOCK));
@@ -106,6 +109,7 @@ set_nonblocking_fd(int fd)
 static uttime
 get_absolute_time(void)
 {
+	ELOG
 	struct timeval tv;
 	int rs;
 	EINTRLOOP(rs, gettimeofday(&tv, NULL));
@@ -123,6 +127,7 @@ get_absolute_time(void)
 static uttime
 get_time(void)
 {
+	ELOG
 #if defined(OS2) || defined(WIN)
 	static unsigned last_tim = 0;
 	static uttime add = 0;
@@ -171,6 +176,7 @@ get_time(void)
 static void
 new_fd_cloexec(int fd)
 {
+	ELOG
 	int rs;
 	EINTRLOOP(rs, fcntl(fd, F_SETFD, FD_CLOEXEC));
 }
@@ -178,6 +184,7 @@ new_fd_cloexec(int fd)
 static int
 cleanup_fds(void)
 {
+	ELOG
 #ifdef ENFILE
 	if (errno == ENFILE) {
 		abort_background_connections();
@@ -196,6 +203,7 @@ cleanup_fds(void)
 static int
 c_socket(int d, int t, int p)
 {
+	ELOG
 	int h;
 	do {
 		fd_lock();
@@ -216,6 +224,7 @@ static volatile unsigned char break_exiting = 0;
 
 void dos_poll_break(void)
 {
+	ELOG
 	if (break_pressed && !break_exiting) {
 		break_exiting = 1;
 		ERROR("Exiting on Ctrl+Break");
@@ -227,11 +236,13 @@ void dos_poll_break(void)
 
 static void sigbreak(int sig)
 {
+	ELOG
 	break_pressed = 1;
 }
 
 void get_terminal_size(int fd, int *x, int *y, int *cw, int *ch)
 {
+	ELOG
 	*x = ScreenCols();
 	*y = ScreenRows();
 	*cw = 8;
@@ -240,11 +251,13 @@ void get_terminal_size(int fd, int *x, int *y, int *cw, int *ch)
 
 void handle_terminal_resize(int fd, void (*fn)(void))
 {
+	ELOG
 }
 
 void
 unhandle_terminal_resize(int fd)
 {
+	ELOG
 }
 
 static size_t init_seq_len;
@@ -277,6 +290,7 @@ static void *txt_mouse_data;
 
 static int dos_mouse_coord(int v)
 {
+	ELOG
 #if 0
 	if (!F) v /= 8;
 #endif
@@ -285,6 +299,7 @@ static int dos_mouse_coord(int v)
 
 static void dos_mouse_show(void)
 {
+	ELOG
 	if (dos_mouse_initialized) { // && !F) {
 		__dpmi_regs r;
 		memset(&r, 0, sizeof r);
@@ -295,6 +310,7 @@ static void dos_mouse_show(void)
 
 static void dos_mouse_hide(void)
 {
+	ELOG
 	if (dos_mouse_initialized) { // && !F) {
 		__dpmi_regs r;
 		memset(&r, 0, sizeof r);
@@ -305,6 +321,7 @@ static void dos_mouse_hide(void)
 
 static void dos_mouse_init(unsigned x, unsigned y)
 {
+	ELOG
 	__dpmi_regs r;
 	memset(&r, 0, sizeof r);
 	__dpmi_int(0x33, &r);
@@ -332,6 +349,7 @@ static void dos_mouse_init(unsigned x, unsigned y)
 
 void dos_mouse_terminate(void)
 {
+	ELOG
 	mem_free_set(&dos_mouse_queue, NULL);
 	dos_mouse_queue_n = 0;
 	dos_mouse_hide();
@@ -339,6 +357,7 @@ void dos_mouse_terminate(void)
 
 static void dos_mouse_enqueue(int x, int y, int b)
 {
+	ELOG
 	if (dos_mouse_queue_n && ((b & BM_ACT) == B_DRAG || (b & BM_ACT) == B_MOVE) && (b & BM_ACT) == (dos_mouse_queue[dos_mouse_queue_n - 1].info.mouse.button & BM_ACT)) {
 		dos_mouse_queue_n--;
 		goto set_last;
@@ -361,6 +380,7 @@ set_last:
 
 static int dos_mouse_button(int b)
 {
+	ELOG
 	switch (b) {
 		default:
 		case 0:	return B_LEFT;
@@ -371,6 +391,7 @@ static int dos_mouse_button(int b)
 
 static void dos_mouse_poll(void)
 {
+	ELOG
 	int i;
 	int cx, cy;
 	__dpmi_regs r;
@@ -441,6 +462,7 @@ x:
 
 void *handle_mouse(int cons, void (*fn)(void *, char *, int), void *data)
 {
+	ELOG
 	int x, y, cw, ch;
 	get_terminal_size(cons, &x, &y, &cw, &ch);
 	dos_mouse_init(x * 8, y * 8);
@@ -455,6 +477,7 @@ void *handle_mouse(int cons, void (*fn)(void *, char *, int), void *data)
 
 void unhandle_mouse(void *data)
 {
+	ELOG
 	dos_mouse_terminate();
 	txt_mouse_handler = NULL;
 }
@@ -462,25 +485,30 @@ void unhandle_mouse(void *data)
 void
 suspend_mouse(void *data)
 {
+	ELOG
 }
 
 void
 resume_mouse(void *data)
 {
+	ELOG
 }
 
 void want_draw(void)
 {
+	ELOG
 	dos_mouse_hide();
 }
 
 void done_draw(void)
 {
+	ELOG
 	dos_mouse_show();
 }
 
 static int dos_mouse_event(void)
 {
+	ELOG
 	if (dos_mouse_queue_n) {
 		if (/*!F &&*/ txt_mouse_handler) {
 			struct interlink_event *q = dos_mouse_queue;
@@ -502,6 +530,7 @@ static int dos_mouse_event(void)
 
 void save_terminal(void)
 {
+	ELOG
 	unsigned char *sc;
 	want_draw();
 	screen_backbuffer_x = ScreenCols();
@@ -521,6 +550,7 @@ void save_terminal(void)
 
 void restore_terminal(void)
 {
+	ELOG
 	want_draw();
 	if (screen_backbuffer) {
 		unsigned char *sc;
@@ -537,6 +567,7 @@ void restore_terminal(void)
 
 static void ansi_initialize(void)
 {
+	ELOG
 	if (screen_initialized)
 		return;
 
@@ -549,6 +580,7 @@ static void ansi_initialize(void)
 
 static void ansi_terminate(void)
 {
+	ELOG
 	if (!screen_initialized)
 		return;
 
@@ -558,6 +590,7 @@ static void ansi_terminate(void)
 
 static unsigned ansi2pc(unsigned c)
 {
+	ELOG
 	return ((c & 4) >> 2) | (c & 2) | ((c & 1) << 2);
 }
 
@@ -566,6 +599,7 @@ static unsigned char init_seq[] = "\033)0\0337";
 static inline
 unsigned upcase(unsigned a)
 {
+	ELOG
 	if (a >= 'a' && a <= 'z') a -= 0x20;
 	return a;
 }
@@ -573,17 +607,20 @@ unsigned upcase(unsigned a)
 static inline
 unsigned locase(unsigned a)
 {
+	ELOG
 	if (a >= 'A' && a <= 'Z') a += 0x20;
 	return a;
 }
 static inline
 int srch_cmp(unsigned char c1, unsigned char c2)
 {
+	ELOG
 	return upcase(c1) != upcase(c2);
 }
 
 static void ansi_write(const unsigned char *str, size_t size)
 {
+	ELOG
 	if (!screen_initialized) {
 		if (size >= init_seq_len && !memcmp(str, init_seq, init_seq_len)) {
 			ansi_initialize();
@@ -700,6 +737,7 @@ static short dos_buffered_char = -1;
 
 static int dos_select_keyboard(void)
 {
+	ELOG
 	int bk;
 	if (dos_buffered_char >= 0) return 1;
 	bk = bioskey(0x11);
@@ -708,6 +746,7 @@ static int dos_select_keyboard(void)
 
 static int dos_read_keyboard(void *buf, size_t size)
 {
+	ELOG
 	int k;
 	if (!size) return 0;
 	if (dos_buffered_char >= 0) {
@@ -737,24 +776,29 @@ static int dos_read_keyboard(void *buf, size_t size)
 
 static inline void pipe_lock(void)
 {
+	ELOG
 }
 
 static inline void pipe_unlock(void)
 {
+	ELOG
 }
 
 static inline void pipe_unlock_wait(void)
 {
+	ELOG
 }
 
 static inline void pipe_wake(void)
 {
+	ELOG
 }
 
 #include "vpipe.inc"
 
 int dos_pipe(int fd[2])
 {
+	ELOG
 	int r = vpipe_create(fd);
 	/*printf("dos_pipe: (%d) : %d,%d\n", r, fd[0], fd[1]);*/
 	return r;
@@ -762,6 +806,7 @@ int dos_pipe(int fd[2])
 
 int dos_read(int fd, void *buf, size_t size)
 {
+	ELOG
 	int r;
 	dos_mouse_poll();
 	r = vpipe_read(fd, buf, size);
@@ -775,6 +820,7 @@ int dos_read(int fd, void *buf, size_t size)
 
 int dos_write(int fd, const void *buf, size_t size)
 {
+	ELOG
 	int r;
 	dos_mouse_poll();
 	r = vpipe_write(fd, buf, size);
@@ -789,6 +835,7 @@ int dos_write(int fd, const void *buf, size_t size)
 
 int dos_close(int fd)
 {
+	ELOG
 	int r;
 	r = vpipe_close(fd);
 	if (r != -2) return r;
@@ -797,6 +844,7 @@ int dos_close(int fd)
 
 int dos_select(int n, fd_set *rs, fd_set *ws, fd_set *es, struct timeval *t, int from_main_loop)
 {
+	ELOG
 	int i;
 	int last_pass = 0;
 	int ret_cnt = 0;
@@ -986,6 +1034,7 @@ int dos_select(int n, fd_set *rs, fd_set *ws, fd_set *es, struct timeval *t, int
 long
 os_get_free_mem_in_mib(void)
 {
+	ELOG
 	__dpmi_memory_info buffer;
 	int ret = __dpmi_get_memory_information(&buffer);
 
@@ -1002,12 +1051,14 @@ os_get_free_mem_in_mib(void)
 
 int dos_setraw(int ctl, int save)
 {
+	ELOG
 	__djgpp_set_ctrl_c(0);
 	return 0;
 }
 
 void setcooked(int ctl)
 {
+	ELOG
 }
 
 #endif
@@ -1016,6 +1067,7 @@ void setcooked(int ctl)
 
 void os_seed_random(unsigned char **pool, int *pool_size)
 {
+	ELOG
 	unsigned *random_pool, *tmp_pool;
 	int a, i;
 	random_pool = (unsigned *)mem_alloc(RANDOM_POOL_SIZE);
@@ -1043,6 +1095,7 @@ _go32_dpmi_seginfo OldISR, NewISR;
 static void
 TickHandler(void)
 {
+	ELOG
 	static int internal = 0;
 
 	if (internal++ >= 19) {
@@ -1054,6 +1107,7 @@ TickHandler(void)
 
 void init_osdep(void)
 {
+	ELOG
 	int s, rs;
 	struct sigaction sa;
 
@@ -1101,6 +1155,7 @@ void init_osdep(void)
 
 void terminate_osdep(void)
 {
+	ELOG
 	if (screen_backbuffer)
 		mem_free(screen_backbuffer);
 #ifdef CONFIG_QUICKJS
@@ -1110,6 +1165,7 @@ void terminate_osdep(void)
 
 #define LINKS_BIN_SEARCH(entries, eq, ab, key, result)                        \
 {                                                                       \
+	ELOG
 	int s_ = 0, e_ = (entries) - 1;                                 \
 	(result) = -1;                                                  \
 	while (s_ <= e_) {                                              \
@@ -1128,6 +1184,7 @@ void terminate_osdep(void)
 int
 get_country_language(int c)
 {
+	ELOG
 	static const struct {
 		int code;
 		const char *language;
@@ -1201,6 +1258,7 @@ get_country_language(int c)
 
 int os_default_language(void)
 {
+	ELOG
 	__dpmi_regs r;
 	memset(&r, 0, sizeof r);
 	r.x.ax = 0x3800;
@@ -1215,6 +1273,7 @@ int os_default_language(void)
 
 int os_default_charset(void)
 {
+	ELOG
 	__dpmi_regs r;
 	memset(&r, 0, sizeof r);
 	r.x.ax = 0x6601;
@@ -1231,6 +1290,7 @@ int os_default_charset(void)
 
 int dos_is_bw(void)
 {
+	ELOG
 	unsigned char cfg;
 	dosmemget(0x410, sizeof cfg, &cfg);
 	return (cfg & 0x30) == 0x30;

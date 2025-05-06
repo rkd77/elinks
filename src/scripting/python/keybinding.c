@@ -27,6 +27,7 @@ PyObject *keybindings = NULL;
 static enum evhook_status
 invoke_keybinding_callback(va_list ap, void *data)
 {
+	ELOG
 	PyObject *callback = (PyObject *)data;
 	struct session *saved_python_ses = python_ses;
 	PyObject *result;
@@ -49,6 +50,7 @@ invoke_keybinding_callback(va_list ap, void *data)
 static int
 keymap_is_valid(const char *keymap)
 {
+	ELOG
 	int keymap_id;
 
 	for (keymap_id = 0; keymap_id < KEYMAP_MAX; ++keymap_id)
@@ -80,6 +82,7 @@ keymap -- A string containing the name of a keymap. Valid keymap\n\
 PyObject *
 python_bind_key(PyObject *self, PyObject *args, PyObject *kwargs)
 {
+	ELOG
 	const char *keystroke;
 	PyObject *callback;
 	static char s_main[] = "main";
@@ -184,6 +187,7 @@ rollback:
 void
 python_done_keybinding_interface(void)
 {
+	ELOG
 	PyObject *temp;
 
 	/* This is equivalent to Py_CLEAR(), but it works with older

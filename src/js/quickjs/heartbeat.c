@@ -35,6 +35,7 @@ static struct itimerval heartbeat_timer = { { 1, 0 }, { 1, 0 } };
 int
 js_heartbeat_callback(JSRuntime *rt, void *opaque)
 {
+	ELOG
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)opaque;
 
 	if (!interpreter || !interpreter->heartbeat || interpreter->heartbeat->ttl > 0) {
@@ -49,6 +50,7 @@ js_heartbeat_callback(JSRuntime *rt, void *opaque)
 void
 check_heartbeats(void *data)
 {
+	ELOG
 	struct heartbeat *hb;
 
 	foreach (hb, heartbeats) {
@@ -78,6 +80,7 @@ check_heartbeats(void *data)
 struct heartbeat *
 add_heartbeat(struct ecmascript_interpreter *interpreter)
 {
+	ELOG
 	struct session *ses;
 	struct heartbeat *hb;
 
@@ -121,6 +124,7 @@ add_heartbeat(struct ecmascript_interpreter *interpreter)
 void
 done_heartbeat(struct heartbeat *hb)
 {
+	ELOG
 	if (!hb) return; /* add_heartbeat returned NULL */
 	assert(hb->interpreter);
 

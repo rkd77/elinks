@@ -54,6 +54,7 @@ static JSValue js_domRect_set_property_y(JSContext *ctx, JSValueConst this_val, 
 static
 void js_domRect_finalizer(JSRuntime *rt, JSValue val)
 {
+	ELOG
 	REF_JS(val);
 
 	struct eljs_domrect *d = (struct eljs_domrect *)JS_GetOpaque(val, js_domRect_class_id);
@@ -82,6 +83,7 @@ static const JSCFunctionListEntry js_domRect_proto_funcs[] = {
 static JSValue
 js_domRect_get_property_bottom(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -100,6 +102,7 @@ js_domRect_get_property_bottom(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_domRect_get_property_height(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -118,6 +121,7 @@ js_domRect_get_property_height(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_domRect_get_property_left(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -136,6 +140,7 @@ js_domRect_get_property_left(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_domRect_get_property_right(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -154,6 +159,7 @@ js_domRect_get_property_right(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_domRect_get_property_top(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -172,6 +178,7 @@ js_domRect_get_property_top(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_domRect_get_property_width(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -190,6 +197,7 @@ js_domRect_get_property_width(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_domRect_get_property_x(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -208,6 +216,7 @@ js_domRect_get_property_x(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_domRect_get_property_y(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -226,6 +235,7 @@ js_domRect_get_property_y(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_domRect_set_property_bottom(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -244,6 +254,7 @@ js_domRect_set_property_bottom(JSContext *ctx, JSValueConst this_val, JSValue va
 static JSValue
 js_domRect_set_property_height(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -262,6 +273,7 @@ js_domRect_set_property_height(JSContext *ctx, JSValueConst this_val, JSValue va
 static JSValue
 js_domRect_set_property_left(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -280,6 +292,7 @@ js_domRect_set_property_left(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_domRect_set_property_right(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -298,6 +311,7 @@ js_domRect_set_property_right(JSContext *ctx, JSValueConst this_val, JSValue val
 static JSValue
 js_domRect_set_property_top(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -316,6 +330,7 @@ js_domRect_set_property_top(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_domRect_set_property_width(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -334,6 +349,7 @@ js_domRect_set_property_width(JSContext *ctx, JSValueConst this_val, JSValue val
 static JSValue
 js_domRect_set_property_x(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -352,6 +368,7 @@ js_domRect_set_property_x(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_domRect_set_property_y(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -370,6 +387,7 @@ js_domRect_set_property_y(JSContext *ctx, JSValueConst this_val, JSValue val)
 JSValue
 getDomRect(JSContext *ctx, int x, int y, int width, int height, int top, int right, int bottom, int left)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

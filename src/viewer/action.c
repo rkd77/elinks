@@ -52,6 +52,7 @@ static void
 goto_url_action(struct session *ses,
 		char *(*get_url)(struct session *, char *, size_t))
 {
+	ELOG
 	char url[MAX_STR_LEN];
 
 	if (!get_url || !get_url(ses, url, sizeof(url)))
@@ -68,6 +69,7 @@ goto_url_action(struct session *ses,
 enum frame_event_status
 do_action(struct session *ses, main_action_T action_id, int verbose)
 {
+	ELOG
 	enum frame_event_status status = FRAME_EVENT_OK;
 	struct terminal *term = ses->tab->term;
 	struct document_view *doc_view = current_frame(ses);

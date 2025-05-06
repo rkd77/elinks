@@ -73,6 +73,7 @@ static struct hash *mimetypes_map = NULL;
 static void
 done_mimetypes_entry(struct mimetypes_entry *entry)
 {
+	ELOG
 	if (!entry) return;
 	mem_free_if(entry->content_type);
 	mem_free(entry);
@@ -87,6 +88,7 @@ done_mimetypes_entry(struct mimetypes_entry *entry)
 static inline void
 parse_mimetypes_extensions(char *token, char *ctype)
 {
+	ELOG
 	int ctypelen = strlen(ctype);
 
 	/* Cycle through the file extensions */
@@ -131,6 +133,7 @@ parse_mimetypes_extensions(char *token, char *ctype)
 static void
 parse_mimetypes_file(char *filename)
 {
+	ELOG
 	FILE *file = fopen(filename, "rb");
 	char line[MAX_STR_LEN];
 
@@ -166,6 +169,7 @@ parse_mimetypes_file(char *filename)
 static struct hash *
 init_mimetypes_map(void)
 {
+	ELOG
 	char *path;
 
 	mimetypes_map = init_hash8();
@@ -190,6 +194,7 @@ init_mimetypes_map(void)
 static void
 done_mimetypes(struct module *module)
 {
+	ELOG
 	struct hash_item *item;
 	int i;
 
@@ -210,6 +215,7 @@ done_mimetypes(struct module *module)
 static int
 change_hook_mimetypes(struct session *ses, struct option *current, struct option *changed)
 {
+	ELOG
 	if (changed == &get_opt_mimetypes(MIMETYPES_PATH)
 	    || (changed == &get_opt_mimetypes(MIMETYPES_ENABLE)
 		&& !get_mimetypes_enable())) {
@@ -222,6 +228,7 @@ change_hook_mimetypes(struct session *ses, struct option *current, struct option
 static void
 init_mimetypes(struct module *module)
 {
+	ELOG
 	static const struct change_hook_info mimetypes_change_hooks[] = {
 		{ "mime.mimetypes",		change_hook_mimetypes },
 		{ NULL,				NULL },
@@ -237,6 +244,7 @@ init_mimetypes(struct module *module)
 static char *
 get_content_type_mimetypes(char *extension)
 {
+	ELOG
 	struct hash_item *item;
 	int extensionlen;
 

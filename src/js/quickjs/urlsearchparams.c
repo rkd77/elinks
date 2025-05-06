@@ -64,6 +64,7 @@ static JSValue map_foreach_callback(JSContext *ctx, JSValueConst this_val, int a
 static
 void js_urlSearchParams_finalizer(JSRuntime *rt, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -80,6 +81,7 @@ void js_urlSearchParams_finalizer(JSRuntime *rt, JSValue val)
 static void
 js_urlSearchParams_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -95,6 +97,7 @@ js_urlSearchParams_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 static void
 parse_text(JSContext *ctx, JSValue map, char *str)
 {
+	ELOG
 	if (!str || !*str) {
 		return;
 	}
@@ -125,6 +128,7 @@ parse_text(JSContext *ctx, JSValue map, char *str)
 static JSValue
 js_urlSearchParams_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -224,6 +228,7 @@ js_urlSearchParams_constructor(JSContext *ctx, JSValueConst new_target, int argc
 static void
 JS_NewGlobalCConstructor2(JSContext *ctx, JSValue func_obj, const char *name, JSValueConst proto)
 {
+	ELOG
 	REF_JS(func_obj);
 	REF_JS(proto);
 
@@ -239,6 +244,7 @@ JS_NewGlobalCConstructor2(JSContext *ctx, JSValue func_obj, const char *name, JS
 static JSValueConst
 JS_NewGlobalCConstructor(JSContext *ctx, const char *name, JSCFunction *func, int length, JSValueConst proto)
 {
+	ELOG
 	JSValue func_obj;
 	func_obj = JS_NewCFunction2(ctx, func, name, length, JS_CFUNC_constructor_or_func, 0);
 	REF_JS(func_obj);
@@ -253,6 +259,7 @@ JS_NewGlobalCConstructor(JSContext *ctx, const char *name, JSCFunction *func, in
 static JSValue
 js_urlSearchParams_get_property_size(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -272,6 +279,7 @@ js_urlSearchParams_get_property_size(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_urlSearchParams_delete(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -291,6 +299,7 @@ js_urlSearchParams_delete(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 static JSValue
 js_urlSearchParams_entries(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -308,6 +317,7 @@ js_urlSearchParams_entries(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 static JSValue
 js_urlSearchParams_forEach(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -331,6 +341,7 @@ js_urlSearchParams_forEach(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 static JSValue
 js_urlSearchParams_get(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -355,6 +366,7 @@ js_urlSearchParams_get(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 static JSValue
 js_urlSearchParams_has(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -399,6 +411,7 @@ js_urlSearchParams_has(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 static JSValue
 js_urlSearchParams_keys(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -416,6 +429,7 @@ js_urlSearchParams_keys(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 static JSValue
 js_urlSearchParams_set(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -439,6 +453,7 @@ js_urlSearchParams_set(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 static JSValue
 map_foreach_callback(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 	const char *val = JS_ToCString(ctx, argv[0]);
 	const char *key = JS_ToCString(ctx, argv[1]);
 	add_to_string(&result, prepend);
@@ -461,6 +476,7 @@ map_foreach_callback(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 static JSValue
 js_urlSearchParams_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -492,6 +508,7 @@ js_urlSearchParams_toString(JSContext *ctx, JSValueConst this_val, int argc, JSV
 static JSValue
 js_urlSearchParams_values(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -528,6 +545,7 @@ static const JSCFunctionListEntry js_urlSearchParams_proto_funcs[] = {
 int
 js_urlSearchParams_init(JSContext *ctx)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

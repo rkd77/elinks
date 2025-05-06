@@ -45,6 +45,7 @@
 static void
 set_bittorrent_connection_timer(struct connection *conn)
 {
+	ELOG
 	struct bittorrent_connection *bittorrent = (struct bittorrent_connection *)conn->info;
 	milliseconds_T interval = sec_to_ms(get_opt_int("protocol.bittorrent.choke_interval", NULL));
 
@@ -57,6 +58,7 @@ set_bittorrent_connection_timer(struct connection *conn)
 static void
 sort_bittorrent_peer_connections(struct bittorrent_connection *bittorrent)
 {
+	ELOG
 	struct bittorrent_peer_connection *peer, *prev;
 
 	while (1) {
@@ -94,6 +96,7 @@ sort_bittorrent_peer_connections(struct bittorrent_connection *bittorrent)
 void
 update_bittorrent_connection_state(struct connection *conn)
 {
+	ELOG
 	struct bittorrent_connection *bittorrent = (struct bittorrent_connection *)conn->info;
 	struct bittorrent_peer_connection *peer, *next_peer;
 	int peer_conns, max_peer_conns;
@@ -194,6 +197,7 @@ update_bittorrent_connection_state(struct connection *conn)
 static void
 update_bittorrent_connection_upload(void *data)
 {
+	ELOG
 	struct bittorrent_connection *bittorrent = (struct bittorrent_connection *)data;
 
 	update_progress(&bittorrent->upload_progress,
@@ -207,6 +211,7 @@ update_bittorrent_connection_stats(struct bittorrent_connection *bittorrent,
 				   off_t downloaded, off_t uploaded,
 				   off_t received)
 {
+	ELOG
 	struct bittorrent_meta *meta = &bittorrent->meta;
 
 	if (bittorrent->conn->est_length == -1) {
@@ -247,6 +252,7 @@ update_bittorrent_connection_stats(struct bittorrent_connection *bittorrent,
 static void
 done_bittorrent_connection(struct connection *conn)
 {
+	ELOG
 	struct bittorrent_connection *bittorrent = (struct bittorrent_connection *)conn->info;
 	struct bittorrent_peer_connection *peer, *next;
 
@@ -278,6 +284,7 @@ done_bittorrent_connection(struct connection *conn)
 static struct bittorrent_connection *
 init_bittorrent_connection(struct connection *conn)
 {
+	ELOG
 	struct bittorrent_connection *bittorrent;
 
 	assert(conn->info == NULL);
@@ -309,6 +316,7 @@ init_bittorrent_connection(struct connection *conn)
 void
 bittorrent_resume_callback(struct bittorrent_connection *bittorrent)
 {
+	ELOG
 	struct connection_state state;
 
 	/* Failing to create the listening socket is fatal. */
@@ -327,6 +335,7 @@ static void
 bittorrent_metainfo_callback(void *data, struct connection_state state,
 			     struct bittorrent_const_string *response)
 {
+	ELOG
 	struct connection *conn = (struct connection *)data;
 	struct bittorrent_connection *bittorrent = (struct bittorrent_connection *)conn->info;
 
@@ -397,6 +406,7 @@ bittorrent_metainfo_callback(void *data, struct connection_state state,
 void
 bittorrent_protocol_handler(struct connection *conn)
 {
+	ELOG
 	struct uri *uri = NULL;
 	struct bittorrent_connection *bittorrent;
 
@@ -426,5 +436,6 @@ bittorrent_protocol_handler(struct connection *conn)
 void
 bittorrent_peer_protocol_handler(struct connection *conn)
 {
+	ELOG
 	abort_connection(conn, connection_state(S_BITTORRENT_PEER_URL));
 }

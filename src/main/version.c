@@ -51,6 +51,7 @@ static void
 add_module_to_string(struct string *string, struct module *module,
 		     struct terminal *term)
 {
+	ELOG
 	struct module *submodule;
 	int i;
 
@@ -75,6 +76,7 @@ add_module_to_string(struct string *string, struct module *module,
 static void
 add_modules_to_string(struct string *string, struct terminal *term)
 {
+	ELOG
 	struct module *module;
 	int i;
 
@@ -89,6 +91,7 @@ add_modules_to_string(struct string *string, struct terminal *term)
 static void
 wrap_string(struct string *string, int start_at, int maxlen)
 {
+	ELOG
 	char *pos, *start_pos;
 	char *last_pos = NULL;
 
@@ -116,6 +119,7 @@ wrap_string(struct string *string, int start_at, int maxlen)
 char *
 get_dyn_full_version(struct terminal *term, int more)
 {
+	ELOG
 	static unsigned char comma[] = ", ";
 	struct string string;
 
@@ -218,6 +222,7 @@ get_dyn_full_version(struct terminal *term, int more)
 void
 init_static_version(void)
 {
+	ELOG
 	char *s = get_dyn_full_version((struct terminal *) NULL, 0);
 
 	if (s) {

@@ -45,6 +45,7 @@
 void
 menu_about(struct terminal *term, void *xxx, void *xxxx)
 {
+	ELOG
 	info_box(term, MSGBOX_FREE_TEXT,
 		 N_("About"), ALIGN_CENTER,
 		 get_dyn_full_version(term, 1));
@@ -58,6 +59,7 @@ struct keys_toggle_info {
 static void
 push_toggle_keys_display_button(void *data)
 {
+	ELOG
 	struct keys_toggle_info *info = (struct keys_toggle_info *)data;
 
 	menu_keys(info->term, (void *) (intptr_t) !info->toggle, NULL);
@@ -66,6 +68,7 @@ push_toggle_keys_display_button(void *data)
 void
 menu_keys(struct terminal *term, void *d_, void *xxx)
 {
+	ELOG
 	/* [gettext_accelerator_context(menu_keys)] */
 	int d = (intptr_t) d_;
 
@@ -146,6 +149,7 @@ menu_keys(struct terminal *term, void *d_, void *xxx)
 void
 menu_copying(struct terminal *term, void *xxx, void *xxxx)
 {
+	ELOG
 	info_box(term, MSGBOX_FREE_TEXT,
 		 N_("Copying"), ALIGN_CENTER,
 		 msg_text(term, N_("ELinks %s\n"
@@ -164,6 +168,7 @@ menu_copying(struct terminal *term, void *xxx, void *xxxx)
 static char *
 get_resource_info(struct terminal *term, void *data)
 {
+	ELOG
 	struct string info;
 	long val;
 	unsigned longlong bigval;
@@ -319,6 +324,7 @@ get_resource_info(struct terminal *term, void *data)
 void
 resource_info(struct terminal *term)
 {
+	ELOG
 	refreshed_msg_box(term, 0, N_("Resources"), ALIGN_LEFT,
 			  get_resource_info, NULL);
 }

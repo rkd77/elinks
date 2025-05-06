@@ -89,6 +89,7 @@ static const char *keymap_2[] = {
 static enum fd_types
 what_fd_type(int *fd)
 {
+	ELOG
 	if (*fd == (int)(intptr_t)GetStdHandle(STD_INPUT_HANDLE)
 	    || *fd == (int)(intptr_t)GetStdHandle(STD_OUTPUT_HANDLE)
 	    || *fd == (int)(intptr_t)GetStdHandle(STD_ERROR_HANDLE))
@@ -108,6 +109,7 @@ what_fd_type(int *fd)
 static int
 console_key_read(const KEY_EVENT_RECORD *ker, char *buf, int max)
 {
+	ELOG
 	char c;
 	int  vkey;
 
@@ -144,6 +146,7 @@ struct elwin_mouse {
 static int
 console_mouse_read(const MOUSE_EVENT_RECORD *mer, char *buf, int max)
 {
+	ELOG
 	static struct interlink_event_mouse prev_mouse;
 	static int prev_buttons;
 	struct interlink_event ev;
@@ -198,6 +201,7 @@ void *
 handle_mouse(int cons, void (*fn)(void *, char *, int),
 	     void *data)
 {
+	ELOG
 	elm.cons = cons;
 	elm.fn = fn;
 	elm.data = data;
@@ -208,17 +212,20 @@ handle_mouse(int cons, void (*fn)(void *, char *, int),
 void
 unhandle_mouse(void *h)
 {
+	ELOG
 	memset(&elm, 0, sizeof(elm));
 }
 
 void
 suspend_mouse(void *h)
 {
+	ELOG
 }
 
 void
 resume_mouse(void *h)
 {
+	ELOG
 }
 
 #endif
@@ -226,6 +233,7 @@ resume_mouse(void *h)
 static int
 console_read(HANDLE hnd, void *buf, int max, INPUT_RECORD *irp)
 {
+	ELOG
 	INPUT_RECORD ir;
 	const KEY_EVENT_RECORD   *ker = &ir.Event.KeyEvent;
 	const MOUSE_EVENT_RECORD *mer = &ir.Event.MouseEvent;
@@ -260,6 +268,7 @@ console_read(HANDLE hnd, void *buf, int max, INPUT_RECORD *irp)
 static int
 console_peek(HANDLE hnd)
 {
+	ELOG
 	DWORD num = 0;
 	char  buf[32];
 	int   rc = 0;
@@ -284,6 +293,7 @@ console_peek(HANDLE hnd)
 int
 win32_write(int fd, const void *buf, unsigned len)
 {
+	ELOG
 	DWORD written = 0;
 	int   rc = -1;
 	int   orig_fd = fd;
@@ -329,6 +339,7 @@ win32_write(int fd, const void *buf, unsigned len)
 int
 win32_read(int fd, void *buf, unsigned len)
 {
+	ELOG
 	int   rc = -1;
 	int   orig_fd = fd;
 	DWORD Read;
@@ -367,6 +378,7 @@ win32_read(int fd, void *buf, unsigned len)
 int
 win32_close(int fd)
 {
+	ELOG
 	int rc = -1;
 	int orig_fd = fd;
 
@@ -400,6 +412,7 @@ win32_close(int fd)
 int
 win32_ioctl(int fd, long option, int *flag)
 {
+	ELOG
 	char  cmd[20];
 	int  rc = 0, orig_fd = fd, flg = *flag;
 	DWORD mode;
@@ -444,6 +457,7 @@ win32_ioctl(int fd, long option, int *flag)
 int
 win32_socket(int pf, int type, int protocol)
 {
+	ELOG
 	int     s;
 	int    rc;
 
@@ -464,6 +478,7 @@ win32_socket(int pf, int type, int protocol)
 int
 win32_connect(int fd, struct sockaddr *addr, int addr_len)
 {
+	ELOG
 	int rc = connect(fd - SOCK_SHIFT, addr, addr_len);
 
 	if (rc < 0)
@@ -477,6 +492,7 @@ win32_connect(int fd, struct sockaddr *addr, int addr_len)
 int
 win32_getpeername (int fd, struct sockaddr *addr, int *addr_len)
 {
+	ELOG
 	int rc = getpeername(fd - SOCK_SHIFT, addr, addr_len);
 
 	if (rc < 0)
@@ -490,6 +506,7 @@ win32_getpeername (int fd, struct sockaddr *addr, int *addr_len)
 int
 win32_getsockname(int fd, struct sockaddr *addr, int *addr_len)
 {
+	ELOG
 	int rc = getsockname(fd - SOCK_SHIFT, addr, addr_len);
 
 	if (rc < 0)
@@ -503,6 +520,7 @@ win32_getsockname(int fd, struct sockaddr *addr, int *addr_len)
 int
 win32_accept(int fd, struct sockaddr *addr, int *addr_len)
 {
+	ELOG
 	int rc = accept(fd - SOCK_SHIFT, addr, addr_len);
 
 	if (rc < 0)
@@ -516,6 +534,7 @@ win32_accept(int fd, struct sockaddr *addr, int *addr_len)
 int
 win32_listen(int fd, int backlog)
 {
+	ELOG
 	int rc = listen(fd - SOCK_SHIFT, backlog);
 
 	if (rc < 0)
@@ -530,6 +549,7 @@ win32_listen(int fd, int backlog)
 int
 win32_bind(int fd, struct sockaddr *addr, int addr_len)
 {
+	ELOG
 	int rc = bind(fd-SOCK_SHIFT, addr, addr_len);
 
 	if (rc < 0)
@@ -543,6 +563,7 @@ win32_bind(int fd, struct sockaddr *addr, int addr_len)
 int
 win32_getsockopt(int fd, int level, int option, void *optval, int *optlen)
 {
+	ELOG
 	int rc = getsockopt(fd - SOCK_SHIFT, level, option, optval, optlen);
 
 	if (rc < 0)
@@ -557,6 +578,7 @@ win32_getsockopt(int fd, int level, int option, void *optval, int *optlen)
 int
 win32_pipe(int *fds)
 {
+	ELOG
 	HANDLE rd_pipe, wr_pipe;
 
 	if (!CreatePipe(&rd_pipe,&wr_pipe,NULL,0)) {
@@ -573,6 +595,7 @@ win32_pipe(int *fds)
 static const char *
 timeval_str(const struct timeval *tv)
 {
+	ELOG
 	static char buf[30];
 
 	snprintf(buf, sizeof(buf), "%ld.%03ld", tv->tv_sec, tv->tv_usec/1000);
@@ -583,6 +606,7 @@ timeval_str(const struct timeval *tv)
 static char *
 fd_set_str(char *buf, size_t len, const fd_set *fd, int num_fds)
 {
+	ELOG
 	char *p   = buf;
 	char *end = buf + len;
 	int   i, num;
@@ -608,6 +632,7 @@ fd_set_str(char *buf, size_t len, const fd_set *fd, int num_fds)
 static void
 select_dump(int num_fds, const fd_set *rd, const fd_set *wr, const fd_set *ex)
 {
+	ELOG
 	char buf_rd[512], buf_wr[512], buf_ex[512];
 
 	TRACE("\tread-fds:   %s\n"
@@ -621,6 +646,7 @@ select_dump(int num_fds, const fd_set *rd, const fd_set *wr, const fd_set *ex)
 static int
 select_read(int fd, struct fd_set *rd)
 {
+	ELOG
 	int rc = 0;
 	HANDLE hnd = (HANDLE)(intptr_t)fd;
 
@@ -651,6 +677,7 @@ static int
 select_one_loop(int num_fds, struct fd_set *rd, struct fd_set *wr,
 		struct fd_set *ex)
 {
+	ELOG
 	struct timeval tv = { 0, 100 };
 	int    rc, fd;
 
@@ -708,6 +735,7 @@ select_one_loop(int num_fds, struct fd_set *rd, struct fd_set *wr,
 int win32_select (int num_fds, struct fd_set *rd, struct fd_set *wr,
 		struct fd_set *ex, struct timeval *tv)
 {
+	ELOG
 	struct fd_set tmp_rd, tmp_ex;
 	struct timeval expiry = {0};
 	int    fd, rc;
@@ -789,6 +817,7 @@ int win32_select (int num_fds, struct fd_set *rd, struct fd_set *wr,
 static char *
 get_winsock_error(int err, char *buf, size_t len)
 {
+	ELOG
 	char *p;
 
 	switch (err) {
@@ -969,6 +998,7 @@ get_winsock_error(int err, char *buf, size_t len)
 char *
 win32_strerror(int err)
 {
+	ELOG
 	static char buf[512];
 	char  *p;
 
@@ -995,6 +1025,7 @@ win32_strerror(int err)
 int
 win32_send(int sockfd, const void *buf, unsigned len, int flags)
 {
+	ELOG
 	int rc;
 
 	if (sockfd >= SOCK_SHIFT) {
@@ -1012,6 +1043,7 @@ win32_send(int sockfd, const void *buf, unsigned len, int flags)
 int
 win32_recv(int sockfd, void *buf, unsigned len, int flags)
 {
+	ELOG
 	int rc;
 
 	if (sockfd >= SOCK_SHIFT) {

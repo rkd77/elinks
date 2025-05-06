@@ -63,6 +63,7 @@
 int
 current_link_evhook(struct document_view *doc_view, enum script_event_hook_type type)
 {
+	ELOG
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 	return ecmascript_current_link_evhook(doc_view, type);
 #else
@@ -85,6 +86,7 @@ do { \
 void
 set_link(struct document_view *doc_view)
 {
+	ELOG
 	assert(doc_view);
 	if_assert_failed return;
 
@@ -96,6 +98,7 @@ set_link(struct document_view *doc_view)
 static inline int
 get_link_cursor_offset(struct document_view *doc_view, struct link *link)
 {
+	ELOG
 	struct el_form_control *fc;
 	struct form_state *fs;
 #ifdef CONFIG_UTF8
@@ -153,6 +156,7 @@ get_link_cursor_offset(struct document_view *doc_view, struct link *link)
 static inline struct screen_char *
 init_link_drawing(struct document_view *doc_view, struct link *link, int invert, int input)
 {
+	ELOG
 	struct document_options *doc_opts;
 	static struct screen_char template_;
 	color_flags_T color_flags;
@@ -219,6 +223,7 @@ init_link_drawing(struct document_view *doc_view, struct link *link, int invert,
 void
 draw_current_link(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	struct terminal *term = ses->tab->term;
 	struct screen_char *template_;
 	struct link *link;
@@ -284,6 +289,7 @@ static void
 draw_link(struct terminal *term, struct document_view *doc_view,
           struct link *link)
 {
+	ELOG
 	int xpos = doc_view->box.x - doc_view->vs->x;
 	int ypos = doc_view->box.y - doc_view->vs->y;
 	int i;
@@ -307,6 +313,7 @@ draw_link(struct terminal *term, struct document_view *doc_view,
 void
 clear_link(struct terminal *term, struct document_view *doc_view)
 {
+	ELOG
 	struct link *link = get_current_link(doc_view);
 	struct link *last = get_old_current_link(doc_view);
 
@@ -322,6 +329,7 @@ highlight_links_with_prefixes_that_start_with_n(struct terminal *term,
                                                 struct document_view *doc_view,
                                                 int n)
 {
+	ELOG
 	struct color_pair *color = get_bfu_color(term, "searched");
 	int xoffset = doc_view->box.x - doc_view->vs->x;
 	int yoffset = doc_view->box.y - doc_view->vs->y;
@@ -352,6 +360,7 @@ highlight_links_with_prefixes_that_start_with_n(struct terminal *term,
 struct link *
 get_first_link(struct document_view *doc_view)
 {
+	ELOG
 	struct link *link, *undef;
 	struct document *document;
 	int height;
@@ -381,6 +390,7 @@ get_first_link(struct document_view *doc_view)
 struct link *
 get_last_link(struct document_view *doc_view)
 {
+	ELOG
 	struct link *link = NULL;
 	struct document *document;
 	int height;
@@ -407,6 +417,7 @@ get_last_link(struct document_view *doc_view)
 static int
 link_in_view_x(struct document_view *doc_view, struct link *link)
 {
+	ELOG
 	int i, dx, width;
 
 	assert(doc_view && link);
@@ -428,6 +439,7 @@ link_in_view_x(struct document_view *doc_view, struct link *link)
 static int
 link_in_view_y(struct document_view *doc_view, struct link *link)
 {
+	ELOG
 	int i, dy, height;
 
 	assert(doc_view && link);
@@ -449,6 +461,7 @@ link_in_view_y(struct document_view *doc_view, struct link *link)
 static int
 link_in_view(struct document_view *doc_view, struct link *link)
 {
+	ELOG
 	assert(doc_view && link);
 	if_assert_failed return 0;
 	return link_in_view_y(doc_view, link) && link_in_view_x(doc_view, link);
@@ -457,6 +470,7 @@ link_in_view(struct document_view *doc_view, struct link *link)
 int
 current_link_is_visible(struct document_view *doc_view)
 {
+	ELOG
 	struct link *link;
 
 	assert(doc_view && doc_view->vs);
@@ -471,6 +485,7 @@ current_link_is_visible(struct document_view *doc_view)
 static void
 get_visible_links_range(struct document_view *doc_view, int *first, int *last)
 {
+	ELOG
 	struct document *document = doc_view->document;
 	int height = int_min(doc_view->vs->y + doc_view->box.height,
 	                     document->height);
@@ -495,6 +510,7 @@ next_link_in_view_(struct document_view *doc_view, int current, int direction,
 	           int (*fn)(struct document_view *, struct link *),
 	           void (*cntr)(struct document_view *, struct link *))
 {
+	ELOG
 	struct document *document;
 	struct view_state *vs;
 	int start, end;
@@ -529,12 +545,14 @@ next_link_in_view_(struct document_view *doc_view, int current, int direction,
 int
 next_link_in_view(struct document_view *doc_view, int current, int direction)
 {
+	ELOG
 	return next_link_in_view_(doc_view, current, direction, link_in_view, NULL);
 }
 
 int
 next_link_in_view_y(struct document_view *doc_view, int current, int direction)
 {
+	ELOG
 	return next_link_in_view_(doc_view, current, direction, link_in_view_y, set_pos_x);
 }
 
@@ -543,6 +561,7 @@ next_link_in_view_y(struct document_view *doc_view, int current, int direction)
 void
 get_link_x_bounds(struct link *link, int y, int *min_x, int *max_x)
 {
+	ELOG
 	int point;
 
 	if (min_x) *min_x = INT_MAX;
@@ -561,6 +580,7 @@ get_link_x_bounds(struct link *link, int y, int *min_x, int *max_x)
 static int
 get_link_x_intersect(struct link *link, int y, int min_x, int max_x)
 {
+	ELOG
 	int point;
 
 	for (point = 0; point < link->npoints; point++) {
@@ -579,6 +599,7 @@ get_link_x_intersect(struct link *link, int y, int min_x, int max_x)
 static int
 get_link_y_intersect(struct link *link, int x, int min_y, int max_y)
 {
+	ELOG
 	int point;
 
 	for (point = 0; point < link->npoints; point++) {
@@ -595,6 +616,7 @@ get_link_y_intersect(struct link *link, int x, int min_y, int max_y)
 int
 next_link_in_dir(struct document_view *doc_view, int dir_x, int dir_y)
 {
+	ELOG
 	struct document *document;
 	struct view_state *vs;
 	struct link *link;
@@ -735,6 +757,7 @@ chose_link:
 void
 set_pos_x(struct document_view *doc_view, struct link *link)
 {
+	ELOG
 	int xm = 0;
 	int xl = INT_MAX;
 	int i;
@@ -758,6 +781,7 @@ set_pos_x(struct document_view *doc_view, struct link *link)
 void
 set_pos_y(struct document_view *doc_view, struct link *link)
 {
+	ELOG
 	int ym = 0;
 	int height;
 	int i;
@@ -781,6 +805,7 @@ set_pos_y(struct document_view *doc_view, struct link *link)
 static void
 find_link(struct document_view *doc_view, int direction, int page_mode)
 {
+	ELOG
 	struct link **line;
 	struct link *link = NULL;
 	int link_pos;
@@ -851,24 +876,28 @@ nolink:
 void
 find_link_up(struct document_view *doc_view)
 {
+	ELOG
 	find_link(doc_view, -1, 0);
 }
 
 void
 find_link_page_up(struct document_view *doc_view)
 {
+	ELOG
 	find_link(doc_view, -1, 1);
 }
 
 void
 find_link_down(struct document_view *doc_view)
 {
+	ELOG
 	find_link(doc_view, 1, 0);
 }
 
 void
 find_link_page_down(struct document_view *doc_view)
 {
+	ELOG
 	find_link(doc_view, 1, 1);
 }
 
@@ -876,6 +905,7 @@ struct uri *
 get_link_uri(struct session *ses, struct document_view *doc_view,
 	     struct link *link)
 {
+	ELOG
 	assert(ses && doc_view && link);
 	if_assert_failed return NULL;
 
@@ -899,6 +929,7 @@ static int
 call_onsubmit_and_submit(struct session *ses, struct document_view *doc_view,
 			 struct el_form_control *fc, int do_reload)
 {
+	ELOG
 	struct uri *uri = NULL;
 	cache_mode_T mode = do_reload ? CACHE_MODE_FORCE_RELOAD : CACHE_MODE_NORMAL;
 
@@ -955,6 +986,7 @@ call_onsubmit_and_submit(struct session *ses, struct document_view *doc_view,
 struct link *
 goto_link(struct session *ses, struct document_view *doc_view, struct link *link, int do_reload)
 {
+	ELOG
 	struct uri *uri;
 
 	assert(link && doc_view && ses);
@@ -997,6 +1029,7 @@ goto_link(struct session *ses, struct document_view *doc_view, struct link *link
 struct link *
 goto_current_link(struct session *ses, struct document_view *doc_view, int do_reload)
 {
+	ELOG
 	struct link *link;
 
 	assert(doc_view && ses);
@@ -1012,6 +1045,7 @@ static enum frame_event_status
 activate_link(struct session *ses, struct document_view *doc_view,
               struct link *link, int do_reload)
 {
+	ELOG
 	struct el_form_control *link_fc;
 	struct form_state *fs;
 	struct form *form;
@@ -1091,6 +1125,7 @@ activate_link(struct session *ses, struct document_view *doc_view,
 enum frame_event_status
 enter(struct session *ses, struct document_view *doc_view, int do_reload)
 {
+	ELOG
 	struct link *link;
 
 	assert(ses && doc_view && doc_view->vs && doc_view->document);
@@ -1118,6 +1153,7 @@ enter(struct session *ses, struct document_view *doc_view, int do_reload)
 struct link *
 get_link_at_coordinates(struct document_view *doc_view, int x, int y)
 {
+	ELOG
 	struct link *l1, *l2, *link;
 	int i, height;
 
@@ -1170,6 +1206,7 @@ get_link_at_coordinates(struct document_view *doc_view, int x, int y)
 void
 jump_to_link_number(struct session *ses, struct document_view *doc_view, int n)
 {
+	ELOG
 	assert(ses && doc_view && doc_view->vs && doc_view->document);
 	if_assert_failed return;
 
@@ -1197,6 +1234,7 @@ jump_to_link_number(struct session *ses, struct document_view *doc_view, int n)
 static int
 compare(const void *a, const void *b)
 {
+	ELOG
 	int na = ((struct reverse_link_lookup *)a)->number;
 	int nb = ((struct reverse_link_lookup *)b)->number;
 
@@ -1207,6 +1245,7 @@ compare(const void *a, const void *b)
 static void
 goto_link_number_do(struct session *ses, struct document_view *doc_view, int n)
 {
+	ELOG
 	struct link *link;
 
 	assert(ses && doc_view && doc_view->document);
@@ -1235,6 +1274,7 @@ goto_link_number_do(struct session *ses, struct document_view *doc_view, int n)
 void
 goto_link_number(struct session *ses, char *num)
 {
+	ELOG
 	struct document_view *doc_view;
 
 	assert(ses && num);
@@ -1248,6 +1288,7 @@ goto_link_number(struct session *ses, char *num)
 void
 goto_link_symbol(struct session *ses, char *sym)
 {
+	ELOG
 	char *symkey = get_opt_str("document.browse.links.label_key", ses);
 	struct document_view *doc_view;
 	int num;
@@ -1267,6 +1308,7 @@ enum frame_event_status
 try_document_key(struct session *ses, struct document_view *doc_view,
 		 struct term_event *ev)
 {
+	ELOG
 	unicode_val_T key;
 	int i; /* GOD I HATE C! --FF */ /* YEAH, BRAINFUCK RULEZ! --pasky */
 
@@ -1322,6 +1364,7 @@ try_document_key(struct session *ses, struct document_view *doc_view,
 void
 link_menu(struct terminal *term, void *xxx, void *ses_)
 {
+	ELOG
 	struct session *ses = (struct session *)ses_;
 	struct document_view *doc_view;
 	struct link *link;
@@ -1459,6 +1502,7 @@ end:
 char *
 get_current_link_title(struct document_view *doc_view)
 {
+	ELOG
 	struct link *link;
 
 	assert(doc_view && doc_view->document && doc_view->vs);
@@ -1499,6 +1543,7 @@ get_current_link_title(struct document_view *doc_view)
 char *
 get_current_link_info(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	struct link *link;
 
 	assert(ses && doc_view && doc_view->document && doc_view->vs);

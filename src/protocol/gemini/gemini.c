@@ -59,12 +59,14 @@ struct module gemini_protocol_module = struct_module(
 static void
 done_gemini(struct module *mod)
 {
+	ELOG
 }
 
 static void
 gemini_end_request(struct connection *conn, struct connection_state state,
 		 int notrunc)
 {
+	ELOG
 	shutdown_connection_stream(conn);
 	abort_connection(conn, state);
 }
@@ -74,12 +76,14 @@ static void gemini_send_header(struct socket *);
 void
 gemini_protocol_handler(struct connection *conn)
 {
+	ELOG
 	make_connection(conn->socket, conn->uri, gemini_send_header, 0);
 }
 
 static void
 done_gemini_connection(struct connection *conn)
 {
+	ELOG
 	struct gemini_connection_info *gemini = (struct gemini_connection_info *)conn->info;
 
 	mem_free_if(gemini->prompt);
@@ -91,6 +95,7 @@ done_gemini_connection(struct connection *conn)
 static struct gemini_connection_info *
 init_gemini_connection_info(struct connection *conn)
 {
+	ELOG
 	struct gemini_connection_info *gemini;
 
 	gemini = (struct gemini_connection_info *)mem_calloc(1, sizeof(*gemini));
@@ -108,6 +113,7 @@ init_gemini_connection_info(struct connection *conn)
 static void
 gemini_send_header(struct socket *socket)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 	struct gemini_connection_info *gemini;
 	struct string header;
@@ -149,6 +155,7 @@ static void
 read_more_gemini_data(struct connection *conn, struct read_buffer *rb,
                     int already_got_anything)
 {
+	ELOG
 	struct connection_state state = already_got_anything
 		? connection_state(S_TRANS) : conn->state;
 
@@ -158,6 +165,7 @@ read_more_gemini_data(struct connection *conn, struct read_buffer *rb,
 static void
 read_gemini_data_done(struct connection *conn)
 {
+	ELOG
 	struct gemini_connection_info *gemini = (struct gemini_connection_info *)conn->info;
 
 	/* There's no content but an error so just print
@@ -194,6 +202,7 @@ read_gemini_data_done(struct connection *conn)
 static int
 read_normal_gemini_data(struct connection *conn, struct read_buffer *rb)
 {
+	ELOG
 	int data_len;
 	int len = rb->length;
 
@@ -215,6 +224,7 @@ read_normal_gemini_data(struct connection *conn, struct read_buffer *rb)
 static void
 read_gemini_data(struct socket *socket, struct read_buffer *rb)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 	int ret;
 
@@ -245,6 +255,7 @@ read_gemini_data(struct socket *socket, struct read_buffer *rb)
 static int
 get_header(struct read_buffer *rb)
 {
+	ELOG
 	int i;
 
 	for (i = 0; i < rb->length; i++) {
@@ -264,6 +275,7 @@ get_header(struct read_buffer *rb)
 static int
 get_gemini_code(struct read_buffer *rb, int *code)
 {
+	ELOG
 	*code = 0;
 	if (rb->data[0] < '1' || rb->data[0] > '6') return -1;
 	if (rb->data[1] < '0' || rb->data[1] > '9') return -1;
@@ -276,6 +288,7 @@ get_gemini_code(struct read_buffer *rb, int *code)
 static void
 gemini_got_header(struct socket *socket, struct read_buffer *rb)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 	struct gemini_connection_info *gemini = (struct gemini_connection_info *)conn->info;
 	struct connection_state state = (!is_in_state(conn->state, S_PROC)

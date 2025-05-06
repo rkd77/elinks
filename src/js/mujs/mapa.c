@@ -19,6 +19,7 @@
 void
 attr_save_in_map(void *m, void *node, void *value)
 {
+	ELOG
 	struct hash *hash = (struct hash *)m;
 
 	if (hash) {
@@ -33,12 +34,14 @@ attr_save_in_map(void *m, void *node, void *value)
 void *
 attr_create_new_map(void)
 {
+	ELOG
 	return (void *)init_hash8();
 }
 
 void *
 attr_create_new_attrs_map(void)
 {
+	ELOG
 	return (void *)init_hash8();
 }
 
@@ -54,18 +57,21 @@ struct classcomp {
 void *
 attr_create_new_requestHeaders_map(void)
 {
+	ELOG
 	return (void *)init_hash8();
 }
 
 void *
 attr_create_new_responseHeaders_map(void)
 {
+	ELOG
 	return (void *)init_hash8();
 }
 
 void
 delete_map_str(void *m)
 {
+	ELOG
 	struct hash *hash = (struct hash *)m;
 
 	if (hash) {
@@ -83,6 +89,7 @@ delete_map_str(void *m)
 void
 attr_delete_map(void *m)
 {
+	ELOG
 	struct hash *hash = (struct hash *)m;
 
 	if (hash) {
@@ -99,6 +106,7 @@ attr_delete_map(void *m)
 void *
 attr_find_in_map(void *m, void *node)
 {
+	ELOG
 	struct hash *hash = (struct hash *)m;
 
 	if (hash) {
@@ -121,6 +129,7 @@ attr_find_in_map(void *m, void *node)
 void
 attr_erase_from_map(void *m, void *node)
 {
+	ELOG
 	struct hash *hash = (struct hash *)m;
 
 	if (hash) {
@@ -141,6 +150,7 @@ attr_erase_from_map(void *m, void *node)
 static int
 explode(char *s, const char c, char **header, char **value)
 {
+	ELOG
 	char *next;
 	char *colon = strchr(s, c);
 
@@ -163,6 +173,7 @@ explode(char *s, const char c, char **header, char **value)
 static void *
 get_requestHeaders(void *h)
 {
+	ELOG
 	return h;
 }
 
@@ -170,12 +181,14 @@ get_requestHeaders(void *h)
 static void *
 get_responseHeaders(void *h)
 {
+	ELOG
 	return h;
 }
 
 void
 process_xhr_headers(char *head, struct mjs_xhr *x)
 {
+	ELOG
 	char *next, *next2, *line;
 	char *headers = stracpy(head);
 	char *space;
@@ -271,6 +284,7 @@ process_xhr_headers(char *head, struct mjs_xhr *x)
 void
 set_xhr_header(char *normalized_value, const char *h_name, struct mjs_xhr *x)
 {
+	ELOG
 	struct hash *requestHeaders = get_requestHeaders(x->requestHeaders);
 	struct hash_item *item;
 	char *key;
@@ -301,6 +315,7 @@ set_xhr_header(char *normalized_value, const char *h_name, struct mjs_xhr *x)
 char *
 get_output_headers(struct mjs_xhr *x)
 {
+	ELOG
 	struct string output;
 	struct hash *hash = (struct hash *)get_responseHeaders(x->responseHeaders);;
 	struct hash_item *item;
@@ -322,6 +337,7 @@ get_output_headers(struct mjs_xhr *x)
 char *
 get_output_header(const char *header_name, struct mjs_xhr *x)
 {
+	ELOG
 	struct hash *hash = get_responseHeaders(x->responseHeaders);
 	struct hash_item *item;
 
@@ -355,6 +371,7 @@ const char *good[] = { "background",
 bool
 isGood(const char *param)
 {
+	ELOG
 	int i;
 
 	for (i = 0; good[i]; i++) {
@@ -370,6 +387,7 @@ isGood(const char *param)
 static std::string
 trimString(std::string str)
 {
+	ELOG
 	const std::string whiteSpaces = " \t\n\r\f\v";
 	// Remove leading whitespace
 	size_t first_non_space = str.find_first_not_of(whiteSpaces);
@@ -385,6 +403,7 @@ trimString(std::string str)
 char *
 trimString(char *str)
 {
+	ELOG
 	char *whitespace = " \t\n\r\f\v";
 	char *end = strchr(str, '\0') - 1;
 
@@ -410,6 +429,7 @@ trimString(char *str)
 void *
 set_elstyle(const char *text)
 {
+	ELOG
 	char *str, *param, *value, *next, *next2;
 	struct hash *css = NULL;
 
@@ -468,6 +488,7 @@ next_iter:
 char *
 get_elstyle(void *m)
 {
+	ELOG
 	struct hash *css = (struct hash *)m;
 	char *delimiter = "";
 	struct hash_item *item;
@@ -494,6 +515,7 @@ get_elstyle(void *m)
 char *
 get_css_value(const char *text, const char *param)
 {
+	ELOG
 	void *m = set_elstyle(text);
 	char *res = NULL;
 	struct hash *css;
@@ -518,6 +540,7 @@ get_css_value(const char *text, const char *param)
 char *
 set_css_value(const char *text, const char *param, const char *value)
 {
+	ELOG
 	void *m = set_elstyle(text);
 
 	if (m) {

@@ -31,6 +31,7 @@ static void done_dom_node_data(struct dom_node *node);
 static inline struct dom_node_list *
 realloc_dom_node_list(struct dom_node_list **oldlist)
 {
+	ELOG
 	struct dom_node_list *list = *oldlist;
 	size_t size = list ? list->size : 0;
 	size_t oldsize = ALIGN_MEMORY_SIZE(size, DOM_NODE_LIST_GRANULARITY);
@@ -56,6 +57,7 @@ struct dom_node_list *
 add_to_dom_node_list(struct dom_node_list **list_ptr,
 		     struct dom_node *node, int position)
 {
+	ELOG
 	struct dom_node_list *list;
 
 	assert(list_ptr && node);
@@ -86,6 +88,7 @@ add_to_dom_node_list(struct dom_node_list **list_ptr,
 static void
 del_from_dom_node_list(struct dom_node_list *list, struct dom_node *node)
 {
+	ELOG
 	struct dom_node *entry;
 	size_t i;
 
@@ -107,6 +110,7 @@ del_from_dom_node_list(struct dom_node_list *list, struct dom_node *node)
 void
 done_dom_node_list(struct dom_node_list *list)
 {
+	ELOG
 	struct dom_node *node;
 	int i;
 
@@ -134,6 +138,7 @@ struct dom_node_search {
 int
 dom_node_casecmp(struct dom_node *node1, struct dom_node *node2)
 {
+	ELOG
 	if (node1->type == node2->type) {
 		switch (node1->type) {
 		case DOM_NODE_ELEMENT:
@@ -157,6 +162,7 @@ dom_node_casecmp(struct dom_node *node1, struct dom_node *node2)
 static inline int
 get_bsearch_position(struct dom_node_list *list, int from, int to)
 {
+	ELOG
 	int pos = from + ((to - from) / 2);
 
 	assertm(0 <= pos && pos < list->size, "pos %d", pos);
@@ -168,6 +174,7 @@ get_bsearch_position(struct dom_node_list *list, int from, int to)
 static inline struct dom_node *
 dom_node_list_bsearch(struct dom_node_search *search, struct dom_node_list *list)
 {
+	ELOG
 	assert(has_bsearch_node(search->from, search->to));
 
 	do {
@@ -193,6 +200,7 @@ dom_node_list_bsearch(struct dom_node_search *search, struct dom_node_list *list
 int
 get_dom_node_map_index(struct dom_node_list *list, struct dom_node *node)
 {
+	ELOG
 	struct dom_node_search search = INIT_DOM_NODE_SEARCH(node, list);
 	struct dom_node *match = dom_node_list_bsearch(&search, list);
 
@@ -203,6 +211,7 @@ struct dom_node *
 get_dom_node_map_entry(struct dom_node_list *list, /*enum dom_node_type*/ uint16_t type,
 		       uint16_t subtype, struct dom_string *name)
 {
+	ELOG
 	struct dom_node node = { type, 0, INIT_DOM_STRING(name->string, name->length) };
 	struct dom_node_search search = INIT_DOM_NODE_SEARCH(&node, list);
 
@@ -229,6 +238,7 @@ get_dom_node_map_entry(struct dom_node_list *list, /*enum dom_node_type*/ uint16
 static int
 get_dom_node_list_pos(struct dom_node_list *list, struct dom_node *node)
 {
+	ELOG
 	struct dom_node *entry;
 	int i;
 
@@ -246,6 +256,7 @@ get_dom_node_list_pos(struct dom_node_list *list, struct dom_node *node)
 int
 get_dom_node_list_index(struct dom_node *parent, struct dom_node *node)
 {
+	ELOG
 	struct dom_node_list **list = get_dom_node_list(parent, node);
 
 	return (list && *list) ? get_dom_node_list_pos(*list, node) : -1;
@@ -254,6 +265,7 @@ get_dom_node_list_index(struct dom_node *parent, struct dom_node *node)
 struct dom_node *
 get_dom_node_prev(struct dom_node *node)
 {
+	ELOG
 	struct dom_node_list **list;
 	int index;
 
@@ -281,6 +293,7 @@ get_dom_node_prev(struct dom_node *node)
 struct dom_node *
 get_dom_node_next(struct dom_node *node)
 {
+	ELOG
 	struct dom_node_list **list;
 	int index;
 
@@ -309,6 +322,7 @@ struct dom_node *
 get_dom_node_child(struct dom_node *parent, /*enum dom_node_type*/ uint16_t type,
 		   int16_t subtype)
 {
+	ELOG
 	struct dom_node_list **list;
 	struct dom_node *node;
 	int index;
@@ -358,6 +372,7 @@ init_dom_node_at(
 		struct dom_node *parent, /*enum dom_node_type*/ uint16_t type,
 		struct dom_string *string, int allocated)
 {
+	ELOG
 #ifdef DEBUG_MEMLEAK
 	struct dom_node *node = (struct dom_node *)debug_mem_calloc(file, line, 1, sizeof(*node));
 #else
@@ -409,6 +424,7 @@ init_dom_node_at(
 void
 done_dom_node_data(struct dom_node *node)
 {
+	ELOG
 	union dom_node_data *data;
 
 	assert(node);
@@ -466,6 +482,7 @@ done_dom_node_data(struct dom_node *node)
 void
 done_dom_node(struct dom_node *node)
 {
+	ELOG
 	assert(node);
 
 	if (node->parent) {
@@ -500,6 +517,7 @@ done_dom_node(struct dom_node *node)
 struct dom_string *
 get_dom_node_name(struct dom_node *node)
 {
+	ELOG
 	static struct dom_string cdata_section_str = STATIC_DOM_STRING("#cdata-section");
 	static struct dom_string comment_str = STATIC_DOM_STRING("#comment");
 	static struct dom_string document_str = STATIC_DOM_STRING("#document");
@@ -539,6 +557,7 @@ get_dom_node_name(struct dom_node *node)
 struct dom_string *
 get_dom_node_value(struct dom_node *node)
 {
+	ELOG
 	assert(node);
 
 	switch (node->type) {
@@ -568,6 +587,7 @@ get_dom_node_value(struct dom_node *node)
 struct dom_string *
 get_dom_node_type_name(/*enum dom_node_type*/ uint16_t type)
 {
+	ELOG
 	static struct dom_string dom_node_type_names[DOM_NODES] = {
 		INIT_DOM_STRING(NULL, 0),
 		/* DOM_NODE_ELEMENT */			STATIC_DOM_STRING("element"),

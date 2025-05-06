@@ -69,6 +69,7 @@ static struct hash *uri_tempfiles;
 void
 clear_uri_tempfiles(void)
 {
+	ELOG
 	struct hash_item *item;
 	int i;
 
@@ -86,6 +87,7 @@ clear_uri_tempfiles(void)
 static char *
 check_url_tempfiles(const char *url)
 {
+	ELOG
 	struct hash_item *item;
 
 	if (!uri_tempfiles || !url) {
@@ -103,6 +105,7 @@ check_url_tempfiles(const char *url)
 static void
 set_uri_tempfile(const char *url, const char *value)
 {
+	ELOG
 	if (!uri_tempfiles) {
 		uri_tempfiles = init_hash8();
 	}
@@ -120,6 +123,7 @@ set_uri_tempfile(const char *url, const char *value)
 int
 download_is_progressing(struct download *download)
 {
+	ELOG
 	return download
 	    && is_in_state(download->state, S_TRANS)
 	    && has_progress(download->progress);
@@ -128,6 +132,7 @@ download_is_progressing(struct download *download)
 int
 are_there_downloads(void)
 {
+	ELOG
 	struct file_download *file_download;
 
 	foreach (file_download, downloads)
@@ -145,6 +150,7 @@ static void download_data(struct download *download, struct file_download *file_
 struct file_download *
 init_file_download(struct uri *uri, struct session *ses, char *file, int fd)
 {
+	ELOG
 	struct file_download *file_download;
 
 	file_download = (struct file_download *)mem_calloc(1, sizeof(*file_download));
@@ -181,6 +187,7 @@ init_file_download(struct uri *uri, struct session *ses, char *file, int fd)
 void
 abort_download(struct file_download *file_download)
 {
+	ELOG
 #if 0
 	/* When hacking to cleanup the download code, remove lots of duplicated
 	 * code and implement stuff from bug 435 we should reintroduce this
@@ -222,6 +229,7 @@ abort_download(struct file_download *file_download)
 static void
 kill_downloads_to_file(char *file)
 {
+	ELOG
 	struct file_download *file_download;
 
 	foreach (file_download, downloads) {
@@ -237,6 +245,7 @@ kill_downloads_to_file(char *file)
 void
 abort_all_downloads(void)
 {
+	ELOG
 	while (!list_empty(downloads))
 		abort_download((struct file_download *)downloads.next);
 }
@@ -245,6 +254,7 @@ abort_all_downloads(void)
 void
 destroy_downloads(struct session *ses)
 {
+	ELOG
 	struct file_download *file_download, *next;
 	struct session *s;
 
@@ -282,6 +292,7 @@ destroy_downloads(struct session *ses)
 void
 detach_downloads_from_terminal(struct terminal *term)
 {
+	ELOG
 	struct file_download *file_download, *next;
 
 	assert(term != NULL);
@@ -306,6 +317,7 @@ detach_downloads_from_terminal(struct terminal *term)
 static void
 download_error_dialog(struct file_download *file_download, int saved_errno)
 {
+	ELOG
 	char *emsg = (char *) strerror(saved_errno);
 	struct session *ses = file_download->ses;
 	struct terminal *term = file_download->term;
@@ -321,6 +333,7 @@ download_error_dialog(struct file_download *file_download, int saved_errno)
 static int
 write_cache_entry_to_file(struct cache_entry *cached, struct file_download *file_download)
 {
+	ELOG
 	struct fragment *frag;
 
 	if (file_download->download.progress && file_download->download.progress->seek) {
@@ -376,6 +389,7 @@ write_cache_entry_to_file(struct cache_entry *cached, struct file_download *file
 static void
 abort_download_and_beep(struct file_download *file_download, struct terminal *term)
 {
+	ELOG
 	if (term && get_opt_int("document.download.notify_bell",
 	                        file_download->ses)
 		    + file_download->notify >= 2) {
@@ -394,6 +408,7 @@ struct exec_mailcap {
 static void
 do_follow_url_mailcap(struct session *ses, struct uri *uri)
 {
+	ELOG
 	if (!uri) {
 		print_error_dialog(ses, connection_state(S_BAD_URL), uri, PRI_CANCEL);
 		return;
@@ -416,6 +431,7 @@ do_follow_url_mailcap(struct session *ses, struct uri *uri)
 static void
 exec_mailcap_command(void *data)
 {
+	ELOG
 	struct exec_mailcap *exec_mailcap = (struct exec_mailcap *)data;
 
 	if (exec_mailcap) {
@@ -453,6 +469,7 @@ exec_mailcap_command(void *data)
 static void
 exec_later(struct session *ses, char *handler, char *file)
 {
+	ELOG
 	struct exec_mailcap *exec_mailcap = (struct exec_mailcap *)mem_calloc(1, sizeof(*exec_mailcap));
 
 	if (exec_mailcap) {
@@ -466,6 +483,7 @@ exec_later(struct session *ses, char *handler, char *file)
 static void
 exec_dgi_command(void *data)
 {
+	ELOG
 	struct exec_dgi *exec_dgi = (struct exec_dgi *)data;
 
 	if (exec_dgi) {
@@ -515,6 +533,7 @@ exec_dgi_command(void *data)
 static void
 exec_later_dgi(struct session *ses, char *handler, char *file, char *inpext, char *outext, int del)
 {
+	ELOG
 	struct exec_dgi *exec_dgi = (struct exec_dgi *)mem_calloc(1, sizeof(*exec_dgi));
 
 	if (exec_dgi) {
@@ -531,6 +550,7 @@ exec_later_dgi(struct session *ses, char *handler, char *file, char *inpext, cha
 static void
 download_data_store(struct download *download, struct file_download *file_download)
 {
+	ELOG
 	struct terminal *term = file_download->term;
 
 	assert_terminal_ptr_not_dangling(term);
@@ -641,6 +661,7 @@ download_data_store(struct download *download, struct file_download *file_downlo
 static void
 download_data(struct download *download, struct file_download *file_download)
 {
+	ELOG
 	struct cache_entry *cached = download->cached;
 
 	if (!cached || is_in_queued_state(download->state)) {
@@ -798,6 +819,7 @@ struct cdf_hop {
 static void
 lun_alternate(void *lun_hop_)
 {
+	ELOG
 	struct lun_hop *lun_hop = (struct lun_hop *)lun_hop_;
 
 	lun_hop->callback(lun_hop->term, lun_hop->file, lun_hop->data,
@@ -815,6 +837,7 @@ lun_alternate(void *lun_hop_)
 static void
 lun_cancel(void *lun_hop_)
 {
+	ELOG
 	struct lun_hop *lun_hop = (struct lun_hop *)lun_hop_;
 
 	lun_hop->callback(lun_hop->term, NULL, lun_hop->data,
@@ -834,6 +857,7 @@ lun_cancel(void *lun_hop_)
 static void
 lun_overwrite(void *lun_hop_)
 {
+	ELOG
 	struct lun_hop *lun_hop = (struct lun_hop *)lun_hop_;
 
 	lun_hop->callback(lun_hop->term, lun_hop->ofile, lun_hop->data,
@@ -852,6 +876,7 @@ lun_overwrite(void *lun_hop_)
 static void
 lun_resume(void *lun_hop_)
 {
+	ELOG
 	struct lun_hop *lun_hop = (struct lun_hop *)lun_hop_;
 
 	lun_hop->callback(lun_hop->term, lun_hop->ofile, lun_hop->data,
@@ -896,6 +921,7 @@ lookup_unique_name(struct terminal *term, char *ofile,
 		   download_flags_T flags,
 		   lun_callback_T *callback, void *data)
 {
+	ELOG
 	/* [gettext_accelerator_context(.lookup_unique_name)] */
 	struct lun_hop *lun_hop = NULL;
 	char *file = NULL;
@@ -994,6 +1020,7 @@ static void
 create_download_file_do(struct terminal *term, char *file,
 			void *data, download_flags_T flags)
 {
+	ELOG
 	struct cdf_hop *cdf_hop = (struct cdf_hop *)data;
 	char *wd;
 	int h = -1;
@@ -1104,6 +1131,7 @@ create_download_file(struct terminal *term, char *fi,
 		     download_flags_T flags,
 		     cdf_callback_T *callback, void *data)
 {
+	ELOG
 	struct cdf_hop *cdf_hop = (struct cdf_hop *)mem_calloc(1, sizeof(*cdf_hop));
 	char *wd;
 
@@ -1133,6 +1161,7 @@ create_download_file(struct terminal *term, char *fi,
 static char *
 get_temp_name(struct uri *uri)
 {
+	ELOG
 	char *extension;
 	char *nm;
 
@@ -1150,6 +1179,7 @@ get_temp_name(struct uri *uri)
 static char *
 subst_file(char *prog, char *file, char *uri)
 {
+	ELOG
 	struct string name;
 	/* When there is no %s in the mailcap entry, the handler program reads
 	 * data from stdin instead of a file. */
@@ -1239,6 +1269,7 @@ static void
 common_download_do(struct terminal *term, int fd, void *data,
 		   download_flags_T flags)
 {
+	ELOG
 	struct file_download *file_download;
 	struct cmdw_hop *cmdw_hop = (struct cmdw_hop *)data;
 	struct uri *download_uri = cmdw_hop->download_uri;
@@ -1282,6 +1313,7 @@ static void
 common_download(struct session *ses, char *file,
 		download_flags_T flags)
 {
+	ELOG
 	struct cmdw_hop *cmdw_hop;
 
 	if (!ses->download_uri) return;
@@ -1309,6 +1341,7 @@ common_download(struct session *ses, char *file,
 void
 start_download(void *ses, char *file)
 {
+	ELOG
 	common_download((struct session *)ses, file,
 			DOWNLOAD_RESUME_ALLOWED);
 }
@@ -1324,6 +1357,7 @@ start_download(void *ses, char *file)
 void
 resume_download(void *ses, char *file)
 {
+	ELOG
 	common_download((struct session *)ses, file,
 			DOWNLOAD_RESUME_ALLOWED | DOWNLOAD_RESUME_SELECTED);
 }
@@ -1341,6 +1375,7 @@ transform_codw_to_cmdw(struct terminal *term, int fd,
 		       struct codw_hop *codw_hop,
 		       download_flags_T flags)
 {
+	ELOG
 	struct type_query *type_query = codw_hop->type_query;
 	struct cmdw_hop *cmdw_hop = (struct cmdw_hop *)mem_calloc(1, sizeof(*cmdw_hop));
 
@@ -1365,6 +1400,7 @@ static void
 continue_download_do(struct terminal *term, int fd, void *data,
 		     download_flags_T flags)
 {
+	ELOG
 	struct codw_hop *codw_hop = (struct codw_hop *)data;
 	struct file_download *file_download = NULL;
 	struct type_query *type_query;
@@ -1443,6 +1479,7 @@ cancel:
 static void
 continue_download(void *data, char *file)
 {
+	ELOG
 	struct type_query *type_query = (struct type_query *)data;
 	struct codw_hop *codw_hop = (struct codw_hop *)mem_calloc(1, sizeof(*codw_hop));
 
@@ -1480,6 +1517,7 @@ continue_download(void *data, char *file)
 static struct type_query *
 find_type_query(struct session *ses)
 {
+	ELOG
 	struct type_query *type_query;
 
 	foreach (type_query, ses->type_queries)
@@ -1498,6 +1536,7 @@ static struct type_query *
 init_type_query(struct session *ses, struct download *download,
 	struct cache_entry *cached)
 {
+	ELOG
 	struct type_query *type_query;
 
 	type_query = (struct type_query *)mem_calloc(1, sizeof(*type_query));
@@ -1526,6 +1565,7 @@ init_type_query(struct session *ses, struct download *download,
 void
 done_type_query(struct type_query *type_query)
 {
+	ELOG
 	/* Unregister any active download */
 	cancel_download(&type_query->download, 0);
 
@@ -1551,6 +1591,7 @@ done_type_query(struct type_query *type_query)
 void
 tp_cancel(void *data)
 {
+	ELOG
 	struct type_query *type_query = (struct type_query *)data;
 
 	/* XXX: Should we really abort? (1 vs 0 as the last param) --pasky */
@@ -1569,6 +1610,7 @@ tp_cancel(void *data)
 void
 tp_save(struct type_query *type_query)
 {
+	ELOG
 	mem_free_set(&type_query->external_handler, NULL);
 	query_file(type_query->ses, type_query->uri, type_query, continue_download, tp_cancel, 1);
 }
@@ -1584,6 +1626,7 @@ tp_save(struct type_query *type_query)
 static widget_handler_status_T
 tp_show_header(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct type_query *type_query = (struct type_query *)widget_data->widget->data;
 
 	cached_header_dialog(type_query->ses, type_query->cached);
@@ -1607,6 +1650,7 @@ tp_show_header(struct dialog_data *dlg_data, struct widget_data *widget_data)
 void
 tp_display(struct type_query *type_query)
 {
+	ELOG
 	struct view_state *vs;
 	struct session *ses = type_query->ses;
 	struct uri *loading_uri = ses->loading_uri;
@@ -1644,6 +1688,7 @@ tp_display(struct type_query *type_query)
 static void
 tp_open(struct type_query *type_query)
 {
+	ELOG
 	if (!type_query->external_handler || !*type_query->external_handler) {
 		tp_display(type_query);
 		return;
@@ -1728,6 +1773,7 @@ tp_open(struct type_query *type_query)
 static void
 do_type_query(struct type_query *type_query, char *ct, struct mime_handler *handler)
 {
+	ELOG
 	/* [gettext_accelerator_context(.do_type_query)] */
 	struct string filename;
 	const char *description;
@@ -1940,6 +1986,7 @@ int
 setup_download_handler(struct session *ses, struct download *loading,
 		       struct cache_entry *cached, int frame)
 {
+	ELOG
 	struct mime_handler *handler;
 	struct view_state *vs;
 	struct type_query *type_query;

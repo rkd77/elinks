@@ -69,6 +69,7 @@ static void add_default_keybindings(void);
 static int
 delete_keybinding(keymap_id_T keymap_id, struct term_event_keyboard *kbd)
 {
+	ELOG
 	struct keybinding *keybinding;
 
 	foreach (keybinding, keymaps[keymap_id]) {
@@ -100,6 +101,7 @@ struct keybinding *
 add_keybinding(keymap_id_T keymap_id, action_id_T action_id,
 	       struct term_event_keyboard *kbd, int event)
 {
+	ELOG
 	struct keybinding *keybinding;
 	struct listbox_item *root;
 	int is_default;
@@ -137,6 +139,7 @@ add_keybinding(keymap_id_T keymap_id, action_id_T action_id,
 void
 free_keybinding(struct keybinding *keybinding)
 {
+	ELOG
 	if (keybinding->box_item) {
 		done_listbox_item(&keybinding_browser, keybinding->box_item);
 		keybinding->box_item = NULL;
@@ -165,6 +168,7 @@ int
 keybinding_exists(keymap_id_T keymap_id, struct term_event_keyboard *kbd,
 		  action_id_T *action_id)
 {
+	ELOG
 	struct keybinding *keybinding;
 
 	foreach (keybinding, keymaps[keymap_id]) {
@@ -186,6 +190,7 @@ keybinding_exists(keymap_id_T keymap_id, struct term_event_keyboard *kbd,
 action_id_T
 kbd_action(keymap_id_T keymap_id, struct term_event *ev, int *event)
 {
+	ELOG
 	struct keybinding *keybinding;
 
 	if (ev->ev != EVENT_KBD) return -1;
@@ -197,6 +202,7 @@ kbd_action(keymap_id_T keymap_id, struct term_event *ev, int *event)
 struct keybinding *
 kbd_ev_lookup(keymap_id_T keymap_id, struct term_event_keyboard *kbd, int *event)
 {
+	ELOG
 	struct keybinding *keybinding;
 
 	foreach (keybinding, keymaps[keymap_id]) {
@@ -218,6 +224,7 @@ kbd_ev_lookup(keymap_id_T keymap_id, struct term_event_keyboard *kbd, int *event
 static struct keybinding *
 kbd_act_lookup(keymap_id_T keymap_id, action_id_T action_id)
 {
+	ELOG
 	struct keybinding *keybinding;
 
 	foreach (keybinding, keymaps[keymap_id]) {
@@ -233,6 +240,7 @@ kbd_act_lookup(keymap_id_T keymap_id, action_id_T action_id)
 struct keybinding *
 kbd_nm_lookup(keymap_id_T keymap_id, const char *name)
 {
+	ELOG
 	action_id_T action_id = get_action_from_string(keymap_id, name);
 
 	if (action_id < 0) return NULL;
@@ -243,6 +251,7 @@ kbd_nm_lookup(keymap_id_T keymap_id, const char *name)
 static struct keybinding *
 kbd_stroke_lookup(keymap_id_T keymap_id, const char *keystroke_str)
 {
+	ELOG
 	struct term_event_keyboard kbd;
 
 	if (parse_keystroke(keystroke_str, &kbd) < 0)
@@ -262,6 +271,7 @@ static const struct action *
 get_action_from_keystroke(keymap_id_T keymap_id,
                           const char *keystroke_str)
 {
+	ELOG
 	struct keybinding *keybinding = kbd_stroke_lookup(keymap_id,
 	                                                  keystroke_str);
 
@@ -272,6 +282,7 @@ char *
 get_action_name_from_keystroke(keymap_id_T keymap_id,
                                const char *keystroke_str)
 {
+	ELOG
 	const struct action *action = get_action_from_keystroke(keymap_id,
 								keystroke_str);
 
@@ -281,6 +292,7 @@ get_action_name_from_keystroke(keymap_id_T keymap_id,
 action_id_T
 get_action_from_string(keymap_id_T keymap_id, const char *str)
 {
+	ELOG
 	const struct action *action;
 
 	assert(keymap_id >= 0 && keymap_id < KEYMAP_MAX);
@@ -295,6 +307,7 @@ get_action_from_string(keymap_id_T keymap_id, const char *str)
 const struct action *
 get_action(keymap_id_T keymap_id, action_id_T action_id)
 {
+	ELOG
 	assert(keymap_id >= 0 && keymap_id < KEYMAP_MAX);
 
 	if (action_id >= 0 && action_id < action_table[keymap_id].num_actions)
@@ -306,6 +319,7 @@ get_action(keymap_id_T keymap_id, action_id_T action_id)
 char *
 get_action_name(keymap_id_T keymap_id, action_id_T action_id)
 {
+	ELOG
 	const struct action *action = get_action(keymap_id, action_id);
 
 	return action ? action->astr : NULL;
@@ -314,6 +328,7 @@ get_action_name(keymap_id_T keymap_id, action_id_T action_id)
 static char *
 get_action_desc(keymap_id_T keymap_id, action_id_T action_id)
 {
+	ELOG
 	const struct action *action = get_action(keymap_id, action_id);
 
 	return action ? (action->adesc ? action->adesc : action->astr)
@@ -324,6 +339,7 @@ get_action_desc(keymap_id_T keymap_id, action_id_T action_id)
 static struct keymap *
 get_keymap(keymap_id_T keymap_id)
 {
+	ELOG
 	assert(keymap_id >= 0 && keymap_id < KEYMAP_MAX);
 
 	return &keymap_table[keymap_id];
@@ -332,6 +348,7 @@ get_keymap(keymap_id_T keymap_id)
 static keymap_id_T
 get_keymap_id(const char *keymap_str)
 {
+	ELOG
 	int keymap_id;
 
 	for (keymap_id = 0; keymap_id < KEYMAP_MAX; keymap_id++)
@@ -344,6 +361,7 @@ get_keymap_id(const char *keymap_str)
 const char *
 get_keymap_name(keymap_id_T keymap_id)
 {
+	ELOG
 	return get_keymap(keymap_id)->str;
 }
 
@@ -387,6 +405,7 @@ static const struct named_key key_table[] = {
 term_event_key_T
 read_key(const char *key_str)
 {
+	ELOG
 	const struct named_key *key;
 
 	if (key_str[0] && !key_str[1])
@@ -408,6 +427,7 @@ read_key(const char *key_str)
 int
 parse_keystroke(const char *s, struct term_event_keyboard *kbd)
 {
+	ELOG
 	kbd->modifier = KBD_MOD_NONE;
 	while (1) {
 		if (!c_strncasecmp(s, "Shift", 5) && (s[5] == '-' || s[5] == '+')) {
@@ -470,6 +490,7 @@ void
 add_keystroke_to_string(struct string *str, struct term_event_keyboard *kbd,
                         int escape)
 {
+	ELOG
 	char key_buffer[3] = "\\x";
 	const char *key_string = NULL;
 	const struct named_key *key;
@@ -506,6 +527,7 @@ void
 add_keystroke_action_to_string(struct string *string, action_id_T action_id,
                                keymap_id_T keymap_id)
 {
+	ELOG
 	struct keybinding *keybinding = kbd_act_lookup(keymap_id, action_id);
 
 	if (keybinding)
@@ -515,6 +537,7 @@ add_keystroke_action_to_string(struct string *string, action_id_T action_id,
 char *
 get_keystroke(action_id_T action_id, keymap_id_T keymap_id)
 {
+	ELOG
 	struct string keystroke;
 
 	if (!init_string(&keystroke)) return NULL;
@@ -531,6 +554,7 @@ void
 add_actions_to_string(struct string *string, action_id_T action_ids[],
 		      keymap_id_T keymap_id, struct terminal *term)
 {
+	ELOG
 	int i;
 
 	assert(keymap_id >= 0 && keymap_id < KEYMAP_MAX);
@@ -556,6 +580,7 @@ add_actions_to_string(struct string *string, action_id_T action_ids[],
 static void
 init_keymaps(struct module *xxx)
 {
+	ELOG
 	int keymap_id;
 
 	for (keymap_id = 0; keymap_id < KEYMAP_MAX; keymap_id++)
@@ -568,6 +593,7 @@ init_keymaps(struct module *xxx)
 static void
 free_keymaps(struct module *xxx)
 {
+	ELOG
 	int keymap_id;
 
 	done_keybinding_listboxes();
@@ -585,6 +611,7 @@ free_keymaps(struct module *xxx)
 static char *
 bind_key_to_event(const char *ckmap, const char *ckey, int event)
 {
+	ELOG
 	struct term_event_keyboard kbd;
 	action_id_T action_id;
 	keymap_id_T keymap_id = get_keymap_id(ckmap);
@@ -608,6 +635,7 @@ int
 bind_key_to_event_name(const char *ckmap, const char *ckey,
 		       char *event_name, char **err)
 {
+	ELOG
 	int event_id;
 
 	event_id = register_event(event_name);
@@ -807,6 +835,7 @@ static struct default_kb *default_keybindings[] = {
 static int
 keybinding_is_default(struct keybinding *keybinding)
 {
+	ELOG
 	static struct default_kb default_keybinding;
 	struct default_kb *pos;
 
@@ -824,6 +853,7 @@ keybinding_is_default(struct keybinding *keybinding)
 static void
 add_default_keybindings(void)
 {
+	ELOG
 	/* Maybe we shouldn't delete old keybindings. But on the other side, we
 	 * can't trust clueless users what they'll push into sources modifying
 	 * defaults, can we? ;)) */
@@ -887,6 +917,7 @@ static const struct action_alias *action_aliases[KEYMAP_MAX] = {
 static action_id_T
 get_aliased_action(keymap_id_T keymap_id, char *action_str)
 {
+	ELOG
 	assert(keymap_id >= 0 && keymap_id < KEYMAP_MAX);
 
 	if (action_aliases[keymap_id]) {
@@ -905,6 +936,7 @@ int
 bind_do(const char *keymap_str, const char *keystroke_str,
 	char *action_str, int is_system_conf)
 {
+	ELOG
 	keymap_id_T keymap_id;
 	action_id_T action_id;
 	struct term_event_keyboard kbd;
@@ -928,6 +960,7 @@ bind_do(const char *keymap_str, const char *keystroke_str,
 char *
 bind_act(char *keymap_str, const char *keystroke_str)
 {
+	ELOG
 	keymap_id_T keymap_id;
 	char *action;
 	struct keybinding *keybinding;
@@ -951,6 +984,7 @@ static void
 single_bind_config_string(struct string *file, keymap_id_T keymap_id,
 			  struct keybinding *keybinding)
 {
+	ELOG
 	const char *keymap_str = get_keymap_name(keymap_id);
 	char *action_str = get_action_name(keymap_id, keybinding->action_id);
 
@@ -976,6 +1010,7 @@ single_bind_config_string(struct string *file, keymap_id_T keymap_id,
 void
 bind_config_string(struct string *file)
 {
+	ELOG
 	int keymap_id;
 
 	for (keymap_id = 0; keymap_id < KEYMAP_MAX; keymap_id++) {

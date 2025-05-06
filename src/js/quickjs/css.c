@@ -28,6 +28,7 @@
 static void *
 js_CSSStyleDeclaration_GetOpaque(JSValueConst this_val)
 {
+	ELOG
 	REF_JS(this_val);
 
 	return attr_find_in_map_rev(map_rev_csses, this_val);
@@ -38,6 +39,7 @@ js_CSSStyleDeclaration_GetOpaque(JSValueConst this_val)
 static void
 js_CSSStyleDeclaration_SetOpaque(JSValueConst this_val, void *node)
 {
+	ELOG
 	REF_JS(this_val);
 
 	if (!node) {
@@ -51,6 +53,7 @@ js_CSSStyleDeclaration_SetOpaque(JSValueConst this_val, void *node)
 static JSValue
 js_CSSStyleDeclaration_get_property_length(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -62,6 +65,7 @@ js_CSSStyleDeclaration_get_property_length(JSContext *ctx, JSValueConst this_val
 static JSValue
 js_CSSStyleDeclaration_getPropertyValue(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -74,6 +78,7 @@ js_CSSStyleDeclaration_getPropertyValue(JSContext *ctx, JSValueConst this_val, i
 static JSValue
 js_CSSStyleDeclaration_item2(JSContext *ctx, JSValueConst this_val, int idx)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -86,6 +91,7 @@ js_CSSStyleDeclaration_item2(JSContext *ctx, JSValueConst this_val, int idx)
 static JSValue
 js_CSSStyleDeclaration_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -101,6 +107,7 @@ js_CSSStyleDeclaration_item(JSContext *ctx, JSValueConst this_val, int argc, JSV
 static JSValue
 js_CSSStyleDeclaration_namedItem2(JSContext *ctx, JSValueConst this_val, const char *str)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -112,6 +119,7 @@ js_CSSStyleDeclaration_namedItem2(JSContext *ctx, JSValueConst this_val, const c
 static JSValue
 js_CSSStyleDeclaration_namedItem(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -126,6 +134,7 @@ js_CSSStyleDeclaration_namedItem(JSContext *ctx, JSValueConst this_val, int argc
 static void
 js_CSSStyleDeclaration_set_items(JSContext *ctx, JSValue this_val, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -139,6 +148,7 @@ js_CSSStyleDeclaration_set_items(JSContext *ctx, JSValue this_val, void *node)
 static JSValue
 js_CSSStyleDeclaration_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -158,6 +168,7 @@ static const JSCFunctionListEntry js_CSSStyleDeclaration_proto_funcs[] = {
 JSValue
 getCSSStyleDeclaration(JSContext *ctx, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

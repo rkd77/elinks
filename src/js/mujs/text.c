@@ -91,6 +91,7 @@ static void mjs_text_set_property_textContent(js_State *J);
 void *
 mjs_getprivate_text(js_State *J, int idx)
 {
+	ELOG
 	struct mjs_text_private *priv = (struct mjs_text_private *)js_touserdata(J, idx, "text");
 
 	if (!priv) {
@@ -103,6 +104,7 @@ mjs_getprivate_text(js_State *J, int idx)
 static void
 mjs_text_get_property_children(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -129,6 +131,7 @@ mjs_text_get_property_children(js_State *J)
 static void
 mjs_text_get_property_childElementCount(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -157,6 +160,7 @@ mjs_text_get_property_childElementCount(js_State *J)
 static void
 mjs_text_get_property_childNodes(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -183,6 +187,7 @@ mjs_text_get_property_childNodes(js_State *J)
 static void
 mjs_text_get_property_firstChild(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -212,6 +217,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_text_get_property_firstElementChild(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -273,6 +279,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_text_get_property_lastChild(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -302,6 +309,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_text_get_property_lastElementChild(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -363,6 +371,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_text_get_property_nextElementSibling(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -410,6 +419,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_text_get_property_nodeName(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -436,6 +446,7 @@ mjs_text_get_property_nodeName(js_State *J)
 static void
 mjs_text_get_property_nodeType(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -461,6 +472,7 @@ mjs_text_get_property_nodeType(js_State *J)
 static void
 mjs_text_get_property_nodeValue(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -487,6 +499,7 @@ mjs_text_get_property_nodeValue(js_State *J)
 static void
 mjs_text_set_property_nodeValue(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -521,6 +534,7 @@ mjs_text_set_property_nodeValue(js_State *J)
 static void
 mjs_text_get_property_nextSibling(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -550,6 +564,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_text_get_property_ownerDocument(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -561,6 +576,7 @@ mjs_text_get_property_ownerDocument(js_State *J)
 static void
 mjs_text_get_property_parentElement(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -590,6 +606,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_text_get_property_parentNode(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -620,6 +637,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_text_get_property_previousElementSibling(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -667,6 +685,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_text_get_property_previousSibling(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -696,6 +715,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_text_get_property_tagName(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -720,6 +740,7 @@ mjs_text_get_property_tagName(js_State *J)
 static void
 mjs_text_get_property_textContent(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -744,6 +765,7 @@ mjs_text_get_property_textContent(js_State *J)
 static void
 mjs_text_set_property_textContent(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -778,6 +800,7 @@ mjs_text_set_property_textContent(js_State *J)
 static xmlpp::Element*
 el_add_child_element_common(xmlNode* child, xmlNode* node)
 {
+	ELOG
 	if (!node) {
 		xmlFreeNode(child);
 		throw xmlpp::internal_error("Could not add child element node");
@@ -791,6 +814,7 @@ el_add_child_element_common(xmlNode* child, xmlNode* node)
 static void
 mjs_text_addEventListener(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -877,6 +901,7 @@ ex:
 static void
 mjs_text_removeEventListener(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -941,6 +966,7 @@ mjs_text_removeEventListener(js_State *J)
 static void
 mjs_text_appendChild(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -977,6 +1003,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_text_cloneNode(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1007,6 +1034,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static bool
 isAncestor(dom_node *el, dom_node *node)
 {
+	ELOG
 	dom_node *prev_next = NULL;
 	while (node) {
 		dom_exception exc;
@@ -1036,6 +1064,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_text_contains(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1100,6 +1129,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_text_hasChildNodes(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1125,6 +1155,7 @@ mjs_text_hasChildNodes(js_State *J)
 static void
 mjs_text_insertBefore(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1161,6 +1192,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_text_isEqualNode(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1201,6 +1233,7 @@ mjs_text_isEqualNode(js_State *J)
 static void
 mjs_text_isSameNode(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1219,6 +1252,7 @@ mjs_text_isSameNode(js_State *J)
 static void
 mjs_text_querySelector(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1251,6 +1285,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_text_querySelectorAll(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1289,6 +1324,7 @@ mjs_text_querySelectorAll(js_State *J)
 static void
 mjs_text_removeChild(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1316,6 +1352,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_text_toString(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1325,6 +1362,7 @@ mjs_text_toString(js_State *J)
 static void
 mjs_text_finalizer(js_State *J, void *priv)
 {
+	ELOG
 	struct mjs_text_private *el_private = (struct mjs_text_private *)priv;
 
 	if (el_private) {
@@ -1341,6 +1379,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 void
 mjs_push_text(js_State *J, void *node)
 {
+	ELOG
 	NODEINFO(node);
 	struct mjs_text_private *el_private = NULL;
 
@@ -1417,6 +1456,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 int
 mjs_text_init(js_State *J)
 {
+	ELOG
 #if 0
 	mjs_push_node(J, NULL);
 	js_defglobal(J, "text", JS_DONTENUM);
@@ -1428,6 +1468,7 @@ mjs_text_init(js_State *J)
 void
 check_element_event(void *interp, void *elem, const char *event_name, struct term_event *ev)
 {
+	ELOG
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)interp;
 	js_State *J = (js_State *)interpreter->backend_data;
 	void *second = attr_find_in_map(map_privates, elem);
@@ -1465,6 +1506,7 @@ check_element_event(void *interp, void *elem, const char *event_name, struct ter
 static void
 mjs_text_dispatchEvent(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1489,6 +1531,7 @@ mjs_text_dispatchEvent(js_State *J)
 static void
 text_event_handler(dom_event *event, void *pw)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

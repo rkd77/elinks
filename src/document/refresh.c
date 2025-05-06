@@ -29,6 +29,7 @@
 struct document_refresh *
 init_document_refresh(char *url, unsigned long seconds)
 {
+	ELOG
 	struct document_refresh *refresh;
 
 	refresh = (struct document_refresh *)mem_alloc(sizeof(*refresh));
@@ -50,12 +51,14 @@ init_document_refresh(char *url, unsigned long seconds)
 void
 kill_document_refresh(struct document_refresh *refresh)
 {
+	ELOG
 	kill_timer(&refresh->timer);
 }
 
 void
 done_document_refresh(struct document_refresh *refresh)
 {
+	ELOG
 	kill_document_refresh(refresh);
 	done_uri(refresh->uri);
 	mem_free(refresh);
@@ -67,6 +70,7 @@ done_document_refresh(struct document_refresh *refresh)
 static void
 do_document_refresh(void *data)
 {
+	ELOG
 	struct document_view *doc_view = (struct document_view *)data;
 	struct document_refresh *refresh = doc_view->document->refresh;
 	struct type_query *type_query;
@@ -100,6 +104,7 @@ static void
 start_document_refresh(struct document_refresh *refresh,
                        struct document_view *doc_view)
 {
+	ELOG
 	milliseconds_T minimum = (milliseconds_T) get_opt_int("document.browse.minimum_refresh_time", doc_view->session);
 	milliseconds_T refresh_delay = sec_to_ms(refresh->seconds);
 	milliseconds_T time = ms_max(refresh_delay, minimum);
@@ -135,6 +140,7 @@ start_document_refresh(struct document_refresh *refresh,
 void
 start_document_refreshes(struct session *ses)
 {
+	ELOG
 
 	assert(ses);
 

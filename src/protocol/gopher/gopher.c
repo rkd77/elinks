@@ -147,6 +147,7 @@ static struct gopher_entity_info gopher_entity_info[] = {
 static struct gopher_entity_info *
 get_gopher_entity_info(gopher_entity_T type)
 {
+	ELOG
 	int entry;
 
 	for (entry = 0; entry < sizeof_array(gopher_entity_info) - 1; entry++)
@@ -161,6 +162,7 @@ get_gopher_entity_info(gopher_entity_T type)
 static const char *
 get_gopher_entity_description(gopher_entity_T type)
 {
+	ELOG
 	struct gopher_entity_info *info = get_gopher_entity_info(type);
 
 	return info ? info->description : NULL;
@@ -180,6 +182,7 @@ static void
 add_uri_decoded(struct string *command, char *string, int length,
 		int replace_plus)
 {
+	ELOG
 	int oldlen = command->length;
 
 	assert(string);
@@ -212,6 +215,7 @@ add_gopher_command(struct connection *conn, struct string *command,
 		   gopher_entity_T entity,
 		   char *selector, int selectorlen)
 {
+	ELOG
 	char *query;
 	int querylen;
 
@@ -280,6 +284,7 @@ add_gopher_command(struct connection *conn, struct string *command,
 static struct connection_state
 init_gopher_connection_info(struct connection *conn)
 {
+	ELOG
 	struct gopher_connection_info *gopher;
 	struct connection_state state;
 	struct string command;
@@ -361,6 +366,7 @@ static void
 add_gopher_link(struct string *buffer, const char *text,
 		const char *addr)
 {
+	ELOG
 	add_to_string(buffer, "<a href=\"");
 	add_html_to_string(buffer, addr, strlen(addr));
 	add_to_string(buffer, "\">");
@@ -372,6 +378,7 @@ static void
 add_gopher_search_field(struct string *buffer, const char *text,
 		const char *addr)
 {
+	ELOG
 	add_to_string(buffer, "<form action=\"");
 	add_html_to_string(buffer, addr, strlen(addr));
 	add_to_string(buffer, "\">"
@@ -389,6 +396,7 @@ add_gopher_search_field(struct string *buffer, const char *text,
 static void
 add_gopher_description(struct string *buffer, gopher_entity_T entity)
 {
+	ELOG
 	const char *description = get_gopher_entity_description(entity);
 
 	if (!description)
@@ -402,6 +410,7 @@ add_gopher_description(struct string *buffer, gopher_entity_T entity)
 static void
 encode_selector_string(struct string *buffer, char *selector)
 {
+	ELOG
 	char *slashes;
 
 	/* Rather hackishly only convert slashes if there are
@@ -420,6 +429,7 @@ encode_selector_string(struct string *buffer, char *selector)
 static void
 add_gopher_menu_line(struct string *buffer, char *line)
 {
+	ELOG
 	/* Gopher menu fields */
 	char *name = line;
 	char *selector = NULL;
@@ -587,6 +597,7 @@ add_gopher_menu_line(struct string *buffer, char *line)
 static char *
 get_gopher_line_end(char *data, int datalen)
 {
+	ELOG
 	for (; datalen >= 1; data++, datalen--) {
 		if (data[0] == ASCII_CR && datalen > 1 && data[1] == ASCII_LF)
 			return data + 2;
@@ -601,6 +612,7 @@ get_gopher_line_end(char *data, int datalen)
 static inline char *
 check_gopher_last_line(char *line, char *end)
 {
+	ELOG
 	assert(line < end);
 
 	return line[0] == '.' && !line[1] ? NULL : line;
@@ -610,6 +622,7 @@ check_gopher_last_line(char *line, char *end)
 static struct connection_state
 read_gopher_directory_data(struct connection *conn, struct read_buffer *rb)
 {
+	ELOG
 	struct connection_state state = connection_state(S_TRANS);
 	struct string buffer;
 	char *end;
@@ -659,6 +672,7 @@ read_gopher_directory_data(struct connection *conn, struct read_buffer *rb)
 static struct cache_entry *
 init_gopher_cache_entry(struct connection *conn)
 {
+	ELOG
 	struct gopher_connection_info *gopher = (struct gopher_connection_info *)conn->info;
 	struct cache_entry *cached = get_cache_entry(conn->uri);
 
@@ -681,6 +695,7 @@ init_gopher_cache_entry(struct connection *conn)
 static struct connection_state
 init_gopher_index_cache_entry(struct connection *conn)
 {
+	ELOG
 	char *where;
 	struct string buffer;
 
@@ -728,6 +743,7 @@ init_gopher_index_cache_entry(struct connection *conn)
 static void
 read_gopher_response_data(struct socket *socket, struct read_buffer *rb)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 	struct gopher_connection_info *gopher = (struct gopher_connection_info *)conn->info;
 	struct connection_state state = connection_state(S_TRANS);
@@ -797,6 +813,7 @@ read_gopher_response_data(struct socket *socket, struct read_buffer *rb)
 static void
 send_gopher_command(struct socket *socket)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 	struct gopher_connection_info *gopher = (struct gopher_connection_info *)conn->info;
 
@@ -810,6 +827,7 @@ send_gopher_command(struct socket *socket)
 void
 gopher_protocol_handler(struct connection *conn)
 {
+	ELOG
 	struct uri *uri = conn->uri;
 	struct connection_state state = connection_state(S_CONN);
 

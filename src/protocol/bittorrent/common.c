@@ -32,6 +32,7 @@ const bittorrent_id_T BITTORRENT_NULL_ID = {};
 char *
 get_peer_id(bittorrent_id_T peer_id)
 {
+	ELOG
 	static char hex[41];
 	int i, j;
 
@@ -59,6 +60,7 @@ get_peer_id(bittorrent_id_T peer_id)
 const char *
 get_peer_message(bittorrent_message_id_T message_id)
 {
+	ELOG
 	static struct {
 		bittorrent_message_id_T message_id;
 		const char *name;
@@ -90,6 +92,7 @@ get_peer_message(bittorrent_message_id_T message_id)
 char *
 get_hexed_bittorrent_id(bittorrent_id_T id)
 {
+	ELOG
 	static char hex[SHA_DIGEST_LENGTH * 2 + 1];
 	int i;
 
@@ -109,6 +112,7 @@ int
 bittorrent_piece_is_valid(struct bittorrent_meta *meta,
 			  uint32_t piece, char *data, uint32_t datalen)
 {
+	ELOG
 	char *piece_hash;
 	bittorrent_id_T data_hash;
 
@@ -123,6 +127,7 @@ bittorrent_piece_is_valid(struct bittorrent_meta *meta,
 void
 done_bittorrent_meta(struct bittorrent_meta *meta)
 {
+	ELOG
 	free_uri_list(&meta->tracker_uris);
 	mem_free_if(meta->name);
 	mem_free_if(meta->comment);
@@ -133,6 +138,7 @@ done_bittorrent_meta(struct bittorrent_meta *meta)
 void
 done_bittorrent_message(struct bittorrent_message *message)
 {
+	ELOG
 	del_from_list(message);
 	done_uri(message->uri);
 	mem_free(message);
@@ -147,6 +153,7 @@ done_bittorrent_message(struct bittorrent_message *message)
 void
 init_bittorrent_peer_id(bittorrent_id_T peer_id)
 {
+	ELOG
 	const char *version = VERSION;
 	int dots = 0;
 	int i = 0;
@@ -183,6 +190,7 @@ int
 bittorrent_id_is_known(struct bittorrent_connection *bittorrent,
 		       bittorrent_id_T id)
 {
+	ELOG
 	struct bittorrent_peer_connection *peer;
 
 	/* The peer ID matches the client ID? */
@@ -203,6 +211,7 @@ struct bittorrent_peer *
 get_peer_from_bittorrent_pool(struct bittorrent_connection *bittorrent,
 			      bittorrent_id_T id)
 {
+	ELOG
 	struct bittorrent_peer *peer_info;
 
 	foreach (peer_info, bittorrent->peer_pool)
@@ -217,6 +226,7 @@ add_peer_to_bittorrent_pool(struct bittorrent_connection *bittorrent,
 			    bittorrent_id_T id, int port,
 			    const char *ip, int iplen)
 {
+	ELOG
 	struct bittorrent_peer *peer;
 
 	/* Check sanity. Don't error out here since entries in the tracker
@@ -264,6 +274,7 @@ struct bittorrent_peer_request *
 get_bittorrent_peer_request(struct bittorrent_peer_status *status,
 			    uint32_t piece, uint32_t offset, uint32_t length)
 {
+	ELOG
 	struct bittorrent_peer_request *request;
 
 	foreach (request, status->requests)  {
@@ -280,6 +291,7 @@ void
 add_bittorrent_peer_request(struct bittorrent_peer_status *status,
 			    uint32_t piece, uint32_t offset, uint32_t length)
 {
+	ELOG
 	struct bittorrent_peer_request *request;
 
 	request = get_bittorrent_peer_request(status, piece, offset, length);
@@ -301,6 +313,7 @@ void
 del_bittorrent_peer_request(struct bittorrent_peer_status *status,
 			    uint32_t piece, uint32_t offset, uint32_t length)
 {
+	ELOG
 	struct bittorrent_peer_request *request;
 
 	request = get_bittorrent_peer_request(status, piece, offset, length);
@@ -331,6 +344,7 @@ struct bittorrent_fetcher {
 static void
 bittorrent_fetch_callback(struct download *download, void *data)
 {
+	ELOG
 	struct bittorrent_fetcher *fetcher = (struct bittorrent_fetcher *)data;
 	struct fragment *fragment;
 	struct bittorrent_const_string response;
@@ -400,6 +414,7 @@ init_bittorrent_fetch(struct bittorrent_fetcher **fetcher_ref,
 		      struct uri *uri, bittorrent_fetch_callback_T callback,
 		      void *data, int delete_)
 {
+	ELOG
 	struct bittorrent_fetcher *fetcher;
 
 	fetcher = (struct bittorrent_fetcher *)mem_calloc(1, sizeof(*fetcher));
@@ -426,6 +441,7 @@ init_bittorrent_fetch(struct bittorrent_fetcher **fetcher_ref,
 static void
 end_bittorrent_fetch(void *fetcher_data)
 {
+	ELOG
 	struct bittorrent_fetcher *fetcher = (struct bittorrent_fetcher *)fetcher_data;
 
 	assert(fetcher && !fetcher->callback);
@@ -439,6 +455,7 @@ end_bittorrent_fetch(void *fetcher_data)
 void
 done_bittorrent_fetch(struct bittorrent_fetcher **fetcher_ref)
 {
+	ELOG
 	struct bittorrent_fetcher *fetcher;
 
 	assert(fetcher_ref);
@@ -474,6 +491,7 @@ static INIT_LIST_OF(struct bittorrent_blacklist_item, bittorrent_blacklist);
 static struct bittorrent_blacklist_item *
 get_bittorrent_blacklist_item(bittorrent_id_T peer_id)
 {
+	ELOG
 	struct bittorrent_blacklist_item *item;
 
 	foreach (item, bittorrent_blacklist)
@@ -487,6 +505,7 @@ void
 add_bittorrent_blacklist_flags(bittorrent_id_T peer_id,
 			       bittorrent_blacklist_flags_T flags)
 {
+	ELOG
 	struct bittorrent_blacklist_item *item;
 
 	item = get_bittorrent_blacklist_item(peer_id);
@@ -508,6 +527,7 @@ void
 del_bittorrent_blacklist_flags(bittorrent_id_T peer_id,
 			       bittorrent_blacklist_flags_T flags)
 {
+	ELOG
 	struct bittorrent_blacklist_item *item;
 
 	item = get_bittorrent_blacklist_item(peer_id);
@@ -523,6 +543,7 @@ del_bittorrent_blacklist_flags(bittorrent_id_T peer_id,
 bittorrent_blacklist_flags_T
 get_bittorrent_blacklist_flags(bittorrent_id_T peer_id)
 {
+	ELOG
 	struct bittorrent_blacklist_item *item;
 
 	item = get_bittorrent_blacklist_item(peer_id);
@@ -533,5 +554,6 @@ get_bittorrent_blacklist_flags(bittorrent_id_T peer_id)
 void
 done_bittorrent_blacklist(void)
 {
+	ELOG
 	free_list(bittorrent_blacklist);
 }

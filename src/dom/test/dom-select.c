@@ -20,6 +20,7 @@
 int
 main(int argc, char *argv[])
 {
+	ELOG
 	struct dom_node *root;
 	struct sgml_parser *parser;
 	struct dom_select *select;

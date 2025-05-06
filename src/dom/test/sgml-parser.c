@@ -25,12 +25,14 @@ unsigned int number_of_lines = 0;
 int
 get_ctl_handle()
 {
+	ELOG
 	return -1;
 }
 
 static int
 update_number_of_lines(struct dom_stack *stack)
 {
+	ELOG
 	struct sgml_parser *parser = stack->contexts[0]->data;
 	int lines;
 
@@ -49,6 +51,7 @@ update_number_of_lines(struct dom_stack *stack)
 static void
 print_compressed_string(struct dom_string *string)
 {
+	ELOG
 	unsigned char escape[3] = { '\\', '?', 0 };
 	size_t pos;
 
@@ -73,6 +76,7 @@ print_compressed_string(struct dom_string *string)
 static void
 print_dom_node_value(struct dom_node *node)
 {
+	ELOG
 	struct dom_string *value;
 
 	assert(node);
@@ -104,12 +108,14 @@ static unsigned char indent_string[] =
 static void
 print_indent(struct dom_stack *stack)
 {
+	ELOG
 	printf("%.*s", (int) get_indent_offset(stack), indent_string);
 }
 
 static enum dom_code
 sgml_parser_test_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 {
+	ELOG
 	struct dom_string *value = &node->string;
 	struct dom_string *name = get_dom_node_name(node);
 
@@ -128,6 +134,7 @@ sgml_parser_test_tree(struct dom_stack *stack, struct dom_node *node, void *data
 static enum dom_code
 sgml_parser_test_id_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
+	ELOG
 	struct dom_string *name;
 	struct dom_string *id;
 
@@ -152,6 +159,7 @@ sgml_parser_test_id_leaf(struct dom_stack *stack, struct dom_node *node, void *d
 static enum dom_code
 sgml_parser_test_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
+	ELOG
 	struct dom_string *name;
 
 	assert(node);
@@ -173,6 +181,7 @@ sgml_parser_test_leaf(struct dom_stack *stack, struct dom_node *node, void *data
 static enum dom_code
 sgml_parser_test_branch(struct dom_stack *stack, struct dom_node *node, void *data)
 {
+	ELOG
 	struct dom_string *name;
 	struct dom_string *id;
 
@@ -194,6 +203,7 @@ sgml_parser_test_branch(struct dom_stack *stack, struct dom_node *node, void *da
 static enum dom_code
 sgml_parser_test_end(struct dom_stack *stack, struct dom_node *node, void *data)
 {
+	ELOG
 	struct sgml_parser *parser = stack->contexts[0]->data;
 
 	if ((parser->flags & SGML_PARSER_COUNT_LINES)
@@ -244,6 +254,7 @@ static enum dom_code
 sgml_error_function(struct sgml_parser *parser, struct dom_string *string,
 		    unsigned int line_number)
 {
+	ELOG
 	printf("error on line %d: %.*s\n",
 	       line_number, string->length, string->string);
 
@@ -253,6 +264,7 @@ sgml_error_function(struct sgml_parser *parser, struct dom_string *string,
 int
 main(int argc, char *argv[])
 {
+	ELOG
 	struct sgml_parser *parser;
 	enum sgml_document_type doctype = SGML_DOCTYPE_HTML;
 	enum sgml_parser_flag flags = 0;

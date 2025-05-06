@@ -74,6 +74,7 @@ static JSValue js_fragment_set_property_textContent(JSContext *ctx, JSValueConst
 void *
 js_getopaque_fragment(JSValueConst obj, JSClassID class_id)
 {
+	ELOG
 	REF_JS(obj);
 	struct js_fragment_private *res = (struct js_fragment_private *)JS_GetOpaque(obj, class_id);
 
@@ -94,12 +95,14 @@ js_getopaque_fragment(JSValueConst obj, JSClassID class_id)
 void *
 fragment_get_node(JSValueConst obj)
 {
+	ELOG
 	return js_getopaque_fragment(obj, js_fragment_class_id);
 }
 
 static JSValue
 js_fragment_get_property_children(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -130,6 +133,7 @@ js_fragment_get_property_children(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_fragment_get_property_childElementCount(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -162,6 +166,7 @@ js_fragment_get_property_childElementCount(JSContext *ctx, JSValueConst this_val
 static JSValue
 js_fragment_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -192,6 +197,7 @@ js_fragment_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_fragment_get_property_firstChild(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -224,6 +230,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_fragment_get_property_firstElementChild(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -290,6 +297,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_fragment_get_property_lastChild(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -323,6 +331,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_fragment_get_property_lastElementChild(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -388,6 +397,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_fragment_get_property_nextElementSibling(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -439,6 +449,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_fragment_get_property_nodeName(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -474,6 +485,7 @@ js_fragment_get_property_nodeName(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_fragment_get_property_nodeType(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -503,6 +515,7 @@ js_fragment_get_property_nodeType(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_fragment_get_property_nodeValue(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -535,6 +548,7 @@ js_fragment_get_property_nodeValue(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_fragment_set_property_nodeValue(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -573,6 +587,7 @@ js_fragment_set_property_nodeValue(JSContext *ctx, JSValueConst this_val, JSValu
 static JSValue
 js_fragment_get_property_nextSibling(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -609,6 +624,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_fragment_get_property_ownerDocument(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -623,6 +639,7 @@ js_fragment_get_property_ownerDocument(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_fragment_get_property_parentElement(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -656,6 +673,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_fragment_get_property_parentNode(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -689,6 +707,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_fragment_get_property_previousElementSibling(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -741,6 +760,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_fragment_get_property_previousSibling(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -775,6 +795,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_fragment_get_property_textContent(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -805,6 +826,7 @@ js_fragment_get_property_textContent(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_fragment_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -846,6 +868,7 @@ js_fragment_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSVa
 static xmlpp::Element*
 el_add_child_element_common(xmlNode* child, xmlNode* node)
 {
+	ELOG
 	if (!node) {
 		xmlFreeNode(child);
 		throw xmlpp::internal_error("Could not add child element node");
@@ -859,6 +882,7 @@ el_add_child_element_common(xmlNode* child, xmlNode* node)
 static JSValue
 js_fragment_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -902,6 +926,7 @@ js_fragment_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 static JSValue
 js_fragment_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -996,6 +1021,7 @@ ex:
 static JSValue
 js_fragment_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1071,6 +1097,7 @@ js_fragment_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc,
 static JSValue
 js_fragment_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1122,6 +1149,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_fragment_cloneNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1164,6 +1192,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static bool
 isAncestor(dom_node *el, dom_node *node)
 {
+	ELOG
 	dom_node *prev_next = NULL;
 	while (node) {
 		dom_exception exc;
@@ -1192,6 +1221,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_fragment_contains(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1256,6 +1286,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_fragment_hasChildNodes(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1291,6 +1322,7 @@ js_fragment_hasChildNodes(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 static JSValue
 js_fragment_insertBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1346,6 +1378,7 @@ js_fragment_insertBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 static JSValue
 js_fragment_isEqualNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1402,6 +1435,7 @@ js_fragment_isEqualNode(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 static JSValue
 js_fragment_isSameNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1434,6 +1468,7 @@ js_fragment_isSameNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 static JSValue
 js_fragment_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1479,6 +1514,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_fragment_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1531,6 +1567,7 @@ js_fragment_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JS
 static JSValue
 js_fragment_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1575,6 +1612,7 @@ js_fragment_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 static JSValue
 js_fragment_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1622,6 +1660,7 @@ static const JSCFunctionListEntry js_fragment_proto_funcs[] = {
 static
 void js_fragment_finalizer(JSRuntime *rt, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1661,6 +1700,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 js_fragment_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1688,6 +1728,7 @@ static JSClassDef js_fragment_class = {
 static JSValue
 js_DocumentFragment_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1735,6 +1776,7 @@ js_DocumentFragment_constructor(JSContext *ctx, JSValueConst new_target, int arg
 static void
 JS_NewGlobalCConstructor2(JSContext *ctx, JSValue func_obj, const char *name, JSValueConst proto)
 {
+	ELOG
 	REF_JS(func_obj);
 	REF_JS(proto);
 
@@ -1750,6 +1792,7 @@ JS_NewGlobalCConstructor2(JSContext *ctx, JSValue func_obj, const char *name, JS
 static JSValueConst
 JS_NewGlobalCConstructor(JSContext *ctx, const char *name, JSCFunction *func, int length, JSValueConst proto)
 {
+	ELOG
 	JSValue func_obj;
 	func_obj = JS_NewCFunction2(ctx, func, name, length, JS_CFUNC_constructor_or_func, 0);
 	REF_JS(func_obj);
@@ -1763,6 +1806,7 @@ JS_NewGlobalCConstructor(JSContext *ctx, const char *name, JSCFunction *func, in
 int
 js_fragment_init(JSContext *ctx)
 {
+	ELOG
 	JSValue fragment_proto;
 
 	/* create the fragment class */
@@ -1791,6 +1835,7 @@ js_fragment_init(JSContext *ctx)
 JSValue
 getDocumentFragment(JSContext *ctx, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1821,6 +1866,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 fragment_event_handler(dom_event *event, void *pw)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

@@ -36,6 +36,7 @@ struct sysmouse_spec {
 static void
 sysmouse_handler(void *data)
 {
+	ELOG
 	static struct interlink_event_mouse prev_mouse;
 	static int prev_buttons;
 	struct sysmouse_spec *sp = (struct sysmouse_spec *)data;
@@ -161,6 +162,7 @@ sysmouse_handler(void *data)
 static void
 sysmouse_signal_handler(void *data)
 {
+	ELOG
 	register_bottom_half(sysmouse_handler, data);
 }
 
@@ -168,6 +170,7 @@ void *
 handle_mouse(int cons, void (*fn)(void *, char *, int),
 	     void *data)
 {
+	ELOG
 	static struct sysmouse_spec mouse_spec;
 	video_info_t vi;
 	mouse_info_t mi;
@@ -203,6 +206,7 @@ handle_mouse(int cons, void (*fn)(void *, char *, int),
 void
 unhandle_mouse(void *data)
 {
+	ELOG
 	if (data) {
 		mouse_info_t mi;
 		int fd = get_output_handle();
@@ -218,12 +222,14 @@ unhandle_mouse(void *data)
 void
 suspend_mouse(void *data)
 {
+	ELOG
 	unhandle_mouse(data);
 }
 
 void
 resume_mouse(void *data)
 {
+	ELOG
 	if (data) {
 		mouse_info_t mi;
 		int fd = get_output_handle();

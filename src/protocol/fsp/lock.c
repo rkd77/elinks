@@ -2,6 +2,8 @@
 #include "config.h"
 #endif
 
+#include "elinks.h"
+
 #include <string.h>
 #include <stdio.h>
 #include "protocol/fsp/lock.h"
@@ -15,6 +17,7 @@ static char code_str[] =
 static void
 make_key_string(FSP_LOCK *lock, unsigned long server_addr, unsigned long server_port)
 {
+	ELOG
 	unsigned long v1, v2;
 	char *p;
 
@@ -53,6 +56,7 @@ make_key_string(FSP_LOCK *lock, unsigned long server_addr, unsigned long server_
 #ifdef _SEM_SEMUN_UNDEFINED
 union semun
 {
+	ELOG
 	int val;
 	struct semid_ds *buf;
 	unsigned short int *array;
@@ -63,6 +67,7 @@ union semun
 unsigned short
 client_get_key(FSP_LOCK *lock)
 {
+	ELOG
 	struct sembuf sem;
 	sem.sem_num = 0;
 	sem.sem_op = -1;
@@ -78,6 +83,7 @@ client_get_key(FSP_LOCK *lock)
 void
 client_set_key(FSP_LOCK *lock,unsigned short key)
 {
+	ELOG
 	struct sembuf sem;
 
 	sem.sem_num = 0;
@@ -94,6 +100,7 @@ client_set_key(FSP_LOCK *lock,unsigned short key)
 int
 client_init_key(FSP_LOCK *lock, unsigned long server_addr, unsigned short server_port)
 {
+	ELOG
 	mode_t omask;
 	key_t lock_key;
 	int fd;
@@ -150,6 +157,7 @@ client_init_key(FSP_LOCK *lock, unsigned long server_addr, unsigned short server
 void
 client_destroy_key(FSP_LOCK *lock)
 {
+	ELOG
 	int rc;
 	struct sembuf sem;
 
@@ -190,24 +198,28 @@ client_destroy_key(FSP_LOCK *lock)
 unsigned short
 client_get_key(FSP_LOCK *lock)
 {
+	ELOG
 	return lock->share_key;
 }
 
 void
 client_set_key(FSP_LOCK *lock,unsigned short key)
 {
+	ELOG
 	lock->share_key = key;
 }
 
 int
 client_init_key(FSP_LOCK *lock, unsigned long server_addr, unsigned short server_port)
 {
+	ELOG
 	return 0;
 }
 
 void
 client_destroy_key(FSP_LOCK *lock)
 {
+	ELOG
 	return;
 }
 #endif
@@ -224,6 +236,7 @@ client_destroy_key(FSP_LOCK *lock)
 unsigned short
 client_get_key(FSP_LOCK *lock)
 {
+	ELOG
 	unsigned int okey;
 
 	if (lockf(lock->lock_fd, F_LOCK, sizeof(okey)) < 0) {
@@ -244,6 +257,7 @@ client_get_key(FSP_LOCK *lock)
 void
 client_set_key(FSP_LOCK *lock,unsigned short nkey)
 {
+	ELOG
 	unsigned int key;
 	key = nkey;
 
@@ -263,6 +277,7 @@ client_set_key(FSP_LOCK *lock,unsigned short nkey)
 int
 client_init_key(FSP_LOCK *lock, unsigned long server_addr, unsigned short server_port)
 {
+	ELOG
 	mode_t omask;
 	make_key_string(lock,server_addr, server_port);
 	omask = umask(0);
@@ -279,6 +294,7 @@ client_init_key(FSP_LOCK *lock, unsigned long server_addr, unsigned short server
 void
 client_destroy_key(FSP_LOCK *lock)
 {
+	ELOG
 	(void)close(lock->lock_fd);
 }
 #endif

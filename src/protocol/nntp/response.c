@@ -36,6 +36,7 @@
 static char *
 get_nntp_line_end(char *data, int datalen)
 {
+	ELOG
 	for (; datalen > 1; data++, datalen--)
 		if (data[0] == ASCII_CR && data[1] == ASCII_LF)
 			return data + 2;
@@ -58,6 +59,7 @@ get_nntp_line_end(char *data, int datalen)
 static inline char *
 check_nntp_line(char *line, char *end)
 {
+	ELOG
 	assert(line < end);
 
 	/* Just to be safe NUL terminate the line */
@@ -74,6 +76,7 @@ check_nntp_line(char *line, char *end)
 static inline char *
 get_nntp_message_header_end(char *data, int datalen)
 {
+	ELOG
 	char *end, *prev_end = data;
 
 	while ((end = get_nntp_line_end(data, datalen))) {
@@ -97,6 +100,7 @@ get_nntp_message_header_end(char *data, int datalen)
 static struct connection_state
 init_nntp_header(struct connection *conn, struct read_buffer *rb)
 {
+	ELOG
 	struct nntp_connection_info *nntp = (struct nntp_connection_info *)conn->info;
 
 	if (!conn->cached) {
@@ -152,6 +156,7 @@ init_nntp_header(struct connection *conn, struct read_buffer *rb)
 static char *
 get_nntp_title(struct connection *conn)
 {
+	ELOG
 	struct nntp_connection_info *nntp = (struct nntp_connection_info *)conn->info;
 	struct string title;
 
@@ -208,6 +213,7 @@ get_nntp_title(struct connection *conn)
 static void
 decode_q_segment(struct string *str, char *in, char *end)
 {
+	ELOG
 	int c;
 
 	while ((c = *in++) != 0 && (in <= end)) {
@@ -230,6 +236,7 @@ decode_q_segment(struct string *str, char *in, char *end)
 static void
 decode_b_segment(struct string *str, char *in, char *end)
 {
+	ELOG
 	/* Decode in..ep, possibly in-place to ot */
 	int c, pos = 0, acc = 0;
 
@@ -277,6 +284,7 @@ decode_b_segment(struct string *str, char *in, char *end)
 static void
 add_header_to_string(struct string *str, char *header)
 {
+	ELOG
 	char *end;
 
 	while ((end = strstr(header, "=?")) != NULL) {
@@ -324,6 +332,7 @@ add_header_to_string(struct string *str, char *header)
 static void
 add_nntp_html_start(struct string *html, struct connection *conn)
 {
+	ELOG
 	struct nntp_connection_info *nntp = (struct nntp_connection_info *)conn->info;
 	char *title = get_nntp_title(conn);
 
@@ -387,6 +396,7 @@ add_nntp_html_start(struct string *html, struct connection *conn)
 static void
 add_nntp_html_end(struct string *html, struct connection *conn)
 {
+	ELOG
 	struct nntp_connection_info *nntp = (struct nntp_connection_info *)conn->info;
 
 	switch (nntp->target) {
@@ -413,6 +423,7 @@ static void
 add_nntp_html_line(struct string *html, struct connection *conn,
 		   char *line)
 {
+	ELOG
 	struct nntp_connection_info *nntp = (struct nntp_connection_info *)conn->info;
 
 	switch (nntp->target) {
@@ -467,6 +478,7 @@ add_nntp_html_line(struct string *html, struct connection *conn,
 struct connection_state
 read_nntp_response_data(struct connection *conn, struct read_buffer *rb)
 {
+	ELOG
 	struct string html;
 	char *end;
 	struct connection_state state = connection_state(S_TRANS);
@@ -525,6 +537,7 @@ static int
 parse_nntp_group_parameters(struct nntp_connection_info *nntp,
 			    char *pos, char *end)
 {
+	ELOG
 	errno = 0;
 
 	/* Get <articles> */
@@ -560,6 +573,7 @@ parse_nntp_group_parameters(struct nntp_connection_info *nntp,
 nntp_code_T
 get_nntp_response_code(struct connection *conn, struct read_buffer *rb)
 {
+	ELOG
 	struct nntp_connection_info *nntp = (struct nntp_connection_info *)conn->info;
 	char *line = rb->data;
 	char *end = get_nntp_line_end(rb->data, rb->length);

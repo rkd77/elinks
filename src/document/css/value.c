@@ -24,6 +24,7 @@ css_parse_color_value(struct css_property_info *propinfo,
 		      union css_property_value *value,
 		      struct scanner *scanner)
 {
+	ELOG
 	struct scanner_token *token = get_scanner_token(scanner);
 
 	assert(propinfo->value_type == CSS_VT_COLOR);
@@ -90,6 +91,7 @@ css_parse_background_value(struct css_property_info *propinfo,
 			   union css_property_value *value,
 			   struct scanner *scanner)
 {
+	ELOG
 	int success = 0;
 
 	assert(propinfo->value_type == CSS_VT_COLOR);
@@ -121,6 +123,7 @@ css_parse_font_style_value(struct css_property_info *propinfo,
 			   union css_property_value *value,
 			   struct scanner *scanner)
 {
+	ELOG
 	struct scanner_token *token = get_scanner_token(scanner);
 
 	assert(propinfo->value_type == CSS_VT_FONT_ATTRIBUTE);
@@ -151,6 +154,7 @@ css_parse_font_weight_value(struct css_property_info *propinfo,
 			    union css_property_value *value,
 			    struct scanner *scanner)
 {
+	ELOG
 	struct scanner_token *token = get_scanner_token(scanner);
 	char *nstring;
 	int weight;
@@ -202,6 +206,7 @@ css_parse_list_style_value(struct css_property_info *propinfo,
 			   union css_property_value *value,
 			   struct scanner *scanner)
 {
+	ELOG
 	struct scanner_token *token = get_scanner_token(scanner);
 
 	assert(propinfo->value_type == CSS_VT_LIST_STYLE);
@@ -284,6 +289,7 @@ css_parse_text_align_value(struct css_property_info *propinfo,
 			   union css_property_value *value,
 			   struct scanner *scanner)
 {
+	ELOG
 	struct scanner_token *token = get_scanner_token(scanner);
 
 	assert(propinfo->value_type == CSS_VT_TEXT_ALIGN);
@@ -316,6 +322,7 @@ css_parse_text_decoration_value(struct css_property_info *propinfo,
 				union css_property_value *value,
 				struct scanner *scanner)
 {
+	ELOG
 	struct scanner_token *token = get_scanner_token(scanner);
 
 	assert(propinfo->value_type == CSS_VT_FONT_ATTRIBUTE);
@@ -343,6 +350,7 @@ css_parse_white_space_value(struct css_property_info *propinfo,
 			    union css_property_value *value,
 			    struct scanner *scanner)
 {
+	ELOG
 	struct scanner_token *token = get_scanner_token(scanner);
 
 	assert(propinfo->value_type == CSS_VT_FONT_ATTRIBUTE);
@@ -369,6 +377,7 @@ css_parse_display_value(struct css_property_info *propinfo,
 			union css_property_value *value,
 			struct scanner *scanner)
 {
+	ELOG
 	struct scanner_token *token = get_scanner_token(scanner);
 
 	assert(propinfo->value_type == CSS_VT_DISPLAY);
@@ -398,6 +407,7 @@ css_parse_value(struct css_property_info *propinfo,
 		union css_property_value *value,
 		struct scanner *scanner)
 {
+	ELOG
 	struct scanner_token *token;
 
 	assert(scanner && value && propinfo);

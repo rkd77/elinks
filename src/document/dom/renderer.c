@@ -33,6 +33,7 @@ static inline void
 init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 		  struct string *buffer, struct conv_table *convert_table)
 {
+	ELOG
 	memset(renderer, 0, sizeof(*renderer));
 
 	renderer->document	= document;
@@ -47,6 +48,7 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 static inline void
 done_dom_renderer(struct dom_renderer *renderer)
 {
+	ELOG
 	done_uri(renderer->base_uri);
 }
 
@@ -54,6 +56,7 @@ done_dom_renderer(struct dom_renderer *renderer)
 static void
 get_doctype(struct dom_renderer *renderer, struct cache_entry *cached)
 {
+	ELOG
 	if (!c_strcasecmp("application/rss+xml", cached->content_type)) {
 		renderer->doctype = SGML_DOCTYPE_RSS;
 
@@ -81,6 +84,7 @@ void
 render_dom_document(struct cache_entry *cached, struct document *document,
 		    struct string *buffer)
 {
+	ELOG
 	char *head = empty_string_or_(cached->head);
 	struct dom_renderer renderer;
 	struct dom_config config;

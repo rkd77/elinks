@@ -93,6 +93,7 @@ static int globhist_cache_entries = 0;
 static void
 remove_item_from_global_history(struct global_history_item *history_item)
 {
+	ELOG
 	del_from_history_list(&global_history, history_item);
 
 	if (globhist_cache) {
@@ -109,6 +110,7 @@ remove_item_from_global_history(struct global_history_item *history_item)
 static void
 reap_deleted_globhist_items(void)
 {
+	ELOG
 	struct global_history_item *history_item, *next;
 
 	foreachsafe(history_item, next, global_history_reap_list) {
@@ -124,6 +126,7 @@ reap_deleted_globhist_items(void)
 static void
 done_global_history_item(struct global_history_item *history_item)
 {
+	ELOG
 	done_listbox_item(&globhist_browser, history_item->box_item);
 
 	history_item->box_item = NULL;
@@ -134,6 +137,7 @@ done_global_history_item(struct global_history_item *history_item)
 void
 delete_global_history_item(struct global_history_item *history_item)
 {
+	ELOG
 	remove_item_from_global_history(history_item);
 
 	done_global_history_item(history_item);
@@ -143,6 +147,7 @@ delete_global_history_item(struct global_history_item *history_item)
 struct global_history_item *
 get_global_history_item(char *url)
 {
+	ELOG
 	struct hash_item *item;
 
 	if (!url || !globhist_cache) return NULL;
@@ -160,6 +165,7 @@ get_global_history_item(char *url)
 struct global_history_item *
 multiget_global_history_item(char *url, char *title, time_t time)
 {
+	ELOG
 	struct global_history_item *history_item;
 
 	/* Code duplication vs performance, since this function is called most
@@ -183,6 +189,7 @@ multiget_global_history_item(char *url, char *title, time_t time)
 static struct global_history_item *
 init_global_history_item(char *url, char *title, time_t vtime)
 {
+	ELOG
 	struct global_history_item *history_item;
 
 	history_item = (struct global_history_item *)mem_calloc(1, sizeof(*history_item));
@@ -222,6 +229,7 @@ init_global_history_item(char *url, char *title, time_t vtime)
 static int
 cap_global_history(int max_globhist_items)
 {
+	ELOG
 	while (global_history.size >= max_globhist_items) {
 		struct global_history_item *history_item;
 
@@ -243,6 +251,7 @@ static void
 add_item_to_global_history(struct global_history_item *history_item,
 			   int max_globhist_items)
 {
+	ELOG
 	add_to_history_list(&global_history, history_item);
 
 	/* Hash creation if needed. */
@@ -264,6 +273,7 @@ add_item_to_global_history(struct global_history_item *history_item,
 void
 add_global_history_item(char *url, char *title, time_t vtime)
 {
+	ELOG
 	struct global_history_item *history_item;
 	int max_globhist_items;
 
@@ -288,6 +298,7 @@ add_global_history_item(char *url, char *title, time_t vtime)
 int
 globhist_simple_search(char *search_url, char *search_title)
 {
+	ELOG
 	struct global_history_item *history_item;
 
 	if (!search_title || !search_url)
@@ -327,6 +338,7 @@ globhist_simple_search(char *search_url, char *search_title)
 static void
 read_global_history(void)
 {
+	ELOG
 	char *xdg_config_home = get_xdg_config_home();
 	char in_buffer[MAX_STR_LEN * 3];
 	char *title;
@@ -376,6 +388,7 @@ read_global_history(void)
 static void
 write_global_history(void)
 {
+	ELOG
 	char *xdg_config_home = get_xdg_config_home();
 	struct global_history_item *history_item;
 	char *file_name;
@@ -408,6 +421,7 @@ write_global_history(void)
 static void
 free_global_history(void)
 {
+	ELOG
 	if (globhist_cache) {
 		free_hash(&globhist_cache);
 		globhist_cache_entries = 0;
@@ -422,6 +436,7 @@ free_global_history(void)
 static enum evhook_status
 global_history_write_hook(va_list ap, void *data)
 {
+	ELOG
 	write_global_history();
 	return EVENT_HOOK_STATUS_NEXT;
 }
@@ -435,12 +450,14 @@ struct event_hook_info global_history_hooks[] = {
 static void
 init_global_history(struct module *module)
 {
+	ELOG
 	read_global_history();
 }
 
 static void
 done_global_history(struct module *module)
 {
+	ELOG
 	write_global_history();
 	free_global_history();
 	mem_free_if(gh_last_searched_title);

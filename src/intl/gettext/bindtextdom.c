@@ -51,6 +51,7 @@ set_binding_values(const char *domainname,
 		   const char **dirnamep,
 		   const char **codesetp)
 {
+	ELOG
 	struct binding *binding;
 	int modified;
 
@@ -249,6 +250,7 @@ failed:
 char *
 bindtextdomain__(const char *domainname, const char *dirname)
 {
+	ELOG
 	set_binding_values(domainname, &dirname, NULL);
 	return (char *) dirname;
 }
@@ -258,6 +260,7 @@ bindtextdomain__(const char *domainname, const char *dirname)
 char *
 bind_textdomain_codeset__(const char *domainname, const char *codeset)
 {
+	ELOG
 	set_binding_values(domainname, NULL, &codeset);
 	return (char *) codeset;
 }

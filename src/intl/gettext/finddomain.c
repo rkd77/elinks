@@ -45,6 +45,7 @@ struct loaded_l10nfile *
 _nl_find_domain(const char *dirname, char *locale, const char *domainname,
 		struct binding *domainbinding)
 {
+	ELOG
 	struct loaded_l10nfile *retval;
 	const char *language;
 	const char *modifier;

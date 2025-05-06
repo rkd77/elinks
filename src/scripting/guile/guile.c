@@ -17,6 +17,7 @@
 static const char *
 get_name_guile(struct module *xxx)
 {
+	ELOG
 	static char elguileversion[32];
 
 	scm_init_guile();

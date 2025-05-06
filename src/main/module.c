@@ -92,6 +92,7 @@ struct module *builtin_modules[] = {
 void
 register_module_options(struct module *module)
 {
+	ELOG
 	struct module *submodule;
 	int i;
 
@@ -105,6 +106,7 @@ register_module_options(struct module *module)
 void
 unregister_module_options(struct module *module)
 {
+	ELOG
 	struct module *submodule;
 	int i;
 
@@ -118,6 +120,7 @@ unregister_module_options(struct module *module)
 void
 init_module(struct module *module)
 {
+	ELOG
 	struct module *submodule;
 	int i;
 
@@ -132,6 +135,7 @@ init_module(struct module *module)
 void
 done_module(struct module *module)
 {
+	ELOG
 	struct module *submodule;
 	int i;
 
@@ -148,6 +152,7 @@ done_module(struct module *module)
 void
 register_modules_options(struct module *modules[])
 {
+	ELOG
 	struct module *module;
 	int i;
 
@@ -159,6 +164,7 @@ register_modules_options(struct module *modules[])
 void
 unregister_modules_options(struct module *modules[])
 {
+	ELOG
 	struct module *module;
 	int i;
 
@@ -174,6 +180,7 @@ unregister_modules_options(struct module *modules[])
 void
 init_modules(struct module *modules[])
 {
+	ELOG
 	struct module *module;
 	int i;
 
@@ -185,6 +192,7 @@ init_modules(struct module *modules[])
 void
 done_modules(struct module *modules[])
 {
+	ELOG
 	struct module *module;
 	int i;
 

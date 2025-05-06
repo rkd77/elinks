@@ -70,6 +70,7 @@ use of this software.
 long
 random(void)
 {
+	ELOG
 	unsigned int number = 0;
 	(void)rand_s(&number);
 	return (long)number;
@@ -119,6 +120,7 @@ struct module fsp_protocol_module = struct_module(
 static int
 buildfilename(const FSP_SESSION *s, FSP_PKT *out, const char *dirname)
 {
+	ELOG
 	int len;
 
 	len = strlen(dirname);
@@ -159,6 +161,7 @@ buildfilename(const FSP_SESSION *s, FSP_PKT *out, const char *dirname)
 static size_t
 fsp_pkt_write(const FSP_PKT *p, void *space)
 {
+	ELOG
 	size_t used;
 	unsigned char *ptr;
 	int checksum;
@@ -201,6 +204,7 @@ fsp_pkt_write(const FSP_PKT *p, void *space)
 static int
 fsp_pkt_read(FSP_PKT *p, const void *space, size_t recv_len)
 {
+	ELOG
 	int mysum;
 	size_t i;
 	const unsigned char *ptr;
@@ -260,6 +264,7 @@ static void fsp_transaction_send_loop(void *data);
 static void
 try_fsp_transaction(void *data)
 {
+	ELOG
 	struct connection *conn = (struct connection *)data;
 	struct fsp_connection_info *fsp = (struct fsp_connection_info *)conn->info;
 	FSP_SESSION *s = fsp->ses;
@@ -290,6 +295,7 @@ static void fsp_transaction_continue(void *data);
 static void
 fsp_transaction_send_loop(void *data)
 {
+	ELOG
 	struct connection *conn = (struct connection *)data;
 	struct fsp_connection_info *fsp = (struct fsp_connection_info *)conn->info;
 
@@ -353,6 +359,7 @@ fsp_transaction_send_loop(void *data)
 static void
 fsp_transaction_continue(void *data)
 {
+	ELOG
 	struct connection *conn = (struct connection *)data;
 	struct fsp_connection_info *fsp = (struct fsp_connection_info *)conn->info;
 
@@ -446,6 +453,7 @@ fsp_transaction_continue(void *data)
 static FSP_SESSION *
 fsp_open_session(const char *host, unsigned short port, const char *password)
 {
+	ELOG
 	FSP_SESSION *s;
 	int fd;
 	struct addrinfo hints,*res;
@@ -552,6 +560,7 @@ static void bye_bye(void *data);
 static void
 try_fsp_close_session(struct connection *conn)
 {
+	ELOG
 	struct fsp_connection_info *fsp = (struct fsp_connection_info *)conn->info;
 
 	if (!fsp->ses || fsp->ses->fd == -1) {
@@ -571,6 +580,7 @@ try_fsp_close_session(struct connection *conn)
 static void
 bye_bye(void *data)
 {
+	ELOG
 	struct connection *conn = (struct connection *)data;
 	struct fsp_connection_info *fsp = (struct fsp_connection_info *)conn->info;
 	FSP_SESSION *s = fsp->ses;
@@ -593,6 +603,7 @@ bye_bye(void *data)
 static int
 fsp_readdir_native(FSP_DIR *dir, FSP_RDENTRY *entry, FSP_RDENTRY **result)
 {
+	ELOG
 	unsigned char ftype;
 	int namelen;
 
@@ -674,6 +685,7 @@ fsp_readdir_native(FSP_DIR *dir, FSP_RDENTRY *entry, FSP_RDENTRY **result)
 static int
 fsp_closedir(FSP_DIR *dirp)
 {
+	ELOG
 	if (dirp == NULL) {
 		return -1;
 	}
@@ -691,6 +703,7 @@ fsp_closedir(FSP_DIR *dirp)
 static FSP_FILE *
 fsp_fopen(struct connection *conn, const char *path, const char *modeflags)
 {
+	ELOG
 	struct fsp_connection_info *fsp = (struct fsp_connection_info *)conn->info;
 	FSP_SESSION *session = fsp->ses;
 	FSP_FILE   *f;
@@ -749,6 +762,7 @@ fsp_fopen(struct connection *conn, const char *path, const char *modeflags)
 static int
 fsp_fclose(FSP_FILE *file)
 {
+	ELOG
 	int rc;
 
 	rc = 0;
@@ -763,6 +777,7 @@ fsp_fclose(FSP_FILE *file)
 static void
 try_fsp_stat(struct connection *conn, const char *path)
 {
+	ELOG
 	struct fsp_connection_info *fsp = (struct fsp_connection_info *)conn->info;
 
 	if (buildfilename(fsp->ses, &fsp->out, path)) {
@@ -792,6 +807,7 @@ static void try_fsp_opendir(void *data);
 static void
 fsp_stat_continue(void *data)
 {
+	ELOG
 	struct connection *conn = (struct connection *)data;
 	struct fsp_connection_info *fsp = (struct fsp_connection_info *)conn->info;
 	unsigned char ftype;
@@ -881,6 +897,7 @@ fsp_stat_continue(void *data)
 static void
 display_entry(struct connection *conn, const FSP_RDENTRY *fentry, const char dircolor[])
 {
+	ELOG
 	struct string string;
 
 	/* fentry->name is a fixed-size array and is followed by other
@@ -949,6 +966,7 @@ display_entry(struct connection *conn, const FSP_RDENTRY *fentry, const char dir
 static int
 compare(const void *av, const void *bv)
 {
+	ELOG
 	const FSP_RDENTRY *a = (const FSP_RDENTRY *)av, *b = (const FSP_RDENTRY *)bv;
 	int res = ((b->type == FSP_RDTYPE_DIR) - (a->type == FSP_RDTYPE_DIR));
 
@@ -960,6 +978,7 @@ compare(const void *av, const void *bv)
 static void
 sort_and_display_entries(struct connection *conn, FSP_DIR *dir, const char dircolor[])
 {
+	ELOG
 	/* fsp_readdir_native in fsplib 0.9 and earlier requires
 	 * the third parameter to point to a non-null pointer
 	 * even though it does not dereference that pointer
@@ -998,6 +1017,7 @@ sort_and_display_entries(struct connection *conn, FSP_DIR *dir, const char dirco
 static void
 show_fsp_directory(struct connection *conn)
 {
+	ELOG
 	struct fsp_connection_info *fsp = (struct fsp_connection_info *)conn->info;
 	struct string buf;
 
@@ -1050,6 +1070,7 @@ show_fsp_directory(struct connection *conn)
 static void
 try_fsp_opendir(void *data)
 {
+	ELOG
 	struct connection *conn = (struct connection *)data;
 	struct fsp_connection_info *fsp = (struct fsp_connection_info *)conn->info;
 	unsigned char *tmp;
@@ -1107,6 +1128,7 @@ try_fsp_opendir(void *data)
 static void
 try_fsp_read_file(void *data)
 {
+	ELOG
 	struct connection *conn = (struct connection *)data;
 	struct fsp_connection_info *fsp = (struct fsp_connection_info *)conn->info;
 
@@ -1149,6 +1171,7 @@ try_fsp_read_file(void *data)
 static void
 done_fsp_connection(struct connection *conn)
 {
+	ELOG
 	struct fsp_connection_info *fsp;
 
 	if (!conn || !conn->info) {
@@ -1176,6 +1199,7 @@ done_fsp_connection(struct connection *conn)
 static void
 do_fsp(struct connection *conn)
 {
+	ELOG
 	FSP_SESSION *ses;
 	struct uri *uri = conn->uri;
 	struct auth_entry *auth;
@@ -1225,6 +1249,7 @@ do_fsp(struct connection *conn)
 void
 fsp_protocol_handler(struct connection *conn)
 {
+	ELOG
 	conn->from = 0;
 	conn->unrestartable = 1;
 	do_fsp(conn);

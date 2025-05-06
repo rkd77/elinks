@@ -30,6 +30,7 @@
 char *
 dgettext__(const char *domainname, const char *msgid)
 {
+	ELOG
 	return dcgettext__(domainname, msgid, LC_MESSAGES);
 }
 

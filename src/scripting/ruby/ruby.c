@@ -20,6 +20,7 @@
 static const char *
 get_name_ruby(struct module *xxx)
 {
+	ELOG
 	static char elrubyversion[32];
 	snprintf(elrubyversion, 31, "Ruby %s", ruby_version);
 

@@ -44,6 +44,7 @@
 static inline int
 atchr(unsigned char c)
 {
+	ELOG
 	return (c < 127 && (c > '>' || (c > ' ' && c != '=' && !end_of_tag(c))));
 }
 
@@ -60,6 +61,7 @@ parse_element(char *e, char *eof,
 	      char **name, int *namelen,
 	      char **attr, char **end)
 {
+	ELOG
 #define next_char() if (++e == eof) return -1;
 
 	assert(e && eof);
@@ -144,6 +146,7 @@ char *
 get_attr_value(char *e, const char *name,
 	       int cp, enum html_attr_flags flags)
 {
+	ELOG
 	char *n;
 	char *name_start;
 	char *attr = NULL;
@@ -255,6 +258,7 @@ parse_error:
 int
 get_num(char *a, const char *name, int cp)
 {
+	ELOG
 	char *al = get_attr_val(a, name, cp);
 	int result = -1;
 
@@ -278,6 +282,7 @@ get_num(char *a, const char *name, int cp)
 int
 get_num2(char *al)
 {
+	ELOG
 	int result = -1;
 
 	if (al) {
@@ -301,6 +306,7 @@ int
 get_width(char *a, const char *name, int limited,
           struct html_context *html_context)
 {
+	ELOG
 	char *value = get_attr_val(a, name, html_context->doc_cp);
 	int ret = get_width2(value, limited, html_context);
 
@@ -311,6 +317,7 @@ get_width(char *a, const char *name, int limited,
 int
 get_width2(char *value, int limited, struct html_context *html_context)
 {
+	ELOG
 	char *str = value;
 	char *end;
 	int percentage = 0;
@@ -391,6 +398,7 @@ get_width2(char *value, int limited, struct html_context *html_context)
 char *
 skip_comment(char *html, char *eof)
 {
+	ELOG
 	if (html + 4 <= eof && html[2] == '-' && html[3] == '-') {
 		html += 4;
 		while (html < eof) {
@@ -550,6 +558,7 @@ static struct element_info elements[] = {
 static int
 compar(const void *a, const void *b)
 {
+	ELOG
 	return c_strcasecmp(((struct element_info *) a)->name,
 			    ((struct element_info *) b)->name);
 }
@@ -562,6 +571,7 @@ static struct element_info *internal_pointer;
 static void
 tags_list_reset(void)
 {
+	ELOG
 	internal_pointer = elements;
 }
 
@@ -572,6 +582,7 @@ tags_list_reset(void)
 static struct fastfind_key_value *
 tags_list_next(void)
 {
+	ELOG
 	static struct fastfind_key_value kv;
 
 	if (!internal_pointer->name) return NULL;
@@ -593,6 +604,7 @@ static struct fastfind_index ff_tags_index
 void
 init_tags_lookup(void)
 {
+	ELOG
 #ifdef USE_FASTFIND
 	fastfind_index(&ff_tags_index, FF_COMPRESS | FF_LOCALE_INDEP);
 #endif
@@ -601,6 +613,7 @@ init_tags_lookup(void)
 void
 free_tags_lookup(void)
 {
+	ELOG
 #ifdef USE_FASTFIND
 	fastfind_done(&ff_tags_index);
 #endif
@@ -623,6 +636,7 @@ const char *
 count_newline_entities(const char *html, const char *eof,
 		       int *newlines_out)
 {
+	ELOG
 	int newlines = 0;
 	int prev_was_cr = 0; /* treat CRLF as one newline, not two */
 
@@ -678,6 +692,7 @@ parse_html(char *html, char *eof,
 	   struct part *part, char *head,
 	   struct html_context *html_context)
 {
+	ELOG
 	char *base_pos = html;
 	int noupdate = 0;
 
@@ -857,6 +872,7 @@ start_element(struct element_info *ei,
               char *eof, char *attr,
               struct html_context *html_context)
 {
+	ELOG
 #define ELEMENT_RENDER_PROLOGUE \
 	ln_break(html_context, ei->linebreak); \
 	a = get_attr_val(attr, "id", html_context->doc_cp); \
@@ -1111,6 +1127,7 @@ end_element(struct element_info *ei,
             char *eof, char *attr,
             struct html_context *html_context)
 {
+	ELOG
 	struct html_element *e, *elt;
 	int lnb = 0;
 	int kill = 0;
@@ -1210,6 +1227,7 @@ process_element(char *name, int namelen, int endingtag,
                 struct html_context *html_context)
 
 {
+	ELOG
 	struct element_info *ei;
 
 #ifndef USE_FASTFIND
@@ -1249,6 +1267,7 @@ void
 scan_http_equiv(char *s, char *eof, struct string *head,
 		struct string *title, int cp)
 {
+	ELOG
 	char *name, *attr, *he, *c;
 	int namelen;
 
@@ -1343,6 +1362,7 @@ xsp:
 int
 supports_html_media_attr(const char *media)
 {
+	ELOG
 	const char *optstr;
 
 	/* The 1999-12-24 edition of HTML 4.01 is inconsistent on what

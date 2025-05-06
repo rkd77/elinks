@@ -30,6 +30,7 @@ static JSClassID js_implementation_class_id;
 static JSValue
 js_implementation_createHTMLDocument(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -70,6 +71,7 @@ js_implementation_createHTMLDocument(JSContext *ctx, JSValueConst this_val, int 
 static JSValue
 js_implementation_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -90,6 +92,7 @@ static JSClassDef js_implementation_class = {
 static JSValue
 js_implementation_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
+	ELOG
 	REF_JS(new_target);
 
 	JSValue obj = JS_UNDEFINED;
@@ -118,6 +121,7 @@ fail:
 int
 js_implementation_init(JSContext *ctx, JSValue global_obj)
 {
+	ELOG
 	REF_JS(global_obj);
 
 	JSValue implementation_proto, implementation_class;
@@ -145,6 +149,7 @@ js_implementation_init(JSContext *ctx, JSValue global_obj)
 JSValue
 getImplementation(JSContext *ctx)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

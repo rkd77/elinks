@@ -27,6 +27,7 @@
 int
 parse_year(const char **date_p, char *end)
 {
+	ELOG
 	const char *date = *date_p;
 	int year;
 
@@ -59,6 +60,7 @@ parse_year(const char **date_p, char *end)
 int
 parse_month(const char **buf, char *end)
 {
+	ELOG
 	const char *month = *buf;
 	int monthnum;
 
@@ -80,6 +82,7 @@ parse_month(const char **buf, char *end)
 int
 parse_day(const char **date_p, char *end)
 {
+	ELOG
 	const char *date = *date_p;
 	int day;
 
@@ -98,6 +101,7 @@ parse_day(const char **date_p, char *end)
 int
 parse_time(const char **time, struct tm *tm, char *end)
 {
+	ELOG
 	unsigned char h1, h2, m1, m2;
 	const char *date = *time;
 
@@ -161,6 +165,7 @@ parse_time(const char **time, struct tm *tm, char *end)
 static time_t
 my_timegm(struct tm *tm)
 {
+	ELOG
 	time_t t = 0;
 
 	/* Okay, the next part of the code is somehow problematic. Now, we use
@@ -230,6 +235,7 @@ time_t
 parse_date(char **date_pos, char *end,
 	   int update_pos, int skip_week_day)
 {
+	ELOG
 #define skip_time_sep(date, end) \
 	do { \
 		const char *start = (date); \

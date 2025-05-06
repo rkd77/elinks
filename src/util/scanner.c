@@ -20,6 +20,7 @@ map_scanner_string(struct scanner *scanner,
 		   const char *ident, const char *end,
 		   int base_type)
 {
+	ELOG
 	const struct scanner_string_mapping *mappings = scanner->info->mappings;
 	int length = end - ident;
 
@@ -36,6 +37,7 @@ map_scanner_string(struct scanner *scanner,
 struct scanner_token *
 skip_scanner_tokens(struct scanner *scanner, int skipto, int precedence)
 {
+	ELOG
 	struct scanner_token *token = get_scanner_token(scanner);
 
 	/* Skip tokens while handling some basic precedens of special chars
@@ -55,6 +57,7 @@ skip_scanner_tokens(struct scanner *scanner, int skipto, int precedence)
 void
 dump_scanner(struct scanner *scanner)
 {
+	ELOG
 	unsigned char buffer[MAX_STR_LEN];
 	struct scanner_token *token = scanner->current;
 	struct scanner_token *table_end = scanner->table + scanner->tokens;
@@ -105,6 +108,7 @@ dump_scanner(struct scanner *scanner)
 struct scanner_token *
 get_scanner_token_debug(struct scanner *scanner)
 {
+	ELOG
 	if (!scanner_has_tokens(scanner)) return NULL;
 
 	dump_scanner(scanner);
@@ -124,6 +128,7 @@ get_scanner_token_debug(struct scanner *scanner)
 static inline void
 init_scanner_info(struct scanner_info *scanner_info)
 {
+	ELOG
 	const struct scan_table_info *info = scanner_info->scan_table_info;
 	int *scan_table = scanner_info->scan_table;
 	int i;
@@ -159,6 +164,7 @@ void
 init_scanner(struct scanner *scanner, struct scanner_info *scanner_info,
 	     const char *string, const char *end)
 {
+	ELOG
 	if (!scanner_info->initialized) {
 		init_scanner_info(scanner_info);
 		scanner_info->initialized = 1;

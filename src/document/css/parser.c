@@ -31,6 +31,7 @@ void
 css_parse_properties(LIST_OF(struct css_property) *props,
 		     struct scanner *scanner)
 {
+	ELOG
 	assert(props && scanner);
 
 	while (scanner_has_tokens(scanner)) {
@@ -99,6 +100,7 @@ ride_on:
 static void
 skip_css_block(struct scanner *scanner)
 {
+	ELOG
 	if (skip_css_tokens(scanner, '{')) {
 		const int preclimit = get_css_precedence('}');
 		int depth = 1;
@@ -135,6 +137,7 @@ skip_css_block(struct scanner *scanner)
 static int
 css_parse_media_types(struct scanner *scanner)
 {
+	ELOG
 	int matched = 0;
 	int empty = 1;
 	const char *const optstr = get_opt_str("document.css.media", NULL);
@@ -174,6 +177,7 @@ static void
 css_parse_atrule(struct css_stylesheet *css, struct scanner *scanner,
 		 struct uri *base_uri)
 {
+	ELOG
 	struct scanner_token *token = get_scanner_token(scanner);
 	struct string import_uri;
 
@@ -291,6 +295,7 @@ reparent_selector(struct css_selector_set *sels,
                   struct css_selector *selector,
                   struct css_selector **watch)
 {
+	ELOG
 	struct css_selector *twin = find_css_selector(sels, selector->type,
 	                                              selector->relation,
 	                                              selector->name, -1);
@@ -332,6 +337,7 @@ static void
 css_parse_selector(struct css_stylesheet *css, struct scanner *scanner,
 		   LIST_OF(struct selector_pkg) *selectors)
 {
+	ELOG
 	/* Shell for the last selector (the whole selector chain, that is). */
 	struct selector_pkg *pkg = NULL;
 	/* In 'p#x.y i.z', it's NULL for 'p', 'p' for '#x', '.y' and 'i', and
@@ -575,6 +581,7 @@ css_parse_selector(struct css_stylesheet *css, struct scanner *scanner,
 static void
 css_parse_ruleset(struct css_stylesheet *css, struct scanner *scanner)
 {
+	ELOG
 	INIT_LIST_OF(struct selector_pkg, selectors);
 	INIT_LIST_OF(struct css_property, properties);
 	struct selector_pkg *pkg;
@@ -631,6 +638,7 @@ void
 css_parse_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
 		     const char *string, const char *end)
 {
+	ELOG
 	struct scanner scanner;
 
 	init_scanner(&scanner, &css_scanner_info, string, end);

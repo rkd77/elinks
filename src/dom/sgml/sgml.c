@@ -25,6 +25,7 @@
 int
 sgml_info_strcmp(const void *key_, const void *node_)
 {
+	ELOG
 	struct dom_node *key = (struct dom_node *) key_;
 	struct sgml_node_info *node = (struct sgml_node_info *) node_;
 
@@ -41,5 +42,6 @@ struct sgml_info *sgml_info[SGML_DOCTYPES] = {
 struct sgml_info *
 get_sgml_info(enum sgml_document_type doctype)
 {
+	ELOG
 	return doctype < SGML_DOCTYPES ? sgml_info[doctype] : NULL;
 }

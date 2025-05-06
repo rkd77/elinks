@@ -30,6 +30,7 @@ static int in_script = 0;
 static bool
 dump_dom_element_closing(struct string *buf, dom_node *node)
 {
+	ELOG
 	dom_exception exc;
 	dom_string *node_name = NULL;
 	dom_node_type type;
@@ -80,6 +81,7 @@ dump_dom_element_closing(struct string *buf, dom_node *node)
 static bool
 dump_node_element_attribute(struct string *buf, dom_node *node)
 {
+	ELOG
 	dom_exception exc;
 	dom_string *attr = NULL;
 	dom_string *attr_value = NULL;
@@ -120,6 +122,7 @@ dump_node_element_attribute(struct string *buf, dom_node *node)
 static bool
 dump_dom_element(void *mapa, void *mapa_rev, struct string *buf, dom_node *node, int depth)
 {
+	ELOG
 	dom_exception exc;
 	dom_string *node_name = NULL;
 	dom_node_type type;
@@ -220,6 +223,7 @@ dump_dom_element(void *mapa, void *mapa_rev, struct string *buf, dom_node *node,
 static bool
 walk_tree(void *mapa, void *mapa_rev, struct string *buf, dom_node *node, bool start, int depth)
 {
+	ELOG
 	dom_exception exc;
 	dom_node *child;
 
@@ -271,6 +275,7 @@ walk_tree(void *mapa, void *mapa_rev, struct string *buf, dom_node *node, bool s
 void
 render_xhtml_document(struct cache_entry *cached, struct document *document, struct string *buffer)
 {
+	ELOG
 	if (!libdom_initialised) {
 		corestrings_init();
 		keybstrings_init();
@@ -307,6 +312,7 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 void
 free_libdom(void)
 {
+	ELOG
 	if (libdom_initialised) {
 		keybstrings_fini();
 		corestrings_fini();
@@ -316,6 +322,7 @@ free_libdom(void)
 static void
 walk_tree2(struct document *document, dom_node *node)
 {
+	ELOG
 	dom_node *child = NULL;
 	/* Get the node's first child */
 	dom_exception exc = dom_node_get_first_child(node, &child);
@@ -409,6 +416,7 @@ next:
 static void
 walk_tree2_color(struct terminal *term, struct el_box *box, struct document *document, int vx, int vy, dom_node *node)
 {
+	ELOG
 	dom_node *child = NULL;
 	/* Get the node's first child */
 	dom_exception exc = dom_node_get_first_child(node, &child);
@@ -482,6 +490,7 @@ walk_tree2_color(struct terminal *term, struct el_box *box, struct document *doc
 void
 debug_dump_xhtml(void *d)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	dom_html_document *doc = (dom_html_document *)d;
 
@@ -524,6 +533,7 @@ debug_dump_xhtml(void *d)
 void
 debug_dump_xhtml2(void *r)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	dom_node *root = (dom_node *)r;
 
@@ -548,6 +558,7 @@ debug_dump_xhtml2(void *r)
 void
 dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
 {
+	ELOG
 	dom_exception exc; /* returned by libdom functions */
 	dom_html_document *doc = NULL; /* document, loaded into libdom */
 	dom_node *root = NULL; /* root element of document */
@@ -630,6 +641,7 @@ dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
 static bool
 fire_dom_event(dom_event *event, dom_node *target)
 {
+	ELOG
 	dom_exception exc;
 	bool result;
 
@@ -645,6 +657,7 @@ fire_dom_event(dom_event *event, dom_node *target)
 int
 fire_generic_dom_event(void *t, void *tar, int bubbles, int cancelable)
 {
+	ELOG
 	dom_string *typ = (dom_string *)t;
 	dom_node *target = (dom_node *)tar;
 	dom_exception exc;
@@ -668,6 +681,7 @@ fire_generic_dom_event(void *t, void *tar, int bubbles, int cancelable)
 int
 fire_onload(void *doc)
 {
+	ELOG
 	dom_node *root = NULL;
 
 	if (!doc) {
@@ -687,6 +701,7 @@ fire_onload(void *doc)
 void
 walk2(struct document *document)
 {
+	ELOG
 	dom_exception exc; /* returned by libdom functions */
 	dom_html_document *doc = NULL; /* document, loaded into libdom */
 	dom_node *root = NULL; /* root element of document */
@@ -717,6 +732,7 @@ static struct node_rect *prev_element = NULL;
 struct node_rect *
 get_element_rect(struct document *document, int offset)
 {
+	ELOG
 	if (offset == prev_offset) {
 		return prev_element;
 	}
@@ -758,6 +774,7 @@ static void dump_results(struct document *document);
 void
 scan_document(struct document *document)
 {
+	ELOG
 	int y, x;
 
 	if (document->scanned) {
@@ -814,6 +831,7 @@ scan_document(struct document *document)
 static void
 dump_results(struct document *document)
 {
+	ELOG
 	struct hash_item *item;
 	int i;
 
@@ -830,6 +848,7 @@ dump_results(struct document *document)
 void
 try_to_color(struct terminal *term, struct el_box *box, struct document *document, int vx, int vy)
 {
+	ELOG
 	dom_exception exc; /* returned by libdom functions */
 	dom_html_document *doc = NULL; /* document, loaded into libdom */
 	dom_node *root = NULL; /* root element of document */

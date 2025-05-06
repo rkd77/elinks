@@ -17,6 +17,7 @@
 static const char *
 get_name_python(struct module *xxx)
 {
+	ELOG
 	static char elpythonversion[32];
 	snprintf(elpythonversion, 31, "Python %s", PY_VERSION);
 

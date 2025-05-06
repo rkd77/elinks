@@ -43,6 +43,7 @@ static void
 css_apply_color(struct html_context *html_context, struct html_element *element,
 		struct css_property *prop)
 {
+	ELOG
 	assert(prop->value_type == CSS_VT_COLOR);
 
 	if (use_document_fg_colors(html_context->options))
@@ -54,6 +55,7 @@ css_apply_background_color(struct html_context *html_context,
 			   struct html_element *element,
 			   struct css_property *prop)
 {
+	ELOG
 	assert(prop->value_type == CSS_VT_COLOR);
 
 	if (use_document_bg_colors(html_context->options))
@@ -64,6 +66,7 @@ static void
 css_apply_display(struct html_context *html_context, struct html_element *element,
 		  struct css_property *prop)
 {
+	ELOG
 	assert(prop->value_type == CSS_VT_DISPLAY);
 
 	switch (prop->value.display) {
@@ -90,6 +93,7 @@ static void
 css_apply_font_attribute(struct html_context *html_context,
 			 struct html_element *element, struct css_property *prop)
 {
+	ELOG
 	assert(prop->value_type == CSS_VT_FONT_ATTRIBUTE);
 	element->attr.style.attr |= prop->value.font_attribute.add;
 	element->attr.style.attr &= ~prop->value.font_attribute.rem;
@@ -99,6 +103,7 @@ static void
 css_apply_list_style(struct html_context *html_context,
                      struct html_element *element, struct css_property *prop)
 {
+	ELOG
 	assert(prop->value_type == CSS_VT_LIST_STYLE);
 
 	element->parattr.list_number = (prop->value.list_style > CSS_LIST_ORDINAL);
@@ -135,6 +140,7 @@ static void
 css_apply_text_align(struct html_context *html_context,
 		     struct html_element *element, struct css_property *prop)
 {
+	ELOG
 	assert(prop->value_type == CSS_VT_TEXT_ALIGN);
 	element->parattr.align = prop->value.text_align;
 }
@@ -162,6 +168,7 @@ examine_element(struct html_context *html_context, struct css_selector *base,
 		struct css_selector_set *selectors,
 		struct html_element *element)
 {
+	ELOG
 	struct css_selector *selector;
 
 #ifdef DEBUG_CSS
@@ -273,6 +280,7 @@ get_css_selector_for_element(struct html_context *html_context,
 			     struct css_stylesheet *css,
 			     LIST_OF(struct html_element) *html_stack)
 {
+	ELOG
 	char *code;
 	struct css_selector *selector;
 
@@ -317,6 +325,7 @@ apply_css_selector_style(struct html_context *html_context,
 			 struct html_element *element,
 			 struct css_selector *selector)
 {
+	ELOG
 	struct css_property *property;
 
 	foreach (property, selector->properties) {
@@ -333,6 +342,7 @@ void
 css_apply(struct html_context *html_context, struct html_element *element,
 	  struct css_stylesheet *css, LIST_OF(struct html_element) *html_stack)
 {
+	ELOG
 	struct css_selector *selector;
 
 	selector = get_css_selector_for_element(html_context, element, css,

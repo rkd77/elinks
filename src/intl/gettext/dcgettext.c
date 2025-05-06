@@ -29,5 +29,6 @@
 char *
 dcgettext__(const char *domainname, const char *msgid, int category)
 {
+	ELOG
 	return dcigettext__(domainname, msgid, NULL, 0, 0, category);
 }

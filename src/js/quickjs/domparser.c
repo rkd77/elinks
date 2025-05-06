@@ -36,6 +36,7 @@ static const JSCFunctionListEntry js_domparser_proto_funcs[] = {
 static JSValue
 js_domparser_parseFromString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -60,6 +61,7 @@ js_domparser_parseFromString(JSContext *ctx, JSValueConst this_val, int argc, JS
 static JSValue
 js_domparser_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -74,6 +76,7 @@ js_domparser_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSVa
 static void
 JS_NewGlobalCConstructor2(JSContext *ctx, JSValue func_obj, const char *name, JSValueConst proto)
 {
+	ELOG
 	REF_JS(func_obj);
 	REF_JS(proto);
 
@@ -89,6 +92,7 @@ JS_NewGlobalCConstructor2(JSContext *ctx, JSValue func_obj, const char *name, JS
 static JSValueConst
 JS_NewGlobalCConstructor(JSContext *ctx, const char *name, JSCFunction *func, int length, JSValueConst proto)
 {
+	ELOG
 	JSValue func_obj;
 	func_obj = JS_NewCFunction2(ctx, func, name, length, JS_CFUNC_constructor_or_func, 0);
 	REF_JS(func_obj);
@@ -102,6 +106,7 @@ JS_NewGlobalCConstructor(JSContext *ctx, const char *name, JSCFunction *func, in
 int
 js_domparser_init(JSContext *ctx)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

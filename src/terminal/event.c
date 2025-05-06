@@ -68,6 +68,7 @@ struct terminal_interlink {
 void
 term_send_event(struct terminal *term, struct term_event *ev)
 {
+	ELOG
 	struct window *win;
 
 	assert(ev && term);
@@ -145,6 +146,7 @@ static void
 term_send_ucs(struct terminal *term, unicode_val_T u,
 	      term_event_modifier_T modifier)
 {
+	ELOG
 #ifdef CONFIG_UTF8
 	struct term_event ev;
 
@@ -168,6 +170,7 @@ term_send_ucs(struct terminal *term, unicode_val_T u,
 static void
 check_terminal_name(struct terminal *term, struct terminal_info *info)
 {
+	ELOG
 	char name[MAX_TERM_LEN + 10];
 	int i;
 
@@ -204,6 +207,7 @@ check_terminal_name(struct terminal *term, struct terminal_info *info)
 static int
 ignore_mouse_event(struct terminal *term, struct term_event *ev)
 {
+	ELOG
 	struct term_event_mouse *prev = &term->prev_mouse_event;
 	struct term_event_mouse *current = &ev->info.mouse;
 
@@ -224,6 +228,7 @@ ignore_mouse_event(struct terminal *term, struct term_event *ev)
 static int
 handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 {
+	ELOG
 	struct terminal_info *info = NULL;
 	struct terminal_interlink *interlink = term->interlink;
 	struct term_event tev;
@@ -465,6 +470,7 @@ invalid_utf8_start_byte:
 void
 in_term(struct terminal *term)
 {
+	ELOG
 	struct terminal_interlink *interlink = term->interlink;
 	ssize_t r;
 	char *iq;

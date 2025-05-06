@@ -38,6 +38,7 @@ PyObject *python_hooks = NULL;
 void
 alert_python_error(void)
 {
+	ELOG
 	const char *msg = "(no traceback available)";
 	PyObject *err_type = NULL, *err_value = NULL, *err_traceback = NULL;
 	PyObject *tb_module = NULL;
@@ -98,6 +99,7 @@ end:
 static int
 set_python_search_path(void)
 {
+	ELOG
 	struct string new_python_path;
 	char *old_python_path;
 	int result = -1;
@@ -129,6 +131,7 @@ end:
 static int
 hooks_module_exists(void)
 {
+	ELOG
 	PyObject *imp_module = NULL, *result = NULL;
 	int found_hooks = 0;
 
@@ -179,6 +182,7 @@ All other arguments are ignored.\n");
 static PyCFunction *
 python_showwarning(PyObject *self, PyObject *args, PyObject *kwargs)
 {
+	ELOG
 	PyObject *warning;
 
 	if (!PyTuple_Check(args)) {
@@ -204,6 +208,7 @@ static PyMethodDef warning_methods[] = {
 static int
 replace_showwarning(void)
 {
+	ELOG
 	PyObject *warnings_module = NULL, *module_name = NULL, *module_dict;
 	int result = -1;
 
@@ -316,6 +321,7 @@ static struct PyModuleDef moduledef = {
 static int
 add_constant(PyObject *dict, const char *key, int value)
 {
+	ELOG
 	PyObject *constant = PyLong_FromLong(value);
 	int result;
 
@@ -329,6 +335,7 @@ add_constant(PyObject *dict, const char *key, int value)
 PyMODINIT_FUNC
 PyInit_elinks(void)
 {
+	ELOG
 	PyObject *elinks_module, *module_dict, *module_name;
 	char *xdg_config_home = get_xdg_config_home();
 
@@ -384,6 +391,7 @@ python_error:
 void
 init_python(struct module *module)
 {
+	ELOG
 	if (set_python_search_path() != 0) {
 		return;
 	}
@@ -408,6 +416,7 @@ python_error:
 void
 cleanup_python(struct module *module)
 {
+	ELOG
 	if (Py_IsInitialized()) {
 		PyObject *temp;
 
@@ -428,6 +437,7 @@ cleanup_python(struct module *module)
 int
 add_python_methods(PyObject *dict, PyObject *name, PyMethodDef *methods)
 {
+	ELOG
 	PyMethodDef *method;
 
 	for (method = methods; method && method->ml_name; method++) {

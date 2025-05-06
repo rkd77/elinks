@@ -13,24 +13,28 @@
 /* fake tty get function, needed for charsets.c */
 int get_ctl_handle()
 {
+	ELOG
 	return -1;
 }
 
 char *
 gettext(const char *text)
 {
+	ELOG
 	return (char *)text;
 }
 
 int
 os_default_charset(void)
 {
+	ELOG
 	return -1;
 }
 
 int
 main(int argc, char *argv[])
 {
+	ELOG
 	struct cookie_str cstr;
 	char name[1024], value[1024], string[1024];
 

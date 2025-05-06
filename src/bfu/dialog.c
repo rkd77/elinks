@@ -33,6 +33,7 @@ struct dialog_data *
 do_dialog(struct terminal *term, struct dialog *dlg,
 	  struct memory_list *ml)
 {
+	ELOG
 	struct dialog_data *dlg_data;
 
 	dlg_data = (struct dialog_data *)mem_calloc(1, sizeof(*dlg_data) +
@@ -58,6 +59,7 @@ static void cycle_widget_focus(struct dialog_data *dlg_data, int direction);
 static void
 update_all_widgets(struct dialog_data *dlg_data)
 {
+	ELOG
 	struct widget_data *widget_data;
 
 	/* Iterate backwards rather than forwards so that listboxes are drawn
@@ -71,6 +73,7 @@ update_all_widgets(struct dialog_data *dlg_data)
 void
 redraw_dialog(struct dialog_data *dlg_data, int layout)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	struct color_pair *title_color;
 
@@ -135,6 +138,7 @@ redraw_dialog(struct dialog_data *dlg_data, int layout)
 static void
 select_dlg_item(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	select_widget(dlg_data, widget_data);
 
 	if (widget_data->widget->ops->select)
@@ -153,6 +157,7 @@ static const struct widget_ops *const widget_type_to_ops[] = {
 static struct widget_data *
 init_widget(struct dialog_data *dlg_data, int i)
 {
+	ELOG
 	struct widget_data *widget_data = &dlg_data->widgets_data[i];
 
 	memset(widget_data, 0, sizeof(*widget_data));
@@ -185,6 +190,7 @@ init_widget(struct dialog_data *dlg_data, int i)
 static int
 check_range(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	if (!dlg_data->dlg->layout.only_widgets) {
 		struct el_box *box = &widget_data->box;
 		struct el_box *dlgbox = &dlg_data->real_box;
@@ -202,6 +208,7 @@ check_range(struct dialog_data *dlg_data, struct widget_data *widget_data)
 void
 select_widget(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct widget_data *previously_selected_widget;
 
 	previously_selected_widget = selected_widget(dlg_data);
@@ -221,6 +228,7 @@ select_widget(struct dialog_data *dlg_data, struct widget_data *widget_data)
 struct widget_data *
 select_widget_by_id(struct dialog_data *dlg_data, int i)
 {
+	ELOG
 	struct widget_data *widget_data;
 
 	if (i >= dlg_data->number_of_widgets)
@@ -235,6 +243,7 @@ select_widget_by_id(struct dialog_data *dlg_data, int i)
 static void
 cycle_widget_focus(struct dialog_data *dlg_data, int direction)
 {
+	ELOG
 	int prev_selected = dlg_data->selected_widget_id;
 	struct widget_data *previously_selected_widget;
 
@@ -264,6 +273,7 @@ cycle_widget_focus(struct dialog_data *dlg_data, int direction)
 static void
 dialog_ev_init(struct dialog_data *dlg_data)
 {
+	ELOG
 	int i;
 
 	dlg_data->y = 0;
@@ -284,6 +294,7 @@ dialog_ev_init(struct dialog_data *dlg_data)
 static void
 dialog_ev_mouse(struct dialog_data *dlg_data)
 {
+	ELOG
 	struct widget_data *widget_data;
 
 	foreach_widget(dlg_data, widget_data) {
@@ -299,6 +310,7 @@ dialog_ev_mouse(struct dialog_data *dlg_data)
 static void
 select_button_by_flag(struct dialog_data *dlg_data, int flag)
 {
+	ELOG
 	struct widget_data *widget_data;
 
 	foreach_widget(dlg_data, widget_data) {
@@ -314,6 +326,7 @@ select_button_by_flag(struct dialog_data *dlg_data, int flag)
 static void
 select_button_by_key(struct dialog_data *dlg_data)
 {
+	ELOG
 	term_event_char_T key;
 #ifdef CONFIG_UTF8
 	int codepage;
@@ -372,6 +385,7 @@ select_button_by_key(struct dialog_data *dlg_data)
 static void
 dialog_ev_kbd(struct dialog_data *dlg_data)
 {
+	ELOG
 	struct widget_data *widget_data = selected_widget(dlg_data);
 	const struct widget_ops *ops = widget_data->widget->ops;
 	/* XXX: KEYMAP_EDIT ? --pasky */
@@ -431,6 +445,7 @@ dialog_ev_kbd(struct dialog_data *dlg_data)
 static void
 dialog_ev_abort(struct dialog_data *dlg_data)
 {
+	ELOG
 	struct widget_data *widget_data;
 
 	if (dlg_data->dlg->refresh) {
@@ -457,6 +472,7 @@ dialog_ev_abort(struct dialog_data *dlg_data)
 static void
 dialog_func(struct window *win, struct term_event *ev)
 {
+	ELOG
 	struct dialog_data *dlg_data = (struct dialog_data *)win->data;
 
 	dlg_data->win = win;
@@ -502,6 +518,7 @@ dialog_func(struct window *win, struct term_event *ev)
 int
 check_dialog(struct dialog_data *dlg_data)
 {
+	ELOG
 	struct widget_data *widget_data;
 
 	foreach_widget(dlg_data, widget_data) {
@@ -524,6 +541,7 @@ check_dialog(struct dialog_data *dlg_data)
 widget_handler_status_T
 cancel_dialog(struct dialog_data *dlg_data, struct widget_data *xxx)
 {
+	ELOG
 	delete_window(dlg_data->win);
 	return EVENT_PROCESSED;
 }
@@ -531,6 +549,7 @@ cancel_dialog(struct dialog_data *dlg_data, struct widget_data *xxx)
 int
 update_dialog_data(struct dialog_data *dlg_data)
 {
+	ELOG
 	struct widget_data *widget_data;
 
 	foreach_widget(dlg_data, widget_data) {
@@ -547,6 +566,7 @@ update_dialog_data(struct dialog_data *dlg_data)
 widget_handler_status_T
 ok_dialog(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	done_handler_T *done = widget_data->widget->info.button.done;
 	void *done_data = widget_data->widget->info.button.done_data;
 
@@ -562,6 +582,7 @@ ok_dialog(struct dialog_data *dlg_data, struct widget_data *widget_data)
 widget_handler_status_T
 clear_dialog(struct dialog_data *dlg_data, struct widget_data *xxx)
 {
+	ELOG
 	struct widget_data *widget_data;
 
 	foreach_widget(dlg_data, widget_data) {
@@ -582,6 +603,7 @@ static void
 format_widgets(struct terminal *term, struct dialog_data *dlg_data,
 	       int x, int *y, int w, int h, int *rw, int format_only)
 {
+	ELOG
 	struct widget_data *wdata = dlg_data->widgets_data;
 	int widgets = dlg_data->number_of_widgets;
 
@@ -649,6 +671,7 @@ format_widgets(struct terminal *term, struct dialog_data *dlg_data,
 void
 generic_dialog_layouter(struct dialog_data *dlg_data)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	int w = dialog_max_width(term);
 	int height = dialog_max_height(term);
@@ -684,6 +707,7 @@ generic_dialog_layouter(struct dialog_data *dlg_data)
 void
 draw_dialog(struct dialog_data *dlg_data, int width, int height)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	int dlg_width = int_min(term->width, width + 2 * DIALOG_LB);
 	int dlg_height = int_min(term->height, height + 2 * DIALOG_TB);
@@ -715,6 +739,7 @@ draw_dialog(struct dialog_data *dlg_data, int width, int height)
 static void
 do_refresh_dialog(struct dialog_data *dlg_data)
 {
+	ELOG
 	struct dialog_refresh *refresh = dlg_data->dlg->refresh;
 	enum dlg_refresh_code refresh_code;
 
@@ -744,6 +769,7 @@ do_refresh_dialog(struct dialog_data *dlg_data)
 void
 refresh_dialog(struct dialog_data *dlg_data, dialog_refresh_handler_T handler, void *data)
 {
+	ELOG
 	struct dialog_refresh *refresh = dlg_data->dlg->refresh;
 
 	if (!refresh) {

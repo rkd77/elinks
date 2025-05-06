@@ -26,6 +26,7 @@ msg_box(struct terminal *term, struct memory_list *ml, msgbox_flags_T flags,
 	char *title, format_align_T align,
 	char *text, void *udata, int buttons, ...)
 {
+	ELOG
 	struct dialog *dlg;
 	va_list ap;
 
@@ -96,6 +97,7 @@ msg_box(struct terminal *term, struct memory_list *ml, msgbox_flags_T flags,
 static inline char *
 msg_text_do(char *format, va_list ap)
 {
+	ELOG
 	char *info;
 	int infolen, len;
 	va_list ap2;
@@ -120,6 +122,7 @@ msg_text_do(char *format, va_list ap)
 char *
 msg_text(struct terminal *term, const char *format, ...)
 {
+	ELOG
 	char *info;
 	va_list ap;
 
@@ -133,6 +136,7 @@ msg_text(struct terminal *term, const char *format, ...)
 static void
 abort_refreshed_msg_box_handler(struct dialog_data *dlg_data)
 {
+	ELOG
 	void *data = dlg_data->dlg->widgets->text;
 
 	if (dlg_data->dlg->udata != data)
@@ -142,6 +146,7 @@ abort_refreshed_msg_box_handler(struct dialog_data *dlg_data)
 static enum dlg_refresh_code
 refresh_msg_box(struct dialog_data *dlg_data, void *data)
 {
+	ELOG
 	char *(*get_info)(struct terminal *, void *) = (char *(*)(struct terminal *, void *))data;
 	void *msg_data = dlg_data->dlg->udata2;
 	char *info = get_info(dlg_data->win->term, msg_data);
@@ -160,6 +165,7 @@ refreshed_msg_box(struct terminal *term, msgbox_flags_T flags,
 		  char *(get_info)(struct terminal *, void *),
 		  void *data)
 {
+	ELOG
 	/* [gettext_accelerator_context(refreshed_msg_box)] */
 	struct dialog_data *dlg_data;
 	char *info = get_info(term, data);
@@ -186,6 +192,7 @@ info_box(struct terminal *term, msgbox_flags_T flags,
 	 char *title, format_align_T align,
 	 char *text)
 {
+	ELOG
 	/* [gettext_accelerator_context(info_box)] */
 	return msg_box(term, NULL, flags,
 		       title, align,

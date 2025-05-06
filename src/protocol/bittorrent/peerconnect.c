@@ -59,6 +59,7 @@ static INIT_LIST_OF(struct bittorrent_peer_connection, bittorrent_peer_connectio
 struct bittorrent_connection *
 find_bittorrent_connection(bittorrent_id_T info_hash)
 {
+	ELOG
 	struct bittorrent_connection *bittorrent;
 
 	foreach (bittorrent, bittorrent_connections)
@@ -72,6 +73,7 @@ static void
 check_bittorrent_peer_blacklisting(struct bittorrent_peer_connection *peer,
 				   struct connection_state state)
 {
+	ELOG
 	bittorrent_blacklist_flags_T flags = BITTORRENT_BLACKLIST_NONE;
 
 	if (bittorrent_id_is_empty(peer->id)
@@ -114,6 +116,7 @@ check_bittorrent_peer_blacklisting(struct bittorrent_peer_connection *peer,
 static void
 bittorrent_peer_connection_timeout(struct bittorrent_peer_connection *peer)
 {
+	ELOG
 	/* Unset the timer so it won't get stopped when removing the peer
 	 * connection. */
 	peer->timer = TIMER_ID_UNDEF;
@@ -127,6 +130,7 @@ bittorrent_peer_connection_timeout(struct bittorrent_peer_connection *peer)
 void
 set_bittorrent_peer_connection_timeout(struct bittorrent_peer_connection *peer)
 {
+	ELOG
 	milliseconds_T timeout = sec_to_ms(get_opt_int("protocol.bittorrent.peerwire.timeout", NULL));
 
 	kill_timer(&peer->timer);
@@ -148,6 +152,7 @@ set_bittorrent_peer_connection_timeout(struct bittorrent_peer_connection *peer)
 static void
 set_bittorrent_socket_state(struct socket *socket, struct connection_state state)
 {
+	ELOG
 	struct bittorrent_peer_connection *peer = (struct bittorrent_peer_connection *)socket->conn;
 
 	if (is_in_state(state, S_TRANS) && peer->bittorrent)
@@ -160,6 +165,7 @@ set_bittorrent_socket_state(struct socket *socket, struct connection_state state
 static void
 set_bittorrent_socket_timeout(struct socket *socket, struct connection_state state)
 {
+	ELOG
 	assert(is_in_state(state, 0));
 	set_bittorrent_peer_connection_timeout((struct bittorrent_peer_connection *)socket->conn);
 }
@@ -169,6 +175,7 @@ set_bittorrent_socket_timeout(struct socket *socket, struct connection_state sta
 static void
 retry_bittorrent_socket(struct socket *socket, struct connection_state state)
 {
+	ELOG
 	struct bittorrent_peer_connection *peer = (struct bittorrent_peer_connection *)socket->conn;
 
 	check_bittorrent_peer_blacklisting(peer, state);
@@ -186,6 +193,7 @@ retry_bittorrent_socket(struct socket *socket, struct connection_state state)
 static void
 done_bittorrent_socket(struct socket *socket, struct connection_state state)
 {
+	ELOG
 	struct bittorrent_peer_connection *peer = (struct bittorrent_peer_connection *)socket->conn;
 
 	check_bittorrent_peer_blacklisting(peer, state);
@@ -211,6 +219,7 @@ static struct socket_operations bittorrent_socket_operations = {
 static struct bittorrent_peer_connection *
 init_bittorrent_peer_connection(int socket)
 {
+	ELOG
 	struct bittorrent_peer_connection *peer;
 
 	peer = (struct bittorrent_peer_connection *)mem_calloc(1, sizeof(*peer));
@@ -242,6 +251,7 @@ init_bittorrent_peer_connection(int socket)
 void
 done_bittorrent_peer_connection(struct bittorrent_peer_connection *peer)
 {
+	ELOG
 	del_from_list(peer);
 
 	/* The peer might not have been associated with a BitTorrent connection,
@@ -274,6 +284,7 @@ enum bittorrent_state
 make_bittorrent_peer_connection(struct bittorrent_connection *bittorrent,
 				struct bittorrent_peer *peer_info)
 {
+	ELOG
 	enum bittorrent_state result = BITTORRENT_STATE_OUT_OF_MEM;
 	struct uri *uri = NULL;
 	struct string uri_string = NULL_STRING;
@@ -334,6 +345,7 @@ out:
 static void
 accept_bittorrent_peer_connection(void *____)
 {
+	ELOG
 	struct sockaddr_in addr;
 	int peer_sock;
 	socklen_t addrlen = sizeof(addr);
@@ -371,6 +383,7 @@ accept_bittorrent_peer_connection(void *____)
 struct connection_state
 init_bittorrent_listening_socket(struct connection *conn)
 {
+	ELOG
 	struct bittorrent_connection *bittorrent = (struct bittorrent_connection *)conn->info;
 	struct sockaddr_in addr, addr2;
 	uint16_t port, max_port;
@@ -442,6 +455,7 @@ init_bittorrent_listening_socket(struct connection *conn)
 void
 done_bittorrent_listening_socket(struct connection *conn)
 {
+	ELOG
 	struct bittorrent_connection *connection, *bittorrent = (struct bittorrent_connection *)conn->info;
 
 	/* The bittorrent connection might not even have been added if the

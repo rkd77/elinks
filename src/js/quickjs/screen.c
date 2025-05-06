@@ -23,6 +23,7 @@ static JSClassID js_screen_class_id;
 static JSValue
 js_screen_get_property_availHeight(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -47,6 +48,7 @@ js_screen_get_property_availHeight(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_screen_get_property_availWidth(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -71,6 +73,7 @@ js_screen_get_property_availWidth(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_screen_get_property_height(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -99,6 +102,7 @@ js_screen_get_property_height(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_screen_get_property_width(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -127,6 +131,7 @@ js_screen_get_property_width(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_screen_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -150,6 +155,7 @@ static JSClassDef js_screen_class = {
 int
 js_screen_init(JSContext *ctx)
 {
+	ELOG
 	JSValue screen_proto;
 
 	/* create the screen class */

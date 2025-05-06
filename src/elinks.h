@@ -38,6 +38,8 @@
 
 #define C_(str) (char *)((str))
 
+#define ELOG
+
 #ifdef CONFIG_OS_DOS
 #define loop_select(a, b, c, d, e) dos_select(a, b, c, d, e, 1)
 #define select2(a, b, c, d, e) dos_select(a, b, c, d, e, 0)

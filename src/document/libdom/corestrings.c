@@ -46,6 +46,7 @@
 /* exported interface documented in utils/corestrings.h */
 int corestrings_fini(void)
 {
+	ELOG
 #define CORESTRING_LWC_VALUE(NAME,VALUE)				\
 	do {								\
 		if (corestring_lwc_##NAME != NULL) {			\
@@ -85,6 +86,7 @@ int corestrings_fini(void)
 /* exported interface documented in utils/corestrings.h */
 int corestrings_init(void)
 {
+	ELOG
 	lwc_error lerror;
 	css_error error;
 	dom_exception exc;

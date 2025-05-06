@@ -18,12 +18,14 @@ static struct hash *map_timer;
 void
 init_map_timer(void)
 {
+	ELOG
 	map_timer = init_hash8();
 }
 
 void
 done_map_timer(void)
 {
+	ELOG
 	struct hash_item *item;
 	int i;
 
@@ -40,6 +42,7 @@ done_map_timer(void)
 void
 add_to_map_timer(struct ecmascript_timeout *t)
 {
+	ELOG
 	if (map_timer && t) {
 		char *key = memacpy((const char *)&t, sizeof(t));
 
@@ -52,6 +55,7 @@ add_to_map_timer(struct ecmascript_timeout *t)
 void
 del_from_map_timer(struct ecmascript_timeout *t)
 {
+	ELOG
 	if (map_timer && t) {
 		char *key = memacpy((const char *)&t, sizeof(t));
 
@@ -70,6 +74,7 @@ del_from_map_timer(struct ecmascript_timeout *t)
 bool
 found_in_map_timer(struct ecmascript_timeout *t)
 {
+	ELOG
 	bool ret = false;
 
 	if (map_timer && t) {

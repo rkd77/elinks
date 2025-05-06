@@ -58,6 +58,7 @@ static void check_if_no_terminal(void);
 void
 clean_temporary_files(void)
 {
+	ELOG
 	struct hash_item *item;
 	int i;
 
@@ -78,6 +79,7 @@ clean_temporary_files(void)
 long
 get_number_of_temporary_files(void)
 {
+	ELOG
 	struct hash_item *item;
 	int i;
 	long counter = 0;
@@ -94,6 +96,7 @@ get_number_of_temporary_files(void)
 static void
 save_temporary_filename(const char *filename)
 {
+	ELOG
 	if (!temporary_files) {
 		temporary_files = init_hash8();
 	}
@@ -110,6 +113,7 @@ save_temporary_filename(const char *filename)
 void
 redraw_terminal(struct terminal *term)
 {
+	ELOG
 	struct term_event ev;
 
 #ifdef CONFIG_LIBSIXEL
@@ -123,6 +127,7 @@ redraw_terminal(struct terminal *term)
 void
 redraw_terminal_cls(struct terminal *term)
 {
+	ELOG
 	struct term_event ev;
 
 #ifdef CONFIG_LIBSIXEL
@@ -136,6 +141,7 @@ redraw_terminal_cls(struct terminal *term)
 void
 cls_redraw_all_terminals(void)
 {
+	ELOG
 	static int in_redraw;
 	struct terminal *term;
 
@@ -154,6 +160,7 @@ cls_redraw_all_terminals(void)
 struct terminal *
 get_default_terminal(void)
 {
+	ELOG
 	if (list_empty(terminals))
 		return NULL;
 	else
@@ -163,6 +170,7 @@ get_default_terminal(void)
 struct terminal *
 init_term(int fdin, int fdout)
 {
+	ELOG
 	char name[MAX_TERM_LEN + 9] = "terminal.";
 	struct terminal *term = (struct terminal *)mem_calloc(1, sizeof(*term));
 
@@ -222,12 +230,14 @@ init_term(int fdin, int fdout)
 int
 get_terminal_codepage(const struct terminal *term)
 {
+	ELOG
 	return get_opt_codepage_tree(term->spec, "charset", NULL);
 }
 
 void
 redraw_all_terminals(void)
 {
+	ELOG
 	struct terminal *term;
 
 	foreach (term, terminals)
@@ -237,6 +247,7 @@ redraw_all_terminals(void)
 void
 destroy_terminal(struct terminal *term)
 {
+	ELOG
 #ifdef CONFIG_SCRIPTING_SPIDERMONKEY
 	smjs_detach_terminal_object(term);
 #endif
@@ -302,6 +313,7 @@ destroy_terminal(struct terminal *term)
 void
 destroy_all_terminals(void)
 {
+	ELOG
 	while (!list_empty(terminals))
 		destroy_terminal((struct terminal *)terminals.next);
 }
@@ -309,6 +321,7 @@ destroy_all_terminals(void)
 static void
 check_if_no_terminal(void)
 {
+	ELOG
 	program.terminate = list_empty(terminals)
 			    && !get_opt_bool("ui.sessions.keep_session_active", NULL);
 }
@@ -316,6 +329,7 @@ check_if_no_terminal(void)
 void
 exec_thread(char *path, int p)
 {
+	ELOG
 #if defined(HAVE_SETPGID) && !defined(CONFIG_OS_BEOS) && !defined(HAVE_BEGINTHREAD)
 	if (path[0] == TERM_EXEC_NEWWIN) setpgid(0, 0);
 #endif
@@ -332,6 +346,7 @@ exec_thread(char *path, int p)
 void
 close_handle(void *h)
 {
+	ELOG
 	close((intptr_t) h);
 	clear_handlers((intptr_t) h);
 }
@@ -339,6 +354,7 @@ close_handle(void *h)
 static void
 unblock_terminal(struct terminal *term)
 {
+	ELOG
 	close_handle((void *) (intptr_t) term->blocked);
 	term->blocked = -1;
 	set_handlers(term->fdin, (select_handler_T) in_term, NULL,
@@ -353,6 +369,7 @@ unblock_terminal(struct terminal *term)
 void
 assert_terminal_ptr_not_dangling(const struct terminal *suspect)
 {
+	ELOG
 	struct terminal *term;
 
 	if (suspect == NULL)
@@ -373,6 +390,7 @@ exec_on_master_terminal(struct terminal *term,
 			const char *delete_, int dlen,
 			term_exec_T fg)
 {
+	ELOG
 	int blockh = 0;
 	int param_size = plen + dlen + 2 /* 2 null char */ + 1 /* fg */;
 	char *param = (char *)fmem_alloc(param_size);
@@ -420,6 +438,7 @@ exec_on_slave_terminal( struct terminal *term,
 			const char *delete_, int dlen,
 			term_exec_T fg)
 {
+	ELOG
 	int data_size = plen + dlen + 1 /* 0 */ + 1 /* fg */ + 2 /* 2 null char */;
 	char *data = (char *)fmem_alloc(data_size);
 
@@ -437,6 +456,7 @@ void
 exec_on_terminal(struct terminal *term, const char *path,
 		 const char *delete_, term_exec_T fg)
 {
+	ELOG
 	if (path) {
 		if (!*path) return;
 	} else {
@@ -492,6 +512,7 @@ exec_on_terminal(struct terminal *term, const char *path,
 void
 exec_shell(struct terminal *term)
 {
+	ELOG
 	const char *sh;
 
 	if (!can_open_os_shell(term->environment)) return;
@@ -506,6 +527,7 @@ void
 do_terminal_function(struct terminal *term, unsigned char code,
 		     const char *data)
 {
+	ELOG
 	int data_len = strlen(data);
 	char *x_data = (char *)fmem_alloc(data_len + 1 /* code */ + 1 /* null char */);
 
@@ -520,6 +542,7 @@ do_terminal_function(struct terminal *term, unsigned char code,
 int
 set_terminal_title(struct terminal *term, char *title)
 {
+	ELOG
 	int from_cp;
 	int to_cp;
 	char *converted = NULL;
@@ -561,12 +584,14 @@ static int terminal_pipe[2];
 int
 check_terminal_pipes(void)
 {
+	ELOG
 	return c_pipe(terminal_pipe);
 }
 
 void
 close_terminal_pipes(void)
 {
+	ELOG
 	close(terminal_pipe[0]);
 	close(terminal_pipe[1]);
 }
@@ -574,6 +599,7 @@ close_terminal_pipes(void)
 struct terminal *
 attach_terminal(int in, int out, int ctl, void *info, int len)
 {
+	ELOG
 	struct terminal *term;
 
 	if (set_nonblocking_fd(terminal_pipe[0]) < 0) return NULL;

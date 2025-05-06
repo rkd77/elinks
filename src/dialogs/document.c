@@ -33,6 +33,7 @@
 void
 nowhere_box(struct terminal *term, char *title)
 {
+	ELOG
 	assert(term);
 	if_assert_failed return;
 
@@ -46,6 +47,7 @@ nowhere_box(struct terminal *term, char *title)
 static void
 add_link_info_to_string(struct string *msg, struct session *ses)
 {
+	ELOG
 	struct document_view *doc_view = current_frame(ses);
 	struct terminal *term = ses->tab->term;
 	char *a;
@@ -115,6 +117,7 @@ add_link_info_to_string(struct string *msg, struct session *ses)
 void
 link_info_dialog(struct session *ses)
 {
+	ELOG
 	struct terminal *term = ses->tab->term;
 	struct location *location = cur_loc(ses);
 	struct string msg;
@@ -137,6 +140,7 @@ link_info_dialog(struct session *ses)
 void
 document_info_dialog(struct session *ses)
 {
+	ELOG
 	struct terminal *term = ses->tab->term;
 	struct location *location = cur_loc(ses);
 	struct document_view *doc_view;
@@ -269,6 +273,7 @@ document_info_dialog(struct session *ses)
 void
 cached_header_dialog(struct session *ses, struct cache_entry *cached)
 {
+	ELOG
 	int msgbox_flags = 0;
 	char *title = N_("Header info");
 	char *headers = NULL;
@@ -338,6 +343,7 @@ display_headers:
 void
 protocol_header_dialog(struct session *ses)
 {
+	ELOG
 	if (!have_location(ses)) {
 		nowhere_box(ses->tab->term, N_("Header info"));
 		return;

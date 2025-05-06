@@ -14,6 +14,7 @@
 static const char *
 get_name_perl(struct module *xxx)
 {
+	ELOG
 	static char elperlversion[32];
 	snprintf(elperlversion, 31, "Perl %s", PERL_VERSION_STRING);
 

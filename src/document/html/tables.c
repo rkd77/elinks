@@ -36,6 +36,7 @@ struct table_frames {
 static void
 get_table_frames(struct table *table, struct table_frames *result)
 {
+	ELOG
 	assert(table && result);
 
 	if (table->border) {
@@ -52,6 +53,7 @@ get_table_frames(struct table *table, struct table_frames *result)
 int
 get_table_indent(struct html_context *html_context, struct table *table)
 {
+	ELOG
 	int width = par_elformat.width - table->real_width;
 	int indent;
 
@@ -83,6 +85,7 @@ format_cell(struct html_context *html_context, struct table *table,
             struct table_cell *cell, struct document *document,
             int x, int y, int width)
 {
+	ELOG
 	if (document) {
 		x += table->part->box.x;
 		y += table->part->box.y;
@@ -100,6 +103,7 @@ get_cell_width(struct html_context *html_context,
 	       int a, int *min, int *max,
 	       int link_num, int *new_link_num)
 {
+	ELOG
 	struct part *part;
 
 	if (min) *min = -1;
@@ -125,6 +129,7 @@ get_cell_width(struct html_context *html_context,
 static void
 get_cell_widths(struct html_context *html_context, struct table *table)
 {
+	ELOG
 	int link_num = table->part->link_num;
 
 	if (!html_context->options->table_order) {
@@ -165,6 +170,7 @@ get_cell_widths(struct html_context *html_context, struct table *table)
 static inline void
 distribute_values(int *values, int count, int wanted, int *limits)
 {
+	ELOG
 	int i;
 	int sum = 0, d, r, t;
 
@@ -208,6 +214,7 @@ again:
 static inline int
 get_vline_width(struct table *table, int col)
 {
+	ELOG
 	int width = 0;
 
 	if (!col) return -1;
@@ -225,6 +232,7 @@ get_vline_width(struct table *table, int col)
 static int
 get_hline_width(struct table *table, int row)
 {
+	ELOG
 	if (!row) return -1;
 
 	if (table->rules == TABLE_RULE_ROWS || table->rules == TABLE_RULE_ALL) {
@@ -253,6 +261,7 @@ get_hline_width(struct table *table, int row)
 static int
 get_column_widths(struct table *table)
 {
+	ELOG
 	int colspan;
 
 	if (!table->cols) return -1; /* prevents calloc(0, ...) calls */
@@ -329,6 +338,7 @@ get_column_widths(struct table *table)
 static void
 get_table_width(struct table *table)
 {
+	ELOG
 	struct table_frames table_frames;
 	int min = 0;
 	int max = 0;
@@ -358,6 +368,7 @@ static inline int
 apply_stretch_method(struct table *table, int widths[], int max_widths[],
 		     int stretch_method, int max_cols_width)
 {
+	ELOG
 	int col, total_width = 0;
 
 	for (col = 0; col < table->cols; col++) {
@@ -434,6 +445,7 @@ static inline int
 stretch_columns(struct table *table, int widths[], int max_widths[],
 		int spare_width, int total_width)
 {
+	ELOG
 	int total_spare_width = spare_width;
 
 	while (spare_width) {
@@ -479,6 +491,7 @@ stretch_columns(struct table *table, int widths[], int max_widths[],
 static void
 distribute_widths(struct table *table, int width)
 {
+	ELOG
 	int col;
 	int spare_width = width - table->min_width;
 	int stretch_method = 0;
@@ -536,6 +549,7 @@ free_widths:
 int
 get_table_cellpadding(struct html_context *html_context, struct table *table)
 {
+	ELOG
 	struct part *part = table->part;
 	int cpd_pass = 0, cpd_width = 0, cpd_last = table->cellpadding;
 	int margins = /*par_elformat.blockquote_level +*/ par_elformat.leftmargin + par_elformat.rightmargin;
@@ -578,6 +592,7 @@ again:
 void
 check_table_widths(struct html_context *html_context, struct table *table)
 {
+	ELOG
 	int col, row;
 	int colspan;
 	int width, new_width;
@@ -676,6 +691,7 @@ end:
 static void
 check_table_height(struct table *table, struct table_frames *frames, int y)
 {
+	ELOG
 #ifndef CONFIG_FASTMEM
 	/* XXX: Cannot we simply use the @yp value we just calculated
 	 * in draw_table_cells()? --pasky */
@@ -708,6 +724,7 @@ check_table_height(struct table *table, struct table_frames *frames, int y)
 static int
 get_table_caption_height(struct html_context *html_context, struct table *table)
 {
+	ELOG
 	char *start = table->caption.start;
 	char *end = table->caption.end;
 	struct part *part;
@@ -740,6 +757,7 @@ get_table_caption_height(struct html_context *html_context, struct table *table)
 static int
 get_table_real_height(struct table *table)
 {
+	ELOG
 	struct table_frames table_frames;
 	int height;
 	int row;
@@ -760,6 +778,7 @@ get_table_real_height(struct table *table)
 void
 get_table_heights(struct html_context *html_context, struct table *table)
 {
+	ELOG
 	int rowspan;
 	int col, row;
 
@@ -833,6 +852,7 @@ void
 draw_table_cell(struct table *table, int col, int row, int x, int y,
                 struct html_context *html_context)
 {
+	ELOG
 	struct table_cell *cell = CELL(table, col, row);
 	struct document *document = table->part->document;
 	struct part *part;
@@ -906,6 +926,7 @@ void
 draw_table_cells(struct table *table, int x, int y,
                  struct html_context *html_context)
 {
+	ELOG
 	int col, row;
 	int xp;
 	color_T bgcolor = par_elformat.color.background;
@@ -968,6 +989,7 @@ draw_table_cells(struct table *table, int x, int y,
 static inline int
 get_frame_pos(int a, int a_size, int b, int b_size)
 {
+	ELOG
 	assert(a >= -1 || a < a_size + 2 || b >= 0 || b <= b_size);
 	if_assert_failed return 0;
 	return a + 1 + (a_size + 2) * b;
@@ -980,6 +1002,7 @@ static inline void
 draw_frame_point(struct table *table, signed char *frame[2], int x, int y,
 		 int col, int row, struct html_context *html_context)
 {
+	ELOG
 	static border_char_T const border_chars[81] = {
 		BORDER_NONE,		BORDER_SVLINE,		BORDER_DVLINE,
 		BORDER_SHLINE,		BORDER_SDLCORNER,	BORDER_DSDLCORNER,
@@ -1041,6 +1064,7 @@ static inline void
 draw_frame_hline(struct table *table, signed char *frame[2], int x, int y,
 		 int col, int row, struct html_context *html_context)
 {
+	ELOG
 	static unsigned char const hltable[] = { ' ', BORDER_SHLINE, BORDER_DHLINE };
 	int pos = H_FRAME_POSITION(table, col, row);
 
@@ -1057,6 +1081,7 @@ static inline void
 draw_frame_vline(struct table *table, signed char *frame[2], int x, int y,
 		 int col, int row, struct html_context *html_context)
 {
+	ELOG
 	static unsigned char const vltable[] = { ' ', BORDER_SVLINE, BORDER_DVLINE };
 	int pos = V_FRAME_POSITION(table, col, row);
 
@@ -1072,6 +1097,7 @@ draw_frame_vline(struct table *table, signed char *frame[2], int x, int y,
 static inline int
 table_row_has_group(struct table *table, int row)
 {
+	ELOG
 	int col;
 
 	for (col = 0; col < table->cols; col++)
@@ -1084,6 +1110,7 @@ table_row_has_group(struct table *table, int row)
 static void
 init_table_rules(struct table *table, signed char *frame[2])
 {
+	ELOG
 	int col, row;
 
 	for (row = 0; row < table->rows; row++) for (col = 0; col < table->cols; col++) {
@@ -1127,6 +1154,7 @@ void
 draw_table_frames(struct table *table, int indent, int y,
                   struct html_context *html_context)
 {
+	ELOG
 	struct table_frames table_frames;
 	signed char *frame[2];
 	int col, row;
@@ -1206,6 +1234,7 @@ void
 draw_table_caption(struct html_context *html_context, struct table *table,
                    int x, int y)
 {
+	ELOG
 	char *start = table->caption.start;
 	char *end = table->caption.end;
 	struct part *part;
@@ -1245,6 +1274,7 @@ draw_table_caption(struct html_context *html_context, struct table *table,
 static void
 draw_table_bad_html(struct html_context *html_context, struct table *table)
 {
+	ELOG
 	int i;
 
 	for (i = 0; i < table->bad_html_size; i++) {
@@ -1267,6 +1297,7 @@ draw_table_bad_html(struct html_context *html_context, struct table *table)
 void
 distribute_table_widths(struct table *table)
 {
+	ELOG
 	int width = table->width;
 
 	if (table->min_width >= width)
@@ -1281,6 +1312,7 @@ void
 format_table(char *attr, char *html, char *eof,
 	     char **end, struct html_context *html_context)
 {
+	ELOG
 	struct part *part = html_context->part;
 	struct table *table;
 	struct node *node, *new_node;

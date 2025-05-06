@@ -21,6 +21,7 @@
 static void
 mjs_attr_get_property_name(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -56,6 +57,7 @@ mjs_attr_get_property_name(js_State *J)
 static void
 mjs_attr_get_property_value(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -91,6 +93,7 @@ mjs_attr_get_property_value(js_State *J)
 static void
 mjs_attr_toString(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -102,6 +105,7 @@ void *map_attrs;
 static
 void mjs_attr_finalizer(js_State *J, void *node)
 {
+	ELOG
 	attr_erase_from_map(map_attrs, node);
 
 #ifdef ECMASCRIPT_DEBUG
@@ -113,6 +117,7 @@ void mjs_attr_finalizer(js_State *J, void *node)
 void
 mjs_push_attr(js_State *J, void *node)
 {
+	ELOG
 	js_newobject(J);
 	{
 		js_newuserdata(J, "attr", node, mjs_attr_finalizer);

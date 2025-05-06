@@ -26,6 +26,7 @@
 static void
 mjs_dataset_finalizer(js_State *J, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -40,6 +41,7 @@ mjs_dataset_finalizer(js_State *J, void *node)
 static int
 mjs_obj_dataset_has(js_State *J, void *p, const char *property)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -78,6 +80,7 @@ mjs_obj_dataset_has(js_State *J, void *p, const char *property)
 static int
 mjs_obj_dataset_put(js_State *J, void *p, const char *property)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -125,6 +128,7 @@ mjs_obj_dataset_put(js_State *J, void *p, const char *property)
 static int
 mjs_obj_dataset_del(js_State *J, void *p, const char *property)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -159,6 +163,7 @@ mjs_obj_dataset_del(js_State *J, void *p, const char *property)
 void
 mjs_push_dataset(js_State *J, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

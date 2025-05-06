@@ -23,6 +23,7 @@ static int failed_assertions;
 static void
 mjs_console_assert(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -64,6 +65,7 @@ mjs_console_assert(js_State *J)
 static void
 mjs_console_log_common(js_State *J, const char *str, const char *log_filename)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -83,6 +85,7 @@ mjs_console_log_common(js_State *J, const char *str, const char *log_filename)
 static void
 mjs_console_log(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -94,6 +97,7 @@ mjs_console_log(js_State *J)
 static void
 mjs_console_error(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -105,6 +109,7 @@ mjs_console_error(js_State *J)
 static void
 mjs_console_warn(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -117,6 +122,7 @@ mjs_console_warn(js_State *J)
 static void
 mjs_console_exit(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -133,6 +139,7 @@ mjs_console_exit(js_State *J)
 static void
 mjs_console_toString(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -142,6 +149,7 @@ mjs_console_toString(js_State *J)
 int
 mjs_console_init(js_State *J)
 {
+	ELOG
 	js_newobject(J);
 	{
 		addmethod(J, "console.assert", mjs_console_assert, 2);

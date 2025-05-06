@@ -47,6 +47,7 @@ static void mjs_domRect_set_property_y(js_State *J);
 static void
 mjs_domRect_finalizer(js_State *J, void *val)
 {
+	ELOG
 	struct eljs_domrect *d = (struct eljs_domrect *)val;
 
 	if (d) {
@@ -57,6 +58,7 @@ mjs_domRect_finalizer(js_State *J, void *val)
 void
 mjs_push_domRect(js_State *J, int x, int y, int width, int height, int top, int right, int bottom, int left)
 {
+	ELOG
 	struct eljs_domrect *d = (struct eljs_domrect *)mem_calloc(1, sizeof(*d));
 
 	if (!d) {
@@ -89,6 +91,7 @@ mjs_push_domRect(js_State *J, int x, int y, int width, int height, int top, int 
 static void
 mjs_domRect_get_property_bottom(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -104,6 +107,7 @@ mjs_domRect_get_property_bottom(js_State *J)
 static void
 mjs_domRect_get_property_height(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -119,6 +123,7 @@ mjs_domRect_get_property_height(js_State *J)
 static void
 mjs_domRect_get_property_left(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -134,6 +139,7 @@ mjs_domRect_get_property_left(js_State *J)
 static void
 mjs_domRect_get_property_right(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -149,6 +155,7 @@ mjs_domRect_get_property_right(js_State *J)
 static void
 mjs_domRect_get_property_top(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -164,6 +171,7 @@ mjs_domRect_get_property_top(js_State *J)
 static void
 mjs_domRect_get_property_width(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -179,6 +187,7 @@ mjs_domRect_get_property_width(js_State *J)
 static void
 mjs_domRect_get_property_x(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -194,6 +203,7 @@ mjs_domRect_get_property_x(js_State *J)
 static void
 mjs_domRect_get_property_y(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -209,6 +219,7 @@ mjs_domRect_get_property_y(js_State *J)
 static void
 mjs_domRect_set_property_bottom(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -225,6 +236,7 @@ mjs_domRect_set_property_bottom(js_State *J)
 static void
 mjs_domRect_set_property_height(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -241,6 +253,7 @@ mjs_domRect_set_property_height(js_State *J)
 static void
 mjs_domRect_set_property_left(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -257,6 +270,7 @@ mjs_domRect_set_property_left(js_State *J)
 static void
 mjs_domRect_set_property_right(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -273,6 +287,7 @@ mjs_domRect_set_property_right(js_State *J)
 static void
 mjs_domRect_set_property_top(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -289,6 +304,7 @@ mjs_domRect_set_property_top(js_State *J)
 static void
 mjs_domRect_set_property_width(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -305,6 +321,7 @@ mjs_domRect_set_property_width(js_State *J)
 static void
 mjs_domRect_set_property_x(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -321,6 +338,7 @@ mjs_domRect_set_property_x(js_State *J)
 static void
 mjs_domRect_set_property_y(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

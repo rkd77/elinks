@@ -23,6 +23,7 @@
 static char *
 readFromStorage(const char *key)
 {
+	ELOG
 
 	char *val;
 
@@ -42,6 +43,7 @@ readFromStorage(const char *key)
 static void
 removeFromStorage(const char *key)
 {
+	ELOG
 	if (local_storage_ready==0)
 	{
 		db_prepare_structure(local_storage_filename);
@@ -54,6 +56,7 @@ removeFromStorage(const char *key)
 static void
 saveToStorage(const char *key, const char *val)
 {
+	ELOG
 	if (local_storage_ready==0) {
 		db_prepare_structure(local_storage_filename);
 		local_storage_ready=1;
@@ -74,6 +77,7 @@ saveToStorage(const char *key, const char *val)
 static void
 mjs_localstorage_getitem(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -97,6 +101,7 @@ mjs_localstorage_getitem(js_State *J)
 static void
 mjs_localstorage_removeitem(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -111,6 +116,7 @@ mjs_localstorage_removeitem(js_State *J)
 static void
 mjs_localstorage_setitem(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -133,6 +139,7 @@ mjs_localstorage_setitem(js_State *J)
 static void
 mjs_localstorage_toString(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -142,6 +149,7 @@ mjs_localstorage_toString(js_State *J)
 int
 mjs_localstorage_init(js_State *J)
 {
+	ELOG
 	js_newobject(J);
 	{
 		addmethod(J, "localStorage.getItem", mjs_localstorage_getitem, 1);

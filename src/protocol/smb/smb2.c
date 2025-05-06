@@ -40,6 +40,7 @@
 static const char *
 get_name_smb(struct module *module)
 {
+	ELOG
 	static char elsmbversion[32];
 	snprintf(elsmbversion, 31, "SMB(%s)", smbc_version());
 
@@ -68,6 +69,7 @@ static FILE *header_out, *data_out;
 static void
 smb_error(struct connection_state error)
 {
+	ELOG
 	if (is_system_error(error))
 		fprintf(data_out, "S%d\n", (int) error.syserr);
 	else
@@ -81,6 +83,7 @@ smb_error(struct connection_state error)
 static struct directory_entry *
 get_smb_directory_entries(int dir, struct string *prefix)
 {
+	ELOG
 	struct directory_entry *entries = NULL;
 	
 	int size = 0;
@@ -142,6 +145,7 @@ static void
 add_smb_dir_entry(struct directory_entry *entry, struct string *page,
 	      int pathlen, char *dircolor)
 {
+	ELOG
 	char *lnk = NULL;
 	struct string html_encoded_name;
 	struct string uri_encoded_name;
@@ -211,6 +215,7 @@ static void
 add_smb_dir_entries(struct directory_entry *entries, char *dirpath,
 		struct string *page)
 {
+	ELOG
 	char dircolor[8];
 	int i;
 
@@ -235,6 +240,7 @@ add_smb_dir_entries(struct directory_entry *entries, char *dirpath,
 static void
 smb_directory(int dir, struct string *prefix, struct uri *uri)
 {
+	ELOG
 	struct string buf;
 	struct directory_entry *entries;
 
@@ -258,6 +264,7 @@ static void
 smb_auth(const char *srv, const char *shr, char *wg, int wglen, char *un,
 	int unlen, char *pw, int pwlen)
 {
+	ELOG
 	/* TODO */
 }
 
@@ -266,6 +273,7 @@ smb_auth(const char *srv, const char *shr, char *wg, int wglen, char *un,
 static void
 do_smb(struct connection *conn)
 {
+	ELOG
 	struct uri *uri = conn->uri;
 	struct auth_entry *auth = find_auth(uri);
 	struct string string;
@@ -363,6 +371,7 @@ do_smb(struct connection *conn)
 static void
 prompt_username_pw(struct connection *conn)
 {
+	ELOG
 	add_auth_entry(conn->uri, "Samba", NULL, NULL, 0);
 	abort_connection(conn, connection_state(S_OK));
 }
@@ -370,6 +379,7 @@ prompt_username_pw(struct connection *conn)
 static void
 smb_got_error(struct socket *socket, struct read_buffer *rb)
 {
+	ELOG
 	int len = rb->length;
 	struct connection *conn = (struct connection *)socket->conn;
 	struct connection_state error;
@@ -412,6 +422,7 @@ smb_got_error(struct socket *socket, struct read_buffer *rb)
 static void
 smb_got_data(struct socket *socket, struct read_buffer *rb)
 {
+	ELOG
 	int len = rb->length;
 	struct connection *conn = (struct connection *)socket->conn;
 
@@ -438,6 +449,7 @@ smb_got_data(struct socket *socket, struct read_buffer *rb)
 static void
 smb_got_header(struct socket *socket, struct read_buffer *rb)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 	struct read_buffer *buf;
 	int error = 0;
@@ -505,6 +517,7 @@ smb_got_header(struct socket *socket, struct read_buffer *rb)
 static void
 close_all_fds_but_two(int header, int data)
 {
+	ELOG
 	int n;
 	int max = 1024;
 #ifdef RLIMIT_NOFILE
@@ -523,6 +536,7 @@ close_all_fds_but_two(int header, int data)
 void
 smb_protocol_handler(struct connection *conn)
 {
+	ELOG
 	int smb_pipe[2] = { -1, -1 };
 	int header_pipe[2] = { -1, -1 };
 	pid_t cpid;

@@ -23,6 +23,7 @@
 static void
 convert_to_md5_digest_hex_T(md5_digest_bin_T bin, md5_digest_hex_T hex)
 {
+	ELOG
 	int i;
 
 	for (i = 0; i < sizeof(md5_digest_bin_T); i++) {
@@ -38,6 +39,7 @@ convert_to_md5_digest_hex_T(md5_digest_bin_T bin, md5_digest_hex_T hex)
 static void
 init_cnonce_digest(md5_digest_hex_T cnonce)
 {
+	ELOG
 	md5_digest_bin_T md5;
 
 	random_nonce(md5, MD5_DIGEST_LENGTH);
@@ -51,6 +53,7 @@ init_cnonce_digest(md5_digest_hex_T cnonce)
 static void
 init_credential_digest(md5_digest_hex_T ha1, struct auth_entry *entry)
 {
+	ELOG
 	MD5_CTX MD5Ctx;
 	md5_digest_bin_T skey;
 
@@ -77,6 +80,7 @@ init_credential_digest(md5_digest_hex_T ha1, struct auth_entry *entry)
 static void
 init_uri_method_digest(md5_digest_hex_T uri_method, struct uri *uri)
 {
+	ELOG
 	MD5_CTX MD5Ctx;
 	md5_digest_bin_T ha2;
 
@@ -96,6 +100,7 @@ init_uri_method_digest(md5_digest_hex_T uri_method, struct uri *uri)
 static char *
 hexl(unsigned int nc)
 {
+	ELOG
 	static char buf[9];
 
 	snprintf(buf, 9, "%08x", nc);
@@ -106,6 +111,7 @@ static void
 init_response_digest(md5_digest_hex_T response, struct auth_entry *entry,
 		     struct uri *uri, md5_digest_hex_T cnonce)
 {
+	ELOG
 	MD5_CTX MD5Ctx;
 	md5_digest_hex_T ha1;
 	md5_digest_bin_T Ha2;
@@ -136,6 +142,7 @@ init_response_digest(md5_digest_hex_T response, struct auth_entry *entry,
 char *
 get_http_auth_digest_response(struct auth_entry *entry, struct uri *uri)
 {
+	ELOG
 	struct string string;
 	md5_digest_hex_T cnonce;
 	md5_digest_hex_T response;

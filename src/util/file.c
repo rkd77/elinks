@@ -46,6 +46,7 @@
 int
 file_exists(const char *filename)
 {
+	ELOG
 #ifdef HAVE_ACCESS
 	return access(filename, F_OK) >= 0;
 #else
@@ -58,6 +59,7 @@ file_exists(const char *filename)
 int
 file_can_read(const char *filename)
 {
+	ELOG
 #ifdef HAVE_ACCESS
 	return access(filename, R_OK) >= 0;
 #else
@@ -72,6 +74,7 @@ file_can_read(const char *filename)
 int
 file_is_dir(const char *filename)
 {
+	ELOG
 	struct stat st;
 
 	if (stat(filename, &st))
@@ -83,6 +86,7 @@ file_is_dir(const char *filename)
 char *
 get_filename_position(char *filename)
 {
+	ELOG
 	char *pos;
 
 	assert(filename);
@@ -97,6 +101,7 @@ get_filename_position(char *filename)
 char *
 expand_tilde(const char *filename)
 {
+	ELOG
 	struct string file;
 
 	if (!init_string(&file)) return NULL;
@@ -140,6 +145,7 @@ expand_tilde(const char *filename)
 char *
 get_unique_name(char *fileprefix)
 {
+	ELOG
 	char *file = fileprefix;
 	int fileprefixlen = strlen(fileprefix);
 	int memtrigger = 1;
@@ -171,6 +177,7 @@ get_unique_name(char *fileprefix)
 char *
 get_tempdir_filename(const char *name)
 {
+	ELOG
 	const char *tmpdir = getenv("TMPDIR");
 
 	if (!tmpdir || !*tmpdir) tmpdir = getenv("TMP");
@@ -184,6 +191,7 @@ get_tempdir_filename(const char *name)
 char *
 file_read_line(char *line, size_t *size, FILE *file, int *lineno)
 {
+	ELOG
 	size_t offset = 0;
 
 	if (!line) {
@@ -263,6 +271,7 @@ file_read_line(char *line, size_t *size, FILE *file, int *lineno)
 int
 safe_mkstemp(char *template_)
 {
+	ELOG
 #ifndef CONFIG_OS_WIN32
 	mode_t saved_mask = umask(S_IXUSR | S_IRWXG | S_IRWXO);
 #endif
@@ -277,6 +286,7 @@ safe_mkstemp(char *template_)
 int
 compare_dir_entries(const void *v1, const void *v2)
 {
+	ELOG
 	const struct directory_entry *d1 = (const struct directory_entry *)v1, *d2 = (const struct directory_entry *)v2;
 
 	if (d1->name[0] == '.' && d1->name[1] == '.' && !d1->name[2]) return -1;
@@ -292,6 +302,7 @@ compare_dir_entries(const void *v1, const void *v2)
 static inline int
 file_visible(char *name, int get_hidden_files, int is_root_directory)
 {
+	ELOG
 	/* Always show everything not beginning with a dot. */
 	if (name[0] != '.')
 		return 1;
@@ -314,6 +325,7 @@ file_visible(char *name, int get_hidden_files, int is_root_directory)
 struct directory_entry *
 get_directory_entries(char *dirname, int get_hidden)
 {
+	ELOG
 	struct directory_entry *entries = NULL;
 	DIR *directory;
 	int size = 0;
@@ -387,6 +399,7 @@ get_directory_entries(char *dirname, int get_hidden)
 int
 mkalldirs(const char *path)
 {
+	ELOG
 	int pos, len, ret = 0;
 	char *p;
 

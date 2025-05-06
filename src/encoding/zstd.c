@@ -41,6 +41,7 @@ struct zstd_enc_data {
 static int
 zstd_open(struct stream_encoded *stream, int fd)
 {
+	ELOG
 	struct zstd_enc_data *data = (struct zstd_enc_data *)mem_calloc(1, sizeof(*data));
 
 	stream->data = NULL;
@@ -69,6 +70,7 @@ zstd_open(struct stream_encoded *stream, int fd)
 static char *
 zstd_decode_buffer(struct stream_encoded *st, char *data, int len, int *new_len)
 {
+	ELOG
 	struct zstd_enc_data *enc_data = (struct zstd_enc_data *)st->data;
 	int error;
 
@@ -110,6 +112,7 @@ zstd_decode_buffer(struct stream_encoded *st, char *data, int len, int *new_len)
 static int
 zstd_read(struct stream_encoded *stream, char *buf, int len)
 {
+	ELOG
 	struct zstd_enc_data *data = (struct zstd_enc_data *) stream->data;
 
 	if (!data) return -1;
@@ -164,6 +167,7 @@ zstd_read(struct stream_encoded *stream, char *buf, int len)
 static void
 zstd_close(struct stream_encoded *stream)
 {
+	ELOG
 	struct zstd_enc_data *data = (struct zstd_enc_data *) stream->data;
 
 	if (data) {
@@ -182,6 +186,7 @@ zstd_close(struct stream_encoded *stream)
 const char *
 get_zstd_version(void)
 {
+	ELOG
 	return ZSTD_versionString();
 }
 

@@ -36,6 +36,7 @@ VALUE erb_module;
 void
 alert_ruby_error(struct session *ses, const char *msg)
 {
+	ELOG
 	report_scripting_error(&ruby_scripting_module, ses, msg);
 }
 
@@ -43,6 +44,7 @@ alert_ruby_error(struct session *ses, const char *msg)
 void
 erb_report_error(struct session *ses, int error)
 {
+	ELOG
 	VALUE eclass;
 	VALUE einfo;
 	char buff[MAX_STR_LEN];
@@ -113,6 +115,7 @@ erb_report_error(struct session *ses, int error)
 static VALUE
 erb_module_message(VALUE self, VALUE str)
 {
+	ELOG
 	char *message, *line_end;
 	struct terminal *term;
 
@@ -145,6 +148,7 @@ erb_module_message(VALUE self, VALUE str)
 static VALUE
 erb_stdout_p(int argc, VALUE *argv, VALUE self)
 {
+	ELOG
 	int i;
 	struct string string;
 	struct terminal *term;
@@ -199,12 +203,14 @@ erb_stdout_p(int argc, VALUE *argv, VALUE self)
 static VALUE
 erb_module_method_missing(int argc, VALUE *argv, VALUE self)
 {
+	ELOG
 	return Qnil;
 }
 
 static void
 init_erb_module(void)
 {
+	ELOG
 	char *home = get_xdg_config_home();
 
 	erb_module = rb_define_module("ELinks");
@@ -221,6 +227,7 @@ init_erb_module(void)
 void
 init_ruby(struct module *module)
 {
+	ELOG
 	char *xdg_config_home = get_xdg_config_home();
 	char *path;
 

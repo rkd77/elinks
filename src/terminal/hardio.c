@@ -31,6 +31,7 @@
 static void
 hw_debug_open(char *name, int fd, char *data, int datalen)
 {
+	ELOG
 	fprintf(stderr, "[%s (fd=%d, data=%p, datalen=%d)]\n",
 		name, fd, data, datalen);
 }
@@ -38,6 +39,7 @@ hw_debug_open(char *name, int fd, char *data, int datalen)
 static void
 hw_debug_flush()
 {
+	ELOG
 	fputs("\n\n", stderr);
 	fflush(stderr);
 }
@@ -45,6 +47,7 @@ hw_debug_flush()
 static void
 hw_debug_write(char *data, int w)
 {
+	ELOG
 	int hex = 0;
 	int i = 0;
 
@@ -98,6 +101,7 @@ hw_debug_write(char *data, int w)
 ssize_t
 hard_write(int fd, const char *data, size_t datalen)
 {
+	ELOG
 	ssize_t total = datalen;
 
 	assert(data && datalen >= 0);
@@ -128,6 +132,7 @@ hard_write(int fd, const char *data, size_t datalen)
 ssize_t
 hard_read(int fd, char *data, size_t datalen)
 {
+	ELOG
 	ssize_t total = datalen;
 
 	assert(data && datalen >= 0);

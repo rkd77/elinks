@@ -22,6 +22,7 @@
 static void
 mjs_menubar_get_property_visible(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -45,6 +46,7 @@ mjs_menubar_get_property_visible(js_State *J)
 static void
 mjs_statusbar_get_property_visible(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -68,6 +70,7 @@ mjs_statusbar_get_property_visible(js_State *J)
 static void
 mjs_menubar_set_property_visible(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -91,6 +94,7 @@ mjs_menubar_set_property_visible(js_State *J)
 static void
 mjs_statusbar_set_property_visible(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -114,18 +118,21 @@ mjs_statusbar_set_property_visible(js_State *J)
 static void
 mjs_menubar_toString(js_State *J)
 {
+	ELOG
 	js_pushstring(J, "[menubar object]");
 }
 
 static void
 mjs_statusbar_toString(js_State *J)
 {
+	ELOG
 	js_pushstring(J, "[statusbar object]");
 }
 
 static void
 mjs_menubar_init(js_State *J)
 {
+	ELOG
 	js_newobject(J);
 	{
 		addmethod(J, "menubar.toString", mjs_menubar_toString, 0);
@@ -137,6 +144,7 @@ mjs_menubar_init(js_State *J)
 static void
 mjs_statusbar_init(js_State *J)
 {
+	ELOG
 	js_newobject(J);
 	{
 		addmethod(J, "statusbar.toString", mjs_statusbar_toString, 0);
@@ -148,6 +156,7 @@ mjs_statusbar_init(js_State *J)
 int
 mjs_unibar_init(js_State *J)
 {
+	ELOG
 	mjs_menubar_init(J);
 	mjs_statusbar_init(J);
 

@@ -26,6 +26,7 @@ void
 add_dlg_text(struct dialog *dlg, char *text,
 	     format_align_T align, int bottom_pad)
 {
+	ELOG
 	struct widget *widget = &dlg->widgets[dlg->number_of_widgets++];
 
 	widget->type = WIDGET_TEXT;
@@ -44,6 +45,7 @@ static inline int
 split_line(const char *text2, int max_width, int *cells)
 #endif /* CONFIG_UTF8 */
 {
+	ELOG
 	char *text = (char *)text2;
 	char *split = text;
 #ifdef CONFIG_UTF8
@@ -161,6 +163,7 @@ static char **
 split_lines(struct widget_data *widget_data, int max_width)
 #endif /* CONFIG_UTF8 */
 {
+	ELOG
 	char *text = widget_data->widget->text;
 	char **lines = (char **) widget_data->cdata;
 	int line = 0;
@@ -218,6 +221,7 @@ dlg_format_text_do(struct dialog_data *dlg_data,
 		struct color_pair *color, format_align_T align,
 		int format_only)
 {
+	ELOG
 #ifdef CONFIG_UTF8
 	struct terminal *term = dlg_data->win->term;
 #endif
@@ -270,6 +274,7 @@ dlg_format_text(struct dialog_data *dlg_data,
 		int x, int *y, int width, int *real_width, int max_height,
 		int format_only)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	char *text = widget_data->widget->text;
 	unsigned char saved = 0;
@@ -356,6 +361,7 @@ dlg_format_text(struct dialog_data *dlg_data,
 static widget_handler_status_T
 display_text(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct window *win = dlg_data->win;
 	struct el_box box;
 	int scale, current, step;
@@ -413,6 +419,7 @@ format_and_display_text(struct widget_data *widget_data,
 			struct dialog_data *dlg_data,
 			int current)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	int y = widget_data->box.y;
 	int height = dialog_max_height(term);
@@ -441,6 +448,7 @@ format_and_display_text(struct widget_data *widget_data,
 static widget_handler_status_T
 kbd_text(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	int current = widget_data->info.text.current;
 	struct term_event *ev = dlg_data->term_event;
 
@@ -481,6 +489,7 @@ kbd_text(struct dialog_data *dlg_data, struct widget_data *widget_data)
 static widget_handler_status_T
 mouse_text(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 #ifdef CONFIG_MOUSE
 	int border = DIALOG_LEFT_BORDER + DIALOG_LEFT_INNER_BORDER;
 	int current = widget_data->info.text.current;

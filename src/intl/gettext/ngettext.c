@@ -32,5 +32,6 @@
 char *
 ngettext__(const char *msgid1, const char *msgid2, unsigned long int n)
 {
+	ELOG
 	return dcngettext__(NULL, msgid1, msgid2, n, LC_MESSAGES);
 }

@@ -22,6 +22,7 @@
 static bool
 dump_dom_element_closing(struct string *buf, dom_node *node)
 {
+	ELOG
 	dom_exception exc;
 	dom_string *node_name = NULL;
 	dom_node_type type;
@@ -63,6 +64,7 @@ dump_dom_element_closing(struct string *buf, dom_node *node)
 static bool
 dump_node_element_attribute(struct string *buf, dom_node *node)
 {
+	ELOG
 	dom_exception exc;
 	dom_string *attr = NULL;
 	dom_string *attr_value = NULL;
@@ -103,6 +105,7 @@ dump_node_element_attribute(struct string *buf, dom_node *node)
 static bool
 dump_dom_element(void *mapa, struct string *buf, dom_node *node, int depth)
 {
+	ELOG
 	dom_exception exc;
 	dom_string *node_name = NULL;
 	dom_node_type type;
@@ -182,6 +185,7 @@ dump_dom_element(void *mapa, struct string *buf, dom_node *node, int depth)
 static bool
 walk_tree(void *mapa, struct string *buf, dom_node *node, bool start, int depth)
 {
+	ELOG
 	dom_exception exc;
 	dom_node *child;
 
@@ -232,6 +236,7 @@ walk_tree(void *mapa, struct string *buf, dom_node *node, bool start, int depth)
 void
 render_source_document_cxx(struct cache_entry *cached, struct document *document, struct string *buffer)
 {
+	ELOG
 	dom_exception exc; /* returned by libdom functions */
 	dom_document *doc = NULL; /* document, loaded into libdom */
 	dom_node *root = NULL; /* root element of document */

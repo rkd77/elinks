@@ -45,6 +45,7 @@
 int
 get_ctl_handle()
 {
+	ELOG
 	return -1;
 }
 
@@ -113,6 +114,7 @@ static char* tags[MAXTAGS][MAXPARS] = {
 
 void make_up_value(void)
 {
+	ELOG
 	char c=R(2);
 
 	if (c) {
@@ -170,6 +172,7 @@ void make_up_value(void)
 
 void random_tag(void)
 {
+	ELOG
 	int tn, tc;
 
 	do
@@ -217,6 +220,7 @@ void random_tag(void)
 
 int main(int argc, char **argv)
 {
+	ELOG
 	int tc, seed;
 
 	printf("<HTML>\n");

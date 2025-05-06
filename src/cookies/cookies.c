@@ -137,6 +137,7 @@ static union option_info cookies_options[] = {
 struct cookie_server *
 get_cookie_server(char *host, int hostlen)
 {
+	ELOG
 	struct cookie_server *sort_spot = NULL;
 	struct cookie_server *cs;
 
@@ -189,6 +190,7 @@ get_cookie_server(char *host, int hostlen)
 static void
 done_cookie_server(struct cookie_server *cs)
 {
+	ELOG
 	object_unlock(cs);
 	if (is_object_used(cs)) return;
 
@@ -200,6 +202,7 @@ done_cookie_server(struct cookie_server *cs)
 void
 done_cookie(struct cookie *c)
 {
+	ELOG
 	if (c->box_item) done_listbox_item(&cookie_browser, c->box_item);
 	if (c->server) done_cookie_server(c->server);
 	mem_free_if(c->name);
@@ -216,6 +219,7 @@ done_cookie(struct cookie *c)
 void
 delete_cookie(struct cookie *c)
 {
+	ELOG
 	del_from_list(c);
 	done_cookie(c);
 }
@@ -226,6 +230,7 @@ delete_cookie(struct cookie *c)
 static int
 is_domain_security_ok(char *domain, char *server, int server_len)
 {
+	ELOG
 	int i;
 	int domain_len;
 	int need_dots;
@@ -312,6 +317,7 @@ init_cookie(char *name, char *value,
 	    char *path, char *domain,
 	    struct cookie_server *server)
 {
+	ELOG
 	struct cookie *cookie = (struct cookie *)mem_calloc(1, sizeof(*cookie));
 
 	if (!cookie || !name || !value || !path || !domain || !server) {
@@ -337,6 +343,7 @@ init_cookie(char *name, char *value,
 void
 set_cookie(struct uri *uri, char *str)
 {
+	ELOG
 	char *path, *domain;
 	struct cookie *cookie;
 	struct cookie_str cstr;
@@ -485,6 +492,7 @@ set_cookie(struct uri *uri, char *str)
 void
 accept_cookie(struct cookie *cookie)
 {
+	ELOG
 	struct c_domain *cd;
 	struct listbox_item *root = cookie->server->box_item;
 	int domain_len;
@@ -532,6 +540,7 @@ static unsigned int cookie_id = 0;
 static void
 delete_cookie(struct cookie *c)
 {
+	ELOG
 	struct c_domain *cd;
 	struct cookie *d;
 
@@ -556,6 +565,7 @@ end:
 static struct
 cookie *find_cookie_id(void *idp)
 {
+	ELOG
 	int id = (int) idp;
 	struct cookie *c;
 
@@ -570,6 +580,7 @@ cookie *find_cookie_id(void *idp)
 static void
 reject_cookie(void *idp)
 {
+	ELOG
 	struct cookie *c = find_cookie_id(idp);
 
 	if (!c)	return;
@@ -582,6 +593,7 @@ reject_cookie(void *idp)
 static void
 cookie_default(void *idp, int a)
 {
+	ELOG
 	struct cookie *c = find_cookie_id(idp);
 
 	if (c) c->server->accept = a;
@@ -591,6 +603,7 @@ cookie_default(void *idp, int a)
 static void
 accept_cookie_always(void *idp)
 {
+	ELOG
 	cookie_default(idp, 1);
 }
 
@@ -598,6 +611,7 @@ accept_cookie_always(void *idp)
 static void
 accept_cookie_never(void *idp)
 {
+	ELOG
 	cookie_default(idp, 0);
 	reject_cookie(idp);
 }
@@ -607,6 +621,7 @@ accept_cookie_never(void *idp)
 static struct string *
 send_cookies_common(struct uri *uri, unsigned int httponly)
 {
+	ELOG
 	struct c_domain *cd;
 	struct cookie *c, *next;
 	char *path = NULL;
@@ -677,12 +692,14 @@ send_cookies_common(struct uri *uri, unsigned int httponly)
 struct string *
 send_cookies(struct uri *uri)
 {
+	ELOG
 	return send_cookies_common(uri, 0);
 }
 
 struct string *
 send_cookies_js(struct uri *uri)
 {
+	ELOG
 	return send_cookies_common(uri, 1);
 }
 
@@ -790,6 +807,7 @@ load_cookies(void) {
 static void
 resave_cookies_bottom_half(void *always_null)
 {
+	ELOG
 	if (get_cookies_save() && get_cookies_resave())
 		save_cookies(NULL); /* checks cookies_dirty */
 }
@@ -801,6 +819,7 @@ resave_cookies_bottom_half(void *always_null)
 void
 set_cookies_dirty(void)
 {
+	ELOG
 	/* Do not check @cookies_dirty here.  If the previous attempt
 	 * to save cookies failed, @cookies_dirty can still be nonzero
 	 * even though @resave_cookies_bottom_half is no longer in the
@@ -890,6 +909,7 @@ save_cookies(struct terminal *term) {
 static void
 init_cookies(struct module *module)
 {
+	ELOG
 	if (get_cookies_save())
 		load_cookies();
 }
@@ -899,6 +919,7 @@ init_cookies(struct module *module)
 static void
 free_cookies_list(LIST_OF(struct cookie) *list)
 {
+	ELOG
 	while (!list_empty(*list)) {
 		struct cookie *cookie = (struct cookie *)list->next;
 
@@ -909,6 +930,7 @@ free_cookies_list(LIST_OF(struct cookie) *list)
 static void
 done_cookies(struct module *module)
 {
+	ELOG
 	free_list(c_domains);
 
 	if (!cookies_nosave && get_cookies_save())

@@ -33,6 +33,7 @@ struct erb_protect_info {
 static VALUE
 do_erb_protected_method_call(VALUE data)
 {
+	ELOG
 	struct erb_protect_info *info = (struct erb_protect_info *) data;
 	ID method_id;
 
@@ -46,6 +47,7 @@ do_erb_protected_method_call(VALUE data)
 static VALUE
 erb_protected_method_call(const char *name, int argc, VALUE *args, int *error)
 {
+	ELOG
 	struct erb_protect_info info = { name, argc, args };
 
 	return rb_protect(do_erb_protected_method_call, (VALUE) &info, error);
@@ -56,6 +58,7 @@ erb_protected_method_call(const char *name, int argc, VALUE *args, int *error)
 static enum evhook_status
 script_hook_goto_url(va_list ap, void *data)
 {
+	ELOG
 	char **url = va_arg(ap, char **);
 	struct session *ses = va_arg(ap, struct session *);
 	int error;
@@ -103,6 +106,7 @@ script_hook_goto_url(va_list ap, void *data)
 static enum evhook_status
 script_hook_follow_url(va_list ap, void *data)
 {
+	ELOG
 	char **url = va_arg(ap, char **);
 	struct session *ses = va_arg(ap, struct session *);
 	int error;
@@ -146,6 +150,7 @@ script_hook_follow_url(va_list ap, void *data)
 static enum evhook_status
 script_hook_pre_format_html(va_list ap, void *data)
 {
+	ELOG
 	struct session *ses = va_arg(ap, struct session *);
 	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
 	struct fragment *fragment = get_cache_fragment(cached);
@@ -195,6 +200,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 static enum evhook_status
 script_hook_get_proxy(va_list ap, void *data)
 {
+	ELOG
 	char **new_proxy_url = va_arg(ap, char **);
 	char *url = va_arg(ap, char *);
 	int error;
@@ -236,6 +242,7 @@ script_hook_get_proxy(va_list ap, void *data)
 static enum evhook_status
 script_hook_quit(va_list ap, void *data)
 {
+	ELOG
 	VALUE args[1];
 	int error;
 

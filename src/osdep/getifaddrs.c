@@ -90,6 +90,7 @@ static int
 getifaddrs2(struct ifaddrs **ifap,
 	    int pf, int siocgifconf, int siocgifflags, size_t ifreq_sz)
 {
+	ELOG
 	struct sockaddr sa_zero;
 	struct ifreq *ifr;
 	struct ifaddrs *start;
@@ -236,6 +237,7 @@ error_out:
 int
 getifaddrs(struct ifaddrs **ifap)
 {
+	ELOG
 	int ret = -1;
 
 	errno = ENXIO;
@@ -262,6 +264,7 @@ getifaddrs(struct ifaddrs **ifap)
 void
 freeifaddrs(struct ifaddrs *ifp)
 {
+	ELOG
 	struct ifaddrs *p, *q;
 
 	for (p = ifp; p;) {
@@ -285,6 +288,7 @@ freeifaddrs(struct ifaddrs *ifp)
 void
 print_addr(const char *s, struct sockaddr *sa)
 {
+	ELOG
 	int i;
 
 	printf("  %s=%d/", s, sa->sa_family);
@@ -302,6 +306,7 @@ print_addr(const char *s, struct sockaddr *sa)
 void
 print_ifaddrs(struct ifaddrs *x)
 {
+	ELOG
 	struct ifaddrs *p;
 
 	for (p = x; p; p = p->ifa_next) {
@@ -320,6 +325,7 @@ print_ifaddrs(struct ifaddrs *x)
 int
 main()
 {
+	ELOG
 	struct ifaddrs *a = NULL, *b;
 
 	getifaddrs2(&a, PF_INET, SIOCGIFCONF, SIOCGIFFLAGS,

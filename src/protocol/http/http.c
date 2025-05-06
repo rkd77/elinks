@@ -271,6 +271,7 @@ struct module http_protocol_module = struct_module(
 static void
 done_http(struct module *mod)
 {
+	ELOG
 	mem_free_if(proxy_auth.realm);
 	mem_free_if(proxy_auth.nonce);
 	mem_free_if(proxy_auth.opaque);
@@ -284,6 +285,7 @@ done_http(struct module *mod)
 static void
 init_accept_charset(void)
 {
+	ELOG
 	struct string ac;
 	const char *cs;
 	int i;
@@ -313,6 +315,7 @@ char *
 subst_user_agent(char *fmt, const char *version,
 		 char *sysname, char *termsize)
 {
+	ELOG
 	struct string agent;
 
 	if (!init_string(&agent)) return NULL;
@@ -365,6 +368,7 @@ subst_user_agent(char *fmt, const char *version,
 void
 add_url_to_http_string(struct string *header, struct uri *uri, uri_component_T components)
 {
+	ELOG
 	/* This block substitues spaces in URL by %20s. This is
 	 * certainly not the right place where to do it, but now the
 	 * behaviour is at least improved compared to what we had
@@ -411,6 +415,7 @@ add_url_to_http_string(struct string *header, struct uri *uri, uri_component_T c
 static int
 revstr2num(char *start, char *end, int *value)
 {
+	ELOG
 	int q = 1, val = 0;
 
 	do {
@@ -431,6 +436,7 @@ revstr2num(char *start, char *end, int *value)
 static int
 get_http_code(struct read_buffer *rb, int *code, struct http_version *version)
 {
+	ELOG
 	char *head = rb->data;
 	char *start;
 
@@ -489,6 +495,7 @@ static int
 check_http_server_bugs(struct uri *uri, struct http_connection_info *http,
 		       char *head)
 {
+	ELOG
 	char *server;
 	const char *const *s;
 	static const char *const buggy_servers[] = {
@@ -521,6 +528,7 @@ static void
 http_end_request(struct connection *conn, struct connection_state state,
 		 int notrunc)
 {
+	ELOG
 	struct http_connection_info *http;
 
 	shutdown_connection_stream(conn);
@@ -549,6 +557,7 @@ static void http_send_header(struct socket *);
 void
 http_protocol_handler(struct connection *conn)
 {
+	ELOG
 #if defined(CONFIG_LIBCURL)
 	if (get_opt_bool("protocol.http.use_curl", NULL)) {
 		http_curl_protocol_handler(conn);
@@ -568,6 +577,7 @@ http_protocol_handler(struct connection *conn)
 void
 proxy_protocol_handler(struct connection *conn)
 {
+	ELOG
 	http_protocol_handler(conn);
 }
 
@@ -581,6 +591,7 @@ proxy_protocol_handler(struct connection *conn)
 static void
 done_http_connection(struct connection *conn)
 {
+	ELOG
 	struct http_connection_info *http = (struct http_connection_info *)conn->info;
 
 	done_http_post(&http->post);
@@ -592,6 +603,7 @@ done_http_connection(struct connection *conn)
 struct http_connection_info *
 init_http_connection_info(struct connection *conn, int major, int minor, int close)
 {
+	ELOG
 	struct http_connection_info *http;
 
 	http = (struct http_connection_info *)mem_calloc(1, sizeof(*http));
@@ -631,6 +643,7 @@ init_http_connection_info(struct connection *conn, int major, int minor, int clo
 static void
 accept_encoding_header(struct string *header)
 {
+	ELOG
 #if defined(CONFIG_GZIP) || defined(CONFIG_BZIP2) || defined(CONFIG_LZMA) || defined(CONFIG_BROTLI) || defined(CONFIG_ZSTD)
 	int comma = 0;
 
@@ -672,6 +685,7 @@ accept_encoding_header(struct string *header)
 static void
 send_more_post_data(struct socket *socket)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 	struct http_connection_info *http = (struct http_connection_info *)conn->info;
 	char buffer[POST_BUFFER_SIZE];
@@ -704,6 +718,7 @@ send_more_post_data(struct socket *socket)
 static void
 http_send_header(struct socket *socket)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 	struct http_connection_info *http;
 	int trace = get_opt_bool("protocol.http.trace", NULL);
@@ -1115,6 +1130,7 @@ static char *
 decompress_data(struct connection *conn, char *data, int len,
 		int *new_len)
 {
+	ELOG
 	*new_len = 0; /* new_len must be zero if we would ever return NULL */
 
 	if (!conn->stream) {
@@ -1128,6 +1144,7 @@ decompress_data(struct connection *conn, char *data, int len,
 static int
 is_line_in_buffer(struct read_buffer *rb)
 {
+	ELOG
 	int l;
 
 	for (l = 0; l < rb->length; l++) {
@@ -1154,6 +1171,7 @@ static void
 read_more_http_data(struct connection *conn, struct read_buffer *rb,
                     int already_got_anything)
 {
+	ELOG
 	struct connection_state state = already_got_anything
 		? connection_state(S_TRANS) : conn->state;
 
@@ -1163,6 +1181,7 @@ read_more_http_data(struct connection *conn, struct read_buffer *rb,
 static void
 read_http_data_done(struct connection *conn)
 {
+	ELOG
 	struct http_connection_info *http = (struct http_connection_info *)conn->info;
 
 	/* There's no content but an error so just print
@@ -1191,6 +1210,7 @@ read_http_data_done(struct connection *conn)
 static int
 read_chunked_http_data(struct connection *conn, struct read_buffer *rb)
 {
+	ELOG
 	struct http_connection_info *http = (struct http_connection_info *)conn->info;
 	int total_data_len = 0;
 
@@ -1312,6 +1332,7 @@ read_chunked_http_data(struct connection *conn, struct read_buffer *rb)
 static int
 read_normal_http_data(struct connection *conn, struct read_buffer *rb)
 {
+	ELOG
 	struct http_connection_info *http = (struct http_connection_info *)conn->info;
 	int data_len;
 	int len = rb->length;
@@ -1361,6 +1382,7 @@ finish:
 static void
 read_http_data(struct socket *socket, struct read_buffer *rb)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 	struct http_connection_info *http = (struct http_connection_info *)conn->info;
 	int ret;
@@ -1404,6 +1426,7 @@ read_http_data(struct socket *socket, struct read_buffer *rb)
 static int
 get_header(struct read_buffer *rb)
 {
+	ELOG
 	int i;
 
 	/* XXX: We will have to do some guess about whether an HTTP header is
@@ -1441,6 +1464,7 @@ static int
 check_http_authentication(struct connection *conn, struct uri *uri,
 		char *header, const char *header_field)
 {
+	ELOG
 	char *str, *d;
 	int ret = 0;
 
@@ -1492,6 +1516,7 @@ check_http_authentication(struct connection *conn, struct uri *uri,
 void
 http_got_header(struct socket *socket, struct read_buffer *rb)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 	struct http_connection_info *http = (struct http_connection_info *)conn->info;
 	char *head;

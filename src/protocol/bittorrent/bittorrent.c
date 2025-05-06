@@ -223,6 +223,7 @@ static union option_info bittorrent_protocol_options[] = {
 uint32_t
 get_bittorrent_peerwire_max_message_length(void)
 {
+	ELOG
 	return get_opt_int_tree(&bittorrent_protocol_options[0].option,
 				"peerwire.max_message_length", NULL);
 }
@@ -230,6 +231,7 @@ get_bittorrent_peerwire_max_message_length(void)
 uint32_t
 get_bittorrent_peerwire_max_request_length(void)
 {
+	ELOG
 	return get_opt_int_tree(&bittorrent_protocol_options[0].option,
 				"peerwire.max_request_length", NULL);
 }
@@ -252,6 +254,7 @@ struct bittorrent_selection_info {
 int *
 get_bittorrent_selection(struct uri *uri, size_t size)
 {
+	ELOG
 	struct bittorrent_selection_info *info;
 
 	foreach (info, bittorrent_selections) {
@@ -281,6 +284,7 @@ get_bittorrent_selection(struct uri *uri, size_t size)
 void
 add_bittorrent_selection(struct uri *uri, int *selection, size_t size)
 {
+	ELOG
 	struct bittorrent_selection_info *info;
 	int *duplicate;
 
@@ -305,6 +309,7 @@ void
 add_bittorrent_message(struct uri *uri, struct connection_state state,
 		       struct bittorrent_const_string *string)
 {
+	ELOG
 	struct bittorrent_message *message;
 	int length = string ? string->length : 0;
 
@@ -323,6 +328,7 @@ add_bittorrent_message(struct uri *uri, struct connection_state state,
 static void
 done_bittorrent(struct module *module)
 {
+	ELOG
 	struct bittorrent_message *message, *message_next;
 	struct bittorrent_selection_info *info, *info_next;
 

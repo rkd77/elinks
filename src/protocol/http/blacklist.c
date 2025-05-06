@@ -29,6 +29,7 @@ static INIT_LIST_OF(struct blacklist_entry, blacklist);
 static struct blacklist_entry *
 get_blacklist_entry(struct uri *uri)
 {
+	ELOG
 	struct blacklist_entry *entry;
 
 	if (uri->protocol != PROTOCOL_MAILCAP) {
@@ -46,6 +47,7 @@ get_blacklist_entry(struct uri *uri)
 void
 add_blacklist_entry(struct uri *uri, blacklist_flags_T flags)
 {
+	ELOG
 	struct blacklist_entry *entry = get_blacklist_entry(uri);
 
 	if (entry) {
@@ -64,6 +66,7 @@ add_blacklist_entry(struct uri *uri, blacklist_flags_T flags)
 void
 del_blacklist_entry(struct uri *uri, blacklist_flags_T flags)
 {
+	ELOG
 	struct blacklist_entry *entry = get_blacklist_entry(uri);
 
 	if (!entry) return;
@@ -78,6 +81,7 @@ del_blacklist_entry(struct uri *uri, blacklist_flags_T flags)
 blacklist_flags_T
 get_blacklist_flags(struct uri *uri)
 {
+	ELOG
 	struct blacklist_entry *entry = get_blacklist_entry(uri);
 
 	return entry ? entry->flags : SERVER_BLACKLIST_NONE;
@@ -86,5 +90,6 @@ get_blacklist_flags(struct uri *uri)
 void
 free_blacklist(void)
 {
+	ELOG
 	free_list(blacklist);
 }

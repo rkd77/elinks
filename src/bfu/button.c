@@ -47,6 +47,7 @@ add_dlg_button_do(struct dialog *dlg, char *text, int flags,
 		  done_handler_T *done, void *done_data)
 #endif
 {
+	ELOG
 	int textlen = strlen(text);
 	struct widget *widget = &dlg->widgets[dlg->number_of_widgets++];
 
@@ -87,6 +88,7 @@ buttons_width(struct widget_data *widget_data, int n,
 	      int *minwidth, int *maxwidth)
 #endif /* CONFIG_UTF8 */
 {
+	ELOG
 	int maxw = -BUTTON_HSPACING;
 #ifdef CONFIG_UTF8
 	int button_lr_len = utf8_ptr2cells(BUTTON_LEFT, NULL)
@@ -119,6 +121,7 @@ dlg_format_buttons(struct dialog_data *dlg_data,
 		   struct widget_data *widget_data, int n,
 		   int x, int *y, int w, int *rw, format_align_T align, int format_only)
 {
+	ELOG
 #ifdef CONFIG_UTF8
 	struct terminal *term = dlg_data->win->term;
 #endif
@@ -183,6 +186,7 @@ dlg_format_buttons(struct dialog_data *dlg_data,
 static widget_handler_status_T
 display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	struct color_pair *color, *shortcut_color;
 	struct el_box *pos = &widget_data->box;
@@ -310,6 +314,7 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 static widget_handler_status_T
 mouse_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	struct term_event *ev = dlg_data->term_event;
 
@@ -332,6 +337,7 @@ mouse_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 static widget_handler_status_T
 select_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	return widget_data->widget->handler(dlg_data, widget_data);
 }
 

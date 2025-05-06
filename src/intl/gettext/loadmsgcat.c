@@ -96,6 +96,7 @@ static struct expression germanic_plural;
 static void
 init_germanic_plural(void)
 {
+	ELOG
 	if (plone.val.num == 0) {
 		plvar.nargs = 0;
 		plvar.operation = var;
@@ -120,6 +121,7 @@ _nl_init_domain_conv(struct loaded_l10nfile *domain_file,
 		     struct loaded_domain *domain,
 		     struct binding *domainbinding)
 {
+	ELOG
 	/* Find out about the character set the file is encoded with.
 	   This can be found (in textual form) in the entry "".  If this
 	   entry does not exist or if this does not contain the `charset='
@@ -200,6 +202,7 @@ _nl_init_domain_conv(struct loaded_l10nfile *domain_file,
 void
 _nl_free_domain_conv(struct loaded_domain *domain)
 {
+	ELOG
 	if (domain->conv_tab != NULL && domain->conv_tab != (char **) -1)
 		free(domain->conv_tab);
 #if HAVE_ICONV
@@ -216,6 +219,7 @@ _nl_free_domain_conv(struct loaded_domain *domain)
 static struct string *
 add_filename_to_string(struct string *str, struct loaded_l10nfile *domain_file)
 {
+	ELOG
 	char *sep;
 	size_t dirnamelen;
 
@@ -248,6 +252,7 @@ void
 _nl_load_domain(struct loaded_l10nfile *domain_file,
 		struct binding *domainbinding)
 {
+	ELOG
 	int fd = -1;
 	size_t size;
 	struct stat st;
@@ -447,6 +452,7 @@ no_plural:
 void
 _nl_unload_domain(struct loaded_domain *domain)
 {
+	ELOG
 	if (domain->plural != &germanic_plural)
 		__gettext_free_exp(domain->plural);
 

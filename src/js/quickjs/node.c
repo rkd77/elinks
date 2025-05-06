@@ -62,6 +62,7 @@ static JSClassDef node_class = {
 JSValue
 getNode(JSContext *ctx, void *n)
 {
+	ELOG
 	dom_node *node = (dom_node *)n;
 	dom_node_type typ;
 	dom_exception exc = dom_node_get_node_type(node, &typ);
@@ -92,6 +93,7 @@ getNode(JSContext *ctx, void *n)
 static JSValue
 node_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -101,6 +103,7 @@ node_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst
 static void
 JS_NewGlobalCConstructor2(JSContext *ctx, JSValue func_obj, const char *name, JSValueConst proto)
 {
+	ELOG
 	REF_JS(func_obj);
 	REF_JS(proto);
 
@@ -116,6 +119,7 @@ JS_NewGlobalCConstructor2(JSContext *ctx, JSValue func_obj, const char *name, JS
 static JSValueConst
 JS_NewGlobalCConstructor(JSContext *ctx, const char *name, JSCFunction *func, int length, JSValueConst proto)
 {
+	ELOG
 	JSValue func_obj;
 	func_obj = JS_NewCFunction2(ctx, func, name, length, JS_CFUNC_constructor_or_func, 0);
 	REF_JS(func_obj);
@@ -129,6 +133,7 @@ JS_NewGlobalCConstructor(JSContext *ctx, const char *name, JSCFunction *func, in
 int
 js_node_init(JSContext *ctx)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

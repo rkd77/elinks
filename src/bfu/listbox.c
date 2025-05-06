@@ -26,6 +26,7 @@
 void
 add_dlg_listbox(struct dialog *dlg, void *box_data)
 {
+	ELOG
 	struct widget *widget = &dlg->widgets[dlg->number_of_widgets++];
 
 	widget->type = WIDGET_LISTBOX;
@@ -35,6 +36,7 @@ add_dlg_listbox(struct dialog *dlg, void *box_data)
 struct listbox_data *
 get_listbox_widget_data(struct widget_data *widget_data)
 {
+	ELOG
 	assert(widget_data->widget->type == WIDGET_LISTBOX);
 	return ((struct listbox_data *) widget_data->widget->data);
 }
@@ -46,6 +48,7 @@ dlg_format_listbox(struct dialog_data *dlg_data,
 	           int x, int *y, int w, int max_height, int *rw,
 	           format_align_T align, int format_only)
 {
+	ELOG
 	int min, optimal_h, height;
 
 	/* Height bussiness follows: */
@@ -122,6 +125,7 @@ traverse_listbox_items_list(struct listbox_item *item, struct listbox_data *box,
 			    int (*fn)(struct listbox_item *, void *, int *),
 			    void *d)
 {
+	ELOG
 	struct listbox_item *visible_item = item;
 	int levmove = 0;
 	int stop = 0;
@@ -258,6 +262,7 @@ done_down:
 static int
 calc_dist(struct listbox_item *item, void *data_, int *offset)
 {
+	ELOG
 	int *item_offset = (int *)data_;
 
 	if (*offset < 0)
@@ -273,6 +278,7 @@ calc_dist(struct listbox_item *item, void *data_, int *offset)
 void
 listbox_sel_move(struct widget_data *widget_data, int dist)
 {
+	ELOG
 	struct listbox_data *box = get_listbox_widget_data(widget_data);
 
 	if (list_empty(*box->items)) return;
@@ -313,6 +319,7 @@ listbox_sel_move(struct widget_data *widget_data, int dist)
 static int
 test_search(struct listbox_item *item, void *data_, int *offset)
 {
+	ELOG
 	struct listbox_context *listbox_context = (struct listbox_context *)data_;
 
 	if (item != listbox_context->item)
@@ -326,6 +333,7 @@ test_search(struct listbox_item *item, void *data_, int *offset)
 static int
 listbox_item_offset(struct listbox_data *box, struct listbox_item *item)
 {
+	ELOG
 	struct listbox_context ctx;
 
 	memset(&ctx, 0, sizeof(ctx));
@@ -340,6 +348,7 @@ listbox_item_offset(struct listbox_data *box, struct listbox_item *item)
 void
 listbox_sel(struct widget_data *widget_data, struct listbox_item *item)
 {
+	ELOG
 	struct listbox_data *box = get_listbox_widget_data(widget_data);
 
 	listbox_sel_move(widget_data,
@@ -352,6 +361,7 @@ listbox_sel(struct widget_data *widget_data, struct listbox_item *item)
 static int
 display_listbox_item(struct listbox_item *item, void *data_, int *offset)
 {
+	ELOG
 	struct listbox_context *data = (struct listbox_context *)data_;
 	int len; /* Length of the current text field. */
 	struct color_pair *tree_color, *text_color;
@@ -499,6 +509,7 @@ display_listbox_item(struct listbox_item *item, void *data_, int *offset)
 static widget_handler_status_T
 display_listbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_data *box = get_listbox_widget_data(widget_data);
 	struct listbox_context data;
@@ -523,6 +534,7 @@ display_listbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 static int
 check_old_state(struct listbox_item *item, void *info_, int *offset)
 {
+	ELOG
 	struct listbox_data *box = (struct listbox_data *)info_;
 
 	if (box->sel == item)
@@ -539,6 +551,7 @@ check_old_state(struct listbox_item *item, void *info_, int *offset)
 static widget_handler_status_T
 init_listbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct hierbox_browser *browser = (struct hierbox_browser *)dlg_data->dlg->udata2;
 	struct listbox_data *box = get_listbox_widget_data(widget_data);
 
@@ -565,6 +578,7 @@ init_listbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 static widget_handler_status_T
 mouse_listbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 #ifdef CONFIG_MOUSE
 	struct listbox_data *box = get_listbox_widget_data(widget_data);
 	struct term_event *ev = dlg_data->term_event;
@@ -625,6 +639,7 @@ static widget_handler_status_T
 do_kbd_listbox_action(action_id_T action_id, struct dialog_data *dlg_data,
 		      struct widget_data *widget_data)
 {
+	ELOG
 	struct widget_data *dlg_item = dlg_data->widgets_data;
 
 	switch (action_id) {
@@ -720,6 +735,7 @@ do_kbd_listbox_action(action_id_T action_id, struct dialog_data *dlg_data,
 static widget_handler_status_T
 kbd_listbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct term_event *ev = dlg_data->term_event;
 
 	/* Not a pure listbox, but you're not supposed to use this outside of

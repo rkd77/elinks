@@ -80,6 +80,7 @@
 static const char *
 get_name_mujs(struct module *xxx)
 {
+	ELOG
 	static char mujs_version[32];
 	snprintf(mujs_version, 31, "MuJS %d.%d.%d", JS_VERSION_MAJOR, JS_VERSION_MINOR, JS_VERSION_PATCH);
 
@@ -89,6 +90,7 @@ get_name_mujs(struct module *xxx)
 static void
 mujs_init(struct module *module)
 {
+	ELOG
 	map_attrs = attr_create_new_map();
 	map_attributes = attr_create_new_map();
 	map_rev_attributes = attr_create_new_map();
@@ -112,6 +114,7 @@ mujs_init(struct module *module)
 static void
 mujs_done(struct module *xxx)
 {
+	ELOG
 	attr_delete_map(map_attrs);
 	attr_delete_map(map_attributes);
 	attr_delete_map(map_rev_attributes);
@@ -137,6 +140,7 @@ mujs_done(struct module *xxx)
 void *
 mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 {
+	ELOG
 	assert(interpreter);
 
 #ifdef CONFIG_MEMCOUNT
@@ -229,6 +233,7 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 void
 mujs_put_interpreter(struct ecmascript_interpreter *interpreter)
 {
+	ELOG
 	assert(interpreter);
 	js_State *J = (js_State *)interpreter->backend_data;
 #ifdef ECMASCRIPT_DEBUG
@@ -244,6 +249,7 @@ fprintf(stderr, "Before js_freestate: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 error_reporter(struct ecmascript_interpreter *interpreter, JSContext *ctx)
 {
+	ELOG
 	struct session *ses = interpreter->vs->doc_view->session;
 	struct terminal *term;
 	struct string msg;
@@ -284,6 +290,7 @@ void
 mujs_eval(struct ecmascript_interpreter *interpreter,
                   struct string *code, struct string *ret)
 {
+	ELOG
 	assert(interpreter);
 
 	js_State *J = (js_State *)interpreter->backend_data;
@@ -345,6 +352,7 @@ void
 mujs_call_function(struct ecmascript_interpreter *interpreter,
                   const char *fun, struct string *ret)
 {
+	ELOG
 	js_State *J = (js_State *)interpreter->backend_data;
 	interpreter->ret = ret;
 	js_getregistry(J, fun); /* retrieve the js function from the registry */
@@ -357,6 +365,7 @@ char *
 mujs_eval_stringback(struct ecmascript_interpreter *interpreter,
 			     struct string *code)
 {
+	ELOG
 	char *ret = NULL;
 	assert(interpreter);
 
@@ -417,6 +426,7 @@ int
 mujs_eval_boolback(struct ecmascript_interpreter *interpreter,
 			   struct string *code)
 {
+	ELOG
 	int ret = 0;
 	assert(interpreter);
 
@@ -470,6 +480,7 @@ mujs_eval_boolback(struct ecmascript_interpreter *interpreter,
 void
 addmethod(js_State *J, const char *name, js_CFunction fun, int n)
 {
+	ELOG
 	const char *realname = strrchr(name, '.');
 	realname = realname ? realname + 1 : name;
 	js_newcfunction(J, fun, name, n);
@@ -478,6 +489,7 @@ addmethod(js_State *J, const char *name, js_CFunction fun, int n)
 
 void addproperty(js_State *J, const char *name, js_CFunction getfun, js_CFunction setfun)
 {
+	ELOG
 	const char *realname = strrchr(name, '.');
 	realname = realname ? realname + 1 : name;
 	js_newcfunction(J, getfun, name, 0);

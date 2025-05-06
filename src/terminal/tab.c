@@ -31,6 +31,7 @@
 struct window *
 init_tab(struct terminal *term, void *data, window_handler_T handler)
 {
+	ELOG
 	struct window *win = (struct window *)mem_calloc(1, sizeof(*win));
 	struct window *pos;
 
@@ -66,6 +67,7 @@ found_pos:
 NONSTATIC_INLINE int
 tabs_are_on_top(struct terminal *term)
 {
+	ELOG
 	if (list_empty(term->windows))
 		return 0;
 
@@ -76,6 +78,7 @@ tabs_are_on_top(struct terminal *term)
 NONSTATIC_INLINE int
 number_of_tabs(struct terminal *term)
 {
+	ELOG
 	int result = 0;
 	struct window *win;
 
@@ -89,6 +92,7 @@ number_of_tabs(struct terminal *term)
 int
 get_tab_number(struct window *window)
 {
+	ELOG
 	struct terminal *term = window->term;
 	struct window *win;
 	int current = 0;
@@ -109,6 +113,7 @@ get_tab_number(struct window *window)
 struct window *
 get_tab_by_number(struct terminal *term, int num)
 {
+	ELOG
 	struct window *win = NULL;
 
 	foreachback_tab (win, term->windows) {
@@ -129,6 +134,7 @@ get_tab_by_number(struct terminal *term, int num)
 int
 get_tab_number_by_xpos(struct terminal *term, int xpos)
 {
+	ELOG
 	int num = 0;
 	struct window *win = NULL;
 
@@ -147,6 +153,7 @@ get_tab_number_by_xpos(struct terminal *term, int xpos)
 void
 switch_to_tab(struct terminal *term, int tab, int tabs_count)
 {
+	ELOG
 	if (tabs_count < 0) tabs_count = number_of_tabs(term);
 
 	if (tabs_count > 1) {
@@ -168,6 +175,7 @@ switch_to_tab(struct terminal *term, int tab, int tabs_count)
 void
 switch_current_tab(struct session *ses, int direction)
 {
+	ELOG
 	struct terminal *term = ses->tab->term;
 	int tabs_count = number_of_tabs(term);
 	int count;
@@ -184,6 +192,7 @@ switch_current_tab(struct session *ses, int direction)
 static void
 really_close_tab(void *ses_)
 {
+	ELOG
 	struct session *ses = (struct session *)ses_;
 	struct terminal *term = ses->tab->term;
 	struct window *current_tab = get_current_tab(term);
@@ -208,6 +217,7 @@ really_close_tab(void *ses_)
 void
 close_tab(struct terminal *term, struct session *ses)
 {
+	ELOG
 	/* [gettext_accelerator_context(close_tab)] */
 	int tabs_count = number_of_tabs(term);
 
@@ -232,6 +242,7 @@ close_tab(struct terminal *term, struct session *ses)
 static void
 really_close_tabs(void *ses_)
 {
+	ELOG
 	struct session *ses = (struct session *)ses_;
 	struct terminal *term = ses->tab->term;
 	struct window *current_tab = get_current_tab(term);
@@ -256,6 +267,7 @@ really_close_tabs(void *ses_)
 void
 close_all_tabs_but_current(struct session *ses)
 {
+	ELOG
 	/* [gettext_accelerator_context(close_all_tabs_but_current)] */
 	assert(ses);
 	if_assert_failed return;
@@ -278,6 +290,7 @@ void
 open_uri_in_new_tab(struct session *ses, struct uri *uri, int in_background,
                     int based)
 {
+	ELOG
 	assert(ses);
 	/* @based means whether the current @ses location will be preloaded
 	 * in the tab. */
@@ -287,6 +300,7 @@ open_uri_in_new_tab(struct session *ses, struct uri *uri, int in_background,
 void
 delayed_open(void *data)
 {
+	ELOG
 	struct delayed_open *deo = (struct delayed_open *)data;
 
 	assert(deo);
@@ -298,6 +312,7 @@ delayed_open(void *data)
 void
 open_current_link_in_new_tab(struct session *ses, int in_background)
 {
+	ELOG
 	struct document_view *doc_view = current_frame(ses);
 	struct uri *uri = NULL;
 	struct link *link;
@@ -315,6 +330,7 @@ open_current_link_in_new_tab(struct session *ses, int in_background)
 void
 move_current_tab(struct session *ses, int direction)
 {
+	ELOG
 	struct terminal *term = ses->tab->term;
 	int tabs = number_of_tabs(term);
 	struct window *current_tab = get_current_tab(term);

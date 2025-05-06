@@ -39,6 +39,7 @@ extern struct term_event last_event;
 static void
 mjs_keyboardEvent_finalizer(js_State *J, void *val)
 {
+	ELOG
 	dom_keyboard_event *event = (dom_keyboard_event *)val;
 
 	if (event) {
@@ -49,6 +50,7 @@ mjs_keyboardEvent_finalizer(js_State *J, void *val)
 void
 mjs_push_keyboardEvent(js_State *J, struct term_event *ev, const char *type_)
 {
+	ELOG
 	dom_keyboard_event *event = NULL;
 	dom_exception exc = dom_keyboard_event_create(&event);
 
@@ -91,6 +93,7 @@ mjs_push_keyboardEvent(js_State *J, struct term_event *ev, const char *type_)
 static void
 mjs_keyboardEvent_get_property_bubbles(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -108,6 +111,7 @@ mjs_keyboardEvent_get_property_bubbles(js_State *J)
 static void
 mjs_keyboardEvent_get_property_cancelable(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -126,6 +130,7 @@ mjs_keyboardEvent_get_property_cancelable(js_State *J)
 static void
 mjs_keyboardEvent_get_property_composed(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -142,6 +147,7 @@ mjs_keyboardEvent_get_property_composed(js_State *J)
 static void
 mjs_keyboardEvent_get_property_defaultPrevented(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -159,6 +165,7 @@ mjs_keyboardEvent_get_property_defaultPrevented(js_State *J)
 static void
 mjs_keyboardEvent_get_property_key(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -182,6 +189,7 @@ mjs_keyboardEvent_get_property_key(js_State *J)
 static void
 mjs_keyboardEvent_get_property_keyCode(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -206,6 +214,7 @@ mjs_keyboardEvent_get_property_keyCode(js_State *J)
 static void
 mjs_keyboardEvent_get_property_code(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -229,6 +238,7 @@ mjs_keyboardEvent_get_property_code(js_State *J)
 static void
 mjs_keyboardEvent_get_property_target(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -255,6 +265,7 @@ mjs_keyboardEvent_get_property_target(js_State *J)
 static void
 mjs_keyboardEvent_get_property_type(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -278,6 +289,7 @@ mjs_keyboardEvent_get_property_type(js_State *J)
 static void
 mjs_keyboardEvent_preventDefault(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -294,6 +306,7 @@ mjs_keyboardEvent_preventDefault(js_State *J)
 static void
 mjs_keyboardEvent_fun(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -303,6 +316,7 @@ mjs_keyboardEvent_fun(js_State *J)
 static void
 mjs_keyboardEvent_constructor(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -373,6 +387,7 @@ mjs_keyboardEvent_constructor(js_State *J)
 int
 mjs_keyboardEvent_init(js_State *J)
 {
+	ELOG
 	js_pushglobal(J);
 	js_newcconstructor(J, mjs_keyboardEvent_fun, mjs_keyboardEvent_constructor, "KeyboardEvent", 0);
 	js_defglobal(J, "KeyboardEvent", JS_DONTENUM);

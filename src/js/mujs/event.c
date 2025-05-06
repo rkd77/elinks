@@ -31,6 +31,7 @@ static void mjs_event_preventDefault(js_State *J);
 static void
 mjs_event_finalizer(js_State *J, void *val)
 {
+	ELOG
 	dom_event *event = (dom_event *)val;
 
 	if (event) {
@@ -41,6 +42,7 @@ mjs_event_finalizer(js_State *J, void *val)
 void
 mjs_push_event(js_State *J, void *eve)
 {
+	ELOG
 	dom_event *event = (dom_event *)eve;
 
 	if (!event) {
@@ -65,6 +67,7 @@ mjs_push_event(js_State *J, void *eve)
 static void
 mjs_event_get_property_bubbles(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -82,6 +85,7 @@ mjs_event_get_property_bubbles(js_State *J)
 static void
 mjs_event_get_property_cancelable(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -100,6 +104,7 @@ mjs_event_get_property_cancelable(js_State *J)
 static void
 mjs_event_get_property_composed(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -116,6 +121,7 @@ mjs_event_get_property_composed(js_State *J)
 static void
 mjs_event_get_property_defaultPrevented(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -133,6 +139,7 @@ mjs_event_get_property_defaultPrevented(js_State *J)
 static void
 mjs_event_get_property_target(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -159,6 +166,7 @@ mjs_event_get_property_target(js_State *J)
 static void
 mjs_event_get_property_type(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -182,6 +190,7 @@ mjs_event_get_property_type(js_State *J)
 static void
 mjs_event_preventDefault(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -198,6 +207,7 @@ mjs_event_preventDefault(js_State *J)
 static void
 mjs_event_fun(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -207,6 +217,7 @@ mjs_event_fun(js_State *J)
 static void
 mjs_event_constructor(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -249,6 +260,7 @@ mjs_event_constructor(js_State *J)
 int
 mjs_event_init(js_State *J)
 {
+	ELOG
 	js_pushglobal(J);
 	js_newcconstructor(J, mjs_event_fun, mjs_event_constructor, "Event", 0);
 	js_defglobal(J, "Event", JS_DONTENUM);

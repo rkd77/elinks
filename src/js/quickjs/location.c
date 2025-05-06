@@ -28,6 +28,7 @@ static JSClassID js_location_class_id;
 static JSValue
 js_location_get_property_hash(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -66,6 +67,7 @@ js_location_get_property_hash(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_location_get_property_host(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -103,6 +105,7 @@ js_location_get_property_host(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_location_get_property_hostname(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -140,6 +143,7 @@ js_location_get_property_hostname(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_location_get_property_href(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -177,6 +181,7 @@ js_location_get_property_href(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_location_get_property_origin(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -214,6 +219,7 @@ js_location_get_property_origin(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_location_get_property_pathname(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -252,6 +258,7 @@ js_location_get_property_pathname(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_location_get_property_port(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -288,6 +295,7 @@ js_location_get_property_port(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_location_get_property_protocol(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -329,6 +337,7 @@ js_location_get_property_protocol(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_location_get_property_search(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -368,6 +377,7 @@ js_location_get_property_search(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_location_set_property_hash(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -403,6 +413,7 @@ js_location_set_property_hash(JSContext *ctx, JSValueConst this_val, JSValue val
 static JSValue
 js_location_set_property_host(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -438,6 +449,7 @@ js_location_set_property_host(JSContext *ctx, JSValueConst this_val, JSValue val
 static JSValue
 js_location_set_property_hostname(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -473,6 +485,7 @@ js_location_set_property_hostname(JSContext *ctx, JSValueConst this_val, JSValue
 static JSValue
 js_location_set_property_href(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -508,6 +521,7 @@ js_location_set_property_href(JSContext *ctx, JSValueConst this_val, JSValue val
 static JSValue
 js_location_set_property_pathname(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -543,6 +557,7 @@ js_location_set_property_pathname(JSContext *ctx, JSValueConst this_val, JSValue
 static JSValue
 js_location_set_property_port(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -578,6 +593,7 @@ js_location_set_property_port(JSContext *ctx, JSValueConst this_val, JSValue val
 static JSValue
 js_location_set_property_protocol(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -613,6 +629,7 @@ js_location_set_property_protocol(JSContext *ctx, JSValueConst this_val, JSValue
 static JSValue
 js_location_set_property_search(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -648,6 +665,7 @@ js_location_set_property_search(JSContext *ctx, JSValueConst this_val, JSValue v
 static JSValue
 js_location_assign(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -680,6 +698,7 @@ js_location_assign(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 static JSValue
 js_location_reload(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -706,6 +725,7 @@ js_location_reload(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 static JSValue
 js_location_replace(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -748,6 +768,7 @@ js_location_replace(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 static JSValue
 js_location_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -776,6 +797,7 @@ static const JSCFunctionListEntry js_location_proto_funcs[] = {
 static void
 js_location_finalize(JSRuntime *rt, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -797,6 +819,7 @@ static JSClassDef js_location_class = {
 JSValue
 js_location_init(JSContext *ctx)
 {
+	ELOG
 	JSValue location_proto;
 
 	/* create the location class */
@@ -821,6 +844,7 @@ js_location_init(JSContext *ctx)
 JSValue
 getLocation(JSContext *ctx, struct view_state *vs)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

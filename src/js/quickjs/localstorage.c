@@ -27,6 +27,7 @@ static JSClassID js_localstorage_class_id;
 static char *
 readFromStorage(const char *key)
 {
+	ELOG
 	char *val;
 
 	if (local_storage_ready==0)
@@ -45,6 +46,7 @@ readFromStorage(const char *key)
 static void
 removeFromStorage(const char *key)
 {
+	ELOG
 	if (local_storage_ready==0)
 	{
 		db_prepare_structure(local_storage_filename);
@@ -57,6 +59,7 @@ removeFromStorage(const char *key)
 static void
 saveToStorage(const char *key, const char *val)
 {
+	ELOG
 	if (local_storage_ready==0) {
 		db_prepare_structure(local_storage_filename);
 		local_storage_ready=1;
@@ -77,6 +80,7 @@ saveToStorage(const char *key, const char *val)
 static JSValue
 js_localstorage_getitem(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -111,6 +115,7 @@ js_localstorage_getitem(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 static JSValue
 js_localstorage_removeitem(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -140,6 +145,7 @@ js_localstorage_removeitem(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 static JSValue
 js_localstorage_setitem(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -181,6 +187,7 @@ js_localstorage_setitem(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 static JSValue
 js_localstorage_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -203,6 +210,7 @@ static JSClassDef js_localstorage_class = {
 int
 js_localstorage_init(JSContext *ctx)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

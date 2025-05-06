@@ -58,6 +58,7 @@ void
 html_a(struct html_context *html_context, char *a,
        char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	char *href;
 
 	href = get_url_val(a, "href", html_context->doc_cp);
@@ -129,6 +130,7 @@ html_a(struct html_context *html_context, char *a,
 static char *
 truncate_label(char *label, int max_len)
 {
+	ELOG
 	char *new_label;
 	int len = strlen(label);
 	int left_part_len;
@@ -164,6 +166,7 @@ truncate_label(char *label, int max_len)
 static char *
 get_image_filename_from_src(int max_len, char *src)
 {
+	ELOG
 	char *text = NULL;
 	char *start, *filename;
 	int len;
@@ -197,6 +200,7 @@ get_image_filename_from_src(int max_len, char *src)
 static char *
 get_image_label(int max_len, char *label)
 {
+	ELOG
 	char *formatted_label;
 
 	if (!label) return NULL;
@@ -211,6 +215,7 @@ static void
 put_image_label(char *a, char *label,
                 struct html_context *html_context)
 {
+	ELOG
 	color_T saved_foreground;
 	text_style_format_T saved_attr;
 
@@ -234,6 +239,7 @@ static void
 html_img_sixel(struct html_context *html_context, char *a,
         char *html, char *eof, char **end)
 {
+	ELOG
 	if (!html_context->options->sixel || !html_context->document) {
 		return;
 	}
@@ -324,6 +330,7 @@ static void
 html_img_do(char *a, char *object_src,
             struct html_context *html_context)
 {
+	ELOG
 	int ismap, usemap = 0;
 	int add_brackets = 0;
 	char *src = NULL;
@@ -465,6 +472,7 @@ void
 html_img(struct html_context *html_context, char *a,
          char *html, char *eof, char **end)
 {
+	ELOG
 #ifdef CONFIG_LIBSIXEL
 	html_img_sixel(html_context, a, html, eof, end);
 #endif
@@ -475,6 +483,7 @@ void
 html_source(struct html_context *html_context, char *a,
            char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	char *src, *title;
 	struct document_options *options = html_context->options;
 	int display_style = options->image_link.display_style;
@@ -509,6 +518,7 @@ put_link_line(const char *prefix, const char *linkname,
 	      char *link, const char *target,
 	      struct html_context *html_context)
 {
+	ELOG
 	html_context->has_link_lines = 1;
 	html_stack_dup(html_context, ELEMENT_KILLABLE);
 	ln_break(html_context, 1);
@@ -534,6 +544,7 @@ void
 html_applet(struct html_context *html_context, char *a,
             char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	char *code, *alt;
 
 	code = get_url_val(a, "code", html_context->doc_cp);
@@ -559,6 +570,7 @@ void
 html_audio(struct html_context *html_context, char *a,
             char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	char *url;
 
 	/* This just places a link where a audio element would be. */
@@ -582,6 +594,7 @@ static void
 html_iframe_do(struct html_context *html_context, char *a,
         char *html, char *eof, char **end, char *object_src)
 {
+	ELOG
 	char *name, *url = NULL;
 	int height = 0;
 	int width = 0;
@@ -692,6 +705,7 @@ void
 html_iframe(struct html_context *html_context, char *a,
          char *html, char *eof, char **end)
 {
+	ELOG
 	html_iframe_do(html_context, a, html, eof, end, NULL);
 }
 
@@ -699,6 +713,7 @@ void
 html_object(struct html_context *html_context, char *a,
          char *html, char *eof, char **end)
 {
+	ELOG
 	char *type, *url;
 
 	/* This is just some dirty wrapper. We emulate various things through
@@ -750,6 +765,7 @@ void
 html_embed(struct html_context *html_context, char *a,
          char *html, char *eof, char **end)
 {
+	ELOG
 	char *type, *extension;
 	char *object_src;
 
@@ -784,6 +800,7 @@ void
 html_video(struct html_context *html_context, char *a,
             char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	char *url;
 
 	/* This just places a link where a video element would be. */
@@ -967,6 +984,7 @@ static struct lt_default_name lt_names[] = {
 static const char *
 get_lt_default_name(struct hlink *link)
 {
+	ELOG
 	struct lt_default_name *entry = lt_names;
 
 	assert(link);
@@ -982,6 +1000,7 @@ get_lt_default_name(struct hlink *link)
 static void
 html_link_clear(struct hlink *link)
 {
+	ELOG
 	assert(link);
 
 	mem_free_if(link->content_type);
@@ -1001,6 +1020,7 @@ static int
 html_link_parse(struct html_context *html_context, char *a,
                 struct hlink *link)
 {
+	ELOG
 	int i;
 
 	assert(a && link);
@@ -1057,6 +1077,7 @@ void
 html_link(struct html_context *html_context, char *a,
           char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	int link_display = html_context->options->meta_link_display;
 	char *name;
 	struct hlink link;

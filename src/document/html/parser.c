@@ -60,6 +60,7 @@ static int
 extract_color(struct html_context *html_context, char *a,
 	      const char *attribute, color_T *rgb)
 {
+	ELOG
 	char *value;
 	int retval;
 
@@ -76,6 +77,7 @@ int
 get_color(struct html_context *html_context, char *a,
 	  const char *attribute, color_T *rgb)
 {
+	ELOG
 	if (!use_document_fg_colors(html_context->options))
 		return -1;
 
@@ -85,6 +87,7 @@ get_color(struct html_context *html_context, char *a,
 int
 get_color2(struct html_context *html_context, char *value_value, color_T *rgb)
 {
+	ELOG
 	if (!use_document_fg_colors(html_context->options))
 		return -1;
 
@@ -98,6 +101,7 @@ get_color2(struct html_context *html_context, char *value_value, color_T *rgb)
 int
 get_bgcolor(struct html_context *html_context, char *a, color_T *rgb)
 {
+	ELOG
 	if (!use_document_bg_colors(html_context->options))
 		return -1;
 
@@ -107,6 +111,7 @@ get_bgcolor(struct html_context *html_context, char *a, color_T *rgb)
 char *
 get_target(struct document_options *options, char *a)
 {
+	ELOG
 	/* FIXME (bug 784): options->cp is the terminal charset;
 	 * should use the document charset instead.  */
 	char *v = get_attr_val(a, "target", options->cp);
@@ -124,6 +129,7 @@ get_target(struct document_options *options, char *a)
 void
 ln_break(struct html_context *html_context, int n)
 {
+	ELOG
 	if (!n || html_top->invisible) return;
 	while (n > html_context->line_breax) {
 		html_context->line_breax++;
@@ -136,6 +142,7 @@ ln_break(struct html_context *html_context, int n)
 void
 put_chrs(struct html_context *html_context, const char *start, int len)
 {
+	ELOG
 	if (html_is_preformatted())
 		html_context->putsp = HTML_SPACE_NORMAL;
 
@@ -184,6 +191,7 @@ void
 set_fragment_identifier(struct html_context *html_context,
                         char *attr_name, const char *attr)
 {
+	ELOG
 	char *id_attr;
 
 	id_attr = get_attr_val(attr_name, attr, html_context->doc_cp);
@@ -198,6 +206,7 @@ void
 add_fragment_identifier(struct html_context *html_context,
                         struct part *part, char *attr)
 {
+	ELOG
 	struct part *saved_part = html_context->part;
 
 	html_context->part = part;
@@ -211,6 +220,7 @@ add_fragment_identifier(struct html_context *html_context,
 void
 import_css2_stylesheet(struct html_context *html_context, struct uri *base_uri, const char *unterminated_url, int len)
 {
+	ELOG
 	char *url;
 	char *import_url;
 	struct uri *uri;
@@ -252,6 +262,7 @@ void
 import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
 		      const char *unterminated_url, int len)
 {
+	ELOG
 	struct html_context *html_context = (struct html_context *)css->import_data;
 	char *url;
 	char *import_url;
@@ -301,6 +312,7 @@ import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
 void
 html_focusable(struct html_context *html_context, char *a)
 {
+	ELOG
 	char *accesskey;
 	int cp;
 	int tabindex;
@@ -338,6 +350,7 @@ html_focusable(struct html_context *html_context, char *a)
 void
 html_skip(struct html_context *html_context, char *a)
 {
+	ELOG
 	html_top->invisible = 1;
 	html_top->type = ELEMENT_DONT_KILL;
 }
@@ -345,6 +358,7 @@ html_skip(struct html_context *html_context, char *a)
 static void
 check_head_for_refresh(struct html_context *html_context, char *head)
 {
+	ELOG
 	char *refresh;
 	char *url = NULL;
 	char *joined_url = NULL;
@@ -387,6 +401,7 @@ static void
 check_head_for_cache_control(struct html_context *html_context,
                              char *head)
 {
+	ELOG
 	char *d;
 	int no_cache = 0;
 	time_t expires = 0;
@@ -454,6 +469,7 @@ check_head_for_cache_control(struct html_context *html_context,
 void
 process_head(struct html_context *html_context, char *head)
 {
+	ELOG
 	check_head_for_refresh(html_context, head);
 
 	check_head_for_cache_control(html_context, head);
@@ -466,6 +482,7 @@ static int
 look_for_map(char **pos, char *eof, struct uri *uri,
              struct document_options *options)
 {
+	ELOG
 	char *al, *attr, *name;
 	int namelen;
 
@@ -508,6 +525,7 @@ static int
 look_for_tag(char **pos, char *eof,
 	     char *name, int namelen, char **label)
 {
+	ELOG
 	char *pos2;
 	struct string str;
 
@@ -562,6 +580,7 @@ look_for_link(char **pos, char *eof, struct menu_item **menu,
 	      char *target_base, struct conv_table *ct,
 	      struct document_options *options)
 {
+	ELOG
 	char *attr, *href, *name, *target;
 	char *label = NULL; /* shut up warning */
 	struct link_def *ld;
@@ -706,6 +725,7 @@ get_image_map(char *head, char *pos, char *eof,
 	      struct document_options *options, char *target_base,
 	      int to, int def, int hdef)
 {
+	ELOG
 	struct conv_table *ct;
 	struct string hd;
 	int look_result;
@@ -754,6 +774,7 @@ init_html_parser_state(struct html_context *html_context,
                        enum html_element_mortality_type type,
                        int align, int margin, int width)
 {
+	ELOG
 	html_stack_dup(html_context, type);
 
 	par_elformat.align = align;
@@ -777,6 +798,7 @@ void
 done_html_parser_state(struct html_context *html_context,
                        void *state)
 {
+	ELOG
 	struct html_element *element = (struct html_element *)state;
 
 	html_context->line_breax = 1;
@@ -813,6 +835,7 @@ init_html_parser(struct uri *uri, struct document *document,
 		 void (*line_break)(struct html_context *),
 		 void *(*special)(struct html_context *, html_special_type_T, ...))
 {
+	ELOG
 	struct html_context *html_context;
 	struct html_element *e;
 	struct document_options *options = &document->options;
@@ -920,6 +943,7 @@ init_html_parser(struct uri *uri, struct document *document,
 void
 done_html_parser(struct html_context *html_context)
 {
+	ELOG
 #ifdef CONFIG_CSS
 #ifdef CONFIG_LIBCSS
 	if (html_context->options->libcss_enable) {

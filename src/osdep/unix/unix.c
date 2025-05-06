@@ -35,6 +35,7 @@ struct gpm_mouse_spec {
 static void
 gpm_mouse_in(struct gpm_mouse_spec *gms)
 {
+	ELOG
 	Gpm_Event gev;
 	struct interlink_event ev;
 	struct interlink_event_mouse mouse;
@@ -81,6 +82,7 @@ gpm_mouse_in(struct gpm_mouse_spec *gms)
 static int
 init_mouse(int cons, int suspend)
 {
+	ELOG
 	Gpm_Connect conn;
 
 	/* We want to get even move events because of the wheels. */
@@ -96,6 +98,7 @@ init_mouse(int cons, int suspend)
 static int
 done_mouse(void)
 {
+	ELOG
 	return Gpm_Close();
 }
 
@@ -103,6 +106,7 @@ void *
 handle_mouse(int cons, void (*fn)(void *, char *, int),
 	     void *data)
 {
+	ELOG
 	int h;
 	struct gpm_mouse_spec *gms;
 
@@ -123,6 +127,7 @@ handle_mouse(int cons, void (*fn)(void *, char *, int),
 void
 unhandle_mouse(void *h)
 {
+	ELOG
 	struct gpm_mouse_spec *gms = (struct gpm_mouse_spec *)h;
 
 	if (!gms) return;
@@ -135,6 +140,7 @@ unhandle_mouse(void *h)
 void
 suspend_mouse(void *h)
 {
+	ELOG
 	struct gpm_mouse_spec *gms = (struct gpm_mouse_spec *)h;
 
 	if (!gms) return;
@@ -148,6 +154,7 @@ suspend_mouse(void *h)
 void
 resume_mouse(void *h)
 {
+	ELOG
 	struct gpm_mouse_spec *gms = (struct gpm_mouse_spec *)h;
 
 	if (!gms) return;
@@ -162,6 +169,7 @@ resume_mouse(void *h)
 long
 os_get_free_mem_in_mib(void)
 {
+	ELOG
 	FILE *f = fopen("/proc/meminfo", "r");
 	long ret = 0;
 

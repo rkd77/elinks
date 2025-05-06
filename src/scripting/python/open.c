@@ -40,6 +40,7 @@ background -- By default a new tab is opened in the foreground. If\n\
 PyObject *
 python_open(PyObject *self, PyObject *args, PyObject *kwargs)
 {
+	ELOG
 	char *url;
 	int new_tab = 0, background = 0;
 	struct uri *uri;

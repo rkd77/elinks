@@ -6,6 +6,7 @@
 
 int main(int argc, char * argv[])
 {
+	ELOG
     int i,j;
     char * kvpairs[256];
     char value[256];

@@ -40,6 +40,7 @@ static struct form_state *mjs_input_get_form_state(js_State *J);
 static char *
 mjs_unicode_to_string(unicode_val_T v)
 {
+	ELOG
 	return encode_utf8(v);
 }
 
@@ -48,6 +49,7 @@ mjs_unicode_to_string(unicode_val_T v)
 static unicode_val_T
 mjs_value_to_accesskey(const char *val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -63,6 +65,7 @@ mjs_value_to_accesskey(const char *val)
 static void
 mjs_input_get_property_accessKey(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -120,6 +123,7 @@ mjs_input_get_property_accessKey(js_State *J)
 static void
 mjs_input_set_property_accessKey(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -173,6 +177,7 @@ mjs_input_set_property_accessKey(js_State *J)
 static void
 mjs_input_get_property_alt(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -211,6 +216,7 @@ mjs_input_get_property_alt(js_State *J)
 static void
 mjs_input_set_property_alt(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -258,6 +264,7 @@ mjs_input_set_property_alt(js_State *J)
 static void
 mjs_input_get_property_checked(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -276,6 +283,7 @@ mjs_input_get_property_checked(js_State *J)
 static void
 mjs_input_set_property_checked(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -321,6 +329,7 @@ mjs_input_set_property_checked(js_State *J)
 static void
 mjs_input_get_property_defaultChecked(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -359,6 +368,7 @@ mjs_input_get_property_defaultChecked(js_State *J)
 static void
 mjs_input_get_property_defaultValue(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -396,6 +406,7 @@ mjs_input_get_property_defaultValue(js_State *J)
 static void
 mjs_input_get_property_disabled(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -437,6 +448,7 @@ mjs_input_get_property_disabled(js_State *J)
 static void
 mjs_input_set_property_disabled(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -483,6 +495,7 @@ mjs_input_set_property_disabled(js_State *J)
 static void
 mjs_input_get_property_form(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -493,6 +506,7 @@ mjs_input_get_property_form(js_State *J)
 static void
 mjs_input_get_property_maxLength(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -532,6 +546,7 @@ mjs_input_get_property_maxLength(js_State *J)
 static void
 mjs_input_set_property_maxLength(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -572,6 +587,7 @@ mjs_input_set_property_maxLength(js_State *J)
 static void
 mjs_input_get_property_name(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -612,6 +628,7 @@ mjs_input_get_property_name(js_State *J)
 static void
 mjs_input_set_property_name(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -659,6 +676,7 @@ mjs_input_set_property_name(js_State *J)
 static void
 mjs_input_get_property_readonly(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -700,6 +718,7 @@ mjs_input_get_property_readonly(js_State *J)
 static void
 mjs_input_set_property_readonly(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -746,6 +765,7 @@ mjs_input_set_property_readonly(js_State *J)
 static void
 mjs_input_get_property_selectedIndex(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -793,6 +813,7 @@ mjs_input_get_property_selectedIndex(js_State *J)
 static void
 mjs_input_set_property_selectedIndex(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -841,6 +862,7 @@ mjs_input_set_property_selectedIndex(js_State *J)
 static void
 mjs_input_get_property_size(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -880,6 +902,7 @@ mjs_input_get_property_size(js_State *J)
 static void
 mjs_input_get_property_src(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -931,6 +954,7 @@ mjs_input_get_property_src(js_State *J)
 static void
 mjs_input_set_property_src(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -986,6 +1010,7 @@ mjs_input_set_property_src(js_State *J)
 static void
 mjs_input_get_property_tabIndex(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1039,6 +1064,7 @@ mjs_input_get_property_tabIndex(js_State *J)
 static void
 mjs_input_get_property_type(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1095,6 +1121,7 @@ mjs_input_get_property_type(js_State *J)
 static void
 mjs_input_get_property_value(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1114,6 +1141,7 @@ mjs_input_get_property_value(js_State *J)
 static void
 mjs_input_set_property_value(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1169,6 +1197,7 @@ mjs_input_set_property_value(js_State *J)
 static struct form_state *
 mjs_input_get_form_state(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1181,6 +1210,7 @@ mjs_input_get_form_state(js_State *J)
 static void
 mjs_input_blur(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1193,6 +1223,7 @@ mjs_input_blur(js_State *J)
 static void
 mjs_input_click(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1243,6 +1274,7 @@ mjs_input_click(js_State *J)
 static void
 mjs_input_focus(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1287,6 +1319,7 @@ mjs_input_focus(js_State *J)
 static void
 mjs_input_select(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1298,6 +1331,7 @@ mjs_input_select(js_State *J)
 static void
 mjs_input_toString(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1307,6 +1341,7 @@ mjs_input_toString(js_State *J)
 static void
 mjs_input_finalizer(js_State *J, void *node)
 {
+	ELOG
 	struct form_state *fs = (struct form_state *)node;
 	attr_erase_from_map(map_inputs, fs);
 }
@@ -1314,6 +1349,7 @@ mjs_input_finalizer(js_State *J, void *node)
 void
 mjs_push_input_object(js_State *J, struct form_state *fs)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

@@ -16,6 +16,7 @@
 void
 seed_rand_once(void)
 {
+	ELOG
 	static int seeded = 0;
 
 	if (!seeded) {
@@ -29,6 +30,7 @@ seed_rand_once(void)
 static void
 pseudorandom_nonce(unsigned char buf[], size_t size)
 {
+	ELOG
 	static int initialized = 0;
 	static int accept_bits;
 	static int accept_mask;
@@ -91,6 +93,7 @@ pseudorandom_nonce(unsigned char buf[], size_t size)
 void
 random_nonce(unsigned char buf[], size_t size)
 {
+	ELOG
 	size_t i = 0;
 	FILE *f = fopen("/dev/urandom", "rb");
 

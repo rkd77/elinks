@@ -75,6 +75,7 @@ do_read_bittorrent_peer_handshake(struct socket *socket, struct read_buffer *buf
 static void
 queue_bittorrent_peer_connection_requests(struct bittorrent_peer_connection *peer)
 {
+	ELOG
 	int size = get_opt_int("protocol.bittorrent.request_queue_size", NULL);
 	int queue_size = list_size(&peer->local.requests);
 
@@ -100,6 +101,7 @@ queue_bittorrent_peer_connection_requests(struct bittorrent_peer_connection *pee
 void
 update_bittorrent_peer_connection_state(struct bittorrent_peer_connection *peer)
 {
+	ELOG
 	struct bittorrent_connection *bittorrent = peer->bittorrent;
 	struct bittorrent_piece_cache *cache = bittorrent->cache;
 	struct bittorrent_peer_request *request, *next_request;
@@ -157,6 +159,7 @@ static inline double
 get_bittorrent_rate(struct bittorrent_peer_stats *stats, time_t now,
 		    double rate, uint32_t loaded)
 {
+	ELOG
 	return (rate * (stats->last_time - stats->age) + loaded)
 		/ (now - stats->age);
 }
@@ -166,6 +169,7 @@ update_bittorrent_peer_connection_stats(struct bittorrent_peer_connection *peer,
 					uint32_t downloaded, uint32_t have_piece,
 					uint32_t uploaded)
 {
+	ELOG
 	struct bittorrent_peer_stats *stats = &peer->stats;
 	time_t now = time(NULL);
 
@@ -222,6 +226,7 @@ update_bittorrent_peer_connection_stats(struct bittorrent_peer_connection *peer,
 static void
 sent_bittorrent_peer_message(struct socket *socket)
 {
+	ELOG
 	assert(!socket->write_buffer);
 	/* Check if there are pending messages or requests. */
 	update_bittorrent_peer_connection_state((struct bittorrent_peer_connection *)socket->conn);
@@ -230,6 +235,7 @@ sent_bittorrent_peer_message(struct socket *socket)
 static inline void
 add_bittorrent_peer_integer(struct string *string, uint32_t integer)
 {
+	ELOG
 	uint32_t data = htonl(integer);
 
 	add_bytes_to_string(string, (char *) &data, sizeof(data));
@@ -241,6 +247,7 @@ static enum bittorrent_state
 do_send_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
 				struct bittorrent_peer_request *message)
 {
+	ELOG
 	struct bittorrent_connection *bittorrent = peer->bittorrent;
 	struct string string;
 	char msgid_str[1] = { (char) message->id };
@@ -365,6 +372,7 @@ void
 send_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
 			     bittorrent_message_id_TT message_id, ...)
 {
+	ELOG
 	struct bittorrent_peer_request message_store, *message = &message_store;
 	va_list args;
 
@@ -426,6 +434,7 @@ send_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
 static inline uint32_t
 get_bittorrent_peer_integer(struct read_buffer *buffer, int offset)
 {
+	ELOG
 	assert(offset + sizeof(uint32_t) <= buffer->length);
 	return ntohl(*((uint32_t *) (buffer->data + offset)));
 }
@@ -434,6 +443,7 @@ static bittorrent_message_id_T
 check_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
 			      struct read_buffer *buffer, uint32_t *length)
 {
+	ELOG
 	uint32_t message_length;
 	bittorrent_message_id_T message_id;
 
@@ -468,6 +478,7 @@ read_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
 			     struct read_buffer *buffer, uint32_t message_length,
 			     int *write_errno)
 {
+	ELOG
 	struct bittorrent_connection *bittorrent = peer->bittorrent;
 	enum bittorrent_state state;
 	uint32_t piece, offset, length;
@@ -624,6 +635,7 @@ read_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
 static void
 read_bittorrent_peer_data(struct socket *socket, struct read_buffer *buffer)
 {
+	ELOG
 	struct bittorrent_peer_connection *peer = (struct bittorrent_peer_connection *)socket->conn;
 
 	if (!peer->remote.handshake) {
@@ -701,6 +713,7 @@ read_bittorrent_peer_data(struct socket *socket, struct read_buffer *buffer)
 static void
 sent_bittorrent_peer_handshake(struct socket *socket)
 {
+	ELOG
 	struct bittorrent_peer_connection *peer = (struct bittorrent_peer_connection *)socket->conn;
 	struct read_buffer *buffer = peer->socket->read_buffer;
 
@@ -723,6 +736,7 @@ sent_bittorrent_peer_handshake(struct socket *socket)
 void
 send_bittorrent_peer_handshake(struct socket *socket)
 {
+	ELOG
 	struct bittorrent_peer_connection *peer = (struct bittorrent_peer_connection *)socket->conn;
 	struct bittorrent_connection *bittorrent = peer->bittorrent;
 	struct bittorrent_meta *meta = &bittorrent->meta;
@@ -777,6 +791,7 @@ send_bittorrent_peer_handshake(struct socket *socket)
 static inline int
 bittorrent_peer_supports_dht(char flags[8])
 {
+	ELOG
 	return !!(flags[7] & 1);
 }
 #endif
@@ -787,6 +802,7 @@ static enum bittorrent_handshake_state
 check_bittorrent_peer_handshake(struct bittorrent_peer_connection *peer,
 				struct read_buffer *buffer)
 {
+	ELOG
 	bittorrent_id_T info_hash;
 	struct bittorrent_peer *peer_info;
 	enum bittorrent_handshake_state state;
@@ -901,6 +917,7 @@ check_bittorrent_peer_handshake(struct bittorrent_peer_connection *peer,
 static enum bittorrent_handshake_state
 do_read_bittorrent_peer_handshake(struct socket *socket, struct read_buffer *buffer)
 {
+	ELOG
 	struct bittorrent_peer_connection *peer = (struct bittorrent_peer_connection *)socket->conn;
 	enum bittorrent_handshake_state state;
 
@@ -962,5 +979,6 @@ do_read_bittorrent_peer_handshake(struct socket *socket, struct read_buffer *buf
 void
 read_bittorrent_peer_handshake(struct socket *socket, struct read_buffer *buffer)
 {
+	ELOG
 	do_read_bittorrent_peer_handshake(socket, buffer);
 }

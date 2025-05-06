@@ -19,6 +19,7 @@
 static SCM
 internal_module(void)
 {
+	ELOG
 	/* XXX: should use internal_module from core.c instead of referring to
 	 * the module by name, once I figure out how... --pw */
 	return scm_c_resolve_module("elinks internal");
@@ -30,12 +31,14 @@ internal_module(void)
 static SCM
 error_handler(void *data, SCM tag, SCM throw_args)
 {
+	ELOG
 	return SCM_BOOL_F;
 }
 
 static SCM
 get_guile_hook_do(void *data)
 {
+	ELOG
 	char *hook = (char *)data;
 
 	return scm_c_module_lookup(internal_module(), hook);
@@ -44,6 +47,7 @@ get_guile_hook_do(void *data)
 static SCM
 get_guile_hook(const char *hook)
 {
+	ELOG
 	return scm_internal_catch(SCM_BOOL_T, get_guile_hook_do, (void *)hook,
 				  error_handler, NULL);
 }
@@ -55,6 +59,7 @@ get_guile_hook(const char *hook)
 static enum evhook_status
 script_hook_goto_url(va_list ap, void *data)
 {
+	ELOG
 	char **url = va_arg(ap, char **);
 	struct session *ses = va_arg(ap, struct session *);
 	SCM proc;
@@ -86,6 +91,7 @@ script_hook_goto_url(va_list ap, void *data)
 static enum evhook_status
 script_hook_follow_url(va_list ap, void *data)
 {
+	ELOG
 	char **url = va_arg(ap, char **);
 	struct session *ses = va_arg(ap, struct session *);
 	SCM proc;
@@ -117,6 +123,7 @@ script_hook_follow_url(va_list ap, void *data)
 static enum evhook_status
 script_hook_pre_format_html(va_list ap, void *data)
 {
+	ELOG
 	struct session *ses = va_arg(ap, struct session *);
 	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
 	struct fragment *fragment = get_cache_fragment(cached);
@@ -151,6 +158,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 static enum evhook_status
 script_hook_get_proxy(va_list ap, void *data)
 {
+	ELOG
 	char **retval = va_arg(ap, char **);
 	char *url = va_arg(ap, char *);
 	SCM proc = get_guile_hook("%get-proxy-hook");
@@ -174,6 +182,7 @@ script_hook_get_proxy(va_list ap, void *data)
 static enum evhook_status
 script_hook_quit(va_list ap, void *data)
 {
+	ELOG
 	SCM proc = get_guile_hook("%quit-hook");
 
 	if (scm_is_false(proc)) return EVENT_HOOK_STATUS_NEXT;

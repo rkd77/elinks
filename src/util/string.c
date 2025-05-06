@@ -44,6 +44,7 @@
 char *
 debug_memacpy(const char *f, int l, const char *src, int len)
 {
+	ELOG
 	char *m;
 
 	string_assert(f, l, len >= 0, "memacpy");
@@ -61,6 +62,7 @@ debug_memacpy(const char *f, int l, const char *src, int len)
 char *
 debug_stracpy(const char *f, int l, const char *src)
 {
+	ELOG
 	string_assert(f, l, src, "stracpy");
 	if_assert_failed return NULL;
 
@@ -72,6 +74,7 @@ debug_stracpy(const char *f, int l, const char *src)
 char *
 memacpy(const char *src, int len)
 {
+	ELOG
 	char *m;
 
 	assertm(len >= 0, "[memacpy]");
@@ -89,6 +92,7 @@ memacpy(const char *src, int len)
 char *
 stracpy(const char *src)
 {
+	ELOG
 	assertm(src, "[stracpy]");
 	if_assert_failed return NULL;
 
@@ -101,6 +105,7 @@ stracpy(const char *src)
 void
 add_to_strn(char **dst, const char *src)
 {
+	ELOG
 	char *newdst;
 	int dstlen;
 	int srclen;
@@ -121,6 +126,7 @@ char *
 insert_in_string(char **dst, int pos,
 		 const char *seq, int seqlen)
 {
+	ELOG
 	int dstlen = strlen(*dst);
 	char *string = (char *)mem_realloc(*dst, dstlen + seqlen + 1);
 
@@ -136,6 +142,7 @@ insert_in_string(char **dst, int pos,
 char *
 straconcat(const char *str, ...)
 {
+	ELOG
 	va_list ap;
 	const char *a;
 	char *s;
@@ -177,6 +184,7 @@ straconcat(const char *str, ...)
 int
 xstrcmp(const char *s1, const char *s2)
 {
+	ELOG
 	if (!s1) return -!!s2;
 	if (!s2) return 1;
 	return strcmp(s1, s2);
@@ -185,6 +193,7 @@ xstrcmp(const char *s1, const char *s2)
 char *
 safe_strncpy(char *dst, const char *src, size_t dst_size)
 {
+	ELOG
 	assertm(dst && src && dst_size > 0, "[safe_strncpy]");
 	if_assert_failed return NULL;
 
@@ -229,6 +238,7 @@ int
 elinks_strlcmp(const char *s1, size_t n1,
 	       const char *s2, size_t n2)
 {
+	ELOG
 	strlcmp_device("strlcmp", s1, n1, s2, n2, s1[p], s2[p]);
 }
 
@@ -237,6 +247,7 @@ elinks_strlcasecmp(const char *s1, size_t n1,
 		   const char *s2, size_t n2,
 		   const int locale_indep)
 {
+	ELOG
 	if (locale_indep) {
 		strlcmp_device("strlcasecmp", s1, n1, s2, n2, c_toupper(s1[p]), c_toupper(s2[p]));
 	}
@@ -250,6 +261,7 @@ char *
 elinks_strlcasestr(const char *haystack, const int haystackl,
                    const char *needle, const int needlel)
 {
+	ELOG
 	size_t haystack_length = haystackl == -1 ? strlen(haystack) : haystackl;
 	size_t needle_length = needlel == -1 ? strlen(needle) : needlel;
 	int i;
@@ -269,6 +281,7 @@ elinks_strlcasestr(const char *haystack, const int haystackl,
 int
 c_strcasecmp(const char *s1, const char *s2)
 {
+	ELOG
 	for (;; s1++, s2++) {
 		unsigned char c1 = c_tolower(*(const char *) s1);
 		unsigned char c2 = c_tolower(*(const char *) s2);
@@ -282,6 +295,7 @@ c_strcasecmp(const char *s1, const char *s2)
 
 int c_strncasecmp(const char *s1, const char *s2, size_t n)
 {
+	ELOG
 	for (; n > 0; n--, s1++, s2++) {
 		unsigned char c1 = c_tolower(*(const char *) s1);
 		unsigned char c2 = c_tolower(*(const char *) s2);
@@ -297,6 +311,7 @@ int c_strncasecmp(const char *s1, const char *s2, size_t n)
 /* c_strcasestr - adapted from src/osdep/stub.c */
 char * c_strcasestr(const char *haystack, const char *needle)
 {
+	ELOG
 	size_t haystack_length = strlen(haystack);
 	size_t needle_length = strlen(needle);
 	int i;
@@ -325,6 +340,7 @@ init_string__(const char *file, int line, struct string *string)
 init_string(struct string *string)
 #endif
 {
+	ELOG
 	assertm(string != NULL, "[init_string]");
 	if_assert_failed { return NULL; }
 
@@ -346,6 +362,7 @@ init_string(struct string *string)
 NONSTATIC_INLINE void
 done_string(struct string *string)
 {
+	ELOG
 	assertm(string != NULL, "[done_string]");
 	if_assert_failed { return; }
 
@@ -365,6 +382,7 @@ done_string(struct string *string)
 NONSTATIC_INLINE struct string *
 add_to_string(struct string *string, const char *source)
 {
+	ELOG
 	assertm(string && source, "[add_to_string]");
 	if_assert_failed { return NULL; }
 
@@ -379,6 +397,7 @@ add_to_string(struct string *string, const char *source)
 NONSTATIC_INLINE struct string *
 add_crlf_to_string(struct string *string)
 {
+	ELOG
 	assertm(string != NULL, "[add_crlf_to_string]");
 	if_assert_failed { return NULL; }
 
@@ -398,6 +417,7 @@ add_crlf_to_string(struct string *string)
 NONSTATIC_INLINE struct string *
 add_string_to_string(struct string *string, const struct string *from)
 {
+	ELOG
 	assertm(string && from, "[add_string_to_string]");
 	if_assert_failed { return NULL; }
 
@@ -413,6 +433,7 @@ add_string_to_string(struct string *string, const struct string *from)
 struct string *
 add_file_to_string(struct string *string, const char *filename)
 {
+	ELOG
 	FILE *file;
 	off_t filelen;
 	int newlength;
@@ -453,6 +474,7 @@ err:
 struct string *
 string_concat(struct string *string, ...)
 {
+	ELOG
 	va_list ap;
 	const char *source;
 
@@ -475,6 +497,7 @@ string_concat(struct string *string, ...)
 NONSTATIC_INLINE struct string *
 add_char_to_string(struct string *string, unsigned char character)
 {
+	ELOG
 	assertm(string, "[add_char_to_string]");
 	if_assert_failed { return NULL; }
 
@@ -492,6 +515,7 @@ add_char_to_string(struct string *string, unsigned char character)
 NONSTATIC_INLINE struct string *
 add_xchar_to_string(struct string *string, unsigned char character, int times)
 {
+	ELOG
 	int newlength;
 
 	assertm(string && character && times >= 0, "[add_xchar_to_string]");
@@ -516,6 +540,7 @@ add_xchar_to_string(struct string *string, unsigned char character, int times)
 struct string *
 add_format_to_string(struct string *string, const char *format, ...)
 {
+	ELOG
 	int newlength;
 	int width;
 	va_list ap;
@@ -547,6 +572,7 @@ add_format_to_string(struct string *string, const char *format, ...)
 void
 el_string_replace(struct string *res, struct string *inp, struct string *what, struct string *repl)
 {
+	ELOG
 	struct string tmp;
 	struct string tmp2;
 	char *head;
@@ -617,6 +643,7 @@ struct string *
 add_to_string_list(LIST_OF(struct string_list_item) *list,
 		   const char *source, int length)
 {
+	ELOG
 	struct string_list_item *item;
 	struct string *string;
 
@@ -644,6 +671,7 @@ add_to_string_list(LIST_OF(struct string_list_item) *list,
 void
 free_string_list(LIST_OF(struct string_list_item) *list)
 {
+	ELOG
 	assertm(list != NULL, "[free_string_list]");
 	if_assert_failed return;
 
@@ -660,6 +688,7 @@ struct string *
 add_to_ecmascript_string_list(LIST_OF(struct ecmascript_string_list_item) *list,
 		   const char *source, int length, int element_offset)
 {
+	ELOG
 	struct ecmascript_string_list_item *item;
 	struct string *string;
 
@@ -689,6 +718,7 @@ add_to_ecmascript_string_list(LIST_OF(struct ecmascript_string_list_item) *list,
 void
 free_ecmascript_string_list(LIST_OF(struct ecmascript_string_list_item) *list)
 {
+	ELOG
 	assertm(list != NULL, "[free_string_list]");
 	if_assert_failed return;
 
@@ -704,5 +734,6 @@ free_ecmascript_string_list(LIST_OF(struct ecmascript_string_list_item) *list)
 int
 elinks_isspace(int c)
 {
+	ELOG
 	return c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r' || c == ' ';
 }

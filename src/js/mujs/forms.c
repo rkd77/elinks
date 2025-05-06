@@ -34,6 +34,7 @@ mjs_find_form_by_name(js_State *J,
 		  struct document_view *doc_view,
 		  const char *string)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -56,6 +57,7 @@ mjs_find_form_by_name(js_State *J,
 static void
 mjs_forms_set_items(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -96,6 +98,7 @@ next:
 static void
 mjs_forms_get_property_length(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -118,6 +121,7 @@ mjs_forms_get_property_length(js_State *J)
 static void
 mjs_forms_item2(js_State *J, int index)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -147,6 +151,7 @@ mjs_forms_item2(js_State *J, int index)
 static void
 mjs_forms_item(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -159,6 +164,7 @@ mjs_forms_item(js_State *J)
 static void
 mjs_forms_namedItem(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -177,6 +183,7 @@ mjs_forms_namedItem(js_State *J)
 static void
 mjs_forms_toString(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -186,6 +193,7 @@ mjs_forms_toString(js_State *J)
 void
 mjs_push_forms(js_State *J, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

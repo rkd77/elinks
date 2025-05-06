@@ -33,5 +33,6 @@
 char *
 gettext__(const char *msgid)
 {
+	ELOG
 	return dcgettext__(NULL, msgid, LC_MESSAGES);
 }

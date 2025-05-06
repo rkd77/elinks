@@ -21,6 +21,7 @@
 static void
 mjs_navigator_get_property_appCodeName(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -30,6 +31,7 @@ mjs_navigator_get_property_appCodeName(js_State *J)
 static void
 mjs_navigator_get_property_appName(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -39,6 +41,7 @@ mjs_navigator_get_property_appName(js_State *J)
 static void
 mjs_navigator_get_property_appVersion(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -48,6 +51,7 @@ mjs_navigator_get_property_appVersion(js_State *J)
 static void
 mjs_navigator_get_property_language(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -63,6 +67,7 @@ mjs_navigator_get_property_language(js_State *J)
 static void
 mjs_navigator_get_property_platform(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -72,6 +77,7 @@ mjs_navigator_get_property_platform(js_State *J)
 static void
 mjs_navigator_get_property_userAgent(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -109,6 +115,7 @@ mjs_navigator_get_property_userAgent(js_State *J)
 static void
 mjs_navigator_toString(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -118,6 +125,7 @@ mjs_navigator_toString(js_State *J)
 int
 mjs_navigator_init(js_State *J)
 {
+	ELOG
 	js_newobject(J);
 	{
 		addmethod(J, "navigator.toString", mjs_navigator_toString, 0);

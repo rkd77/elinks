@@ -32,6 +32,7 @@ extern PyObject *python_hooks;
 static PyObject *
 replace_with_python_string(char **dest, PyObject *object)
 {
+	ELOG
 	char *str;
 
 	if (object == Py_None) {
@@ -54,6 +55,7 @@ replace_with_python_string(char **dest, PyObject *object)
 static enum evhook_status
 script_hook_url(va_list ap, void *data)
 {
+	ELOG
 	char **url = va_arg(ap, char **);
 	struct session *ses = va_arg(ap, struct session *);
 	char *method = (char *)data;
@@ -83,6 +85,7 @@ script_hook_url(va_list ap, void *data)
 static int
 get_codepage(char *head)
 {
+	ELOG
 	int cp_index = -1;
 	char *part = head;
 
@@ -139,6 +142,7 @@ none:
 static enum evhook_status
 script_hook_pre_format_html(va_list ap, void *data)
 {
+	ELOG
 	struct session *ses = va_arg(ap, struct session *);
 	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
 	struct fragment *fragment = get_cache_fragment(cached);
@@ -253,6 +257,7 @@ error:
 static enum evhook_status
 script_hook_get_proxy(va_list ap, void *data)
 {
+	ELOG
 	char **proxy = va_arg(ap, char **);
 	char *url = va_arg(ap, char *);
 	const char *method = "proxy_for_hook";
@@ -279,6 +284,7 @@ script_hook_get_proxy(va_list ap, void *data)
 static enum evhook_status
 script_hook_quit(va_list ap, void *data)
 {
+	ELOG
 	const char *method = "quit_hook";
 	PyObject *result;
 

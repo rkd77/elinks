@@ -26,6 +26,7 @@ static JSClassID js_style_class_id;
 static JSValue
 js_style(JSContext *ctx, JSValueConst this_val, const char *property)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -72,6 +73,7 @@ js_style(JSContext *ctx, JSValueConst this_val, const char *property)
 static JSValue
 js_style_get_property_cssText(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -102,6 +104,7 @@ js_style_get_property_cssText(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_set_style(JSContext *ctx, JSValueConst this_val, JSValue val, const char *property)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -155,6 +158,7 @@ js_set_style(JSContext *ctx, JSValueConst this_val, JSValue val, const char *pro
 static JSValue
 js_style_set_property_cssText(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -210,6 +214,7 @@ js_style_set_property_cssText(JSContext *ctx, JSValueConst this_val, JSValue val
 static JSValue
 js_style_get_property_background(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -219,6 +224,7 @@ js_style_get_property_background(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_style_get_property_backgroundClip(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -228,6 +234,7 @@ js_style_get_property_backgroundClip(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_style_get_property_backgroundColor(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -237,6 +244,7 @@ js_style_get_property_backgroundColor(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_style_get_property_color(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -246,6 +254,7 @@ js_style_get_property_color(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_style_get_property_display(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -255,6 +264,7 @@ js_style_get_property_display(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_style_get_property_fontStyle(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -264,6 +274,7 @@ js_style_get_property_fontStyle(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_style_get_property_fontWeight(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -273,6 +284,7 @@ js_style_get_property_fontWeight(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_style_get_property_height(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -282,6 +294,7 @@ js_style_get_property_height(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_style_get_property_left(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -291,6 +304,7 @@ js_style_get_property_left(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_style_get_property_lineStyle(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -300,6 +314,7 @@ js_style_get_property_lineStyle(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_style_get_property_lineStyleType(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -309,6 +324,7 @@ js_style_get_property_lineStyleType(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_style_get_property_textAlign(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -318,6 +334,7 @@ js_style_get_property_textAlign(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_style_get_property_textDecoration(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -327,6 +344,7 @@ js_style_get_property_textDecoration(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_style_get_property_top(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -336,6 +354,7 @@ js_style_get_property_top(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_style_get_property_whiteSpace(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -345,6 +364,7 @@ js_style_get_property_whiteSpace(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_style_set_property_background(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -354,6 +374,7 @@ js_style_set_property_background(JSContext *ctx, JSValueConst this_val, JSValue 
 static JSValue
 js_style_set_property_backgroundClip(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -363,6 +384,7 @@ js_style_set_property_backgroundClip(JSContext *ctx, JSValueConst this_val, JSVa
 static JSValue
 js_style_set_property_backgroundColor(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -372,6 +394,7 @@ js_style_set_property_backgroundColor(JSContext *ctx, JSValueConst this_val, JSV
 static JSValue
 js_style_set_property_color(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -381,6 +404,7 @@ js_style_set_property_color(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_style_set_property_display(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -390,6 +414,7 @@ js_style_set_property_display(JSContext *ctx, JSValueConst this_val, JSValue val
 static JSValue
 js_style_set_property_fontStyle(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -399,6 +424,7 @@ js_style_set_property_fontStyle(JSContext *ctx, JSValueConst this_val, JSValue v
 static JSValue
 js_style_set_property_fontWeight(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -408,6 +434,7 @@ js_style_set_property_fontWeight(JSContext *ctx, JSValueConst this_val, JSValue 
 static JSValue
 js_style_set_property_height(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -417,6 +444,7 @@ js_style_set_property_height(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_style_set_property_left(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -426,6 +454,7 @@ js_style_set_property_left(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_style_set_property_lineStyle(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -435,6 +464,7 @@ js_style_set_property_lineStyle(JSContext *ctx, JSValueConst this_val, JSValue v
 static JSValue
 js_style_set_property_lineStyleType(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -444,6 +474,7 @@ js_style_set_property_lineStyleType(JSContext *ctx, JSValueConst this_val, JSVal
 static JSValue
 js_style_set_property_textAlign(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -453,6 +484,7 @@ js_style_set_property_textAlign(JSContext *ctx, JSValueConst this_val, JSValue v
 static JSValue
 js_style_set_property_textDecoration(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -462,6 +494,7 @@ js_style_set_property_textDecoration(JSContext *ctx, JSValueConst this_val, JSVa
 static JSValue
 js_style_set_property_top(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -471,6 +504,7 @@ js_style_set_property_top(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_style_set_property_whiteSpace(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -479,12 +513,14 @@ js_style_set_property_whiteSpace(JSContext *ctx, JSValueConst this_val, JSValue 
 
 void js_style_finalizer(JSRuntime *rt, JSValue val)
 {
+	ELOG
 	REF_JS(val);
 }
 
 static JSValue
 js_style_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -520,6 +556,7 @@ static JSClassDef js_style_class = {
 JSValue
 getStyle(JSContext *ctx, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

@@ -10,6 +10,7 @@ int get_ctl_handle() {
 
 int main(int argc, char **argv)
 {
+	ELOG
 	int res = is_path_prefix(argv[1], argv[2]);
 	printf("is_path_prefix(\"%s\", \"%s\")=%d\n", argv[1], argv[2], res);
 

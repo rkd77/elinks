@@ -76,6 +76,7 @@ static JSValue js_element_set_property_textContent(JSContext *ctx, JSValueConst 
 void *
 js_getopaque(JSValueConst obj, JSClassID class_id)
 {
+	ELOG
 	REF_JS(obj);
 
 	struct js_element_private *res = (struct js_element_private *)JS_GetOpaque(obj, class_id);
@@ -97,6 +98,7 @@ js_getopaque(JSValueConst obj, JSClassID class_id)
 void *
 js_getopaque_any(JSValueConst obj)
 {
+	ELOG
 	REF_JS(obj);
 	struct js_element_private *res = (struct js_element_private *)JS_GetOpaque(obj, js_element_class_id);
 
@@ -119,6 +121,7 @@ js_getopaque_any(JSValueConst obj)
 static JSValue
 js_element_get_property_attributes(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -150,6 +153,7 @@ js_element_get_property_attributes(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_checked(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -219,6 +223,7 @@ js_element_get_property_checked(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_set_property_checked(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -291,6 +296,7 @@ js_element_set_property_checked(JSContext *ctx, JSValueConst this_val, JSValue v
 static JSValue
 js_element_get_property_children(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -321,6 +327,7 @@ js_element_get_property_children(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_childElementCount(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -353,6 +360,7 @@ js_element_get_property_childElementCount(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -383,6 +391,7 @@ js_element_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_classList(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -409,6 +418,7 @@ js_element_get_property_classList(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_className(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -446,6 +456,7 @@ js_element_get_property_className(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_contentDocument(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -519,6 +530,7 @@ js_element_get_property_contentDocument(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_contentWindow(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -590,6 +602,7 @@ js_element_get_property_contentWindow(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_clientHeight(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -644,6 +657,7 @@ js_element_get_property_clientHeight(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_clientLeft(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -653,6 +667,7 @@ js_element_get_property_clientLeft(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_clientTop(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -662,6 +677,7 @@ js_element_get_property_clientTop(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_clientWidth(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -716,6 +732,7 @@ js_element_get_property_clientWidth(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_dataset(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -732,6 +749,7 @@ js_element_get_property_dataset(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_dir(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -772,6 +790,7 @@ js_element_get_property_dir(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_firstChild(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -804,6 +823,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_element_get_property_firstElementChild(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -869,6 +889,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_element_get_property_height(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -897,6 +918,7 @@ js_element_get_property_height(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_href(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -933,6 +955,7 @@ js_element_get_property_href(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_id(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -969,6 +992,7 @@ js_element_get_property_id(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_lang(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1005,6 +1029,7 @@ js_element_get_property_lang(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_lastChild(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1038,6 +1063,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_element_get_property_lastElementChild(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1102,6 +1128,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_element_get_property_name(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1138,6 +1165,7 @@ js_element_get_property_name(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_nextElementSibling(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1188,6 +1216,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_element_get_property_nodeName(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1223,6 +1252,7 @@ js_element_get_property_nodeName(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_nodeType(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1252,6 +1282,7 @@ js_element_get_property_nodeType(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_nodeValue(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1284,6 +1315,7 @@ js_element_get_property_nodeValue(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_set_property_nodeValue(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1322,6 +1354,7 @@ js_element_set_property_nodeValue(JSContext *ctx, JSValueConst this_val, JSValue
 static JSValue
 js_element_get_property_nextSibling(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1356,6 +1389,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_element_get_property_offsetHeight(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1365,6 +1399,7 @@ js_element_get_property_offsetHeight(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_offsetLeft(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1425,6 +1460,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_element_get_property_offsetParent(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1453,6 +1489,7 @@ js_element_get_property_offsetParent(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_offsetTop(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1513,6 +1550,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_element_get_property_offsetWidth(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1522,6 +1560,7 @@ js_element_get_property_offsetWidth(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_ownerDocument(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1536,6 +1575,7 @@ js_element_get_property_ownerDocument(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_parentElement(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1569,6 +1609,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_element_get_property_parentNode(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1601,6 +1642,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_element_get_property_previousElementSibling(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1652,6 +1694,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_element_get_property_previousSibling(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1685,6 +1728,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_element_get_property_src(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1722,6 +1766,7 @@ js_element_get_property_src(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_style(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1740,6 +1785,7 @@ js_element_get_property_style(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_tagName(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1770,6 +1816,7 @@ js_element_get_property_tagName(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_title(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1806,6 +1853,7 @@ js_element_get_property_title(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_value(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1873,6 +1921,7 @@ js_element_get_property_value(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_innerHtml(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1902,6 +1951,7 @@ js_element_get_property_innerHtml(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_outerHtml(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1931,6 +1981,7 @@ js_element_get_property_outerHtml(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_textContent(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1960,6 +2011,7 @@ js_element_get_property_textContent(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_get_property_width(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1988,6 +2040,7 @@ js_element_get_property_width(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_element_set_property_className(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2027,6 +2080,7 @@ js_element_set_property_className(JSContext *ctx, JSValueConst this_val, JSValue
 static JSValue
 js_element_set_property_dir(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2068,6 +2122,7 @@ js_element_set_property_dir(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_element_set_property_href(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2107,6 +2162,7 @@ js_element_set_property_href(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_element_set_property_id(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2146,6 +2202,7 @@ js_element_set_property_id(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_element_set_property_innerHtml(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2311,6 +2368,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_element_set_property_innerText(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2320,6 +2378,7 @@ js_element_set_property_innerText(JSContext *ctx, JSValueConst this_val, JSValue
 static JSValue
 js_element_set_property_lang(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2360,6 +2419,7 @@ js_element_set_property_lang(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_element_set_property_outerHtml(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2532,6 +2592,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_element_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2570,6 +2631,7 @@ js_element_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSVal
 static JSValue
 js_element_set_property_title(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2609,6 +2671,7 @@ js_element_set_property_title(JSContext *ctx, JSValueConst this_val, JSValue val
 static JSValue
 js_element_set_property_value(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2698,6 +2761,7 @@ js_element_set_property_value(JSContext *ctx, JSValueConst this_val, JSValue val
 static xmlpp::Element*
 el_add_child_element_common(xmlNode* child, xmlNode* node)
 {
+	ELOG
 	if (!node) {
 		xmlFreeNode(child);
 		throw xmlpp::internal_error("Could not add child element node");
@@ -2711,6 +2775,7 @@ el_add_child_element_common(xmlNode* child, xmlNode* node)
 static JSValue
 js_element_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2754,6 +2819,7 @@ js_element_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 static JSValue
 js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2848,6 +2914,7 @@ ex:
 static JSValue
 js_element_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -2923,6 +2990,7 @@ js_element_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, 
 static JSValue
 js_element_append(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3007,6 +3075,7 @@ js_element_append(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst 
 static JSValue
 js_element_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3059,6 +3128,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_element_blur(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3072,6 +3142,7 @@ js_element_blur(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *a
 static JSValue
 js_element_click(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3127,6 +3198,7 @@ js_element_click(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *
 static JSValue
 js_element_cloneNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3169,6 +3241,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static bool
 isAncestor(dom_node *el, dom_node *node)
 {
+	ELOG
 	dom_node *prev_next = NULL;
 	while (node) {
 		dom_exception exc;
@@ -3197,6 +3270,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_element_closest(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3291,6 +3365,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_element_contains(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3355,6 +3430,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_element_focus(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3404,6 +3480,7 @@ js_element_focus(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *
 static JSValue
 js_element_getAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3460,6 +3537,7 @@ js_element_getAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 static JSValue
 js_element_getAttributeNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3514,6 +3592,7 @@ js_element_getAttributeNode(JSContext *ctx, JSValueConst this_val, int argc, JSV
 static JSValue
 js_element_getBoundingClientRect(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3592,6 +3671,7 @@ ret:
 static JSValue
 js_element_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3644,6 +3724,7 @@ js_element_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc,
 static JSValue
 js_element_hasAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3695,6 +3776,7 @@ js_element_hasAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 static JSValue
 js_element_hasAttributes(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3730,6 +3812,7 @@ js_element_hasAttributes(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 static JSValue
 js_element_hasChildNodes(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3765,6 +3848,7 @@ js_element_hasChildNodes(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 static JSValue
 js_element_insertBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3823,6 +3907,7 @@ js_element_insertBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 static JSValue
 js_element_isEqualNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3879,6 +3964,7 @@ js_element_isEqualNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 static JSValue
 js_element_isSameNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3911,6 +3997,7 @@ js_element_isSameNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 static JSValue
 js_element_matches(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3942,6 +4029,7 @@ js_element_matches(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 static JSValue
 js_element_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -3987,6 +4075,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_element_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -4039,6 +4128,7 @@ js_element_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JSV
 static JSValue
 js_element_remove(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -4079,6 +4169,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_element_removeAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -4123,6 +4214,7 @@ js_element_removeAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 static JSValue
 js_element_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -4167,6 +4259,7 @@ js_element_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 static JSValue
 js_element_replaceWith(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -4312,6 +4405,7 @@ out:
 static JSValue
 js_element_setAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -4387,6 +4481,7 @@ js_element_setAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 static JSValue
 js_element_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -4481,6 +4576,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 void
 unset_el_private(void *priv)
 {
+	ELOG
 	struct js_element_private *el_private = (struct js_element_private *)priv;
 
 	if (el_private) {
@@ -4491,6 +4587,7 @@ unset_el_private(void *priv)
 static void
 js_element_finalizer(JSRuntime *rt, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -4532,6 +4629,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 js_element_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -4559,6 +4657,7 @@ static JSClassDef js_element_class = {
 static JSValue
 js_element_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -4588,6 +4687,7 @@ js_element_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValu
 static void
 JS_NewGlobalCConstructor2(JSContext *ctx, JSValue func_obj, const char *name, JSValueConst proto)
 {
+	ELOG
 	REF_JS(func_obj);
 	REF_JS(proto);
 
@@ -4603,6 +4703,7 @@ JS_NewGlobalCConstructor2(JSContext *ctx, JSValue func_obj, const char *name, JS
 static JSValueConst
 JS_NewGlobalCConstructor(JSContext *ctx, const char *name, JSCFunction *func, int length, JSValueConst proto)
 {
+	ELOG
 	JSValue func_obj;
 	func_obj = JS_NewCFunction2(ctx, func, name, length, JS_CFUNC_constructor_or_func, 0);
 	REF_JS(func_obj);
@@ -4616,6 +4717,7 @@ JS_NewGlobalCConstructor(JSContext *ctx, const char *name, JSCFunction *func, in
 int
 js_element_init(JSContext *ctx)
 {
+	ELOG
 	JSValue element_proto;
 
 	/* create the element class */
@@ -4643,6 +4745,7 @@ void *map_privates;
 JSValue
 getElement(JSContext *ctx, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -4685,6 +4788,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 void
 check_element_event(void *interp, void *elem, const char *event_name, struct term_event *ev)
 {
+	ELOG
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)interp;
 	JSContext *ctx = (JSContext *)interpreter->backend_data;
 	struct js_element_private *el_private = attr_find_in_map_void(map_privates, elem);
@@ -4723,6 +4827,7 @@ check_element_event(void *interp, void *elem, const char *event_name, struct ter
 static void
 element_event_handler(dom_event *event, void *pw)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

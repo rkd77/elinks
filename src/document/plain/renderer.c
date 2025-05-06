@@ -70,6 +70,7 @@ struct plain_renderer {
 static struct screen_char *
 realloc_line(struct document *document, int x, int y)
 {
+	ELOG
 	struct line *line = realloc_lines(document, y);
 
 	if (!line) return NULL;
@@ -88,6 +89,7 @@ static inline struct link *
 add_document_link(struct document *document, char *uri, int length,
 		  int x, int y)
 {
+	ELOG
 	struct link *link;
 	struct point *point;
 
@@ -121,6 +123,7 @@ static inline struct link *
 check_link_word(struct document *document, char *uri, int length,
 		int x, int y)
 {
+	ELOG
 	struct uri test;
 	char *where = NULL;
 	char *mailto = (char *)memchr(uri, '@', length);
@@ -167,6 +170,7 @@ check_link_word(struct document *document, char *uri, int length,
 static inline int
 get_uri_length(char *line, int length)
 {
+	ELOG
 	int uri_end = 0;
 
 	while (uri_end < length
@@ -187,6 +191,7 @@ print_document_link(struct plain_renderer *renderer, int lineno,
 		    char *line, int line_pos, int width,
 		    int expanded, struct screen_char *pos, int cells)
 {
+	ELOG
 	struct document *document = renderer->document;
 	char *start = &line[line_pos];
 	int len = get_uri_length(start, width - line_pos);
@@ -249,6 +254,7 @@ decode_esc_color(char *text, int *line_pos, int width,
 		 struct screen_char *template_, color_mode_T mode,
 		 int *was_reversed)
 {
+	ELOG
 	struct screen_char ch;
 	struct color_pair color;
 	char *buf, *tail, *begin, *end;
@@ -463,6 +469,7 @@ static inline int
 add_document_line(struct plain_renderer *renderer,
 		  char *line, int line_width)
 {
+	ELOG
 	struct document *document = renderer->document;
 	struct screen_char *template_ = &renderer->template_;
 	struct screen_char saved_renderer_template = *template_;
@@ -760,12 +767,14 @@ zero:
 static void
 init_template(struct screen_char *template_, struct document_options *options)
 {
+	ELOG
 	get_screen_char_template(template_, options, options->default_style);
 }
 
 static struct node *
 add_node(struct plain_renderer *renderer, int x, int width, int height)
 {
+	ELOG
 	struct node *node = (struct node *)mem_alloc(sizeof(*node));
 
 	if (node) {
@@ -785,6 +794,7 @@ add_node(struct plain_renderer *renderer, int x, int width, int height)
 static void
 add_document_lines(struct plain_renderer *renderer)
 {
+	ELOG
 	char *source = renderer->source;
 	int length = renderer->length;
 	int was_empty_line = 0;
@@ -897,6 +907,7 @@ add_document_lines(struct plain_renderer *renderer)
 static void
 fixup_tables(struct plain_renderer *renderer)
 {
+	ELOG
 	int y;
 
 	for (y = 0; y < renderer->lineno; y++) {
@@ -1017,6 +1028,7 @@ void
 render_plain_document(struct cache_entry *cached, struct document *document,
 		      struct string *buffer)
 {
+	ELOG
 	struct conv_table *convert_table;
 	char *head = empty_string_or_(cached->head);
 	struct plain_renderer renderer;

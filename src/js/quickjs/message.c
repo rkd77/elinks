@@ -47,6 +47,7 @@ struct message_event {
 static
 void js_messageEvent_finalizer(JSRuntime *rt, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -85,6 +86,7 @@ static const JSCFunctionListEntry js_messageEvent_proto_funcs[] = {
 static JSValue
 js_messageEvent_get_property_bubbles(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -103,6 +105,7 @@ js_messageEvent_get_property_bubbles(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_messageEvent_get_property_cancelable(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -121,6 +124,7 @@ js_messageEvent_get_property_cancelable(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_messageEvent_get_property_composed(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -139,6 +143,7 @@ js_messageEvent_get_property_composed(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_messageEvent_get_property_data(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -157,6 +162,7 @@ js_messageEvent_get_property_data(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_messageEvent_get_property_defaultPrevented(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -175,6 +181,7 @@ js_messageEvent_get_property_defaultPrevented(JSContext *ctx, JSValueConst this_
 static JSValue
 js_messageEvent_get_property_lastEventId(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -193,6 +200,7 @@ js_messageEvent_get_property_lastEventId(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_messageEvent_get_property_origin(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -211,6 +219,7 @@ js_messageEvent_get_property_origin(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_messageEvent_get_property_source(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -229,6 +238,7 @@ js_messageEvent_get_property_source(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_messageEvent_get_property_type(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -251,6 +261,7 @@ js_messageEvent_get_property_type(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_messageEvent_preventDefault(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -272,6 +283,7 @@ static int lastEventId;
 JSValue
 get_messageEvent(JSContext *ctx, char *data, char *origin, char *source)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -308,6 +320,7 @@ get_messageEvent(JSContext *ctx, char *data, char *origin, char *source)
 static JSValue
 js_messageEvent_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -386,6 +399,7 @@ js_messageEvent_constructor(JSContext *ctx, JSValueConst new_target, int argc, J
 static void
 JS_NewGlobalCConstructor2(JSContext *ctx, JSValue func_obj, const char *name, JSValueConst proto)
 {
+	ELOG
 	REF_JS(func_obj);
 	REF_JS(proto);
 
@@ -401,6 +415,7 @@ JS_NewGlobalCConstructor2(JSContext *ctx, JSValue func_obj, const char *name, JS
 static JSValueConst
 JS_NewGlobalCConstructor(JSContext *ctx, const char *name, JSCFunction *func, int length, JSValueConst proto)
 {
+	ELOG
 	JSValue func_obj;
 	func_obj = JS_NewCFunction2(ctx, func, name, length, JS_CFUNC_constructor_or_func, 0);
 	REF_JS(func_obj);
@@ -414,6 +429,7 @@ JS_NewGlobalCConstructor(JSContext *ctx, const char *name, JSCFunction *func, in
 int
 js_messageEvent_init(JSContext *ctx)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

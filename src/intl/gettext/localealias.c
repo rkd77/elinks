@@ -68,6 +68,7 @@ static int alias_compare(const struct alias_map * map1,
 const char *
 _nl_expand_alias(const char *name)
 {
+	ELOG
 	static const char *locale_alias_path = LOCALEDIR;
 	struct alias_map *retval;
 	const char *result = NULL;
@@ -122,6 +123,7 @@ _nl_expand_alias(const char *name)
 static size_t
 read_alias_file(const char *fname, int fname_len)
 {
+	ELOG
 	FILE *fp;
 	char *full_fname;
 	size_t added;
@@ -266,6 +268,7 @@ read_alias_file(const char *fname, int fname_len)
 static int
 extend_alias_table(void)
 {
+	ELOG
 	size_t new_size;
 	struct alias_map *new_map;
 
@@ -285,5 +288,6 @@ extend_alias_table(void)
 static int
 alias_compare(const struct alias_map *map1, const struct alias_map *map2)
 {
+	ELOG
 	return c_strcasecmp(map1->alias, map2->alias);
 }

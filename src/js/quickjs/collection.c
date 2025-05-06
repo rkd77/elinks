@@ -37,6 +37,7 @@ struct js_col {
 static void *
 js_htmlCollection_GetOpaque(JSValueConst this_val)
 {
+	ELOG
 	REF_JS(this_val);
 
 	return JS_GetOpaque(this_val, js_htmlCollection_class_id);
@@ -46,6 +47,7 @@ js_htmlCollection_GetOpaque(JSValueConst this_val)
 static void
 js_htmlCollection_SetOpaque(JSValueConst this_val, void *node)
 {
+	ELOG
 	REF_JS(this_val);
 
 	JS_SetOpaque(this_val, node);
@@ -62,6 +64,7 @@ js_htmlCollection_SetOpaque(JSValueConst this_val, void *node)
 static void
 js_htmlColection_finalizer(JSRuntime *rt, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -94,6 +97,7 @@ js_htmlColection_finalizer(JSRuntime *rt, JSValue val)
 static void
 js_htmlCollection_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -110,6 +114,7 @@ js_htmlCollection_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 static JSValue
 js_htmlCollection_get_property_length(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -139,6 +144,7 @@ js_htmlCollection_get_property_length(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_htmlCollection_item2(JSContext *ctx, JSValueConst this_val, int idx)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -176,6 +182,7 @@ js_htmlCollection_item2(JSContext *ctx, JSValueConst this_val, int idx)
 static JSValue
 js_htmlCollection_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -194,6 +201,7 @@ js_htmlCollection_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 static JSValue
 js_htmlCollection_namedItem2(JSContext *ctx, JSValueConst this_val, const char *str)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -281,6 +289,7 @@ js_htmlCollection_namedItem2(JSContext *ctx, JSValueConst this_val, const char *
 static JSValue
 js_htmlCollection_namedItem(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -308,6 +317,7 @@ js_htmlCollection_namedItem(JSContext *ctx, JSValueConst this_val, int argc, JSV
 static void
 js_htmlCollection_set_items(JSContext *ctx, JSValue this_val, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -366,6 +376,7 @@ js_htmlCollection_set_items(JSContext *ctx, JSValue this_val, void *node)
 static JSValue
 js_htmlCollection_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -384,6 +395,7 @@ static const JSCFunctionListEntry js_htmlCollection_proto_funcs[] = {
 static int
 js_obj_delete_property(JSContext *ctx, JSValueConst obj, JSAtom prop)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -398,6 +410,7 @@ js_obj_delete_property(JSContext *ctx, JSValueConst obj, JSAtom prop)
 static JSValue
 js_obj_get_property(JSContext *ctx, JSValueConst obj, JSAtom prop, JSValueConst receiver)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -413,6 +426,7 @@ js_obj_get_property(JSContext *ctx, JSValueConst obj, JSAtom prop, JSValueConst 
 static int
 js_obj_set_property(JSContext *ctx, JSValueConst obj, JSAtom prop, JSValueConst val, JSValueConst receiver, int flags)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -441,6 +455,7 @@ static JSClassDef js_htmlCollection_class = {
 static JSValue
 getCollection_common(JSContext *ctx, void *node, bool was_class_name)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -479,11 +494,13 @@ getCollection_common(JSContext *ctx, void *node, bool was_class_name)
 JSValue
 getCollection(JSContext *ctx, void *node)
 {
+	ELOG
 	return getCollection_common(ctx, node, false);
 }
 
 JSValue
 getCollection2(JSContext *ctx, void *node)
 {
+	ELOG
 	return getCollection_common(ctx, node, true);
 }

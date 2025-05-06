@@ -53,12 +53,14 @@ static union option_info nntp_protocol_options[] = {
 char *
 get_nntp_server(void)
 {
+	ELOG
 	return get_opt_nntp(NNTP_PROTOCOL_SERVER).value.string;
 }
 
 char *
 get_nntp_header_entries(void)
 {
+	ELOG
 	return get_opt_nntp(NNTP_PROTOCOL_HEADER_ENTRIES).value.string;
 }
 

@@ -44,6 +44,7 @@ match_hostname_pattern(const char *hostname,
 		       const char *pattern,
 		       size_t pattern_length)
 {
+	ELOG
 	const char *const hostname_end = hostname + hostname_length;
 	const char *const pattern_end = pattern + pattern_length;
 

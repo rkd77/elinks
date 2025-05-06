@@ -19,24 +19,28 @@
 int
 get_ctl_handle()
 {
+	ELOG
 	return -1;
 }
 
 char *
 gettext(const char *text)
 {
+	ELOG
 	return (char *)text;
 }
 
 int
 os_default_charset(void)
 {
+	ELOG
 	return -1;
 }
 
 int
 main(int argc, char *argv[])
 {
+	ELOG
 	struct ftp_file_info ftp_info = INIT_FTP_FILE_INFO;
 	char *response = "";
 	int i;

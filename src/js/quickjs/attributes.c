@@ -30,6 +30,7 @@ JSClassID js_attributes_class_id;
 static void *
 js_attributes_GetOpaque(JSValueConst this_val)
 {
+	ELOG
 	REF_JS(this_val);
 
 	return attr_find_in_map_rev(map_rev_attributes, this_val);
@@ -38,6 +39,7 @@ js_attributes_GetOpaque(JSValueConst this_val)
 static void
 js_attributes_SetOpaque(JSValueConst this_val, void *node)
 {
+	ELOG
 	REF_JS(this_val);
 
 	if (!node) {
@@ -50,6 +52,7 @@ js_attributes_SetOpaque(JSValueConst this_val, void *node)
 static void
 js_attributes_set_items(JSContext *ctx, JSValue this_val, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -108,6 +111,7 @@ next:
 static JSValue
 js_attributes_get_property_length(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -145,6 +149,7 @@ js_attributes_get_property_length(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_attributes_item2(JSContext *ctx, JSValueConst this_val, int idx)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -179,6 +184,7 @@ js_attributes_item2(JSContext *ctx, JSValueConst this_val, int idx)
 static JSValue
 js_attributes_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -197,6 +203,7 @@ js_attributes_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 static JSValue
 js_attributes_namedItem2(JSContext *ctx, JSValueConst this_val, const char *str)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -240,6 +247,7 @@ js_attributes_namedItem2(JSContext *ctx, JSValueConst this_val, const char *str)
 static JSValue
 js_attributes_getNamedItem(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -267,6 +275,7 @@ js_attributes_getNamedItem(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 static JSValue
 js_attributes_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -285,6 +294,7 @@ static const JSCFunctionListEntry js_attributes_proto_funcs[] = {
 static void
 js_attributes_finalizer(JSRuntime *rt, JSValue val)
 {
+	ELOG
 	void *attrs = js_attributes_GetOpaque(val);
 
 	js_attributes_SetOpaque(val, NULL);
@@ -302,6 +312,7 @@ static JSClassDef js_attributes_class = {
 JSValue
 getAttributes(JSContext *ctx, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

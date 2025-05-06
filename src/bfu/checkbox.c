@@ -24,6 +24,7 @@ void
 add_dlg_radio_do(struct dialog *dlg, char *text,
 		 int groupid, int groupnum, int *data)
 {
+	ELOG
 	struct widget *widget = &dlg->widgets[dlg->number_of_widgets++];
 
 	widget->type    = WIDGET_CHECKBOX;
@@ -41,6 +42,7 @@ dlg_format_checkbox(struct dialog_data *dlg_data,
 		    int x, int *y, int w, int *rw,
 		    format_align_T align, int format_only)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	char *text = widget_data->widget->text;
 
@@ -61,6 +63,7 @@ dlg_format_checkbox(struct dialog_data *dlg_data,
 static widget_handler_status_T
 display_checkbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	struct color_pair *color;
 	const char *text;
@@ -92,6 +95,7 @@ display_checkbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 static widget_handler_status_T
 init_checkbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	int *cdata = (int *) widget_data->cdata;
 
 	assert(cdata);
@@ -109,6 +113,7 @@ init_checkbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 static widget_handler_status_T
 mouse_checkbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	struct term_event *ev = dlg_data->term_event;
 
@@ -129,6 +134,7 @@ mouse_checkbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 static widget_handler_status_T
 select_checkbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	if (!widget_data->widget->info.checkbox.gid) {
 		/* Checkbox. */
 		int *cdata = (int *) widget_data->cdata;

@@ -92,6 +92,7 @@ static const struct about_page about_pages[] = {
 void
 about_protocol_handler(struct connection *conn)
 {
+	ELOG
 	struct cache_entry *cached = get_cache_entry(conn->uri);
 
 	/* Only do this the first time */

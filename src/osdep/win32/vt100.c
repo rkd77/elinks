@@ -23,6 +23,7 @@
 int
 VT100_decode(HANDLE fd, const void *b, int len)
 {
+	ELOG
 	static unsigned char intensity = 0;
 	static unsigned char fore = 7;
 	static unsigned char back = 0;

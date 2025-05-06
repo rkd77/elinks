@@ -41,6 +41,7 @@
 char *
 _nl_find_language(const char *name)
 {
+	ELOG
 	while (name[0] != '\0' && name[0] != '_' && name[0] != '@'
 	       && name[0] != '+' && name[0] != ',')
 		++name;
@@ -54,6 +55,7 @@ _nl_explode_name(char *name, const char **language, const char **modifier,
 		 const char **normalized_codeset, const char **special,
 		 const char **sponsor, const char **revision)
 {
+	ELOG
 	enum { undecided, xpg, cen } syntax;
 	char *cp;
 	int mask;

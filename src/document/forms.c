@@ -44,6 +44,7 @@ static struct form_type_name form_type2name[] = {
 enum form_type
 str2form_type(const char *s)
 {
+	ELOG
 	int n;
 
 	for (n = 0; n < FORM_TYPE_COUNT; n++)
@@ -56,6 +57,7 @@ str2form_type(const char *s)
 const char *
 form_type2str(enum form_type num)
 {
+	ELOG
 	int n;
 
 	for (n = 0; n < FORM_TYPE_COUNT; n++)
@@ -71,6 +73,7 @@ form_type2str(enum form_type num)
 struct form *
 init_form(void)
 {
+	ELOG
 	struct form *form = (struct form *)mem_calloc(1, sizeof(*form));
 
 	if (!form) return NULL;
@@ -86,6 +89,7 @@ init_form(void)
 void
 done_form(struct form *form)
 {
+	ELOG
 	struct el_form_control *fc;
 
 	if (form->next)
@@ -107,6 +111,7 @@ done_form(struct form *form)
 int
 has_form_submit(struct form *form)
 {
+	ELOG
 	struct el_form_control *fc;
 
 	assert(form);
@@ -127,6 +132,7 @@ has_form_submit(struct form *form)
 int
 get_form_control_link(struct document *document, struct el_form_control *fc)
 {
+	ELOG
 	int link;
 
 	/* Hidden form fields have no links. */
@@ -147,6 +153,7 @@ get_form_control_link(struct document *document, struct el_form_control *fc)
 void
 done_form_control(struct el_form_control *fc)
 {
+	ELOG
 	int i;
 
 	assert(fc);

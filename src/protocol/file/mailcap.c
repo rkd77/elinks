@@ -54,6 +54,7 @@ struct module mailcap_protocol_module = struct_module(
 static void
 get_request(struct connection *conn)
 {
+	ELOG
 	struct read_buffer *rb = alloc_read_buffer(conn->socket);
 
 	if (!rb) return;
@@ -73,6 +74,7 @@ get_request(struct connection *conn)
 void
 mailcap_protocol_handler(struct connection *conn)
 {
+	ELOG
 #ifdef HAVE_FORK
 	char *script, *ref;
 	pid_t pid;

@@ -72,6 +72,7 @@ secsave_errno_T secsave_errno = SS_ERR_NONE;
 static struct secure_save_info *
 secure_open_umask(char *file_name)
 {
+	ELOG
 	struct stat st;
 	struct secure_save_info *ssi;
 
@@ -205,6 +206,7 @@ end:
 struct secure_save_info *
 secure_open(char *file_name)
 {
+	ELOG
 	struct secure_save_info *ssi;
 	mode_t saved_mask;
 #ifdef CONFIG_OS_WIN32
@@ -227,6 +229,7 @@ secure_open(char *file_name)
 int
 secure_close(struct secure_save_info *ssi)
 {
+	ELOG
 	int ret = -1;
 
 	if (!ssi) return ret;
@@ -307,6 +310,7 @@ free:
 int
 secure_fputs(struct secure_save_info *ssi, const char *s)
 {
+	ELOG
 	int ret;
 
 	if (!ssi || !ssi->fp || ssi->err) return EOF;
@@ -327,6 +331,7 @@ secure_fputs(struct secure_save_info *ssi, const char *s)
 int
 secure_fputc(struct secure_save_info *ssi, int c)
 {
+	ELOG
 	int ret;
 
 	if (!ssi || !ssi->fp || ssi->err) return EOF;
@@ -346,6 +351,7 @@ secure_fputc(struct secure_save_info *ssi, int c)
 int
 secure_fprintf(struct secure_save_info *ssi, const char *format, ...)
 {
+	ELOG
 	va_list ap;
 	int ret;
 
@@ -362,6 +368,7 @@ secure_fprintf(struct secure_save_info *ssi, const char *format, ...)
 char *
 secsave_strerror(secsave_errno_T secsave_error, struct terminal *term)
 {
+	ELOG
 	switch (secsave_error) {
 	case SS_ERR_OPEN_READ:
 		return _("Cannot read the file", term);

@@ -35,6 +35,7 @@ extern char **environ;
 static char *
 get_global_hook_file(void)
 {
+	ELOG
 	static char buf[] = CONFDIR STRING_DIR_SEP PERL_HOOKS_FILENAME;
 
 	if (file_exists(buf)) return buf;
@@ -44,6 +45,7 @@ get_global_hook_file(void)
 static char *
 get_local_hook_file(void)
 {
+	ELOG
 	static char buf[1024];	/* TODO: MAX_PATH ??? --Zas */
 	char *xdg_config_home = get_xdg_config_home();
 
@@ -56,6 +58,7 @@ get_local_hook_file(void)
 static void
 precleanup_perl(struct module *module)
 {
+	ELOG
 	if (!my_perl) return;
 
 	perl_destruct(my_perl);
@@ -66,6 +69,7 @@ precleanup_perl(struct module *module)
 void
 cleanup_perl(struct module *module)
 {
+	ELOG
 	precleanup_perl(module);
 #ifdef PERL_SYS_TERM
 	PERL_SYS_TERM();
@@ -76,6 +80,7 @@ cleanup_perl(struct module *module)
 static void
 xs_init(pTHX)
 {
+	ELOG
 	/* DynaLoader is the only Perl module whose library is
 	 * statically linked into ELinks.  DynaLoader::bootstrap will
 	 * then load other libraries and register their XSUBs as
@@ -86,6 +91,7 @@ xs_init(pTHX)
 void
 init_perl(struct module *module)
 {
+	ELOG
 	/* FIXME: it seems that some systems like OS/2 requires PERL_SYS_INIT3
 	 * and PERL_SYS_TERM to open/close the same block, at least regarding
 	 * some ml messages.

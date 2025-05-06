@@ -33,6 +33,7 @@ static void unhandle_basic_signals(struct terminal *term);
 static void
 sig_terminate(struct terminal *term)
 {
+	ELOG
 	unhandle_basic_signals(term);
 	program.terminate = 1;
 	program.retval = RET_SIGNAL;
@@ -42,6 +43,7 @@ sig_terminate(struct terminal *term)
 static void
 sig_intr(struct terminal *term)
 {
+	ELOG
 	unhandle_basic_signals(term);
 
 	if (!term)
@@ -54,6 +56,7 @@ sig_intr(struct terminal *term)
 void
 sig_ctrl_c(struct terminal *term)
 {
+	ELOG
 	if (!is_blocked()) kbd_ctrl_c();
 }
 
@@ -61,6 +64,7 @@ sig_ctrl_c(struct terminal *term)
 static void
 sig_ign(void *x)
 {
+	ELOG
 }
 #endif
 
@@ -72,6 +76,7 @@ static struct timer *fg_poll_timer = NULL;
 static void
 sig_tstp(struct terminal *term)
 {
+	ELOG
 #ifdef SIGSTOP
 	pid_t pid = getpid();
 
@@ -101,6 +106,7 @@ sig_tstp(struct terminal *term)
 static void
 poll_fg(void *t_)
 {
+	ELOG
 	struct terminal *t = (struct terminal *)t_;
 	int r ;
 
@@ -127,6 +133,7 @@ poll_fg(void *t_)
 static void
 sig_cont(struct terminal *term)
 {
+	ELOG
 	if (!unblock_itrm()) {
 		resize_terminal();
 	}
@@ -137,6 +144,7 @@ sig_cont(struct terminal *term)
 static void
 sig_segv(struct terminal *term)
 {
+	ELOG
 	/* Get some attention. */
 	fputs("\a", stderr); fflush(stderr); sleep(1); fputs("\a\n", stderr);
 
@@ -166,6 +174,7 @@ sig_segv(struct terminal *term)
 void
 handle_basic_signals(struct terminal *term)
 {
+	ELOG
 #ifdef SIGHUP
 	install_signal_handler(SIGHUP, (void (*)(void *)) sig_intr, term, 0);
 #endif
@@ -191,6 +200,7 @@ handle_basic_signals(struct terminal *term)
 void
 unhandle_terminal_signals(struct terminal *term)
 {
+	ELOG
 #ifdef SIGHUP
 	install_signal_handler(SIGHUP, NULL, NULL, 0);
 #endif
@@ -215,6 +225,7 @@ unhandle_terminal_signals(struct terminal *term)
 static void
 unhandle_basic_signals(struct terminal *term)
 {
+	ELOG
 #ifdef SIGHUP
 	install_signal_handler(SIGHUP, NULL, NULL, 0);
 #endif
@@ -253,6 +264,7 @@ static struct signal_info signal_info[NUM_SIGNALS];
 static void
 got_signal(int sig)
 {
+	ELOG
 	struct signal_info *s;
 	int saved_errno = errno;
 
@@ -293,6 +305,7 @@ got_signal(int sig)
 void
 install_signal_handler(int sig, void (*fn)(void *), void *data, int critical)
 {
+	ELOG
 #ifdef HAVE_SIGACTION
 	struct sigaction sa;
 #else
@@ -332,6 +345,7 @@ install_signal_handler(int sig, void (*fn)(void *), void *data, int critical)
 static void
 sig_chld(void *p)
 {
+	ELOG
 #ifdef WNOHANG
 	while ((int) waitpid(-1, NULL, WNOHANG) > 0);
 #else
@@ -343,6 +357,7 @@ sig_chld(void *p)
 void
 set_sigcld(void)
 {
+	ELOG
 #ifdef SIGCHLD
 	install_signal_handler(SIGCHLD, sig_chld, NULL, 1);
 #endif
@@ -351,12 +366,14 @@ set_sigcld(void)
 void
 clear_signal_mask_and_handlers(void)
 {
+	ELOG
 	memset(signal_info, 0, sizeof(signal_info));
 }
 
 int
 check_signals(void)
 {
+	ELOG
 	int i, r = 0;
 
 	for (i = 0; i < NUM_SIGNALS; i++) {

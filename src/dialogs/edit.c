@@ -24,6 +24,7 @@
 static widget_handler_status_T
 my_cancel_dialog(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	((void (*)(struct dialog *)) widget_data->widget->data)(dlg_data->dlg);
 	return cancel_dialog(dlg_data, widget_data);
 }
@@ -48,6 +49,7 @@ do_edit_dialog(struct terminal *term, int intl, char *title,
 	       void *done_data,
 	       enum edit_dialog_type dialog_type)
 {
+	ELOG
 	/* [gettext_accelerator_context(do_edit_dialog)] */
 	char *name, *url;
 	struct dialog *dlg;

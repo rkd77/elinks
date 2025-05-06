@@ -27,6 +27,7 @@
 static void
 mjs_image_fun(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -36,6 +37,7 @@ mjs_image_fun(js_State *J)
 static void
 mjs_image_constructor(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -80,6 +82,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 int
 mjs_image_init(js_State *J)
 {
+	ELOG
 	js_pushglobal(J);
 	js_newcconstructor(J, mjs_image_fun, mjs_image_constructor, "Image", 0);
 	js_defglobal(J, "Image", JS_DONTENUM);

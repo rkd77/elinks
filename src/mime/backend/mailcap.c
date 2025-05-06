@@ -147,6 +147,7 @@ static struct hash *mailcap_map = NULL;
 static inline void
 done_mailcap_entry(struct mailcap_entry *entry)
 {
+	ELOG
 	if (!entry) return;
 	mem_free_if(entry->testcommand);
 	mem_free_if(entry->description);
@@ -159,6 +160,7 @@ done_mailcap_entry(struct mailcap_entry *entry)
 static inline struct mailcap_entry *
 init_mailcap_entry(char *command, int priority)
 {
+	ELOG
 	struct mailcap_entry *entry;
 	int commandlen = strlen(command);
 
@@ -175,6 +177,7 @@ init_mailcap_entry(char *command, int priority)
 static inline void
 add_mailcap_entry(struct mailcap_entry *entry, char *type, int typelen)
 {
+	ELOG
 	struct mailcap_hash_item *mitem;
 	struct hash_item *item;
 
@@ -227,6 +230,7 @@ add_mailcap_entry(struct mailcap_entry *entry, char *type, int typelen)
 static char *
 get_mailcap_field(char **next)
 {
+	ELOG
 	char *field;
 	char *fieldend;
 
@@ -271,6 +275,7 @@ get_mailcap_field(char **next)
 static char *
 get_mailcap_field_text(char *field)
 {
+	ELOG
 	skip_space(field);
 
 	if (*field == '=') {
@@ -287,6 +292,7 @@ get_mailcap_field_text(char *field)
 static inline int
 parse_optional_fields(struct mailcap_entry *entry, char *line)
 {
+	ELOG
 	while (0xf131d5) {
 		char *field = get_mailcap_field(&line);
 
@@ -331,6 +337,7 @@ parse_optional_fields(struct mailcap_entry *entry, char *line)
 static void
 parse_mailcap_file(char *filename, unsigned int priority)
 {
+	ELOG
 	FILE *file = fopen(filename, "rb");
 	char *line = NULL;
 	size_t linelen = MAX_STR_LEN;
@@ -409,6 +416,7 @@ parse_mailcap_file(char *filename, unsigned int priority)
 static struct hash *
 init_mailcap_map(void)
 {
+	ELOG
 	char *path;
 	unsigned int priority = 0;
 
@@ -434,6 +442,7 @@ init_mailcap_map(void)
 static void
 done_mailcap(struct module *module)
 {
+	ELOG
 	struct hash_item *item;
 	int i;
 
@@ -462,6 +471,7 @@ done_mailcap(struct module *module)
 static int
 change_hook_mailcap(struct session *ses, struct option *current, struct option *changed)
 {
+	ELOG
 	if (changed == &get_opt_mailcap(MAILCAP_PATH)
 	    || (changed == &get_opt_mailcap(MAILCAP_ENABLE)
 		&& !get_mailcap_enable())) {
@@ -474,6 +484,7 @@ change_hook_mailcap(struct session *ses, struct option *current, struct option *
 static void
 init_mailcap(struct module *module)
 {
+	ELOG
 	static const struct change_hook_info mimetypes_change_hooks[] = {
 		{ "mime.mailcap",		change_hook_mailcap },
 		{ NULL,				NULL },
@@ -509,6 +520,7 @@ init_mailcap(struct module *module)
 static char *
 format_command(char *command, char *type, int copiousoutput)
 {
+	ELOG
 	struct string cmd;
 
 	if (!init_string(&cmd)) return NULL;
@@ -571,6 +583,7 @@ format_command(char *command, char *type, int copiousoutput)
 static struct mailcap_entry *
 check_entries(struct mailcap_hash_item *item)
 {
+	ELOG
 	struct mailcap_entry *entry;
 
 	foreach (entry, item->entries) {
@@ -608,6 +621,7 @@ check_entries(struct mailcap_hash_item *item)
 static struct mailcap_entry *
 get_mailcap_entry(char *type)
 {
+	ELOG
 	struct mailcap_entry *entry;
 	struct hash_item *item;
 
@@ -691,6 +705,7 @@ get_mailcap_entry(char *type)
 static void
 set_display(int xwin, int restore)
 {
+	ELOG
 	static char *display = NULL;
 
 	if (!restore) {
@@ -742,6 +757,7 @@ set_display(int xwin, int restore)
 static struct mime_handler *
 get_mime_handler_mailcap(char *type, int xwin)
 {
+	ELOG
 	struct mailcap_entry *entry;
 	struct mime_handler *handler;
 	char *program;
@@ -802,12 +818,14 @@ struct option *cmdline_options;
 union option_value *
 get_opt_(char *a, int, enum option_type b, struct option *c, const char *d, struct session *e)
 {
+	ELOG
 	return NULL;
 }
 #else
 union option_value *
 get_opt_(struct option *a , const char *b, struct session *c)
 {
+	ELOG
 	return NULL;
 }
 #endif
@@ -824,6 +842,7 @@ LIST_OF(struct terminal) terminals;
 int
 main(int argc, char *argv[])
 {
+	ELOG
 	char *format = "description,ask,block,program";
 	int has_gotten = 0;
 	int setenv_display = 0;

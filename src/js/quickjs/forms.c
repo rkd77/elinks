@@ -32,6 +32,7 @@ void *map_rev_forms;
 static void
 forms_SetOpaque(JSValueConst this_val, void *node)
 {
+	ELOG
 	REF_JS(this_val);
 
 	if (!node) {
@@ -48,6 +49,7 @@ js_find_form_by_name(JSContext *ctx,
 		  struct document_view *doc_view,
 		  const char *string)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -68,6 +70,7 @@ js_find_form_by_name(JSContext *ctx,
 static void
 js_forms_set_items(JSContext *ctx, JSValueConst this_val, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -104,6 +107,7 @@ js_forms_set_items(JSContext *ctx, JSValueConst this_val, void *node)
 static JSValue
 js_forms_get_property_length(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -127,6 +131,7 @@ js_forms_get_property_length(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_forms_item2(JSContext *ctx, JSValueConst this_val, int index)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -158,6 +163,7 @@ js_forms_item2(JSContext *ctx, JSValueConst this_val, int index)
 static JSValue
 js_forms_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -179,6 +185,7 @@ js_forms_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *arg
 static JSValue
 js_forms_namedItem(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -208,6 +215,7 @@ js_forms_namedItem(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 JSString *
 unicode_to_jsstring(JSContext *ctx, unicode_val_T u)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -238,6 +246,7 @@ unicode_to_jsstring(JSContext *ctx, unicode_val_T u)
 static JSValue
 js_forms_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -256,6 +265,7 @@ static const JSCFunctionListEntry js_forms_proto_funcs[] = {
 JSValue
 getForms(JSContext *ctx, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

@@ -40,6 +40,7 @@ extern const char *_nl_current_default_domain__;
 char *
 textdomain__(const char *domainname)
 {
+	ELOG
 	char *new_domain;
 	char *old_domain;
 

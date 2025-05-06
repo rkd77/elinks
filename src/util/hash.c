@@ -30,6 +30,7 @@ static hash_value_T strhash(const char *k, unsigned int length, hash_value_T ini
 static inline struct hash *
 init_hash(unsigned int width, hash_func_T func)
 {
+	ELOG
 	struct hash *hash;
 	unsigned int i = 0;
 
@@ -55,6 +56,7 @@ init_hash(unsigned int width, hash_func_T func)
 struct hash *
 init_hash8(void)
 {
+	ELOG
 	return init_hash(8, &strhash);
 }
 
@@ -62,6 +64,7 @@ init_hash8(void)
 void
 free_hash(struct hash **hashp)
 {
+	ELOG
 	unsigned int i = 0;
 
 	assert(hashp && *hashp);
@@ -85,6 +88,7 @@ struct hash_item *
 add_hash_item(struct hash *hash, const char *key, unsigned int keylen,
 	      void *value)
 {
+	ELOG
 	hash_value_T hashval;
 	struct hash_item *item = (struct hash_item *)mem_alloc(sizeof(*item));
 
@@ -105,6 +109,7 @@ add_hash_item(struct hash *hash, const char *key, unsigned int keylen,
 struct hash_item *
 get_hash_item(struct hash *hash, const char *key, unsigned int keylen)
 {
+	ELOG
 	struct list_head *list;
 	struct hash_item *item;
 	hash_value_T hashval;
@@ -136,6 +141,7 @@ get_hash_item(struct hash *hash, const char *key, unsigned int keylen)
 void
 del_hash_item(struct hash *hash, struct hash_item *item)
 {
+	ELOG
 	assert(item);
 	if_assert_failed return;
 
@@ -155,6 +161,7 @@ strhash(const char *k,
 	unsigned int length,
 	hash_value_T initval)
 {
+	ELOG
 	const char *p = (const char *) k;
 	hash_value_T h = initval;
 	unsigned int i = 0;
@@ -280,6 +287,7 @@ strhash(char *k,
 	unsigned int length,
 	hash_value_T initval)
 {
+	ELOG
 	int len;
 	hash_value_T a, b, c;
 

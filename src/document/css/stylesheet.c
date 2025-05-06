@@ -32,6 +32,7 @@ find_css_selector(struct css_selector_set *sels,
                   enum css_selector_relation rel,
                   const char *name, int namelen)
 {
+	ELOG
 	struct css_selector *selector;
 
 	assert(sels && name);
@@ -53,6 +54,7 @@ init_css_selector(struct css_selector_set *sels,
                   enum css_selector_relation relation,
                   const char *name, int namelen)
 {
+	ELOG
 	struct css_selector *selector;
 
 	selector = (struct css_selector *)mem_calloc(1, sizeof(*selector));
@@ -87,6 +89,7 @@ void
 set_css_selector_relation(struct css_selector *selector,
 			  enum css_selector_relation relation)
 {
+	ELOG
 	/* Changing the relation after the selector is in a set might require
 	 * setting css_relation_set.may_contain_rel_ancestor_or_parent,
 	 * but we don't have a pointer to the set here.  */
@@ -100,6 +103,7 @@ get_css_selector(struct css_selector_set *sels,
                  enum css_selector_relation rel,
                  const char *name, int namelen)
 {
+	ELOG
 	struct css_selector *selector = NULL;
 
 	if (sels && name && namelen) {
@@ -114,6 +118,7 @@ get_css_selector(struct css_selector_set *sels,
 static struct css_selector *
 copy_css_selector(struct css_stylesheet *css, struct css_selector *orig)
 {
+	ELOG
 	struct css_selector *copy;
 
 	assert(css && orig);
@@ -130,6 +135,7 @@ copy_css_selector(struct css_stylesheet *css, struct css_selector *orig)
 static void
 add_selector_property(struct css_selector *selector, struct css_property *prop)
 {
+	ELOG
 	struct css_property *newprop = (struct css_property *)mem_alloc(sizeof(*newprop));
 
 	if (newprop) {
@@ -142,6 +148,7 @@ void
 add_selector_properties(struct css_selector *selector,
                         LIST_OF(struct css_property) *properties)
 {
+	ELOG
 	struct css_property *prop;
 
 	foreach (prop, *properties) {
@@ -152,6 +159,7 @@ add_selector_properties(struct css_selector *selector,
 static struct css_selector *
 clone_css_selector(struct css_stylesheet *css, struct css_selector *orig)
 {
+	ELOG
 	struct css_selector *copy;
 
 	assert(css && orig);
@@ -166,6 +174,7 @@ clone_css_selector(struct css_stylesheet *css, struct css_selector *orig)
 void
 merge_css_selectors(struct css_selector *sel1, struct css_selector *sel2)
 {
+	ELOG
 	struct css_property *prop;
 
 	foreach (prop, sel2->properties) {
@@ -186,6 +195,7 @@ merge_css_selectors(struct css_selector *sel1, struct css_selector *sel2)
 void
 done_css_selector(struct css_selector *selector)
 {
+	ELOG
 	done_css_selector_set(&selector->leaves);
 
 	if (css_selector_is_in_set(selector))
@@ -198,6 +208,7 @@ done_css_selector(struct css_selector *selector)
 void
 init_css_selector_set(struct css_selector_set *set)
 {
+	ELOG
 	set->may_contain_rel_ancestor_or_parent = 0;
 	init_list(set->list);
 }
@@ -205,6 +216,7 @@ init_css_selector_set(struct css_selector_set *set)
 void
 done_css_selector_set(struct css_selector_set *set)
 {
+	ELOG
 	while (!css_selector_set_empty(set)) {
 		done_css_selector(css_selector_set_front(set));
 	}
@@ -214,6 +226,7 @@ void
 add_css_selector_to_set(struct css_selector *selector,
 			struct css_selector_set *set)
 {
+	ELOG
 	assert(!css_selector_is_in_set(selector));
 
 	add_to_list(set->list, selector);
@@ -225,6 +238,7 @@ add_css_selector_to_set(struct css_selector *selector,
 void
 del_css_selector_from_set(struct css_selector *selector)
 {
+	ELOG
 	del_from_list(selector);
 	selector->next = NULL;
 	selector->prev = NULL;
@@ -234,6 +248,7 @@ del_css_selector_from_set(struct css_selector *selector)
 void
 dump_css_selector_tree_iter(struct css_selector_set *sels, int level)
 {
+	ELOG
 	struct css_selector *sel;
 
 	foreach_css_selector (sel, sels) {
@@ -253,6 +268,7 @@ dump_css_selector_tree_iter(struct css_selector_set *sels, int level)
 void
 dump_css_selector_tree(struct css_selector_set *sels)
 {
+	ELOG
 	dump_css_selector_tree_iter(sels, 0);
 }
 #endif
@@ -262,6 +278,7 @@ dump_css_selector_tree(struct css_selector_set *sels)
 struct css_stylesheet *
 init_css_stylesheet(css_stylesheet_importer_T importer, void *import_data)
 {
+	ELOG
 	struct css_stylesheet *css;
 
 	css = (struct css_stylesheet *)mem_calloc(1, sizeof(*css));
@@ -277,6 +294,7 @@ init_css_stylesheet(css_stylesheet_importer_T importer, void *import_data)
 void
 mirror_css_stylesheet(struct css_stylesheet *css1, struct css_stylesheet *css2)
 {
+	ELOG
 	struct css_selector *selector;
 
 	foreach_css_selector (selector, &css1->selectors) {
@@ -288,6 +306,7 @@ mirror_css_stylesheet(struct css_stylesheet *css1, struct css_stylesheet *css2)
 struct css_stylesheet *
 clone_css_stylesheet(struct css_stylesheet *orig)
 {
+	ELOG
 	struct css_stylesheet *copy;
 	struct css_selector *selector;
 
@@ -302,6 +321,7 @@ void
 merge_css_stylesheets(struct css_stylesheet *css1,
 		      struct css_stylesheet *css2)
 {
+	ELOG
 	struct css_selector *selector;
 
 	assert(css1 && css2);
@@ -327,5 +347,6 @@ merge_css_stylesheets(struct css_stylesheet *css1,
 void
 done_css_stylesheet(struct css_stylesheet *css)
 {
+	ELOG
 	done_css_selector_set(&css->selectors);
 }

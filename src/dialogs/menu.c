@@ -52,6 +52,7 @@
 static void
 menu_url_shortcut(struct terminal *term, void *url_, void *ses_)
 {
+	ELOG
 	char *url = (char *)url_;
 	struct session *ses = (struct session *)ses_;
 	struct uri *uri = get_uri(url, URI_NONE);
@@ -64,6 +65,7 @@ menu_url_shortcut(struct terminal *term, void *url_, void *ses_)
 static void
 save_url(struct session *ses, char *url)
 {
+	ELOG
 	struct document_view *doc_view;
 	struct uri *uri;
 
@@ -93,6 +95,7 @@ save_url(struct session *ses, char *url)
 void
 save_url_as(struct session *ses)
 {
+	ELOG
 	input_dialog(ses->tab->term, NULL,
 		     N_("Save URL"), N_("Enter URL"),
 		     ses, &goto_url_history,
@@ -104,6 +107,7 @@ save_url_as(struct session *ses)
 static void
 really_exit_prog(void *ses_)
 {
+	ELOG
 	struct session *ses = (struct session *)ses_;
 
 	register_bottom_half(destroy_terminal, ses->tab->term);
@@ -112,6 +116,7 @@ really_exit_prog(void *ses_)
 static inline void
 dont_exit_prog(void *ses_)
 {
+	ELOG
 	struct session *ses = (struct session *)ses_;
 
 	ses->exit_query = 0;
@@ -120,6 +125,7 @@ dont_exit_prog(void *ses_)
 void
 query_exit(struct session *ses)
 {
+	ELOG
 	/* [gettext_accelerator_context(query_exit)] */
 	ses->exit_query = 1;
 	msg_box(ses->tab->term, NULL, 0,
@@ -136,6 +142,7 @@ query_exit(struct session *ses)
 void
 exit_prog(struct session *ses, int query)
 {
+	ELOG
 	assert(ses);
 
 	/* An exit query is in progress. */
@@ -156,6 +163,7 @@ exit_prog(struct session *ses, int query)
 static void
 go_historywards(struct terminal *term, void *target_, void *ses_)
 {
+	ELOG
 	struct location *target = (struct location *)target_;
 	struct session *ses = (struct session *)ses_;
 
@@ -172,6 +180,7 @@ static struct menu_item no_hist_menu[] = {
 static void
 history_menu_common(struct terminal *term, struct session *ses, int unhist)
 {
+	ELOG
 	struct menu_item *mi = NULL;
 
 	if (have_location(ses)) {
@@ -205,6 +214,7 @@ history_menu_common(struct terminal *term, struct session *ses, int unhist)
 static void
 history_menu(struct terminal *term, void *xxx, void *ses_)
 {
+	ELOG
 	struct session *ses = (struct session *)ses_;
 
 	history_menu_common(term, ses, 0);
@@ -213,6 +223,7 @@ history_menu(struct terminal *term, void *xxx, void *ses_)
 static void
 unhistory_menu(struct terminal *term, void *xxx, void *ses_)
 {
+	ELOG
 	struct session *ses = (struct session *)ses_;
 
 	history_menu_common(term, ses, 1);
@@ -221,6 +232,7 @@ unhistory_menu(struct terminal *term, void *xxx, void *ses_)
 void
 tab_menu(struct session *ses, int x, int y, int place_above_cursor)
 {
+	ELOG
 	/* [gettext_accelerator_context(tab_menu)] */
 	struct menu_item *menu;
 	int tabs_count;
@@ -301,6 +313,7 @@ tab_menu(struct session *ses, int x, int y, int place_above_cursor)
 static void
 do_submenu(struct terminal *term, void *menu_, void *ses_)
 {
+	ELOG
 	struct menu_item *menu = (struct menu_item *)menu_;
 
 	do_menu(term, menu, ses_, 1);
@@ -349,6 +362,7 @@ static struct menu_item file_menu3[] = {
 static void
 do_file_menu(struct terminal *term, void *xxx, void *ses_)
 {
+	ELOG
 	/* [gettext_accelerator_context(.file_menu)] */
 	struct menu_item *file_menu, *e, *f;
 	int anonymous = get_cmd_opt_bool("anonymous");
@@ -512,6 +526,7 @@ static struct menu_item tools_menu[] = {
 static void
 do_setup_menu(struct terminal *term, void *xxx, void *ses_)
 {
+	ELOG
 	struct session *ses = (struct session *)ses_;
 
 	if (!get_cmd_opt_bool("anonymous"))
@@ -534,6 +549,7 @@ static struct menu_item main_menu[] = {
 void
 activate_bfu_technology(struct session *ses, int item)
 {
+	ELOG
 	do_mainmenu(ses->tab->term, main_menu, ses, item);
 }
 
@@ -541,6 +557,7 @@ activate_bfu_technology(struct session *ses, int item)
 void
 dialog_goto_url(struct session *ses, char *url)
 {
+	ELOG
 	input_dialog(ses->tab->term, NULL,
 		     N_("Go to URL"), N_("Enter URL"),
 		     ses, &goto_url_history,
@@ -557,6 +574,7 @@ query_file(struct session *ses, struct uri *uri, void *data,
 	   void (*std)(void *, char *),
 	   void (*cancel)(void *), int interactive)
 {
+	ELOG
 	struct string def;
 
 	assert(ses && uri);
@@ -615,6 +633,7 @@ query_file(struct session *ses, struct uri *uri, void *data,
 void
 free_history_lists(void)
 {
+	ELOG
 	free_list(file_history.entries);
 #ifdef CONFIG_SCRIPTING
 	trigger_event_name("free-history");
@@ -625,6 +644,7 @@ free_history_lists(void)
 static void
 add_cmdline_bool_option(struct string *string, const char *name)
 {
+	ELOG
 	if (!get_cmd_opt_bool(name)) return;
 	add_to_string(string, " -");
 	add_to_string(string, name);
@@ -635,6 +655,7 @@ open_uri_in_new_window(struct session *ses, struct uri *uri, struct uri *referre
 		       term_env_type_T env, cache_mode_T cache_mode,
 		       enum task_type task)
 {
+	ELOG
 	int ring = get_cmd_opt_int("session-ring");
 	struct string parameters;
 	int id;
@@ -669,6 +690,7 @@ void
 send_open_in_new_window(struct terminal *term, const struct open_in_new *open,
 			struct session *ses)
 {
+	ELOG
 	struct document_view *doc_view;
 	struct link *link;
 	struct uri *uri;
@@ -694,6 +716,7 @@ void
 send_open_new_window(struct terminal *term, const struct open_in_new *open,
 		     struct session *ses)
 {
+	ELOG
 	open_uri_in_new_window(ses, NULL, NULL, open->env,
 			       CACHE_MODE_NORMAL, TASK_NONE);
 }
@@ -702,6 +725,7 @@ send_open_new_window(struct terminal *term, const struct open_in_new *open,
 void
 open_in_new_window(struct terminal *term, void *func_, void *ses_)
 {
+	ELOG
 	menu_func_T func = (menu_func_T)func_;
 	struct session *ses = (struct session *)ses_;
 	struct menu_item *mi;
@@ -741,6 +765,7 @@ void
 add_new_win_to_menu(struct menu_item **mi, char *text,
 		    struct terminal *term)
 {
+	ELOG
 	int c = can_open_in_new(term);
 
 	if (!c) return;
@@ -763,6 +788,7 @@ add_new_win_to_menu(struct menu_item **mi, char *text,
 static void
 do_pass_uri_to_command(struct terminal *term, void *command_, void *xxx)
 {
+	ELOG
 	char *command = (char *)command_;
 	int block = command[0] == 'b' ? TERM_EXEC_BG : TERM_EXEC_FG;
 
@@ -777,6 +803,7 @@ do_pass_uri_to_command(struct terminal *term, void *command_, void *xxx)
 static char *
 format_command(char *format, struct uri *uri)
 {
+	ELOG
 	struct string string;
 
 	if (!init_string(&string)) return NULL;
@@ -819,6 +846,7 @@ enum frame_event_status
 pass_uri_to_command(struct session *ses, struct document_view *doc_view,
 		    int which_type)
 {
+	ELOG
 	LIST_OF(struct option) *tree = get_opt_tree("document.uri_passing",
 	                                            NULL);
 	pass_uri_type_T type = which_type;
@@ -918,6 +946,7 @@ void
 add_uri_command_to_menu(struct menu_item **mi, pass_uri_type_T type,
 			char *text)
 {
+	ELOG
 	LIST_OF(struct option) *tree = get_opt_tree("document.uri_passing",
 	                                            NULL);
 	struct option *option;
@@ -972,6 +1001,7 @@ complete_file_menu(struct terminal *term, int no_elevator, void *data,
 		   menu_func_T file_func, menu_func_T dir_func,
 		   char *dirname, char *filename)
 {
+	ELOG
 	struct menu_item *menu = new_menu(FREE_LIST | NO_INTL);
 	struct directory_entry *entries, *entry;
 	int filenamelen = strlen(filename);
@@ -1072,6 +1102,7 @@ void
 auto_complete_file(struct terminal *term, int no_elevator, char *path,
 		   menu_func_T file_func, menu_func_T dir_func, void *data)
 {
+	ELOG
 	struct uri *uri;
 	char *dirname;
 	char *filename;

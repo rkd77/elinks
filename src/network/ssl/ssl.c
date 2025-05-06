@@ -65,6 +65,7 @@ static int
 socket_SSL_ex_data_dup(CRYPTO_EX_DATA *to, const CRYPTO_EX_DATA *from,
 		       WSK from_d, int idx, long argl, void *argp)
 {
+	ELOG
 	/* The documentation of from_d in RSA_get_ex_new_index(3)
 	 * is a bit unclear.  The caller does something like:
 	 *
@@ -93,6 +94,7 @@ socket_SSL_ex_data_dup(CRYPTO_EX_DATA *to, const CRYPTO_EX_DATA *from,
 static int
 ssl_set_private_paths(SSL_CTX *ctx)
 {
+	ELOG
 	char *path, *c;
 	char *bundle = getenv("CURL_CA_BUNDLE");
 	int r;
@@ -131,6 +133,7 @@ ssl_set_private_paths(SSL_CTX *ctx)
 static void
 init_openssl(struct module *module)
 {
+	ELOG
 	char f_randfile[PATH_MAX];
 
 	/* In a nutshell, on OS's without a /dev/urandom, the OpenSSL library
@@ -174,6 +177,7 @@ init_openssl(struct module *module)
 static const char *
 get_name_openssl(struct module *xxx)
 {
+	ELOG
 	static char opensslversion[64];
 	strncpy(opensslversion, SSLeay_version(OPENSSL_VERSION), 63);
 
@@ -183,6 +187,7 @@ get_name_openssl(struct module *xxx)
 static void
 done_openssl(struct module *module)
 {
+	ELOG
 	if (context) SSL_CTX_free(context);
 	/* There is no function that undoes SSL_get_ex_new_index.  */
 }
@@ -269,6 +274,7 @@ const static int cert_type_priority[16] = { GNUTLS_CRT_X509, GNUTLS_CRT_OPENPGP,
 static void
 init_gnutls(struct module *module)
 {
+	ELOG
 	int ret = gnutls_global_init();
 	char *ca_file = get_opt_str("connection.ssl.trusted_ca_file",
 					     NULL);
@@ -318,6 +324,7 @@ init_gnutls(struct module *module)
 static const char *
 get_name_gnutls(struct module *xxx)
 {
+	ELOG
 	static char gnutlsversion[64];
 	snprintf(gnutlsversion, 63, "GnuTLS %s", gnutls_check_version(NULL));
 
@@ -327,6 +334,7 @@ get_name_gnutls(struct module *xxx)
 static void
 done_gnutls(struct module *module)
 {
+	ELOG
 	if (xcred) gnutls_certificate_free_credentials(xcred);
 	if (anon_cred) gnutls_anon_free_client_credentials(anon_cred);
 	gnutls_global_deinit();
@@ -434,6 +442,7 @@ int
 init_ssl_connection(struct socket *socket,
 		    const char *server_name)
 {
+	ELOG
 #ifdef USE_OPENSSL
 	socket->ssl = SSL_new(context);
 	if (!socket->ssl) return S_SSL_ERROR;
@@ -531,6 +540,7 @@ init_ssl_connection(struct socket *socket,
 void
 done_ssl_connection(struct socket *socket)
 {
+	ELOG
 	ssl_t *ssl = (ssl_t *)socket->ssl;
 
 	if (!ssl) return;
@@ -546,6 +556,7 @@ done_ssl_connection(struct socket *socket)
 char *
 get_ssl_connection_cipher(struct socket *socket)
 {
+	ELOG
 	ssl_t *ssl = (ssl_t *)socket->ssl;
 	struct string str;
 
@@ -574,6 +585,7 @@ get_ssl_connection_cipher(struct socket *socket)
 void
 random_nonce(unsigned char buf[], size_t size)
 {
+	ELOG
 #ifdef USE_OPENSSL
 #ifdef HAVE_RAND_BYTES
 	RAND_bytes(buf, size);

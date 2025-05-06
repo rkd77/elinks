@@ -55,6 +55,7 @@ static union option_info mime_options[] = {
 static char *
 get_content_filename(struct uri *uri, struct cache_entry *cached)
 {
+	ELOG
 	char *filename, *pos;
 
 	if (!cached) cached = find_in_cache(uri);
@@ -103,6 +104,7 @@ get_content_filename(struct uri *uri, struct cache_entry *cached)
 static inline char *
 check_extension_type(char *extension)
 {
+	ELOG
 	/* Trim the extension so only last .<extension> is used. */
 	char *trimmed = strrchr(extension, '.');
 	struct mime_handler *handler;
@@ -131,6 +133,7 @@ check_extension_type(char *extension)
 static inline char *
 check_encoding_type(char *extension)
 {
+	ELOG
 	stream_encoding_T encoding = guess_encoding(extension);
 	const char *const *extension_list;
 	char *last_extension = strrchr(extension, '.');
@@ -174,6 +177,7 @@ check_encoding_type(char *extension)
 char *
 get_extension_content_type(char *extension)
 {
+	ELOG
 	char *ctype;
 
 	assert(extension && *extension);
@@ -194,6 +198,7 @@ get_extension_content_type(char *extension)
 char *
 get_cache_header_content_type(struct cache_entry *cached)
 {
+	ELOG
 	char *extension, *ctype;
 
 	ctype = parse_header(cached->head, "Content-Type", NULL);
@@ -233,6 +238,7 @@ get_cache_header_content_type(struct cache_entry *cached)
 static char *
 get_fragment_content_type(struct cache_entry *cached)
 {
+	ELOG
 	struct fragment *fragment;
 	size_t length;
 	char *sample;
@@ -261,6 +267,7 @@ get_fragment_content_type(struct cache_entry *cached)
 char *
 get_content_type(struct cache_entry *cached)
 {
+	ELOG
 	char *extension, *ctype;
 
 	debug_get_content_type_params(cached);
@@ -325,12 +332,14 @@ get_content_type(struct cache_entry *cached)
 struct mime_handler *
 get_mime_type_handler(char *content_type, int xwin)
 {
+	ELOG
 	return get_mime_handler_backends(content_type, xwin);
 }
 
 struct string *
 add_mime_filename_to_string(struct string *string, struct uri *uri)
 {
+	ELOG
 	char *filename = get_content_filename(uri, NULL);
 
 	assert(uri->data);

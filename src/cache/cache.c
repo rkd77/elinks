@@ -73,18 +73,21 @@ do { \
 unsigned longlong
 get_cache_size(void)
 {
+	ELOG
 	return cache_size;
 }
 
 int
 get_cache_entry_count(void)
 {
+	ELOG
 	return list_size(&cache_entries);
 }
 
 int
 get_cache_entry_used_count(void)
 {
+	ELOG
 	struct cache_entry *cached;
 	int i = 0;
 
@@ -97,6 +100,7 @@ get_cache_entry_used_count(void)
 int
 get_cache_entry_loading_count(void)
 {
+	ELOG
 	struct cache_entry *cached;
 	int i = 0;
 
@@ -109,6 +113,7 @@ get_cache_entry_loading_count(void)
 struct cache_entry *
 find_in_cache(struct uri *uri)
 {
+	ELOG
 	struct cache_entry *cached;
 	int proxy = (uri->protocol == PROTOCOL_PROXY);
 
@@ -132,6 +137,7 @@ find_in_cache(struct uri *uri)
 struct cache_entry *
 get_cache_entry(struct uri *uri)
 {
+	ELOG
 	struct cache_entry *cached = find_in_cache(uri);
 
 	assertm(!uri->fragment, "Fragment in URI (%s)", struri(uri));
@@ -172,6 +178,7 @@ get_cache_entry(struct uri *uri)
 static int
 cache_entry_has_expired(struct cache_entry *cached)
 {
+	ELOG
 	timeval_T now;
 
 	timeval_now(&now);
@@ -182,6 +189,7 @@ cache_entry_has_expired(struct cache_entry *cached)
 struct cache_entry *
 get_validated_cache_entry(struct uri *uri, cache_mode_T cache_mode)
 {
+	ELOG
 	struct cache_entry *cached;
 
 	/* We have to check if something should be reloaded */
@@ -219,6 +227,7 @@ get_validated_cache_entry(struct uri *uri, cache_mode_T cache_mode)
 int
 cache_entry_is_valid(struct cache_entry *cached)
 {
+	ELOG
 	struct cache_entry *valid_cached;
 
 	foreach (valid_cached, cache_entries) {
@@ -233,6 +242,7 @@ cache_entry_is_valid(struct cache_entry *cached)
 struct cache_entry *
 follow_cached_redirects(struct cache_entry *cached)
 {
+	ELOG
 	int redirects = 0;
 
 	while (cached) {
@@ -253,6 +263,7 @@ follow_cached_redirects(struct cache_entry *cached)
 struct cache_entry *
 get_redirected_cache_entry(struct uri *uri)
 {
+	ELOG
 	struct cache_entry *cached = find_in_cache(uri);
 
 	return cached ? follow_cached_redirects(cached) : NULL;
@@ -262,6 +273,7 @@ get_redirected_cache_entry(struct uri *uri)
 static inline void
 enlarge_entry(struct cache_entry *cached, off_t size)
 {
+	ELOG
 	cached->data_size += size;
 	assertm(cached->data_size >= 0,
 		"cache entry data_size underflow: %ld", cached->data_size);
@@ -304,6 +316,7 @@ enlarge_entry(struct cache_entry *cached, off_t size)
 static struct fragment *
 frag_alloc(size_t size)
 {
+	ELOG
 	struct fragment *f = (struct fragment *)mem_mmap_alloc(FRAGSIZE(size));
 
 	if (!f) return NULL;
@@ -314,12 +327,14 @@ frag_alloc(size_t size)
 static struct fragment *
 frag_realloc(struct fragment *f, size_t size)
 {
+	ELOG
 	return (struct fragment *)mem_mmap_realloc(f, FRAGSIZE(f->real_length), FRAGSIZE(size));
 }
 
 static void
 frag_free(struct fragment *f)
 {
+	ELOG
 	mem_mmap_free(f, FRAGSIZE(f->real_length));
 }
 
@@ -328,6 +343,7 @@ frag_free(struct fragment *f)
 static void
 remove_overlaps(struct cache_entry *cached, struct fragment *f, int *trunc)
 {
+	ELOG
 	off_t f_end_offset = f->offset + f->length;
 
 	/* Iterate thru all fragments we still overlap to. */
@@ -382,6 +398,7 @@ int
 add_fragment(struct cache_entry *cached, off_t offset,
 	     const char *data, ssize_t length)
 {
+	ELOG
 	struct fragment *f, *nf;
 	int trunc = 0;
 	off_t end_offset;
@@ -485,6 +502,7 @@ add_fragment(struct cache_entry *cached, off_t offset,
 struct fragment *
 get_cache_fragment(struct cache_entry *cached)
 {
+	ELOG
 	struct fragment *first_frag, *adj_frag, *frag, *new_frag;
 	int new_frag_len;
 
@@ -559,6 +577,7 @@ get_cache_fragment(struct cache_entry *cached)
 static void
 delete_fragment(struct cache_entry *cached, struct fragment *f)
 {
+	ELOG
 	while ((void *) f != &cached->frag) {
 		struct fragment *tmp = f->next;
 
@@ -572,6 +591,7 @@ delete_fragment(struct cache_entry *cached, struct fragment *f)
 static void
 truncate_entry(struct cache_entry *cached, off_t offset, int final)
 {
+	ELOG
 	struct fragment *f;
 
 	if (cached->length > offset) {
@@ -616,6 +636,7 @@ truncate_entry(struct cache_entry *cached, off_t offset, int final)
 void
 free_entry_to(struct cache_entry *cached, off_t offset)
 {
+	ELOG
 	struct fragment *f;
 
 	foreach (f, cached->frag) {
@@ -640,6 +661,7 @@ free_entry_to(struct cache_entry *cached, off_t offset)
 void
 delete_entry_content(struct cache_entry *cached)
 {
+	ELOG
 	enlarge_entry(cached, -cached->data_size);
 
 	while (cached->frag.next != (void *) &cached->frag) {
@@ -659,6 +681,7 @@ delete_entry_content(struct cache_entry *cached)
 static void
 done_cache_entry(struct cache_entry *cached)
 {
+	ELOG
 	assertm(!is_object_used(cached), "deleting locked cache entry");
 	assertm(!is_entry_used(cached), "deleting loading cache entry");
 
@@ -686,6 +709,7 @@ done_cache_entry(struct cache_entry *cached)
 void
 delete_cache_entry(struct cache_entry *cached)
 {
+	ELOG
 	del_from_list(cached);
 
 	done_cache_entry(cached);
@@ -695,6 +719,7 @@ delete_cache_entry(struct cache_entry *cached)
 void
 normalize_cache_entry(struct cache_entry *cached, off_t truncate_length)
 {
+	ELOG
 	if (truncate_length < 0)
 		return;
 
@@ -709,6 +734,7 @@ struct uri *
 redirect_cache(struct cache_entry *cached, const char *location,
 	       int get, int incomplete)
 {
+	ELOG
 	char *uristring;
 
 	/* XXX: I am a little puzzled whether we should only use the cache
@@ -779,6 +805,7 @@ redirect_cache(struct cache_entry *cached, const char *location,
 void
 garbage_collection(int whole)
 {
+	ELOG
 	struct cache_entry *cached;
 	/* We recompute cache_size when scanning cache entries, to ensure
 	 * consistency. */
@@ -937,6 +964,7 @@ shrinked_enough:
 static int
 check_sha(const char *name, const unsigned char *data, size_t len, const char *checksum)
 {
+	ELOG
 	EVP_MD_CTX *mdctx;
 	const EVP_MD *md;
 	unsigned char md_value[EVP_MAX_MD_SIZE];
@@ -967,6 +995,7 @@ check_sha(const char *name, const unsigned char *data, size_t len, const char *c
 int
 validate_cache_integrity(struct cache_entry *cached, const char *integrity)
 {
+	ELOG
 	struct fragment *frag = get_cache_fragment(cached);
 	const char *ch = integrity;
 	int ret = 1;
@@ -1001,6 +1030,7 @@ validate_cache_integrity(struct cache_entry *cached, const char *integrity)
 int
 validate_cache_integrity(struct cache_entry *cached, const char *integrity)
 {
+	ELOG
 	struct fragment *frag = get_cache_fragment(cached);
 
 	if (!frag) {

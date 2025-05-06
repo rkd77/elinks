@@ -127,12 +127,14 @@ int local_storage_ready;
 static int
 is_prefix(char *prefix, char *url, int dl)
 {
+	ELOG
 	return memcmp(prefix, url, dl);
 }
 
 static void
 read_url_list(void)
 {
+	ELOG
 	char *xdg_config_home = get_xdg_config_home();
 	char line[4096];
 	char *filename;
@@ -178,6 +180,7 @@ int ecmascript_enabled;
 int
 get_ecmascript_enable(struct ecmascript_interpreter *interpreter)
 {
+	ELOG
 	struct string_list_item *item;
 	char *url;
 
@@ -230,6 +233,7 @@ get_ecmascript_enable(struct ecmascript_interpreter *interpreter)
 struct ecmascript_interpreter *
 ecmascript_get_interpreter(struct view_state *vs)
 {
+	ELOG
 	struct ecmascript_interpreter *interpreter;
 
 	assert(vs);
@@ -271,6 +275,7 @@ ecmascript_get_interpreter(struct view_state *vs)
 static void
 delayed_reload(void *data)
 {
+	ELOG
 	struct delayed_rel *rel = (struct delayed_rel *)data;
 	assert(rel);
 	struct session *ses = rel->ses;
@@ -295,6 +300,7 @@ delayed_reload(void *data)
 static void
 run_jobs(void *data)
 {
+	ELOG
 #ifdef CONFIG_ECMASCRIPT_SMJS
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)data;
 	js::RunJobs((JSContext *)interpreter->backend_data);
@@ -319,6 +325,7 @@ run_jobs(void *data)
 void
 check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %s %d\n", __FILE__, __FUNCTION__, text, interpreter->changed);
 #endif
@@ -391,6 +398,7 @@ void
 ecmascript_eval(struct ecmascript_interpreter *interpreter,
                 struct string *code, struct string *ret, int element_offset)
 {
+	ELOG
 	if (!get_ecmascript_enable(interpreter)) {
 		return;
 	}
@@ -421,6 +429,7 @@ ecmascript_call_function(struct ecmascript_interpreter *interpreter,
                 JS::HandleValue fun, struct string *ret)
 #endif
 {
+	ELOG
 	if (!get_ecmascript_enable(interpreter))
 		return;
 	assert(interpreter);
@@ -439,6 +448,7 @@ char *
 ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter,
 			   struct string *code)
 {
+	ELOG
 	char *result;
 
 	if (!get_ecmascript_enable(interpreter))
@@ -462,6 +472,7 @@ ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter,
 void
 ecmascript_timeout_dialog(struct terminal *term, int max_exec_time)
 {
+	ELOG
 	info_box(term, MSGBOX_FREE_TEXT,
 		 N_("JavaScript Emergency"), ALIGN_LEFT,
 		 msg_text(term,
@@ -476,6 +487,7 @@ ecmascript_timeout_dialog(struct terminal *term, int max_exec_time)
 void
 ecmascript_set_action(char **action, char *string)
 {
+	ELOG
 	struct uri *protocol;
 
 	trim_chars(string, ' ', NULL);
@@ -514,6 +526,7 @@ ecmascript_set_action(char **action, char *string)
 static void
 ecmascript_timeout_handler(void *val)
 {
+	ELOG
 	struct ecmascript_timeout *t = (struct ecmascript_timeout *)val;
 	struct ecmascript_interpreter *interpreter = t->interpreter;
 
@@ -547,6 +560,7 @@ skip:
 static void
 ecmascript_timeout_handler2(void *val)
 {
+	ELOG
 	struct ecmascript_timeout *t = (struct ecmascript_timeout *)val;
 	struct ecmascript_interpreter *interpreter = t->interpreter;
 
@@ -597,6 +611,7 @@ skip:
 struct ecmascript_timeout *
 ecmascript_set_timeout(void *c, char *code, int timeout, int timeout_next)
 {
+	ELOG
 #ifdef CONFIG_QUICKJS
 	JSContext *ctx = (JSContext *)c;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
@@ -643,6 +658,7 @@ ecmascript_set_timeout(void *c, char *code, int timeout, int timeout_next)
 struct ecmascript_timeout *
 ecmascript_set_timeout2(void *c, JS::HandleValue f, int timeout, int timeout_next)
 {
+	ELOG
 	JSContext *ctx = (JSContext *)c;
 	JS::Realm *comp = js::GetContextRealm(ctx);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
@@ -674,6 +690,7 @@ ecmascript_set_timeout2(void *c, JS::HandleValue f, int timeout, int timeout_nex
 struct ecmascript_timeout *
 ecmascript_set_timeout2q(void *c, JSValueConst fun, int timeout, int timeout_next)
 {
+	ELOG
 	JSContext *ctx = (JSContext *)c;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter && interpreter->vs->doc_view->document);
@@ -702,6 +719,7 @@ ecmascript_set_timeout2q(void *c, JSValueConst fun, int timeout, int timeout_nex
 struct ecmascript_timeout *
 ecmascript_set_timeout2m(js_State *J, const char *handle, int timeout, int timeout_next)
 {
+	ELOG
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	assert(interpreter && interpreter->vs->doc_view->document);
 
@@ -730,6 +748,7 @@ ecmascript_set_timeout2m(js_State *J, const char *handle, int timeout, int timeo
 int
 ecmascript_found(struct ecmascript_interpreter *interpreter)
 {
+	ELOG
 	struct ecmascript_interpreter *i;
 
 	foreach (i, ecmascript_interpreters) {
@@ -744,6 +763,7 @@ ecmascript_found(struct ecmascript_interpreter *interpreter)
 static void
 init_ecmascript_module(struct module *module)
 {
+	ELOG
 	char *xdg_config_home = get_xdg_config_home();
 	read_url_list();
 
@@ -773,6 +793,7 @@ init_ecmascript_module(struct module *module)
 static void
 done_ecmascript_module(struct module *module)
 {
+	ELOG
 #ifdef CONFIG_LIBCURL
 	curl_global_cleanup();
 #endif
@@ -801,6 +822,7 @@ static struct module *ecmascript_modules[] = {
 static void
 delayed_goto(void *data)
 {
+	ELOG
 	struct delayed_goto *deg = (struct delayed_goto *)data;
 
 	assert(deg);
@@ -817,6 +839,7 @@ delayed_goto(void *data)
 void
 location_goto_const(struct document_view *doc_view, const char *url, int reload)
 {
+	ELOG
 	char *url2 = stracpy(url);
 
 	if (url2) {
@@ -828,6 +851,7 @@ location_goto_const(struct document_view *doc_view, const char *url, int reload)
 void
 location_goto(struct document_view *doc_view, char *url, int reload)
 {
+	ELOG
 	char *new_abs_url;
 	struct uri *new_uri;
 	struct delayed_goto *deg;

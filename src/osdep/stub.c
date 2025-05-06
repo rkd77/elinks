@@ -47,6 +47,7 @@
 NONSTATIC_INLINE int
 elinks_strcasecmp(const char *s1, const char *s2)
 {
+	ELOG
 	while (*s1 != '\0' && toupper_equal(s1, s2)) {
 		s1++;
 		s2++;
@@ -60,6 +61,7 @@ elinks_strcasecmp(const char *s1, const char *s2)
 NONSTATIC_INLINE int
 elinks_strncasecmp(const char *s1, const char *s2, size_t len)
 {
+	ELOG
 	if (len == 0)
 		return 0;
 
@@ -79,6 +81,7 @@ elinks_strncasecmp(const char *s1, const char *s2, size_t len)
 NONSTATIC_INLINE char *
 elinks_strcasestr(const char *haystack, const char *needle)
 {
+	ELOG
 	size_t haystack_length = strlen(haystack);
 	size_t needle_length = strlen(needle);
 	int i;
@@ -100,6 +103,7 @@ elinks_strcasestr(const char *haystack, const char *needle)
 NONSTATIC_INLINE char *
 elinks_strdup(const char *str)
 {
+	ELOG
 	int str_len = strlen(str);
 	char *new_ = malloc(str_len + 1);
 
@@ -121,6 +125,7 @@ extern const char *const sys_errlist[];
 NONSTATIC_INLINE const char *
 elinks_strerror(int err_no)
 {
+	ELOG
 	if (err_no < 0 || err_no > sys_nerr)
 		return (const char *) "Unknown Error";
 	else
@@ -133,6 +138,7 @@ elinks_strerror(int err_no)
 NONSTATIC_INLINE char *
 elinks_strstr(const char *s, const char *p)
 {
+	ELOG
 	char *sp, *pp;
 
 	for (sp = (char *) s, pp = (char *) p; *sp && *pp; )
@@ -162,6 +168,7 @@ elinks_strstr(const char *s, const char *p)
 NONSTATIC_INLINE void *
 elinks_memmove(void *d, const void *s, size_t n)
 {
+	ELOG
 	register char *dst = (char *) d;
 	register char *src = (char *) s;
 
@@ -185,6 +192,7 @@ elinks_memmove(void *d, const void *s, size_t n)
 NONSTATIC_INLINE char *
 elinks_stpcpy(char *dest, const char *src)
 {
+	ELOG
 	while ((*dest++ = *src++));
 	return (dest - 1);
 }
@@ -194,6 +202,7 @@ elinks_stpcpy(char *dest, const char *src)
 NONSTATIC_INLINE void *
 elinks_mempcpy(void *dest, const void *src, size_t n)
 {
+	ELOG
 	return (void *) ((char *) memcpy(dest, src, n) + n);
 }
 #endif
@@ -202,6 +211,7 @@ elinks_mempcpy(void *dest, const void *src, size_t n)
 NONSTATIC_INLINE int
 elinks_isdigit(int i)
 {
+	ELOG
 	return i >= '0' && i <= '9';
 }
 #endif
@@ -210,6 +220,7 @@ elinks_isdigit(int i)
 NONSTATIC_INLINE void *
 elinks_memrchr(const void *s, int c, size_t n)
 {
+	ELOG
 	char *pos = (char *) s;
 
 	while (n > 0) {
@@ -231,6 +242,7 @@ elinks_memrchr(const void *s, int c, size_t n)
 int
 elinks_raise(int signal)
 {
+	ELOG
 	return(kill(getpid(), signal));
 }
 #endif
@@ -258,6 +270,7 @@ elinks_raise(int signal)
 static const char *
 elinks_inet_ntop4(const char *src, char *dst, size_t size)
 {
+	ELOG
 	const char *addr = inet_ntoa(*(struct in_addr*)src);
 
 	if (strlen(addr) >= size) {
@@ -273,6 +286,7 @@ elinks_inet_ntop4(const char *src, char *dst, size_t size)
 static const char *
 elinks_inet_ntop6(const char *src, char *dst, size_t size)
 {
+	ELOG
 	/* Note that int32_t and int16_t need only be "at least" large enough
 	 * to contain a value of the specified size.  On some systems, like
 	 * Crays, there is no such thing as an integer variable with 16 bits.
@@ -366,6 +380,7 @@ const char *
 elinks_inet_ntop(int af, const void *src, char *dst, size_t size)
 
 {
+	ELOG
 	switch (af) {
 	case AF_INET:
 		return elinks_inet_ntop4((const char *) src, dst, size);

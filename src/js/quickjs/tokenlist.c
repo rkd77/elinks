@@ -29,6 +29,7 @@ JSClassID js_tokenlist_class_id;
 static
 void js_tokenlist_finalizer(JSRuntime *rt, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -43,6 +44,7 @@ void js_tokenlist_finalizer(JSRuntime *rt, JSValue val)
 static JSValue
 js_tokenlist_add(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -79,6 +81,7 @@ js_tokenlist_add(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *
 static JSValue
 js_tokenlist_contains(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -115,6 +118,7 @@ js_tokenlist_contains(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 static JSValue
 js_tokenlist_remove(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -152,6 +156,7 @@ js_tokenlist_remove(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 static JSValue
 js_tokenlist_toggle(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -196,6 +201,7 @@ js_tokenlist_toggle(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 static JSValue
 js_tokenlist_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -220,6 +226,7 @@ static JSClassDef js_tokenlist_class = {
 JSValue
 getTokenlist(JSContext *ctx, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

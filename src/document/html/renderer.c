@@ -104,6 +104,7 @@ set_screen_char_color(struct screen_char *schar,
 		      color_flags_T color_flags,
 		      color_mode_T color_mode)
 {
+	ELOG
 	struct color_pair colors = INIT_COLOR_PAIR(bgcolor, fgcolor);
 
 	set_term_color(schar, &colors, color_flags, color_mode);
@@ -113,6 +114,7 @@ static int
 realloc_line(struct html_context *html_context, struct document *document,
              int y, int length)
 {
+	ELOG
 	struct screen_char *pos, *end;
 	struct line *line;
 	int orig_length;
@@ -151,6 +153,7 @@ realloc_line(struct html_context *html_context, struct document *document,
 static inline int
 realloc_spaces(struct part *part, int length)
 {
+	ELOG
 	if (length < part->spaces_len)
 		return 0;
 
@@ -183,6 +186,7 @@ static inline void
 clear_hchars(struct html_context *html_context, int x, int y, int width,
 	     struct screen_char *a)
 {
+	ELOG
 	struct part *part;
 	struct screen_char *pos, *end;
 
@@ -218,6 +222,7 @@ get_frame_char(struct html_context *html_context, struct part *part,
 	       int x, int y, unsigned char data,
                color_T bgcolor, color_T fgcolor)
 {
+	ELOG
 	struct screen_char *template_;
 
 	assert(html_context);
@@ -246,6 +251,7 @@ static inline struct screen_char *
 get_format_screen_char(struct html_context *html_context,
                        link_state_T link_state)
 {
+	ELOG
 	static struct text_style ta_cache = INIT_TEXT_STYLE(-1, 0x0, 0x0);
 	static struct screen_char schar_cache;
 
@@ -275,6 +281,7 @@ draw_frame_hchars(struct part *part, int x, int y, int width,
 		  unsigned char data, color_T bgcolor, color_T fgcolor,
 		  struct html_context *html_context)
 {
+	ELOG
 	struct screen_char *template_;
 
 	assert(width > 0);
@@ -296,6 +303,7 @@ draw_frame_hchars(struct part *part, int x, int y, int width,
 void
 draw_blockquote_chars(struct part *part, int y, struct html_context *html_context)
 {
+	ELOG
 	int i;
 	int x = par_elformat.orig_leftmargin;
 	struct screen_char *const schar = get_format_screen_char(html_context, 0);
@@ -324,6 +332,7 @@ draw_frame_vchars(struct part *part, int x, int y, int height,
 		  unsigned char data, color_T bgcolor, color_T fgcolor,
 		  struct html_context *html_context)
 {
+	ELOG
 	struct screen_char *template_ = get_frame_char(html_context, part, x, y,
 	                                              data, bgcolor, fgcolor);
 
@@ -343,6 +352,7 @@ void
 expand_lines(struct html_context *html_context, struct part *part,
              int x, int y, int lines, color_T bgcolor)
 {
+	ELOG
 	int line;
 
 	assert(part && part->document);
@@ -376,6 +386,7 @@ static inline int
 set_hline(struct html_context *html_context, const char *chars, int charslen,
 	  link_state_T link_state)
 {
+	ELOG
 	struct part *const part = html_context->part;
 	struct screen_char *const schar = get_format_screen_char(html_context,
 								 link_state);
@@ -628,6 +639,7 @@ static inline void
 set_hline(struct html_context *html_context, const char *chars, int charslen,
 	  link_state_T link_state)
 {
+	ELOG
 	struct part *part = html_context->part;
 	struct screen_char *schar = get_format_screen_char(html_context,
 	                                                   link_state);
@@ -682,6 +694,7 @@ set_hline(struct html_context *html_context, const char *chars, int charslen,
 static void
 move_links(struct html_context *html_context, int xf, int yf, int xt, int yt)
 {
+	ELOG
 	struct part *part;
 	struct tag *tag;
 	int nlink = renderer_context.last_link_to_move;
@@ -799,6 +812,7 @@ move_links(struct html_context *html_context, int xf, int yf, int xt, int yt)
 static inline void
 copy_chars(struct html_context *html_context, int x, int y, int width, struct screen_char *d)
 {
+	ELOG
 	struct part *part;
 
 	assert(html_context);
@@ -818,6 +832,7 @@ copy_chars(struct html_context *html_context, int x, int y, int width, struct sc
 static inline void
 move_chars(struct html_context *html_context, int x, int y, int nx, int ny)
 {
+	ELOG
 	struct part *part;
 
 	assert(html_context);
@@ -845,6 +860,7 @@ move_chars(struct html_context *html_context, int x, int y, int nx, int ny)
 static inline void
 shift_chars(struct html_context *html_context, int y, int shift)
 {
+	ELOG
 	struct part *part;
 	struct screen_char *a;
 	int len;
@@ -874,6 +890,7 @@ shift_chars(struct html_context *html_context, int y, int shift)
 static inline void
 del_chars(struct html_context *html_context, int x, int y)
 {
+	ELOG
 	struct part *part;
 
 	assert(html_context);
@@ -899,6 +916,7 @@ del_chars(struct html_context *html_context, int x, int y)
 static int inline
 split_line_at(struct html_context *html_context, int width)
 {
+	ELOG
 	struct part *part;
 	int tmp;
 	int new_width = width + par_elformat.rightmargin;
@@ -990,6 +1008,7 @@ split_line_at(struct html_context *html_context, int width)
 static int
 split_line(struct html_context *html_context)
 {
+	ELOG
 	struct part *part;
 	int x;
 
@@ -1047,6 +1066,7 @@ split_line(struct html_context *html_context)
 static void
 insert_spaces_in_link(struct part *part, int x, int y, int new_spaces)
 {
+	ELOG
 	int i = part->document->nlinks;
 
 	x = X(x);
@@ -1084,6 +1104,7 @@ insert_spaces_in_link(struct part *part, int x, int y, int new_spaces)
 static void
 justify_line(struct html_context *html_context, int y)
 {
+	ELOG
 	struct part *part;
 	struct screen_char *line; /* we save original line here */
 	int len;
@@ -1227,6 +1248,7 @@ out_of_memory:
 static void
 align_line(struct html_context *html_context, int y, int last)
 {
+	ELOG
 	struct part *part;
 	int shift;
 	int len;
@@ -1260,6 +1282,7 @@ align_line(struct html_context *html_context, int y, int last)
 static inline void
 init_link_event_hooks(struct html_context *html_context, struct link *link)
 {
+	ELOG
 #ifdef CONFIG_ECMASCRIPT
 	link->event_hooks = (LIST_OF(struct script_event_hook) *)mem_calloc(1, sizeof(*link->event_hooks));
 	if (!link->event_hooks) return;
@@ -1298,6 +1321,7 @@ init_link_event_hooks(struct html_context *html_context, struct link *link)
 static struct link *
 new_link(struct html_context *html_context, const char *name, int namelen)
 {
+	ELOG
 	struct document *document;
 	struct part *part;
 	int link_number;
@@ -1405,6 +1429,7 @@ new_link(struct html_context *html_context, const char *name, int namelen)
 static void
 html_special_tag(struct document *document, char *t, int x, int y)
 {
+	ELOG
 	struct tag *tag;
 	int tag_len;
 
@@ -1427,6 +1452,7 @@ html_special_tag(struct document *document, char *t, int x, int y)
 static void
 put_chars_invisible(struct html_context *html_context, const char *chars, int charslen)
 {
+	ELOG
 	const unsigned char *data = (const unsigned char *)chars;
 	int i;
 
@@ -1439,6 +1465,7 @@ void
 put_chars_conv(struct html_context *html_context,
                const char *chars, int charslen)
 {
+	ELOG
 	assert(html_context);
 	if_assert_failed return;
 
@@ -1465,6 +1492,7 @@ put_chars_conv(struct html_context *html_context,
 int
 dec2qwerty(int num, char *link_sym, const char *key, int base)
 {
+	ELOG
 	int newlen, i, pow;
 
 	if (base < 2) return 0;
@@ -1486,6 +1514,7 @@ dec2qwerty(int num, char *link_sym, const char *key, int base)
 int
 qwerty2dec(const char *link_sym, const char *key, int base)
 {
+	ELOG
 	int z = 0;
 	int symlen = strlen(link_sym);
 	int i;
@@ -1502,6 +1531,7 @@ qwerty2dec(const char *link_sym, const char *key, int base)
 static inline void
 put_link_number(struct html_context *html_context)
 {
+	ELOG
 	char *symkey = get_opt_str("document.browse.links.label_key", NULL);
 	struct part *part = html_context->part;
 	char s[64];
@@ -1552,6 +1582,7 @@ static inline void
 init_link_state_info(char *link, char *target,
 		     char *image, struct el_form_control *form)
 {
+	ELOG
 	assert_link_variable(renderer_context.link_state_info.image, image);
 	assert_link_variable(renderer_context.link_state_info.target, target);
 	assert_link_variable(renderer_context.link_state_info.link, link);
@@ -1565,6 +1596,7 @@ init_link_state_info(char *link, char *target,
 static inline void
 done_link_state_info(void)
 {
+	ELOG
 	mem_free_if(renderer_context.link_state_info.link);
 	mem_free_if(renderer_context.link_state_info.target);
 	mem_free_if(renderer_context.link_state_info.image);
@@ -1582,6 +1614,7 @@ process_link(struct html_context *html_context, link_state_T link_state,
 		   const char *chars, int charslen)
 #endif /* CONFIG_UTF8 */
 {
+	ELOG
 	struct part *part = html_context->part;
 	struct link *link;
 	int x_offset = 0;
@@ -1679,6 +1712,7 @@ process_link(struct html_context *html_context, link_state_T link_state,
 static inline link_state_T
 get_link_state(struct html_context *html_context)
 {
+	ELOG
 	link_state_T state;
 
 	if (!(elformat.link || elformat.image || elformat.form)) {
@@ -1706,6 +1740,7 @@ get_link_state(struct html_context *html_context)
 static inline int
 html_has_non_space_chars(const char *chars, int charslen)
 {
+	ELOG
 	int pos = 0;
 
 	while (pos < charslen)
@@ -1719,6 +1754,7 @@ html_has_non_space_chars(const char *chars, int charslen)
 static void
 put_chars(struct html_context *html_context, const char *chars, int charslen)
 {
+	ELOG
 	link_state_T link_state;
 	struct part *part;
 #ifdef CONFIG_UTF8
@@ -1842,6 +1878,7 @@ put_chars(struct html_context *html_context, const char *chars, int charslen)
 void
 line_break(struct html_context *html_context)
 {
+	ELOG
 	struct part *part;
 	struct tag *tag;
 
@@ -1895,6 +1932,7 @@ end:
 static void
 html_special_form(struct part *part, struct form *form)
 {
+	ELOG
 	struct form *nform;
 
 	assert(part && form);
@@ -1966,6 +2004,7 @@ html_special_form(struct part *part, struct form *form)
 static void
 html_special_form_control(struct part *part, struct el_form_control *fc)
 {
+	ELOG
 	struct form *form;
 
 	assert(part && fc);
@@ -2005,6 +2044,7 @@ html_special_form_control(struct part *part, struct el_form_control *fc)
 static void
 assert_forms_list_ok(LIST_OF(struct form) *forms)
 {
+	ELOG
 	int saw_form_num_0 = 0;
 	struct form *outer;
 
@@ -2042,6 +2082,7 @@ assert_forms_list_ok(LIST_OF(struct form) *forms)
 void
 check_html_form_hierarchy(struct part *part)
 {
+	ELOG
 	struct document *document = part->document;
 	INIT_LIST_OF(struct el_form_control, form_controls);
 	struct form *form;
@@ -2090,6 +2131,7 @@ check_html_form_hierarchy(struct part *part)
 static inline void
 color_link_lines(struct html_context *html_context)
 {
+	ELOG
 	struct document *document = html_context->part->document;
 	struct color_pair colors = INIT_COLOR_PAIR(par_elformat.color.background, 0x0);
 	color_mode_T color_mode = document->options.color_mode;
@@ -2117,6 +2159,7 @@ color_link_lines(struct html_context *html_context)
 void *
 html_special(struct html_context *html_context, html_special_type_T c, ...)
 {
+	ELOG
 	va_list l;
 	struct part *part;
 	struct document *document;
@@ -2284,6 +2327,7 @@ html_special(struct html_context *html_context, html_special_type_T c, ...)
 void
 free_table_cache(void)
 {
+	ELOG
 	if (table_cache) {
 		struct hash_item *item;
 		int i;
@@ -2305,6 +2349,7 @@ format_html_part(struct html_context *html_context,
 		 int x, int y, char *head,
 		 int link_num)
 {
+	ELOG
 	struct part *part;
 	void *html_state;
 	struct tag *saved_last_tag_to_move = renderer_context.last_tag_to_move;
@@ -2446,6 +2491,7 @@ ret:
 static void
 subst_frame_chars(struct document *document)
 {
+	ELOG
 	int y;
 
 	for (y = 0; y < document->height; y++) {
@@ -2566,6 +2612,7 @@ void
 render_html_document(struct cache_entry *cached, struct document *document,
 		     struct string *buffer)
 {
+	ELOG
 	struct html_context *html_context;
 	struct part *part;
 	char *start;

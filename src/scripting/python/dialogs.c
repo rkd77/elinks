@@ -40,6 +40,7 @@ title -- A string containing a title for the dialog box. By default\n\
 PyObject *
 python_info_box(PyObject *self, PyObject *args, PyObject *kwargs)
 {
+	ELOG
 	/* [gettext_accelerator_context(python_info_box)] */
 	char *title = N_("Info");
 	PyObject *object, *string_object;
@@ -115,6 +116,7 @@ struct python_input_callback_hop {
 static void
 invoke_input_ok_callback(void *data, char *text)
 {
+	ELOG
 	struct python_input_callback_hop *hop = (struct python_input_callback_hop *)data;
 	struct session *saved_python_ses = python_ses;
 	PyObject *result;
@@ -142,6 +144,7 @@ invoke_input_ok_callback(void *data, char *text)
 static void
 invoke_input_cancel_callback(void *data)
 {
+	ELOG
 	invoke_input_ok_callback(data, NULL);
 }
 
@@ -171,6 +174,7 @@ initial -- A string containing an initial value for the text entry\n\
 PyObject *
 python_input_box(PyObject *self, PyObject *args, PyObject *kwargs)
 {
+	ELOG
 	char *prompt;
 	PyObject *callback;
 	char *title = N_("User dialog");

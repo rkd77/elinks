@@ -23,6 +23,7 @@
 static struct option *
 get_real_opt(const char *base, char *id)
 {
+	ELOG
 	struct option *opt = get_opt_rec_real(config_options, base);
 	struct string translated;
 
@@ -41,6 +42,7 @@ get_real_opt(const char *base, char *id)
 static void
 really_del_ext(void *fcp)
 {
+	ELOG
 	struct option *opt = get_real_opt("mime.extension",
 					  (char *) fcp);
 
@@ -50,6 +52,7 @@ really_del_ext(void *fcp)
 void
 menu_del_ext(struct terminal *term, void *fcp, void *xxx2)
 {
+	ELOG
 	/* [gettext_accelerator_context(menu_del_ext)] */
 	struct option *opt = NULL;
 	char *extension = (char *)fcp;
@@ -81,6 +84,7 @@ struct extension {
 static void
 add_mime_extension(void *data)
 {
+	ELOG
 	struct extension *ext = (struct extension *)data;
 	struct string name;
 
@@ -98,6 +102,7 @@ add_mime_extension(void *data)
 void
 menu_add_ext(struct terminal *term, void *fcp, void *xxx2)
 {
+	ELOG
 	/* [gettext_accelerator_context(menu_add_ext)] */
 	struct extension *new_;
 	struct dialog *dlg;
@@ -146,6 +151,7 @@ static struct menu_item mi_no_ext[] = {
 void
 menu_list_ext(struct terminal *term, void *fn_, void *xxx)
 {
+	ELOG
 	menu_func_T fn = (menu_func_T)fn_;
 	LIST_OF(struct option) *opt_tree = get_opt_tree("mime.extension", NULL);
 	struct option *opt;

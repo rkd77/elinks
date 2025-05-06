@@ -29,6 +29,7 @@
 static void
 mjs_push_nodeList_item2(js_State *J, int idx)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -57,6 +58,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_nodeList_item(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -68,6 +70,7 @@ mjs_nodeList_item(js_State *J)
 static void
 mjs_nodeList_set_items(js_State *J, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -104,6 +107,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 mjs_nodeList_toString(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -113,6 +117,7 @@ mjs_nodeList_toString(js_State *J)
 static void
 mjs_nodeList_finalizer(js_State *J, void *node)
 {
+	ELOG
 	//attr_erase_from_map(map_nodelist, node);
 	dom_nodelist_unref((dom_nodelist *)node);
 }
@@ -121,6 +126,7 @@ mjs_nodeList_finalizer(js_State *J, void *node)
 static void
 mjs_nodeList_get_property_length(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -146,6 +152,7 @@ mjs_nodeList_get_property_length(js_State *J)
 void
 mjs_push_nodelist(js_State *J, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

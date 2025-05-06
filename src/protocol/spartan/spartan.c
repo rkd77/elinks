@@ -58,12 +58,14 @@ struct module spartan_protocol_module = struct_module(
 static void
 done_spartan(struct module *mod)
 {
+	ELOG
 }
 
 static void
 spartan_end_request(struct connection *conn, struct connection_state state,
 		 int notrunc)
 {
+	ELOG
 	shutdown_connection_stream(conn);
 	abort_connection(conn, state);
 }
@@ -73,12 +75,14 @@ static void spartan_send_header(struct socket *);
 void
 spartan_protocol_handler(struct connection *conn)
 {
+	ELOG
 	make_connection(conn->socket, conn->uri, spartan_send_header, 0);
 }
 
 static void
 done_spartan_connection(struct connection *conn)
 {
+	ELOG
 	struct spartan_connection_info *spartan = (struct spartan_connection_info *)conn->info;
 
 	mem_free_if(spartan->msg);
@@ -90,6 +94,7 @@ done_spartan_connection(struct connection *conn)
 static struct spartan_connection_info *
 init_spartan_connection_info(struct connection *conn)
 {
+	ELOG
 	struct spartan_connection_info *spartan;
 
 	spartan = (struct spartan_connection_info *)mem_calloc(1, sizeof(*spartan));
@@ -107,6 +112,7 @@ init_spartan_connection_info(struct connection *conn)
 static void
 spartan_send_header(struct socket *socket)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 	struct spartan_connection_info *spartan;
 	struct string header;
@@ -166,6 +172,7 @@ static void
 read_more_spartan_data(struct connection *conn, struct read_buffer *rb,
                     int already_got_anything)
 {
+	ELOG
 	struct connection_state state = already_got_anything
 		? connection_state(S_TRANS) : conn->state;
 
@@ -175,6 +182,7 @@ read_more_spartan_data(struct connection *conn, struct read_buffer *rb,
 static void
 read_spartan_data_done(struct connection *conn)
 {
+	ELOG
 	struct spartan_connection_info *spartan = (struct spartan_connection_info *)conn->info;
 
 	/* There's no content but an error so just print
@@ -198,6 +206,7 @@ read_spartan_data_done(struct connection *conn)
 static int
 read_normal_spartan_data(struct connection *conn, struct read_buffer *rb)
 {
+	ELOG
 	int data_len;
 	int len = rb->length;
 
@@ -219,6 +228,7 @@ read_normal_spartan_data(struct connection *conn, struct read_buffer *rb)
 static void
 read_spartan_data(struct socket *socket, struct read_buffer *rb)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 	int ret;
 
@@ -249,6 +259,7 @@ read_spartan_data(struct socket *socket, struct read_buffer *rb)
 static int
 get_header(struct read_buffer *rb)
 {
+	ELOG
 	int i;
 
 	for (i = 0; i < rb->length; i++) {
@@ -268,6 +279,7 @@ get_header(struct read_buffer *rb)
 static int
 get_spartan_code(struct read_buffer *rb)
 {
+	ELOG
 	if (rb->data[0] < '2' || rb->data[0] > '5') return -1;
 
 	return (rb->data[0] - '0');
@@ -276,6 +288,7 @@ get_spartan_code(struct read_buffer *rb)
 static void
 spartan_got_header(struct socket *socket, struct read_buffer *rb)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 	struct spartan_connection_info *spartan = (struct spartan_connection_info *)conn->info;
 	struct connection_state state = (!is_in_state(conn->state, S_PROC)

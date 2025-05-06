@@ -20,6 +20,7 @@ enum direction {
 static enum direction
 parse_direction(const char *name)
 {
+	ELOG
 	if (strcmp(name, "forward") == 0)
 		return DIRECTION_FORWARD;
 	else if (strcmp(name, "backward") == 0)
@@ -31,6 +32,7 @@ parse_direction(const char *name)
 static enum utf8_step
 parse_way(const char *name)
 {
+	ELOG
 	if (strcmp(name, "characters") == 0)
 		return UTF8_STEP_CHARACTERS;
 	else if (strcmp(name, "cells-fewer") == 0)
@@ -44,6 +46,7 @@ parse_way(const char *name)
 int
 main(int argc, char **argv)
 {
+	ELOG
 	enum direction direction;
 	enum utf8_step way;
 	int max_steps;

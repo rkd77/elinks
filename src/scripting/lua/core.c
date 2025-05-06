@@ -100,6 +100,7 @@ static void handle_ref(LS, struct session *ses, int func_ref,
 static int
 l_alert(LS)
 {
+	ELOG
 	const char *msg = (const char *)lua_tostring(S, 1);
 
 	/* Don't crash if a script calls e.g. error(nil) or error(error).  */
@@ -113,6 +114,7 @@ l_alert(LS)
 static int
 l_current_url(LS)
 {
+	ELOG
 	if (lua_ses && have_location(lua_ses)) {
 		struct view_state *vs = &cur_loc(lua_ses)->vs;
 		char *url = get_uri_string(vs->uri, URI_ORIGINAL);
@@ -131,6 +133,7 @@ l_current_url(LS)
 static int
 l_current_link(LS)
 {
+	ELOG
 	struct link *link = get_current_session_link(lua_ses);
 
 	if (link) {
@@ -145,6 +148,7 @@ l_current_link(LS)
 static int
 l_current_title(LS)
 {
+	ELOG
 	struct document_view *doc_view = current_frame(lua_ses);
 
 	if (doc_view && doc_view->document->title) {
@@ -166,6 +170,7 @@ l_current_title(LS)
 static int
 l_current_document(LS)
 {
+	ELOG
 	if (lua_ses && lua_ses->doc_view && lua_ses->doc_view->document) {
 		struct cache_entry *cached = lua_ses->doc_view->document->cached;
 		struct fragment *f = (struct fragment *)(cached ? cached->frag.next : NULL);
@@ -184,6 +189,7 @@ l_current_document(LS)
 static int
 l_current_document_formatted(LS)
 {
+	ELOG
 	struct document_view *doc_view;
 	struct string buffer;
 	int width, old_width = 0;
@@ -219,6 +225,7 @@ lua_error:
 static int
 l_pipe_read(LS)
 {
+	ELOG
 	FILE *fp;
 	char *s = NULL;
 	size_t len = 0;
@@ -259,6 +266,7 @@ lua_error:
 static int
 l_execute(LS)
 {
+	ELOG
 	if (lua_isstring(S, 1)) {
 		exec_on_terminal(lua_ses->tab->term, (char *) lua_tostring(S, 1), "",
 				 TERM_EXEC_BG);
@@ -273,6 +281,7 @@ l_execute(LS)
 static int
 l_tmpname(LS)
 {
+	ELOG
 	char *fn = tempname(NULL, "elinks", NULL);
 
 	if (fn) {
@@ -293,6 +302,7 @@ l_tmpname(LS)
 static enum evhook_status
 run_lua_func(va_list ap, void *data)
 {
+	ELOG
 	struct session *ses = va_arg(ap, struct session *);
 	int func_ref = (intptr_t) data;
 
@@ -310,6 +320,7 @@ run_lua_func(va_list ap, void *data)
 static int
 l_bind_key(LS)
 {
+	ELOG
 	int ref;
 	int event_id;
 	char *err = NULL;
@@ -379,6 +390,7 @@ struct lua_dlg_data {
 static void
 dialog_run_lua(void *data_)
 {
+	ELOG
 	struct lua_dlg_data *data = (struct lua_dlg_data *)data_;
 	lua_State *s = data->state;
 
@@ -391,6 +403,7 @@ dialog_run_lua(void *data_)
 static int
 l_edit_bookmark_dialog(LS)
 {
+	ELOG
 	/* [gettext_accelerator_context(.l_edit_bookmark_dialog)] */
 	struct terminal *term = lua_ses->tab->term;
 	struct dialog *dlg;
@@ -455,6 +468,7 @@ struct lua_xdialog_data {
 static void
 xdialog_run_lua(void *data_)
 {
+	ELOG
 	struct lua_xdialog_data *data = (struct lua_xdialog_data *)data_;
 	lua_State *s = data->state;
 	int i;
@@ -467,6 +481,7 @@ xdialog_run_lua(void *data_)
 static int
 l_xdialog(LS)
 {
+	ELOG
 	/* [gettext_accelerator_context(.l_xdialog)] */
 	struct terminal *term;
 	struct dialog *dlg;
@@ -529,6 +544,7 @@ lua_error:
 static int
 l_set_option(LS)
 {
+	ELOG
 	int nargs;
 	struct option *opt;
 	const char *name;
@@ -587,6 +603,7 @@ lua_error:
 static int
 l_get_option(LS)
 {
+	ELOG
 	int nargs;
 	struct option *opt;
 	const char *name;
@@ -662,6 +679,7 @@ lua_error:
 static int
 l_reload(LS)
 {
+	ELOG
 	reload(lua_ses, CACHE_MODE_INCREMENT);
 	cls_redraw_all_terminals();
 	return 1;
@@ -670,6 +688,7 @@ l_reload(LS)
 static int
 l_goto_url(LS)
 {
+	ELOG
 	if (lua_isstring(S, 1)) {
 		goto_url(lua_ses, (char *)lua_tostring(S, 1));
 		lua_pushnumber(S, 0);
@@ -683,6 +702,7 @@ l_goto_url(LS)
 int
 eval_function(LS, int num_args, int num_results)
 {
+	ELOG
 	int err;
 
 	err = lua_pcall(S, num_args, num_results, 0);
@@ -699,6 +719,7 @@ eval_function(LS, int num_args, int num_results)
 static void
 do_hooks_file(LS, const char *prefix, const char *filename)
 {
+	ELOG
 	char *file = straconcat(prefix, STRING_DIR_SEP, filename,
 					 (char *) NULL);
 
@@ -723,6 +744,7 @@ do_hooks_file(LS, const char *prefix, const char *filename)
 void
 init_lua(struct module *module)
 {
+	ELOG
 	char *xdg_config_home = get_xdg_config_home();
 
 	L = luaL_newstate();
@@ -759,6 +781,7 @@ static void free_lua_console_history_entries(void);
 void
 cleanup_lua(struct module *module)
 {
+	ELOG
 	free_lua_console_history_entries();
 	lua_close(L);
 }
@@ -770,6 +793,7 @@ cleanup_lua(struct module *module)
 static void
 handle_sigint(void *data)
 {
+	ELOG
 	finish_lua();
 #ifdef CONFIG_OS_WIN32
 	longjmp(errjmp, -1);
@@ -781,6 +805,7 @@ handle_sigint(void *data)
 int
 prepare_lua(struct session *ses)
 {
+	ELOG
 	lua_ses = ses;
 	errterm = lua_ses ? lua_ses->tab->term : NULL;
 	/* XXX this uses the wrong term, I think */
@@ -795,6 +820,7 @@ prepare_lua(struct session *ses)
 void
 finish_lua(void)
 {
+	ELOG
 	/* XXX should save previous handler instead of assuming this one */
 	install_signal_handler(SIGINT, (void (*)(void *)) sig_ctrl_c, errterm, 0);
 }
@@ -805,6 +831,7 @@ finish_lua(void)
 void
 alert_lua_error(const char *msg)
 {
+	ELOG
 	if (errterm) {
 		info_box(errterm, MSGBOX_NO_TEXT_INTL | MSGBOX_FREE_TEXT,
 			N_("Lua Error"), ALIGN_LEFT,
@@ -819,6 +846,7 @@ alert_lua_error(const char *msg)
 void
 alert_lua_error2(const char *msg, const char *msg2)
 {
+	ELOG
 	char *tmp = stracpy(msg);
 
 	if (!tmp) return;
@@ -835,6 +863,7 @@ alert_lua_error2(const char *msg, const char *msg2)
 static void
 handle_ret_eval(struct session *ses)
 {
+	ELOG
 	const char *expr = lua_tostring(L, -1);
 
 	if (expr) {
@@ -854,6 +883,7 @@ handle_ret_eval(struct session *ses)
 static void
 handle_ret_run(struct session *ses)
 {
+	ELOG
 	char *cmd = (char *) lua_tostring(L, -1);
 
 	if (cmd) {
@@ -867,6 +897,7 @@ handle_ret_run(struct session *ses)
 static void
 handle_ret_goto_url(struct session *ses)
 {
+	ELOG
 	char *url = (char *) lua_tostring(L, -1);
 
 	if (url) {
@@ -880,6 +911,7 @@ handle_ret_goto_url(struct session *ses)
 static void
 handle_standard_lua_returns(const char *from)
 {
+	ELOG
 	const char *act = lua_tostring(L, -2);
 
 	if (act) {
@@ -901,6 +933,7 @@ handle_standard_lua_returns(const char *from)
 static void
 handle_ref_on_stack(LS, struct session *ses, const char *from, int num_args)
 {
+	ELOG
 	int err;
 
 	if (prepare_lua(ses)) return;
@@ -914,6 +947,7 @@ static void
 handle_ref(LS, struct session *ses, int func_ref, const char *from,
            int num_args, int unref)
 {
+	ELOG
 	lua_rawgeti(S, LUA_REGISTRYINDEX, func_ref);
 
 	/* The function must be below the arguments on the stack. */
@@ -933,6 +967,7 @@ static INIT_INPUT_HISTORY(lua_console_history);
 static void
 lua_console(struct session *ses, char *expr)
 {
+	ELOG
 	lua_getglobal(L, "lua_console_hook");
 	if (lua_isnil(L, -1)) {
 		lua_pop(L, 1);
@@ -951,6 +986,7 @@ lua_console(struct session *ses, char *expr)
 enum evhook_status
 dialog_lua_console(va_list ap, void *data)
 {
+	ELOG
 	struct session *ses = va_arg(ap, struct session *);
 
 	if (get_cmd_opt_bool("anonymous"))
@@ -967,12 +1003,14 @@ dialog_lua_console(va_list ap, void *data)
 static void
 free_lua_console_history_entries(void)
 {
+	ELOG
 	free_list(lua_console_history.entries);
 }
 
 enum evhook_status
 free_lua_console_history(va_list ap, void *data)
 {
+	ELOG
 	free_lua_console_history_entries();
 	return EVENT_HOOK_STATUS_NEXT;
 }

@@ -37,6 +37,7 @@
 NONSTATIC_INLINE struct screen_char *
 get_char(struct terminal *term, int x, int y)
 {
+	ELOG
 	assert(term && term->screen && term->screen->image);
 	if_assert_failed return NULL;
 	check_range(term, x, y);
@@ -48,6 +49,7 @@ void
 draw_border_cross(struct terminal *term, int x, int y,
 		  enum border_cross_direction dir, struct color_pair *color)
 {
+	ELOG
 	static const unsigned char border_trans[2][4] = {
 		/* Used for BORDER_X_{RIGHT,LEFT}: */
 		{ BORDER_SVLINE, BORDER_SRTEE, BORDER_SLTEE },
@@ -82,6 +84,7 @@ void
 draw_border_char(struct terminal *term, int x, int y,
 		 border_char_T border, struct color_pair *color)
 {
+	ELOG
 	struct screen_char *screen_char = get_char(term, x, y);
 
 	if (!screen_char) return;
@@ -95,6 +98,7 @@ draw_border_char(struct terminal *term, int x, int y,
 void
 draw_char_color(struct terminal *term, int x, int y, struct color_pair *color)
 {
+	ELOG
 	struct screen_char *screen_char = get_char(term, x, y);
 
 	if (!screen_char) return;
@@ -113,6 +117,7 @@ draw_char_data(struct terminal *term, int x, int y, unicode_val_T data)
 draw_char_data(struct terminal *term, int x, int y, unsigned char data)
 #endif /* CONFIG_UTF8 */
 {
+	ELOG
 	struct screen_char *screen_char = get_char(term, x, y);
 
 	if (!screen_char) return;
@@ -141,6 +146,7 @@ draw_char_data(struct terminal *term, int x, int y, unsigned char data)
 void
 draw_space(struct terminal *term, int x, int y, struct screen_char *color)
 {
+	ELOG
 	struct screen_char *screen_char = get_char(term, x, y);
 
 	if (!screen_char) return;
@@ -154,6 +160,7 @@ draw_space(struct terminal *term, int x, int y, struct screen_char *color)
 void
 draw_line(struct terminal *term, int x, int y, int l, struct screen_char *line)
 {
+	ELOG
 	struct screen_char *screen_char = get_char(term, x, y);
 	int size;
 
@@ -204,6 +211,7 @@ void
 draw_border(struct terminal *term, struct el_box *box,
 	    struct color_pair *color, int width)
 {
+	ELOG
 	static const border_char_T p1[] = {
 		BORDER_SULCORNER,
 		BORDER_SURCORNER,
@@ -285,6 +293,7 @@ void
 fix_dwchar_around_box(struct terminal *term, struct el_box *box, int border,
 		     int shadow_width, int shadow_height)
 {
+	ELOG
 	struct screen_char *schar;
 	int height, x, y;
 
@@ -353,6 +362,7 @@ draw_char(struct terminal *term, int x, int y,
 	  struct color_pair *color)
 #endif /* CONFIG_UTF8 */
 {
+	ELOG
 	struct screen_char *screen_char = get_char(term, x, y);
 
 	if (!screen_char) return;
@@ -376,6 +386,7 @@ draw_box(struct terminal *term, struct el_box *box,
 	 struct color_pair *color)
 #endif /* CONFIG_UTF8 */
 {
+	ELOG
 	struct screen_char *line, *pos, *end;
 	int width, height;
 
@@ -417,6 +428,7 @@ void
 draw_shadow(struct terminal *term, struct el_box *box,
 	    struct color_pair *color, int width, int height)
 {
+	ELOG
 	struct el_box dbox;
 
 	/* (horizontal) */
@@ -438,6 +450,7 @@ draw_text_utf8(struct terminal *term, int x, int y,
 	       const char *text2, int length,
 	       int attr, struct color_pair *color)
 {
+	ELOG
 	struct screen_char *start, *pos;
 	char *text = (char *)text2;
 	char *end = text + length;
@@ -511,6 +524,7 @@ draw_text(struct terminal *term, int x, int y,
 	  const char *text, int length,
 	  int attr, struct color_pair *color)
 {
+	ELOG
 	int end_pos;
 	struct screen_char *pos, *end;
 
@@ -576,6 +590,7 @@ draw_dlg_text(struct dialog_data *dlg_data, int x, int y,
 	  const char *text, int length,
 	  int attr, struct color_pair *color)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	struct el_box *box = &dlg_data->real_box;
 
@@ -592,6 +607,7 @@ draw_dlg_text(struct dialog_data *dlg_data, int x, int y,
 void
 set_cursor(struct terminal *term, int x, int y, int blockable)
 {
+	ELOG
 	assert(term && term->screen);
 	if_assert_failed return;
 
@@ -613,6 +629,7 @@ set_cursor(struct terminal *term, int x, int y, int blockable)
 void
 set_dlg_cursor(struct terminal *term, struct dialog_data *dlg_data, int x, int y, int blockable)
 {
+	ELOG
 	struct el_box *box = &dlg_data->real_box;
 
 	assert(term && term->screen);
@@ -631,6 +648,7 @@ set_dlg_cursor(struct terminal *term, struct dialog_data *dlg_data, int x, int y
 void
 clear_terminal(struct terminal *term)
 {
+	ELOG
 	struct el_box box;
 	int bgchar = get_opt_int("ui.background_char", NULL);
 

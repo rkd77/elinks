@@ -24,6 +24,7 @@ dlg_format_group(struct dialog_data *dlg_data,
 		 struct widget_data *widget_data,
 		 int n, int x, int *y, int w, int *rw, int format_only)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	int space_between_widgets = 1;
 	int line_width = 0;
@@ -143,6 +144,7 @@ dlg_format_group(struct dialog_data *dlg_data,
 void
 group_layouter(struct dialog_data *dlg_data)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	int w = dialog_max_width(term);
 	int rw;

@@ -67,6 +67,7 @@ static void set_menu_selection(struct menu *menu, int pos);
 void
 deselect_mainmenu(struct terminal *term, struct menu *menu)
 {
+	ELOG
 	menu->selected = -1;
 	del_from_list(menu->win);
 	add_to_list_end(term->windows, menu->win);
@@ -75,6 +76,7 @@ deselect_mainmenu(struct terminal *term, struct menu *menu)
 static inline int
 count_items(struct menu_item *items)
 {
+	ELOG
 	int i = 0;
 
 	if (items) {
@@ -91,6 +93,7 @@ count_items(struct menu_item *items)
 static void
 free_menu_items(struct menu_item *items)
 {
+	ELOG
 	struct menu_item *item;
 
 	if (!items || !(items->flags & FREE_ANY)) return;
@@ -111,6 +114,7 @@ void
 do_menu_selected(struct terminal *term, struct menu_item *items,
 		 void *data, int selected, int hotkeys)
 {
+	ELOG
 	struct menu *menu = (struct menu *)mem_calloc(1, sizeof(*menu));
 
 	if (menu) {
@@ -132,12 +136,14 @@ do_menu_selected(struct terminal *term, struct menu_item *items,
 void
 do_menu(struct terminal *term, struct menu_item *items, void *data, int hotkeys)
 {
+	ELOG
 	do_menu_selected(term, items, data, 0, hotkeys);
 }
 
 static void
 select_menu_item(struct terminal *term, struct menu_item *it, void *data)
 {
+	ELOG
 	/* We save these values due to delete_window() call below. */
 	menu_func_T func = it->func;
 	void *it_data = it->data;
@@ -180,6 +186,7 @@ select_menu_item(struct terminal *term, struct menu_item *it, void *data)
 static inline void
 select_menu(struct terminal *term, struct menu *menu)
 {
+	ELOG
 	if (menu->selected < 0 || menu->selected >= menu->size)
 		return;
 
@@ -190,6 +197,7 @@ select_menu(struct terminal *term, struct menu *menu)
 static int
 get_menuitem_text_width(struct terminal *term, struct menu_item *mi)
 {
+	ELOG
 	char *text;
 
 	if (!mi_has_left_text(mi)) return 0;
@@ -214,6 +222,7 @@ get_menuitem_text_width(struct terminal *term, struct menu_item *mi)
 static int
 get_menuitem_rtext_width(struct terminal *term, struct menu_item *mi)
 {
+	ELOG
 	int rtext_width = 0;
 
 	if (mi_is_submenu(mi)) {
@@ -244,6 +253,7 @@ get_menuitem_rtext_width(struct terminal *term, struct menu_item *mi)
 static int
 get_menuitem_width(struct terminal *term, struct menu_item *mi, int max_width)
 {
+	ELOG
 	int text_width = get_menuitem_text_width(term, mi);
 	int rtext_width = get_menuitem_rtext_width(term, mi);
 
@@ -256,6 +266,7 @@ get_menuitem_width(struct terminal *term, struct menu_item *mi, int max_width)
 static void
 count_menu_size(struct terminal *term, struct menu *menu)
 {
+	ELOG
 	struct menu_item *item;
 	int width = term->width - MENU_BORDER_SIZE * 2;
 	int height = term->height - MENU_BORDER_SIZE * 2;
@@ -278,6 +289,7 @@ count_menu_size(struct terminal *term, struct menu *menu)
 static void
 scroll_menu(struct menu *menu, int steps, int wrap)
 {
+	ELOG
 	int pos, start;
 	int s = steps ? steps/abs(steps) : 1; /* Selectable item search direction. */
 
@@ -346,6 +358,7 @@ select_item:
 static void
 set_menu_selection(struct menu *menu, int pos)
 {
+	ELOG
 	int height, scr_i;
 
 	assert(pos >= 0 && pos < menu->size);
@@ -374,6 +387,7 @@ static inline void
 draw_menu_left_text(struct terminal *term, char *text, int len,
 		    int x, int y, int width, struct color_pair *color)
 {
+	ELOG
 	int w = width - (L_TEXT_SPACE + R_TEXT_SPACE);
 	int max_len;
 
@@ -402,6 +416,7 @@ draw_menu_left_text_hk(struct terminal *term, char *text,
 		       int hotkey_pos, int x, int y, int width,
 		       struct color_pair *color, int selected)
 {
+	ELOG
 	struct color_pair *hk_color = get_bfu_color(term, "menu.hotkey.normal");
 	struct color_pair *hk_color_sel = get_bfu_color(term, "menu.hotkey.selected");
 	screen_char_attr_T hk_attr = get_opt_bool("ui.dialogs.underline_hotkeys", NULL)
@@ -524,6 +539,7 @@ static inline void
 draw_menu_right_text(struct terminal *term, char *text, int len,
 		     int x, int y, int width, struct color_pair *color)
 {
+	ELOG
 	int w = width - (L_RTEXT_SPACE + R_RTEXT_SPACE);
 
 	if (w <= 0) return;
@@ -540,6 +556,7 @@ draw_menu_right_text(struct terminal *term, char *text, int len,
 static void
 display_menu(struct terminal *term, struct menu *menu)
 {
+	ELOG
 	struct color_pair *normal_color = get_bfu_color(term, "menu.normal");
 	struct color_pair *selected_color = get_bfu_color(term, "menu.selected");
 	struct color_pair *frame_color = get_bfu_color(term, "menu.frame");
@@ -680,6 +697,7 @@ display_menu(struct terminal *term, struct menu *menu)
 static void
 menu_mouse_handler(struct menu *menu, struct term_event *ev)
 {
+	ELOG
 	struct window *win = menu->win;
 	int scroll_direction = 1;
 
@@ -741,6 +759,7 @@ menu_mouse_handler(struct menu *menu, struct term_event *ev)
 static void
 menu_page_up(struct menu *menu)
 {
+	ELOG
 	int current = int_max(0, int_min(menu->selected, menu->size - 1));
 	int step;
 	int i;
@@ -761,6 +780,7 @@ menu_page_up(struct menu *menu)
 static void
 menu_page_down(struct menu *menu)
 {
+	ELOG
 	int current = int_max(0, int_min(menu->selected, menu->size - 1));
 	int step;
 	int i;
@@ -784,6 +804,7 @@ static inline int
 search_menu_item(struct menu_item *item, char *buffer,
 		 struct terminal *term)
 {
+	ELOG
 	char *text, *match;
 
 	/* set_menu_selection asserts selectability. */
@@ -808,6 +829,7 @@ search_menu_item(struct menu_item *item, char *buffer,
 static enum input_line_code
 menu_search_handler(struct input_line *line, int action_id)
 {
+	ELOG
 	struct menu *menu = (struct menu *)line->data;
 	struct terminal *term = menu->win->term;
 	char *buffer = line->buffer;
@@ -868,6 +890,7 @@ menu_search_handler(struct input_line *line, int action_id)
 static void
 search_menu(struct menu *menu)
 {
+	ELOG
 	struct terminal *term = menu->win->term;
 	struct window *current_tab = get_current_tab(term);
 	struct session *ses = (struct session *)(current_tab ? current_tab->data : NULL);
@@ -881,6 +904,7 @@ search_menu(struct menu *menu)
 static void
 menu_kbd_handler(struct menu *menu, struct term_event *ev)
 {
+	ELOG
 	struct window *win = menu->win;
 	action_id_T action_id = kbd_action(KEYMAP_MENU, ev, NULL);
 	int s = 0;
@@ -999,6 +1023,7 @@ enter:
 static void
 menu_handler(struct window *win, struct term_event *ev)
 {
+	ELOG
 	struct menu *menu = (struct menu *)win->data;
 
 	menu->win = win;
@@ -1043,6 +1068,7 @@ void
 do_mainmenu(struct terminal *term, struct menu_item *items,
 	    void *data, int sel)
 {
+	ELOG
 	int init = 0;
 	struct menu *menu;
 	struct window *win;
@@ -1091,6 +1117,7 @@ do_mainmenu(struct terminal *term, struct menu_item *items,
 static void
 display_mainmenu(struct terminal *term, struct menu *menu)
 {
+	ELOG
 	struct color_pair *normal_color = get_bfu_color(term, "menu.normal");
 	struct color_pair *selected_color = get_bfu_color(term, "menu.selected");
 	int p = 0;
@@ -1222,6 +1249,7 @@ display_mainmenu(struct terminal *term, struct menu *menu)
 static void
 mainmenu_mouse_handler(struct menu *menu, struct term_event *ev)
 {
+	ELOG
 	struct window *win = menu->win;
 	struct menu_item *item;
 	int scroll = 0;
@@ -1290,6 +1318,7 @@ mainmenu_mouse_handler(struct menu *menu, struct term_event *ev)
 static void
 mainmenu_kbd_handler(struct menu *menu, struct term_event *ev)
 {
+	ELOG
 	struct window *win = menu->win;
 	action_id_T action_id = kbd_action(KEYMAP_MENU, ev, NULL);
 
@@ -1351,6 +1380,7 @@ mainmenu_kbd_handler(struct menu *menu, struct term_event *ev)
 static void
 mainmenu_handler(struct window *win, struct term_event *ev)
 {
+	ELOG
 	struct menu *menu = (struct menu *)win->data;
 
 	menu->win = win;
@@ -1387,6 +1417,7 @@ mainmenu_handler(struct window *win, struct term_event *ev)
 struct menu_item *
 new_menu(menu_item_flags_T flags)
 {
+	ELOG
 	struct menu_item *mi = NULL;
 
 	if (realloc_menu_items(&mi, 0)) mi->flags = flags;
@@ -1399,6 +1430,7 @@ add_to_menu(struct menu_item **mi, const char *text, const char *rtext,
 	    main_action_T action_id, menu_func_T func, void *data,
 	    menu_item_flags_T flags)
 {
+	ELOG
 	int n = count_items(*mi);
 	/* XXX: Don't clear the last and special item. */
 	struct menu_item *item = (struct menu_item *)realloc_menu_items(mi, n + 1);

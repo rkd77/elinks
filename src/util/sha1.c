@@ -40,6 +40,7 @@ static void sha_hash_block(struct sha1_context *ctx);
 void
 init_sha1(struct sha1_context *ctx)
 {
+	ELOG
 	int i;
 
 	ctx->lenW = 0;
@@ -61,6 +62,7 @@ void
 update_sha1(struct sha1_context *ctx, const unsigned char *dataIn,
 	    unsigned long len)
 {
+	ELOG
 	int i;
 
 	/* Read the data into W and process blocks as they get full. */
@@ -82,6 +84,7 @@ update_sha1(struct sha1_context *ctx, const unsigned char *dataIn,
 void
 done_sha1(struct sha1_context *ctx, sha1_digest_bin_T digest)
 {
+	ELOG
 	unsigned char pad0x80 = 0x80;
 	unsigned char pad0x00 = 0x00;
 	unsigned char padlen[8];
@@ -116,6 +119,7 @@ unsigned char *
 digest_sha1(const unsigned char *data, unsigned long length,
 	    sha1_digest_bin_T digest)
 {
+	ELOG
 	struct sha1_context ctx;
 
 	init_sha1(&ctx);
@@ -134,6 +138,7 @@ digest_sha1(const unsigned char *data, unsigned long length,
 static void
 sha_hash_block(struct sha1_context *ctx)
 {
+	ELOG
 	int t;
 	unsigned int A, B, C, D, E, TEMP;
 

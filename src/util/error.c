@@ -38,6 +38,7 @@ char full_static_version[1024] = "ELinks " VERSION_STRING;
 static void
 er(int bell, int shall_sleep, const char *fmt, va_list params)
 {
+	ELOG
 	if (bell)
 #ifdef CONFIG_OS_WIN32
 		MessageBeep(MB_ICONEXCLAMATION);
@@ -56,6 +57,7 @@ const char *errfile;
 void
 elinks_debug(const char *fmt, ...)
 {
+	ELOG
 	char errbuf[4096];
 	va_list params;
 
@@ -72,6 +74,7 @@ elinks_debug(const char *fmt, ...)
 void
 elinks_wdebug(const char *fmt, ...)
 {
+	ELOG
 	char errbuf[4096];
 	va_list params;
 
@@ -88,6 +91,7 @@ elinks_wdebug(const char *fmt, ...)
 void
 elinks_error(const char *fmt, ...)
 {
+	ELOG
 	char errbuf[4096];
 	va_list params;
 
@@ -104,6 +108,7 @@ elinks_error(const char *fmt, ...)
 void
 elinks_internal(const char *fmt, ...)
 {
+	ELOG
 	char errbuf[4096];
 	va_list params;
 
@@ -125,6 +130,7 @@ elinks_internal(const char *fmt, ...)
 void
 usrerror(const char *fmt, ...)
 {
+	ELOG
 	va_list params;
 
 	va_start(params, fmt);
@@ -143,6 +149,7 @@ int assert_failed = 0;
 void
 elinks_assertm(int x, const char *fmt, ...)
 {
+	ELOG
 	char *buf = NULL;
 	va_list params;
 
@@ -161,6 +168,7 @@ elinks_assertm(int x, const char *fmt, ...)
 void
 force_dump(void)
 {
+	ELOG
 	fprintf(stderr,
 		"\n\033[1m%s\033[0m %s\n", "Forcing core dump!",
 		"Man the Lifeboats! Women and children first!\n");
@@ -182,6 +190,7 @@ static FILE *log_file = NULL;
 static void
 done_log(void)
 {
+	ELOG
 	char errbuf[4096];
 	time_t curtime = time(NULL);
 	struct tm *loctime = localtime(&curtime);
@@ -201,6 +210,7 @@ void
 elinks_log(char *msg, char *file, int line,
 	   const char *fmt, ...)
 {
+	ELOG
 	static char *log_files = NULL;
 	static char *log_msg = NULL;
 	char errbuf[4096];
@@ -252,6 +262,7 @@ elinks_log(char *msg, char *file, int line,
 void
 do_not_optimize_here(void *p)
 {
+	ELOG
 	/* stop GCC optimization - avoid bugs in it */
 }
 
@@ -270,6 +281,7 @@ do_not_optimize_here(void *p)
 void
 dump_backtrace(FILE *f, int trouble)
 {
+	ELOG
 	/* If trouble is set, when we get here, we can be in various
 	 * interesting situations like inside of the SIGSEGV handler etc. So be
 	 * especially careful here.  Dynamic memory allocation may not work

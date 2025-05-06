@@ -88,6 +88,7 @@ static inline void
 add_dir_entry(struct directory_entry *entry, struct string *page,
 	      int pathlen, char *dircolor, int first)
 {
+	ELOG
 	char *lnk = NULL;
 	struct string html_encoded_name;
 	struct string uri_encoded_name;
@@ -162,6 +163,7 @@ static inline void
 add_dir_entries(struct directory_entry *entries, char *dirpath,
 		struct string *page)
 {
+	ELOG
 	char dircolor[8];
 	int dirpathlen = strlen(dirpath);
 	int i;
@@ -191,6 +193,7 @@ static inline struct connection_state
 list_directory(struct connection *conn, char *dirpath,
 	       struct string *page)
 {
+	ELOG
 	int show_hidden_files = get_opt_bool("protocol.file.show_hidden_files",
 	                                     NULL);
 	struct directory_entry *entries;
@@ -220,6 +223,7 @@ list_directory(struct connection *conn, char *dirpath,
 static void
 check_if_closed(struct socket *socket, struct read_buffer *rb)
 {
+	ELOG
 	if (socket->state == SOCKET_CLOSED) {
 		abort_connection((struct connection *)socket->conn, connection_state(S_OK));
 		return;
@@ -230,6 +234,7 @@ check_if_closed(struct socket *socket, struct read_buffer *rb)
 static void
 read_from_stdin(struct connection *conn)
 {
+	ELOG
 	struct read_buffer *rb = alloc_read_buffer(conn->socket);
 
 	if (!rb) return;
@@ -254,6 +259,7 @@ read_from_stdin(struct connection *conn)
 void
 file_protocol_handler(struct connection *connection)
 {
+	ELOG
 	const char *redirect_location = NULL;
 	struct string page, name;
 	struct connection_state state;

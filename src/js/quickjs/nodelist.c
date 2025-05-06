@@ -41,6 +41,7 @@ void *map_rev_nodelist;
 static void *
 js_nodelist_GetOpaque(JSValueConst this_val)
 {
+	ELOG
 	REF_JS(this_val);
 
 	return JS_GetOpaque(this_val, js_nodelist_class_id);
@@ -49,6 +50,7 @@ js_nodelist_GetOpaque(JSValueConst this_val)
 static void
 js_nodelist_finalizer(JSRuntime *rt, JSValue val)
 {
+	ELOG
 	REF_JS(val);
 	struct js_nodelist *nodelist_private = (struct js_nodelist *)js_nodelist_GetOpaque(val);
 
@@ -63,6 +65,7 @@ js_nodelist_finalizer(JSRuntime *rt, JSValue val)
 static void
 js_nodelist_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -79,6 +82,7 @@ js_nodelist_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 static JSValue
 js_nodeList_get_property_length(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -110,6 +114,7 @@ js_nodeList_get_property_length(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_nodeList_item2(JSContext *ctx, JSValueConst this_val, int idx)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -147,6 +152,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_nodeList_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -165,6 +171,7 @@ js_nodeList_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *
 static void
 js_nodeList_set_items(JSContext *ctx, JSValue this_val, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -210,6 +217,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_nodeList_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -227,6 +235,7 @@ static const JSCFunctionListEntry js_nodelist_proto_funcs[] = {
 static int
 js_obj_delete_property(JSContext *ctx, JSValueConst obj, JSAtom prop)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -241,6 +250,7 @@ js_obj_delete_property(JSContext *ctx, JSValueConst obj, JSAtom prop)
 static JSValue
 js_obj_get_property(JSContext *ctx, JSValueConst obj, JSAtom prop, JSValueConst receiver)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -256,6 +266,7 @@ js_obj_get_property(JSContext *ctx, JSValueConst obj, JSAtom prop, JSValueConst 
 static int
 js_obj_set_property(JSContext *ctx, JSValueConst obj, JSAtom prop, JSValueConst val, JSValueConst receiver, int flags)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -285,6 +296,7 @@ static JSClassDef js_nodelist_class = {
 JSValue
 getNodeList(JSContext *ctx, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

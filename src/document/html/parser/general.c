@@ -45,30 +45,35 @@ void
 html_article(struct html_context *html_context, char *a,
           char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 }
 
 void
 html_main(struct html_context *html_context, char *a,
           char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 }
 
 void
 html_section(struct html_context *html_context, char *a,
           char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 }
 
 void
 html_span(struct html_context *html_context, char *a,
           char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 }
 
 void
 html_bold(struct html_context *html_context, char *a,
           char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	elformat.style.attr |= AT_BOLD;
 }
 
@@ -76,6 +81,7 @@ void
 html_italic(struct html_context *html_context, char *a,
             char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	elformat.style.attr |= AT_ITALIC;
 }
 
@@ -83,6 +89,7 @@ void
 html_strike(struct html_context *html_context, char *a,
                char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	elformat.style.attr |= AT_STRIKE;
 }
 
@@ -90,6 +97,7 @@ void
 html_underline(struct html_context *html_context, char *a,
                char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	elformat.style.attr |= AT_UNDERLINE;
 }
 
@@ -98,6 +106,7 @@ void
 html_fixed(struct html_context *html_context, char *a,
            char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	elformat.style.attr |= AT_FIXED;
 }
 
@@ -105,6 +114,7 @@ void
 html_subscript(struct html_context *html_context, char *a,
                char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	put_chrs(html_context, "[", 1);
 }
 
@@ -112,6 +122,7 @@ void
 html_subscript_close(struct html_context *html_context, char *a,
                 char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	put_chrs(html_context, "]", 1);
 }
 
@@ -119,6 +130,7 @@ void
 html_superscript(struct html_context *html_context, char *a,
                  char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	put_chrs(html_context, "^", 1);
 }
 
@@ -130,6 +142,7 @@ void
 html_quote(struct html_context *html_context, char *a,
 	   char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	/* An HTML document containing extremely many repetitions of
 	 * "<q>" could cause @html_context->quote_level to overflow.
 	 * Because it is unsigned, it then wraps around to zero, and
@@ -148,6 +161,7 @@ html_quote_close(struct html_context *html_context, char *a,
 		 char *xxx3, char *xxx4,
 		 char **xxx5)
 {
+	ELOG
 	char *q;
 
 	if (html_context->quote_level > 0)
@@ -162,6 +176,7 @@ void
 html_font(struct html_context *html_context, char *a,
           char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	char *al = get_attr_val(a, "size", html_context->doc_cp);
 
 	if (al) {
@@ -191,6 +206,7 @@ void
 html_body(struct html_context *html_context, char *a,
           char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	get_color(html_context, a, "text", &elformat.style.color.foreground);
 	get_color(html_context, a, "link", &elformat.color.clink);
 	get_color(html_context, a, "vlink", &elformat.color.vlink);
@@ -207,6 +223,7 @@ html_body(struct html_context *html_context, char *a,
 void
 html_apply_canvas_bgcolor(struct html_context *html_context)
 {
+	ELOG
 #ifdef CONFIG_CSS
 #ifdef CONFIG_LIBCSS
 	if (!html_context->options->libcss_enable)
@@ -240,6 +257,7 @@ void
 html_script(struct html_context *html_context, char *a,
             char *html, char *eof, char **end)
 {
+	ELOG
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 	/* TODO: <noscript> processing. Well, same considerations apply as to
 	 * CSS property display: none processing. */
@@ -449,6 +467,7 @@ void
 html_style(struct html_context *html_context, char *a,
            char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	html_context->was_style = 1;
 	html_skip(html_context, a);
 }
@@ -457,6 +476,7 @@ void
 html_style_close(struct html_context *html_context, char *a,
                  char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	html_context->was_style = 0;
 }
 
@@ -464,6 +484,7 @@ void
 html_html(struct html_context *html_context, char *a,
           char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	/* This is here just to get CSS stuff applied. */
 
 	/* Modify the root HTML element - format_html_part() will take
@@ -478,6 +499,7 @@ void
 html_html_close(struct html_context *html_context, char *a,
                 char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	if (html_top->type >= ELEMENT_KILLABLE
 	    && !html_context->was_body_background)
 		html_apply_canvas_bgcolor(html_context);
@@ -487,6 +509,7 @@ void
 html_head(struct html_context *html_context, char *a,
           char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	/* This makes sure it gets to the stack and helps tame down unclosed
 	 * <title>. */
 }
@@ -495,6 +518,7 @@ void
 html_meta(struct html_context *html_context, char *a,
           char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	/* html_handle_body_meta() does all the work. */
 }
 
@@ -503,6 +527,7 @@ void
 html_handle_body_meta(struct html_context *html_context, char *meta,
 		      char *eof)
 {
+	ELOG
 	struct string head;
 
 	if (!init_string(&head)) return;
@@ -518,6 +543,7 @@ void
 html_title(struct html_context *html_context, char *a,
            char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	html_top->invisible = 1;
 	html_top->type = ELEMENT_WEAK;
 }
@@ -526,6 +552,7 @@ void
 html_center(struct html_context *html_context, char *a,
             char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	par_elformat.align = ALIGN_CENTER;
 	if (!html_context->table_level)
 		par_elformat.leftmargin = par_elformat.rightmargin = 0;
@@ -535,6 +562,7 @@ void
 html_linebrk(struct html_context *html_context, char *a,
              char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	char *al = get_attr_val(a, "align", html_context->doc_cp);
 
 	if (al) {
@@ -553,6 +581,7 @@ void
 html_br(struct html_context *html_context, char *a,
         char *html, char *eof, char **end)
 {
+	ELOG
 	html_linebrk(html_context, a, html, eof, end);
 	if (html_context->was_br)
 		ln_break(html_context, 2);
@@ -564,6 +593,7 @@ void
 html_p(struct html_context *html_context, char *a,
        char *html, char *eof, char **end)
 {
+	ELOG
 	int_lower_bound(&par_elformat.leftmargin, html_context->margin);
 	int_lower_bound(&par_elformat.rightmargin, html_context->margin);
 	/*par_elformat.align = ALIGN_LEFT;*/
@@ -574,6 +604,7 @@ void
 html_address(struct html_context *html_context, char *a,
              char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	par_elformat.leftmargin++;
 	par_elformat.align = ALIGN_LEFT;
 }
@@ -582,6 +613,7 @@ void
 html_blockquote(struct html_context *html_context, char *a,
                 char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	par_elformat.align = ALIGN_LEFT;
 	if (par_elformat.blockquote_level == 0) {
 		par_elformat.orig_leftmargin = par_elformat.leftmargin;
@@ -594,6 +626,7 @@ void
 html_blockquote_close(struct html_context *html_context, char *a,
                 char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	if (par_elformat.blockquote_level == 2) par_elformat.blockquote_level--;
 	if (par_elformat.blockquote_level > 0) par_elformat.blockquote_level--;
 }
@@ -603,6 +636,7 @@ html_h(int h, char *a,
        format_align_T default_align, struct html_context *html_context,
        char *html, char *eof, char **end)
 {
+	ELOG
 	if (!par_elformat.align) par_elformat.align = default_align;
 	html_linebrk(html_context, a, html, eof, end);
 
@@ -631,6 +665,7 @@ void
 html_h1(struct html_context *html_context, char *a,
 	char *html, char *eof, char **end)
 {
+	ELOG
 	elformat.style.attr |= AT_BOLD;
 	html_h(1, a, ALIGN_CENTER, html_context, html, eof, end);
 }
@@ -639,6 +674,7 @@ void
 html_h2(struct html_context *html_context, char *a,
         char *html, char *eof, char **end)
 {
+	ELOG
 	html_h(2, a, ALIGN_LEFT, html_context, html, eof, end);
 }
 
@@ -646,6 +682,7 @@ void
 html_h3(struct html_context *html_context, char *a,
         char *html, char *eof, char **end)
 {
+	ELOG
 	html_h(3, a, ALIGN_LEFT, html_context, html, eof, end);
 }
 
@@ -653,6 +690,7 @@ void
 html_h4(struct html_context *html_context, char *a,
         char *html, char *eof, char **end)
 {
+	ELOG
 	html_h(4, a, ALIGN_LEFT, html_context, html, eof, end);
 }
 
@@ -660,6 +698,7 @@ void
 html_h5(struct html_context *html_context, char *a,
         char *html, char *eof, char **end)
 {
+	ELOG
 	html_h(5, a, ALIGN_LEFT, html_context, html, eof, end);
 }
 
@@ -667,6 +706,7 @@ void
 html_h6(struct html_context *html_context, char *a,
         char *html, char *eof, char **end)
 {
+	ELOG
 	html_h(6, a, ALIGN_LEFT, html_context, html, eof, end);
 }
 
@@ -674,6 +714,7 @@ void
 html_pre(struct html_context *html_context, char *a,
          char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	elformat.style.attr |= AT_PREFORMATTED;
 	par_elformat.leftmargin = (par_elformat.leftmargin > 1);
 	par_elformat.rightmargin = 0;
@@ -683,6 +724,7 @@ void
 html_xmp(struct html_context *html_context, char *a,
          char *html, char *eof, char **end)
 {
+	ELOG
 	html_context->was_xmp = 1;
 	html_pre(html_context, a, html, eof, end);
 }
@@ -691,6 +733,7 @@ void
 html_xmp_close(struct html_context *html_context, char *a,
                char *html, char *eof, char **end)
 {
+	ELOG
 	html_context->was_xmp = 0;
 }
 
@@ -698,6 +741,7 @@ void
 html_hr(struct html_context *html_context, char *a,
         char *html, char *eof, char **end)
 {
+	ELOG
 	int i/* = par_elformat.width - 10*/;
 	unsigned char r = BORDER_DHLINE;
 	int q = get_num(a, "size", html_context->doc_cp);
@@ -727,6 +771,7 @@ void
 html_table(struct html_context *html_context, char *attr,
            char *html, char *eof, char **end)
 {
+	ELOG
 	if (html_context->options->tables
 	    && html_context->table_level < HTML_MAX_TABLE_LEVEL) {
 		format_table(attr, html, eof, end, html_context);
@@ -745,12 +790,14 @@ void
 html_tt(struct html_context *html_context, char *a,
         char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 }
 
 void
 html_tr(struct html_context *html_context, char *a,
         char *html, char *eof, char **end)
 {
+	ELOG
 	html_linebrk(html_context, a, html, eof, end);
 }
 
@@ -758,6 +805,7 @@ void
 html_th(struct html_context *html_context, char *a,
         char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	/*html_linebrk(html_context, a, html, eof, end);*/
 	kill_html_stack_until(html_context, 1,
 	                      "TD", "TH", "", "TR", "TABLE", NULL);
@@ -769,6 +817,7 @@ void
 html_td(struct html_context *html_context, char *a,
         char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	/*html_linebrk(html_context, a, html, eof, end);*/
 	kill_html_stack_until(html_context, 1,
 	                      "TD", "TH", "", "TR", "TABLE", NULL);
@@ -780,6 +829,7 @@ void
 html_base(struct html_context *html_context, char *a,
           char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	char *al;
 
 	al = get_url_val(a, "href", html_context->doc_cp);
@@ -804,6 +854,7 @@ void
 html_ul(struct html_context *html_context, char *a,
         char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	char *al;
 
 	/* dump_html_stack(html_context); */
@@ -833,6 +884,7 @@ void
 html_ol(struct html_context *html_context, char *a,
         char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	char *al;
 	int st;
 
@@ -893,6 +945,7 @@ static struct {
 static void
 roman(struct string  *p, unsigned n)
 {
+	ELOG
 	int i = 0;
 
 	if (n >= 4000) {
@@ -919,6 +972,7 @@ void
 html_li(struct html_context *html_context, char *a,
         char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	int t = par_elformat.flags & P_LISTMASK;
 
 	/* When handling the code <li><li> @was_li will be 1 and it means we
@@ -1012,6 +1066,7 @@ void
 html_dl(struct html_context *html_context, char *a,
         char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	par_elformat.flags &= ~P_COMPACT;
 	if (has_attr(a, "compact", html_context->doc_cp))
 		par_elformat.flags |= P_COMPACT;
@@ -1031,6 +1086,7 @@ void
 html_dt(struct html_context *html_context, char *a,
         char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	kill_html_stack_until(html_context, 0, "", "DL", NULL);
 	par_elformat.align = ALIGN_LEFT;
 	par_elformat.leftmargin = par_elformat.dd_margin;
@@ -1043,6 +1099,7 @@ void
 html_dd(struct html_context *html_context, char *a,
         char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	kill_html_stack_until(html_context, 0, "", "DL", NULL);
 
 	par_elformat.leftmargin = par_elformat.dd_margin + 3;
@@ -1060,6 +1117,7 @@ void
 html_noframes(struct html_context *html_context, char *a,
               char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	struct html_element *element;
 
 	if (!html_context->options->frames) return;
@@ -1074,6 +1132,7 @@ void
 html_frame(struct html_context *html_context, char *a,
            char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	char *name, *src, *url;
 
 	src = get_url_val(a, "src", html_context->doc_cp);
@@ -1115,6 +1174,7 @@ void
 html_frameset(struct html_context *html_context, char *a,
               char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	struct frameset_param fp;
 	char *cols, *rows;
 	int width, height;
@@ -1184,6 +1244,7 @@ void
 html_noscript(struct html_context *html_context, char *a,
               char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	/* We shouldn't throw <noscript> away until our ECMAScript support is
 	 * halfway decent. */
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
@@ -1197,5 +1258,6 @@ void
 html_template(struct html_context *html_context, char *a,
               char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	html_skip(html_context, a);
 }

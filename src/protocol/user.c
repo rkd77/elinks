@@ -97,6 +97,7 @@ struct module user_protocol_module = struct_module(
 char *
 get_user_program(struct terminal *term, const char *progid, int progidlen)
 {
+	ELOG
 	struct option *opt;
 	int xwin = term ? term->environment & ENV_XWIN : 0;
 	struct string name;
@@ -123,6 +124,7 @@ static char *
 subst_cmd(char *cmd, struct uri *uri, char *subj,
 	  char *formfile)
 {
+	ELOG
 	struct string string;
 
 	if (!init_string(&string)) return NULL;
@@ -209,6 +211,7 @@ subst_cmd(char *cmd, struct uri *uri, char *subj,
 static char *
 get_subject_from_query(char *query)
 {
+	ELOG
 	char *subject;
 
 	if (strncmp(query, "subject=", 8)) {
@@ -226,6 +229,7 @@ get_subject_from_query(char *query)
 static char *
 save_form_data_to_file(struct uri *uri)
 {
+	ELOG
 	char *filename = get_tempdir_filename("elinks-XXXXXX");
 	int fd;
 	FILE *fp;
@@ -273,6 +277,7 @@ error:
 void
 user_protocol_handler(struct session *ses, struct uri *uri)
 {
+	ELOG
 	char *subj = NULL, *prog;
 	char *filename;
 

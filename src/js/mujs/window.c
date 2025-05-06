@@ -81,6 +81,7 @@ struct el_message {
 static
 void mjs_window_finalizer(js_State *J, void *val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -100,6 +101,7 @@ void mjs_window_finalizer(js_State *J, void *val)
 static void
 mjs_window_get_property_closed(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -109,6 +111,7 @@ mjs_window_get_property_closed(js_State *J)
 static void
 mjs_window_get_property_event(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -118,6 +121,7 @@ mjs_window_get_property_event(js_State *J)
 static void
 mjs_window_get_property_innerHeight(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -146,6 +150,7 @@ mjs_window_get_property_innerHeight(js_State *J)
 static void
 mjs_window_get_property_innerWidth(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -174,6 +179,7 @@ mjs_window_get_property_innerWidth(js_State *J)
 static void
 mjs_window_get_property_location(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -189,6 +195,7 @@ mjs_window_get_property_location(js_State *J)
 static void
 mjs_window_set_property_location(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -219,6 +226,7 @@ mjs_window_set_property_location(js_State *J)
 static void
 mjs_window_get_property_parent(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -239,6 +247,7 @@ mjs_window_get_property_parent(js_State *J)
 static void
 mjs_window_get_property_scrollX(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -254,6 +263,7 @@ mjs_window_get_property_scrollX(js_State *J)
 static void
 mjs_window_get_property_scrollY(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -269,6 +279,7 @@ mjs_window_get_property_scrollY(js_State *J)
 static void
 mjs_window_get_property_self(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -278,6 +289,7 @@ mjs_window_get_property_self(js_State *J)
 static void
 mjs_window_get_property_status(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -287,6 +299,7 @@ mjs_window_get_property_status(js_State *J)
 static void
 mjs_window_set_property_status(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -314,6 +327,7 @@ mjs_window_set_property_status(js_State *J)
 static void
 mjs_window_get_property_top(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -359,6 +373,7 @@ mjs_window_get_property_top(js_State *J)
 static void
 mjs_window_alert(js_State *J)
 {
+	ELOG
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 
 	assert(interpreter);
@@ -379,6 +394,7 @@ mjs_window_alert(js_State *J)
 static void
 mjs_window_clearInterval(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -401,6 +417,7 @@ mjs_window_clearInterval(js_State *J)
 static void
 mjs_window_clearTimeout(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -423,6 +440,7 @@ mjs_window_clearTimeout(js_State *J)
 static void
 mjs_window_getComputedStyle(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -433,6 +451,7 @@ mjs_window_getComputedStyle(js_State *J)
 static void
 mjs_window_open(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -564,6 +583,7 @@ end:
 static void
 mjs_window_scrollBy(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -601,6 +621,7 @@ mjs_window_scrollBy(js_State *J)
 static void
 mjs_window_scrollByLines(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -618,6 +639,7 @@ mjs_window_scrollByLines(js_State *J)
 static void
 mjs_window_scrollByPages(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -635,6 +657,7 @@ mjs_window_scrollByPages(js_State *J)
 static void
 mjs_window_scrollTo(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -672,6 +695,7 @@ mjs_window_scrollTo(js_State *J)
 static void
 mjs_window_scroll(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -681,6 +705,7 @@ mjs_window_scroll(js_State *J)
 static void
 mjs_window_setInterval(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -724,6 +749,7 @@ mjs_window_setInterval(js_State *J)
 static void
 mjs_window_setTimeout(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -766,6 +792,7 @@ mjs_window_setTimeout(js_State *J)
 static void
 mjs_window_toString(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -775,6 +802,7 @@ mjs_window_toString(js_State *J)
 static void
 mjs_window_addEventListener(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -833,6 +861,7 @@ mjs_window_addEventListener(js_State *J)
 static void
 mjs_window_removeEventListener(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -881,6 +910,7 @@ mjs_window_removeEventListener(js_State *J)
 static void
 onmessage_run(void *data)
 {
+	ELOG
 	struct el_message *mess = (struct el_message *)data;
 
 	if (mess) {
@@ -920,6 +950,7 @@ onmessage_run(void *data)
 static void
 mjs_window_postMessage(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -967,6 +998,7 @@ mjs_window_postMessage(js_State *J)
 int
 mjs_window_init(js_State *J)
 {
+	ELOG
 	js_pushglobal(J);
 	{
 		addmethod(J, "window.addEventListener", mjs_window_addEventListener, 3);
@@ -1011,6 +1043,7 @@ mjs_window_init(js_State *J)
 void
 mjs_push_window(js_State *J, struct view_state *vs)
 {
+	ELOG
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	struct el_window *elwin = (struct el_window *)mem_calloc(1, sizeof(*elwin));
 

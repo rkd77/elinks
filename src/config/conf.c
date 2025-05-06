@@ -92,6 +92,7 @@ struct conf_parsing_state {
 static enum parse_error
 show_parse_error(const struct conf_parsing_state *state, enum parse_error err)
 {
+	ELOG
 	static const  char error_msg[][40] = {
 		"no error",        /* ERROR_NONE */
 		"unknown command", /* ERROR_COMMAND */
@@ -112,6 +113,7 @@ show_parse_error(const struct conf_parsing_state *state, enum parse_error err)
 static void
 skip_white(struct conf_parsing_pos *pos)
 {
+	ELOG
 	char *start = pos->look;
 
 	while (*start) {
@@ -138,6 +140,7 @@ skip_white(struct conf_parsing_pos *pos)
 static void
 skip_quoted(struct conf_parsing_pos *pos)
 {
+	ELOG
 	assert(isquote(*pos->look));
 	if_assert_failed return;
 	pos->look++;
@@ -166,6 +169,7 @@ skip_quoted(struct conf_parsing_pos *pos)
 static void
 skip_option_value(struct conf_parsing_pos *pos)
 {
+	ELOG
 	if (isquote(*pos->look)) {
 		/* Looks like OPT_STRING, OPT_CODEPAGE, OPT_LANGUAGE,
 		 * or OPT_COLOR.  */
@@ -186,6 +190,7 @@ skip_option_value(struct conf_parsing_pos *pos)
 static void
 skip_to_unquoted_newline_or_comment(struct conf_parsing_pos *pos)
 {
+	ELOG
 	while (*pos->look && *pos->look != '#' && *pos->look != '\n') {
 		if (isquote(*pos->look))
 			skip_quoted(pos);
@@ -204,6 +209,7 @@ static enum parse_error
 parse_set_common(struct option *opt_tree, struct conf_parsing_state *state,
 		 struct string *mirror, int is_system_conf, int want_domain)
 {
+	ELOG
 	const char *domain_orig = NULL;
 	size_t domain_len = 0;
 	char *domain_copy = NULL;
@@ -393,6 +399,7 @@ static enum parse_error
 parse_set_domain(struct option *opt_tree, struct conf_parsing_state *state,
                  struct string *mirror, int is_system_conf)
 {
+	ELOG
 	return parse_set_common(opt_tree, state, mirror, is_system_conf, 1);
 }
 
@@ -400,6 +407,7 @@ static enum parse_error
 parse_set(struct option *opt_tree, struct conf_parsing_state *state,
           struct string *mirror, int is_system_conf)
 {
+	ELOG
 	return parse_set_common(opt_tree, state, mirror, is_system_conf, 0);
 }
 
@@ -408,6 +416,7 @@ static enum parse_error
 parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 	    struct string *mirror, int is_system_conf)
 {
+	ELOG
 	const char *optname_orig;
 	size_t optname_len;
 	char *optname_copy;
@@ -485,6 +494,7 @@ static enum parse_error
 parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
 	   struct string *mirror, int is_system_conf)
 {
+	ELOG
 	char *keymap, *keystroke, *action;
 	enum parse_error err = ERROR_NONE;
 	struct conf_parsing_pos before_error;
@@ -578,6 +588,7 @@ static enum parse_error
 parse_include(struct option *opt_tree, struct conf_parsing_state *state,
 	      struct string *mirror, int is_system_conf)
 {
+	ELOG
 	char *xdg_config_home = get_xdg_config_home();
 	char *fname;
 	struct string dumbstring;
@@ -645,6 +656,7 @@ static enum parse_error
 parse_config_command(struct option *options, struct conf_parsing_state *state,
 		     struct string *mirror, int is_system_conf)
 {
+	ELOG
 	const struct parse_handler *handler;
 
 	/* If we're mirroring, then everything up to this point must
@@ -680,6 +692,7 @@ parse_config_command(struct option *options, struct conf_parsing_state *state,
 enum parse_error
 parse_config_exmode_command(char *cmd)
 {
+	ELOG
 	struct conf_parsing_state state = {{ 0 }};
 
 	state.pos.look = cmd;
@@ -696,6 +709,7 @@ parse_config_file(struct option *options, const char *name,
 		  char *file, struct string *mirror,
 		  int is_system_conf)
 {
+	ELOG
 	struct conf_parsing_state state = {{ 0 }};
 	int error_occurred = 0;
 
@@ -769,6 +783,7 @@ parse_config_file(struct option *options, const char *name,
 static char *
 read_config_file(char *name)
 {
+	ELOG
 #define FILE_BUF	1024
 	char cfg_buffer[FILE_BUF];
 	struct string string;
@@ -805,6 +820,7 @@ load_config_file(const char *prefix, const char *name,
 		 struct option *options, struct string *mirror,
 		 int is_system_conf)
 {
+	ELOG
 	char *config_str, *config_file;
 
 	config_file = straconcat(prefix, STRING_DIR_SEP, name,
@@ -837,6 +853,7 @@ load_config_file(const char *prefix, const char *name,
 static void
 load_config_from(char *file, struct option *tree)
 {
+	ELOG
 	load_config_file(CONFDIR, file, tree, NULL, 1);
 	load_config_file(empty_string_or_(get_xdg_config_home()), file, tree, NULL, 0);
 }
@@ -844,6 +861,7 @@ load_config_from(char *file, struct option *tree)
 void
 load_config(void)
 {
+	ELOG
 	load_config_from(get_cmd_opt_str("config-file"),
 			 config_options);
 }
@@ -856,6 +874,7 @@ static int comments = 3;
 static inline const char *
 conf_i18n(const char *s, int i18n)
 {
+	ELOG
 	if (i18n) return gettext(s);
 	return s;
 }
@@ -863,6 +882,7 @@ conf_i18n(const char *s, int i18n)
 static void
 add_indent_to_string(struct string *string, int depth)
 {
+	ELOG
 	if (!depth) return;
 
 	add_xchar_to_string(string, ' ', depth * indentation);
@@ -872,6 +892,7 @@ struct string *
 wrap_option_desc(struct string *out, const char *src,
 		 const struct string *indent, int maxwidth)
 {
+	ELOG
 	const char *last_space = NULL;
 	const char *uncopied = src;
 	int width = 0;
@@ -914,6 +935,7 @@ static void
 output_option_desc_as_comment(struct string *out, const struct option *option,
 			      int i18n, int depth)
 {
+	ELOG
 	const char *desc_i18n = conf_i18n(option->desc, i18n);
 	struct string indent;
 
@@ -935,6 +957,7 @@ smart_config_output_fn(struct string *string, struct option *option,
 		       char *path, int depth, int do_print_comment,
 		       int action, int i18n)
 {
+	ELOG
 	if (option->type == OPT_ALIAS)
 		return;
 
@@ -1007,6 +1030,7 @@ smart_config_output_fn_html(struct string *string, struct option *option,
 		       char *path, int depth, int do_print_comment,
 		       int action, int i18n)
 {
+	ELOG
 	static unsigned int counter;
 	int is_str = 0;
 
@@ -1077,6 +1101,7 @@ smart_config_output_fn_html(struct string *string, struct option *option,
 static void
 add_cfg_header_to_string(struct string *string, const char *text)
 {
+	ELOG
 	int n = strlen(text) + 2;
 
 	int_bounds(&n, 10, 80);
@@ -1091,6 +1116,7 @@ add_cfg_header_to_string(struct string *string, const char *text)
 char *
 create_about_config_string(void)
 {
+	ELOG
 	struct option *options = config_options;
 	struct string config;
 	/* Don't write headers if nothing will be added anyway. */
@@ -1146,6 +1172,7 @@ get_me_out:
 char *
 create_config_string(const char *prefix, const char *name)
 {
+	ELOG
 	struct option *options = config_options;
 	struct string config;
 	/* Don't write headers if nothing will be added anyway. */
@@ -1264,6 +1291,7 @@ static int
 write_config_file(char *prefix, char *name,
                   struct terminal *term)
 {
+	ELOG
 	int ret = -1;
 	struct secure_save_info *ssi;
 	char *config_file = NULL;
@@ -1307,6 +1335,7 @@ free_cfg_str:
 int
 write_config(struct terminal *term)
 {
+	ELOG
 	char *xdg_config_home = get_xdg_config_home();
 
 	if (!xdg_config_home) {
@@ -1324,6 +1353,7 @@ write_config(struct terminal *term)
 void
 set_option_or_save(const char *str)
 {
+	ELOG
 #define NUMKVPAIRS 16
 	int i;
 	char *kvpairs[NUMKVPAIRS];

@@ -28,6 +28,7 @@
 void
 update_hierbox_browser(struct hierbox_browser *browser)
 {
+	ELOG
 	struct hierbox_dialog_list_item *item;
 
 	foreach (item, browser->dialogs) {
@@ -41,6 +42,7 @@ struct listbox_item *
 add_listbox_item(struct hierbox_browser *browser, struct listbox_item *root,
 		 enum listbox_item_type type, void *data, int add_position)
 {
+	ELOG
 	struct listbox_item *item;
 
 	if (!root) {
@@ -76,6 +78,7 @@ add_listbox_item(struct hierbox_browser *browser, struct listbox_item *root,
 static inline struct listbox_item *
 replace_listbox_item(struct listbox_item *item, struct listbox_data *data)
 {
+	ELOG
 	struct listbox_item *new_item;
 
 	new_item = traverse_listbox_items_list(item, data, 1, 1, NULL, NULL);
@@ -88,6 +91,7 @@ replace_listbox_item(struct listbox_item *item, struct listbox_data *data)
 void
 done_listbox_item(struct hierbox_browser *browser, struct listbox_item *item)
 {
+	ELOG
 	struct listbox_data *box_data;
 
 	assert(item && list_empty(item->child));
@@ -120,6 +124,7 @@ done_listbox_item(struct hierbox_browser *browser, struct listbox_item *item)
 static void
 recursively_set_expanded(struct listbox_item *item, int expanded)
 {
+	ELOG
 	struct listbox_item *child;
 
 	if (item->type != BI_FOLDER)
@@ -134,6 +139,7 @@ recursively_set_expanded(struct listbox_item *item, int expanded)
 static widget_handler_status_T
 hierbox_ev_kbd(struct dialog_data *dlg_data)
 {
+	ELOG
 	struct hierbox_browser *browser = (struct hierbox_browser *)dlg_data->dlg->udata2;
 	struct widget_data *widget_data = dlg_data->widgets_data;
 	struct widget *widget = widget_data->widget;
@@ -214,6 +220,7 @@ hierbox_ev_kbd(struct dialog_data *dlg_data)
 static widget_handler_status_T
 hierbox_ev_init(struct dialog_data *dlg_data)
 {
+	ELOG
 	struct hierbox_browser *browser = (struct hierbox_browser *)dlg_data->dlg->udata2;
 	struct hierbox_dialog_list_item *item;
 	struct listbox_item *litem;
@@ -238,6 +245,7 @@ hierbox_ev_init(struct dialog_data *dlg_data)
 static widget_handler_status_T
 hierbox_ev_abort(struct dialog_data *dlg_data)
 {
+	ELOG
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct hierbox_browser *browser = (struct hierbox_browser *)dlg_data->dlg->udata2;
 	struct hierbox_dialog_list_item *item;
@@ -270,6 +278,7 @@ hierbox_ev_abort(struct dialog_data *dlg_data)
 static widget_handler_status_T
 hierbox_dialog_event_handler(struct dialog_data *dlg_data)
 {
+	ELOG
 	struct term_event *ev = dlg_data->term_event;
 
 	switch (ev->ev) {
@@ -295,6 +304,7 @@ hierbox_dialog_event_handler(struct dialog_data *dlg_data)
 struct dialog_data *
 hierbox_browser(struct hierbox_browser *browser, struct session *ses)
 {
+	ELOG
 	struct terminal *term = ses->tab->term;
 	struct listbox_data *listbox_data;
 	struct dialog *dlg;
@@ -345,6 +355,7 @@ hierbox_browser(struct hierbox_browser *browser, struct session *ses)
 static int
 scan_for_marks(struct listbox_item *item, void *info_, int *offset)
 {
+	ELOG
 	if (item->marked) {
 		struct listbox_context *context = (struct listbox_context *)info_;
 
@@ -358,6 +369,7 @@ scan_for_marks(struct listbox_item *item, void *info_, int *offset)
 static int
 scan_for_used(struct listbox_item *item, void *info_, int *offset)
 {
+	ELOG
 	struct listbox_context *context = (struct listbox_context *)info_;
 
 	if (context->box->ops->is_used(item)) {
@@ -374,6 +386,7 @@ init_listbox_context(struct listbox_data *box, struct terminal *term,
 		     struct listbox_item *item,
 		     int (*scanner)(struct listbox_item *, void *, int *))
 {
+	ELOG
 	struct listbox_context *context;
 
 	context = (struct listbox_context *)mem_calloc(1, sizeof(*context));
@@ -397,6 +410,7 @@ init_listbox_context(struct listbox_data *box, struct terminal *term,
 static void
 done_listbox_context(void *context_)
 {
+	ELOG
 	struct listbox_context *context = (struct listbox_context *)context_;
 
 	if (context->item)
@@ -409,6 +423,7 @@ done_listbox_context(void *context_)
 widget_handler_status_T
 push_hierbox_info_button(struct dialog_data *dlg_data, struct widget_data *button)
 {
+	ELOG
 	/* [gettext_accelerator_context(push_hierbox_info_button)] */
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct listbox_item *item = box->sel;
@@ -455,6 +470,7 @@ static void
 recursively_goto_listbox(struct session *ses, struct listbox_item *item,
 			 struct listbox_data *box)
 {
+	ELOG
 	if (item->type == BI_FOLDER) {
 		recursively_goto_each_listbox(ses, item, box);
 		return;
@@ -473,6 +489,7 @@ static void
 recursively_goto_each_listbox(struct session *ses, struct listbox_item *root,
 			 struct listbox_data *box)
 {
+	ELOG
 	struct listbox_item *item;
 
 	foreach (item, root->child) {
@@ -483,6 +500,7 @@ recursively_goto_each_listbox(struct session *ses, struct listbox_item *root,
 static int
 goto_marked(struct listbox_item *item, void *data_, int *offset)
 {
+	ELOG
 	struct listbox_context *context = (struct listbox_context *)data_;
 
 	if (item->marked) {
@@ -499,6 +517,7 @@ widget_handler_status_T
 push_hierbox_goto_button(struct dialog_data *dlg_data,
 			 struct widget_data *button)
 {
+	ELOG
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct listbox_item *item = box->sel;
 	struct session *ses = (struct session *)dlg_data->dlg->udata;
@@ -611,6 +630,7 @@ static void
 print_delete_error(struct listbox_item *item, struct terminal *term,
 		   const struct listbox_ops *ops, enum delete_error err)
 {
+	ELOG
 	struct string msg;
 	char *errmsg;
 	char *text;
@@ -664,6 +684,7 @@ static void
 do_delete_item(struct listbox_item *item, struct listbox_context *info,
 	       int last)
 {
+	ELOG
 	const struct listbox_ops *ops = info->box->ops;
 
 	assert(item);
@@ -684,6 +705,7 @@ do_delete_item(struct listbox_item *item, struct listbox_context *info,
 static int
 delete_marked(struct listbox_item *item, void *data_, int *offset)
 {
+	ELOG
 	struct listbox_context *context = (struct listbox_context *)data_;
 
 	if (item->marked && !context->box->ops->is_used(item)) {
@@ -703,6 +725,7 @@ delete_marked(struct listbox_item *item, void *data_, int *offset)
 static void
 push_ok_delete_button(void *context_)
 {
+	ELOG
 	struct listbox_context *context = (struct listbox_context *)context_;
 	struct listbox_item *root;
 	int last = 0;
@@ -733,6 +756,7 @@ push_ok_delete_button(void *context_)
 static widget_handler_status_T
 query_delete_selected_item(void *context_)
 {
+	ELOG
 	/* [gettext_accelerator_context(query_delete_selected_item)] */
 	struct listbox_context *context, *oldcontext = (struct listbox_context *)context_;
 	struct terminal *term = oldcontext->term;
@@ -792,6 +816,7 @@ query_delete_selected_item(void *context_)
 static void
 dont_delete_marked_items(void *const context_)
 {
+	ELOG
 	query_delete_selected_item(context_);
 }
 
@@ -799,6 +824,7 @@ widget_handler_status_T
 push_hierbox_delete_button(struct dialog_data *dlg_data,
 			   struct widget_data *button)
 {
+	ELOG
 	/* [gettext_accelerator_context(push_hierbox_delete_button)] */
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
@@ -841,6 +867,7 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 static int
 delete_unused(struct listbox_item *item, void *data_, int *offset)
 {
+	ELOG
 	struct listbox_context *context = (struct listbox_context *)data_;
 
 	if (context->box->ops->is_used(item)) return 0;
@@ -852,6 +879,7 @@ delete_unused(struct listbox_item *item, void *data_, int *offset)
 static void
 do_clear_browser(void *context_)
 {
+	ELOG
 	struct listbox_context *context = (struct listbox_context *)context_;
 
 	traverse_listbox_items_list((struct listbox_item *)context->box->items->next,
@@ -863,6 +891,7 @@ widget_handler_status_T
 push_hierbox_clear_button(struct dialog_data *dlg_data,
 			  struct widget_data *button)
 {
+	ELOG
 	/* [gettext_accelerator_context(push_hierbox_clear_button)] */
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	const struct listbox_ops *ops = box->ops;
@@ -904,6 +933,7 @@ push_hierbox_clear_button(struct dialog_data *dlg_data,
 static int
 scan_for_matches(struct listbox_item *item, void *info_, int *offset)
 {
+	ELOG
 	struct listbox_context *context = (struct listbox_context *)info_;
 	char *text = (char *)context->widget_data;
 
@@ -933,6 +963,7 @@ scan_for_matches(struct listbox_item *item, void *info_, int *offset)
 static int
 mark_visible(struct listbox_item *item, void *xxx, int *offset)
 {
+	ELOG
 	item->visible = 1;
 	return 0;
 }
@@ -941,6 +972,7 @@ mark_visible(struct listbox_item *item, void *xxx, int *offset)
 static void
 search_hierbox_browser(void *data, char *text)
 {
+	ELOG
 	struct dialog_data *dlg_data = (struct dialog_data *)data;
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct terminal *term = dlg_data->win->term;
@@ -984,6 +1016,7 @@ widget_handler_status_T
 push_hierbox_search_button(struct dialog_data *dlg_data,
 			   struct widget_data *button)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 

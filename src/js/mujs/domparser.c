@@ -24,6 +24,7 @@ static void mjs_domparser_parseFromString(js_State *J);
 static void
 mjs_domparser_parseFromString(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -45,6 +46,7 @@ mjs_domparser_parseFromString(js_State *J)
 static void
 mjs_domparser_fun(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -54,6 +56,7 @@ mjs_domparser_fun(js_State *J)
 static void
 mjs_domparser_constructor(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -66,6 +69,7 @@ mjs_domparser_constructor(js_State *J)
 int
 mjs_domparser_init(js_State *J)
 {
+	ELOG
 	js_pushglobal(J);
 	js_newcconstructor(J, mjs_domparser_fun, mjs_domparser_constructor, "DOMParser", 0);
 	js_defglobal(J, "DOMParser", JS_DONTENUM);

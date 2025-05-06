@@ -35,6 +35,7 @@
 void
 dump_html_stack(struct html_context *html_context)
 {
+	ELOG
 	struct html_element *element;
 
 	DBG("HTML stack debug:");
@@ -52,6 +53,7 @@ dump_html_stack(struct html_context *html_context)
 struct html_element *
 search_html_stack(struct html_context *html_context, const char *name)
 {
+	ELOG
 	struct html_element *element;
 	int namelen;
 
@@ -77,6 +79,7 @@ search_html_stack(struct html_context *html_context, const char *name)
 void
 kill_html_stack_item(struct html_context *html_context, struct html_element *e)
 {
+	ELOG
 #ifdef CONFIG_ECMASCRIPT
 	char *onload = NULL;
 #endif
@@ -151,6 +154,7 @@ kill_html_stack_item(struct html_context *html_context, struct html_element *e)
 void
 html_stack_dup(struct html_context *html_context, enum html_element_mortality_type type)
 {
+	ELOG
 	struct html_element *e;
 	struct html_element *ep = (struct html_element *)html_context->stack.next;
 
@@ -197,6 +201,7 @@ html_stack_dup(struct html_context *html_context, enum html_element_mortality_ty
 static void
 kill_element(struct html_context *html_context, int ls, struct html_element *e)
 {
+	ELOG
 	int l = 0;
 
 	while ((void *) e != &html_context->stack) {
@@ -215,6 +220,7 @@ kill_element(struct html_context *html_context, int ls, struct html_element *e)
 void
 kill_html_stack_until(struct html_context *html_context, int ls, ...)
 {
+	ELOG
 	struct html_element *e = html_top;
 
 	if (ls) e = e->next;

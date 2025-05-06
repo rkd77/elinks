@@ -32,6 +32,7 @@
 int
 be_read(int s, void *ptr, int len)
 {
+	ELOG
 	if (s >= SHS) return recv(s - SHS, ptr, len, 0);
 	return read(s, ptr, len);
 }
@@ -39,6 +40,7 @@ be_read(int s, void *ptr, int len)
 int
 be_write(int s, void *ptr, int len)
 {
+	ELOG
 	if (s >= SHS) return send(s - SHS, ptr, len, 0);
 	return write(s, ptr, len);
 }
@@ -46,6 +48,7 @@ be_write(int s, void *ptr, int len)
 int
 be_close(int s)
 {
+	ELOG
 	if (s >= SHS) return closesocket(s - SHS);
 	return close(s);
 }
@@ -53,6 +56,7 @@ be_close(int s)
 int
 be_socket(int pf, int sock, int prot)
 {
+	ELOG
 	int h = socket(pf, sock, prot);
 
 	if (h < 0) return h;
@@ -62,30 +66,35 @@ be_socket(int pf, int sock, int prot)
 int
 be_connect(int s, struct sockaddr *sa, int sal)
 {
+	ELOG
 	return connect(s - SHS, sa, sal);
 }
 
 int
 be_getpeername(int s, struct sockaddr *sa, int *sal)
 {
+	ELOG
 	return getpeername(s - SHS, sa, sal);
 }
 
 int
 be_getsockname(int s, struct sockaddr *sa, int *sal)
 {
+	ELOG
 	return getsockname(s - SHS, sa, sal);
 }
 
 int
 be_listen(int s, int c)
 {
+	ELOG
 	return listen(s - SHS, c);
 }
 
 int
 be_accept(int s, struct sockaddr *sa, int *sal)
 {
+	ELOG
 	int a = accept(s - SHS, sa, sal);
 
 	if (a < 0) return -1;
@@ -95,6 +104,7 @@ be_accept(int s, struct sockaddr *sa, int *sal)
 int
 be_bind(int s, struct sockaddr *sa, int sal)
 {
+	ELOG
 #if 0
 	struct sockaddr_in *sin = (struct sockaddr_in *) sa;
 
@@ -117,6 +127,7 @@ be_bind(int s, struct sockaddr *sa, int sal)
 int
 be_pipe(int *fd)
 {
+	ELOG
 	int s1, s2, s3, l;
 	struct sockaddr_in sa1, sa2;
 	int retry_count = 0;
@@ -179,6 +190,7 @@ int
 be_select(int n, struct fd_set *rd, struct fd_set *wr, struct fd_set *exc,
 	  struct timeval *tm)
 {
+	ELOG
 	int i, s;
 	struct fd_set d, rrd;
 
@@ -210,6 +222,7 @@ be_select(int n, struct fd_set *rd, struct fd_set *wr, struct fd_set *exc,
 int
 be_getsockopt(int s, int level, int optname, void *optval, int *optlen)
 {
+	ELOG
 	if (optname == SO_ERROR && *optlen >= sizeof(int)) {
 		*(int *) optval = 0;
 		*optlen = sizeof(int);

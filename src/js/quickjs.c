@@ -84,6 +84,7 @@ void *map_interp;
 static void
 quickjs_get_version(char *quickjs_version)
 {
+	ELOG
 #ifdef HAVE_OPEN_MEMSTREAM
 	char *ptr = NULL;
 	size_t size = 0;
@@ -119,6 +120,7 @@ quickjs_get_version(char *quickjs_version)
 static const char *
 get_name_quickjs(struct module *xxx)
 {
+	ELOG
 	static char quickjs_version[32];
 
 	quickjs_get_version(quickjs_version);
@@ -132,6 +134,7 @@ static long quickjs_gc_threshold;
 static int
 change_hook_quickjs_memory_limit(struct session *ses, struct option *current, struct option *changed)
 {
+	ELOG
 	quickjs_memory_limit = get_opt_long("ecmascript.quickjs.memory_limit", ses);
 
 	return 0;
@@ -140,6 +143,7 @@ change_hook_quickjs_memory_limit(struct session *ses, struct option *current, st
 static int
 change_hook_quickjs_gc_threshold(struct session *ses, struct option *current, struct option *changed)
 {
+	ELOG
 	quickjs_gc_threshold = get_opt_long("ecmascript.quickjs.gc_threshold", ses);
 
 	return 0;
@@ -148,6 +152,7 @@ change_hook_quickjs_gc_threshold(struct session *ses, struct option *current, st
 static void
 quickjs_init(struct module *module)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -194,6 +199,7 @@ quickjs_init(struct module *module)
 static void
 quickjs_done(struct module *xxx)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -226,6 +232,7 @@ quickjs_done(struct module *xxx)
 int
 el_js_module_set_import_meta(JSContext *ctx, JSValueConst func_val, JS_BOOL use_realpath, JS_BOOL is_main)
 {
+	ELOG
 	JSModuleDef *m;
 	//char buf[PATH_MAX + 16];
 	JSValue meta_obj;
@@ -287,6 +294,7 @@ el_js_module_set_import_meta(JSContext *ctx, JSValueConst func_val, JS_BOOL use_
 JSModuleDef *
 el_js_module_loader(JSContext *ctx, const char *module_name, void *opaque)
 {
+	ELOG
 	JSModuleDef *m = NULL;
 
 	if (!strcmp(module_name, "a")) {
@@ -309,6 +317,7 @@ el_js_module_loader(JSContext *ctx, const char *module_name, void *opaque)
 void *
 quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -386,6 +395,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 void
 quickjs_put_interpreter(struct ecmascript_interpreter *interpreter)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -405,6 +415,7 @@ fprintf(stderr, "Before JS_FreeContext: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 js_dump_obj(JSContext *ctx, struct string *f, JSValueConst val)
 {
+	ELOG
 	const char *str;
 
 	str = JS_ToCString(ctx, val);
@@ -421,6 +432,7 @@ js_dump_obj(JSContext *ctx, struct string *f, JSValueConst val)
 static void
 js_dump_error1(JSContext *ctx, struct string *f, JSValueConst exception_val)
 {
+	ELOG
 	JSValue val;
 	bool is_error;
 
@@ -440,6 +452,7 @@ js_dump_error1(JSContext *ctx, struct string *f, JSValueConst exception_val)
 static void
 js_dump_error(JSContext *ctx, struct string *f)
 {
+	ELOG
 	JSValue exception_val;
 
 	exception_val = JS_GetException(ctx);
@@ -450,6 +463,7 @@ js_dump_error(JSContext *ctx, struct string *f)
 static void
 error_reporter(struct ecmascript_interpreter *interpreter, JSContext *ctx)
 {
+	ELOG
 	struct session *ses = interpreter->vs->doc_view->session;
 	struct terminal *term;
 	struct string msg;
@@ -489,6 +503,7 @@ void
 quickjs_eval(struct ecmascript_interpreter *interpreter,
                   struct string *code, struct string *ret)
 {
+	ELOG
 	JSContext *ctx;
 
 	assert(interpreter);
@@ -546,6 +561,7 @@ void
 quickjs_call_function(struct ecmascript_interpreter *interpreter,
                   JSValueConst fun, struct string *ret)
 {
+	ELOG
 	JSContext *ctx;
 
 	assert(interpreter);
@@ -574,6 +590,7 @@ char *
 quickjs_eval_stringback(struct ecmascript_interpreter *interpreter,
 			     struct string *code)
 {
+	ELOG
 	JSContext *ctx;
 
 	assert(interpreter);
@@ -612,6 +629,7 @@ int
 quickjs_eval_boolback(struct ecmascript_interpreter *interpreter,
 			   struct string *code)
 {
+	ELOG
 	JSContext *ctx;
 
 	assert(interpreter);

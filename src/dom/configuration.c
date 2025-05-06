@@ -15,6 +15,7 @@
 static enum dom_code
 normalize_text_node_whitespace(struct dom_node *node)
 {
+	ELOG
 	char buf[256];
 	struct dom_string string = INIT_DOM_STRING(NULL, 0);
 	int count = 0, i = 0;
@@ -61,6 +62,7 @@ normalize_text_node_whitespace(struct dom_node *node)
 static enum dom_code
 append_node_text(struct dom_config *config, struct dom_node *node)
 {
+	ELOG
 	struct dom_node *prev = get_dom_node_prev(node);
 	size_t length;
 	struct dom_string dest;
@@ -156,6 +158,7 @@ append_node_text(struct dom_config *config, struct dom_node *node)
 static enum dom_code
 dom_normalize_node_end(struct dom_stack *stack, struct dom_node *node, void *data)
 {
+	ELOG
 	struct dom_config *config = (struct dom_config *)stack->current->data;
 	enum dom_code code = DOM_CODE_OK;
 
@@ -236,6 +239,7 @@ dom_normalize_node_end(struct dom_stack *stack, struct dom_node *node, void *dat
 enum dom_code
 dom_normalize_text(struct dom_stack *stack, struct dom_node *node, void *data)
 {
+	ELOG
 	struct dom_config *config = (struct dom_config *)stack->current->data;
 
 	if (config->flags & DOM_CONFIG_NORMALIZE_WHITESPACE) {
@@ -287,6 +291,7 @@ struct dom_config *
 add_dom_config_normalizer(struct dom_stack *stack, struct dom_config *config, 
 			  /*enum dom_config_flag*/ unsigned int flags)
 {
+	ELOG
 	memset(config, 0, sizeof(*config));
 	config->flags = flags;
 
@@ -317,6 +322,7 @@ static struct dom_config_info dom_config_info[] = {
 static /*enum dom_config_flag*/ unsigned int
 get_dom_config_flag(struct dom_string *name)
 {
+	ELOG
 	int i;
 
 	for (i = 0; i < sizeof_array(dom_config_info); i++)
@@ -329,6 +335,7 @@ get_dom_config_flag(struct dom_string *name)
 /*enum dom_config_flag*/ unsigned int
 parse_dom_config(char *flaglist, char separator)
 {
+	ELOG
 	/*enum dom_config_flag*/ unsigned int flags = 0;
 
 	while (flaglist) {

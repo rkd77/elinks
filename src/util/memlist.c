@@ -37,6 +37,7 @@ struct memory_list *
 getml(void *p, ...)
 #endif
 {
+	ELOG
 	struct memory_list *ml;
 	va_list ap;
 	void *q;
@@ -81,6 +82,7 @@ void
 add_to_ml(struct memory_list **ml, ...)
 #endif
 {
+	ELOG
 	va_list ap;
 	void *q;
 	int n = 0;
@@ -135,6 +137,7 @@ void
 add_one_to_ml(struct memory_list **ml, void *p)
 #endif
 {
+	ELOG
 	/* None, so just return. */
 	if (!p) {
 #ifdef DEBUG_MEMLIST
@@ -172,6 +175,7 @@ add_one_to_ml(struct memory_list **ml, void *p)
 void
 freeml(struct memory_list *ml)
 {
+	ELOG
 	int i;
 
 	if (!ml) return;

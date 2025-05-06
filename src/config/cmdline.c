@@ -60,6 +60,7 @@ static enum retval
 parse_options_(int argc, char *argv[], struct option *opt,
                LIST_OF(struct string_list_item) *url_list)
 {
+	ELOG
 	while (argc) {
 		argv++, argc--;
 
@@ -132,6 +133,7 @@ enum retval
 parse_options(int argc, char *argv[],
 	      LIST_OF(struct string_list_item) *url_list)
 {
+	ELOG
 	return parse_options_(argc, argv, cmdline_options, url_list);
 }
 
@@ -143,6 +145,7 @@ parse_options(int argc, char *argv[],
 static const char *
 eval_cmd(struct option *o, char ***argv, int *argc)
 {
+	ELOG
 	if (*argc < 1) return gettext("Parameter expected");
 
 	(*argv)++; (*argc)--;	/* Consume next argument */
@@ -157,6 +160,7 @@ eval_cmd(struct option *o, char ***argv, int *argc)
 static const char *
 forcehtml_cmd(struct option *o, char ***argv, int *argc)
 {
+	ELOG
 	safe_strncpy(get_opt_str("mime.default_type", NULL), "text/html", MAX_STR_LEN);
 	return NULL;
 }
@@ -164,6 +168,7 @@ forcehtml_cmd(struct option *o, char ***argv, int *argc)
 static const char *
 lookup_cmd(struct option *o, char ***argv, int *argc)
 {
+	ELOG
 	struct sockaddr_storage *addrs = NULL;
 	int addrno, i;
 	char *idname;
@@ -259,6 +264,7 @@ struct remote_method {
 static const char *
 remote_cmd(struct option *o, char ***argv, int *argc)
 {
+	ELOG
 	struct remote_method remote_methods[] = {
 		{ "openURL",	  REMOTE_METHOD_OPENURL },
 		{ "ping",	  REMOTE_METHOD_PING },
@@ -472,6 +478,7 @@ remote_cmd(struct option *o, char ***argv, int *argc)
 static const char *
 version_cmd(struct option *o, char ***argv, int *argc)
 {
+	ELOG
 	printf("%s\n", full_static_version);
 	fflush(stdout);
 	return "";
@@ -492,6 +499,7 @@ version_cmd(struct option *o, char ***argv, int *argc)
 
 static void print_option_desc(const char *desc)
 {
+	ELOG
 	struct string wrapped;
 	static const struct string indent = INIT_STRING("            ", 12);
 
@@ -518,6 +526,7 @@ static void
 print_full_help_inner(struct option *tree, const char *path,
 		      int trees)
 {
+	ELOG
 	struct option *option;
 	char saved[MAX_STR_LEN];
 	char *savedpos = saved;
@@ -650,6 +659,7 @@ print_full_help_inner(struct option *tree, const char *path,
 static void
 print_full_help_outer(struct option *tree, const char *path)
 {
+	ELOG
 	print_full_help_inner(tree, path, 0);
 	print_full_help_inner(tree, path, 1);
 }
@@ -657,6 +667,7 @@ print_full_help_outer(struct option *tree, const char *path)
 static void
 print_short_help(void)
 {
+	ELOG
 #define ALIGN_WIDTH 20
 	struct option *option;
 	struct string string = NULL_STRING;
@@ -718,6 +729,7 @@ print_short_help(void)
 static const char *
 printhelp_cmd(struct option *option, char ***argv, int *argc)
 {
+	ELOG
 	char *lineend = strchr(full_static_version, '\n');
 
 	if (lineend) *lineend = '\0';
@@ -745,6 +757,7 @@ printhelp_cmd(struct option *option, char ***argv, int *argc)
 static const char *
 redir_cmd(struct option *option, char ***argv, int *argc)
 {
+	ELOG
 	const char *target;
 
 	/* I can't get any dirtier. --pasky */
@@ -784,6 +797,7 @@ redir_cmd(struct option *option, char ***argv, int *argc)
 static const char *
 printconfigdump_cmd(struct option *option, char ***argv, int *argc)
 {
+	ELOG
 	char *config_string;
 
 	/* Print all. */

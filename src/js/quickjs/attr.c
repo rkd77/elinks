@@ -24,6 +24,7 @@ static JSClassID js_attr_class_id;
 static JSValue
 js_attr_get_property_name(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -67,6 +68,7 @@ js_attr_get_property_name(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_attr_get_property_value(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -106,6 +108,7 @@ js_attr_get_property_value(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_attr_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -124,6 +127,7 @@ void *map_attrs;
 static
 void js_attr_finalizer(JSRuntime *rt, JSValue val)
 {
+	ELOG
 	REF_JS(val);
 	dom_attr *node = (dom_attr *)JS_GetOpaque(val, js_attr_class_id);
 
@@ -141,6 +145,7 @@ static JSClassDef js_attr_class = {
 JSValue
 getAttr(JSContext *ctx, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

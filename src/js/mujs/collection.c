@@ -29,6 +29,7 @@ void *map_rev_collections;
 static void
 mjs_htmlCollection_get_property_length(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -49,6 +50,7 @@ mjs_htmlCollection_get_property_length(js_State *J)
 static void
 mjs_push_htmlCollection_item2(js_State *J, int idx)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -76,6 +78,7 @@ mjs_push_htmlCollection_item2(js_State *J, int idx)
 static void
 mjs_htmlCollection_item(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -87,6 +90,7 @@ mjs_htmlCollection_item(js_State *J)
 static void
 mjs_push_htmlCollection_namedItem2(js_State *J, const char *str)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -167,6 +171,7 @@ mjs_push_htmlCollection_namedItem2(js_State *J, const char *str)
 static void
 mjs_htmlCollection_namedItem(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -178,6 +183,7 @@ mjs_htmlCollection_namedItem(js_State *J)
 static void
 mjs_htmlCollection_set_items(js_State *J, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -238,6 +244,7 @@ next:
 static void
 mjs_htmlCollection_toString(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -247,6 +254,7 @@ mjs_htmlCollection_toString(js_State *J)
 static void
 mjs_htmlCollection_finalizer(js_State *J, void *node)
 {
+	ELOG
 	if (node) {
 		dom_html_collection_unref((dom_html_collection *)node);
 	}
@@ -256,6 +264,7 @@ mjs_htmlCollection_finalizer(js_State *J, void *node)
 void
 mjs_push_collection(js_State *J, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

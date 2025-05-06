@@ -70,6 +70,7 @@ struct module cgi_protocol_module = struct_module(
 static void
 close_pipe_and_read(struct socket *data_socket)
 {
+	ELOG
 	struct connection *conn = (struct connection *)data_socket->conn;
 	struct read_buffer *rb = alloc_read_buffer(conn->socket);
 
@@ -94,6 +95,7 @@ close_pipe_and_read(struct socket *data_socket)
 static void
 send_more_post_data(struct socket *socket)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 	struct http_connection_info *http = (struct http_connection_info *)conn->info;
 	char buffer[POST_BUFFER_SIZE];
@@ -116,6 +118,7 @@ send_more_post_data(struct socket *socket)
 static void
 send_post_data(struct connection *conn)
 {
+	ELOG
 	struct http_connection_info *http = (struct http_connection_info *)conn->info;
 	char *post = conn->uri->post;
 	char *postend;
@@ -136,6 +139,7 @@ send_post_data(struct connection *conn)
 static void
 send_request(struct connection *conn)
 {
+	ELOG
 	if (conn->uri->post) send_post_data(conn);
 	else close_pipe_and_read(conn->data_socket);
 }
@@ -144,6 +148,7 @@ send_request(struct connection *conn)
 static int
 set_vars(struct connection *conn, char *script)
 {
+	ELOG
 	char *post = conn->uri->post;
 	char *query = get_uri_string(conn->uri, URI_QUERY);
 	char *str;
@@ -296,6 +301,7 @@ set_vars(struct connection *conn, char *script)
 static int
 test_path(char *path)
 {
+	ELOG
 	char *cgi_path = get_opt_str("protocol.file.cgi.path", NULL);
 	char **path_ptr;
 	char *filename;
@@ -321,6 +327,7 @@ test_path(char *path)
 int
 execute_cgi(struct connection *conn)
 {
+	ELOG
 	char *last_slash;
 	char *script;
 	struct stat buf;

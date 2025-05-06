@@ -29,6 +29,7 @@
 void
 init_http_post(struct http_post *http_post)
 {
+	ELOG
 	http_post->total_upload_length = 0;
 	http_post->uploaded = 0;
 	http_post->post_data = NULL;
@@ -46,6 +47,7 @@ init_http_post(struct http_post *http_post)
 void
 done_http_post(struct http_post *http_post)
 {
+	ELOG
 	size_t i;
 
 	http_post->total_upload_length = 0;
@@ -90,6 +92,7 @@ int
 open_http_post(struct http_post *http_post, const char *post_data,
 	       struct connection_state *error)
 {
+	ELOG
 	off_t size = 0;
 	size_t length = strlen(post_data);
 	const char *end = post_data;
@@ -163,6 +166,7 @@ read_http_post_inline(struct http_post *http_post,
 		      char buffer[], int max,
 		      struct connection_state *error)
 {
+	ELOG
 	const char *post = http_post->post_data;
 	const char *end = strchr(post, FILE_CHAR);
 	int total = 0;
@@ -221,6 +225,7 @@ read_http_post_fd(struct http_post *http_post,
 		  char buffer[], int max,
 		  struct connection_state *error)
 {
+	ELOG
 	const struct http_post_file *const file
 		= &http_post->files[http_post->file_index];
 	int ret;
@@ -288,6 +293,7 @@ read_http_post(struct http_post *http_post,
 	       char buffer[], int max,
 	       struct connection_state *error)
 {
+	ELOG
 	int total = 0;
 
 	while (total < max) {

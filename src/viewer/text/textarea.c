@@ -64,6 +64,7 @@ struct line_info {
 static struct line_info *
 format_textutf8(char *text, int width, enum form_wrap wrap, int format)
 {
+	ELOG
 	struct line_info *line = NULL;
 	int line_number = 0;
 	int begin = 0;
@@ -151,6 +152,7 @@ format_textutf8(char *text, int width, enum form_wrap wrap, int format)
 static struct line_info *
 format_text(char *text, int width, enum form_wrap wrap, int format)
 {
+	ELOG
 	struct line_info *line = NULL;
 	int line_number = 0;
 	int begin = 0;
@@ -213,6 +215,7 @@ format_text(char *text, int width, enum form_wrap wrap, int format)
 static int
 get_textarea_line_number(struct line_info *line, int cursor_position)
 {
+	ELOG
 	int idx;
 
 	for (idx = 0; line[idx].start != -1; idx++) {
@@ -235,6 +238,7 @@ get_textarea_line_number(struct line_info *line, int cursor_position)
 int
 area_cursor(struct el_form_control *fc, struct form_state *fs, int utf8)
 {
+	ELOG
 	struct line_info *line;
 	int x, y;
 
@@ -287,6 +291,7 @@ area_cursor(struct el_form_control *fc, struct form_state *fs, int utf8)
 int
 area_cursor(struct el_form_control *fc, struct form_state *fs)
 {
+	ELOG
 	struct line_info *line;
 	int x, y;
 
@@ -323,6 +328,7 @@ static void
 draw_textarea_utf8(struct terminal *term, struct form_state *fs,
 	      struct document_view *doc_view, struct link *link)
 {
+	ELOG
 	struct line_info *line, *linex;
 	struct el_form_control *fc;
 	struct el_box *box;
@@ -405,6 +411,7 @@ void
 draw_textarea(struct terminal *term, struct form_state *fs,
 	      struct document_view *doc_view, struct link *link)
 {
+	ELOG
 	struct line_info *line, *linex;
 	struct el_form_control *fc;
 	struct el_box *box;
@@ -487,6 +494,7 @@ draw_textarea(struct terminal *term, struct form_state *fs,
 char *
 encode_textarea(struct submitted_value *sv)
 {
+	ELOG
 	struct el_form_control *fc;
 	void *blabla;
 
@@ -521,6 +529,7 @@ encode_textarea(struct submitted_value *sv)
 static char *
 save_textarea_file(char *value)
 {
+	ELOG
 	char *filename;
 	FILE *fp = NULL;
 	int fd;
@@ -574,6 +583,7 @@ static struct textarea_data *
 init_textarea_data(struct terminal *term, struct form_state *fs,
                    struct document_view *doc_view, struct link *link)
 {
+	ELOG
 	struct textarea_data *td;
 
 	assert(fs && doc_view && link && term);
@@ -599,6 +609,7 @@ init_textarea_data(struct terminal *term, struct form_state *fs,
 static void
 done_textarea_data(struct textarea_data *td)
 {
+	ELOG
 	assert(td);
 
 	mem_free(td->fn);
@@ -608,6 +619,7 @@ done_textarea_data(struct textarea_data *td)
 void
 free_textarea_data(struct terminal *term)
 {
+	ELOG
 	assert(term);
 
 	if (term->textarea_data)
@@ -620,6 +632,7 @@ void
 textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 	      struct document_view *doc_view_, struct link *link_)
 {
+	ELOG
 	struct textarea_data *td = NULL;
 
 	assert ((op == 0 || op == 1) && term_);
@@ -713,6 +726,7 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 void
 menu_textarea_edit(struct terminal *term, void *xxx, void *ses_)
 {
+	ELOG
 	struct session *ses = (struct session *)ses_;
 	struct document_view *doc_view;
 	struct link *link;
@@ -745,6 +759,7 @@ static enum frame_event_status
 textarea_op(struct form_state *fs, struct el_form_control *fc, int utf8,
 	    int (*do_op)(struct form_state *, struct line_info *, int, int))
 {
+	ELOG
 	struct line_info *line;
 	int current, state;
 	int state_cell;
@@ -777,6 +792,7 @@ static enum frame_event_status
 textarea_op(struct form_state *fs, struct el_form_control *fc,
 	    int (*do_op)(struct form_state *, struct line_info *, int))
 {
+	ELOG
 	struct line_info *line;
 	int current, state;
 
@@ -803,6 +819,7 @@ textarea_op(struct form_state *fs, struct el_form_control *fc,
 void
 new_pos(struct form_state *fs, struct line_info *line, int current, int max_cells)
 {
+	ELOG
 	char *text = fs->value + line[current].start;
 	char *end = fs->value + line[current].end;
 	int cells = 0;
@@ -824,6 +841,7 @@ do_op_home(struct form_state *fs, struct line_info *line, int current, int utf8)
 do_op_home(struct form_state *fs, struct line_info *line, int current)
 #endif /* CONFIG_UTF8 */
 {
+	ELOG
 	if (current == -1)
 		return 0;
 #ifdef CONFIG_UTF8
@@ -839,6 +857,7 @@ do_op_home(struct form_state *fs, struct line_info *line, int current)
 static int
 do_op_up(struct form_state *fs, struct line_info *line, int current, int utf8)
 {
+	ELOG
 	int old_state;
 
 	if (current == -1) return 0;
@@ -882,6 +901,7 @@ do_op_up(struct form_state *fs, struct line_info *line, int current, int utf8)
 static int
 do_op_up(struct form_state *fs, struct line_info *line, int current)
 {
+	ELOG
 	if (current == -1) return 0;
 	if (!current) return 1;
 
@@ -895,6 +915,7 @@ do_op_up(struct form_state *fs, struct line_info *line, int current)
 static int
 do_op_down(struct form_state *fs, struct line_info *line, int current, int utf8)
 {
+	ELOG
 	int old_state;
 
 	if (current == -1) return 0;
@@ -936,6 +957,7 @@ do_op_down(struct form_state *fs, struct line_info *line, int current, int utf8)
 static int
 do_op_down(struct form_state *fs, struct line_info *line, int current)
 {
+	ELOG
 	if (current == -1) return 0;
 	if (line[current+1].start == -1) return 1;
 
@@ -949,6 +971,7 @@ do_op_down(struct form_state *fs, struct line_info *line, int current)
 static int
 do_op_end(struct form_state *fs, struct line_info *line, int current, int utf8)
 {
+	ELOG
 	if (current == -1) {
 		fs->state = strlen(fs->value);
 		return 0;
@@ -980,6 +1003,7 @@ do_op_end(struct form_state *fs, struct line_info *line, int current, int utf8)
 static int
 do_op_end(struct form_state *fs, struct line_info *line, int current)
 {
+	ELOG
 	if (current == -1) {
 		fs->state = strlen(fs->value);
 
@@ -1000,6 +1024,7 @@ do_op_bob(struct form_state *fs, struct line_info *line, int current, int utf8)
 do_op_bob(struct form_state *fs, struct line_info *line, int current)
 #endif /* CONFIG_UTF8 */
 {
+	ELOG
 	if (current == -1) return 0;
 
 	fs->state -= line[current].start;
@@ -1014,6 +1039,7 @@ do_op_eob(struct form_state *fs, struct line_info *line, int current, int utf8)
 do_op_eob(struct form_state *fs, struct line_info *line, int current)
 #endif /* CONFIG_UTF8 */
 {
+	ELOG
 	if (current == -1) {
 		fs->state = strlen(fs->value);
 
@@ -1032,12 +1058,14 @@ do_op_eob(struct form_state *fs, struct line_info *line, int current)
 enum frame_event_status
 textarea_op_home(struct form_state *fs, struct el_form_control *fc, int utf8)
 {
+	ELOG
 	return textarea_op(fs, fc, utf8, do_op_home);
 }
 #else
 enum frame_event_status
 textarea_op_home(struct form_state *fs, struct el_form_control *fc)
 {
+	ELOG
 	return textarea_op(fs, fc, do_op_home);
 }
 #endif /* CONFIG_UTF8 */
@@ -1046,12 +1074,14 @@ textarea_op_home(struct form_state *fs, struct el_form_control *fc)
 enum frame_event_status
 textarea_op_up(struct form_state *fs, struct el_form_control *fc, int utf8)
 {
+	ELOG
 	return textarea_op(fs, fc, utf8, do_op_up);
 }
 #else
 enum frame_event_status
 textarea_op_up(struct form_state *fs, struct el_form_control *fc)
 {
+	ELOG
 	return textarea_op(fs, fc, do_op_up);
 }
 #endif /* CONFIG_UTF8 */
@@ -1060,12 +1090,14 @@ textarea_op_up(struct form_state *fs, struct el_form_control *fc)
 enum frame_event_status
 textarea_op_down(struct form_state *fs, struct el_form_control *fc, int utf8)
 {
+	ELOG
 	return textarea_op(fs, fc, utf8, do_op_down);
 }
 #else
 enum frame_event_status
 textarea_op_down(struct form_state *fs, struct el_form_control *fc)
 {
+	ELOG
 	return textarea_op(fs, fc, do_op_down);
 }
 #endif /* CONFIG_UTF8 */
@@ -1074,12 +1106,14 @@ textarea_op_down(struct form_state *fs, struct el_form_control *fc)
 enum frame_event_status
 textarea_op_end(struct form_state *fs, struct el_form_control *fc, int utf8)
 {
+	ELOG
 	return textarea_op(fs, fc, utf8, do_op_end);
 }
 #else
 enum frame_event_status
 textarea_op_end(struct form_state *fs, struct el_form_control *fc)
 {
+	ELOG
 	return textarea_op(fs, fc, do_op_end);
 }
 #endif /* CONFIG_UTF8 */
@@ -1090,12 +1124,14 @@ textarea_op_end(struct form_state *fs, struct el_form_control *fc)
 enum frame_event_status
 textarea_op_bob(struct form_state *fs, struct el_form_control *fc, int utf8)
 {
+	ELOG
 	return textarea_op(fs, fc, utf8, do_op_bob);
 }
 #else
 enum frame_event_status
 textarea_op_bob(struct form_state *fs, struct el_form_control *fc)
 {
+	ELOG
 	return textarea_op(fs, fc, do_op_bob);
 }
 #endif /* CONFIG_UTF8 */
@@ -1108,12 +1144,14 @@ textarea_op_bob(struct form_state *fs, struct el_form_control *fc)
 enum frame_event_status
 textarea_op_eob(struct form_state *fs, struct el_form_control *fc, int utf8)
 {
+	ELOG
 	return textarea_op(fs, fc, utf8, do_op_eob);
 }
 #else
 enum frame_event_status
 textarea_op_eob(struct form_state *fs, struct el_form_control *fc)
 {
+	ELOG
 	return textarea_op(fs, fc, do_op_eob);
 }
 #endif /* CONFIG_UTF8 */
@@ -1125,6 +1163,7 @@ textarea_op_enter(struct form_state *fs, struct el_form_control *fc, int utf8)
 textarea_op_enter(struct form_state *fs, struct el_form_control *fc)
 #endif /* CONFIG_UTF8 */
 {
+	ELOG
 	assert(fs && fs->value && fc);
 	if_assert_failed return FRAME_EVENT_OK;
 
@@ -1141,6 +1180,7 @@ textarea_op_enter(struct form_state *fs, struct el_form_control *fc)
 static int
 do_op_left(struct form_state *fs, struct line_info *line, int current, int utf8)
 {
+	ELOG
 	int old_state;
 	int new_state;
 	char *new_value;
@@ -1172,6 +1212,7 @@ do_op_left(struct form_state *fs, struct line_info *line, int current, int utf8)
 static int
 do_op_right(struct form_state *fs, struct line_info *line, int current, int utf8)
 {
+	ELOG
 	char *text, *end;
 	int old_state;
 
@@ -1207,12 +1248,14 @@ do_op_right(struct form_state *fs, struct line_info *line, int current, int utf8
 enum frame_event_status
 textarea_op_left(struct form_state *fs, struct el_form_control *fc, int utf8)
 {
+	ELOG
 	return textarea_op(fs, fc, utf8, do_op_left);
 }
 
 enum frame_event_status
 textarea_op_right(struct form_state *fs, struct el_form_control *fc, int utf8)
 {
+	ELOG
 	return textarea_op(fs, fc, utf8, do_op_right);
 }
 #endif /* CONFIG_UTF8 */
@@ -1220,6 +1263,7 @@ textarea_op_right(struct form_state *fs, struct el_form_control *fc, int utf8)
 void
 set_textarea(struct document_view *doc_view, int direction)
 {
+	ELOG
 	struct el_form_control *fc;
 	struct form_state *fs;
 	struct link *link;

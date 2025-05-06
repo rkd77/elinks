@@ -35,6 +35,7 @@ static INIT_LIST_OF(struct auth_entry, auth_entry_list);
 static struct auth_entry *
 find_auth_entry(struct uri *uri, const char *realm)
 {
+	ELOG
 	struct auth_entry *match = NULL, *entry;
 
 #ifdef DEBUG_HTTP_AUTH
@@ -70,6 +71,7 @@ find_auth_entry(struct uri *uri, const char *realm)
 static void
 set_auth_user(struct auth_entry *entry, struct uri *uri)
 {
+	ELOG
 	int userlen = int_min(uri->userlen, AUTH_USER_MAXLEN - 1);
 
 	if (userlen)
@@ -81,6 +83,7 @@ set_auth_user(struct auth_entry *entry, struct uri *uri)
 static void
 set_auth_password(struct auth_entry *entry, struct uri *uri)
 {
+	ELOG
 	int passwordlen = int_min(uri->passwordlen, AUTH_PASSWORD_MAXLEN - 1);
 
 	if (passwordlen)
@@ -94,6 +97,7 @@ static void done_auth_entry(struct auth_entry *entry);
 static struct auth_entry *
 init_auth_entry(struct uri *uri, const char *realm)
 {
+	ELOG
 	struct auth_entry *entry;
 
 #ifdef DEBUG_HTTP_AUTH
@@ -135,6 +139,7 @@ struct auth_entry *
 add_auth_entry(struct uri *uri, const char *realm, char *nonce,
 	char *opaque, unsigned int digest)
 {
+	ELOG
 	struct auth_entry *entry;
 
 #ifdef DEBUG_HTTP_AUTH
@@ -232,6 +237,7 @@ add_auth_entry(struct uri *uri, const char *realm, char *nonce,
 struct auth_entry *
 find_auth(struct uri *uri)
 {
+	ELOG
 	struct auth_entry *entry = NULL;
 
 #ifdef DEBUG_HTTP_AUTH
@@ -269,6 +275,7 @@ find_auth(struct uri *uri)
 static void
 done_auth_entry(struct auth_entry *entry)
 {
+	ELOG
 	if (entry->box_item)
 		done_listbox_item(&auth_browser, entry->box_item);
 	done_uri(entry->uri);
@@ -282,6 +289,7 @@ done_auth_entry(struct auth_entry *entry)
 void
 del_auth_entry(struct auth_entry *entry)
 {
+	ELOG
 #ifdef DEBUG_HTTP_AUTH
 	DBG("del_auth_entry: url=%s realm=%s user=%p",
 	      entry->url, entry->realm, entry->user);
@@ -296,6 +304,7 @@ del_auth_entry(struct auth_entry *entry)
 void
 free_auth(void)
 {
+	ELOG
 #ifdef DEBUG_HTTP_AUTH
 	DBG("free_auth");
 #endif
@@ -309,12 +318,14 @@ free_auth(void)
 static void
 done_auth(struct module *xxx)
 {
+	ELOG
 	free_auth();
 }
 
 struct auth_entry *
 get_invalid_auth_entry(void)
 {
+	ELOG
 	struct auth_entry *entry;
 
 #ifdef DEBUG_HTTP_AUTH

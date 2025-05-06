@@ -57,6 +57,7 @@ static const struct gemini_code gemini_code[] = {
 static int
 compare_gemini_codes(const void *key, const void *element)
 {
+	ELOG
 	int first = (intptr_t) key;
 	int second = ((const struct gemini_code *) element)->num;
 
@@ -66,6 +67,7 @@ compare_gemini_codes(const void *key, const void *element)
 static const char *
 gemini_code_to_string(int code)
 {
+	ELOG
 	const struct gemini_code *element
 		= (const struct gemini_code *)bsearch((void *) (intptr_t) code, gemini_code,
 			  sizeof_array(gemini_code),
@@ -80,6 +82,7 @@ gemini_code_to_string(int code)
 static char *
 get_gemini_error_document(struct terminal *term, struct uri *uri, int code)
 {
+	ELOG
 	const char *codestr = gemini_code_to_string(code);
 	char *title = asprintfa(_("Gemini error %02d", term), code);
 	struct string string;
@@ -129,6 +132,7 @@ get_gemini_error_document(struct terminal *term, struct uri *uri, int code)
 static void
 show_gemini_error_document(struct session *ses, void *data)
 {
+	ELOG
 	struct gemini_error_info *info = (struct gemini_error_info *)data;
 	struct terminal *term = ses->tab->term;
 	struct cache_entry *cached = find_in_cache(info->uri);
@@ -166,6 +170,7 @@ show_gemini_error_document(struct session *ses, void *data)
 void
 gemini_error_document(struct connection *conn, int code)
 {
+	ELOG
 	struct gemini_error_info *info;
 
 	assert(conn && conn->uri);

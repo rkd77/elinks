@@ -119,6 +119,7 @@ enum addr_type {
 static int
 get_sun_path(struct string *sun_path)
 {
+	ELOG
 	char *xdg_config_home = get_xdg_config_home();
 
 	assert(sun_path);
@@ -140,6 +141,7 @@ get_sun_path(struct string *sun_path)
 static int
 get_address(struct socket_info *info, enum addr_type type)
 {
+	ELOG
 	struct sockaddr_un *addr = NULL;
 	int sun_path_freespace;
 	struct string path;
@@ -212,6 +214,7 @@ free_and_error:
 static int
 alloc_address(struct socket_info *info)
 {
+	ELOG
 	struct sockaddr_un *sa;
 
 	assert(info);
@@ -230,6 +233,7 @@ alloc_address(struct socket_info *info)
 static void
 unlink_unix(struct sockaddr *addr)
 {
+	ELOG
 	assert(addr);
 	if_assert_failed return;
 
@@ -258,6 +262,7 @@ unlink_unix(struct sockaddr *addr)
 static int
 get_address(struct socket_info *info, enum addr_type type)
 {
+	ELOG
 	struct sockaddr_in *sin;
 	uint16_t port;
 
@@ -285,6 +290,7 @@ get_address(struct socket_info *info, enum addr_type type)
 static int
 alloc_address(struct socket_info *info)
 {
+	ELOG
 	struct sockaddr_in *sa;
 
 	assert(info);
@@ -304,6 +310,7 @@ alloc_address(struct socket_info *info)
 static void
 setsock_reuse_addr(int fd)
 {
+	ELOG
 	int reuse_addr = 1;
 
 	setsockopt(fd, SOL_SOCKET, SO_REUSEADDR,
@@ -329,6 +336,7 @@ setsock_reuse_addr(int fd)
 static void
 report_af_unix_error(const char *function, int error)
 {
+	ELOG
 	ERROR(gettext("The call to %s failed: %d (%s)"),
 	      function, error, (char *) strerror(error));
 }
@@ -337,6 +345,7 @@ report_af_unix_error(const char *function, int error)
 static void
 af_unix_connection(struct socket_info *info)
 {
+	ELOG
 	int ns;
 	socklen_t l;
 
@@ -362,6 +371,7 @@ af_unix_connection(struct socket_info *info)
 void
 elinks_usleep(unsigned long useconds)
 {
+	ELOG
 	struct timeval delay;
 	fd_set dummy1, dummy2, dummy3;
 
@@ -380,6 +390,7 @@ elinks_usleep(unsigned long useconds)
 static int
 bind_to_af_unix(void)
 {
+	ELOG
 	mode_t saved_mask = umask(S_IXUSR | S_IRWXG | S_IRWXO);
 	int attempts = 0;
 	int pf = get_address(&s_info_listen, ADDR_IP_SERVER);
@@ -443,6 +454,7 @@ free_and_error:
 static int
 connect_to_af_unix(void)
 {
+	ELOG
 	int pf = get_address(&s_info_connect, ADDR_IP_CLIENT);
 
 	if (pf != -1) {
@@ -478,6 +490,7 @@ static void safe_close(int *fd) {
 void
 done_interlink(void)
 {
+	ELOG
 	/* We test for addr != NULL since
 	 * if it was not allocated then fd is not
 	 * initialized and we don't want to close
@@ -512,6 +525,7 @@ done_interlink(void)
 int
 init_interlink(void)
 {
+	ELOG
 	int efd;
 	uint64_t trigger = 1;
 	ssize_t n;
@@ -575,6 +589,7 @@ init_interlink(void)
 int
 init_interlink(void)
 {
+	ELOG
 	int pipefds[2];
 	char trigger = 0;
 	ssize_t n;

@@ -47,12 +47,14 @@ extern int ecmascript_enabled;
 int
 ecmascript_get_interpreter_count(void)
 {
+	ELOG
 	return interpreter_count;
 }
 
 void
 toggle_ecmascript(struct session *ses)
 {
+	ELOG
 	ecmascript_enabled = !ecmascript_enabled;
 
 	if (ecmascript_enabled) {
@@ -66,6 +68,7 @@ toggle_ecmascript(struct session *ses)
 void
 ecmascript_protocol_handler(struct session *ses, struct uri *uri)
 {
+	ELOG
 	struct document_view *doc_view = current_frame(ses);
 	struct string current_url = INIT_STRING(struri(uri), (int)strlen(struri(uri)));
 	char *redirect_url, *redirect_abs_url;
@@ -112,6 +115,7 @@ add_snippets(struct ecmascript_interpreter *interpreter,
              LIST_OF(struct ecmascript_string_list_item) *doc_snippets,
              LIST_OF(struct ecmascript_string_list_item) *queued_snippets)
 {
+	ELOG
 	struct ecmascript_string_list_item *doc_current = (struct ecmascript_string_list_item *)doc_snippets->next;
 
 #ifdef CONFIG_LEDS
@@ -173,6 +177,7 @@ process_snippets(struct ecmascript_interpreter *interpreter,
                  LIST_OF(struct ecmascript_string_list_item) *snippets,
                  struct ecmascript_string_list_item **current)
 {
+	ELOG
 	if (!*current)
 		*current = (struct ecmascript_string_list_item *)snippets->next;
 	for (; *current != (struct ecmascript_string_list_item *) snippets;
@@ -291,6 +296,7 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 void
 check_for_snippets(struct view_state *vs, struct document_options *options, struct document *document)
 {
+	ELOG
 	if (!vs->ecmascript_fragile) {
 		assert(vs->ecmascript);
 	}
@@ -345,6 +351,7 @@ check_for_snippets(struct view_state *vs, struct document_options *options, stru
 void
 ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 {
+	ELOG
 	assert(interpreter);
 	assert(interpreter->backend_nesting == 0);
 	/* If the assertion fails, it is better to leak the
@@ -399,6 +406,7 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 void
 check_events_for_element(struct ecmascript_interpreter *ecmascript, dom_node *element, struct term_event *ev)
 {
+	ELOG
 	const char *event_name = script_event_hook_name[SEVHOOK_ONKEYDOWN];
 
 	if (!ecmascript) {
@@ -415,6 +423,7 @@ check_events_for_element(struct ecmascript_interpreter *ecmascript, dom_node *el
 void
 ecmascript_reset_state(struct view_state *vs)
 {
+	ELOG
 	struct form_view *fv;
 	int i;
 
@@ -444,6 +453,7 @@ int
 ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter,
 			 struct string *code)
 {
+	ELOG
 	int result;
 
 	if (!get_ecmascript_enable(interpreter))
@@ -467,6 +477,7 @@ ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter,
 int
 ecmascript_current_link_evhook(struct document_view *doc_view, enum script_event_hook_type type)
 {
+	ELOG
 	struct link *link;
 	struct script_event_hook *evhook;
 
@@ -509,6 +520,7 @@ ecmascript_current_link_evhook(struct document_view *doc_view, enum script_event
 void
 ecmascript_detach_form_view(struct form_view *fv)
 {
+	ELOG
 #ifdef CONFIG_MUJS
 #elif defined(CONFIG_QUICKJS)
 	quickjs_detach_form_view(fv);
@@ -519,6 +531,7 @@ ecmascript_detach_form_view(struct form_view *fv)
 
 void ecmascript_detach_form_state(struct form_state *fs)
 {
+	ELOG
 #ifdef CONFIG_MUJS
 #elif defined(CONFIG_QUICKJS)
 	quickjs_detach_form_state(fs);
@@ -529,6 +542,7 @@ void ecmascript_detach_form_state(struct form_state *fs)
 
 void ecmascript_moved_form_state(struct form_state *fs)
 {
+	ELOG
 #ifdef CONFIG_MUJS
 #elif defined(CONFIG_QUICKJS)
 	quickjs_moved_form_state(fs);
@@ -540,6 +554,7 @@ void ecmascript_moved_form_state(struct form_state *fs)
 void *
 walk_tree_query(dom_node *node, const char *selector, int depth)
 {
+	ELOG
 	dom_exception exc;
 	dom_node *child = NULL;
 	void *res = NULL;
@@ -593,6 +608,7 @@ walk_tree_query(dom_node *node, const char *selector, int depth)
 void
 walk_tree_query_append(dom_node *node, const char *selector, int depth, LIST_OF(struct selector_node) *result_list)
 {
+	ELOG
 	dom_exception exc;
 	dom_node *child;
 	void *res = NULL;
@@ -645,6 +661,7 @@ walk_tree_query_append(dom_node *node, const char *selector, int depth, LIST_OF(
 static bool
 node_has_classes(struct dom_node *node, void *ctx)
 {
+	ELOG
 	LIST_OF(struct class_string) *list = (LIST_OF(struct class_string) *)ctx;
 	struct class_string *st;
 
@@ -667,6 +684,7 @@ node_has_classes(struct dom_node *node, void *ctx)
 static LIST_OF(struct class_string) *
 prepare_strings(const char *text)
 {
+	ELOG
 	if (!text) {
 		return NULL;
 	}
@@ -707,6 +725,7 @@ prepare_strings(const char *text)
 void
 free_el_dom_collection(void *ctx)
 {
+	ELOG
 	if (!ctx) {
 		return;
 	}
@@ -762,6 +781,7 @@ el_dom_html_collection_initialise(dom_html_document *doc,
                 dom_node *root,
                 dom_callback_is_in_collection ic, void *ctx)
 {
+	ELOG
 	assert(doc != NULL);
 	assert(ic != NULL);
 	assert(root != NULL);
@@ -785,6 +805,7 @@ el_dom_html_collection_create(dom_html_document *doc,
                 void *ctx,
                 struct el_dom_html_collection **col)
 {
+	ELOG
 	*col = (struct el_dom_html_collection *)malloc(sizeof(struct el_dom_html_collection));
 
 	if (*col == NULL) {
@@ -797,6 +818,7 @@ el_dom_html_collection_create(dom_html_document *doc,
 void *
 get_elements_by_class_name(dom_html_document *doc, dom_node *node, const char *classes)
 {
+	ELOG
 	if (!node || !classes) {
 		return NULL;
 	}
@@ -818,6 +840,7 @@ get_elements_by_class_name(dom_html_document *doc, dom_node *node, const char *c
 static bool
 scripts_callback(struct dom_node *node, void *ctx)
 {
+	ELOG
 	dom_html_element_type ty;
 	dom_exception exc = dom_html_element_get_tag_type(node, &ty);
 
@@ -827,6 +850,7 @@ scripts_callback(struct dom_node *node, void *ctx)
 void *
 get_scripts(dom_html_document *doc, dom_node *node)
 {
+	ELOG
 	struct el_dom_html_collection *col = NULL;
 	dom_exception exc = el_dom_html_collection_create(doc, node, scripts_callback, NULL, &col);
 
@@ -840,6 +864,7 @@ get_scripts(dom_html_document *doc, dom_node *node)
 void
 camel_to_html(const char *text, struct string *result)
 {
+	ELOG
 	add_to_string(result, "data-");
 
 	for (; *text; text++) {
@@ -855,6 +880,7 @@ camel_to_html(const char *text, struct string *result)
 static bool
 el_dump_node_element_attribute(struct string *buf, dom_node *node)
 {
+	ELOG
 	dom_exception exc;
 	dom_string *attr = NULL;
 	dom_string *attr_value = NULL;
@@ -895,6 +921,7 @@ el_dump_node_element_attribute(struct string *buf, dom_node *node)
 static bool
 el_dump_element(struct string *buf, dom_node *node, bool toSortAttrs)
 {
+	ELOG
 // TODO toSortAttrs
 	dom_exception exc;
 	dom_string *node_name = NULL;
@@ -979,6 +1006,7 @@ el_dump_element(struct string *buf, dom_node *node, bool toSortAttrs)
 void
 ecmascript_walk_tree(struct string *buf, void *nod, bool start, bool toSortAttrs)
 {
+	ELOG
 	dom_node *node = (dom_node *)(nod);
 	dom_nodelist *children = NULL;
 	dom_node_type type;

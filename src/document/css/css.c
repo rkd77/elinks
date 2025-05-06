@@ -91,6 +91,7 @@ int
 supports_css_media_type(const char *optstr,
 			const char *token, size_t token_length)
 {
+	ELOG
 	/* Split @optstr into comma-delimited strings, strip leading
 	 * and trailing spaces from each, and compare them to the
 	 * token.  */
@@ -134,6 +135,7 @@ supports_css_media_type(const char *optstr,
 void
 import_css(struct css_stylesheet *css, struct uri *uri)
 {
+	ELOG
 	/* Do we have it in the cache? (TODO: CSS cache) */
 	struct cache_entry *cached;
 	struct fragment *fragment;
@@ -159,6 +161,7 @@ static void
 import_css_file(struct css_stylesheet *css, struct uri *base_uri,
 		const char *url, int urllen)
 {
+	ELOG
 	char *xdg_config_home = get_xdg_config_home();
 	struct string string, filename;
 
@@ -190,6 +193,7 @@ struct css_stylesheet default_stylesheet = INIT_CSS_STYLESHEET(default_styleshee
 static void
 import_default_css(void)
 {
+	ELOG
 	char *url = get_opt_str("document.css.stylesheet", NULL);
 
 	if (!css_selector_set_empty(&default_stylesheet.selectors))
@@ -203,6 +207,7 @@ import_default_css(void)
 static int
 change_hook_css(struct session *ses, struct option *current, struct option *changed)
 {
+	ELOG
 	int reload_css = 0;
 
 	if (!strcmp(changed->name, "stylesheet")) {
@@ -225,6 +230,7 @@ change_hook_css(struct session *ses, struct option *current, struct option *chan
 static void
 init_css(struct module *module)
 {
+	ELOG
 	static const struct change_hook_info css_change_hooks[] = {
 		{ "document.css",		change_hook_css },
 		{ NULL,				NULL },
@@ -237,6 +243,7 @@ init_css(struct module *module)
 void
 done_css(struct module *module)
 {
+	ELOG
 	done_css_stylesheet(&default_stylesheet);
 }
 

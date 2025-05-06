@@ -30,6 +30,7 @@
 static int
 menu_contains(struct menu_item *m, int f)
 {
+	ELOG
 	if (m->func != do_select_submenu)
 		return (intptr_t) m->data == f;
 
@@ -44,6 +45,7 @@ menu_contains(struct menu_item *m, int f)
 void
 do_select_submenu(struct terminal *term, void *menu_, void *ses_)
 {
+	ELOG
 	struct menu_item *menu = (struct menu_item *)menu_;
 	struct session *ses = (struct session *)ses_;
 	struct menu_item *m;
@@ -64,6 +66,7 @@ void
 new_menu_item(struct list_menu *menu, char *name, int data, int fullname)
 	/* name == NULL - up;	data == -1 - down */
 {
+	ELOG
 	struct menu_item *new_menu_item = NULL; /* no uninitialized warnings */
 	struct menu_item **items;
 	size_t stack_size = menu->stack_size;
@@ -131,6 +134,7 @@ new_menu_item(struct list_menu *menu, char *name, int data, int fullname)
 void
 init_menu(struct list_menu *menu)
 {
+	ELOG
 	menu->stack_size = 0;
 	menu->stack = NULL;
 	new_menu_item(menu, stracpy(""), -1, 0);
@@ -140,6 +144,7 @@ init_menu(struct list_menu *menu)
 void
 free_menu(struct menu_item *m) /* Grrr. Recursion */
 {
+	ELOG
 	struct menu_item *mm;
 
 	if (!m) return; /* XXX: Who knows... need to be verified */
@@ -155,6 +160,7 @@ free_menu(struct menu_item *m) /* Grrr. Recursion */
 struct menu_item *
 detach_menu(struct list_menu *menu)
 {
+	ELOG
 	struct menu_item *i = NULL;
 
 	if (menu->stack) {
@@ -168,6 +174,7 @@ detach_menu(struct list_menu *menu)
 void
 destroy_menu(struct list_menu *menu)
 {
+	ELOG
 	if (menu->stack) free_menu(menu->stack[0]);
 	detach_menu(menu);
 }
@@ -175,6 +182,7 @@ destroy_menu(struct list_menu *menu)
 void
 menu_labels(struct menu_item *items, const char *base, char **lbls)
 {
+	ELOG
 	struct menu_item *item;
 	char *bs;
 
@@ -199,6 +207,7 @@ add_select_item(struct list_menu *menu, struct string *string,
 		struct string *orig_string, char **value,
 		int order, int dont_add)
 {
+	ELOG
 	int pos = order - 1;
 
 	assert(menu && string);

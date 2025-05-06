@@ -80,24 +80,28 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 char *
 gettext(const char *msgid)
 {
+	ELOG
 	return gettext__(msgid);
 }
 
 char *
 dgettext(const char *domainname, const char *msgid)
 {
+	ELOG
 	return dgettext__(domainname, msgid);
 }
 
 char *
 dcgettext(const char *domainname, const char *msgid, int category)
 {
+	ELOG
 	return dcgettext__(domainname, msgid, category);
 }
 
 char *
 ngettext(const char *msgid1, const char *msgid2, unsigned long int n)
 {
+	ELOG
 	return ngettext__(msgid1, msgid2, n);
 }
 
@@ -105,6 +109,7 @@ char *
 dngettext(const char *domainname, const char *msgid1, const char *msgid2,
 	  unsigned long int n)
 {
+	ELOG
 	return dngettext__(domainname, msgid1, msgid2, n);
 }
 
@@ -112,23 +117,27 @@ char *
 dcngettext(const char *domainname, const char *msgid1, const char *msgid2,
 	   unsigned long int n, int category)
 {
+	ELOG
 	return dcngettext__(domainname, msgid1, msgid2, n, category);
 }
 
 char *
 textdomain(const char *domainname)
 {
+	ELOG
 	return textdomain__(domainname);
 }
 
 char *
 bindtextdomain(const char *domainname, const char *dirname)
 {
+	ELOG
 	return bindtextdomain__(domainname, dirname);
 }
 
 char *
 bind_textdomain_codeset(const char *domainname, const char *codeset)
 {
+	ELOG
 	return bind_textdomain_codeset__(domainname, codeset);
 }

@@ -39,6 +39,7 @@ void
 html_form(struct html_context *html_context, char *a,
           char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	char *al;
 	struct form *form;
 
@@ -114,6 +115,7 @@ html_form(struct html_context *html_context, char *a,
 static int
 get_form_mode(struct html_context *html_context, char *attr)
 {
+	ELOG
 	if (has_attr(attr, "disabled", html_context->doc_cp))
 		return FORM_MODE_DISABLED;
 
@@ -127,6 +129,7 @@ static struct el_form_control *
 init_form_control(enum form_type type, char *attr,
                   struct html_context *html_context)
 {
+	ELOG
 	struct el_form_control *fc;
 
 	fc = (struct el_form_control *)mem_calloc(1, sizeof(*fc));
@@ -143,6 +146,7 @@ void
 html_button(struct html_context *html_context, char *a,
             char *html, char *xxx4, char **xxx5)
 {
+	ELOG
 	char *al;
 	struct el_form_control *fc;
 	enum form_type type = FC_SUBMIT;
@@ -192,6 +196,7 @@ static void
 html_input_format(struct html_context *html_context, char *a,
 	   	  struct el_form_control *fc)
 {
+	ELOG
 	put_chrs(html_context, " ", 1);
 	char *top_name = html_top->name;
 	html_stack_dup(html_context, ELEMENT_KILLABLE);
@@ -273,6 +278,7 @@ void
 html_input(struct html_context *html_context, char *a,
            char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	char *al;
 	struct el_form_control *fc;
 	int cp = html_context->doc_cp;
@@ -343,6 +349,7 @@ do_html_select(char *attr, char *html,
 	       char *eof, char **end,
 	       struct html_context *html_context)
 {
+	ELOG
 	struct conv_table *ct = (struct conv_table *)html_context->special_f(html_context, SP_TABLE, NULL);
 	struct el_form_control *fc;
 	struct string lbl = NULL_STRING, orig_lbl = NULL_STRING;
@@ -530,6 +537,7 @@ do_html_select_multiple(struct html_context *html_context, char *a,
                         char *html, char *eof,
                         char **end)
 {
+	ELOG
 	char *al = get_attr_val(a, "name", html_context->doc_cp);
 
 	if (!al) return;
@@ -546,6 +554,7 @@ void
 html_select(struct html_context *html_context, char *a,
             char *html, char *eof, char **end)
 {
+	ELOG
 	if (has_attr(a, "multiple", html_context->doc_cp))
 		do_html_select_multiple(html_context, a, html, eof, end);
 	else
@@ -557,6 +566,7 @@ void
 html_option(struct html_context *html_context, char *a,
             char *xxx3, char *xxx4, char **xxx5)
 {
+	ELOG
 	struct el_form_control *fc;
 	char *val;
 
@@ -635,6 +645,7 @@ void
 html_textarea(struct html_context *html_context, char *attr,
               char *html, char *eof, char **end)
 {
+	ELOG
 	struct el_form_control *fc;
 	char *p, *t_name, *wrap_attr;
 	int t_namelen;

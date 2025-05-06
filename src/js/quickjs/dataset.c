@@ -30,6 +30,7 @@ JSClassID js_dataset_class_id;
 static void
 js_dataset_finalizer(JSRuntime *rt, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -47,6 +48,7 @@ js_dataset_finalizer(JSRuntime *rt, JSValue val)
 static int
 js_obj_delete_property(JSContext *ctx, JSValueConst obj, JSAtom prop)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -89,6 +91,7 @@ js_obj_delete_property(JSContext *ctx, JSValueConst obj, JSAtom prop)
 static int
 js_obj_has_property(JSContext *ctx, JSValueConst obj, JSAtom atom)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -100,6 +103,7 @@ js_obj_has_property(JSContext *ctx, JSValueConst obj, JSAtom atom)
 static JSValue
 js_obj_get_property(JSContext *ctx, JSValueConst obj, JSAtom atom, JSValueConst receiver)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -144,6 +148,7 @@ js_obj_get_property(JSContext *ctx, JSValueConst obj, JSAtom atom, JSValueConst 
 static int
 js_obj_set_property(JSContext *ctx, JSValueConst obj, JSAtom atom, JSValueConst val, JSValueConst receiver, int flags)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -213,6 +218,7 @@ static JSClassDef js_dataset_class = {
 JSValue
 getDataset(JSContext *ctx, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

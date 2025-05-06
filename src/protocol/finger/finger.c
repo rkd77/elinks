@@ -36,6 +36,7 @@ struct module finger_protocol_module = struct_module(
 static void
 finger_get_response(struct socket *socket, struct read_buffer *rb)
 {
+	ELOG
 	struct connection *conn = socket->conn;
 	struct cache_entry *cached = get_cache_entry(conn->uri);
 	int l;
@@ -66,6 +67,7 @@ finger_get_response(struct socket *socket, struct read_buffer *rb)
 static void
 finger_send_request(struct socket *socket)
 {
+	ELOG
 	struct connection *conn = socket->conn;
 	struct string req;
 
@@ -86,6 +88,7 @@ finger_send_request(struct socket *socket)
 void
 finger_protocol_handler(struct connection *conn)
 {
+	ELOG
 	conn->from = 0;
 	make_connection(conn->socket, conn->uri, finger_send_request,
 			conn->cache_mode >= CACHE_MODE_FORCE_RELOAD);

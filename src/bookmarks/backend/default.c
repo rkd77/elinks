@@ -26,6 +26,7 @@
 static void
 read_bookmarks_default(FILE *f)
 {
+	ELOG
 	/* INBUF_SIZE = max. title length + 1 byte for separator
 	 * + max. url length + 1 byte for separator + 5 bytes for depth
 	 * + 1 byte for end of line + 1 byte for null char + reserve */
@@ -130,6 +131,7 @@ read_bookmarks_default(FILE *f)
 
 struct write_bookmarks_default
 {
+	ELOG
 	struct secure_save_info *ssi;
 	int save_folder_state;
 	int codepage;
@@ -140,6 +142,7 @@ static void
 write_bookmarks_default_inner(const struct write_bookmarks_default *out,
 			      LIST_OF(struct bookmark) *bookmarks_list)
 {
+	ELOG
 	struct bookmark *bm;
 
 	foreach (bm, *bookmarks_list) {
@@ -179,6 +182,7 @@ static void
 write_bookmarks_default(struct secure_save_info *ssi,
 		        LIST_OF(struct bookmark) *bookmarks_list)
 {
+	ELOG
 	struct write_bookmarks_default out;
 
 	out.ssi = ssi;
@@ -192,6 +196,7 @@ write_bookmarks_default(struct secure_save_info *ssi,
 static const char *
 filename_bookmarks_default(int writing)
 {
+	ELOG
 	return BOOKMARKS_FILENAME;
 }
 

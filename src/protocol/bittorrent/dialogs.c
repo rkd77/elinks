@@ -41,6 +41,7 @@ struct bittorrent_download_info {
 static void
 done_bittorrent_download_info(struct bittorrent_download_info *info)
 {
+	ELOG
 	free_string_list(&info->labels);
 	mem_free_if(info->selection);
 	mem_free_if(info->name);
@@ -50,6 +51,7 @@ done_bittorrent_download_info(struct bittorrent_download_info *info)
 static struct bittorrent_download_info *
 init_bittorrent_download_info(struct bittorrent_meta *meta)
 {
+	ELOG
 	struct bittorrent_download_info *info;
 	struct bittorrent_file *file;
 	size_t max_label = 0;
@@ -123,6 +125,7 @@ static void
 add_bittorrent_meta_to_string(struct string *msg, struct bittorrent_meta *meta,
 			      struct terminal *term, int add_files)
 {
+	ELOG
 	if (meta->malicious_paths) {
 		add_format_to_string(msg, "%s\n\n",
 			_("Warning: potential malicious path detected", term));
@@ -198,6 +201,7 @@ add_bittorrent_meta_to_string(struct string *msg, struct bittorrent_meta *meta,
 void
 set_bittorrent_files_for_deletion(struct download *download)
 {
+	ELOG
 	struct bittorrent_connection *bittorrent;
 
 	if (!download->conn || !download->conn->info)
@@ -210,6 +214,7 @@ set_bittorrent_files_for_deletion(struct download *download)
 void
 set_bittorrent_notify_on_completion(struct download *download, struct terminal *term)
 {
+	ELOG
 	struct bittorrent_connection *bittorrent;
 
 	if (!download->conn || !download->conn->info)
@@ -223,6 +228,7 @@ set_bittorrent_notify_on_completion(struct download *download, struct terminal *
 void
 notify_bittorrent_download_complete(struct bittorrent_connection *bittorrent)
 {
+	ELOG
 	struct connection *conn = bittorrent->conn;
 	char *url = get_uri_string(conn->uri, URI_PUBLIC);
 
@@ -240,6 +246,7 @@ notify_bittorrent_download_complete(struct bittorrent_connection *bittorrent)
 widget_handler_status_T
 dlg_show_bittorrent_info(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct file_download *file_download = (struct file_download *)dlg_data->dlg->udata;
 	struct download *download = &file_download->download;
 	struct string msg;
@@ -277,6 +284,7 @@ char *
 get_bittorrent_message(struct download *download, struct terminal *term,
 		       int wide, int full, const char *separator)
 {
+	ELOG
 	/* Cooresponds to the connection mode enum. */
 	static char *modes_text[] = {
 		N_("downloading (random)"),
@@ -457,6 +465,7 @@ draw_bittorrent_piece_progress(struct download *download, struct terminal *term,
 			       int x, int y, int width, char *text,
 			       struct color_pair *color)
 {
+	ELOG
 	struct bittorrent_connection *bittorrent;
 	uint32_t piece;
 	int x_start;
@@ -570,6 +579,7 @@ draw_bittorrent_piece_progress(struct download *download, struct terminal *term,
 void
 bittorrent_message_dialog(struct session *ses, void *data)
 {
+	ELOG
 	struct bittorrent_message *message = (struct bittorrent_message *)data;
 	struct string string;
 	char *uristring;
@@ -617,6 +627,7 @@ bittorrent_message_dialog(struct session *ses, void *data)
 static void
 abort_bittorrent_download_query(struct dialog_data *dlg_data)
 {
+	ELOG
 	struct bittorrent_download_info *info = (struct bittorrent_download_info *)dlg_data->dlg->udata;
 
 	done_bittorrent_download_info(info);
@@ -630,6 +641,7 @@ abort_bittorrent_download_query(struct dialog_data *dlg_data)
 static widget_handler_status_T
 bittorrent_download(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct type_query *type_query = (struct type_query *)dlg_data->dlg->udata2;
 	struct bittorrent_download_info *info = (struct bittorrent_download_info *)dlg_data->dlg->udata;
 	struct file_download *file_download;
@@ -687,6 +699,7 @@ bittorrent_download(struct dialog_data *dlg_data, struct widget_data *widget_dat
 static widget_handler_status_T
 tp_show_header(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct type_query *type_query = (struct type_query *)widget_data->widget->data;
 
 	cached_header_dialog(type_query->ses, type_query->cached);
@@ -702,6 +715,7 @@ static void
 bittorrent_query_callback(void *data, struct connection_state state,
 			  struct bittorrent_const_string *response)
 {
+	ELOG
 	/* [gettext_accelerator_context(.bittorrent_query_callback)] */
 	struct type_query *type_query = (struct type_query *)data;
 	struct string filename;
@@ -845,6 +859,7 @@ bittorrent_query_callback(void *data, struct connection_state state,
 void
 query_bittorrent_dialog(struct type_query *type_query)
 {
+	ELOG
 	init_bittorrent_fetch(NULL, type_query->uri,
 			      bittorrent_query_callback, type_query, 0);
 }

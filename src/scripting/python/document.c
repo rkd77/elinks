@@ -25,6 +25,7 @@ If a document is being viewed, return its body; otherwise return None.\n");
 PyObject *
 python_current_document(PyObject *self, PyObject *args)
 {
+	ELOG
 	if (python_ses && python_ses->doc_view
 	    && python_ses->doc_view->document) {
 		struct cache_entry *cached = python_ses->doc_view->document->cached;
@@ -48,6 +49,7 @@ otherwise return None.\n");
 PyObject *
 python_current_header(PyObject *self, PyObject *args)
 {
+	ELOG
 	if (python_ses && python_ses->doc_view
 	    && python_ses->doc_view->document) {
 		struct cache_entry *cached = python_ses->doc_view->document->cached;
@@ -70,6 +72,7 @@ If a link is selected, return its URL; otherwise return None.\n");
 PyObject *
 python_current_link_url(PyObject *self, PyObject *args)
 {
+	ELOG
 	char url[MAX_STR_LEN];
 
 	if (python_ses && get_current_link_url(python_ses, url, MAX_STR_LEN))
@@ -89,6 +92,7 @@ If a document is being viewed, return its title; otherwise return None.\n");
 PyObject *
 python_current_title(PyObject *self, PyObject *args)
 {
+	ELOG
 	char title[MAX_STR_LEN];
 
 	if (python_ses && get_current_title(python_ses, title, MAX_STR_LEN))
@@ -108,6 +112,7 @@ If a document is being viewed, return its URL; otherwise return None.\n");
 PyObject *
 python_current_url(PyObject *self, PyObject *args)
 {
+	ELOG
 	char url[MAX_STR_LEN];
 
 	if (python_ses && get_current_url(python_ses, url, MAX_STR_LEN))

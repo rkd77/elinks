@@ -92,6 +92,7 @@
 static void
 ssl_set_no_tls(struct socket *socket)
 {
+	ELOG
 #ifdef CONFIG_OPENSSL
 #ifdef SSL_OP_NO_TLSv1
 	SSL_set_options((ssl_t *)socket->ssl, SSL_OP_NO_TLSv1);
@@ -117,6 +118,7 @@ ssl_set_no_tls(struct socket *socket)
 static int
 verify_certificates(struct socket *socket)
 {
+	ELOG
 	gnutls_x509_crt_t cert;
 	gnutls_session_t session = *(ssl_t *)socket->ssl;
 	struct connection *conn = (struct connection *)socket->conn;
@@ -207,6 +209,7 @@ static int
 match_uri_host_name(const char *uri_host,
 		    ASN1_STRING *cert_host_asn1)
 {
+	ELOG
 	const size_t uri_host_len = strlen(uri_host);
 	unsigned char *cert_host = NULL;
 	int cert_host_len;
@@ -260,6 +263,7 @@ static int
 match_uri_host_ip(const char *uri_host,
 		  ASN1_OCTET_STRING *cert_host_asn1)
 {
+	ELOG
 #if defined(HAVE_INET_PTON) || defined(HAVE_INET_ATON)
 #ifdef HAVE_ASN1_STRING_GET0_DATA
 	const unsigned char *cert_host_addr = ASN1_STRING_get0_data(cert_host_asn1);
@@ -323,6 +327,7 @@ match_uri_host_ip(const char *uri_host,
 static int
 verify_callback(int preverify_ok, X509_STORE_CTX *ctx)
 {
+	ELOG
 
 	X509 *cert;
 	SSL *ssl;
@@ -398,6 +403,7 @@ verify_callback(int preverify_ok, X509_STORE_CTX *ctx)
 static int
 ssl_do_connect(struct socket *socket)
 {
+	ELOG
 	int ret;
 
 	gnutls_handshake_set_timeout(*(ssl_t *)(socket->ssl), GNUTLS_DEFAULT_HANDSHAKE_TIMEOUT);
@@ -413,6 +419,7 @@ ssl_do_connect(struct socket *socket)
 static void
 ssl_want_read(struct socket *socket)
 {
+	ELOG
 	if (socket->no_tls)
 		ssl_set_no_tls(socket);
 
@@ -444,6 +451,7 @@ ssl_want_read(struct socket *socket)
 int
 ssl_connect(struct socket *socket)
 {
+	ELOG
 	int ret;
 	char *server_name;
 	struct connection *conn = (struct connection *)socket->conn;
@@ -582,6 +590,7 @@ ssl_connect(struct socket *socket)
 ssize_t
 ssl_write(struct socket *socket, char *data, int len)
 {
+	ELOG
 	ssize_t wr = ssl_do_write(socket, data, len);
 
 	if (wr <= 0) {
@@ -611,6 +620,7 @@ ssl_write(struct socket *socket, char *data, int len)
 ssize_t
 ssl_read(struct socket *socket, char *data, int len)
 {
+	ELOG
 	ssize_t rd = ssl_do_read(socket, data, len);
 
 	if (rd <= 0) {
@@ -653,6 +663,7 @@ ssl_read(struct socket *socket, char *data, int len)
 int
 ssl_close(struct socket *socket)
 {
+	ELOG
 	ssl_do_close(socket);
 	done_ssl_connection(socket);
 

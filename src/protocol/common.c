@@ -32,6 +32,7 @@
 void
 close_all_non_term_fd(void)
 {
+	ELOG
 	int n;
 	int max = 1024;
 #ifdef RLIMIT_NOFILE
@@ -47,6 +48,7 @@ close_all_non_term_fd(void)
 struct connection_state
 init_directory_listing(struct string *page, struct uri *uri)
 {
+	ELOG
 	struct string dirpath = NULL_STRING;
 	struct string decoded = NULL_STRING;
 	struct string location = NULL_STRING;

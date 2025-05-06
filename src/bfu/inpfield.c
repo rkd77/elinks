@@ -43,6 +43,7 @@ add_dlg_field_do(struct dialog *dlg, enum widget_type type, char *label,
 		 int datalen, void *data,
 		 struct input_history *history, enum inpfield_flags flags)
 {
+	ELOG
 	struct widget *widget = &dlg->widgets[dlg->number_of_widgets++];
 
 	widget->type    = type;
@@ -60,6 +61,7 @@ add_dlg_field_do(struct dialog *dlg, enum widget_type type, char *label,
 widget_handler_status_T
 check_number(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct widget *widget = widget_data->widget;
 	char *end;
 	long l;
@@ -89,6 +91,7 @@ check_number(struct dialog_data *dlg_data, struct widget_data *widget_data)
 widget_handler_status_T
 check_nonempty(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	unsigned char *p;
 
 	for (p = (unsigned char *)widget_data->cdata; *p; p++)
@@ -107,6 +110,7 @@ dlg_format_field(struct dialog_data *dlg_data,
 		 struct widget_data *widget_data,
 		 int x, int *y, int w, int *rw, format_align_T align, int format_only)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	static int max_label_width;
 	static int *prev_y; /* Assert the uniqueness of y */	/* TODO: get rid of this !! --Zas */
@@ -166,6 +170,7 @@ dlg_format_field(struct dialog_data *dlg_data,
 static widget_handler_status_T
 input_field_cancel(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	void (*fn)(void *) = (void (*)(void *))widget_data->widget->data;
 	void *data = dlg_data->dlg->udata2;
 
@@ -177,6 +182,7 @@ input_field_cancel(struct dialog_data *dlg_data, struct widget_data *widget_data
 static widget_handler_status_T
 input_field_ok(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	void (*fn)(void *, char *) = (void (*)(void *, char *))widget_data->widget->data;
 	void *data = dlg_data->dlg->udata2;
 	char *text = dlg_data->widgets_data->cdata;
@@ -204,6 +210,7 @@ input_field(struct terminal *term, struct memory_list *ml, int intl,
 	    void (*fn)(void *, char *),
 	    void (*cancelfn)(void *))
 {
+	ELOG
 	struct dialog *dlg;
 	char *field;
 
@@ -256,6 +263,7 @@ password_field(struct terminal *term, struct memory_list *ml, int intl,
 	    void (*fn)(void *, char *),
 	    void (*cancelfn)(void *))
 {
+	ELOG
 	struct dialog *dlg;
 	char *field;
 
@@ -306,6 +314,7 @@ input_dialog(struct terminal *term, struct memory_list *ml,
 	     void (*fn)(void *, char *),
 	     void (*cancelfn)(void *))
 {
+	ELOG
 	/* [gettext_accelerator_context(input_dialog)] */
 	input_field(term, ml, 1, title, text, N_("~OK"), N_("~Cancel"),
 		    data, history, l,
@@ -323,6 +332,7 @@ password_dialog(struct terminal *term, struct memory_list *ml,
 	     void (*fn)(void *, char *),
 	     void (*cancelfn)(void *))
 {
+	ELOG
 	/* [gettext_accelerator_context(input_dialog)] */
 	password_field(term, ml, 1, title, text, N_("~OK"), N_("~Cancel"),
 		    data, history, l,
@@ -334,6 +344,7 @@ static widget_handler_status_T
 display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 		 int hide)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	struct color_pair *color;
 	int sel = is_selected_widget(dlg_data, widget_data);
@@ -415,18 +426,21 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 static widget_handler_status_T
 display_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	return display_field_do(dlg_data, widget_data, 0);
 }
 
 static widget_handler_status_T
 display_field_pass(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	return display_field_do(dlg_data, widget_data, 1);
 }
 
 static widget_handler_status_T
 init_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	if (widget_has_history(widget_data)) {
 		struct input_history_entry *entry;
 
@@ -450,6 +464,7 @@ init_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 static int
 field_prev_history(struct widget_data *widget_data)
 {
+	ELOG
 	if (widget_has_history(widget_data)
 	    && (void *) widget_data->info.field.cur_hist->prev != &widget_data->info.field.history) {
 		widget_data->info.field.cur_hist = widget_data->info.field.cur_hist->prev;
@@ -462,6 +477,7 @@ field_prev_history(struct widget_data *widget_data)
 static int
 field_next_history(struct widget_data *widget_data)
 {
+	ELOG
 	if (widget_has_history(widget_data)
 	    && (void *) widget_data->info.field.cur_hist != &widget_data->info.field.history) {
 		widget_data->info.field.cur_hist = widget_data->info.field.cur_hist->next;
@@ -474,6 +490,7 @@ field_next_history(struct widget_data *widget_data)
 static widget_handler_status_T
 mouse_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct term_event *ev = dlg_data->term_event;
 
 	if (!check_mouse_position(ev, &widget_data->box))
@@ -512,6 +529,7 @@ mouse_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 static widget_handler_status_T
 kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct window *win = dlg_data->win;
 	struct terminal *term = win->term;
 	struct term_event *ev = dlg_data->term_event;
@@ -795,6 +813,7 @@ display_field:
 static widget_handler_status_T
 clear_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	widget_data->info.field.cpos = 0;
 
 	if (widget_data->widget->datalen)
@@ -827,6 +846,7 @@ const struct widget_ops field_pass_ops = {
 static void
 input_line_layouter(struct dialog_data *dlg_data)
 {
+	ELOG
 	struct input_line *input_line = (struct input_line *)dlg_data->dlg->udata;
 	struct session *ses = input_line->ses;
 	struct window *win = dlg_data->win;
@@ -841,6 +861,7 @@ input_line_layouter(struct dialog_data *dlg_data)
 static widget_handler_status_T
 input_line_event_handler(struct dialog_data *dlg_data)
 {
+	ELOG
 	struct input_line *input_line = (struct input_line *)dlg_data->dlg->udata;
 	input_line_handler_T handler = input_line->handler;
 	action_id_T action_id;
@@ -947,6 +968,7 @@ void
 input_field_line(struct session *ses, char *prompt, void *data,
 		 struct input_history *history, input_line_handler_T handler)
 {
+	ELOG
 	struct dialog *dlg;
 	char *buffer;
 	struct input_line *input_line;

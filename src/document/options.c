@@ -24,6 +24,7 @@
 void
 init_document_options(struct session *ses, struct document_options *doo)
 {
+	ELOG
 	/* Ensure that any padding bytes are cleared. */
 	memset(doo, 0, sizeof(*doo));
 
@@ -143,6 +144,7 @@ init_document_options(struct session *ses, struct document_options *doo)
 int
 compare_opt(struct document_options *o1, struct document_options *o2)
 {
+	ELOG
 	return memcmp(o1, o2, offsetof(struct document_options, framename))
 		|| c_strcasecmp(o1->framename, o2->framename)
 		|| (o1->box.x != o2->box.x)
@@ -156,6 +158,7 @@ compare_opt(struct document_options *o1, struct document_options *o2)
 NONSTATIC_INLINE void
 copy_opt(struct document_options *o1, struct document_options *o2)
 {
+	ELOG
 	copy_struct(o1, o2);
 	o1->framename = stracpy(o2->framename);
 	o1->image_link.prefix = stracpy(get_opt_str("document.browse.images.image_link_prefix", NULL));
@@ -165,6 +168,7 @@ copy_opt(struct document_options *o1, struct document_options *o2)
 void
 done_document_options(struct document_options *options)
 {
+	ELOG
 	mem_free_if(options->framename);
 	mem_free(options->image_link.prefix);
 	mem_free(options->image_link.suffix);
@@ -173,6 +177,7 @@ done_document_options(struct document_options *options)
 void
 toggle_document_option(struct session *ses, const char *option_name)
 {
+	ELOG
 	struct option *option;
 
 	assert(ses && ses->doc_view && ses->tab && ses->tab->term);

@@ -49,6 +49,7 @@ static HANDLE hTimerQueue = NULL;
 VOID CALLBACK
 TimerRoutine(PVOID lpParam, BOOLEAN TimerOrWaitFired)
 {
+	ELOG
 	check_heartbeats(NULL);
 }
 #endif
@@ -56,6 +57,7 @@ TimerRoutine(PVOID lpParam, BOOLEAN TimerOrWaitFired)
 void
 init_osdep(void)
 {
+	ELOG
 #ifdef CONFIG_OS_WIN32
 	WSADATA ws;
 	WORD ver = MAKEWORD(1,1);
@@ -86,6 +88,7 @@ init_osdep(void)
 void
 create_timer_queue(void)
 {
+	ELOG
 	hTimerQueue = CreateTimerQueue();
 
 	if (hTimerQueue != NULL) {
@@ -97,6 +100,7 @@ create_timer_queue(void)
 static void
 delete_timer_queue(void)
 {
+	ELOG
 	if (hTimerQueue) {
 		DeleteTimerQueueEx(hTimerQueue, NULL);
 		hTimerQueue = NULL;
@@ -107,6 +111,7 @@ delete_timer_queue(void)
 void
 terminate_osdep(void)
 {
+	ELOG
 #ifdef CONFIG_QUICKJS
 	delete_timer_queue();
 #endif
@@ -115,6 +120,7 @@ terminate_osdep(void)
 int
 get_system_env(void)
 {
+	ELOG
 	return (0);
 }
 
@@ -126,6 +132,7 @@ static int old_xsize, old_ysize;
 static void
 terminal_resize_fn(void *unused)
 {
+	ELOG
 	int cur_xsize, cur_ysize;
 	int cw, ch;
 
@@ -142,6 +149,7 @@ terminal_resize_fn(void *unused)
 static void
 terminal_resize_poll(int x, int y)
 {
+	ELOG
 	if (terminal_resize_timer != TIMER_ID_UNDEF) {
 		elinks_internal("terminal_resize_poll: timer already active");
 	}
@@ -153,6 +161,7 @@ terminal_resize_poll(int x, int y)
 void
 handle_terminal_resize(int fd, void (*fn)(void))
 {
+	ELOG
 	int x, y;
 	int cw, ch;
 
@@ -164,6 +173,7 @@ handle_terminal_resize(int fd, void (*fn)(void))
 void
 unhandle_terminal_resize(int fd)
 {
+	ELOG
 	if (terminal_resize_timer != TIMER_ID_UNDEF) {
 		kill_timer(&terminal_resize_timer);
 	}
@@ -172,6 +182,7 @@ unhandle_terminal_resize(int fd)
 void
 get_terminal_size(int fd, int *x, int *y, int *cw, int *ch)
 {
+	ELOG
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 
 	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
@@ -204,6 +215,7 @@ get_terminal_size(int fd, int *x, int *y, int *cw, int *ch)
 int
 exe(char *path)
 {
+	ELOG
 	int rc;
 	const char *shell = get_shell();
 	char *x = *path != '"' ? " /c start /wait " : " /c start /wait \"\" ";
@@ -234,6 +246,7 @@ exe(char *path)
 int
 get_ctl_handle(void)
 {
+	ELOG
 	return get_input_handle();
 }
 
@@ -251,6 +264,7 @@ extern void bgt(struct tdata *t);
 int
 start_thread(void (*fn)(void *, int), void *ptr, int l)
 {
+	ELOG
 	int p[2];
 	struct tdata *t;
 
@@ -278,6 +292,7 @@ start_thread(void (*fn)(void *, int), void *ptr, int l)
 int
 get_input_handle(void)
 {
+	ELOG
 	static HANDLE hStdIn = INVALID_HANDLE_VALUE;
 
 	if (hStdIn == INVALID_HANDLE_VALUE) {
@@ -293,6 +308,7 @@ get_input_handle(void)
 int
 get_output_handle(void)
 {
+	ELOG
 	static HANDLE hStdOut = INVALID_HANDLE_VALUE;
 
 	if (hStdOut == INVALID_HANDLE_VALUE) {
@@ -308,6 +324,7 @@ get_output_handle(void)
 int
 gettimeofday(struct timeval* p, void* tz)
 {
+	ELOG
 	union {
 		long long ns100; /*time since 1 Jan 1601 in 100ns units */
 		FILETIME ft;
@@ -323,6 +340,7 @@ gettimeofday(struct timeval* p, void* tz)
 int
 mkstemp(char *template_name)
 {
+	ELOG
 	int i, j, fd, len, index;
 
 	static const char letters[] = "abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ0123456789";
@@ -351,6 +369,7 @@ mkstemp(char *template_name)
 int
 tcgetattr(int fd, struct termios *_termios_p)
 {
+	ELOG
 	(void) fd;
 	(void) _termios_p;
 	return 0;
@@ -359,6 +378,7 @@ tcgetattr(int fd, struct termios *_termios_p)
 int
 tcsetattr(int fd, int _optional_actions, const struct termios *_termios_p)
 {
+	ELOG
 	(void) fd;
 	(void) _optional_actions;
 	(void) _termios_p;
@@ -369,6 +389,7 @@ tcsetattr(int fd, int _optional_actions, const struct termios *_termios_p)
 int
 gettext__parse(void *arg)
 {
+	ELOG
 	return 0;
 }
 #endif
@@ -376,6 +397,7 @@ gettext__parse(void *arg)
 char *
 user_appdata_directory(void)
 {
+	ELOG
 #if _WIN32_WINNT >= 0x0500
 	HWND hwnd = GetConsoleWindow();
 #else
@@ -394,6 +416,7 @@ user_appdata_directory(void)
 long
 os_get_free_mem_in_mib(void)
 {
+	ELOG
 	MEMORYSTATUSEX statex;
 	statex.dwLength = sizeof(statex);
 	GlobalMemoryStatusEx(&statex);

@@ -67,6 +67,7 @@ STUB_MODULE(user_protocol_module);
 static void
 stub_called(const char *fun)
 {
+	ELOG
 	die("FAIL: stub %s\n", fun);
 }
 
@@ -110,6 +111,7 @@ STUB_PROTOCOL_EXTERNAL_HANDLER(user_protocol_handler);
 char *
 get_user_program(struct terminal *term, const char *progid, int progidlen)
 {
+	ELOG
 	stub_called("get_user_program");
 	return NULL;
 }
@@ -119,6 +121,7 @@ void
 print_error_dialog(struct session *ses, struct connection_state state,
 		   struct uri *uri, connection_priority_T priority)
 {
+	ELOG
 	stub_called("print_error_dialog");
 }
 
@@ -126,6 +129,7 @@ print_error_dialog(struct session *ses, struct connection_state state,
 char *
 msg_text(struct terminal *term, const char *format, ...)
 {
+	ELOG
 	stub_called("msg_text");
 	return NULL;
 }
@@ -136,6 +140,7 @@ msg_box(struct terminal *term, struct memory_list *mem_list,
 	msgbox_flags_T flags, char *title, format_align_T align,
 	char *text, void *udata, int buttons, ...)
 {
+	ELOG
 	/* mem_list should be freed here but because this is just a
 	 * test program it won't matter.  */
 	stub_called("msg_box");
@@ -146,5 +151,6 @@ msg_box(struct terminal *term, struct memory_list *mem_list,
 void
 mailcap_protocol_handler(struct connection *conn)
 {
+	ELOG
 	stub_called("mailcap_protocol_handler");
 }

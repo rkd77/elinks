@@ -117,6 +117,7 @@ static void dump_print(const char *option, const char *url);
 static void
 dump_output_prepare_frame(struct dump_output *out, int to_cp)
 {
+	ELOG
 	const int cp437 = get_cp_index("cp437");
 	int orig;
 	unsigned char subst;
@@ -171,6 +172,7 @@ dump_output_prepare_frame(struct dump_output *out, int to_cp)
 static struct dump_output *
 dump_output_alloc(int fd, struct string *string, int cp)
 {
+	ELOG
 	struct dump_output *out;
 
 	assert((fd == -1) ^ (string == NULL));
@@ -198,6 +200,7 @@ dump_output_alloc(int fd, struct string *string, int cp)
 static int
 dump_output_flush(struct dump_output *out)
 {
+	ELOG
 	if (out->string) {
 		if (!add_bytes_to_string(out->string, out->buf, out->bufpos))
 			return -1;
@@ -214,6 +217,7 @@ dump_output_flush(struct dump_output *out)
 static int
 is_start_of_link(struct document *document, int x, int y, int *current_link_number, struct link **ret)
 {
+	ELOG
 	int i = *current_link_number;
 
 	for (; i < document->nlinks; i++) {
@@ -235,6 +239,7 @@ is_start_of_link(struct document *document, int x, int y, int *current_link_numb
 static int
 is_end_of_link(struct document *document, int x, int y, int *current_link_number, struct link **ret)
 {
+	ELOG
 	int i = *current_link_number;
 
 	for (; i < document->nlinks; i++) {
@@ -256,6 +261,7 @@ is_end_of_link(struct document *document, int x, int y, int *current_link_number
 static int
 write_char(unsigned char c, struct dump_output *out)
 {
+	ELOG
 	if (out->bufpos >= D_BUF) {
 		if (dump_output_flush(out))
 			return -1;
@@ -268,6 +274,7 @@ write_char(unsigned char c, struct dump_output *out)
 static void
 write_start_of_link(struct link *link, struct dump_output *out)
 {
+	ELOG
 	char buf[D_BUF];
 	char *where = link->where ?: link->where_img;
 	char *st;
@@ -282,6 +289,7 @@ write_start_of_link(struct link *link, struct dump_output *out)
 static void
 write_end_of_link(struct dump_output *out)
 {
+	ELOG
 	char buf[] = "\033]8;;\033\\";
 	char *st;
 
@@ -293,6 +301,7 @@ write_end_of_link(struct dump_output *out)
 static int
 write_color_16(unsigned char color, struct dump_output *out)
 {
+	ELOG
 	char bufor[] = "\033[0;30;40m";
 	char *data = bufor;
 	int background = (color >> 4) & 7;
@@ -329,6 +338,7 @@ static int
 write_color_256(const char *str, unsigned char color,
 		struct dump_output *out)
 {
+	ELOG
 	char bufor[16];
 	char *data = bufor;
 
@@ -357,6 +367,7 @@ static int
 write_true_color(const char *str, const unsigned char *color,
 		 struct dump_output *out)
 {
+	ELOG
 	char bufor[24];
 	char *data = bufor;
 
@@ -393,6 +404,7 @@ write_true_color(const char *str, const unsigned char *color,
 static int
 dump_references(struct document *document, int fd, char buf[D_BUF])
 {
+	ELOG
 	if (document->nlinks
 	    && get_opt_bool("document.dump.references", NULL)) {
 		char key_sym[64] = {0};
@@ -465,6 +477,7 @@ dump_references(struct document *document, int fd, char buf[D_BUF])
 int
 dump_to_file(struct document *document, int fd)
 {
+	ELOG
 	struct dump_output *out = dump_output_alloc(fd, NULL,
 						    document->options.cp);
 	int error;
@@ -483,6 +496,7 @@ dump_to_file(struct document *document, int fd)
 static void
 dump_formatted(int fd, struct download *download, struct cache_entry *cached)
 {
+	ELOG
 	struct document_options o;
 	struct document_view formatted;
 	struct view_state vs;
@@ -574,6 +588,7 @@ dump_formatted(int fd, struct download *download, struct cache_entry *cached)
 static int
 dump_source(int fd, struct download *download, struct cache_entry *cached)
 {
+	ELOG
 	struct fragment *frag;
 
 	if (!cached) return 0;
@@ -613,6 +628,7 @@ nextfrag:
 static char *
 subst_url(char *str, const char *url)
 {
+	ELOG
 	struct string string;
 
 	if (!init_string(&string)) return NULL;
@@ -668,6 +684,7 @@ subst_url(char *str, const char *url)
 static void
 dump_print(const char *option, const char *url)
 {
+	ELOG
 	char *str = get_opt_str(option, NULL);
 
 	if (str) {
@@ -684,6 +701,7 @@ dump_print(const char *option, const char *url)
 static void
 dump_loading_callback(struct download *download, void *p)
 {
+	ELOG
 	struct cache_entry *cached = download->cached;
 	int fd = get_output_handle();
 
@@ -728,6 +746,7 @@ terminate:
 static void
 dump_start(char *url)
 {
+	ELOG
 	char *wd = get_cwd();
 	struct uri *uri = get_translated_uri(url, wd);
 
@@ -754,6 +773,7 @@ terminate:
 void
 dump_next(LIST_OF(struct string_list_item) *url_list)
 {
+	ELOG
 	static INIT_LIST_OF(struct string_list_item, todo_list);
 	static INIT_LIST_OF(struct string_list_item, done_list);
 	struct string_list_item *item;
@@ -795,6 +815,7 @@ dump_next(LIST_OF(struct string_list_item) *url_list)
 struct string *
 add_document_to_string(struct string *string, struct document *document)
 {
+	ELOG
 	struct dump_output *out;
 	int error;
 

@@ -87,6 +87,7 @@ static void http_curl_got_header(void *stream, void *buffer, size_t len);
 static size_t
 my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream)
 {
+	ELOG
 	http_got_data(stream, buffer, size * nmemb);
 	return nmemb;
 }
@@ -94,6 +95,7 @@ my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream)
 static size_t
 my_fwrite_header(void *buffer, size_t size, size_t nmemb, void *stream)
 {
+	ELOG
 	http_curl_got_header(stream, buffer, size * nmemb);
 	return nmemb;
 }
@@ -101,6 +103,7 @@ my_fwrite_header(void *buffer, size_t size, size_t nmemb, void *stream)
 static size_t
 read_post_data(void *buffer, size_t size, size_t nmemb, void *stream)
 {
+	ELOG
 	struct connection *conn = (struct connection *)stream;
 	struct http_curl_connection_info *http = (struct http_curl_connection_info *)conn->info;
 	struct connection_state error;
@@ -113,6 +116,7 @@ read_post_data(void *buffer, size_t size, size_t nmemb, void *stream)
 static void
 done_http_curl(struct connection *conn)
 {
+	ELOG
 	struct http_curl_connection_info *http = (struct http_curl_connection_info *)conn->info;
 
 	if (!http || !http->easy) {
@@ -138,6 +142,7 @@ done_http_curl(struct connection *conn)
 static void
 do_http(struct connection *conn)
 {
+	ELOG
 	struct http_curl_connection_info *http = (struct http_curl_connection_info *)mem_calloc(1, sizeof(*http));
 	struct auth_entry *auth = find_auth(conn->uri);
 
@@ -399,6 +404,7 @@ do_http(struct connection *conn)
 static void
 http_curl_got_header(void *stream, void *buf, size_t len)
 {
+	ELOG
 	struct connection *conn = (struct connection *)stream;
 	char *buffer = (char *)buf;
 	struct http_curl_connection_info *http = (struct http_curl_connection_info *)conn->info;
@@ -457,6 +463,7 @@ next:
 static void
 http_got_data(void *stream, void *buf, size_t len)
 {
+	ELOG
 	struct connection *conn = (struct connection *)stream;
 	char *buffer = (char *)buf;
 
@@ -479,6 +486,7 @@ http_got_data(void *stream, void *buf, size_t len)
 static char *
 http_curl_check_redirect(struct connection *conn)
 {
+	ELOG
 	struct http_curl_connection_info *http;
 	if (!conn || !conn->info) {
 		return NULL;
@@ -502,6 +510,7 @@ http_curl_check_redirect(struct connection *conn)
 void
 http_curl_handle_error(struct connection *conn, CURLcode res)
 {
+	ELOG
 	if (res == CURLE_OK) {
 		char *url = http_curl_check_redirect(conn);
 		struct http_curl_connection_info *http = (struct http_curl_connection_info *)conn->info;
@@ -520,6 +529,7 @@ http_curl_handle_error(struct connection *conn, CURLcode res)
 void
 http_curl_protocol_handler(struct connection *conn)
 {
+	ELOG
 	if (g.multi) {
 		do_http(conn);
 	}
@@ -529,6 +539,7 @@ http_curl_protocol_handler(struct connection *conn)
 void
 check_multi_info(GlobalInfo *g)
 {
+	ELOG
 	//char *eff_url;
 	CURLMsg *msg;
 	int msgs_left;

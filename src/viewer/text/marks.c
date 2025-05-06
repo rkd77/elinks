@@ -64,6 +64,7 @@ static struct view_state *marks[MARKS_SIZE];
 static inline int
 index_from_char(unsigned char mark)
 {
+	ELOG
 	assert(is_valid_mark_char(mark));
 
 	if (mark >= 'A' && mark <= 'Z')
@@ -75,6 +76,7 @@ index_from_char(unsigned char mark)
 void
 goto_mark(unsigned char mark, struct view_state *vs)
 {
+	ELOG
 	int old_current_link;
 #ifdef CONFIG_ECMASCRIPT
 	struct ecmascript_interpreter *ecmascript;
@@ -117,6 +119,7 @@ goto_mark(unsigned char mark, struct view_state *vs)
 static void
 free_mark_by_index(int i)
 {
+	ELOG
 	assert(is_valid_mark_index(i));
 
 	if (!marks[i]) return;
@@ -128,6 +131,7 @@ free_mark_by_index(int i)
 void
 set_mark(unsigned char mark, struct view_state *mark_vs)
 {
+	ELOG
 	struct view_state *vs;
 	int i;
 
@@ -157,6 +161,7 @@ set_mark(unsigned char mark, struct view_state *mark_vs)
 static void
 done_marks(struct module *xxx)
 {
+	ELOG
 	int i;
 
 	for (i = 0; i < MARKS_SIZE; i++) {

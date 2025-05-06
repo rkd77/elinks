@@ -16,6 +16,7 @@
 void
 save_in_map(void *m, void *node, int length)
 {
+	ELOG
 	struct el_mapa *mapa = (struct el_mapa *)m;
 
 	if (!mapa) {
@@ -40,6 +41,7 @@ save_in_map(void *m, void *node, int length)
 void
 save_in_map2(void *m, void *node, int length)
 {
+	ELOG
 	struct hash *mapa = (struct hash *)m;
 
 	if (mapa) {
@@ -54,12 +56,14 @@ save_in_map2(void *m, void *node, int length)
 void
 save_offset_in_map(void *m, void *node, int offset)
 {
+	ELOG
 	save_in_map(m, node, offset);
 }
 
 void
 save_offset_in_map2(void *m, void *node, int offset)
 {
+	ELOG
 	struct hash *mapa = (struct hash *)m;
 
 	if (mapa) {
@@ -74,6 +78,7 @@ save_offset_in_map2(void *m, void *node, int offset)
 void *
 create_new_element_map(void)
 {
+	ELOG
 	struct el_mapa *mapa = (struct el_mapa *)mem_calloc(1, sizeof(*mapa));
 
 	if (!mapa) {
@@ -95,18 +100,21 @@ create_new_element_map(void)
 void *
 create_new_element_map2(void)
 {
+	ELOG
 	return (void *)init_hash8();
 }
 
 void *
 create_new_element_map_rev(void)
 {
+	ELOG
 	return create_new_element_map();
 }
 
 void
 delete_map(void *m)
 {
+	ELOG
 	struct el_mapa *mapa = (struct el_mapa *)m;
 
 	if (mapa) {
@@ -118,6 +126,7 @@ delete_map(void *m)
 void
 delete_map2(void *m)
 {
+	ELOG
 	struct hash *hash = (struct hash *)(*(struct hash **)m);
 	struct hash_item *item;
 	int i;
@@ -131,12 +140,14 @@ delete_map2(void *m)
 void
 delete_map_rev(void *m)
 {
+	ELOG
 	delete_map2(m);
 }
 
 static int
 compare(const void *a, const void *b)
 {
+	ELOG
 	int offa = ((struct el_node_elem *)a)->offset;
 	int offb = ((struct el_node_elem *)b)->offset;
 
@@ -146,6 +157,7 @@ compare(const void *a, const void *b)
 void *
 find_in_map(void *m, int offset)
 {
+	ELOG
 	struct el_mapa *mapa = (struct el_mapa *)m;
 
 	if (!mapa) {
@@ -163,6 +175,7 @@ find_in_map(void *m, int offset)
 void *
 find_in_map2(void *m, int offset)
 {
+	ELOG
 	struct hash *mapa = (struct hash *)m;
 	struct hash_item *item;
 	char *key;
@@ -188,6 +201,7 @@ find_in_map2(void *m, int offset)
 static int
 compare_nodes(const void *a, const void *b)
 {
+	ELOG
 	void *nodea = ((struct el_node_elem *)a)->node;
 	void *nodeb = ((struct el_node_elem *)b)->node;
 
@@ -205,6 +219,7 @@ compare_nodes(const void *a, const void *b)
 int
 find_offset(void *m, void *node)
 {
+	ELOG
 	struct el_mapa *mapa = (struct el_mapa *)m;
 
 	if (!mapa) {
@@ -222,6 +237,7 @@ find_offset(void *m, void *node)
 void
 sort_nodes(void *m)
 {
+	ELOG
 	struct el_mapa *mapa = (struct el_mapa *)m;
 
 	if (!mapa) {
@@ -233,6 +249,7 @@ sort_nodes(void *m)
 int
 find_offset2(void *m, void *node)
 {
+	ELOG
 	struct hash *mapa = (struct hash *)m;
 	struct hash_item *item;
 	char *key;

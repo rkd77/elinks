@@ -65,6 +65,7 @@ static const enum term_event_special_key dummy_term_event_special_key;
 int
 is_blocked(void)
 {
+	ELOG
 	return ditrm && ditrm->blocked;
 }
 
@@ -72,6 +73,7 @@ is_blocked(void)
 void
 free_all_itrms(void)
 {
+	ELOG
 	if (ditrm) free_itrm(ditrm);
 }
 
@@ -83,6 +85,7 @@ free_all_itrms(void)
 static void
 itrm_queue_write(struct itrm *itrm)
 {
+	ELOG
 	int written;
 	int qlen = int_min(itrm->out.queue.len, 128);
 
@@ -113,6 +116,7 @@ itrm_queue_write(struct itrm *itrm)
 void
 itrm_queue_event(struct itrm *itrm, char *data, int len)
 {
+	ELOG
 	int w = 0;
 
 	if (!len) return;
@@ -149,6 +153,7 @@ itrm_queue_event(struct itrm *itrm, char *data, int len)
 void
 kbd_ctrl_c(void)
 {
+	ELOG
 	struct interlink_event ev;
 
 	if (!ditrm) return;
@@ -170,6 +175,7 @@ kbd_ctrl_c(void)
 static void
 send_init_sequence(int h, int altscreen)
 {
+	ELOG
 #ifdef CONFIG_OS_DOS
 	save_terminal();
 #endif
@@ -199,6 +205,7 @@ send_init_sequence(int h, int altscreen)
 static void
 send_done_sequence(int h, int altscreen)
 {
+	ELOG
 	want_draw();
 #ifndef CONFIG_OS_DOS
 	write_sequence(h, DONE_BRACKETED_PASTE_SEQ);
@@ -227,6 +234,7 @@ send_done_sequence(int h, int altscreen)
 void
 resize_terminal(void)
 {
+	ELOG
 	struct interlink_event ev;
 	int width, height;
 	int cell_width, cell_height;
@@ -239,6 +247,7 @@ resize_terminal(void)
 void
 get_terminal_name(char name[MAX_TERM_LEN])
 {
+	ELOG
 	char *term = getenv("TERM");
 	int i;
 
@@ -254,6 +263,7 @@ get_terminal_name(char name[MAX_TERM_LEN])
 static int
 setraw(struct itrm *itrm, int save_orig)
 {
+	ELOG
 	struct termios t;
 
 	memset(&t, 0, sizeof(t));
@@ -318,6 +328,7 @@ void
 handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
 	   void *init_string, int init_len, int remote)
 {
+	ELOG
 	struct itrm *itrm;
 	struct terminal_info info;
 	struct interlink_event_size *size = &info.event.info.size;
@@ -406,6 +417,7 @@ handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
 static void
 unblock_itrm_x(void *h)
 {
+	ELOG
 	close_handle(h);
 	if (!ditrm) return;
 	unblock_itrm();
@@ -418,6 +430,7 @@ unblock_itrm_x(void *h)
 int
 unblock_itrm(void)
 {
+	ELOG
 	if (!ditrm) return -1;
 
 	if (ditrm->in.ctl >= 0 && setraw(ditrm, 0)) return -1;
@@ -437,6 +450,7 @@ unblock_itrm(void)
 void
 block_itrm(void)
 {
+	ELOG
 	if (!ditrm) return;
 
 	ditrm->blocked = 1;
@@ -454,6 +468,7 @@ block_itrm(void)
 static void
 free_itrm(struct itrm *itrm)
 {
+	ELOG
 	if (!itrm) return;
 
 	if (!itrm->remote) {
@@ -505,6 +520,7 @@ free_itrm(struct itrm *itrm)
 static inline void
 resize_terminal_from_str(const char *text_)
 {
+	ELOG
 	enum { NEW_WIDTH = 0, NEW_HEIGHT, OLD_WIDTH, OLD_HEIGHT, NUMBERS };
 	int numbers[NUMBERS];
 	int i;
@@ -544,6 +560,7 @@ resize_terminal_from_str(const char *text_)
 void
 dispatch_special(const char *text)
 {
+	ELOG
 	switch (text[0]) {
 		case TERM_FN_TITLE:
 			if (ditrm) {
@@ -589,6 +606,7 @@ dispatch_special(const char *text)
 static void inline
 safe_hard_write(int fd, const char *buf, int len)
 {
+	ELOG
 	if (is_blocked()) return;
 
 	want_draw();
@@ -602,6 +620,7 @@ safe_hard_write(int fd, const char *buf, int len)
 static void
 in_sock(struct itrm *itrm)
 {
+	ELOG
 	struct string path;
 	struct string delete_;
 	char ch;
@@ -734,6 +753,7 @@ free_and_return:
 static int
 get_esc_code(unsigned char *str, int len, unsigned char *code, int *num, int *el)
 {
+	ELOG
 	int pos;
 	*num = 0;
 	for (pos = 2; pos < len; pos++) {
@@ -761,6 +781,7 @@ int ui_double_esc;
 static inline int
 get_ui_double_esc(void)
 {
+	ELOG
 	return ui_double_esc;
 }
 
@@ -777,6 +798,7 @@ get_ui_double_esc(void)
 static int
 decode_terminal_escape_sequence(struct itrm *itrm, struct interlink_event *ev)
 {
+	ELOG
 	struct term_event_keyboard kbd = { KBD_UNDEF, KBD_MOD_NONE };
 	unsigned char c;
 	int v;
@@ -959,6 +981,7 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct interlink_event *ev)
 static int
 decode_terminal_application_key(struct itrm *itrm, struct interlink_event *ev)
 {
+	ELOG
 	unsigned char c;
 	struct interlink_event_keyboard kbd = { KBD_UNDEF, KBD_MOD_NONE };
 
@@ -1011,6 +1034,7 @@ static void
 set_kbd_event(const struct itrm *itrm, struct interlink_event *ev,
 	      int key, term_event_modifier_T modifier)
 {
+	ELOG
 	if (key == itrm->verase)
 		key = KBD_BS;
 	else switch (key) {
@@ -1045,6 +1069,7 @@ set_kbd_event(const struct itrm *itrm, struct interlink_event *ev,
 static void
 kbd_timeout(struct itrm *itrm)
 {
+	ELOG
 	struct interlink_event ev;
 	int el;
 
@@ -1087,6 +1112,7 @@ kbd_timeout(struct itrm *itrm)
 static int
 process_queue(struct itrm *itrm)
 {
+	ELOG
 	struct interlink_event ev;
 	int el = 0;
 
@@ -1229,6 +1255,7 @@ return_without_event:
 static void
 in_kbd(struct itrm *itrm)
 {
+	ELOG
 	int r;
 
 	if (!can_read(itrm->in.std)) return;
@@ -1264,6 +1291,7 @@ in_kbd(struct itrm *itrm)
 static void
 handle_itrm_stdin(struct itrm *itrm)
 {
+	ELOG
 	assert(itrm->in.std >= 0);
 	if_assert_failed return;
 
@@ -1277,6 +1305,7 @@ handle_itrm_stdin(struct itrm *itrm)
 static void
 unhandle_itrm_stdin(struct itrm *itrm)
 {
+	ELOG
 	assert(itrm->in.std >= 0);
 	if_assert_failed return;
 

@@ -47,6 +47,7 @@ INIT_LIST_OF(struct formhist_data, saved_forms);
 static struct formhist_data *
 new_formhist_item(char *url)
 {
+	ELOG
 	struct formhist_data *form;
 	int url_len = strlen(url);
 
@@ -72,6 +73,7 @@ new_formhist_item(char *url)
 static void
 done_formhist_item(struct formhist_data *form)
 {
+	ELOG
 	done_listbox_item(&formhist_browser, form->box_item);
 	done_submitted_value_list(form->submit);
 	mem_free(form->submit);
@@ -81,6 +83,7 @@ done_formhist_item(struct formhist_data *form)
 void
 delete_formhist_item(struct formhist_data *form)
 {
+	ELOG
 	del_from_list(form);
 	done_formhist_item(form);
 }
@@ -90,6 +93,7 @@ static int loaded = 0;
 int
 load_formhist_from_file(void)
 {
+	ELOG
 	char *xdg_config_home = get_xdg_config_home();
 	struct formhist_data *form;
 	char tmp[MAX_STR_LEN];
@@ -216,6 +220,7 @@ fail:
 int
 save_formhist_to_file(void)
 {
+	ELOG
 	char *xdg_config_home = get_xdg_config_home();
 	struct secure_save_info *ssi;
 	char *file;
@@ -280,6 +285,7 @@ save_formhist_to_file(void)
 static int
 form_exists(struct formhist_data *form1)
 {
+	ELOG
 	struct formhist_data *form;
 
 	if (!load_formhist_from_file()) return 0;
@@ -321,6 +327,7 @@ form_exists(struct formhist_data *form1)
 static int
 forget_forms_with_url(char *url)
 {
+	ELOG
 	struct formhist_data *form, *next;
 	int count = 0;
 
@@ -338,6 +345,7 @@ forget_forms_with_url(char *url)
 static void
 remember_form(void *form_)
 {
+	ELOG
 	struct formhist_data *form = (struct formhist_data *)form_;
 
 	forget_forms_with_url(form->url);
@@ -349,6 +357,7 @@ remember_form(void *form_)
 static void
 dont_remember_form(void *form_)
 {
+	ELOG
 	struct formhist_data *form = (struct formhist_data *)form_;
 
 	done_formhist_item(form);
@@ -357,6 +366,7 @@ dont_remember_form(void *form_)
 static void
 never_for_this_site(void *form_)
 {
+	ELOG
 	struct formhist_data *form = (struct formhist_data *)form_;
 
 	form->dontsave = 1;
@@ -366,6 +376,7 @@ never_for_this_site(void *form_)
 char *
 get_form_history_value(const char *url, const char *name)
 {
+	ELOG
 	struct formhist_data *form;
 
 	if (!url || !*url || !name || !*name) return NULL;
@@ -391,6 +402,7 @@ void
 memorize_form(struct session *ses, LIST_OF(struct submitted_value) *submit,
 	      struct form *forminfo)
 {
+	ELOG
 	/* [gettext_accelerator_context(memorize_form)] */
 	struct formhist_data *form;
 	struct submitted_value *sv;
@@ -444,6 +456,7 @@ fail:
 static void
 done_form_history(struct module *module)
 {
+	ELOG
 	struct formhist_data *form, *next;
 
 	foreachsafe (form, next, saved_forms) {

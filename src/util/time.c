@@ -23,6 +23,7 @@
 timeval_T *
 timeval_now(timeval_T *t)
 {
+	ELOG
 #ifdef HAVE_GETTIMEOFDAY
 	struct timeval tv;
 
@@ -51,6 +52,7 @@ timeval_now(timeval_T *t)
 timeval_T *
 timeval_sub_interval(timeval_T *t, timeval_T *interval)
 {
+	ELOG
 	t->sec  -= interval->sec;
 	if (t->sec < 0) {
 		t->sec = 0;
@@ -77,6 +79,7 @@ timeval_sub_interval(timeval_T *t, timeval_T *interval)
 timeval_T *
 timeval_sub(timeval_T *res, timeval_T *older, timeval_T *newer)
 {
+	ELOG
 	res->sec  = newer->sec - older->sec;
 	res->usec = newer->usec - older->usec;
 
@@ -92,6 +95,7 @@ timeval_sub(timeval_T *res, timeval_T *older, timeval_T *newer)
 timeval_T *
 el_timeval_add(timeval_T *res, timeval_T *base, timeval_T *t)
 {
+	ELOG
 	res->sec  = base->sec + t->sec;
 	res->usec = base->usec + t->usec;
 
@@ -107,6 +111,7 @@ el_timeval_add(timeval_T *res, timeval_T *base, timeval_T *t)
 timeval_T *
 timeval_add_interval(timeval_T *t, timeval_T *interval)
 {
+	ELOG
 	t->sec  += interval->sec;
 	t->usec += interval->usec;
 
@@ -122,6 +127,7 @@ timeval_add_interval(timeval_T *t, timeval_T *interval)
 timeval_T *
 timeval_from_double(timeval_T *t, double x)
 {
+	ELOG
 	t->sec  = (long) x;
 	t->usec = (long) ((x - (double) t->sec) * 1000000);
 
@@ -132,6 +138,7 @@ timeval_from_double(timeval_T *t, double x)
 timeval_T *
 timeval_from_milliseconds(timeval_T *t, milliseconds_T milliseconds)
 {
+	ELOG
 	long ms = (long) milliseconds;
 
 	t->sec = ms / 1000;
@@ -146,6 +153,7 @@ timeval_from_milliseconds(timeval_T *t, milliseconds_T milliseconds)
 timeval_T *
 timeval_from_seconds(timeval_T *t, long seconds)
 {
+	ELOG
 	t->sec = seconds;
 	t->usec = 0;
 
@@ -155,6 +163,7 @@ timeval_from_seconds(timeval_T *t, long seconds)
 milliseconds_T
 sec_to_ms(long sec)
 {
+	ELOG
 	assert(sec >= 0 && sec < LONG_MAX / 1000L);
 	if_assert_failed return (milliseconds_T) (LONG_MAX / 1000L);
 
@@ -164,6 +173,7 @@ sec_to_ms(long sec)
 milliseconds_T
 add_ms_to_ms(milliseconds_T a, milliseconds_T b)
 {
+	ELOG
 	long la = (long) a;
 	long lb = (long) b;
 
@@ -176,6 +186,7 @@ add_ms_to_ms(milliseconds_T a, milliseconds_T b)
 milliseconds_T
 mult_ms(milliseconds_T a, long lb)
 {
+	ELOG
 	long la = (long) a;
 
 	assert(la >= 0 && lb >= 0 && la < LONG_MAX / lb);
@@ -188,6 +199,7 @@ mult_ms(milliseconds_T a, long lb)
 milliseconds_T
 timeval_to_milliseconds(timeval_T *t)
 {
+	ELOG
 	milliseconds_T a = sec_to_ms(t->sec);
 	milliseconds_T b = (milliseconds_T) (t->usec / 1000L);
 
@@ -200,6 +212,7 @@ timeval_to_milliseconds(timeval_T *t)
 long
 timeval_to_seconds(timeval_T *t)
 {
+	ELOG
 	return t->sec + t->usec / 1000000L;
 }
 
@@ -207,6 +220,7 @@ timeval_to_seconds(timeval_T *t)
 int
 timeval_is_positive(timeval_T *t)
 {
+	ELOG
 	return (t->sec > 0 || (t->sec == 0 && t->usec > 0));
 }
 
@@ -215,6 +229,7 @@ timeval_is_positive(timeval_T *t)
 void
 timeval_limit_to_zero_or_one(timeval_T *t)
 {
+	ELOG
 	if (t->sec < 0) t->sec = 0;
 	if (t->usec < 0) t->usec = 0;
 #ifdef CONFIG_OS_WIN32
@@ -231,6 +246,7 @@ timeval_limit_to_zero_or_one(timeval_T *t)
 int
 timeval_cmp(timeval_T *t1, timeval_T *t2)
 {
+	ELOG
 	if (t1->sec > t2->sec) return 1;
 	if (t1->sec < t2->sec) return -1;
 
@@ -241,6 +257,7 @@ timeval_cmp(timeval_T *t1, timeval_T *t2)
 int
 timeval_div_off_t(off_t n, timeval_T *t)
 {
+	ELOG
 	longlong ln = 1000 * (longlong) n;	/* FIXME: off_t -> longlong ??? Find a better way. --Zas */
 	longlong lsec = 1000 * (longlong) t->sec;
 	int lusec = t->usec / 1000;

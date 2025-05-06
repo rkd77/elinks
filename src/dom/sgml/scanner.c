@@ -83,6 +83,7 @@ struct dom_scanner_info sgml_scanner_info = {
 static inline void
 skip_sgml_space(struct dom_scanner *scanner, char **string)
 {
+	ELOG
 	char *pos = *string;
 
 	if (!scanner->count_lines) {
@@ -106,6 +107,7 @@ skip_sgml_space(struct dom_scanner *scanner, char **string)
 static void
 set_sgml_incomplete(struct dom_scanner *scanner, struct dom_scanner_token *token)
 {
+	ELOG
 	size_t left = scanner->end - scanner->position;
 
 	assert(left > 0);
@@ -121,6 +123,7 @@ set_sgml_incomplete(struct dom_scanner *scanner, struct dom_scanner_token *token
 static inline int
 check_sgml_error(struct dom_scanner *scanner)
 {
+	ELOG
 	unsigned int found_error = scanner->found_error;
 
 	/* Toggle if we found an error previously. */
@@ -133,6 +136,7 @@ static char *
 get_sgml_error_end(struct dom_scanner *scanner, /*enum sgml_token_type*/ unsigned int type,
 		   char *end)
 {
+	ELOG
 	switch (type) {
 	case SGML_TOKEN_CDATA_SECTION:
 	case SGML_TOKEN_NOTATION_ATTLIST:
@@ -174,6 +178,7 @@ get_sgml_error_end(struct dom_scanner *scanner, /*enum sgml_token_type*/ unsigne
 static struct dom_scanner_token *
 set_sgml_error(struct dom_scanner *scanner, char *end)
 {
+	ELOG
 	struct dom_scanner_token *token = scanner->current;
 	struct dom_scanner_token *next;
 
@@ -206,6 +211,7 @@ set_sgml_error(struct dom_scanner *scanner, char *end)
 static inline void
 scan_sgml_text_token(struct dom_scanner *scanner, struct dom_scanner_token *token)
 {
+	ELOG
 	char *string = scanner->position;
 	unsigned char first_char = *string;
 	/*enum sgml_token_type*/ unsigned int type = SGML_TOKEN_GARBAGE;
@@ -292,6 +298,7 @@ scan_sgml_text_token(struct dom_scanner *scanner, struct dom_scanner_token *toke
 static inline int
 check_sgml_precedence(int type, int skipto)
 {
+	ELOG
 	return get_sgml_precedence(type) <= get_sgml_precedence(skipto);
 }
 
@@ -300,6 +307,7 @@ static inline char *
 skip_sgml_chars(struct dom_scanner *scanner, char *string,
 		unsigned char skipto)
 {
+	ELOG
 	int newlines;
 
 	assert(string >= scanner->position && string <= scanner->end);
@@ -331,6 +339,7 @@ static inline char *
 skip_sgml(struct dom_scanner *scanner, char **string, unsigned char skipto,
 	  int check_quoting)
 {
+	ELOG
 	char *pos = *string;
 
 	for (; pos < scanner->end; pos++) {
@@ -361,6 +370,7 @@ static inline int
 skip_sgml_comment(struct dom_scanner *scanner, char **string,
 		  int *possibly_incomplete)
 {
+	ELOG
 	char *pos = *string;
 	int length = 0;
 
@@ -401,6 +411,7 @@ static inline int
 skip_sgml_cdata_section(struct dom_scanner *scanner, char **string,
 		  	int *possibly_incomplete)
 {
+	ELOG
 	char *pos = *string;
 	int length = 0;
 
@@ -434,6 +445,7 @@ skip_sgml_cdata_section(struct dom_scanner *scanner, char **string,
 static inline void
 scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *token)
 {
+	ELOG
 	char *string = scanner->position;
 	unsigned char first_char = *string;
 	/*enum sgml_token_type*/ unsigned int type = SGML_TOKEN_GARBAGE;
@@ -735,6 +747,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 static inline void
 scan_sgml_proc_inst_token(struct dom_scanner *scanner, struct dom_scanner_token *token)
 {
+	ELOG
 	char *string = scanner->position;
 	/* The length can be empty for '<??>'. */
 	ssize_t length = -1;
@@ -782,6 +795,7 @@ scan_sgml_proc_inst_token(struct dom_scanner *scanner, struct dom_scanner_token 
 static struct dom_scanner_token *
 scan_sgml_tokens(struct dom_scanner *scanner)
 {
+	ELOG
 	struct dom_scanner_token *table_end = scanner->table + DOM_SCANNER_TOKENS;
 
 	if (!begin_dom_token_scanning(scanner))

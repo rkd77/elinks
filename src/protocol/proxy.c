@@ -27,6 +27,7 @@
 static int
 proxy_probe_no_proxy(char *url, char *no_proxy)
 {
+	ELOG
 	char *slash = strchr(url, '/');
 
 	if (slash) *slash = '\0';
@@ -57,6 +58,7 @@ static struct uri *
 proxy_uri(struct uri *uri, char *proxy,
           struct connection_state *error_state)
 {
+	ELOG
 	struct string string;
 
 	if (init_string(&string)
@@ -84,6 +86,7 @@ static char *
 strip_proxy_protocol(char *proxy,
 		     const char *strip1, const char *strip2)
 {
+	ELOG
 	assert(proxy && *proxy);
 
 	if (!c_strncasecmp(proxy, strip1, strlen(strip1)))
@@ -103,6 +106,7 @@ get_protocol_proxy(const char *opt,
                    const char *env1, const char *env2,
                    const char *strip1, const char *strip2)
 {
+	ELOG
 	char *proxy;
 
 	proxy = get_opt_str(opt, NULL);
@@ -120,6 +124,7 @@ static struct uri *
 get_proxy_worker(struct uri *uri, char *proxy,
                  struct connection_state *error_state)
 {
+	ELOG
 	char *protocol_proxy = NULL;
 
 	if (proxy) {
@@ -205,6 +210,7 @@ end:
 struct uri *
 get_proxy_uri(struct uri *uri, struct connection_state *error_state)
 {
+	ELOG
 	if (uri->protocol == PROTOCOL_PROXY) {
 		return get_composed_uri(uri, URI_BASE);
 	} else {
@@ -227,6 +233,7 @@ get_proxy_uri(struct uri *uri, struct connection_state *error_state)
 struct uri *
 get_proxied_uri(struct uri *uri)
 {
+	ELOG
 	if (uri->protocol == PROTOCOL_PROXY)
 		return get_uri(uri->data, URI_BASE);
 

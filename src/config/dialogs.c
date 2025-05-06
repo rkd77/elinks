@@ -34,6 +34,7 @@
 static void
 disable_success_msgbox(void *dummy)
 {
+	ELOG
 	get_opt_bool("ui.success_msgbox", NULL) = 0;
 	option_changed(NULL, get_opt_rec(config_options, "ui.success_msgbox"));
 }
@@ -42,6 +43,7 @@ void
 write_config_dialog(struct terminal *term, char *config_file,
 		    int secsave_error, int stdio_error)
 {
+	ELOG
 	/* [gettext_accelerator_context(write_config_dialog)] */
 	char *errmsg = NULL;
 	char *strerr;
@@ -84,24 +86,28 @@ write_config_dialog(struct terminal *term, char *config_file,
 static void
 lock_option(struct listbox_item *item)
 {
+	ELOG
 	object_lock((struct option *) item->udata);
 }
 
 static void
 unlock_option(struct listbox_item *item)
 {
+	ELOG
 	object_unlock((struct option *) item->udata);
 }
 
 static int
 is_option_used(struct listbox_item *item)
 {
+	ELOG
 	return is_object_used((struct option *) item->udata);
 }
 
 static char *
 get_range_string(struct option *option)
 {
+	ELOG
 	struct string info;
 
 	if (!init_string(&info)) return NULL;
@@ -117,6 +123,7 @@ get_range_string(struct option *option)
 static char *
 get_option_text(struct listbox_item *item, struct terminal *term)
 {
+	ELOG
 	struct option *option = (struct option *)item->udata;
 	const char *desc = option->capt ? option->capt : option->name;
 
@@ -131,6 +138,7 @@ get_option_text(struct listbox_item *item, struct terminal *term)
 static char *
 get_option_info(struct listbox_item *item, struct terminal *term)
 {
+	ELOG
 	struct option *option = (struct option *)item->udata;
 	char *desc, *type;
 	struct string info;
@@ -191,6 +199,7 @@ get_option_info(struct listbox_item *item, struct terminal *term)
 static struct listbox_item *
 get_option_root(struct listbox_item *item)
 {
+	ELOG
 	struct option *option = (struct option *)item->udata;
 
 	/* The config_options root has no listbox so return that
@@ -204,6 +213,7 @@ static enum listbox_match
 match_option(struct listbox_item *item, struct terminal *term,
 	     char *text)
 {
+	ELOG
 	struct option *option = (struct option *)item->udata;
 
 	if (option->type == OPT_TREE)
@@ -219,6 +229,7 @@ match_option(struct listbox_item *item, struct terminal *term,
 static int
 can_delete_option(struct listbox_item *item)
 {
+	ELOG
 	struct option *option = (struct option *)item->udata;
 
 	if (option->root) {
@@ -233,6 +244,7 @@ can_delete_option(struct listbox_item *item)
 static void
 delete_option_item(struct listbox_item *item, int last)
 {
+	ELOG
 	struct option *option = (struct option *)item->udata;
 
 	assert(!is_object_used(option));
@@ -265,6 +277,7 @@ static const struct listbox_ops options_listbox_ops = {
 static widget_handler_status_T
 check_valid_option(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	struct option *option = (struct option *)dlg_data->dlg->udata;
 	struct session *ses = (struct session *)dlg_data->dlg->udata2;
@@ -298,6 +311,7 @@ static void
 build_edit_dialog(struct terminal *term, struct session *ses,
 		  struct option *option)
 {
+	ELOG
 	/* [gettext_accelerator_context(.build_edit_dialog)] */
 #define EDIT_WIDGETS_COUNT 5
 	struct dialog *dlg;
@@ -375,6 +389,7 @@ static widget_handler_status_T
 push_edit_button(struct dialog_data *dlg_data,
 		 struct widget_data *some_useless_info_button)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct option *option;
@@ -408,6 +423,7 @@ struct add_option_to_tree_ctx {
 static void
 add_option_to_tree(void *data, char *name)
 {
+	ELOG
 	struct add_option_to_tree_ctx *ctx = (struct add_option_to_tree_ctx *)data;
 	struct option *old = get_opt_rec_real(ctx->option, name);
 	struct option *new_;
@@ -422,6 +438,7 @@ add_option_to_tree(void *data, char *name)
 static widget_handler_status_T
 check_option_name(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	char *p;
 
 	for (p = widget_data->cdata; *p; p++)
@@ -440,6 +457,7 @@ static widget_handler_status_T
 push_add_button(struct dialog_data *dlg_data,
 		struct widget_data *some_useless_info_button)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct listbox_item *item = box->sel;
@@ -487,6 +505,7 @@ static widget_handler_status_T
 push_save_button(struct dialog_data *dlg_data,
 		struct widget_data *some_useless_info_button)
 {
+	ELOG
 	write_config(dlg_data->win->term);
 
 	update_hierbox_browser(&option_browser);
@@ -516,6 +535,7 @@ struct_hierbox_browser(
 void
 options_manager(struct session *ses)
 {
+	ELOG
 	hierbox_browser(&option_browser, ses);
 }
 
@@ -538,6 +558,7 @@ static struct listbox_item *action_box_items[KEYMAP_MAX][ACTION_BOX_SIZE];
 struct listbox_item *
 get_keybinding_action_box_item(keymap_id_T keymap_id, action_id_T action_id)
 {
+	ELOG
 	assert(action_id < ACTION_BOX_SIZE);
 	if_assert_failed return NULL;
 
@@ -550,6 +571,7 @@ void
 init_keybinding_listboxes(struct keymap keymap_table[KEYMAP_MAX],
 			  const struct action_list actions[])
 {
+	ELOG
 	struct listbox_item *root = &keybinding_browser.root;
 	const struct action *act;
 	int keymap_id;
@@ -592,6 +614,7 @@ init_keybinding_listboxes(struct keymap keymap_table[KEYMAP_MAX],
 void
 done_keybinding_listboxes(void)
 {
+	ELOG
 	struct listbox_item *action;
 
 	foreach (action, keybinding_browser.root.child) {
@@ -614,6 +637,7 @@ done_keybinding_listboxes(void)
 static void
 lock_keybinding(struct listbox_item *item)
 {
+	ELOG
 	if (item->depth == 2)
 		object_lock((struct keybinding *) item->udata);
 }
@@ -621,6 +645,7 @@ lock_keybinding(struct listbox_item *item)
 static void
 unlock_keybinding(struct listbox_item *item)
 {
+	ELOG
 	if (item->depth == 2)
 		object_unlock((struct keybinding *) item->udata);
 }
@@ -628,6 +653,7 @@ unlock_keybinding(struct listbox_item *item)
 static int
 is_keybinding_used(struct listbox_item *item)
 {
+	ELOG
 	if (item->depth != 2) return 0;
 	return is_object_used((struct keybinding *) item->udata);
 }
@@ -635,6 +661,7 @@ is_keybinding_used(struct listbox_item *item)
 static char *
 get_keybinding_text(struct listbox_item *item, struct terminal *term)
 {
+	ELOG
 	struct keybinding *keybinding = (struct keybinding *)item->udata;
 	struct string info;
 
@@ -658,6 +685,7 @@ get_keybinding_text(struct listbox_item *item, struct terminal *term)
 static char *
 get_keybinding_info(struct listbox_item *item, struct terminal *term)
 {
+	ELOG
 	struct keybinding *keybinding = (struct keybinding *)item->udata;
 	char *action;
 	const char *keymap;
@@ -683,6 +711,7 @@ get_keybinding_info(struct listbox_item *item, struct terminal *term)
 static struct listbox_item *
 get_keybinding_root(struct listbox_item *item)
 {
+	ELOG
 	/* .. at the bottom */
 	if (item->depth == 0) return NULL;
 
@@ -701,6 +730,7 @@ static enum listbox_match
 match_keybinding(struct listbox_item *item, struct terminal *term,
 		 char *text)
 {
+	ELOG
 	const struct action *action = (const struct action *)item->udata;
 	char *desc;
 
@@ -719,6 +749,7 @@ match_keybinding(struct listbox_item *item, struct terminal *term,
 static int
 can_delete_keybinding(struct listbox_item *item)
 {
+	ELOG
 	return item->depth == 2;
 }
 
@@ -726,6 +757,7 @@ can_delete_keybinding(struct listbox_item *item)
 static void
 delete_keybinding_item(struct listbox_item *item, int last)
 {
+	ELOG
 	struct keybinding *keybinding = (struct keybinding *)item->udata;
 
 	assert(item->depth == 2 && !is_object_used(keybinding));
@@ -760,6 +792,7 @@ struct kbdbind_add_hop {
 static struct kbdbind_add_hop *
 new_hop_from(struct kbdbind_add_hop *hop)
 {
+	ELOG
 	struct kbdbind_add_hop *new_hop = (struct kbdbind_add_hop *)mem_alloc(sizeof(*new_hop));
 
 	if (new_hop)
@@ -771,6 +804,7 @@ new_hop_from(struct kbdbind_add_hop *hop)
 static void
 really_really_add_keybinding(void *data)
 {
+	ELOG
 	struct kbdbind_add_hop *hop = (struct kbdbind_add_hop *)data;
 	struct keybinding *keybinding;
 
@@ -786,6 +820,7 @@ really_really_add_keybinding(void *data)
 static void
 really_add_keybinding(void *data, char *keystroke)
 {
+	ELOG
 	/* [gettext_accelerator_context(.really_add_keybinding.yn)] */
 	struct kbdbind_add_hop *hop = (struct kbdbind_add_hop *)data;
 	action_id_T action_id;
@@ -834,6 +869,7 @@ really_add_keybinding(void *data, char *keystroke)
 static widget_handler_status_T
 check_keystroke(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct kbdbind_add_hop *hop = (struct kbdbind_add_hop *)dlg_data->dlg->udata2;
 	char *keystroke = widget_data->cdata;
 
@@ -850,6 +886,7 @@ static widget_handler_status_T
 push_kbdbind_add_button(struct dialog_data *dlg_data,
 			struct widget_data *some_useless_info_button)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct listbox_item *item = box->sel;
@@ -906,6 +943,7 @@ static widget_handler_status_T
 push_kbdbind_toggle_display_button(struct dialog_data *dlg_data,
 		struct widget_data *some_useless_info_button)
 {
+	ELOG
 #ifndef CONFIG_SMALL
 	keybinding_text_toggle = !keybinding_text_toggle;
 	redraw_dialog(dlg_data, 0);
@@ -920,6 +958,7 @@ static widget_handler_status_T
 push_kbdbind_save_button(struct dialog_data *dlg_data,
 		struct widget_data *some_useless_info_button)
 {
+	ELOG
 	write_config(dlg_data->win->term);
 	return EVENT_PROCESSED;
 }
@@ -945,5 +984,6 @@ struct_hierbox_browser(
 void
 keybinding_manager(struct session *ses)
 {
+	ELOG
 	hierbox_browser(&keybinding_browser, ses);
 }

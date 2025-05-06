@@ -75,6 +75,7 @@ static void notify_connection_callbacks(struct connection *conn);
 static /* inline */ connection_priority_T
 get_priority(struct connection *conn)
 {
+	ELOG
 	int priority;
 
 	for (priority = 0; priority < PRIORITIES; priority++)
@@ -90,18 +91,21 @@ get_priority(struct connection *conn)
 int
 get_connections_count(void)
 {
+	ELOG
 	return list_size(&connection_queue);
 }
 
 int
 get_keepalive_connections_count(void)
 {
+	ELOG
 	return list_size(&keepalive_connections);
 }
 
 int
 get_connections_connecting_count(void)
 {
+	ELOG
 	struct connection *conn;
 	int i = 0;
 
@@ -114,6 +118,7 @@ get_connections_connecting_count(void)
 int
 get_connections_transfering_count(void)
 {
+	ELOG
 	struct connection *conn;
 	int i = 0;
 
@@ -132,6 +137,7 @@ get_connections_transfering_count(void)
 static inline int
 connection_disappeared(struct connection *conn, unsigned int id)
 {
+	ELOG
 	struct connection *c;
 
 	foreach (c, connection_queue)
@@ -160,6 +166,7 @@ struct host_connection {
 static struct host_connection *
 get_host_connection(struct connection *conn)
 {
+	ELOG
 	struct host_connection *host_conn;
 
 	if (!conn->uri->host) return NULL;
@@ -176,6 +183,7 @@ get_host_connection(struct connection *conn)
 static int
 add_host_connection(struct connection *conn)
 {
+	ELOG
 	struct host_connection *host_conn = get_host_connection(conn);
 
 	if (!host_conn && conn->uri->host) {
@@ -195,6 +203,7 @@ add_host_connection(struct connection *conn)
 static void
 done_host_connection(struct connection *conn)
 {
+	ELOG
 	struct host_connection *host_conn = get_host_connection(conn);
 
 	if (!host_conn) return;
@@ -214,6 +223,7 @@ static void sort_queue();
 static void
 check_queue_bugs(void)
 {
+	ELOG
 	struct connection *conn;
 	connection_priority_T prev_priority = 0;
 	int cc = 0;
@@ -241,6 +251,7 @@ check_queue_bugs(void)
 static void
 set_connection_socket_state(struct socket *socket, struct connection_state state)
 {
+	ELOG
 	assert(socket);
 	set_connection_state((struct connection *)socket->conn, state);
 }
@@ -248,6 +259,7 @@ set_connection_socket_state(struct socket *socket, struct connection_state state
 static void
 set_connection_socket_timeout(struct socket *socket, struct connection_state state)
 {
+	ELOG
 	assert(socket);
 	set_connection_timeout((struct connection *)socket->conn);
 }
@@ -255,6 +267,7 @@ set_connection_socket_timeout(struct socket *socket, struct connection_state sta
 static void
 retry_connection_socket(struct socket *socket, struct connection_state state)
 {
+	ELOG
 	assert(socket);
 	retry_connection((struct connection *)socket->conn, state);
 }
@@ -262,6 +275,7 @@ retry_connection_socket(struct socket *socket, struct connection_state state)
 static void
 done_connection_socket(struct socket *socket, struct connection_state state)
 {
+	ELOG
 	assert(socket);
 	abort_connection((struct connection *)socket->conn, state);
 }
@@ -271,6 +285,7 @@ init_connection(struct uri *uri, struct uri *proxied_uri, struct uri *referrer,
 		off_t start, cache_mode_T cache_mode,
 		connection_priority_T priority)
 {
+	ELOG
 	static struct socket_operations connection_socket_operations = {
 		set_connection_socket_state,
 		set_connection_socket_timeout,
@@ -333,6 +348,7 @@ init_connection(struct uri *uri, struct uri *proxied_uri, struct uri *referrer,
 static void
 update_connection_progress(struct connection *conn)
 {
+	ELOG
 	update_progress(conn->progress, conn->received, conn->est_length, conn->from);
 }
 
@@ -340,6 +356,7 @@ update_connection_progress(struct connection *conn)
 static void
 stat_timer(struct connection *conn)
 {
+	ELOG
 	update_connection_progress(conn);
 	notify_connection_callbacks(conn);
 }
@@ -348,6 +365,7 @@ stat_timer(struct connection *conn)
 static void
 upload_stat_timer(struct connection *conn)
 {
+	ELOG
 	struct http_connection_info *http = (struct http_connection_info *)conn->info;
 
 	assert(conn->http_upload_progress);
@@ -362,6 +380,7 @@ upload_stat_timer(struct connection *conn)
 void
 set_connection_state(struct connection *conn, struct connection_state state)
 {
+	ELOG
 	struct download *download;
 	struct progress *progress = conn->progress;
 	struct progress *upload_progress = conn->http_upload_progress;
@@ -403,6 +422,7 @@ set_connection_state(struct connection *conn, struct connection_state state)
 void
 shutdown_connection_stream(struct connection *conn)
 {
+	ELOG
 	if (conn->stream) {
 		close_encoded(conn->stream);
 		conn->stream = NULL;
@@ -412,6 +432,7 @@ shutdown_connection_stream(struct connection *conn)
 static void
 free_connection_data(struct connection *conn)
 {
+	ELOG
 	assertm(conn->running, "connection already suspended");
 	/* XXX: Recovery path? Originally, there was none. I think we'll get
 	 * at least active_connections underflows along the way. --pasky */
@@ -454,6 +475,7 @@ free_connection_data(struct connection *conn)
 static void
 notify_connection_callbacks(struct connection *conn)
 {
+	ELOG
 	struct connection_state state = conn->state;
 	unsigned int id = conn->id;
 	struct download *download, *next;
@@ -471,6 +493,7 @@ notify_connection_callbacks(struct connection *conn)
 static void
 done_connection(struct connection *conn)
 {
+	ELOG
 	/* When removing the connection callbacks should always be aware of it
 	 * so they can unregister themselves. We do this by enforcing that the
 	 * connection is in a result state. If it is not already it is an
@@ -495,6 +518,7 @@ done_connection(struct connection *conn)
 static inline void
 add_to_queue(struct connection *conn)
 {
+	ELOG
 	struct connection *c;
 	connection_priority_T priority = get_priority(conn);
 
@@ -511,6 +535,7 @@ add_to_queue(struct connection *conn)
 static int
 do_keepalive_connection_callback(struct keepalive_connection *keep_conn)
 {
+	ELOG
 	struct uri *proxied_uri = get_proxied_uri(keep_conn->uri);
 	struct uri *proxy_uri   = get_proxy_uri(keep_conn->uri, NULL);
 
@@ -549,6 +574,7 @@ do_keepalive_connection_callback(struct keepalive_connection *keep_conn)
 static inline void
 done_keepalive_connection(struct keepalive_connection *keep_conn)
 {
+	ELOG
 	if (keep_conn->done && do_keepalive_connection_callback(keep_conn))
 		return;
 
@@ -562,6 +588,7 @@ static struct keepalive_connection *
 init_keepalive_connection(struct connection *conn, long timeout_in_seconds,
 			  void (*done)(struct connection *))
 {
+	ELOG
 	struct keepalive_connection *keep_conn;
 	struct uri *uri = conn->uri;
 
@@ -584,6 +611,7 @@ init_keepalive_connection(struct connection *conn, long timeout_in_seconds,
 static struct keepalive_connection *
 get_keepalive_connection(struct connection *conn)
 {
+	ELOG
 	struct keepalive_connection *keep_conn;
 
 	if (!conn->uri->host) return NULL;
@@ -598,6 +626,7 @@ get_keepalive_connection(struct connection *conn)
 int
 has_keepalive_connection(struct connection *conn)
 {
+	ELOG
 	struct keepalive_connection *keep_conn = get_keepalive_connection(conn);
 
 	if (!keep_conn) return 0;
@@ -618,6 +647,7 @@ void
 add_keepalive_connection(struct connection *conn, long timeout_in_seconds,
 			 void (*done)(struct connection *))
 {
+	ELOG
 	struct keepalive_connection *keep_conn;
 
 	assertm(conn->socket->fd != -1, "keepalive connection not connected");
@@ -648,6 +678,7 @@ done:
 static void
 keepalive_timer(void *x)
 {
+	ELOG
 	keepalive_timeout = TIMER_ID_UNDEF;
 	/* The expired timer ID has now been erased.  */
 	check_keepalive_connections();
@@ -656,6 +687,7 @@ keepalive_timer(void *x)
 void
 check_keepalive_connections(void)
 {
+	ELOG
 	struct keepalive_connection *keep_conn, *next;
 	timeval_T now;
 	int p = 0;
@@ -695,6 +727,7 @@ check_keepalive_connections(void)
 static inline void
 abort_all_keepalive_connections(void)
 {
+	ELOG
 	while (!list_empty(keepalive_connections))
 		done_keepalive_connection((struct keepalive_connection *)keepalive_connections.next);
 
@@ -705,6 +738,7 @@ abort_all_keepalive_connections(void)
 static void
 sort_queue(void)
 {
+	ELOG
 	while (1) {
 		struct connection *conn;
 		int swp = 0;
@@ -728,12 +762,14 @@ sort_queue(void)
 static void
 interrupt_connection(struct connection *conn)
 {
+	ELOG
 	free_connection_data(conn);
 }
 
 static inline void
 suspend_connection(struct connection *conn)
 {
+	ELOG
 	interrupt_connection(conn);
 	set_connection_state(conn, connection_state(S_WAIT));
 }
@@ -741,6 +777,7 @@ suspend_connection(struct connection *conn)
 static void
 run_connection(struct connection *conn)
 {
+	ELOG
 	protocol_handler_T *func = get_protocol_handler(conn->uri->protocol);
 
 	assert(func);
@@ -764,6 +801,7 @@ run_connection(struct connection *conn)
 void
 abort_connection(struct connection *conn, struct connection_state state)
 {
+	ELOG
 	assertm(is_in_result_state(state),
 		"connection didn't end in result state (%d)", state);
 
@@ -781,6 +819,7 @@ abort_connection(struct connection *conn, struct connection_state state)
 void
 retry_connection(struct connection *conn, struct connection_state state)
 {
+	ELOG
 	int max_tries = get_opt_int("connection.retries", NULL);
 
 	assertm(is_in_result_state(state),
@@ -801,6 +840,7 @@ retry_connection(struct connection *conn, struct connection_state state)
 static int
 try_to_suspend_connection(struct connection *conn, struct uri *uri)
 {
+	ELOG
 	connection_priority_T priority = get_priority(conn);
 	struct connection *c;
 
@@ -819,6 +859,7 @@ try_to_suspend_connection(struct connection *conn, struct uri *uri)
 static inline int
 try_connection(struct connection *conn, int max_conns_to_host, int max_conns)
 {
+	ELOG
 	struct host_connection *host_conn = get_host_connection(conn);
 
 	if (host_conn && get_object_refcount(host_conn) >= max_conns_to_host)
@@ -834,6 +875,7 @@ try_connection(struct connection *conn, int max_conns_to_host, int max_conns)
 static void
 check_queue(void)
 {
+	ELOG
 	struct connection *conn;
 	int max_conns_to_host = get_opt_int("connection.max_connections_to_host", NULL);
 	int max_conns = get_opt_int("connection.max_connections", NULL);
@@ -884,6 +926,7 @@ again2:
 int
 register_check_queue(void)
 {
+	ELOG
 	return register_bottom_half(check_queue, NULL);
 }
 
@@ -891,6 +934,7 @@ int
 load_uri(struct uri *uri, struct uri *referrer, struct download *download,
 	 connection_priority_T pri, cache_mode_T cache_mode, off_t start)
 {
+	ELOG
 	struct cache_entry *cached;
 	struct connection *conn;
 	struct uri *proxy_uri, *proxied_uri;
@@ -1043,6 +1087,7 @@ load_uri(struct uri *uri, struct uri *referrer, struct download *download,
 void
 cancel_download(struct download *download, int interrupt)
 {
+	ELOG
 	struct connection *conn;
 
 	assert(download);
@@ -1083,6 +1128,7 @@ void
 move_download(struct download *old, struct download *new_,
 	      connection_priority_T newpri)
 {
+	ELOG
 	struct connection *conn;
 
 	assert(old);
@@ -1129,6 +1175,7 @@ move_download(struct download *old, struct download *new_,
 void
 detach_connection(struct download *download, off_t pos)
 {
+	ELOG
 	struct connection *conn = download->conn;
 
 	if (is_in_result_state(download->state)) return;
@@ -1181,6 +1228,7 @@ detach_connection(struct download *download, off_t pos)
 static void
 connection_timeout(struct connection *conn)
 {
+	ELOG
 	conn->timer = TIMER_ID_UNDEF;
 	/* The expired timer ID has now been erased.  */
 	timeout_socket(conn->socket);
@@ -1194,6 +1242,7 @@ connection_timeout(struct connection *conn)
 static void
 connection_timeout_1(struct connection *conn)
 {
+	ELOG
 	install_timer(&conn->timer, (milliseconds_T)
 			((conn->unrestartable
 			 ? get_opt_int("connection.unrestartable_receive_timeout", NULL)
@@ -1205,6 +1254,7 @@ connection_timeout_1(struct connection *conn)
 void
 set_connection_timeout(struct connection *conn)
 {
+	ELOG
 	if (conn->xhr_timeout) {
 		return;
 	}
@@ -1220,12 +1270,14 @@ set_connection_timeout(struct connection *conn)
 static void
 connection_timeout_xhr_1(struct connection *conn)
 {
+	ELOG
 	install_timer(&conn->timer, conn->xhr_timeout / 2, (void (*)(void *)) connection_timeout, conn);
 }
 
 void
 set_connection_timeout_xhr(struct connection *conn, milliseconds_T timeout)
 {
+	ELOG
 	if (!conn) {
 		return;
 	}
@@ -1237,6 +1289,7 @@ set_connection_timeout_xhr(struct connection *conn, milliseconds_T timeout)
 void
 abort_all_connections(void)
 {
+	ELOG
 	while (!list_empty(connection_queue)) {
 		abort_connection((struct connection *)connection_queue.next,
 				 connection_state(S_INTERRUPTED));
@@ -1248,6 +1301,7 @@ abort_all_connections(void)
 void
 abort_background_connections(void)
 {
+	ELOG
 	struct connection *conn, *next;
 
 	foreachsafe (conn, next, connection_queue) {
@@ -1259,6 +1313,7 @@ abort_background_connections(void)
 int
 is_entry_used(struct cache_entry *cached)
 {
+	ELOG
 	struct connection *conn;
 
 	foreach (conn, connection_queue)

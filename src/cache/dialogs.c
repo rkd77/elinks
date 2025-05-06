@@ -30,24 +30,28 @@
 static void
 lock_cache_entry(struct listbox_item *item)
 {
+	ELOG
 	object_lock((struct cache_entry *) item->udata);
 }
 
 static void
 unlock_cache_entry(struct listbox_item *item)
 {
+	ELOG
 	object_unlock((struct cache_entry *) item->udata);
 }
 
 static int
 is_cache_entry_used(struct listbox_item *item)
 {
+	ELOG
 	return is_object_used((struct cache_entry *) item->udata);
 }
 
 static char *
 get_cache_entry_text(struct listbox_item *item, struct terminal *term)
 {
+	ELOG
 	struct cache_entry *cached = (struct cache_entry *)item->udata;
 
 	return get_uri_string(cached->uri, URI_PUBLIC);
@@ -56,6 +60,7 @@ get_cache_entry_text(struct listbox_item *item, struct terminal *term)
 static char *
 get_cache_entry_info(struct listbox_item *item, struct terminal *term)
 {
+	ELOG
 	struct cache_entry *cached = (struct cache_entry *)item->udata;
 	struct string msg;
 
@@ -160,6 +165,7 @@ get_cache_entry_info(struct listbox_item *item, struct terminal *term)
 static struct uri *
 get_cache_entry_uri(struct listbox_item *item)
 {
+	ELOG
 	struct cache_entry *cached = (struct cache_entry *)item->udata;
 
 	return get_uri_reference(cached->uri);
@@ -168,18 +174,21 @@ get_cache_entry_uri(struct listbox_item *item)
 static struct listbox_item *
 get_cache_entry_root(struct listbox_item *item)
 {
+	ELOG
 	return NULL;
 }
 
 static int
 can_delete_cache_entry(struct listbox_item *item)
 {
+	ELOG
 	return 1;
 }
 
 static void
 delete_cache_entry_item(struct listbox_item *item, int last)
 {
+	ELOG
 	struct cache_entry *cached = (struct cache_entry *)item->udata;
 
 	assert(!is_object_used(cached));
@@ -191,6 +200,7 @@ static enum listbox_match
 match_cache_entry(struct listbox_item *item, struct terminal *term,
 		  char *text)
 {
+	ELOG
 	struct cache_entry *cached = (struct cache_entry *)item->udata;
 
 	if (c_strcasestr((const char *)struri(cached->uri), (const char *)text)
@@ -204,6 +214,7 @@ static enum listbox_match
 match_cache_entry_contents(struct listbox_item *item, struct terminal *term,
 		  char *text)
 {
+	ELOG
 	struct cache_entry *cached = (struct cache_entry *)item->udata;
 	struct fragment *fragment = get_cache_fragment(cached);
 
@@ -274,6 +285,7 @@ const static struct listbox_ops cache_entry_listbox_ops = {
 static widget_handler_status_T
 push_cache_hierbox_search_button(struct dialog_data *dlg_data, struct widget_data *button)
 {
+	ELOG
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 
 	box->ops = &cache_entry_listbox_ops;
@@ -284,6 +296,7 @@ push_cache_hierbox_search_button(struct dialog_data *dlg_data, struct widget_dat
 static widget_handler_status_T
 push_cache_hierbox_search_contents_button(struct dialog_data *dlg_data, struct widget_data *button)
 {
+	ELOG
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 
 	box->ops = &cache_entry_listbox_ops_match_contents;
@@ -295,6 +308,7 @@ push_cache_hierbox_search_contents_button(struct dialog_data *dlg_data, struct w
 static widget_handler_status_T
 push_invalidate_button(struct dialog_data *dlg_data, struct widget_data *button)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct cache_entry *cached = (struct cache_entry *)box->sel->udata;
@@ -331,5 +345,6 @@ struct_hierbox_browser(
 void
 cache_manager(struct session *ses)
 {
+	ELOG
 	hierbox_browser(&cache_browser, ses);
 }

@@ -28,6 +28,7 @@ struct rgb_cache_entry {
 static inline int
 color_distance(const struct rgb *c1, const struct rgb *c2)
 {
+	ELOG
 	int r = c1->r - c2->r;
 	int g = c1->g - c2->g;
 	int b = c1->b - c2->b;
@@ -61,6 +62,7 @@ color_distance(const struct rgb *c1, const struct rgb *c2)
 static inline unsigned char
 get_color(color_T color, const struct rgb *palette, int level)
 {
+	ELOG
 	static struct rgb_cache_entry cache[RGB_HASH_SIZE];
 	struct rgb_cache_entry *rgb_cache = &cache[HASH_RGB(color, level)];
 
@@ -245,6 +247,7 @@ NONSTATIC_INLINE void
 set_term_color16(struct screen_char *schar, color_flags_T flags,
 		 unsigned char fg, unsigned char bg)
 {
+	ELOG
 	/* Adjusts the foreground color to be more visible. */
 	if (flags & COLOR_INCREASE_CONTRAST) {
 		fg = fg_color[fg][bg];
@@ -291,6 +294,7 @@ set_term_color16(struct screen_char *schar, color_flags_T flags,
 color_T
 get_term_color16(unsigned int index)
 {
+	ELOG
 	if (index > 15) return 0;
 	return ((palette16[index].r << 16) |
 		(palette16[index].g << 8) |
@@ -301,6 +305,7 @@ get_term_color16(unsigned int index)
 color_T
 get_term_color88(unsigned int index)
 {
+	ELOG
 	if (index > 87) return 0;
 	return ((palette88[index].r << 16) |
 		(palette88[index].g << 8) |
@@ -312,6 +317,7 @@ get_term_color88(unsigned int index)
 color_T
 get_term_color256(unsigned int index)
 {
+	ELOG
 	if (index > 255) return 0;
 	return ((palette256[index].r << 16) |
 		(palette256[index].g << 8) |
@@ -323,6 +329,7 @@ void
 get_screen_char_color(struct screen_char *schar, struct color_pair *pair,
 		      color_flags_T flags, color_mode_T color_mode)
 {
+	ELOG
 	unsigned char fg, bg;
 
 	assert(color_mode >= COLOR_MODE_DUMP && color_mode < COLOR_MODES);
@@ -378,6 +385,7 @@ void
 set_term_color(struct screen_char *schar, struct color_pair *pair,
 	       color_flags_T flags, color_mode_T color_mode)
 {
+	ELOG
 	const struct color_mode_info *mode;
 	enum palette_range palette_range = PALETTE_FULL;
 	unsigned char fg, bg;

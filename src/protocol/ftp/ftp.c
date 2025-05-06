@@ -176,6 +176,7 @@ static void ftp_data_accept(struct connection *conn);
 static int
 parse_psv_resp(char *data, int *n, int max_value)
 {
+	ELOG
 	char *p = data;
 	int i = 5;
 
@@ -216,6 +217,7 @@ static int
 get_ftp_response(struct connection *conn, struct read_buffer *rb, int part,
 		 struct sockaddr_storage *sa, off_t *est_length)
 {
+	ELOG
 	char *eol;
 	char *num_end;
 	int response;
@@ -306,6 +308,7 @@ ok:
 void
 ftp_protocol_handler(struct connection *conn)
 {
+	ELOG
 #if defined(CONFIG_LIBCURL)
 	if (get_opt_bool("protocol.ftp.use_curl", NULL)) {
 		ftpes_protocol_handler(conn);
@@ -326,6 +329,7 @@ static void
 send_cmd(struct connection *conn, struct string *cmd, void *callback,
 	 struct connection_state state)
 {
+	ELOG
 	request_from_socket(conn->socket, cmd->source, cmd->length, state,
 			    SOCKET_RETRY_ONCLOSE, (socket_read_T)callback);
 
@@ -336,6 +340,7 @@ send_cmd(struct connection *conn, struct string *cmd, void *callback,
 static int
 auth_user_matching_uri(struct auth_entry *auth, struct uri *uri)
 {
+	ELOG
 	if (!uri->userlen) /* Noone said it doesn't. */
 		return 1;
 	return !c_strlcasecmp(auth->user, -1, uri->user, uri->userlen);
@@ -347,6 +352,7 @@ auth_user_matching_uri(struct auth_entry *auth, struct uri *uri)
 static void
 prompt_username_pw(struct connection *conn)
 {
+	ELOG
 	if (!conn->cached) {
 		conn->cached = get_cache_entry(conn->uri);
 		if (!conn->cached) {
@@ -370,6 +376,7 @@ prompt_username_pw(struct connection *conn)
 static void
 ftp_login(struct socket *socket)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 	struct string cmd;
 	struct auth_entry* auth;
@@ -402,6 +409,7 @@ ftp_login(struct socket *socket)
 static void
 ftp_got_info(struct socket *socket, struct read_buffer *rb)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 	int response = get_ftp_response(conn, rb, 0, NULL, NULL);
 
@@ -434,6 +442,7 @@ ftp_got_info(struct socket *socket, struct read_buffer *rb)
 static void
 ftp_got_user_info(struct socket *socket, struct read_buffer *rb)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 	int response = get_ftp_response(conn, rb, 0, NULL, NULL);
 
@@ -484,6 +493,7 @@ ftp_got_user_info(struct socket *socket, struct read_buffer *rb)
 static void
 ftp_pass(struct connection *conn)
 {
+	ELOG
 	struct string cmd;
 	struct auth_entry *auth;
 
@@ -520,6 +530,7 @@ ftp_pass(struct connection *conn)
 static void
 ftp_pass_info(struct socket *socket, struct read_buffer *rb)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 	int response = get_ftp_response(conn, rb, 0, NULL, NULL);
 
@@ -563,6 +574,7 @@ ftp_pass_info(struct socket *socket, struct read_buffer *rb)
 static void
 add_portcmd_to_string(struct string *string, char *pc)
 {
+	ELOG
 	/* From RFC 959: DATA PORT (PORT)
 	 *
 	 * The argument is a HOST-PORT specification for the data port
@@ -599,6 +611,7 @@ add_portcmd_to_string(struct string *string, char *pc)
 static void
 add_eprtcmd_to_string(struct string *string, struct sockaddr_in6 *addr)
 {
+	ELOG
 	char addr_str[INET6_ADDRSTRLEN];
 
 	inet_ntop(AF_INET6, &addr->sin6_addr, addr_str, INET6_ADDRSTRLEN);
@@ -630,6 +643,7 @@ add_eprtcmd_to_string(struct string *string, struct sockaddr_in6 *addr)
 static int
 get_ftp_data_socket(struct connection *conn, struct string *command)
 {
+	ELOG
 	struct ftp_connection_info *ftp = (struct ftp_connection_info *)conn->info;
 
 	ftp->use_pasv = get_opt_bool("protocol.ftp.use_pasv", NULL);
@@ -688,6 +702,7 @@ get_ftp_data_socket(struct connection *conn, struct string *command)
 static int
 is_ftp_pathname_safe(const struct string *s)
 {
+	ELOG
 	int i;
 
 	/* RFC 959 says the argument of CWD and RETR is a <pathname>,
@@ -709,6 +724,7 @@ is_ftp_pathname_safe(const struct string *s)
 static struct ftp_connection_info *
 add_file_cmd_to_str(struct connection *conn)
 {
+	ELOG
 	int ok = 0;
 	struct ftp_connection_info *ftp = NULL;
 	struct string command = NULL_STRING;
@@ -860,6 +876,7 @@ ret:
 static void
 send_it_line_by_line(struct connection *conn, struct string *cmd)
 {
+	ELOG
 	struct ftp_connection_info *ftp = (struct ftp_connection_info *)conn->info;
 	char *nl = strchr(ftp->cmd_buffer, '\n');
 
@@ -877,6 +894,7 @@ send_it_line_by_line(struct connection *conn, struct string *cmd)
 static void
 ftp_send_retr_req(struct connection *conn, struct connection_state state)
 {
+	ELOG
 	struct string cmd;
 
 	if (!init_string(&cmd)) {
@@ -901,6 +919,7 @@ ftp_send_retr_req(struct connection *conn, struct connection_state state)
 static off_t
 get_filesize_from_RETR(char *data, int data_len, int *resume)
 {
+	ELOG
 	off_t file_len;
 	int pos;
 	int pos_file_len = 0;
@@ -970,6 +989,7 @@ static int
 ftp_data_connect(struct connection *conn, int pf, struct sockaddr_storage *sa,
 		 int size_of_sockaddr)
 {
+	ELOG
 	int fd;
 
 	if (conn->data_socket->fd != -1) {
@@ -996,6 +1016,7 @@ ftp_data_connect(struct connection *conn, int pf, struct sockaddr_storage *sa,
 static void
 ftp_retr_file(struct socket *socket, struct read_buffer *rb)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 	struct ftp_connection_info *ftp = (struct ftp_connection_info *)conn->info;
 	int response;
@@ -1137,6 +1158,7 @@ ftp_retr_file(struct socket *socket, struct read_buffer *rb)
 static void
 ftp_got_final_response(struct socket *socket, struct read_buffer *rb)
 {
+	ELOG
 	struct connection *conn = (struct connection *)socket->conn;
 	struct ftp_connection_info *ftp = (struct ftp_connection_info *)conn->info;
 	int response = get_ftp_response(conn, rb, 0, NULL, NULL);
@@ -1214,6 +1236,7 @@ display_dir_entry(struct cache_entry *cached, off_t *pos, int *tries,
 		  const struct ftp_dir_html_format *format,
 		  struct ftp_file_info *ftp_info)
 {
+	ELOG
 	struct string string;
 	char permissions[10] = "---------";
 
@@ -1340,6 +1363,7 @@ static int
 ftp_get_line(struct cache_entry *cached, char *buf, int bufl,
              int last, int *len)
 {
+	ELOG
 	char *newline;
 
 	if (!bufl) return -1;
@@ -1374,6 +1398,7 @@ static int
 ftp_add_unparsed_line(struct cache_entry *cached, off_t *pos, int *tries, 
 		      const char *line, int line_length)
 {
+	ELOG
 	int our_ret;
 	struct string string;
 	int frag_ret;
@@ -1404,6 +1429,7 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 		    char *buffer, int buflen, int last,
 		    int *tries, const struct ftp_dir_html_format *format)
 {
+	ELOG
 	int ret = 0;
 
 	while (1) {
@@ -1456,6 +1482,7 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 static void
 ftp_data_accept(struct connection *conn)
 {
+	ELOG
 	struct ftp_connection_info *ftp = (struct ftp_connection_info *)conn->info;
 	int newsock;
 
@@ -1496,6 +1523,7 @@ ftp_data_accept(struct connection *conn)
 static void
 got_something_from_data_connection(struct connection *conn)
 {
+	ELOG
 	struct ftp_connection_info *ftp = (struct ftp_connection_info *)conn->info;
 	struct ftp_dir_html_format format;
 	ssize_t len;
@@ -1621,6 +1649,7 @@ out_of_mem:
 static void
 ftp_end_request(struct connection *conn, struct connection_state state)
 {
+	ELOG
 	if (is_in_state(state, S_OK) && conn->cached) {
 		normalize_cache_entry(conn->cached, conn->from);
 	}

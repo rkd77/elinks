@@ -48,6 +48,7 @@ struct bz2_enc_data {
 static int
 bzip2_open(struct stream_encoded *stream, int fd)
 {
+	ELOG
 	/* A zero-initialized bz_stream.  The compiler ensures that all
 	 * pointer members in it are null.  (Can't do this with memset
 	 * because C99 does not require all-bits-zero to be a null
@@ -83,6 +84,7 @@ bzip2_open(struct stream_encoded *stream, int fd)
 static int
 bzip2_read(struct stream_encoded *stream, char *buf, int len)
 {
+	ELOG
 	struct bz2_enc_data *data = (struct bz2_enc_data *) stream->data;
 	int err = 0;
 
@@ -136,6 +138,7 @@ bzip2_read(struct stream_encoded *stream, char *buf, int len)
 static char *
 bzip2_decode_buffer(struct stream_encoded *st, char *data, int len, int *new_len)
 {
+	ELOG
 	struct bz2_enc_data *enc_data = (struct bz2_enc_data *)st->data;
 	bz_stream *stream = &enc_data->fbz_stream;
 	char *buffer = NULL;
@@ -198,6 +201,7 @@ bzip2_decode_buffer(struct stream_encoded *st, char *data, int len, int *new_len
 static void
 bzip2_close(struct stream_encoded *stream)
 {
+	ELOG
 	struct bz2_enc_data *data = (struct bz2_enc_data *) stream->data;
 
 	if (data) {
@@ -215,6 +219,7 @@ bzip2_close(struct stream_encoded *stream)
 const char *
 get_bzip2_version(void)
 {
+	ELOG
 	static char version[16];
 
 	if (!version[0]) {

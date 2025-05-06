@@ -46,6 +46,7 @@ extern "C" {
 static enum evhook_status
 script_hook_goto_url(va_list ap, void *data)
 {
+	ELOG
 	lua_State *L = lua_state;
 	char **url = va_arg(ap, char **);
 	struct session *ses = va_arg(ap, struct session *);
@@ -95,6 +96,7 @@ script_hook_goto_url(va_list ap, void *data)
 static enum evhook_status
 script_hook_follow_url(va_list ap, void *data)
 {
+	ELOG
 	lua_State *L = lua_state;
 	char **url = va_arg(ap, char **);
 	struct session *ses = va_arg(ap, struct session *);
@@ -138,6 +140,7 @@ script_hook_follow_url(va_list ap, void *data)
 static enum evhook_status
 script_hook_pre_format_html(va_list ap, void *data)
 {
+	ELOG
 	lua_State *L = lua_state;
 	struct session *ses = va_arg(ap, struct session *);
 	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
@@ -187,6 +190,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 static enum evhook_status
 script_hook_get_proxy(va_list ap, void *data)
 {
+	ELOG
 	lua_State *L = lua_state;
 	char **new_proxy_url = va_arg(ap, char **);
 	char *url = va_arg(ap, char *);
@@ -226,6 +230,7 @@ script_hook_get_proxy(va_list ap, void *data)
 static enum evhook_status
 script_hook_quit(va_list ap, void *data)
 {
+	ELOG
 	if (!prepare_lua(NULL)) {
 		(void)luaL_dostring(lua_state, "if quit_hook then quit_hook() end");
 		finish_lua();

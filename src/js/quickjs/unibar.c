@@ -26,6 +26,7 @@ static JSClassID js_statusbar_class_id;
 static JSValue
 js_unibar_get_property_visible(JSContext *ctx, JSValueConst this_val, int magic)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -59,6 +60,7 @@ js_unibar_get_property_visible(JSContext *ctx, JSValueConst this_val, int magic)
 static JSValue
 js_unibar_set_property_visible(JSContext *ctx, JSValueConst this_val, JSValue val, int magic)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -93,6 +95,7 @@ js_unibar_set_property_visible(JSContext *ctx, JSValueConst this_val, JSValue va
 static JSValue
 js_menubar_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -104,6 +107,7 @@ js_menubar_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 static JSValue
 js_statusbar_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -133,6 +137,7 @@ static JSClassDef js_statusbar_class = {
 int
 js_unibar_init(JSContext *ctx)
 {
+	ELOG
 	JSValue menubar_proto;
 	JSValue statusbar_proto;
 

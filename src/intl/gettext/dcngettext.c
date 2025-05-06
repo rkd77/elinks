@@ -30,5 +30,6 @@ char *
 dcngettext__(const char *domainname, const char *msgid1, const char *msgid2,
 	   unsigned long int n, int category)
 {
+	ELOG
 	return dcigettext__(domainname, msgid1, msgid2, 1, n, category);
 }

@@ -196,6 +196,7 @@ static union option_info uri_rewrite_options[] = {
 static inline struct option *
 get_prefix_tree(enum uri_rewrite_option tree)
 {
+	ELOG
 	assert(tree == URI_REWRITE_DUMB_TREE
 	       || tree == URI_REWRITE_SMART_TREE);
 	return &get_opt_rewrite(tree);
@@ -206,6 +207,7 @@ get_prefix_tree(enum uri_rewrite_option tree)
 static char *
 rewrite_uri(char *url, struct uri *current_uri, const char *arg)
 {
+	ELOG
 	struct string n = NULL_STRING;
 	const char *args[MAX_URI_ARGS];
 	int argslen[MAX_URI_ARGS];
@@ -282,6 +284,7 @@ rewrite_uri(char *url, struct uri *current_uri, const char *arg)
 static char *
 get_uri_rewrite_prefix(enum uri_rewrite_type type, char *url)
 {
+	ELOG
 	enum uri_rewrite_option tree = type == URI_REWRITE_DUMB
 			? URI_REWRITE_DUMB_TREE : URI_REWRITE_SMART_TREE;
 	struct option *prefix_tree = get_prefix_tree(tree);
@@ -294,6 +297,7 @@ get_uri_rewrite_prefix(enum uri_rewrite_type type, char *url)
 static enum evhook_status
 goto_url_hook(va_list ap, void *data)
 {
+	ELOG
 	char **url = va_arg(ap, char **);
 	struct session *ses = va_arg(ap, struct session *);
 	char *uu = NULL;

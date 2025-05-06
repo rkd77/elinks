@@ -18,6 +18,7 @@
 void
 copy_location(struct location *dst, struct location *src)
 {
+	ELOG
 	struct frame *frame, *new_frame;
 	struct frame *iframe, *new_iframe;
 
@@ -57,6 +58,7 @@ copy_location(struct location *dst, struct location *src)
 void
 destroy_location(struct location *loc)
 {
+	ELOG
 	struct frame *frame;
 	struct frame *iframe;
 

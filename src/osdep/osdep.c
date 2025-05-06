@@ -78,6 +78,7 @@
 long
 os_get_free_mem_in_mib(void)
 {
+	ELOG
 	return 0;
 }
 #endif
@@ -88,6 +89,7 @@ os_get_free_mem_in_mib(void)
 int
 set_nonblocking_fd(int fd)
 {
+	ELOG
 #ifdef WIN32
 	if (fd > 1024) {
 		u_long mode = 1; // set socket non-blocking
@@ -120,6 +122,7 @@ set_nonblocking_fd(int fd)
 int
 set_blocking_fd(int fd)
 {
+	ELOG
 #ifdef WIN32
 	if (fd > 1024) {
 		u_long mode = 0; // set socket blocking
@@ -149,6 +152,7 @@ set_blocking_fd(int fd)
 void
 set_ip_tos_throughput(int socket)
 {
+	ELOG
 #if defined(IP_TOS) && defined(IPTOS_THROUGHPUT)
 	int on = IPTOS_THROUGHPUT;
 
@@ -159,6 +163,7 @@ set_ip_tos_throughput(int socket)
 int
 get_e(const char *env)
 {
+	ELOG
 	char *v = getenv(env);
 
 	return (v ? atoi(v) : 0);
@@ -167,6 +172,7 @@ get_e(const char *env)
 char *
 get_cwd(void)
 {
+	ELOG
 	int bufsize = 128;
 	char *buf;
 
@@ -187,12 +193,14 @@ get_cwd(void)
 void
 set_cwd(char *path)
 {
+	ELOG
 	if (path) while (chdir(path) && errno == EINTR);
 }
 
 const char *
 get_shell(void)
 {
+	ELOG
 	const char *shell = GETSHELL;
 
 	if (!shell || !*shell)
@@ -209,24 +217,28 @@ get_shell(void)
 static void
 sigwinch(void *s)
 {
+	ELOG
 	((void (*)(void)) s)();
 }
 
 void
 handle_terminal_resize(int fd, void (*fn)(void))
 {
+	ELOG
 	install_signal_handler(SIGWINCH, sigwinch, (void *)fn, 0);
 }
 
 void
 unhandle_terminal_resize(int fd)
 {
+	ELOG
 	install_signal_handler(SIGWINCH, NULL, NULL, 0);
 }
 
 void
 get_terminal_size(int fd, int *x, int *y, int *cw, int *ch)
 {
+	ELOG
 	struct winsize ws;
 
 	if (ioctl(fd, TIOCGWINSZ, &ws) != -1) {
@@ -266,11 +278,13 @@ get_terminal_size(int fd, int *x, int *y, int *cw, int *ch)
 void
 set_bin(int fd)
 {
+	ELOG
 }
 
 int
 c_pipe(int *fd)
 {
+	ELOG
 	return pipe(fd);
 }
 
@@ -279,12 +293,14 @@ c_pipe(int *fd)
 void
 set_bin(int fd)
 {
+	ELOG
 	setmode(fd, O_BINARY);
 }
 
 int
 c_pipe(int *fd)
 {
+	ELOG
 	int r = pipe(fd);
 
 	if (!r) {
@@ -302,6 +318,7 @@ c_pipe(int *fd)
 int
 is_twterm(void) /* Check if it make sense to call a twterm. */
 {
+	ELOG
 	static int tw = -1;
 
 	if (tw == -1) tw = !!getenv("TWDISPLAY");
@@ -312,6 +329,7 @@ is_twterm(void) /* Check if it make sense to call a twterm. */
 int
 is_gnuscreen(void)
 {
+	ELOG
 	static int screen = -1;
 
 	if (screen == -1) screen = !!getenv("STY");
@@ -325,6 +343,7 @@ is_gnuscreen(void)
 int
 is_xterm(void)
 {
+	ELOG
 	static int xt = -1;
 
 	if (xt == -1) {
@@ -359,6 +378,7 @@ unsigned int resize_count = 0;
 int
 exe(char *path)
 {
+	ELOG
 	return system(path);
 }
 
@@ -397,6 +417,7 @@ static char *clipboard;
 char *
 get_clipboard_text(void)
 {
+	ELOG
 	/* The following support for GNU Screen's clipboard is
 	 * disabled for two reasons:
 	 *
@@ -435,6 +456,7 @@ get_clipboard_text(void)
 void
 set_clipboard_text(char *data)
 {
+	ELOG
 #ifdef HAVE_ACCESS
 	char *f = get_ui_clipboard_file();
 
@@ -477,6 +499,7 @@ set_clipboard_text(char *data)
 void
 set_window_title(const char *ctitle, int codepage)
 {
+	ELOG
 	struct string filtered;
 
 #ifndef HAVE_SYS_CYGWIN_H
@@ -565,6 +588,7 @@ static int x_error = 0;
 static int
 catch_x_error(void)
 {
+	ELOG
 	x_error = 1;
 	return 0;
 }
@@ -576,6 +600,7 @@ catch_x_error(void)
 static char *
 xprop_to_string(Display *display, const XTextProperty *text_prop, int to_cp)
 {
+	ELOG
 	int from_cp;
 	char **list = NULL;
 	int count = 0;
@@ -621,6 +646,7 @@ xprop_to_string(Display *display, const XTextProperty *text_prop, int to_cp)
 char *
 get_window_title(int codepage)
 {
+	ELOG
 #ifdef HAVE_X11
 	/* Following code is stolen from our beloved vim. */
 	char *winid;
@@ -679,6 +705,7 @@ get_window_title(int codepage)
 int
 resize_window(int width, int height, int old_width, int old_height)
 {
+	ELOG
 #ifdef HAVE_X11
 	/* Following code is stolen from our beloved vim. */
 	char *winid;
@@ -788,6 +815,7 @@ resize_window(int width, int height, int old_width, int old_height)
 int
 start_thread(void (*fn)(void *, int), void *ptr, int l)
 {
+	ELOG
 	int p[2];
 	int rs;
 	if (c_pipe(p) < 0) return -1;
@@ -808,6 +836,7 @@ struct tdata {
 void
 bgt(struct tdata *t)
 {
+	ELOG
 #ifdef SIGPIPE
 	signal(SIGPIPE, SIG_IGN);
 #endif
@@ -822,6 +851,7 @@ bgt(struct tdata *t)
 int
 start_thread(void (*fn)(void *, int), void *ptr, int l)
 {
+	ELOG
 	int p[2];
 	pid_t pid;
 
@@ -871,11 +901,13 @@ start_thread(void (*fn)(void *, int), void *ptr, int l)
 void
 want_draw(void)
 {
+	ELOG
 }
 
 void
 done_draw(void)
 {
+	ELOG
 }
 #endif
 
@@ -884,6 +916,7 @@ done_draw(void)
 int
 get_output_handle(void)
 {
+	ELOG
 	if (program.testjs) {
 		return open("/dev/null", O_WRONLY);
 	}
@@ -894,6 +927,7 @@ get_output_handle(void)
 int
 get_ctl_handle(void)
 {
+	ELOG
 	static int fd = -1;
 
 	if (isatty(0)) {
@@ -911,6 +945,7 @@ get_ctl_handle(void)
 int
 get_input_handle(void)
 {
+	ELOG
 	return get_ctl_handle();
 }
 
@@ -921,6 +956,7 @@ get_input_handle(void)
 void
 init_osdep(void)
 {
+	ELOG
 	setlocale(LC_ALL, "");
 }
 
@@ -931,6 +967,7 @@ init_osdep(void)
 void
 terminate_osdep(void)
 {
+	ELOG
 }
 
 #endif
@@ -940,11 +977,13 @@ terminate_osdep(void)
 void
 block_stdin(void)
 {
+	ELOG
 }
 
 void
 unblock_stdin(void)
 {
+	ELOG
 }
 
 #endif
@@ -953,6 +992,7 @@ unblock_stdin(void)
 void
 elinks_cfmakeraw(struct termios *t)
 {
+	ELOG
 	/* This elinks_cfmakeraw() intentionally leaves the following
 	 * settings unchanged, even though the standard cfmakeraw()
 	 * would change some of them:
@@ -980,22 +1020,26 @@ void *
 handle_mouse(int cons, void (*fn)(void *, char *, int),
 	     void *data)
 {
+	ELOG
 	return NULL;
 }
 
 void
 unhandle_mouse(void *data)
 {
+	ELOG
 }
 
 void
 suspend_mouse(void *data)
 {
+	ELOG
 }
 
 void
 resume_mouse(void *data)
 {
+	ELOG
 }
 
 #endif
@@ -1007,6 +1051,7 @@ resume_mouse(void *data)
 static int
 get_common_env(void)
 {
+	ELOG
 	int env = 0;
 
 	if (is_xterm()) env |= ENV_XWIN;
@@ -1029,6 +1074,7 @@ get_common_env(void)
 int
 get_system_env(void)
 {
+	ELOG
 	return get_common_env();
 }
 #endif
@@ -1037,6 +1083,7 @@ get_system_env(void)
 int
 can_resize_window(int environment)
 {
+	ELOG
 	return !!(environment & (ENV_OS2VIO | ENV_XWIN));
 }
 
@@ -1044,12 +1091,14 @@ can_resize_window(int environment)
 int
 can_open_os_shell(int environment)
 {
+	ELOG
 	return 1;
 }
 
 void
 set_highpri(void)
 {
+	ELOG
 }
 #endif
 
@@ -1057,6 +1106,7 @@ set_highpri(void)
 const char *
 get_system_str(int xwin)
 {
+	ELOG
 	return xwin ? SYSTEM_STR "-xwin" : SYSTEM_STR;
 }
 
@@ -1067,6 +1117,7 @@ get_system_str(int xwin)
 static int
 isdirectory(const char *path)
 {
+	ELOG
 	struct stat ss;
 	if (path == NULL)
 		return 0;
@@ -1078,6 +1129,7 @@ isdirectory(const char *path)
 char *
 tempname(const char *dir, const char *pfx, char *suff)
 {
+	ELOG
 	struct string path;
 	char *ret;
 	int fd;

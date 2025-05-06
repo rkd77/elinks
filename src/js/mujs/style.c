@@ -22,6 +22,7 @@
 static void
 mjs_style(js_State *J, const char *property)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -61,6 +62,7 @@ mjs_style(js_State *J, const char *property)
 static void
 mjs_style_get_property_cssText(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -85,6 +87,7 @@ mjs_style_get_property_cssText(js_State *J)
 static void
 mjs_set_style(js_State *J, const char *property)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -134,6 +137,7 @@ mjs_set_style(js_State *J, const char *property)
 static void
 mjs_style_set_property_cssText(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -176,6 +180,7 @@ mjs_style_set_property_cssText(js_State *J)
 static void
 mjs_style_get_property_background(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -185,6 +190,7 @@ mjs_style_get_property_background(js_State *J)
 static void
 mjs_style_get_property_backgroundClip(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -194,6 +200,7 @@ mjs_style_get_property_backgroundClip(js_State *J)
 static void
 mjs_style_get_property_backgroundColor(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -203,6 +210,7 @@ mjs_style_get_property_backgroundColor(js_State *J)
 static void
 mjs_style_get_property_color(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -211,6 +219,7 @@ mjs_style_get_property_color(js_State *J)
 static void
 mjs_style_get_property_display(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -220,6 +229,7 @@ mjs_style_get_property_display(js_State *J)
 static void
 mjs_style_get_property_fontStyle(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -229,6 +239,7 @@ mjs_style_get_property_fontStyle(js_State *J)
 static void
 mjs_style_get_property_fontWeight(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -238,6 +249,7 @@ mjs_style_get_property_fontWeight(js_State *J)
 static void
 mjs_style_get_property_height(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -247,6 +259,7 @@ mjs_style_get_property_height(js_State *J)
 static void
 mjs_style_get_property_left(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -256,6 +269,7 @@ mjs_style_get_property_left(js_State *J)
 static void
 mjs_style_get_property_listStyle(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -265,6 +279,7 @@ mjs_style_get_property_listStyle(js_State *J)
 static void
 mjs_style_get_property_listStyleType(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -274,6 +289,7 @@ mjs_style_get_property_listStyleType(js_State *J)
 static void
 mjs_style_get_property_textAlign(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -283,6 +299,7 @@ mjs_style_get_property_textAlign(js_State *J)
 static void
 mjs_style_get_property_textDecoration(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -292,6 +309,7 @@ mjs_style_get_property_textDecoration(js_State *J)
 static void
 mjs_style_get_property_top(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -301,6 +319,7 @@ mjs_style_get_property_top(js_State *J)
 static void
 mjs_style_get_property_whiteSpace(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -310,6 +329,7 @@ mjs_style_get_property_whiteSpace(js_State *J)
 static void
 mjs_style_set_property_background(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -319,6 +339,7 @@ mjs_style_set_property_background(js_State *J)
 static void
 mjs_style_set_property_backgroundClip(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -328,6 +349,7 @@ mjs_style_set_property_backgroundClip(js_State *J)
 static void
 mjs_style_set_property_backgroundColor(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -337,6 +359,7 @@ mjs_style_set_property_backgroundColor(js_State *J)
 static void
 mjs_style_set_property_color(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -345,6 +368,7 @@ mjs_style_set_property_color(js_State *J)
 static void
 mjs_style_set_property_display(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -354,6 +378,7 @@ mjs_style_set_property_display(js_State *J)
 static void
 mjs_style_set_property_fontStyle(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -363,6 +388,7 @@ mjs_style_set_property_fontStyle(js_State *J)
 static void
 mjs_style_set_property_fontWeight(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -372,6 +398,7 @@ mjs_style_set_property_fontWeight(js_State *J)
 static void
 mjs_style_set_property_height(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -381,6 +408,7 @@ mjs_style_set_property_height(js_State *J)
 static void
 mjs_style_set_property_left(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -390,6 +418,7 @@ mjs_style_set_property_left(js_State *J)
 static void
 mjs_style_set_property_listStyle(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -399,6 +428,7 @@ mjs_style_set_property_listStyle(js_State *J)
 static void
 mjs_style_set_property_listStyleType(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -408,6 +438,7 @@ mjs_style_set_property_listStyleType(js_State *J)
 static void
 mjs_style_set_property_textAlign(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -417,6 +448,7 @@ mjs_style_set_property_textAlign(js_State *J)
 static void
 mjs_style_set_property_textDecoration(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -426,6 +458,7 @@ mjs_style_set_property_textDecoration(js_State *J)
 static void
 mjs_style_set_property_top(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -435,6 +468,7 @@ mjs_style_set_property_top(js_State *J)
 static void
 mjs_style_set_property_whiteSpace(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -444,6 +478,7 @@ mjs_style_set_property_whiteSpace(js_State *J)
 static void
 mjs_style_toString(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -453,11 +488,13 @@ mjs_style_toString(js_State *J)
 static
 void mjs_style_finalizer(js_State *J, void *node)
 {
+	ELOG
 }
 
 void
 mjs_push_style(js_State *J, void *node)
 {
+	ELOG
 	js_newobject(J);
 	{
 		js_newuserdata(J, "style", node, mjs_style_finalizer);

@@ -63,6 +63,7 @@
 static const char *
 get_name_ftpes(struct module *module)
 {
+	ELOG
 	static char el_curlversion[256];
 	snprintf(el_curlversion, 255, "FTPES(%s)", curl_version());
 
@@ -141,6 +142,7 @@ display_dir_entry(struct cache_entry *cached, off_t *pos, int *tries,
 		  const struct ftp_dir_html_format *format,
 		  struct ftp_file_info *ftp_info)
 {
+	ELOG
 	struct string string;
 	char permissions[10] = "---------";
 
@@ -267,6 +269,7 @@ static int
 ftp_get_line(struct cache_entry *cached, char *buf, int bufl,
              int last, int *len)
 {
+	ELOG
 	char *newline;
 
 	if (!bufl) return -1;
@@ -301,6 +304,7 @@ static int
 ftp_add_unparsed_line(struct cache_entry *cached, off_t *pos, int *tries, 
 		      const char *line, int line_length)
 {
+	ELOG
 	int our_ret;
 	struct string string;
 	int frag_ret;
@@ -331,6 +335,7 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 		    char *buffer, int buflen, int last,
 		    int *tries, const struct ftp_dir_html_format *format, struct ftpes_connection_info *sftp)
 {
+	ELOG
 	int ret = 0;
 
 	while (1) {
@@ -408,6 +413,7 @@ static void sftp_got_data(void *stream, void *buffer, size_t len);
 static size_t
 my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream)
 {
+	ELOG
 	ftpes_got_data(stream, buffer, size * nmemb);
 	return nmemb;
 }
@@ -415,6 +421,7 @@ my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream)
 static size_t
 my_fwrite_sftp(void *buffer, size_t size, size_t nmemb, void *stream)
 {
+	ELOG
 	sftp_got_data(stream, buffer, size * nmemb);
 	return nmemb;
 }
@@ -422,6 +429,7 @@ my_fwrite_sftp(void *buffer, size_t size, size_t nmemb, void *stream)
 static void
 done_ftp_infos(struct ftpes_connection_info *ftp)
 {
+	ELOG
 	size_t i;
 
 	for (i = 0; i < ftp->info_number; i++) {
@@ -436,6 +444,7 @@ done_ftp_infos(struct ftpes_connection_info *ftp)
 static void
 done_ftpes(struct connection *conn)
 {
+	ELOG
 	struct ftpes_connection_info *ftp = (struct ftpes_connection_info *)conn->info;
 
 	if (!ftp || !ftp->easy) {
@@ -452,6 +461,7 @@ done_ftpes(struct connection *conn)
 static void
 do_ftpes(struct connection *conn)
 {
+	ELOG
 	struct ftpes_connection_info *ftp = (struct ftpes_connection_info *)mem_calloc(1, sizeof(*ftp));
 	struct auth_entry *auth = find_auth(conn->uri);
 	char *url;
@@ -564,6 +574,7 @@ do_ftpes(struct connection *conn)
 static void
 ftpes_got_data(void *stream, void *buf, size_t len)
 {
+	ELOG
 	struct connection *conn = (struct connection *)stream;
 	char *buffer = (char *)buf;
 	struct ftpes_connection_info *ftp = (struct ftpes_connection_info *)conn->info;
@@ -696,6 +707,7 @@ again:
 static int
 compare_file_ftp_info(const void *a, const void *b)
 {
+	ELOG
 	struct ftp_file_info *a1 = *(struct ftp_file_info **)a;
 	struct ftp_file_info *b1 = *(struct ftp_file_info **)b;
 
@@ -712,6 +724,7 @@ compare_file_ftp_info(const void *a, const void *b)
 static void
 sort_ftp_infos(struct ftpes_connection_info *ftp)
 {
+	ELOG
 	qsort(&ftp->infos[0], ftp->info_number, sizeof(struct ftp_file_info *), compare_file_ftp_info);
 }
 
@@ -722,6 +735,7 @@ sort_ftp_infos(struct ftpes_connection_info *ftp)
 static void
 sftp_got_data(void *stream, void *buf, size_t len)
 {
+	ELOG
 	struct connection *conn = (struct connection *)stream;
 	char *buffer = (char *)buf;
 	struct ftpes_connection_info *ftp = (struct ftpes_connection_info *)conn->info;
@@ -867,6 +881,7 @@ again:
 void
 ftp_curl_handle_error(struct connection *conn, CURLcode res)
 {
+	ELOG
 	if (res == CURLE_OK) {
 		struct ftpes_connection_info *ftp = (struct ftpes_connection_info *)conn->info;
 
@@ -897,6 +912,7 @@ ftp_curl_handle_error(struct connection *conn, CURLcode res)
 void
 ftpes_protocol_handler(struct connection *conn)
 {
+	ELOG
 	if (g.multi) {
 		do_ftpes(conn);
 	}
@@ -907,6 +923,7 @@ ftpes_protocol_handler(struct connection *conn)
 void
 sftp_protocol_handler(struct connection *conn)
 {
+	ELOG
 	if (g.multi) {
 		do_ftpes(conn);
 	}

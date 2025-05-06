@@ -31,6 +31,7 @@ static inline void
 init_template(struct screen_char *template_, struct document_options *options,
 	      screen_char_attr_T attr, color_T foreground, color_T background)
 {
+	ELOG
 	struct text_style style = INIT_TEXT_STYLE((short int)attr, foreground, background);
 
 	get_screen_char_template(template_, options, style);
@@ -40,6 +41,7 @@ void
 init_template_by_style(struct screen_char *template_, struct document_options *options,
 		       LIST_OF(struct css_property) *properties)
 {
+	ELOG
 	struct text_style style = options->default_style;
 	struct css_property *property;
 
@@ -79,6 +81,7 @@ init_template_by_style(struct screen_char *template_, struct document_options *o
 static struct screen_char *
 realloc_line(struct document *document, int x, int y)
 {
+	ELOG
 	struct line *line = realloc_lines(document, y);
 
 	if (!line) return NULL;
@@ -100,6 +103,7 @@ realloc_line(struct document *document, int x, int y)
 static struct node *
 add_search_node(struct dom_renderer *renderer, int width)
 {
+	ELOG
 	struct node *node = (struct node *)mem_alloc(sizeof(*node));
 
 	if (node) {
@@ -118,6 +122,7 @@ static void
 render_dom_line(struct dom_renderer *renderer, struct screen_char *template_,
 		char *string, int length)
 {
+	ELOG
 	struct document *document = renderer->document;
 	struct conv_table *convert = renderer->convert_table;
 	enum convert_string_mode mode = renderer->convert_mode;
@@ -197,6 +202,7 @@ render_dom_line(struct dom_renderer *renderer, struct screen_char *template_,
 static inline char *
 split_dom_line(char *line, int length, int *linelen)
 {
+	ELOG
 	char *end = line + length;
 	char *pos;
 
@@ -225,6 +231,7 @@ void
 render_dom_text(struct dom_renderer *renderer, struct screen_char *template_,
 		char *string, int length)
 {
+	ELOG
 	int linelen;
 
 	for (; length > 0; string += linelen, length -= linelen) {
@@ -248,6 +255,7 @@ NONSTATIC_INLINE struct link *
 add_dom_link(struct dom_renderer *renderer, const char *cstring, int length,
 	     char *uristring, int urilength)
 {
+	ELOG
 	struct document *document = renderer->document;
 	int x = renderer->canvas_x;
 	int y = renderer->canvas_y;

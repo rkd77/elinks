@@ -34,6 +34,7 @@ JSClassID js_htmlCollection2_class_id;
 static void *
 js_htmlCollection2_GetOpaque(JSValueConst this_val)
 {
+	ELOG
 	REF_JS(this_val);
 
 	return JS_GetOpaque(this_val, js_htmlCollection2_class_id);
@@ -42,6 +43,7 @@ js_htmlCollection2_GetOpaque(JSValueConst this_val)
 static void
 js_htmlCollection2_SetOpaque(JSValueConst this_val, void *node)
 {
+	ELOG
 	REF_JS(this_val);
 
 	JS_SetOpaque(this_val, node);
@@ -57,6 +59,7 @@ js_htmlCollection2_SetOpaque(JSValueConst this_val, void *node)
 static
 void js_htmlColection2_finalizer(JSRuntime *rt, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -78,6 +81,7 @@ void js_htmlColection2_finalizer(JSRuntime *rt, JSValue val)
 static JSValue
 js_htmlCollection2_get_property_length(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -102,6 +106,7 @@ js_htmlCollection2_get_property_length(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_htmlCollection2_item2(JSContext *ctx, JSValueConst this_val, int idx)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -134,6 +139,7 @@ js_htmlCollection2_item2(JSContext *ctx, JSValueConst this_val, int idx)
 static JSValue
 js_htmlCollection2_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -152,6 +158,7 @@ js_htmlCollection2_item(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 static JSValue
 js_htmlCollection2_namedItem2(JSContext *ctx, JSValueConst this_val, const char *str)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -234,6 +241,7 @@ js_htmlCollection2_namedItem2(JSContext *ctx, JSValueConst this_val, const char 
 static JSValue
 js_htmlCollection2_namedItem(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -261,6 +269,7 @@ js_htmlCollection2_namedItem(JSContext *ctx, JSValueConst this_val, int argc, JS
 static void
 js_htmlCollection2_set_items(JSContext *ctx, JSValue this_val, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -318,6 +327,7 @@ js_htmlCollection2_set_items(JSContext *ctx, JSValue this_val, void *node)
 static JSValue
 js_htmlCollection2_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -341,6 +351,7 @@ static JSClassDef js_htmlCollection2_class = {
 JSValue
 getCollection2(JSContext *ctx, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

@@ -35,6 +35,7 @@ struct lzma_enc_data {
 static int
 lzma_open(struct stream_encoded *stream, int fd)
 {
+	ELOG
 	struct lzma_enc_data *data = (struct lzma_enc_data *)mem_alloc(sizeof(*data));
 	int err;
 
@@ -62,6 +63,7 @@ lzma_open(struct stream_encoded *stream, int fd)
 static int
 lzma_read(struct stream_encoded *stream, char *buf, int len)
 {
+	ELOG
 	struct lzma_enc_data *data = (struct lzma_enc_data *) stream->data;
 	int err = 0;
 
@@ -109,6 +111,7 @@ lzma_read(struct stream_encoded *stream, char *buf, int len)
 static char *
 lzma_decode_buffer(struct stream_encoded *st, char *data, int len, int *new_len)
 {
+	ELOG
 	struct lzma_enc_data *enc_data = (struct lzma_enc_data *) st->data;
 	lzma_stream *stream = &enc_data->flzma_stream;
 	unsigned char *buffer = NULL;
@@ -162,6 +165,7 @@ lzma_decode_buffer(struct stream_encoded *st, char *data, int len, int *new_len)
 static void
 lzma_close(struct stream_encoded *stream)
 {
+	ELOG
 	struct lzma_enc_data *data = (struct lzma_enc_data *) stream->data;
 
 	if (data) {
@@ -179,6 +183,7 @@ lzma_close(struct stream_encoded *stream)
 const char *
 get_lzma_version(void)
 {
+	ELOG
 	return lzma_version_string();
 }
 

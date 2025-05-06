@@ -22,6 +22,7 @@
 static /*enum dom_select_pseudo*/ unsigned int
 get_dom_select_pseudo(struct dom_scanner_token *token)
 {
+	ELOG
 	static struct {
 		struct dom_string string;
 		/*enum dom_select_pseudo*/ unsigned int pseudo;
@@ -83,6 +84,7 @@ get_dom_select_pseudo(struct dom_scanner_token *token)
 static enum dom_code
 parse_dom_select_attribute(struct dom_select_node *sel, struct dom_scanner *scanner)
 {
+	ELOG
 	struct dom_scanner_token *token = get_dom_scanner_token(scanner);
 
 	/* Get '['. */
@@ -171,6 +173,7 @@ parse_dom_select_attribute(struct dom_select_node *sel, struct dom_scanner *scan
 static size_t
 get_scanner_token_number(struct dom_scanner_token *token)
 {
+	ELOG
 	size_t number = 0;
 
 	while (token->string.length > 0 && isdigit(token->string.string[0])) {
@@ -193,6 +196,7 @@ get_scanner_token_number(struct dom_scanner_token *token)
 static enum dom_code
 parse_dom_select_nth_arg(struct dom_select_nth_match *nth, struct dom_scanner *scanner)
 {
+	ELOG
 	struct dom_scanner_token *token = get_next_dom_scanner_token(scanner);
 	int sign = 1;
 	int number = -1;
@@ -293,6 +297,7 @@ static enum dom_code
 parse_dom_select_pseudo(struct dom_select *select, struct dom_select_node *sel,
 			struct dom_scanner *scanner)
 {
+	ELOG
 	struct dom_scanner_token *token = get_dom_scanner_token(scanner);
 	/*enum dom_select_pseudo*/ unsigned int pseudo;
 	enum dom_code code;
@@ -388,6 +393,7 @@ static enum dom_code
 parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 		 struct dom_string *string)
 {
+	ELOG
 	struct dom_scanner scanner;
 	struct dom_select_node sel;
 
@@ -527,6 +533,7 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 struct dom_select *
 init_dom_select(enum dom_select_syntax syntax, struct dom_string *string)
 {
+	ELOG
 	struct dom_select *select = (struct dom_select *)mem_calloc(1, sizeof(select));
 	struct dom_stack stack;
 	enum dom_code code;
@@ -548,6 +555,7 @@ init_dom_select(enum dom_select_syntax syntax, struct dom_string *string)
 void
 done_dom_select(struct dom_select *select)
 {
+	ELOG
 	if (select->selector) {
 		struct dom_node *node = (struct dom_node *) select->selector;
 
@@ -592,6 +600,7 @@ static struct dom_select_node *
 get_child_dom_select_node(struct dom_select_node *selector,
 			  enum dom_node_type type)
 {
+	ELOG
 	struct dom_node_list *children = selector->node.data.element.children;
 	struct dom_node *node;
 	int index;
@@ -614,6 +623,7 @@ get_child_dom_select_node(struct dom_select_node *selector,
 static int
 match_attribute_value(struct dom_select_node *selector, struct dom_node *node)
 {
+	ELOG
 	struct dom_string str;
 	struct dom_string *selvalue = &selector->node.data.attribute.value;
 	struct dom_string *value = &node->data.attribute.value;
@@ -719,6 +729,7 @@ match_attribute_value(struct dom_select_node *selector, struct dom_node *node)
 static int
 match_attribute_selectors(struct dom_select_node *base, struct dom_node *node)
 {
+	ELOG
 	struct dom_node_list *attrs = node->data.element.map;
 	struct dom_node_list *selnodes = base->node.data.element.map;
 	struct dom_node *selnode;
@@ -778,6 +789,7 @@ static int
 match_element_relation(struct dom_select_node *selector, struct dom_node *node,
 		       struct dom_stack *stack)
 {
+	ELOG
 	struct dom_stack_state *state;
 	/*enum dom_select_element_match*/ unsigned int relation = get_element_relation(selector);
 	int i, index;
@@ -852,6 +864,7 @@ static int
 match_element_selector(struct dom_select_node *selector, struct dom_node *node,
 		       struct dom_stack *stack)
 {
+	ELOG
 	assert(node && node->type == DOM_NODE_ELEMENT);
 
 	if (!has_element_match(selector, DOM_SELECT_ELEMENT_UNIVERSAL)
@@ -901,6 +914,7 @@ match_element_selector(struct dom_select_node *selector, struct dom_node *node,
 enum dom_code
 dom_select_push_element(struct dom_stack *stack, struct dom_node *node, void *data)
 {
+	ELOG
 	struct dom_select_data *select_data = (struct dom_select_data *)get_dom_select_data(stack);
 	struct dom_stack_state *state;
 	int pos;
@@ -931,6 +945,7 @@ dom_select_push_element(struct dom_stack *stack, struct dom_node *node, void *da
 enum dom_code
 dom_select_pop_element(struct dom_stack *stack, struct dom_node *node, void *data)
 {
+	ELOG
 	struct dom_select_data *select_data = (struct dom_select_data *)get_dom_select_data(stack);
 	struct dom_stack_state *state;
 	int index;
@@ -957,6 +972,7 @@ dom_select_pop_element(struct dom_stack *stack, struct dom_node *node, void *dat
 enum dom_code
 dom_select_push_text(struct dom_stack *stack, struct dom_node *node, void *data)
 {
+	ELOG
 	struct dom_select_data *select_data = (struct dom_select_data *)get_dom_select_data(stack);
 	struct dom_stack_state *state = get_dom_stack_top(&select_data->stack);
 	struct dom_select_node *selector = (struct dom_select_node *) state->node;
@@ -1057,6 +1073,7 @@ static struct dom_stack_context_info dom_select_data_context_info = {
 struct dom_node_list *
 select_dom_nodes(struct dom_select *select, struct dom_node *root)
 {
+	ELOG
 	struct dom_select_data select_data;
 	struct dom_stack stack;
 

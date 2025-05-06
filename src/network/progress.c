@@ -18,6 +18,7 @@
 int
 has_progress(struct progress *progress)
 {
+	ELOG
 	timeval_T current_speed_after;
 
 	timeval_from_milliseconds(&current_speed_after, CURRENT_SPD_AFTER);
@@ -28,6 +29,7 @@ has_progress(struct progress *progress)
 struct progress *
 init_progress(off_t start)
 {
+	ELOG
 	struct progress *progress = (struct progress *)mem_calloc(1, sizeof(*progress));
 
 	if (progress) {
@@ -41,6 +43,7 @@ init_progress(off_t start)
 void
 done_progress(struct progress *progress)
 {
+	ELOG
 	assert(progress->timer == TIMER_ID_UNDEF);
 	mem_free(progress);
 }
@@ -50,6 +53,7 @@ done_progress(struct progress *progress)
 static void
 progress_timeout(void *progress_voidptr)
 {
+	ELOG
 	struct progress *const progress = (struct progress *const)progress_voidptr;
 
 	progress->timer = TIMER_ID_UNDEF;
@@ -62,6 +66,7 @@ progress_timeout(void *progress_voidptr)
 void
 update_progress(struct progress *progress, off_t loaded, off_t size, off_t pos)
 {
+	ELOG
 	off_t bytes_delta;
 	timeval_T now, elapsed, dis_b_max, dis_b_interval;
 
@@ -113,6 +118,7 @@ void
 start_update_progress(struct progress *progress, void (*timer_func)(void *),
 		      void *timer_func_data)
 {
+	ELOG
 	if (!progress->valid) {
 		struct progress tmp;
 

@@ -81,6 +81,7 @@ struct submitted_value *
 init_submitted_value(const char *name, const char *value, enum form_type type,
 		     struct el_form_control *fc, int position)
 {
+	ELOG
 	struct submitted_value *sv;
 
 	sv = (struct submitted_value *)mem_alloc(sizeof(*sv));
@@ -103,6 +104,7 @@ init_submitted_value(const char *name, const char *value, enum form_type type,
 void
 done_submitted_value(struct submitted_value *sv)
 {
+	ELOG
 	if (!sv) return;
 	mem_free_if(sv->value);
 	mem_free_if(sv->name);
@@ -112,6 +114,7 @@ done_submitted_value(struct submitted_value *sv)
 static void
 fixup_select_state(struct el_form_control *fc, struct form_state *fs)
 {
+	ELOG
 	int i;
 
 	assert(fc && fs);
@@ -139,6 +142,7 @@ fixup_select_state(struct el_form_control *fc, struct form_state *fs)
 void
 selected_item(struct terminal *term, void *item_, void *ses_)
 {
+	ELOG
 	struct session *ses = (struct session *)ses_;
 	int item = (int)(size_t)item_;
 	struct document_view *doc_view;
@@ -173,6 +177,7 @@ static void
 init_form_state(struct document_view *doc_view,
 		struct el_form_control *fc, struct form_state *fs)
 {
+	ELOG
 	struct terminal *term;
 	int doc_cp, viewer_cp;
 
@@ -246,6 +251,7 @@ init_form_state(struct document_view *doc_view,
 struct form_state *
 find_form_state(struct document_view *doc_view, struct el_form_control *fc)
 {
+	ELOG
 	struct view_state *vs;
 	struct form_state *fs;
 	int n;
@@ -305,6 +311,7 @@ find_form_state(struct document_view *doc_view, struct el_form_control *fc)
 struct el_form_control *
 find_form_control(struct document *document, struct form_state *fs)
 {
+	ELOG
 	struct form *form = find_form_by_form_view(document, fs->form_view);
 	struct el_form_control *fc;
 
@@ -321,6 +328,7 @@ find_form_control(struct document *document, struct form_state *fs)
 struct form_view *
 find_form_view_in_vs(struct view_state *vs, int form_num)
 {
+	ELOG
 	struct form_view *fv;
 
 	assert(vs);
@@ -338,12 +346,14 @@ find_form_view_in_vs(struct view_state *vs, int form_num)
 struct form_view *
 find_form_view(struct document_view *doc_view, struct form *form)
 {
+	ELOG
 	return find_form_view_in_vs(doc_view->vs, form->form_num);
 }
 
 struct form *
 find_form_by_form_view(struct document *document, struct form_view *fv)
 {
+	ELOG
 	struct form *form;
 
 	foreach (form, document->forms) {
@@ -359,6 +369,7 @@ find_form_by_form_view(struct document *document, struct form_view *fv)
 void
 done_form_state(struct form_state *fs)
 {
+	ELOG
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 	ecmascript_detach_form_state(fs);
 #endif
@@ -371,6 +382,7 @@ done_form_state(struct form_state *fs)
 void
 done_form_view(struct form_view *fv)
 {
+	ELOG
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 	ecmascript_detach_form_view(fv);
 #endif
@@ -380,6 +392,7 @@ done_form_view(struct form_view *fv)
 int
 get_current_state(struct session *ses)
 {
+	ELOG
 	struct document_view *doc_view;
 	struct link *link;
 	struct form_state *fs;
@@ -403,6 +416,7 @@ void
 draw_form_entry(struct terminal *term, struct document_view *doc_view,
 		struct link *link)
 {
+	ELOG
 	struct form_state *fs;
 	struct el_form_control *fc;
 	struct view_state *vs;
@@ -669,6 +683,7 @@ drew_char:
 void
 draw_forms(struct terminal *term, struct document_view *doc_view)
 {
+	ELOG
 	struct link *l1, *l2;
 
 	assert(term && doc_view);
@@ -696,6 +711,7 @@ draw_forms(struct terminal *term, struct document_view *doc_view)
 void
 done_submitted_value_list(LIST_OF(struct submitted_value) *list)
 {
+	ELOG
 	struct submitted_value *sv, *svtmp;
 
 	assert(list);
@@ -714,6 +730,7 @@ add_submitted_value_to_list(struct el_form_control *fc,
 		            struct form_state *fs,
 		            LIST_OF(struct submitted_value) *list)
 {
+	ELOG
 	struct submitted_value *sub;
 	char *name;
 	enum form_type type;
@@ -779,6 +796,7 @@ add_submitted_value_to_list(struct el_form_control *fc,
 static void
 sort_submitted_values(LIST_OF(struct submitted_value) *list)
 {
+	ELOG
 	while (1) {
 		struct submitted_value *sub;
 		int changed = 0;
@@ -812,6 +830,7 @@ get_successful_controls(struct document_view *doc_view,
 			struct el_form_control *fc,
 			LIST_OF(struct submitted_value) *list)
 {
+	ELOG
 	struct el_form_control *fc2;
 
 	assert(doc_view && fc && fc->form && list);
@@ -837,6 +856,7 @@ get_successful_controls(struct document_view *doc_view,
 char *
 encode_crlf(struct submitted_value *sv)
 {
+	ELOG
 	struct string newtext;
 	int i;
 
@@ -862,6 +882,7 @@ static void
 encode_controls(LIST_OF(struct submitted_value) *l, struct string *data,
 		int cp_from, int cp_to)
 {
+	ELOG
 	struct submitted_value *sv;
 	struct conv_table *convert_table = NULL;
 	int lst = 0;
@@ -930,6 +951,7 @@ struct boundary_info {
 static void
 randomize_boundary(char *data, int length)
 {
+	ELOG
 	int i;
 
 	random_nonce((unsigned char *)data, length);
@@ -947,6 +969,7 @@ randomize_boundary(char *data, int length)
 static inline void
 init_boundary(struct boundary_info *boundary)
 {
+	ELOG
 	memset(boundary, 0, sizeof(*boundary));
 	randomize_boundary(boundary->string, BOUNDARY_LENGTH);
 }
@@ -956,6 +979,7 @@ init_boundary(struct boundary_info *boundary)
 static inline void
 add_boundary(struct string *data, struct boundary_info *boundary)
 {
+	ELOG
 	add_to_string(data, "--");
 
 	if (realloc_bound_ptrs(&boundary->offsets, boundary->count))
@@ -1000,6 +1024,7 @@ encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
 		 struct string *data, struct boundary_info *boundary,
 		 LIST_OF(struct files_offset) *bfs, int cp_from, int cp_to)
 {
+	ELOG
 	struct conv_table *convert_table = NULL;
 	struct submitted_value *sv;
 
@@ -1136,6 +1161,7 @@ encode_error:
 static void
 encode_newlines(struct string *string, char *data)
 {
+	ELOG
 	for (; *data; data++) {
 		if (*data == '\n' || *data == '\r') {
 			char buffer[3];
@@ -1155,6 +1181,7 @@ static void
 encode_text_plain(LIST_OF(struct submitted_value) *l, struct string *data,
 		  int cp_from, int cp_to)
 {
+	ELOG
 	struct submitted_value *sv;
 	struct conv_table *convert_table = get_translation_table(cp_from, cp_to);
 
@@ -1204,6 +1231,7 @@ encode_text_plain(LIST_OF(struct submitted_value) *l, struct string *data,
 void
 do_reset_form(struct document_view *doc_view, struct form *form)
 {
+	ELOG
 	struct el_form_control *fc;
 
 	assert(doc_view && doc_view->document);
@@ -1219,6 +1247,7 @@ do_reset_form(struct document_view *doc_view, struct form *form)
 enum frame_event_status
 reset_form(struct session *ses, struct document_view *doc_view, int a)
 {
+	ELOG
 	struct link *link = get_current_link(doc_view);
 
 	if (!link) return FRAME_EVENT_OK;
@@ -1235,6 +1264,7 @@ struct uri *
 get_form_uri(struct session *ses, struct document_view *doc_view,
 	     struct el_form_control *fc)
 {
+	ELOG
 	struct boundary_info boundary;
 	INIT_LIST_OF(struct submitted_value, submit);
 	INIT_LIST_OF(struct files_offset, bfs);
@@ -1401,6 +1431,7 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 enum frame_event_status
 submit_form(struct session *ses, struct document_view *doc_view, int do_reload)
 {
+	ELOG
 	goto_current_link(ses, doc_view, do_reload);
 	return FRAME_EVENT_OK;
 }
@@ -1409,6 +1440,7 @@ void
 submit_given_form(struct session *ses, struct document_view *doc_view,
 		  struct form *form, int do_reload)
 {
+	ELOG
 /* Added support for submitting forms in hidden
  * links in 1.285, commented code can safely be removed once we have made sure the new
  * code does the right thing. */
@@ -1443,6 +1475,7 @@ submit_given_form(struct session *ses, struct document_view *doc_view,
 void
 auto_submit_form(struct session *ses)
 {
+	ELOG
 	struct document *document = ses->doc_view->document;
 
 	if (!list_empty(document->forms))
@@ -1454,6 +1487,7 @@ auto_submit_form(struct session *ses)
 static void
 set_file_form_state(struct terminal *term, void *filename_, void *fs_)
 {
+	ELOG
 	char *filename = (char *)filename_;
 	struct form_state *fs = (struct form_state *)fs_;
 
@@ -1467,6 +1501,7 @@ set_file_form_state(struct terminal *term, void *filename_, void *fs_)
 static void
 file_form_menu(struct terminal *term, void *path_, void *fs_)
 {
+	ELOG
 	char *path = (char *)path_;
 	struct form_state *fs = (struct form_state *)fs_;
 
@@ -1497,6 +1532,7 @@ enum frame_event_status
 field_op(struct session *ses, struct document_view *doc_view,
 	 struct link *link, struct term_event *ev)
 {
+	ELOG
 	struct el_form_control *fc;
 	struct form_state *fs;
 	edit_action_T action_id;
@@ -1919,6 +1955,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 static char *
 get_form_label(struct el_form_control *fc)
 {
+	ELOG
 	assert(fc->form);
 	switch (fc->type) {
 	case FC_RESET:
@@ -1959,6 +1996,7 @@ static inline void
 add_form_attr_to_string(struct string *string, struct terminal *term,
 			char *name, char *value)
 {
+	ELOG
 	add_to_string(string, ", ");
 	add_to_string(string, _(name, term));
 	if (value) {
@@ -1970,6 +2008,7 @@ add_form_attr_to_string(struct string *string, struct terminal *term,
 char *
 get_form_info(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	struct terminal *term = ses->tab->term;
 	struct link *link = get_current_link(doc_view);
 	struct el_form_control *fc;
@@ -2104,6 +2143,7 @@ get_form_info(struct session *ses, struct document_view *doc_view)
 static void
 link_form_menu_func(struct terminal *term, void *link_number_, void *ses_)
 {
+	ELOG
 	struct session *ses = (struct session *)ses_;
 	struct document_view *doc_view;
 	int link_number = *(int *) link_number_;
@@ -2126,6 +2166,7 @@ link_form_menu_func(struct terminal *term, void *link_number_, void *ses_)
 void
 link_form_menu(struct session *ses)
 {
+	ELOG
 	struct document_view *doc_view;
 	struct link *link;
 	struct menu_item *mi;

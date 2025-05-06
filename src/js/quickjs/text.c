@@ -73,6 +73,7 @@ static JSValue js_text_set_property_textContent(JSContext *ctx, JSValueConst thi
 void *
 js_getopaque_text(JSValueConst obj, JSClassID class_id)
 {
+	ELOG
 	//REF_JS(obj);
 
 	struct js_text_private *res = (struct js_text_private *)JS_GetOpaque(obj, class_id);
@@ -93,12 +94,14 @@ js_getopaque_text(JSValueConst obj, JSClassID class_id)
 void *
 text_get_node(JSValueConst obj)
 {
+	ELOG
 	return js_getopaque_text(obj, js_text_class_id);
 }
 
 static JSValue
 js_text_get_property_children(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -129,6 +132,7 @@ js_text_get_property_children(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_text_get_property_childElementCount(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -161,6 +165,7 @@ js_text_get_property_childElementCount(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_text_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -191,6 +196,7 @@ js_text_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_text_get_property_firstChild(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -223,6 +229,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_text_get_property_firstElementChild(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -289,6 +296,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_text_get_property_lastChild(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -322,6 +330,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_text_get_property_lastElementChild(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -387,6 +396,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_text_get_property_nextElementSibling(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -438,6 +448,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_text_get_property_nodeName(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -473,6 +484,7 @@ js_text_get_property_nodeName(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_text_get_property_nodeType(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -502,6 +514,7 @@ js_text_get_property_nodeType(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_text_get_property_nodeValue(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -534,6 +547,7 @@ js_text_get_property_nodeValue(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_text_set_property_nodeValue(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -571,6 +585,7 @@ js_text_set_property_nodeValue(JSContext *ctx, JSValueConst this_val, JSValue va
 static JSValue
 js_text_get_property_nextSibling(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -605,6 +620,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_text_get_property_ownerDocument(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -619,6 +635,7 @@ js_text_get_property_ownerDocument(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_text_get_property_parentElement(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -652,6 +669,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_text_get_property_parentNode(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -685,6 +703,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_text_get_property_previousElementSibling(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -737,6 +756,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_text_get_property_previousSibling(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -770,6 +790,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_text_get_property_tagName(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -801,6 +822,7 @@ js_text_get_property_tagName(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_text_get_property_textContent(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -830,6 +852,7 @@ js_text_get_property_textContent(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_text_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -871,6 +894,7 @@ js_text_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSValue 
 static xmlpp::Element*
 el_add_child_element_common(xmlNode* child, xmlNode* node)
 {
+	ELOG
 	if (!node) {
 		xmlFreeNode(child);
 		throw xmlpp::internal_error("Could not add child element node");
@@ -884,6 +908,7 @@ el_add_child_element_common(xmlNode* child, xmlNode* node)
 static JSValue
 js_text_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -927,6 +952,7 @@ js_text_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 static JSValue
 js_text_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1021,6 +1047,7 @@ ex:
 static JSValue
 js_text_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1096,6 +1123,7 @@ js_text_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSV
 static JSValue
 js_text_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1147,6 +1175,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_text_cloneNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1189,6 +1218,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static bool
 isAncestor(dom_node *el, dom_node *node)
 {
+	ELOG
 	dom_node *prev_next = NULL;
 	while (node) {
 		dom_exception exc;
@@ -1217,6 +1247,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_text_contains(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1280,6 +1311,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static JSValue
 js_text_hasChildNodes(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1315,6 +1347,7 @@ js_text_hasChildNodes(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 static JSValue
 js_text_insertBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1370,6 +1403,7 @@ js_text_insertBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 static JSValue
 js_text_isEqualNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1426,6 +1460,7 @@ js_text_isEqualNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 static JSValue
 js_text_isSameNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1458,6 +1493,7 @@ js_text_isSameNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 static JSValue
 js_text_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1498,6 +1534,7 @@ js_text_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 static JSValue
 js_text_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1543,6 +1580,7 @@ static const JSCFunctionListEntry js_text_proto_funcs[] = {
 static
 void js_text_finalizer(JSRuntime *rt, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1578,6 +1616,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 js_text_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1605,6 +1644,7 @@ static JSClassDef js_text_class = {
 int
 js_text_init(JSContext *ctx)
 {
+	ELOG
 	JSValue element_proto;
 
 	/* create the element class */
@@ -1629,6 +1669,7 @@ js_text_init(JSContext *ctx)
 JSValue
 getText(JSContext *ctx, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1661,6 +1702,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 static void
 text_event_handler(dom_event *event, void *pw)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

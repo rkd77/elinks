@@ -21,6 +21,7 @@
 void
 el_insert_before(struct document *document, void *element, struct string *source)
 {
+	ELOG
 	dom_html_document *doc = (dom_html_document *)document->dom;
 	dom_node *node = (dom_node *)element;
 	dom_string *text = NULL;

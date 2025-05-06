@@ -49,6 +49,7 @@ static INIT_LIST_OF(struct negotiate, negotiate_list);
 static struct negotiate *
 http_negotiate_get(struct uri *uri, int *isnew, int alloc)
 {
+	ELOG
 	struct negotiate *neg;
 
 	foreach (neg, negotiate_list) {
@@ -73,12 +74,14 @@ http_negotiate_get(struct uri *uri, int *isnew, int alloc)
 static void
 http_negotiate_save(struct negotiate *neg)
 {
+	ELOG
 	add_to_list(negotiate_list, neg);
 }
 
 static void
 http_negotiate_cleanup(struct negotiate *neg, int full)
 {
+	ELOG
 	OM_uint32 minor_status;
 
 	if (neg->context != GSS_C_NO_CONTEXT)
@@ -104,6 +107,7 @@ http_negotiate_cleanup(struct negotiate *neg, int full)
 static int
 http_negotiate_get_name(struct connection *conn, struct negotiate *neg)
 {
+	ELOG
 	OM_uint32 major_status, minor_status;
 	gss_buffer_desc token = GSS_C_EMPTY_BUFFER;
 	char name[2048];
@@ -140,6 +144,7 @@ static int
 http_negotiate_parse_data(char *data, int type,
 			  gss_buffer_desc *token)
 {
+	ELOG
 	int len = 0;
 	char *end;
 	int bytelen = 0;
@@ -183,6 +188,7 @@ http_negotiate_parse_data(char *data, int type,
 static int
 http_negotiate_create_context(struct negotiate *neg)
 {
+	ELOG
 	OM_uint32 major_status, minor_status;
 
 	major_status = gss_init_sec_context(&minor_status,
@@ -217,6 +223,7 @@ int
 http_negotiate_input(struct connection *conn, struct uri *uri,
 		     int type, char *data)
 {
+	ELOG
 	struct negotiate *neg;
 	int ret = 0, isnew = 0;
 
@@ -255,6 +262,7 @@ http_negotiate_input(struct connection *conn, struct uri *uri,
 int
 http_negotiate_output(struct uri *uri, struct string *header)
 {
+	ELOG
 	struct negotiate *neg;
 	char *encoded = NULL;
 	int len = 0;

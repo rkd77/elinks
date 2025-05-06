@@ -21,6 +21,7 @@
 static void
 mjs_implementation_createHTMLDocument(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -48,6 +49,7 @@ mjs_implementation_createHTMLDocument(js_State *J)
 static void
 mjs_implementation_toString(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -57,6 +59,7 @@ mjs_implementation_toString(js_State *J)
 void
 mjs_push_implementation(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

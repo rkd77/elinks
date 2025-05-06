@@ -72,6 +72,7 @@ enum {
 static void
 mjs_node_static_get_property_ELEMENT_NODE(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -81,6 +82,7 @@ mjs_node_static_get_property_ELEMENT_NODE(js_State *J)
 static void
 mjs_node_static_get_property_ATTRIBUTE_NODE(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -90,6 +92,7 @@ mjs_node_static_get_property_ATTRIBUTE_NODE(js_State *J)
 static void
 mjs_node_static_get_property_TEXT_NODE(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -99,6 +102,7 @@ mjs_node_static_get_property_TEXT_NODE(js_State *J)
 static void
 mjs_node_static_get_property_CDATA_SECTION_NODE(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -108,6 +112,7 @@ mjs_node_static_get_property_CDATA_SECTION_NODE(js_State *J)
 static void
 mjs_node_static_get_property_PROCESSING_INSTRUCTION_NODE(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -117,6 +122,7 @@ mjs_node_static_get_property_PROCESSING_INSTRUCTION_NODE(js_State *J)
 static void
 mjs_node_static_get_property_COMMENT_NODE(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -126,6 +132,7 @@ mjs_node_static_get_property_COMMENT_NODE(js_State *J)
 static void
 mjs_node_static_get_property_DOCUMENT_NODE(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -135,6 +142,7 @@ mjs_node_static_get_property_DOCUMENT_NODE(js_State *J)
 static void
 mjs_node_static_get_property_DOCUMENT_TYPE_NODE(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -143,6 +151,7 @@ mjs_node_static_get_property_DOCUMENT_TYPE_NODE(js_State *J)
 static void
 mjs_node_static_get_property_DOCUMENT_FRAGMENT_NODE(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -153,6 +162,7 @@ mjs_node_static_get_property_DOCUMENT_FRAGMENT_NODE(js_State *J)
 static void
 mjs_node_fun(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -163,6 +173,7 @@ mjs_node_fun(js_State *J)
 void
 mjs_push_node(js_State *J, void *n)
 {
+	ELOG
 	dom_node *node = (dom_node *)n;
 	dom_node_type typ;
 	dom_exception exc = dom_node_get_node_type(node, &typ);
@@ -202,6 +213,7 @@ mjs_push_node(js_State *J, void *n)
 static void
 mjs_node_constructor(js_State *J)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -222,6 +234,7 @@ mjs_node_constructor(js_State *J)
 int
 mjs_node_init(js_State *J)
 {
+	ELOG
 	js_pushglobal(J);
 	//js_newcconstructor(J, mjs_node_fun, mjs_node_constructor, "Node", 0);
 	mjs_node_constructor(J);

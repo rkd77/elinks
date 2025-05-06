@@ -111,6 +111,7 @@ static const struct protocol_backend protocol_backends[] = {
 protocol_T
 get_protocol(const char *name, int namelen)
 {
+	ELOG
 	/* These are really protocol_T values but can take on negative
 	 * values and since 0 <= -1 for enum values it's better to use clean
 	 * integer type. */
@@ -168,6 +169,7 @@ get_protocol(const char *name, int namelen)
 int
 get_protocol_port(protocol_T protocol)
 {
+	ELOG
 	assert(VALID_PROTOCOL(protocol));
 	if_assert_failed return 0;
 
@@ -180,6 +182,7 @@ get_protocol_port(protocol_T protocol)
 int
 get_protocol_need_slashes(protocol_T protocol)
 {
+	ELOG
 	assert(VALID_PROTOCOL(protocol));
 	if_assert_failed return 0;
 	return protocol_backends[protocol].need_slashes;
@@ -188,6 +191,7 @@ get_protocol_need_slashes(protocol_T protocol)
 int
 get_protocol_need_slash_after_host(protocol_T protocol)
 {
+	ELOG
 	assert(VALID_PROTOCOL(protocol));
 	if_assert_failed return 0;
 	return protocol_backends[protocol].need_slash_after_host;
@@ -196,6 +200,7 @@ get_protocol_need_slash_after_host(protocol_T protocol)
 int
 get_protocol_keep_double_slashes(protocol_T protocol)
 {
+	ELOG
 	assert(VALID_PROTOCOL(protocol));
 	if_assert_failed return 0;
 	return protocol_backends[protocol].keep_double_slashes;
@@ -204,6 +209,7 @@ get_protocol_keep_double_slashes(protocol_T protocol)
 int
 get_protocol_free_syntax(protocol_T protocol)
 {
+	ELOG
 	assert(VALID_PROTOCOL(protocol));
 	if_assert_failed return 0;
 	return protocol_backends[protocol].free_syntax;
@@ -212,6 +218,7 @@ get_protocol_free_syntax(protocol_T protocol)
 int
 get_protocol_need_ssl(protocol_T protocol)
 {
+	ELOG
 	assert(VALID_PROTOCOL(protocol));
 	if_assert_failed return 0;
 	return protocol_backends[protocol].need_ssl;
@@ -220,6 +227,7 @@ get_protocol_need_ssl(protocol_T protocol)
 protocol_handler_T *
 get_protocol_handler(protocol_T protocol)
 {
+	ELOG
 	assert(VALID_PROTOCOL(protocol));
 	if_assert_failed return NULL;
 	return protocol_backends[protocol].handler;
@@ -229,6 +237,7 @@ get_protocol_handler(protocol_T protocol)
 static void
 generic_external_protocol_handler(struct session *ses, struct uri *uri)
 {
+	ELOG
 	/* [gettext_accelerator_context(generic_external_protocol_handler)] */
 	struct connection_state state;
 
@@ -270,6 +279,7 @@ generic_external_protocol_handler(struct session *ses, struct uri *uri)
 protocol_external_handler_T *
 get_protocol_external_handler(struct terminal *term, struct uri *uri)
 {
+	ELOG
 	char *prog;
 
 	assert(uri && VALID_PROTOCOL(uri->protocol));

@@ -63,6 +63,7 @@ enum {
 char *
 normalize(char *value)
 {
+	ELOG
 	char *ret = value;
 	size_t index = strspn(ret, "\r\n\t ");
 	ret += index;
@@ -84,6 +85,7 @@ normalize(char *value)
 static bool
 valid_header(const char *header)
 {
+	ELOG
 	if (!*header) {
 		return false;
 	}
@@ -99,6 +101,7 @@ valid_header(const char *header)
 static bool
 forbidden_header(const char *header)
 {
+	ELOG
 	const char *bad[] = {
 		"Accept-Charset"
 		"Accept-Encoding",
@@ -151,6 +154,7 @@ static void ontimeout_run(void *data);
 static void
 onload_run(void *data)
 {
+	ELOG
 	struct Xhr *x = (struct Xhr *)data;
 
 	if (x && ecmascript_found(x->interpreter)) {
@@ -189,6 +193,7 @@ onload_run(void *data)
 static void
 onloadend_run(void *data)
 {
+	ELOG
 	struct Xhr *x = (struct Xhr *)data;
 
 	if (x && ecmascript_found(x->interpreter)) {
@@ -227,6 +232,7 @@ onloadend_run(void *data)
 static void
 onreadystatechange_run(void *data)
 {
+	ELOG
 	struct Xhr *x = (struct Xhr *)data;
 
 	if (x && ecmascript_found(x->interpreter)) {
@@ -265,6 +271,7 @@ onreadystatechange_run(void *data)
 static void
 ontimeout_run(void *data)
 {
+	ELOG
 	struct Xhr *x = (struct Xhr *)data;
 
 	if (x && ecmascript_found(x->interpreter)) {
@@ -303,6 +310,7 @@ ontimeout_run(void *data)
 static void
 xhr_finalizer(JSRuntime *rt, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -342,6 +350,7 @@ xhr_finalizer(JSRuntime *rt, JSValue val)
 static void
 xhr_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -375,6 +384,7 @@ static JSClassDef xhr_class = {
 static struct Xhr *
 xhr_get(JSContext *ctx, JSValueConst obj)
 {
+	ELOG
 	REF_JS(obj);
 
 	return (struct Xhr *)JS_GetOpaque2(ctx, obj, xhr_class_id);
@@ -383,6 +393,7 @@ xhr_get(JSContext *ctx, JSValueConst obj)
 static void
 x_loading_callback(struct download *download, struct Xhr *x)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -432,6 +443,7 @@ x_loading_callback(struct download *download, struct Xhr *x)
 static JSValue
 xhr_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -479,6 +491,7 @@ xhr_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst 
 static JSValue
 xhr_event_get(JSContext *ctx, JSValueConst this_val, int magic)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -496,6 +509,7 @@ xhr_event_get(JSContext *ctx, JSValueConst this_val, int magic)
 static JSValue
 xhr_event_set(JSContext *ctx, JSValueConst this_val, JSValueConst value, int magic)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -518,6 +532,7 @@ xhr_event_set(JSContext *ctx, JSValueConst this_val, JSValueConst value, int mag
 static JSValue
 xhr_readystate_get(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -535,6 +550,7 @@ xhr_readystate_get(JSContext *ctx, JSValueConst this_val)
 static JSValue
 xhr_response_get(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -576,6 +592,7 @@ xhr_response_get(JSContext *ctx, JSValueConst this_val)
 static JSValue
 xhr_responsetext_get(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -600,6 +617,7 @@ xhr_responsetext_get(JSContext *ctx, JSValueConst this_val)
 static JSValue
 xhr_responsetype_get(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -628,6 +646,7 @@ xhr_responsetype_get(JSContext *ctx, JSValueConst this_val)
 static JSValue
 xhr_responsetype_set(JSContext *ctx, JSValueConst this_val, JSValueConst value)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -669,6 +688,7 @@ xhr_responsetype_set(JSContext *ctx, JSValueConst this_val, JSValueConst value)
 static JSValue
 xhr_responseurl_get(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -686,6 +706,7 @@ xhr_responseurl_get(JSContext *ctx, JSValueConst this_val)
 static JSValue
 xhr_status_get(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -703,6 +724,7 @@ xhr_status_get(JSContext *ctx, JSValueConst this_val)
 static JSValue
 xhr_statustext_get(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -724,6 +746,7 @@ xhr_statustext_get(JSContext *ctx, JSValueConst this_val)
 static JSValue
 xhr_timeout_get(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -741,6 +764,7 @@ xhr_timeout_get(JSContext *ctx, JSValueConst this_val)
 static JSValue
 xhr_timeout_set(JSContext *ctx, JSValueConst this_val, JSValueConst value)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -769,6 +793,7 @@ xhr_timeout_set(JSContext *ctx, JSValueConst this_val, JSValueConst value)
 static JSValue
 xhr_upload_get(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -781,6 +806,7 @@ xhr_upload_get(JSContext *ctx, JSValueConst this_val)
 static JSValue
 xhr_withcredentials_get(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -792,6 +818,7 @@ xhr_withcredentials_get(JSContext *ctx, JSValueConst this_val)
 static JSValue
 xhr_withcredentials_set(JSContext *ctx, JSValueConst this_val, JSValueConst value)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -804,6 +831,7 @@ xhr_withcredentials_set(JSContext *ctx, JSValueConst this_val, JSValueConst valu
 static JSValue
 xhr_abort(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -828,6 +856,7 @@ xhr_abort(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 static JSValue
 xhr_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -880,6 +909,7 @@ xhr_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 static JSValue
 xhr_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -931,6 +961,7 @@ xhr_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 static JSValue
 xhr_getallresponseheaders(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -956,6 +987,7 @@ xhr_getallresponseheaders(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 static JSValue
 xhr_getresponseheader(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -983,6 +1015,7 @@ xhr_getresponseheader(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 static JSValue
 xhr_open(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1152,6 +1185,7 @@ xhr_open(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 static JSValue
 xhr_overridemimetype(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1163,6 +1197,7 @@ xhr_overridemimetype(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 static size_t
 write_data(void *ptr, size_t size, size_t nmemb, void *stream)
 {
+	ELOG
 	struct Xhr *x = (struct Xhr *)stream;
 	size_t length = x->response_length;
 
@@ -1183,6 +1218,7 @@ write_data(void *ptr, size_t size, size_t nmemb, void *stream)
 static JSValue
 xhr_send(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1301,6 +1337,7 @@ xhr_send(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 static JSValue
 xhr_setrequestheader(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -1398,6 +1435,7 @@ static const JSCFunctionListEntry xhr_proto_funcs[] = {
 static void
 JS_NewGlobalCConstructor2(JSContext *ctx, JSValue func_obj, const char *name, JSValueConst proto)
 {
+	ELOG
 	REF_JS(func_obj);
 	REF_JS(proto);
 
@@ -1413,6 +1451,7 @@ JS_NewGlobalCConstructor2(JSContext *ctx, JSValue func_obj, const char *name, JS
 static JSValueConst
 JS_NewGlobalCConstructor(JSContext *ctx, const char *name, JSCFunction *func, int length, JSValueConst proto)
 {
+	ELOG
 	JSValue func_obj;
 	func_obj = JS_NewCFunction2(ctx, func, name, length, JS_CFUNC_constructor_or_func, 0);
 	REF_JS(func_obj);
@@ -1426,6 +1465,7 @@ JS_NewGlobalCConstructor(JSContext *ctx, const char *name, JSCFunction *func, in
 int
 js_xhr_init(JSContext *ctx)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

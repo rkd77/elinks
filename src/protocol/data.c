@@ -65,6 +65,7 @@ static char *
 init_data_protocol_header(struct cache_entry *cached,
 			  const char *type_, int typelen)
 {
+	ELOG
 	char *head;
 	char *type;
 
@@ -86,6 +87,7 @@ init_data_protocol_header(struct cache_entry *cached,
 static char *
 parse_data_protocol_header(struct connection *conn, int *base64)
 {
+	ELOG
 	struct uri *uri = conn->uri;
 	char *end = (char *)memchr(uri->data, ',', uri->datalen);
 	const char *type = DEFAULT_DATA_MEDIATYPE;
@@ -115,6 +117,7 @@ parse_data_protocol_header(struct connection *conn, int *base64)
 void
 data_protocol_handler(struct connection *conn)
 {
+	ELOG
 	struct uri *uri = conn->uri;
 	struct cache_entry *cached = get_cache_entry(uri);
 	char *data_start, *data = NULL;

@@ -38,6 +38,7 @@ static void
 add_cookie_info_to_string(struct string *string, struct cookie *cookie,
 			  struct terminal *term)
 {
+	ELOG
 	add_format_to_string(string, "\n%s: %s", _("Name", term), cookie->name);
 	add_format_to_string(string, "\n%s: %s", _("Value", term), cookie->value);
 	add_format_to_string(string, "\n%s: %s", _("Domain", term), cookie->domain);
@@ -62,12 +63,14 @@ add_cookie_info_to_string(struct string *string, struct cookie *cookie,
 static void
 accept_cookie_in_msg_box(void *cookie_)
 {
+	ELOG
 	accept_cookie((struct cookie *) cookie_);
 }
 
 static void
 reject_cookie_in_msg_box(void *cookie_)
 {
+	ELOG
 	done_cookie((struct cookie *) cookie_);
 }
 
@@ -75,6 +78,7 @@ reject_cookie_in_msg_box(void *cookie_)
 void
 accept_cookie_dialog(struct session *ses, void *data)
 {
+	ELOG
 	/* [gettext_accelerator_context(accept_cookie_dialog)] */
 	struct cookie *cookie = (struct cookie *)cookie_queries.next;
 	struct string string;
@@ -107,6 +111,7 @@ accept_cookie_dialog(struct session *ses, void *data)
 static void
 lock_cookie(struct listbox_item *item)
 {
+	ELOG
 	if (item->type == BI_LEAF)
 		object_lock((struct cookie *) item->udata);
 	else
@@ -116,6 +121,7 @@ lock_cookie(struct listbox_item *item)
 static void
 unlock_cookie(struct listbox_item *item)
 {
+	ELOG
 	if (item->type == BI_LEAF)
 		object_unlock((struct cookie *) item->udata);
 	else
@@ -125,6 +131,7 @@ unlock_cookie(struct listbox_item *item)
 static int
 is_cookie_used(struct listbox_item *item)
 {
+	ELOG
 	if (item->type == BI_FOLDER) {
 		struct listbox_item *root = item;
 
@@ -141,6 +148,7 @@ is_cookie_used(struct listbox_item *item)
 static char *
 get_cookie_text(struct listbox_item *item, struct terminal *term)
 {
+	ELOG
 	/* Are we dealing with a folder? */
 	if (item->type == BI_FOLDER) {
 		struct cookie_server *server = (struct cookie_server *)item->udata;
@@ -157,6 +165,7 @@ get_cookie_text(struct listbox_item *item, struct terminal *term)
 static char *
 get_cookie_info(struct listbox_item *item, struct terminal *term)
 {
+	ELOG
 	struct cookie *cookie = (struct cookie *)item->udata;
 	struct cookie_server *server;
 	struct string string;
@@ -177,6 +186,7 @@ get_cookie_info(struct listbox_item *item, struct terminal *term)
 static struct listbox_item *
 get_cookie_root(struct listbox_item *item)
 {
+	ELOG
 	/* Are we dealing with a folder? */
 	if (item->type == BI_FOLDER) {
 		return NULL;
@@ -190,12 +200,14 @@ get_cookie_root(struct listbox_item *item)
 static int
 can_delete_cookie(struct listbox_item *item)
 {
+	ELOG
 	return 1;
 }
 
 static void
 delete_cookie_item(struct listbox_item *item, int last)
 {
+	ELOG
 	struct cookie *cookie = (struct cookie *)item->udata;
 
 	if (item->type == BI_FOLDER) {
@@ -258,6 +270,7 @@ static const struct listbox_ops cookies_listbox_ops = {
 static widget_handler_status_T
 set_cookie_name(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct cookie *cookie = (struct cookie *)dlg_data->dlg->udata;
 	char *value = widget_data->cdata;
 
@@ -270,6 +283,7 @@ set_cookie_name(struct dialog_data *dlg_data, struct widget_data *widget_data)
 static widget_handler_status_T
 set_cookie_value(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct cookie *cookie = (struct cookie *)dlg_data->dlg->udata;
 	char *value = widget_data->cdata;
 
@@ -282,6 +296,7 @@ set_cookie_value(struct dialog_data *dlg_data, struct widget_data *widget_data)
 static widget_handler_status_T
 set_cookie_domain(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct cookie *cookie = (struct cookie *)dlg_data->dlg->udata;
 	char *value = widget_data->cdata;
 
@@ -294,6 +309,7 @@ set_cookie_domain(struct dialog_data *dlg_data, struct widget_data *widget_data)
 static widget_handler_status_T
 set_cookie_expires(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct cookie *cookie = (struct cookie *)dlg_data->dlg->udata;
 	char *value = widget_data->cdata;
 	char *end;
@@ -323,6 +339,7 @@ set_cookie_expires(struct dialog_data *dlg_data, struct widget_data *widget_data
 static widget_handler_status_T
 set_cookie_secure(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct cookie *cookie = (struct cookie *)dlg_data->dlg->udata;
 	char *value = widget_data->cdata;
 	char *end;
@@ -342,6 +359,7 @@ set_cookie_secure(struct dialog_data *dlg_data, struct widget_data *widget_data)
 static widget_handler_status_T
 set_cookie_httponly(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct cookie *cookie = (struct cookie *)dlg_data->dlg->udata;
 	char *value = widget_data->cdata;
 	char *end;
@@ -362,6 +380,7 @@ set_cookie_httponly(struct dialog_data *dlg_data, struct widget_data *widget_dat
 static void
 build_edit_dialog(struct terminal *term, struct cookie *cookie)
 {
+	ELOG
 #define EDIT_WIDGETS_COUNT 9
 	/* [gettext_accelerator_context(.build_edit_dialog)] */
 	struct dialog *dlg;
@@ -432,6 +451,7 @@ build_edit_dialog(struct terminal *term, struct cookie *cookie)
 static widget_handler_status_T
 push_edit_button(struct dialog_data *dlg_data, struct widget_data *button)
 {
+	ELOG
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct terminal *term = dlg_data->win->term;
 	struct cookie *cookie;
@@ -447,6 +467,7 @@ push_edit_button(struct dialog_data *dlg_data, struct widget_data *button)
 static widget_handler_status_T
 push_add_button(struct dialog_data *dlg_data, struct widget_data *button)
 {
+	ELOG
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct terminal *term = dlg_data->win->term;
 	struct cookie *new_cookie;
@@ -483,6 +504,7 @@ push_add_button(struct dialog_data *dlg_data, struct widget_data *button)
 static void
 add_server_do(void *data)
 {
+	ELOG
 	char *value = (char *)data;
 	struct cookie *dummy_cookie;
 
@@ -501,6 +523,7 @@ add_server_do(void *data)
 static widget_handler_status_T
 push_add_server_button(struct dialog_data *dlg_data, struct widget_data *button)
 {
+	ELOG
 	/* [gettext_accelerator_context(.push_add_server_button)] */
 #define SERVER_WIDGETS_COUNT 3
 	struct terminal *term = dlg_data->win->term;
@@ -531,6 +554,7 @@ push_add_server_button(struct dialog_data *dlg_data, struct widget_data *button)
 static widget_handler_status_T
 push_save_button(struct dialog_data *dlg_data, struct widget_data *button)
 {
+	ELOG
 	save_cookies(dlg_data->win->term);
 	return EVENT_PROCESSED;
 }
@@ -556,5 +580,6 @@ struct_hierbox_browser(
 void
 cookie_manager(struct session *ses)
 {
+	ELOG
 	hierbox_browser(&cookie_browser, ses);
 }

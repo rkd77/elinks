@@ -63,6 +63,7 @@ struct eljs_url {
 static
 void js_url_finalizer(JSRuntime *rt, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -85,6 +86,7 @@ void js_url_finalizer(JSRuntime *rt, JSValue val)
 static JSValue
 js_url_get_property_hash(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -114,6 +116,7 @@ js_url_get_property_hash(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_url_get_property_host(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -141,6 +144,7 @@ js_url_get_property_host(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_url_get_property_hostname(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -168,6 +172,7 @@ js_url_get_property_hostname(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_url_get_property_href(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -195,6 +200,7 @@ js_url_get_property_href(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_url_get_property_origin(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -222,6 +228,7 @@ js_url_get_property_origin(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_url_get_property_pathname(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -251,6 +258,7 @@ js_url_get_property_pathname(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_url_get_property_port(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -278,6 +286,7 @@ js_url_get_property_port(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_url_get_property_protocol(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -309,6 +318,7 @@ js_url_get_property_protocol(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_url_get_property_search(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -338,6 +348,7 @@ js_url_get_property_search(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_url_set_property_hash(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -370,6 +381,7 @@ js_url_set_property_hash(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_url_set_property_host(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -402,6 +414,7 @@ js_url_set_property_host(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_url_set_property_hostname(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -434,6 +447,7 @@ js_url_set_property_hostname(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_url_set_property_href(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -466,6 +480,7 @@ js_url_set_property_href(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_url_set_property_pathname(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -497,6 +512,7 @@ js_url_set_property_pathname(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_url_set_property_port(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -528,6 +544,7 @@ js_url_set_property_port(JSContext *ctx, JSValueConst this_val, JSValue val)
 static inline int
 get_protocol_length(const char *url)
 {
+	ELOG
 	char *end = (char *) url;
 
 	/* Seek the end of the protocol name if any. */
@@ -550,6 +567,7 @@ get_protocol_length(const char *url)
 static JSValue
 js_url_set_property_protocol(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -583,6 +601,7 @@ js_url_set_property_protocol(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_url_set_property_search(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -613,6 +632,7 @@ js_url_set_property_search(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_url_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -642,6 +662,7 @@ static const JSCFunctionListEntry js_url_proto_funcs[] = {
 static JSValue
 js_url_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -692,6 +713,7 @@ js_url_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueCon
 static void
 JS_NewGlobalCConstructor2(JSContext *ctx, JSValue func_obj, const char *name, JSValueConst proto)
 {
+	ELOG
 	REF_JS(func_obj);
 	REF_JS(proto);
 
@@ -707,6 +729,7 @@ JS_NewGlobalCConstructor2(JSContext *ctx, JSValue func_obj, const char *name, JS
 static JSValueConst
 JS_NewGlobalCConstructor(JSContext *ctx, const char *name, JSCFunction *func, int length, JSValueConst proto)
 {
+	ELOG
 	JSValue func_obj;
 	func_obj = JS_NewCFunction2(ctx, func, name, length, JS_CFUNC_constructor_or_func, 0);
 	REF_JS(func_obj);
@@ -720,6 +743,7 @@ JS_NewGlobalCConstructor(JSContext *ctx, const char *name, JSCFunction *func, in
 int
 js_url_init(JSContext *ctx)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

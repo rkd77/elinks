@@ -31,6 +31,7 @@ struct python_load_uri_callback_hop {
 static void
 invoke_load_uri_callback(struct download *download, void *data)
 {
+	ELOG
 	struct python_load_uri_callback_hop *hop = (struct python_load_uri_callback_hop *)data;
 	struct session *saved_python_ses = python_ses;
 
@@ -95,6 +96,7 @@ callback -- A callable object to be called after the document has\n\
 PyObject *
 python_load(PyObject *self, PyObject *args)
 {
+	ELOG
 	char *uristring;
 	PyObject *callback;
 	struct uri *uri;

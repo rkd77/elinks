@@ -37,18 +37,21 @@
 static void
 lock_bookmark(struct listbox_item *item)
 {
+	ELOG
 	object_lock((struct bookmark *) item->udata);
 }
 
 static void
 unlock_bookmark(struct listbox_item *item)
 {
+	ELOG
 	object_unlock((struct bookmark *) item->udata);
 }
 
 static int
 is_bookmark_used(struct listbox_item *item)
 {
+	ELOG
 	return is_object_used((struct bookmark *) item->udata);
 }
 
@@ -57,6 +60,7 @@ static int with_urls = 0;
 static char *
 get_bookmark_text(struct listbox_item *item, struct terminal *term)
 {
+	ELOG
 	struct bookmark *bookmark = (struct bookmark *)item->udata;
 	int utf8_cp = get_cp_index("UTF-8");
 	int term_cp = get_terminal_codepage(term);
@@ -91,6 +95,7 @@ get_bookmark_text(struct listbox_item *item, struct terminal *term)
 static void
 add_converted_bytes_to_string(void *data, char *buf, int buflen)
 {
+	ELOG
 	struct string *string = (struct string *)data;
 
 	add_bytes_to_string(string, buf, buflen); /* ignore errors */
@@ -99,6 +104,7 @@ add_converted_bytes_to_string(void *data, char *buf, int buflen)
 static char *
 get_bookmark_info(struct listbox_item *item, struct terminal *term)
 {
+	ELOG
 	struct bookmark *bookmark = (struct bookmark *)item->udata;
 	int utf8_cp = get_cp_index("UTF-8");
 	int term_cp = get_terminal_codepage(term);
@@ -125,6 +131,7 @@ get_bookmark_info(struct listbox_item *item, struct terminal *term)
 static struct uri *
 get_bookmark_uri(struct listbox_item *item)
 {
+	ELOG
 	struct bookmark *bookmark = (struct bookmark *)item->udata;
 
 	/** @todo Bug 1066: Tell the URI layer that bookmark->url is UTF-8.  */
@@ -135,6 +142,7 @@ get_bookmark_uri(struct listbox_item *item)
 static struct listbox_item *
 get_bookmark_root(struct listbox_item *item)
 {
+	ELOG
 	struct bookmark *bookmark = (struct bookmark *)item->udata;
 
 	return bookmark->root ? bookmark->root->box_item : NULL;
@@ -143,12 +151,14 @@ get_bookmark_root(struct listbox_item *item)
 static int
 can_delete_bookmark(struct listbox_item *item)
 {
+	ELOG
 	return 1;
 }
 
 static void
 delete_bookmark_item(struct listbox_item *item, int last)
 {
+	ELOG
 	struct bookmark *bookmark = (struct bookmark *)item->udata;
 
 	assert(!is_object_used(bookmark));
@@ -210,6 +220,7 @@ static const struct listbox_ops bookmarks_listbox_ops = {
 static widget_handler_status_T
 push_add_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	launch_bm_add_doc_dialog(dlg_data->win->term, dlg_data,
 				 (struct session *) dlg_data->dlg->udata);
 	return EVENT_PROCESSED;
@@ -225,6 +236,7 @@ void launch_bm_search_doc_dialog(struct terminal *, struct dialog_data *,
 static widget_handler_status_T
 push_search_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	launch_bm_search_doc_dialog(dlg_data->win->term, dlg_data,
 				    (struct session *) dlg_data->dlg->udata);
 	return EVENT_PROCESSED;
@@ -234,6 +246,7 @@ push_search_button(struct dialog_data *dlg_data, struct widget_data *widget_data
 static void
 move_bookmark_after_selected(struct bookmark *bookmark, struct bookmark *selected)
 {
+	ELOG
 	if (selected == bookmark->root
 	    || !selected
 	    || !selected->box_item
@@ -273,6 +286,7 @@ static void
 do_add_bookmark(struct terminal *term, struct dialog_data *dlg_data,
 		const char *title, const char *url)
 {
+	ELOG
 	int term_cp = get_terminal_codepage(term);
 	struct bookmark *bm = NULL;
 	struct bookmark *selected = NULL;
@@ -325,6 +339,7 @@ do_add_bookmark(struct terminal *term, struct dialog_data *dlg_data,
 static void
 do_add_folder(struct dialog_data *dlg_data, char *foldername)
 {
+	ELOG
 	do_add_bookmark(dlg_data->win->term, dlg_data, foldername, NULL);
 }
 
@@ -339,6 +354,7 @@ do_add_folder(struct dialog_data *dlg_data, char *foldername)
 static widget_handler_status_T
 push_add_folder_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	input_dialog(dlg_data->win->term, NULL,
 		     N_("Add folder"), N_("Folder name"),
 		     dlg_data, NULL,
@@ -362,6 +378,7 @@ push_add_folder_button(struct dialog_data *dlg_data, struct widget_data *widget_
 static widget_handler_status_T
 push_add_separator_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	do_add_bookmark(dlg_data->win->term, dlg_data, "-", "");
 	redraw_dialog(dlg_data, 1);
 	return EVENT_PROCESSED;
@@ -398,6 +415,7 @@ bookmark_edit_cancel(struct dialog *dlg) {
 static widget_handler_status_T
 push_edit_button(struct dialog_data *dlg_data, struct widget_data *edit_btn)
 {
+	ELOG
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 
 	/* Follow the bookmark */
@@ -447,6 +465,7 @@ static struct bookmark *move_cache_root_avoid;
 static void
 update_depths(struct listbox_item *parent)
 {
+	ELOG
 	struct listbox_item *item;
 
 	foreach (item, parent->child) {
@@ -468,6 +487,7 @@ static /*enum move_bookmark_flags*/ unsigned int
 do_move_bookmark(struct bookmark *dest, int insert_as_child,
 		 LIST_OF(struct bookmark) *src, struct listbox_data *box)
 {
+	ELOG
 	static int move_bookmark_event_id = EVENT_NONE;
 	struct bookmark *bm, *next;
 	/*enum move_bookmark_flags*/ unsigned int result = MOVE_BOOKMARK_NONE;
@@ -542,6 +562,7 @@ static widget_handler_status_T
 push_move_button(struct dialog_data *dlg_data,
 		 struct widget_data *blah)
 {
+	ELOG
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct bookmark *dest = NULL;
 	int insert_as_child = 0;
@@ -605,6 +626,7 @@ static widget_handler_status_T
 push_toggle_display_button(struct dialog_data *dlg_data,
 		 struct widget_data *blah)
 {
+	ELOG
 	with_urls = !with_urls;
 	redraw_dialog(dlg_data, 1);
 	return EVENT_PROCESSED;
@@ -644,6 +666,7 @@ struct_hierbox_browser(
 void
 bookmark_manager(struct session *ses)
 {
+	ELOG
 	free_last_searched_bookmark();
 	bookmark_browser.expansion_callback = bookmarks_set_dirty;
 	hierbox_browser(&bookmark_browser, ses);
@@ -679,6 +702,7 @@ struct bookmark_search_ctx {
 static int
 test_search(struct listbox_item *item, void *data_, int *offset)
 {
+	ELOG
 	struct bookmark_search_ctx *ctx = (struct bookmark_search_ctx *)data_;
 
 	if (!ctx->offset) {
@@ -736,6 +760,7 @@ static char *bm_last_searched_url = NULL;
 void
 free_last_searched_bookmark(void)
 {
+	ELOG
 	mem_free_set(&bm_last_searched_title, NULL);
 	mem_free_set(&bm_last_searched_url, NULL);
 }
@@ -744,6 +769,7 @@ static int
 memorize_last_searched_bookmark(const char *title,
 				const char *url)
 {
+	ELOG
 	/* Memorize last searched title */
 	mem_free_set(&bm_last_searched_title, stracpy(title));
 	if (!bm_last_searched_title) return 0;
@@ -762,6 +788,7 @@ memorize_last_searched_bookmark(const char *title,
 static void
 bookmark_search_do(void *data)
 {
+	ELOG
 	struct dialog *dlg = (struct dialog *)data;
 	struct bookmark_search_ctx ctx = NULL_BOOKMARK_SEARCH_CTX;
 	struct listbox_data *box;
@@ -822,6 +849,7 @@ launch_bm_search_doc_dialog(struct terminal *term,
 			    struct dialog_data *parent,
 			    struct session *ses)
 {
+	ELOG
 	char *title = NULL;
 	char *url = NULL;
 
@@ -866,6 +894,7 @@ launch_bm_search_doc_dialog(struct terminal *term,
 static void
 bookmark_add_add(void *data)
 {
+	ELOG
 	struct dialog *dlg = (struct dialog *)data;
 	struct dialog_data *dlg_data = (struct dialog_data *) dlg->udata;
 	struct terminal *term = (struct terminal *)dlg->udata2;
@@ -900,6 +929,7 @@ launch_bm_add_dialog(struct terminal *term,
 		     char *title,
 		     char *url)
 {
+	ELOG
 	/* When the user eventually pushes the OK button, BFU calls
 	 * bookmark_add_add() and gives it the struct dialog * as the
 	 * void * parameter.  However, bookmark_add_add() also needs
@@ -923,6 +953,7 @@ launch_bm_add_doc_dialog(struct terminal *term,
 			 struct dialog_data *parent,
 			 struct session *ses)
 {
+	ELOG
 	launch_bm_add_dialog(term, parent, ses, NULL, NULL);
 }
 
@@ -931,6 +962,7 @@ launch_bm_add_link_dialog(struct terminal *term,
 			  struct dialog_data *parent,
 			  struct session *ses)
 {
+	ELOG
 	char title[MAX_STR_LEN], url[MAX_STR_LEN];
 
 	launch_bm_add_dialog(term, parent, ses,
@@ -946,6 +978,7 @@ launch_bm_add_link_dialog(struct terminal *term,
 static void
 bookmark_terminal_tabs_ok(void *term_void, char *foldername)
 {
+	ELOG
 	struct terminal *const term = (struct terminal *const)term_void;
 	int from_cp = get_terminal_codepage(term);
 	int to_cp = get_cp_index("UTF-8");
@@ -968,6 +1001,7 @@ bookmark_terminal_tabs_ok(void *term_void, char *foldername)
 void
 bookmark_terminal_tabs_dialog(struct terminal *term)
 {
+	ELOG
 	struct string string;
 
 	if (!init_string(&string)) return;

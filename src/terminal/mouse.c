@@ -55,6 +55,7 @@ extern struct itrm *ditrm;
 void
 send_mouse_init_sequence(int h)
 {
+	ELOG
 	write_sequence(h, INIT_TWIN_MOUSE_SEQ);
 	write_sequence(h, INIT_XWIN_MOUSE_SEQ);
 }
@@ -65,6 +66,7 @@ send_mouse_init_sequence(int h)
 void
 send_mouse_done_sequence(int h)
 {
+	ELOG
 	/* This is a hack to make xterm + alternate screen working,
 	 * if we send only DONE_XWIN_MOUSE_SEQ, mouse is not totally
 	 * released it seems, in rxvt and xterm... --Zas */
@@ -77,6 +79,7 @@ int mouse_enabled;
 void
 disable_mouse(void)
 {
+	ELOG
 	if (!mouse_enabled) return;
 
 	unhandle_mouse(ditrm->mouse_h);
@@ -88,6 +91,7 @@ disable_mouse(void)
 static int
 mouse_lock_exists(void)
 {
+	ELOG
 	char *lock_filename = straconcat(empty_string_or_(get_xdg_config_home()), "mouse.lock", (char *) NULL);
 	int res = 0;
 
@@ -102,6 +106,7 @@ mouse_lock_exists(void)
 void
 enable_mouse(void)
 {
+	ELOG
 	if (get_opt_bool("ui.mouse_disable", NULL))
 		return;
 
@@ -120,6 +125,7 @@ enable_mouse(void)
 void
 toggle_mouse(struct session *ses)
 {
+	ELOG
 	if (mouse_enabled) {
 		disable_mouse();
 	} else {
@@ -137,6 +143,7 @@ toggle_mouse(struct session *ses)
 static int
 decode_mouse_position(struct itrm *itrm, int from)
 {
+	ELOG
 	int position;
 
 	position = (unsigned char) (itrm->in.queue.data[from]) - ' ' - 1
@@ -160,6 +167,7 @@ int
 decode_terminal_mouse_escape_sequence(struct itrm *itrm, struct interlink_event *ev,
 				      int el, int v)
 {
+	ELOG
 	struct interlink_event_mouse mouse;
 
 	if (itrm->in.queue.len - el < 3)
@@ -242,6 +250,7 @@ int
 decode_terminal_mouse_escape_sequence_256(struct itrm *itrm, struct interlink_event *ev,
 				      int el, int v)
 {
+	ELOG
 	struct interlink_event_mouse mouse;
 	/* SGR 1006 mouse extension: \e[<b;x;yM where b, x and y are in decimal, no longer offset by 32,
 	   and the trailing letter is 'm' instead of 'M' for mouse release so that the released button is reported. */

@@ -72,6 +72,7 @@ static size_t argz_count__(const char *argz, size_t len);
 static size_t
 argz_count__(const char *argz, size_t len)
 {
+	ELOG
 	size_t count = 0;
 
 	while (len > 0) {
@@ -96,6 +97,7 @@ static void argz_stringify__(char *argz, size_t len, int sep);
 static void
 argz_stringify__(char *argz, size_t len, int sep)
 {
+	ELOG
 	while (len > 0) {
 		size_t part_len = strlen(argz);
 
@@ -117,6 +119,7 @@ static char *argz_next__(char *argz, size_t argz_len,
 static char *
 argz_next__(char *argz, size_t argz_len, const char *entry)
 {
+	ELOG
 	if (entry) {
 		if (entry < argz + argz_len)
 			entry = strchr(entry, '\0') + 1;
@@ -136,6 +139,7 @@ argz_next__(char *argz, size_t argz_len, const char *entry)
 static inline int
 pop(int x)
 {
+	ELOG
 	/* We assume that no more than 16 bits are used.  */
 	x = ((x & ~0x5555) >> 1) + (x & 0x5555);
 	x = ((x & ~0x3333) >> 2) + (x & 0x3333);
@@ -161,6 +165,7 @@ _nl_make_l10nflist(struct loaded_l10nfile **l10nfile_list,
 		   const char *filename,
 		   int do_allocate)
 {
+	ELOG
 	char *abs_filename, *abs_langdirname;
 	int abs_langdirnamelen;
 	struct loaded_l10nfile *last = NULL;
@@ -326,6 +331,7 @@ _nl_make_l10nflist(struct loaded_l10nfile **l10nfile_list,
 const char *
 _nl_normalize_codeset(const char *codeset, size_t name_len)
 {
+	ELOG
 	int len = 0;
 	int only_digit = 1;
 	char *retval;

@@ -70,12 +70,14 @@ static struct hash *event_hash = NULL;
 static inline int
 invalid_event_id(int id)
 {
+	ELOG
 	return (id < 0 || id >= eventssize || id == EVENT_NONE);
 }
 
 int
 register_event(const char *name)
 {
+	ELOG
 	int id = get_event_id(name);
 	struct el_event *event;
 	int namelen;
@@ -119,6 +121,7 @@ register_event(const char *name)
 int
 get_event_id(const char *name)
 {
+	ELOG
 	struct hash_item *item;
 	int namelen;
 
@@ -144,6 +147,7 @@ get_event_id(const char *name)
 char *
 get_event_name(int id)
 {
+	ELOG
 	if (invalid_event_id(id)) return NULL;
 
 	return events[id].name;
@@ -152,6 +156,7 @@ get_event_name(int id)
 static void
 trigger_event_va(int id, va_list ap_init)
 {
+	ELOG
 	int i;
 	struct event_handler *ev_handler;
 
@@ -173,6 +178,7 @@ trigger_event_va(int id, va_list ap_init)
 void
 trigger_event(int id, ...)
 {
+	ELOG
 	va_list ap;
 
 	va_start(ap, id);
@@ -183,6 +189,7 @@ trigger_event(int id, ...)
 void
 trigger_event_name(const char *name, ...)
 {
+	ELOG
 	va_list ap;
 	int id = get_event_id(name);
 
@@ -194,6 +201,7 @@ trigger_event_name(const char *name, ...)
 static inline void
 move_event_handler(struct el_event *event, int to, int from)
 {
+	ELOG
 	int d = int_max(to, from);
 
 	memmove(&event->handlers[to], &event->handlers[from],
@@ -203,6 +211,7 @@ move_event_handler(struct el_event *event, int to, int from)
 int
 register_event_hook(int id, event_hook_T callback, int priority, void *data)
 {
+	ELOG
 	struct el_event *event;
 	int i;
 
@@ -245,6 +254,7 @@ register_event_hook(int id, event_hook_T callback, int priority, void *data)
 void
 unregister_event_hook(int id, event_hook_T callback)
 {
+	ELOG
 	struct el_event *event;
 
 	assert(callback);
@@ -281,6 +291,7 @@ unregister_event_hook(int id, event_hook_T callback)
 void
 register_event_hooks(struct event_hook_info *hooks)
 {
+	ELOG
 	int i;
 
 	for (i = 0; hooks[i].name; i++) {
@@ -296,6 +307,7 @@ register_event_hooks(struct event_hook_info *hooks)
 void
 unregister_event_hooks(struct event_hook_info *hooks)
 {
+	ELOG
 	int i;
 
 	for (i = 0; hooks[i].name; i++) {
@@ -310,12 +322,14 @@ unregister_event_hooks(struct event_hook_info *hooks)
 void
 init_event(void)
 {
+	ELOG
 	event_hash = init_hash8();
 }
 
 void
 done_event(void)
 {
+	ELOG
 	int i;
 
 	for (i = 0; i < eventssize; i++) {

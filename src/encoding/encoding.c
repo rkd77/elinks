@@ -37,6 +37,7 @@ struct dummy_enc_data {
 static int
 dummy_open(struct stream_encoded *stream, int fd)
 {
+	ELOG
 	stream->data = mem_alloc(sizeof(struct dummy_enc_data));
 	if (!stream->data) return -1;
 
@@ -48,12 +49,14 @@ dummy_open(struct stream_encoded *stream, int fd)
 static int
 dummy_read(struct stream_encoded *stream, char *data, int len)
 {
+	ELOG
 	return safe_read(((struct dummy_enc_data *) stream->data)->fd, data, len);
 }
 
 static char *
 dummy_decode_buffer(struct stream_encoded *stream, char *data, int len, int *new_len)
 {
+	ELOG
 	char *buffer = memacpy(data, len);
 
 	if (!buffer) return NULL;
@@ -65,6 +68,7 @@ dummy_decode_buffer(struct stream_encoded *stream, char *data, int len, int *new
 static void
 dummy_close(struct stream_encoded *stream)
 {
+	ELOG
 	close(((struct dummy_enc_data *) stream->data)->fd);
 	mem_free(stream->data);
 }
@@ -108,6 +112,7 @@ static const struct decoding_backend *const decoding_backends[] = {
 struct stream_encoded *
 open_encoded(int fd, stream_encoding_T encoding)
 {
+	ELOG
 	struct stream_encoded *stream;
 
 	stream = (struct stream_encoded *)mem_alloc(sizeof(*stream));
@@ -127,6 +132,7 @@ open_encoded(int fd, stream_encoding_T encoding)
 int
 read_encoded(struct stream_encoded *stream, char *data, int len)
 {
+	ELOG
 	return decoding_backends[stream->encoding]->eread(stream, data, len);
 }
 
@@ -137,6 +143,7 @@ char *
 decode_encoded_buffer(struct stream_encoded *stream, stream_encoding_T encoding, char *data, int len,
 		      int *new_len)
 {
+	ELOG
 	return decoding_backends[encoding]->decode_buffer(stream, data, len, new_len);
 }
 
@@ -145,6 +152,7 @@ decode_encoded_buffer(struct stream_encoded *stream, stream_encoding_T encoding,
 void
 close_encoded(struct stream_encoded *stream)
 {
+	ELOG
 	decoding_backends[stream->encoding]->eclose(stream);
 	mem_free(stream);
 }
@@ -153,12 +161,14 @@ close_encoded(struct stream_encoded *stream)
 /* Return a list of extensions associated with that encoding. */
 const char *const *listext_encoded(stream_encoding_T encoding)
 {
+	ELOG
 	return decoding_backends[encoding]->extensions;
 }
 
 stream_encoding_T
 guess_encoding(char *filename)
 {
+	ELOG
 	int fname_len = strlen(filename);
 	char *fname_end = filename + fname_len;
 	int enc;
@@ -182,6 +192,7 @@ guess_encoding(char *filename)
 const char *
 get_encoding_name(stream_encoding_T encoding)
 {
+	ELOG
 	return decoding_backends[encoding]->name;
 }
 
@@ -193,6 +204,7 @@ get_encoding_name(stream_encoding_T encoding)
 static inline stream_encoding_T
 try_encoding_extensions(struct string *filename, int *fd)
 {
+	ELOG
 	int length = filename->length;
 	int encoding;
 
@@ -229,6 +241,7 @@ try_encoding_extensions(struct string *filename, int *fd)
 struct connection_state
 read_file(struct stream_encoded *stream, int readsize, struct string *page)
 {
+	ELOG
 	if (!init_string(page)) return connection_state(S_OUT_OF_MEM);
 
 	/* We read with granularity of stt.st_size (given as @readsize) - this
@@ -285,6 +298,7 @@ read_file(struct stream_encoded *stream, int readsize, struct string *page)
 static inline int
 is_stdin_pipe(struct stat *stt, struct string *filename)
 {
+	ELOG
 	/* On Mac OS X, /dev/stdin has type S_IFSOCK. (bug 616) */
 	return !strlcmp(filename->source, filename->length, "/dev/stdin", 10)
 		&& (
@@ -297,6 +311,7 @@ is_stdin_pipe(struct stat *stt, struct string *filename)
 struct connection_state
 read_encoded_file(struct string *filename, struct string *page)
 {
+	ELOG
 	struct stream_encoded *stream;
 	struct stat stt;
 	stream_encoding_T encoding = ENCODING_NONE;

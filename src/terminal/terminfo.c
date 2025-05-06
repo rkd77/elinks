@@ -23,12 +23,14 @@
 int
 terminfo_setupterm(char *term, int fildes)
 {
+	ELOG
 	return setupterm(term, fildes, NULL);
 }
 
 const char *
 terminfo_clear_screen(void)
 {
+	ELOG
 	char *res = tiparm(clear_screen);
 
 	return res ?: "";
@@ -37,6 +39,7 @@ terminfo_clear_screen(void)
 const char *
 terminfo_set_bold(int arg)
 {
+	ELOG
 	char *res = tiparm(arg ? enter_bold_mode : exit_attribute_mode);
 
 	return res ?: "";
@@ -45,6 +48,7 @@ terminfo_set_bold(int arg)
 const char *
 terminfo_set_italics(int arg)
 {
+	ELOG
 	char *res = tiparm(arg ? enter_italics_mode : exit_italics_mode);
 
 	return res ?: "";
@@ -53,6 +57,7 @@ terminfo_set_italics(int arg)
 const char *
 terminfo_set_underline(int arg)
 {
+	ELOG
 	char *res = tiparm(arg ? enter_underline_mode : exit_underline_mode);
 
 	return res ?: "";
@@ -61,6 +66,7 @@ terminfo_set_underline(int arg)
 const char *
 terminfo_set_strike(int arg)
 {
+	ELOG
 	char *res = tigetstr(arg ? "smxx" : "rmxx");
 
 	return res ?: "";
@@ -69,6 +75,7 @@ terminfo_set_strike(int arg)
 const char *
 terminfo_set_background(int arg)
 {
+	ELOG
 	char *res = tiparm(set_a_background, arg);
 
 	return res ?: "";
@@ -77,6 +84,7 @@ terminfo_set_background(int arg)
 const char *
 terminfo_set_foreground(int arg)
 {
+	ELOG
 	char *res = tiparm(set_a_foreground, arg);
 
 	return res ?: "";
@@ -85,6 +93,7 @@ terminfo_set_foreground(int arg)
 const char *
 terminfo_set_standout(int arg)
 {
+	ELOG
 	char *res = tiparm(arg ? enter_standout_mode : exit_standout_mode);
 
 	return res ?: "";
@@ -93,12 +102,14 @@ terminfo_set_standout(int arg)
 int
 terminfo_max_colors(void)
 {
+	ELOG
 	return max_colors;
 }
 
 const char *
 terminfo_cursor_address(int y, int x)
 {
+	ELOG
 	char *res = tiparm(cursor_address, y, x);
 
 	return res ?: "";

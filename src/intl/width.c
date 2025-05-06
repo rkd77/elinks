@@ -132,6 +132,7 @@ static  const int RANGE_LUT_LIST_SIZE = 4;
 static int
 unicode_to_cell_konsole(unicode_val_T ucs4)
 {
+	ELOG
 	const struct RangeLut *rl;
 
 	if (ucs4 < sizeof(DIRECT_LUT)) {
@@ -161,6 +162,7 @@ unicode_to_cell_konsole(unicode_val_T ucs4)
 int
 unicode_to_cell(unicode_val_T ucs4)
 {
+	ELOG
 	int res = unicode_to_cell_konsole(ucs4);
 
 	return res >= 0 ? res : 0;

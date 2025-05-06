@@ -36,6 +36,7 @@
 static void
 add_table_bad_html_start(struct table *table, char *start)
 {
+	ELOG
 	if (table->caption.start && !table->caption.end)
 		return;
 
@@ -52,6 +53,7 @@ add_table_bad_html_start(struct table *table, char *start)
 static void
 add_table_bad_html_end(struct table *table, char *end)
 {
+	ELOG
 	if (table->caption.start && !table->caption.end) {
 		table->caption.end = end;
 		return;
@@ -66,6 +68,7 @@ add_table_bad_html_end(struct table *table, char *end)
 static void
 get_bordercolor(struct html_context *html_context, char *a, color_T *rgb)
 {
+	ELOG
 	char *at;
 
 	if (!use_document_fg_colors(html_context->options))
@@ -86,6 +89,7 @@ get_bordercolor(struct html_context *html_context, char *a, color_T *rgb)
 static void
 get_align(struct html_context *html_context, char *attr, int *a)
 {
+	ELOG
 	char *al = get_attr_val(attr, "align", html_context->doc_cp);
 
 	if (!al) return;
@@ -101,6 +105,7 @@ get_align(struct html_context *html_context, char *attr, int *a)
 static void
 get_valign(struct html_context *html_context, char *attr, int *a)
 {
+	ELOG
 	char *al = get_attr_val(attr, "valign", html_context->doc_cp);
 
 	if (!al) return;
@@ -116,6 +121,7 @@ static void
 get_column_width(char *attr, int *width, int sh,
                  struct html_context *html_context)
 {
+	ELOG
 	char *al = get_attr_val(attr, "width", html_context->doc_cp);
 	int len;
 
@@ -143,6 +149,7 @@ static void
 set_table_frame(struct html_context *html_context, struct table *table,
                 char *attr)
 {
+	ELOG
 	char *al;
 
 	if (!table->border) {
@@ -173,6 +180,7 @@ static void
 set_table_rules(struct html_context *html_context, struct table *table,
                 char *attr)
 {
+	ELOG
 	char *al;
 
 	table->rules = table->border ? TABLE_RULE_ALL : TABLE_RULE_NONE;
@@ -192,6 +200,7 @@ static void
 parse_table_attributes(struct table *table, char *attr, int real,
                        struct html_context *html_context)
 {
+	ELOG
 	table->fragment_id = get_attr_val(attr, "id", html_context->doc_cp);
 
 	get_bordercolor(html_context, attr, &table->color.border);
@@ -254,6 +263,7 @@ parse_table_attributes(struct table *table, char *attr, int real,
 struct table *
 new_table(void)
 {
+	ELOG
 	struct table *table = (struct table *)mem_calloc(1, sizeof(*table));
 
 	if (!table) return NULL;
@@ -281,6 +291,7 @@ new_table(void)
 void
 free_table(struct table *table)
 {
+	ELOG
 	int col, row;
 
 	mem_free_if(table->min_cols_widths);
@@ -303,6 +314,7 @@ free_table(struct table *table)
 static void
 expand_cells(struct table *table, int dest_col, int dest_row)
 {
+	ELOG
 	if (dest_col >= table->cols) {
 		if (table->cols) {
 			int last_col = table->cols - 1;
@@ -359,6 +371,7 @@ expand_cells(struct table *table, int dest_col, int dest_row)
 static void
 copy_table(struct table *table_src, struct table *table_dst)
 {
+	ELOG
 	int row;
 	int size = sizeof(*table_dst->cells) * table_src->cols;
 
@@ -376,6 +389,7 @@ copy_table(struct table *table_src, struct table *table_dst)
 static inline int
 smart_raise(int target, int base, int unit, int limit)
 {
+	ELOG
 	while (target > base) {
 		int orig_base = base;
 
@@ -395,6 +409,7 @@ smart_raise(int target, int base, int unit, int limit)
 struct table_cell *
 new_cell(struct table *table, int dest_col, int dest_row)
 {
+	ELOG
 	if (dest_col < table->cols && dest_row < table->rows)
 		return CELL(table, dest_col, dest_row);
 
@@ -439,6 +454,7 @@ void
 new_columns(struct table *table, int span, int width, int align,
 	    int valign, int group)
 {
+	ELOG
 	if (table->columns_count + span > table->real_columns_count) {
 		int n = table->real_columns_count;
 		struct table_column *new_columns;
@@ -468,6 +484,7 @@ new_columns(struct table *table, int span, int width, int align,
 void
 set_td_width(struct table *table, int col, int width, int force)
 {
+	ELOG
 	if (col >= table->cols_x_count) {
 		int n = table->cols_x_count;
 		int i;
@@ -505,6 +522,7 @@ set_td_width(struct table *table, int col, int width, int force)
 static char *
 skip_table(char *html, char *eof)
 {
+	ELOG
 	int level = 1;
 
 	while (1) {
@@ -542,6 +560,7 @@ skip_table(char *html, char *eof)
 static char *
 skip_script(char *html, char *eof)
 {
+	ELOG
 	int level = 1;
 
 	while (1) {
@@ -579,6 +598,7 @@ struct table *
 parse_table(char *html, char *eof, char **end,
 	    char *attr, int sh, struct html_context *html_context)
 {
+	ELOG
 	struct table *table;
 	struct table_cell *cell;
 	char *t_attr, *en, *name;

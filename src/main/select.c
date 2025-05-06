@@ -90,6 +90,7 @@
 /* Information associated with a specific easy handle */
 typedef struct _ConnInfo
 {
+	ELOG
 	CURL *easy;
 	char *url;
 	GlobalInfo *global;
@@ -99,6 +100,7 @@ typedef struct _ConnInfo
 /* Information associated with a specific socket */
 typedef struct _SockInfo
 {
+	ELOG
 	curl_socket_t sockfd;
 	CURL *easy;
 	int action;
@@ -116,6 +118,7 @@ GlobalInfo g;
 void
 mcode_or_die(const char *where, CURLMcode code)
 {
+	ELOG
 	if (CURLM_OK != code) {
 		const char *s;
 
@@ -141,6 +144,7 @@ mcode_or_die(const char *where, CURLMcode code)
 static int
 multi_timer_cb(CURLM *multi, long timeout_ms, GlobalInfo *g)
 {
+	ELOG
 	struct timeval timeout;
 	(void)multi;
 
@@ -168,6 +172,7 @@ multi_timer_cb(CURLM *multi, long timeout_ms, GlobalInfo *g)
 static void
 event_cb(int fd, short kind, void *userp)
 {
+	ELOG
 	GlobalInfo *g = (GlobalInfo*) userp;
 	CURLMcode rc;
 
@@ -191,6 +196,7 @@ event_cb(int fd, short kind, void *userp)
 static void
 timer_cb(int fd, short kind, void *userp)
 {
+	ELOG
 	GlobalInfo *g = (GlobalInfo *)userp;
 	CURLMcode rc;
 	(void)fd;
@@ -205,6 +211,7 @@ timer_cb(int fd, short kind, void *userp)
 static void
 remsock(SockInfo *f)
 {
+	ELOG
 	//fprintf(stderr, "remsock f=%p\n", f);
 
 	if (f) {
@@ -219,6 +226,7 @@ remsock(SockInfo *f)
 static void
 setsock(SockInfo *f, curl_socket_t s, CURL *e, int act, GlobalInfo *g)
 {
+	ELOG
 	int kind = ((act & CURL_POLL_IN) ? EV_READ : 0) | ((act & CURL_POLL_OUT) ? EV_WRITE : 0) | EV_PERSIST;
 
 	f->sockfd = s;
@@ -239,6 +247,7 @@ setsock(SockInfo *f, curl_socket_t s, CURL *e, int act, GlobalInfo *g)
 static void
 addsock(curl_socket_t s, CURL *easy, int action, GlobalInfo *g)
 {
+	ELOG
 	//fprintf(stderr, "addsock easy=%p\n", easy);
 
 	SockInfo *fdp = mem_calloc(1, sizeof(SockInfo));
@@ -251,6 +260,7 @@ addsock(curl_socket_t s, CURL *easy, int action, GlobalInfo *g)
 static int
 sock_cb(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp)
 {
+	ELOG
 	GlobalInfo *g = (GlobalInfo*) cbp;
 	SockInfo *fdp = (SockInfo*) sockp;
 //	const char *whatstr[]={ "none", "IN", "OUT", "INOUT", "REMOVE" };
@@ -278,6 +288,7 @@ sock_cb(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp)
 /* Information associated with a specific easy handle */
 typedef struct _ConnInfo
 {
+	ELOG
 	CURL *easy;
 	char *url;
 	GlobalInfo *global;
@@ -287,6 +298,7 @@ typedef struct _ConnInfo
 /* Information associated with a specific socket */
 typedef struct _SockInfo
 {
+	ELOG
 	curl_socket_t sockfd;
 	CURL *easy;
 	int action;
@@ -304,6 +316,7 @@ static void timer_cb(EV_P_ struct ev_timer *w, int revents);
 static int
 multi_timer_cb(CURLM *multi, long timeout_ms, GlobalInfo *g)
 {
+	ELOG
 	//DPRINT("%s %li\n", __PRETTY_FUNCTION__,  timeout_ms);
 	ev_timer_stop(g->loop, &g->timer_event);
 
@@ -322,6 +335,7 @@ multi_timer_cb(CURLM *multi, long timeout_ms, GlobalInfo *g)
 void
 mcode_or_die(const char *where, CURLMcode code)
 {
+	ELOG
 	if (CURLM_OK != code) {
 		const char *s;
 		switch(code) {
@@ -361,6 +375,7 @@ mcode_or_die(const char *where, CURLMcode code)
 static void
 event_cb(EV_P_ struct ev_io *w, int revents)
 {
+	ELOG
 	//DPRINT("%s  w %p revents %i\n", __PRETTY_FUNCTION__, w, revents);
 	GlobalInfo *g = (GlobalInfo*) w->data;
 	CURLMcode rc;
@@ -382,6 +397,7 @@ event_cb(EV_P_ struct ev_io *w, int revents)
 static void
 timer_cb(EV_P_ struct ev_timer *w, int revents)
 {
+	ELOG
 	//DPRINT("%s  w %p revents %i\n", __PRETTY_FUNCTION__, w, revents);
 	GlobalInfo *g = (GlobalInfo *)w->data;
 	CURLMcode rc;
@@ -395,6 +411,7 @@ timer_cb(EV_P_ struct ev_timer *w, int revents)
 static void
 remsock(SockInfo *f, GlobalInfo *g)
 {
+	ELOG
 	//printf("%s  \n", __PRETTY_FUNCTION__);
 
 	if (f) {
@@ -409,6 +426,7 @@ remsock(SockInfo *f, GlobalInfo *g)
 static void
 setsock(SockInfo *f, curl_socket_t s, CURL *e, int act, GlobalInfo *g)
 {
+	ELOG
 	//printf("%s  \n", __PRETTY_FUNCTION__);
 
 	int kind = ((act & CURL_POLL_IN) ? EV_READ : 0) | ((act & CURL_POLL_OUT) ? EV_WRITE : 0);
@@ -430,6 +448,7 @@ setsock(SockInfo *f, curl_socket_t s, CURL *e, int act, GlobalInfo *g)
 static void
 addsock(curl_socket_t s, CURL *easy, int action, GlobalInfo *g)
 {
+	ELOG
 	SockInfo *fdp = calloc(1, sizeof(SockInfo));
 
 	fdp->global = g;
@@ -441,6 +460,7 @@ addsock(curl_socket_t s, CURL *easy, int action, GlobalInfo *g)
 static int
 sock_cb(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp)
 {
+	ELOG
 	//DPRINT("%s e %p s %i what %i cbp %p sockp %p\n", __PRETTY_FUNCTION__, e, s, what, cbp, sockp);
 	GlobalInfo *g = (GlobalInfo*) cbp;
 	SockInfo *fdp = (SockInfo*) sockp;
@@ -470,6 +490,7 @@ sock_cb(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp)
 /* Information associated with a specific easy handle */
 typedef struct _ConnInfo
 {
+	ELOG
 	CURL *easy;
 	char *url;
 	GlobalInfo *global;
@@ -479,6 +500,7 @@ typedef struct _ConnInfo
 /* Information associated with a specific socket */
 typedef struct _SockInfo
 {
+	ELOG
 	curl_socket_t sockfd;
 	CURL *easy;
 	int action;
@@ -495,6 +517,7 @@ GlobalInfo g;
 void
 mcode_or_die(const char *where, CURLMcode code)
 {
+	ELOG
 	if (CURLM_OK != code) {
 		const char *s;
 
@@ -524,6 +547,7 @@ mcode_or_die(const char *where, CURLMcode code)
 static void
 timer_cb_select(void *userp)
 {
+	ELOG
 	GlobalInfo *g = (GlobalInfo *)userp;
 	CURLMcode rc;
 
@@ -536,6 +560,7 @@ timer_cb_select(void *userp)
 static int
 multi_timer_cb_select(CURLM *multi, long timeout_ms, GlobalInfo *g)
 {
+	ELOG
 	(void)multi;
 	//fprintf(stderr, "multi_timer_cb: Setting timeout to %ld ms\n", timeout_ms);
 
@@ -556,6 +581,7 @@ multi_timer_cb_select(CURLM *multi, long timeout_ms, GlobalInfo *g)
 static void
 event_read_cb_select(void *userp)
 {
+	ELOG
 	SockInfo *f = (SockInfo *)userp;
 	GlobalInfo *g = (GlobalInfo*)f->global;
 	CURLMcode rc;
@@ -570,6 +596,7 @@ event_read_cb_select(void *userp)
 static void
 event_write_cb_select(void *userp)
 {
+	ELOG
 	SockInfo *f = (SockInfo *)userp;
 	GlobalInfo *g = (GlobalInfo*)f->global;
 	CURLMcode rc;
@@ -585,6 +612,7 @@ event_write_cb_select(void *userp)
 static void
 remsock_select(SockInfo *f)
 {
+	ELOG
 	//fprintf(stderr, "remsock f=%p\n", f);
 	if (f) {
 		if (f->sockfd) {
@@ -598,6 +626,7 @@ remsock_select(SockInfo *f)
 static void
 setsock_select(SockInfo *f, curl_socket_t s, CURL *e, int act, GlobalInfo *g)
 {
+	ELOG
 	int in = act & CURL_POLL_IN;
 	int out = act & CURL_POLL_OUT;
 
@@ -612,6 +641,7 @@ setsock_select(SockInfo *f, curl_socket_t s, CURL *e, int act, GlobalInfo *g)
 static void
 addsock_select(curl_socket_t s, CURL *easy, int action, GlobalInfo *g)
 {
+	ELOG
 	//fprintf(stderr, "addsock easy=%p\n", easy);
 
 	SockInfo *fdp = mem_calloc(1, sizeof(SockInfo));
@@ -624,6 +654,7 @@ addsock_select(curl_socket_t s, CURL *easy, int action, GlobalInfo *g)
 static int
 sock_cb_select(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp)
 {
+	ELOG
 	GlobalInfo *g = (GlobalInfo*) cbp;
 	SockInfo *fdp = (SockInfo*) sockp;
 	//const char *whatstr[]={ "none", "IN", "OUT", "INOUT", "REMOVE" };
@@ -651,12 +682,14 @@ sock_cb_select(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp)
 const char *
 get_libevent_version(void)
 {
+	ELOG
 	return event_get_version();
 }
 #else
 const char *
 get_libevent_version(void)
 {
+	ELOG
 	return "";
 }
 #endif
@@ -699,6 +732,7 @@ static int w_max;
 int
 get_file_handles_count(void)
 {
+	ELOG
 	int i = 0, j;
 
 	for (j = 0; j < w_max; j++)
@@ -721,6 +755,7 @@ static INIT_LIST_OF(struct bottom_half, bottom_halves);
 int
 register_bottom_half_do(select_handler_T fn, void *data)
 {
+	ELOG
 	struct bottom_half *bh;
 
 	foreach (bh, bottom_halves)
@@ -739,6 +774,7 @@ register_bottom_half_do(select_handler_T fn, void *data)
 void
 check_bottom_halves(void)
 {
+	ELOG
 	while (!list_empty(bottom_halves)) {
 		struct bottom_half *bh = (struct bottom_half *)bottom_halves.prev;
 		select_handler_T fn = bh->fn;
@@ -757,6 +793,7 @@ check_bottom_halves(void)
 static void
 restrict_fds(void)
 {
+	ELOG
 #if defined(RLIMIT_OFILE) && !defined(RLIMIT_NOFILE)
 #define RLIMIT_NOFILE RLIMIT_OFILE
 #endif
@@ -790,6 +827,7 @@ struct event_base *event_base;
 static void
 event_callback(int h, short ev, void *data)
 {
+	ELOG
 #ifndef EV_PERSIST
 	if (event_add((struct event *)data, NULL) == -1)
 		elinks_internal("ERROR: event_add failed: %s", strerror(errno));
@@ -817,6 +855,7 @@ event_callback(int h, short ev, void *data)
 static void
 set_event_for_action(int h, void (*func)(void *), struct event **evptr, short evtype)
 {
+	ELOG
 	if (func) {
 		if (!*evptr) {
 #ifdef EV_PERSIST
@@ -842,6 +881,7 @@ set_event_for_action(int h, void (*func)(void *), struct event **evptr, short ev
 static void
 set_events_for_handle(int h)
 {
+	ELOG
 	set_event_for_action(h, threads[h].read_func, &threads[h].read_event, EV_READ);
 	set_event_for_action(h, threads[h].write_func, &threads[h].write_event, EV_WRITE);
 }
@@ -849,6 +889,7 @@ set_events_for_handle(int h)
 static void
 enable_libevent(void)
 {
+	ELOG
 	int i;
 
 	if (get_cmd_opt_bool("no-libevent"))
@@ -906,6 +947,7 @@ enable_libevent(void)
 static void
 terminate_libevent(void)
 {
+	ELOG
 	int i;
 	if (event_enabled) {
 		for (i = 0; i < n_threads; i++) {
@@ -926,6 +968,7 @@ terminate_libevent(void)
 static void
 do_event_loop(int flags)
 {
+	ELOG
 	int e;
 #ifdef HAVE_EVENT_BASE_SET
 	e = event_base_loop(event_base, flags);
@@ -941,6 +984,7 @@ do_event_loop(int flags)
 select_handler_T
 get_handler(int fd, enum select_handler_type tp)
 {
+	ELOG
 	if (fd >= w_max || fd < 0) {
 		return NULL;
 	}
@@ -958,6 +1002,7 @@ get_handler(int fd, enum select_handler_type tp)
 void *
 get_handler_data(int fd)
 {
+	ELOG
 	if (fd >= w_max || fd < 0) {
 		return NULL;
 	}
@@ -969,6 +1014,7 @@ void
 set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
 	     select_handler_T error_func, void *data)
 {
+	ELOG
 	if (fd < 0) {
 		return;
 	}
@@ -1069,6 +1115,7 @@ static int was_installed_timer = 0;
 static void
 periodic_redraw_all_terminals(void *data)
 {
+	ELOG
 	redraw_all_terminals();
 	was_installed_timer = 0;
 }
@@ -1076,6 +1123,7 @@ periodic_redraw_all_terminals(void *data)
 static void
 try_redraw_all_terminals(void)
 {
+	ELOG
 	if (was_installed_timer) {
 		return;
 	}
@@ -1091,6 +1139,7 @@ try_redraw_all_terminals(void)
 static void
 clear_events(int h, int blocking)
 {
+	ELOG
 #ifdef HAVE_SYS_EVENTFD_H
 	if (1) {
 		int rd;
@@ -1120,6 +1169,7 @@ int signal_pipe[2] = { -1, -1 };
 static void
 clear_events_ptr(void *handle)
 {
+	ELOG
 	clear_events((int)(intptr_t)handle, 0);
 }
 #endif
@@ -1127,6 +1177,7 @@ clear_events_ptr(void *handle)
 void
 select_loop(void (*init)(void))
 {
+	ELOG
 	timeval_T last_time;
 	int select_errors = 0;
 
@@ -1381,6 +1432,7 @@ select_loop(void (*init)(void))
 static int
 can_read_or_write(int fd, int write)
 {
+	ELOG
 #if defined(USE_POLL)
 	struct pollfd p;
 	int rs;
@@ -1412,18 +1464,21 @@ can_read_or_write(int fd, int write)
 int
 can_read(int fd)
 {
+	ELOG
 	return can_read_or_write(fd, 0);
 }
 
 int
 can_write(int fd)
 {
+	ELOG
 	return can_read_or_write(fd, 1);
 }
 
 void
 terminate_select(void)
 {
+	ELOG
 #ifdef USE_LIBEVENT
 	terminate_libevent();
 #endif

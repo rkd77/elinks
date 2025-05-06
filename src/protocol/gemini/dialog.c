@@ -28,6 +28,7 @@
 static void
 query_ok(void *d, const char *data)
 {
+	ELOG
 	struct gemini_error_info *info = (struct gemini_error_info *)d;
 	struct string q;
 
@@ -51,6 +52,7 @@ query_ok(void *d, const char *data)
 static void
 query_cancel(void *d)
 {
+	ELOG
 	struct gemini_error_info *info = (struct gemini_error_info *)d;
 
 	done_uri(info->uri);
@@ -61,6 +63,7 @@ query_cancel(void *d)
 void
 do_gemini_query_dialog(struct session *ses, void *data)
 {
+	ELOG
 	struct gemini_error_info *info = (struct gemini_error_info *)data;
 	info->ses = ses;
 

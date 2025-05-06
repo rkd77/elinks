@@ -32,6 +32,7 @@
 void
 init_vs(struct view_state *vs, struct uri *uri, int plain)
 {
+	ELOG
 	memset(vs, 0, sizeof(*vs));
 	vs->current_link = -1;
 	vs->old_current_link = -1;
@@ -54,6 +55,7 @@ init_vs(struct view_state *vs, struct uri *uri, int plain)
 void
 destroy_vs(struct view_state *vs, int blast_ecmascript)
 {
+	ELOG
 	struct form_view *fv, *next;
 
 #ifdef CONFIG_SCRIPTING_SPIDERMONKEY
@@ -95,6 +97,7 @@ destroy_vs(struct view_state *vs, int blast_ecmascript)
 void
 copy_vs(struct view_state *dst, struct view_state *src)
 {
+	ELOG
 	struct form_view *fv;
 
 	copy_struct(dst, src);
@@ -174,6 +177,7 @@ copy_vs(struct view_state *dst, struct view_state *src)
 void
 check_vs(struct document_view *doc_view)
 {
+	ELOG
 	struct view_state *vs = doc_view->vs;
 
 	int_upper_bound(&vs->current_link, doc_view->document->nlinks - 1);
@@ -193,6 +197,7 @@ check_vs(struct document_view *doc_view)
 void
 next_frame(struct session *ses, int p)
 {
+	ELOG
 	struct view_state *vs;
 	struct document_view *doc_view;
 	int n;

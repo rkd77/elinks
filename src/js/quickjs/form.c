@@ -44,6 +44,7 @@ JSValue getForm(JSContext *ctx, struct form *form);
 static struct form_view *
 getOpaque(JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -55,6 +56,7 @@ getOpaque(JSValueConst this_val)
 static void
 setOpaque(JSValueConst this_val, struct form_view *fv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -71,6 +73,7 @@ setOpaque(JSValueConst this_val, struct form_view *fv)
 static struct form *
 form_GetOpaque(JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -82,6 +85,7 @@ form_GetOpaque(JSValueConst this_val)
 static void
 form_SetOpaque(JSValueConst this_val, struct form *form)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -98,6 +102,7 @@ static JSValue
 js_get_form_control_object(JSContext *ctx,
 			enum form_type type, struct form_state *fs)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -128,6 +133,7 @@ js_get_form_control_object(JSContext *ctx,
 static void
 js_form_set_items(JSContext *ctx, JSValueConst this_val, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -184,6 +190,7 @@ js_form_set_items(JSContext *ctx, JSValueConst this_val, void *node)
 static void
 js_form_set_items2(JSContext *ctx, JSValueConst this_val, void *node)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -228,6 +235,7 @@ js_form_set_items2(JSContext *ctx, JSValueConst this_val, void *node)
 static JSValue
 js_form_elements_get_property_length(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -266,6 +274,7 @@ js_form_elements_get_property_length(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_form_elements_item2(JSContext *ctx, JSValueConst this_val, int index)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -310,6 +319,7 @@ js_form_elements_item2(JSContext *ctx, JSValueConst this_val, int index)
 static JSValue
 js_form_elements_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -331,6 +341,7 @@ js_form_elements_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 static JSValue
 js_form_elements_namedItem2(JSContext *ctx, JSValueConst this_val, const char *string)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -378,6 +389,7 @@ js_form_elements_namedItem2(JSContext *ctx, JSValueConst this_val, const char *s
 static JSValue
 js_form_elements_namedItem(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -403,6 +415,7 @@ js_form_elements_namedItem(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 static JSValue
 js_form_elements_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -414,6 +427,7 @@ js_form_elements_toString(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 static JSValue
 js_form_get_property_action(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -440,6 +454,7 @@ js_form_get_property_action(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_form_set_property_action(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -491,6 +506,7 @@ static const JSCFunctionListEntry js_form_elements_proto_funcs[] = {
 void
 quickjs_detach_form_view(struct form_view *fv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -506,6 +522,7 @@ quickjs_detach_form_view(struct form_view *fv)
 static
 void js_elements_finalizer(JSRuntime *rt, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -526,6 +543,7 @@ static JSClassDef js_form_elements_class = {
 JSValue
 getFormElements(JSContext *ctx, struct form_view *fv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -560,6 +578,7 @@ getFormElements(JSContext *ctx, struct form_view *fv)
 static JSValue
 js_form_get_property_elements(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -594,6 +613,7 @@ js_form_get_property_elements(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_form_get_property_encoding(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -634,6 +654,7 @@ js_form_get_property_encoding(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_form_set_property_encoding(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -677,6 +698,7 @@ js_form_set_property_encoding(JSContext *ctx, JSValueConst this_val, JSValue val
 static JSValue
 js_form_get_property_length(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -702,6 +724,7 @@ js_form_get_property_length(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_form_get_property_method(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -742,6 +765,7 @@ js_form_get_property_method(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_form_set_property_method(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -783,6 +807,7 @@ js_form_set_property_method(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_form_get_property_name(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -810,6 +835,7 @@ js_form_get_property_name(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_form_set_property_name(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -846,6 +872,7 @@ js_form_set_property_name(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_form_get_property_target(JSContext *ctx, JSValueConst this_val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -872,6 +899,7 @@ js_form_get_property_target(JSContext *ctx, JSValueConst this_val)
 static JSValue
 js_form_set_property_target(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -909,6 +937,7 @@ js_form_set_property_target(JSContext *ctx, JSValueConst this_val, JSValue val)
 static JSValue
 js_form_reset(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -933,6 +962,7 @@ js_form_reset(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *arg
 static JSValue
 js_form_submit(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -957,6 +987,7 @@ js_form_submit(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *ar
 static JSValue
 js_form_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -968,6 +999,7 @@ js_form_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *
 JSValue
 js_get_form_object(JSContext *ctx, JSValueConst jsdoc, struct form *form)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
@@ -993,6 +1025,7 @@ static const JSCFunctionListEntry js_form_proto_funcs[] = {
 static
 void js_form_finalizer(JSRuntime *rt, JSValue val)
 {
+	ELOG
 	REF_JS(val);
 
 	struct form *form = form_GetOpaque(val);
@@ -1011,6 +1044,7 @@ static JSClassDef js_form_class = {
 JSValue
 getForm(JSContext *ctx, struct form *form)
 {
+	ELOG
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif

@@ -20,6 +20,7 @@ static char *
 get_progress_msg_2(struct progress *progress, struct terminal *term,
 		 int wide, int full, const char *separator, char *type)
 {
+	ELOG
 	struct string msg;
 	int newlines = separator[strlen(separator) - 1] == '\n';
 
@@ -94,6 +95,7 @@ char *
 get_upload_progress_msg(struct progress *progress, struct terminal *term,
 			int wide, int full, const char *separator)
 {
+	ELOG
 	return get_progress_msg_2(progress, term, wide, full, separator, _("Sent", term));
 }
 
@@ -101,6 +103,7 @@ char *
 get_progress_msg(struct progress *progress, struct terminal *term,
 			int wide, int full, const char *separator)
 {
+	ELOG
 	return get_progress_msg_2(progress, term, wide, full, separator, _("Received", term));
 }
 
@@ -109,6 +112,7 @@ draw_progress_bar(struct progress *progress, struct terminal *term,
 		  int x, int y, int width,
 		  char *text, struct color_pair *meter_color)
 {
+	ELOG
 	/* Note : values > 100% are theorically possible and were seen. */
 	int percent = 0;
 	struct el_box barprogress;

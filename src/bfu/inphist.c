@@ -26,6 +26,7 @@
 static void
 tab_compl_n(struct dialog_data *dlg_data, char *item, int len)
 {
+	ELOG
 	struct widget_data *widget_data = selected_widget(dlg_data);
 
 	assert(widget_is_textfield(widget_data));
@@ -42,6 +43,7 @@ tab_compl_n(struct dialog_data *dlg_data, char *item, int len)
 static void
 tab_compl(struct dialog_data *dlg_data, char *item)
 {
+	ELOG
 	tab_compl_n(dlg_data, item, strlen(item));
 }
 
@@ -49,6 +51,7 @@ tab_compl(struct dialog_data *dlg_data, char *item)
 static void
 menu_tab_compl(struct terminal *term, void *item_, void *dlg_data_)
 {
+	ELOG
 	char *item = (char *)item_;
 	struct dialog_data *dlg_data = (struct dialog_data *)dlg_data_;
 
@@ -61,6 +64,7 @@ void
 do_tab_compl(struct dialog_data *dlg_data,
 	     LIST_OF(struct input_history_entry) *history)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	struct widget_data *widget_data = selected_widget(dlg_data);
 	int cpos = widget_data->info.field.cpos;
@@ -92,6 +96,7 @@ do_tab_compl(struct dialog_data *dlg_data,
 static inline int
 strcommonlen(char *a, char *b)
 {
+	ELOG
 	char *start = a;
 
 	while (*a && *a == *b)
@@ -108,6 +113,7 @@ void
 do_tab_compl_unambiguous(struct dialog_data *dlg_data,
 			 LIST_OF(struct input_history_entry) *history)
 {
+	ELOG
 	struct string completion;
 	struct widget_data *widget_data = selected_widget(dlg_data);
 	int base_len = widget_data->info.field.cpos;
@@ -158,6 +164,7 @@ do_tab_compl_unambiguous(struct dialog_data *dlg_data,
 static void
 set_complete_file_menu(struct terminal *term, void *filename_, void *dlg_data_)
 {
+	ELOG
 	struct dialog_data *dlg_data = (struct dialog_data *)dlg_data_;
 	struct widget_data *widget_data = selected_widget(dlg_data);
 	char *filename = (char *)filename_;
@@ -181,6 +188,7 @@ set_complete_file_menu(struct terminal *term, void *filename_, void *dlg_data_)
 static void
 tab_complete_file_menu(struct terminal *term, void *path_, void *dlg_data_)
 {
+	ELOG
 	struct dialog_data *dlg_data = (struct dialog_data *)dlg_data_;
 	char *path = (char *)path_;
 
@@ -193,6 +201,7 @@ void
 do_tab_compl_file(struct dialog_data *dlg_data,
 		  LIST_OF(struct input_history_entry) *history)
 {
+	ELOG
 	struct widget_data *widget_data = selected_widget(dlg_data);
 
 	if (get_cmd_opt_bool("anonymous"))
@@ -207,6 +216,7 @@ do_tab_compl_file(struct dialog_data *dlg_data,
 static struct input_history_entry *
 check_duplicate_entries(struct input_history *history, char *data)
 {
+	ELOG
 	struct input_history_entry *entry, *first_duplicate = NULL;
 
 	if (!history || !data || !*data) return NULL;
@@ -240,6 +250,7 @@ void
 add_to_input_history(struct input_history *history, char *data,
 		     int check_duplicate)
 {
+	ELOG
 	struct input_history_entry *entry;
 	int length;
 
@@ -286,6 +297,7 @@ add_to_input_history(struct input_history *history, char *data,
 int
 load_input_history(struct input_history *history, const char *filename)
 {
+	ELOG
 	char *xdg_config_home = get_xdg_config_home();
 	char *history_file = (char *)filename;
 	char line[MAX_STR_LEN];
@@ -330,6 +342,7 @@ load_input_history(struct input_history *history, const char *filename)
 int
 save_input_history(struct input_history *history, const char *filename)
 {
+	ELOG
 	char *xdg_config_home = get_xdg_config_home();
 	struct input_history_entry *entry;
 	struct secure_save_info *ssi;
@@ -364,6 +377,7 @@ save_input_history(struct input_history *history, const char *filename)
 void
 dlg_set_history(struct widget_data *widget_data)
 {
+	ELOG
 	assert(widget_has_history(widget_data));
 	assert(widget_data->widget->datalen > 0);
 

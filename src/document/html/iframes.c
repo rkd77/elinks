@@ -27,6 +27,7 @@
 
 void add_iframeset_entry(struct document *parent, char *url, char *name, int number, int y, int width, int height, int nlink, int hidden)
 {
+	ELOG
 	struct iframeset_desc *iframeset_desc;
 	struct iframe_desc *iframe_desc;
 	int offset;
@@ -72,6 +73,7 @@ void add_iframeset_entry(struct document *parent, char *url, char *name, int num
 static void
 add_iframe_to_list(struct session *ses, struct document_view *doc_view)
 {
+	ELOG
 	struct document_view *ses_doc_view;
 
 	assert(ses && doc_view);
@@ -96,6 +98,7 @@ static struct document_view *
 find_ifd(struct session *ses, char *name,
 	int depth, int x, int y)
 {
+	ELOG
 	struct document_view *doc_view;
 
 	assert(ses && name);
@@ -134,6 +137,7 @@ static struct document_view *
 format_iframe(struct session *ses, struct document *document, struct iframe_desc *iframe_desc,
 	     struct document_options *o, int j)
 {
+	ELOG
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct cache_entry *cached;
@@ -223,6 +227,7 @@ render:
 void
 format_iframes(struct session *ses, struct document *document, struct document_options *op, int depth)
 {
+	ELOG
 	struct document_options o;
 	int j;
 	struct iframeset_desc *ifsd = document->iframeset_desc;

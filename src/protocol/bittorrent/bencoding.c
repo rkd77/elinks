@@ -105,6 +105,7 @@ enum bencoding_token {
 static inline void
 scan_bencoding_token(struct scanner *scanner, struct scanner_token *token)
 {
+	ELOG
 	const char *string = scanner->position;
 	unsigned char first_char = *string;
 	enum bencoding_token type = BENCODING_TOKEN_NONE;
@@ -166,6 +167,7 @@ scan_bencoding_token(struct scanner *scanner, struct scanner_token *token)
 static void
 skip_bencoding_tokens(struct scanner *scanner)
 {
+	ELOG
 	int nesting_level = 0;
 
 	assert(scanner_has_tokens(scanner));
@@ -203,6 +205,7 @@ skip_bencoding_tokens(struct scanner *scanner)
 static struct scanner_token *
 scan_bencoding_tokens(struct scanner *scanner)
 {
+	ELOG
 	struct scanner_token *table_end = scanner->table + SCANNER_TOKENS;
 	struct scanner_token *current;
 
@@ -285,6 +288,7 @@ enum bencoding_token
 check_bencoding_dictionary_entry(struct scanner *scanner,
 				 struct scanner_token **value_ptr)
 {
+	ELOG
 	const struct bencoding_dictionary_info *entry;
 	struct scanner_token *key, *value, key_backup;
 
@@ -327,6 +331,7 @@ check_bencoding_dictionary_entry(struct scanner *scanner,
 static off_t
 parse_bencoding_integer(struct scanner_token *token)
 {
+	ELOG
 	const char *string = token->string;
 	int pos = 0, length = token->length;
 	off_t integer = 0;
@@ -359,6 +364,7 @@ static char *
 normalize_bencoding_path(const char *path, int pathlen,
 			 int *malicious)
 {
+	ELOG
 	struct string string;
 
 	/* Normalize and check for malicious paths in the the file list. */
@@ -398,6 +404,7 @@ static enum bittorrent_state
 add_bittorrent_file(struct bittorrent_meta *meta, char *path,
 		    struct bittorrent_file *template_)
 {
+	ELOG
 	struct bittorrent_file *file;
 	int malicious;
 	int pathlen;
@@ -433,6 +440,7 @@ add_bittorrent_file(struct bittorrent_meta *meta, char *path,
 static enum bittorrent_state
 parse_bencoding_file_path(struct scanner *scanner, struct string *path)
 {
+	ELOG
 	assert(get_scanner_token(scanner)->type == BENCODING_TOKEN_LIST);
 
 	skip_scanner_token(scanner);
@@ -470,6 +478,7 @@ static enum bittorrent_state
 parse_bencoding_file_dictionary(struct bittorrent_meta *meta,
 				struct scanner *scanner, struct string *path)
 {
+	ELOG
 	struct bittorrent_file file;
 
 	assert(get_scanner_token(scanner)->type == BENCODING_TOKEN_DICTIONARY);
@@ -523,6 +532,7 @@ parse_bencoding_file_dictionary(struct bittorrent_meta *meta,
 static enum bittorrent_state
 parse_bencoding_files_list(struct bittorrent_meta *meta, struct scanner *scanner)
 {
+	ELOG
 	assert(get_scanner_token(scanner)->type == BENCODING_TOKEN_LIST);
 
 	skip_scanner_token(scanner);
@@ -562,6 +572,7 @@ static enum bittorrent_state
 parse_bencoding_info_dictionary(struct bittorrent_meta *meta,
 				struct scanner *scanner)
 {
+	ELOG
 	struct bittorrent_file file;
 
 	assert(get_scanner_token(scanner)->type == BENCODING_TOKEN_DICTIONARY);
@@ -655,6 +666,7 @@ parse_bencoding_info_dictionary(struct bittorrent_meta *meta,
 static enum bittorrent_state
 check_bittorrent_metafile(struct bittorrent_meta *meta)
 {
+	ELOG
 	struct bittorrent_file *file;
 	off_t last_piece_length = 0;
 	off_t total_length = 0;
@@ -694,6 +706,7 @@ enum bittorrent_state
 parse_bittorrent_metafile(struct bittorrent_meta *meta,
 			  struct bittorrent_const_string *metafile)
 {
+	ELOG
 	struct scanner scanner;
 
 	memset(meta, 0, sizeof(*meta));
@@ -800,6 +813,7 @@ static enum bittorrent_state
 parse_bencoding_peer_dictionary(struct bittorrent_connection *bittorrent,
 				struct scanner *scanner)
 {
+	ELOG
 	struct scanner_token ip;
 	bittorrent_id_T id;
 	/* Set to invalid value. */
@@ -855,6 +869,7 @@ static enum bittorrent_state
 parse_bencoding_peers_list(struct bittorrent_connection *bittorrent,
 			   struct scanner *scanner)
 {
+	ELOG
 	assert(get_scanner_token(scanner)->type == BENCODING_TOKEN_LIST);
 
 	skip_scanner_token(scanner);
@@ -886,6 +901,7 @@ static enum bittorrent_state
 parse_bencoding_peers_string(struct bittorrent_connection *bittorrent,
 			     struct scanner *scanner)
 {
+	ELOG
 	struct scanner_token *token = get_scanner_token(scanner);
 	const char *pos;
 	const char *last_peer_info_start
@@ -920,6 +936,7 @@ enum bittorrent_state
 parse_bittorrent_tracker_response(struct bittorrent_connection *bittorrent,
 				  struct bittorrent_const_string *response)
 {
+	ELOG
 	struct scanner scanner;
 
 	init_scanner(&scanner, &bencoding_scanner_info,

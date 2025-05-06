@@ -157,6 +157,7 @@ static char HEXnumbers[] = "0123456789ABCDEF";
 static inline void
 dopr_outch(char *buffer, size_t *currlen, size_t maxlen, char c)
 {
+	ELOG
 	if (*currlen < maxlen)
 		buffer[(*currlen)] = c;
 
@@ -166,6 +167,7 @@ dopr_outch(char *buffer, size_t *currlen, size_t maxlen, char c)
 static size_t
 dopr(char *buffer, size_t maxlen, const char *format, va_list args_in)
 {
+	ELOG
 	char ch;
 	LLONG value;
 	LDOUBLE fvalue;
@@ -436,6 +438,7 @@ static void
 fmtstr(char *buffer, size_t *currlen, size_t maxlen,
        char *value, int flags, int min, int max)
 {
+	ELOG
 	int padlen, strln;     /* amount to pad */
 	int cnt = 0;
 
@@ -472,6 +475,7 @@ static void
 fmtint(char *buffer, size_t *currlen, size_t maxlen,
        long value, int base, int min, int max, int flags)
 {
+	ELOG
 	int signvalue = 0;
 	unsigned long uvalue;
 	char convert[20];
@@ -555,6 +559,7 @@ fmtint(char *buffer, size_t *currlen, size_t maxlen,
 static LDOUBLE
 my_abs(LDOUBLE value)
 {
+	ELOG
 	LDOUBLE result = value;
 
 	if (value < 0)
@@ -566,6 +571,7 @@ my_abs(LDOUBLE value)
 static LDOUBLE
 my_pow10(int exp)
 {
+	ELOG
 	LDOUBLE result = 1;
 
 	while (exp) {
@@ -579,6 +585,7 @@ my_pow10(int exp)
 static LLONG
 my_round(LDOUBLE value)
 {
+	ELOG
 	LLONG intpart;
 
 	intpart = (LLONG) value;
@@ -593,6 +600,7 @@ my_round(LDOUBLE value)
 static double
 my_modf(double x0, double *iptr)
 {
+	ELOG
 	int i;
 	long l;
 	double x = x0;
@@ -628,6 +636,7 @@ static void
 fmtfp(char *buffer, size_t *currlen, size_t maxlen,
       LDOUBLE fvalue, int min, int max, int flags)
 {
+	ELOG
 	int signvalue = 0;
 	double ufvalue;
 	char iconvert[311];
@@ -795,6 +804,7 @@ fmtfp(char *buffer, size_t *currlen, size_t maxlen,
 int
 elinks_vsnprintf(char *str, size_t count, const char *fmt, va_list args)
 {
+	ELOG
 	return dopr(str, count, fmt, args);
 }
 #endif
@@ -803,6 +813,7 @@ elinks_vsnprintf(char *str, size_t count, const char *fmt, va_list args)
 int
 elinks_snprintf(char *str, size_t count, const char *fmt, ...)
 {
+	ELOG
 	size_t ret;
 	va_list ap;
 
@@ -822,6 +833,7 @@ elinks_snprintf(char *str, size_t count, const char *fmt, ...)
 int
 elinks_vasprintf(char **ptr, const char *format, va_list ap)
 {
+	ELOG
 	int ret;
 	va_list ap2;
 
@@ -853,6 +865,7 @@ elinks_vasprintf(char **ptr, const char *format, va_list ap)
 int
 elinks_asprintf(char **ptr, const char *format, ...)
 {
+	ELOG
 	va_list ap;
 	int ret;
 
@@ -868,6 +881,7 @@ elinks_asprintf(char **ptr, const char *format, ...)
 char *
 asprintfa(const char *fmt, ...)
 {
+	ELOG
 	char *str;
 	va_list ap;
 
@@ -888,6 +902,7 @@ int sprintf(char *str,const char *fmt,...);
 int
 main(void)
 {
+	ELOG
 	char buf1[1024];
 	char buf2[1024];
 	char *fp_fmt[] = {

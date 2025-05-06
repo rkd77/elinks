@@ -22,18 +22,21 @@ INIT_INPUT_HISTORY(goto_url_history);
 static void
 load_url_history(void)
 {
+	ELOG
 	load_input_history(&goto_url_history, GOTO_HISTORY_FILENAME);
 }
 
 static void
 save_url_history(void)
 {
+	ELOG
 	save_input_history(&goto_url_history, GOTO_HISTORY_FILENAME);
 }
 
 static enum evhook_status
 goto_url_history_write_hook(va_list ap, void *data)
 {
+	ELOG
 	save_url_history();
 	return EVENT_HOOK_STATUS_NEXT;
 }
@@ -47,12 +50,14 @@ static struct event_hook_info goto_url_history_hooks[] = {
 static void
 init_url_history(struct module *module)
 {
+	ELOG
 	load_url_history();
 }
 
 static void
 done_url_history(struct module *module)
 {
+	ELOG
 	save_url_history();
 	free_list(goto_url_history.entries);
 }

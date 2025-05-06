@@ -17,6 +17,7 @@
 struct line *
 realloc_lines(struct document *document, int y)
 {
+	ELOG
 	assert(document);
 	if_assert_failed return NULL;
 

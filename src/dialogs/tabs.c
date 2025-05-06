@@ -43,6 +43,7 @@ static char *tab_last_searched_url;
 static struct tab_item *
 init_tab_item(struct terminal *term, char *url, char *title, int i)
 {
+	ELOG
 	struct tab_item *tab_item = (struct tab_item *)mem_calloc(1, sizeof(*tab_item));
 
 	if (!tab_item) {
@@ -80,6 +81,7 @@ init_tab_item(struct terminal *term, char *url, char *title, int i)
 static void
 add_tab_item(struct terminal *term, char *url, char *title, int i)
 {
+	ELOG
 	struct tab_item *item = init_tab_item(term, url, title, i);
 
 	if (!item) {
@@ -93,22 +95,26 @@ add_tab_item(struct terminal *term, char *url, char *title, int i)
 static void
 lock_tab_item(struct listbox_item *item)
 {
+	ELOG
 }
 
 static void
 unlock_tab_item(struct listbox_item *item)
 {
+	ELOG
 }
 
 static int
 is_tab_item_used(struct listbox_item *item)
 {
+	ELOG
 	return 0;
 }
 
 static char *
 get_tab_item_text(struct listbox_item *box_item, struct terminal *term)
 {
+	ELOG
 	struct tab_item *item = (struct tab_item *)box_item->udata;
 	struct string info;
 
@@ -126,6 +132,7 @@ get_tab_item_text(struct listbox_item *box_item, struct terminal *term)
 static char *
 get_tab_item_info(struct listbox_item *box_item, struct terminal *term)
 {
+	ELOG
 	struct tab_item *item = (struct tab_item *)box_item->udata;
 	struct string info;
 
@@ -141,12 +148,14 @@ get_tab_item_info(struct listbox_item *box_item, struct terminal *term)
 static struct listbox_item *
 get_tab_item_root(struct listbox_item *box_item)
 {
+	ELOG
 	return NULL;
 }
 
 static struct uri *
 get_tab_item_uri(struct listbox_item *item)
 {
+	ELOG
 	struct tab_item *tab_item = (struct tab_item *)item->udata;
 
 	return get_uri(tab_item->url, URI_NONE);
@@ -155,6 +164,7 @@ get_tab_item_uri(struct listbox_item *item)
 static int
 get_tab_item_number(struct listbox_item *item)
 {
+	ELOG
 	struct tab_item *tab_item = (struct tab_item *)item->udata;
 
 	return tab_item->i;
@@ -163,6 +173,7 @@ get_tab_item_number(struct listbox_item *item)
 static int
 can_delete_tab_item(struct listbox_item *item)
 {
+	ELOG
 	return 0;
 }
 
@@ -213,6 +224,7 @@ static const struct listbox_ops tab_listbox_ops = {
 static int
 tab_simple_search(struct terminal *term, char *search_url, char *search_title)
 {
+	ELOG
 	struct tab_item *tab_item;
 
 	if (!search_title || !search_url)
@@ -252,6 +264,7 @@ tab_simple_search(struct terminal *term, char *search_url, char *search_title)
 static void
 tabs_search_do(void *data)
 {
+	ELOG
 	struct dialog *dlg = (struct dialog *)data;
 	struct terminal *term = (struct terminal *)dlg->udata2;
 	struct listbox_item *item = (struct listbox_item *)term->tab_browser.root.child.next;
@@ -272,6 +285,7 @@ static void
 launch_search_dialog(struct terminal *term, struct dialog_data *parent,
 		     struct session *ses)
 {
+	ELOG
 	do_edit_dialog(term, 1, N_("Search tabs"), tab_last_searched_title,
 		       tab_last_searched_url, ses, parent, tabs_search_do,
 		       NULL, term, EDIT_DLG_SEARCH);
@@ -280,6 +294,7 @@ launch_search_dialog(struct terminal *term, struct dialog_data *parent,
 static widget_handler_status_T
 push_search_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	launch_search_dialog(dlg_data->win->term, dlg_data,
 			     (struct session *) dlg_data->dlg->udata);
 	return EVENT_PROCESSED;
@@ -290,6 +305,7 @@ push_search_button(struct dialog_data *dlg_data, struct widget_data *widget_data
 static widget_handler_status_T
 push_toggle_display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
+	ELOG
 	struct terminal *term = dlg_data->win->term;
 	int *display_type;
 
@@ -305,6 +321,7 @@ static widget_handler_status_T
 push_goto_button(struct dialog_data *dlg_data,
                          struct widget_data *button)
 {
+	ELOG
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct listbox_item *item = box->sel;
 	struct terminal *term = dlg_data->win->term;
@@ -328,6 +345,7 @@ static widget_handler_status_T
 push_bookmark_button(struct dialog_data *dlg_data,
 		     struct widget_data *some_useless_info_button)
 {
+	ELOG
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct terminal *term = dlg_data->win->term;
 	struct tab_item *tab_item;
@@ -359,6 +377,7 @@ static const struct hierbox_browser_button tabs_buttons[] = {
 void
 init_hierbox_tab_browser(struct terminal *term)
 {
+	ELOG
 	struct hierbox_browser *tab_browser = &term->tab_browser;
 
 	tab_browser->title = N_("Tabs manager");
@@ -384,6 +403,7 @@ init_hierbox_tab_browser(struct terminal *term)
 void
 free_tabs_data(struct terminal *term)
 {
+	ELOG
 	struct tab_item *item, *next;
 
 	foreachsafe (item, next, term->tabs_history.entries) {
@@ -398,6 +418,7 @@ free_tabs_data(struct terminal *term)
 static void
 populate_tabs_data(struct session *ses)
 {
+	ELOG
 	struct terminal *term = ses->tab->term;
 	int tab_count = number_of_tabs(term);
 	int i;
@@ -425,6 +446,7 @@ populate_tabs_data(struct session *ses)
 void
 tab_manager(struct session *ses)
 {
+	ELOG
 	mem_free_set(&tab_last_searched_title, NULL);
 	mem_free_set(&tab_last_searched_url, NULL);
 	free_tabs_data(ses->tab->term);
