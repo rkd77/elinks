@@ -493,7 +493,7 @@ set_screen_dirty_image(struct terminal_screen *screen, int from, int to)
 static void
 set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 {
-	ELOG
+	//ELOG
 	const int cp = get_opt_codepage_tree(term_spec, "charset", NULL);
 	int utf8_io = get_opt_bool_tree(term_spec, "utf_8_io", NULL);
 
@@ -603,7 +603,7 @@ static int
 screen_driver_change_hook(struct session *ses, struct option *term_spec,
 			  struct option *changed)
 {
-	ELOG
+	//ELOG
 	term_mode_type_T type = get_opt_int_tree(term_spec, "type", NULL);
 	struct screen_driver *driver;
 	const char *name = term_spec->name;
@@ -620,7 +620,7 @@ screen_driver_change_hook(struct session *ses, struct option *term_spec,
 static inline struct screen_driver *
 add_screen_driver(term_mode_type_T type, struct terminal *term, int env_len)
 {
-	ELOG
+	//ELOG
 	struct screen_driver *driver;
 
 	/* One byte is reserved for name in struct screen_driver. */
@@ -646,7 +646,7 @@ add_screen_driver(term_mode_type_T type, struct terminal *term, int env_len)
 static inline struct screen_driver *
 get_screen_driver(struct terminal *term)
 {
-	ELOG
+	//ELOG
 	term_mode_type_T type = get_opt_int_tree(term->spec, "type", NULL);
 	const char *name = term->spec->name;
 	int len = strlen(name);
@@ -673,7 +673,7 @@ get_screen_driver(struct terminal *term)
 void
 done_screen_drivers(struct module *xxx)
 {
-	ELOG
+	//ELOG
 	free_list(active_screen_drivers);
 }
 
@@ -683,7 +683,7 @@ done_screen_drivers(struct module *xxx)
 struct string *
 add_cursor_move_to_string(struct string *screen, int y, int x)
 {
-	ELOG
+	//ELOG
 #ifdef CONFIG_TERMINFO
 	if (get_cmd_opt_bool("terminfo")) {
 		const char *aa = terminfo_cursor_address(y-1, x-1);
@@ -735,35 +735,35 @@ struct screen_state {
 static inline int
 compare_color_true(unsigned char *a, unsigned char *b)
 {
-	ELOG
+	//ELOG
 	return !memcmp(a, b, 6);
 }
 
 static inline int
 compare_bg_color_true(unsigned char *a, unsigned char *b)
 {
-	ELOG
+	//ELOG
 	return (a[3] == b[3] && a[4] == b[4] && a[5] == b[5]);
 }
 
 static inline int
 compare_fg_color_true(unsigned char *a, unsigned char *b)
 {
-	ELOG
+	//ELOG
 	return (a[0] == b[0] && a[1] == b[1] && a[2] == b[2]);
 }
 
 static inline void
 copy_color_true(unsigned char *a, unsigned char *b)
 {
-	ELOG
+	//ELOG
 	memcpy(a, b, 6);
 }
 
 static inline int
 background_is_black(unsigned char *a)
 {
-	ELOG
+	//ELOG
 	static unsigned char b[6] = {0, 0, 0, 0, 0, 0};
 
 	return compare_bg_color_true(a, b);
@@ -774,28 +774,28 @@ background_is_black(unsigned char *a)
 static inline int
 compare_color_256(unsigned char *a, unsigned char *b)
 {
-	ELOG
+	//ELOG
 	return (a[0] == b[0] && a[1] == b[1]);
 }
 
 static inline int
 compare_bg_color_256(unsigned char *a, unsigned char *b)
 {
-	ELOG
+	//ELOG
 	return (a[1] == b[1]);
 }
 
 static inline int
 compare_fg_color_256(unsigned char *a, unsigned char *b)
 {
-	ELOG
+	//ELOG
 	return (a[0] == b[0]);
 }
 
 static inline void
 copy_color_256(unsigned char *a, unsigned char *b)
 {
-	ELOG
+	//ELOG
 	a[0] = b[0];
 	a[1] = b[1];
 }
@@ -804,28 +804,28 @@ copy_color_256(unsigned char *a, unsigned char *b)
 static inline int
 compare_color_16(unsigned char *a, unsigned char *b)
 {
-	ELOG
+	//ELOG
 	return (a[0] == b[0]);
 }
 
 static inline int
 compare_bg_color_16(unsigned char *a, unsigned char *b)
 {
-	ELOG
+	//ELOG
 	return (TERM_COLOR_BACKGROUND_16(a) == TERM_COLOR_BACKGROUND_16(b));
 }
 
 static inline int
 compare_fg_color_16(unsigned char *a, unsigned char *b)
 {
-	ELOG
+	//ELOG
 	return (TERM_COLOR_FOREGROUND_16(a) == TERM_COLOR_FOREGROUND_16(b));
 }
 
 static inline void
 copy_color_16(unsigned char *a, unsigned char *b)
 {
-	ELOG
+	//ELOG
 	a[0] = b[0];
 }
 
@@ -839,7 +839,7 @@ add_char_data(struct string *screen, struct screen_driver *driver,
 	      unsigned char data, unsigned char border)
 #endif /* !CONFIG_UTF8 */
 {
-	ELOG
+	//ELOG
 	/* charset  use_utf8_io  border  data              add_to_string
 	 * -------  -----------  ------  ----------------  ----------------
 	 * unibyte  0            0       terminal unibyte  terminal unibyte
@@ -890,7 +890,7 @@ static inline void
 add_char16(struct string *screen, struct screen_driver *driver,
 	   struct screen_char *ch, struct screen_state *state)
 {
-	ELOG
+	//ELOG
 	unsigned char border = (ch->attr & SCREEN_ATTR_FRAME);
 	unsigned char italic = (ch->attr & SCREEN_ATTR_ITALIC);
 	unsigned char underline = (ch->attr & SCREEN_ATTR_UNDERLINE);
@@ -1070,7 +1070,7 @@ add_char16(struct string *screen, struct screen_driver *driver,
 static inline void
 add_char_color(struct string *screen, const struct string *seq, unsigned char color)
 {
-	ELOG
+	//ELOG
 	char color_buf[3];
 	char *color_pos = color_buf;
 	int seq_pos = 0;
@@ -1123,7 +1123,7 @@ static inline void
 add_char256(struct string *screen, struct screen_driver *driver,
 	    struct screen_char *ch, struct screen_state *state)
 {
-	ELOG
+	//ELOG
 	unsigned char attr_delta = (ch->attr ^ state->attr);
 
 	if (
@@ -1262,7 +1262,7 @@ static const struct string color_true_seqs[] = {
 static inline void
 add_char_true_color(struct string *screen, const struct string *seq, unsigned char *colors)
 {
-	ELOG
+	//ELOG
 	char color_buf[3];
 	int i;
 
@@ -1312,7 +1312,7 @@ static inline void
 add_char_true(struct string *screen, struct screen_driver *driver,
 	    struct screen_char *ch, struct screen_state *state)
 {
-	ELOG
+	//ELOG
 	unsigned char attr_delta = (ch->attr ^ state->attr);
 
 	if (
@@ -1508,7 +1508,7 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 void
 redraw_screen(struct terminal *term)
 {
-	ELOG
+	//ELOG
 	struct screen_driver *driver;
 	struct string image;
 	struct screen_state state = INIT_SCREEN_STATE;
@@ -1596,7 +1596,7 @@ redraw_screen(struct terminal *term)
 void
 erase_screen(struct terminal *term)
 {
-	ELOG
+	//ELOG
 	if (term->master) {
 		if (is_blocked()) return;
 		want_draw();
@@ -1615,7 +1615,7 @@ erase_screen(struct terminal *term)
 void
 beep_terminal(struct terminal *term)
 {
-	ELOG
+	//ELOG
 #ifdef CONFIG_OS_WIN32
 	MessageBeep(MB_ICONEXCLAMATION);
 #else
@@ -1626,7 +1626,7 @@ beep_terminal(struct terminal *term)
 struct terminal_screen *
 init_screen(void)
 {
-	ELOG
+	//ELOG
 	struct terminal_screen *screen;
 
 	screen = (struct terminal_screen *)mem_calloc(1, sizeof(*screen));
@@ -1644,7 +1644,7 @@ init_screen(void)
 void
 resize_screen(struct terminal *term, int width, int height)
 {
-	ELOG
+	//ELOG
 	struct terminal_screen *screen;
 	struct screen_char *image;
 	size_t size, bsize;
@@ -1689,7 +1689,7 @@ resize_screen(struct terminal *term, int width, int height)
 void
 done_screen(struct terminal_screen *screen)
 {
-	ELOG
+	//ELOG
 	mem_free_if(screen->image);
 	mem_free(screen->dirty);
 	mem_free(screen->dirty_image);

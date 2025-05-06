@@ -29,7 +29,7 @@ static int alloc_try = 0;
 static int
 patience(const char *of)
 {
-	ELOG
+	//ELOG
 	++alloc_try;
 	if (alloc_try < ALLOC_MAXTRIES) {
 		ERROR("Out of memory (%s returned NULL): retry #%d/%d, "
@@ -55,7 +55,7 @@ patience(const char *of)
 void *
 mem_alloc(size_t size)
 {
-	ELOG
+	//ELOG
 	if (size)
 		do {
 			void *p = malloc(size);
@@ -68,7 +68,7 @@ mem_alloc(size_t size)
 void *
 mem_calloc(size_t count, size_t eltsize)
 {
-	ELOG
+	//ELOG
 	if (eltsize && count)
 		do {
 			void *p = calloc(count, eltsize);
@@ -81,7 +81,7 @@ mem_calloc(size_t count, size_t eltsize)
 void
 mem_free(void *p)
 {
-	ELOG
+	//ELOG
 	if (!p) {
 		INTERNAL("mem_free(NULL)");
 		return;
@@ -92,7 +92,7 @@ mem_free(void *p)
 void *
 mem_realloc(void *p, size_t size)
 {
-	ELOG
+	//ELOG
 	if (!p) return mem_alloc(size);
 
 	if (size)
@@ -124,7 +124,7 @@ static int page_size;
 static size_t
 round_size(size_t size)
 {
-	ELOG
+	//ELOG
 #ifdef HAVE_SC_PAGE_SIZE
 	if (!page_size) page_size = sysconf(_SC_PAGE_SIZE);
 #endif
@@ -140,7 +140,7 @@ round_size(size_t size)
 void *
 mem_mmap_alloc(size_t size)
 {
-	ELOG
+	//ELOG
 	if (size) {
 		void *p = mmap(NULL, round_size(size), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANON, -1, 0);
 
@@ -154,7 +154,7 @@ mem_mmap_alloc(size_t size)
 void
 mem_mmap_free(void *p, size_t size)
 {
-	ELOG
+	//ELOG
 	if (!p) {
 		INTERNAL("mem_mmap_free(NULL)");
 		return;
@@ -166,7 +166,7 @@ mem_mmap_free(void *p, size_t size)
 void *
 mem_mmap_realloc(void *p, size_t old_size, size_t new_size)
 {
-	ELOG
+	//ELOG
 	if (!p) return mem_mmap_alloc(new_size);
 
 	if (round_size(old_size) == round_size(new_size))

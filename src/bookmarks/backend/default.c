@@ -131,7 +131,6 @@ read_bookmarks_default(FILE *f)
 
 struct write_bookmarks_default
 {
-	ELOG
 	struct secure_save_info *ssi;
 	int save_folder_state;
 	int codepage;

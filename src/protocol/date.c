@@ -99,11 +99,11 @@ parse_day(const char **date_p, char *end)
 }
 
 int
-parse_time(const char **time, struct tm *tm, char *end)
+parse_time(const char **time2, struct tm *tm, char *end)
 {
 	ELOG
 	unsigned char h1, h2, m1, m2;
-	const char *date = *time;
+	const char *date = *time2;
 
 #define check_time(tm) \
 	((tm)->tm_hour <= 23 && (tm)->tm_min <= 59 && (tm)->tm_sec <= 59)
@@ -126,7 +126,7 @@ parse_time(const char **time, struct tm *tm, char *end)
 
 	/* Eat :SS or [PA]M or nothing */
 	if (end && date + 2 >= end) {
-		*time = date;
+		*time2 = date;
 		return check_time(tm);
 	}
 
@@ -156,7 +156,7 @@ parse_time(const char **time, struct tm *tm, char *end)
 			return 0;
 	}
 
-	*time = date;
+	*time2 = date;
 
 	return check_time(tm);
 }

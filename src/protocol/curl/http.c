@@ -578,6 +578,7 @@ check_multi_info(GlobalInfo *g)
 			}
 		}
 	}
+	check_bottom_halves();
 #if 0
 	if (g->still_running == 0 && g->stopped) {
 		event_base_loopbreak(g->evbase);

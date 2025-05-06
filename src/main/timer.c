@@ -119,7 +119,6 @@ check_timers(timeval_T *last_time)
 #endif
 		check_bottom_halves();
 	}
-
 	timeval_copy(last_time, &now);
 }
 

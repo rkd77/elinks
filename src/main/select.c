@@ -90,7 +90,6 @@
 /* Information associated with a specific easy handle */
 typedef struct _ConnInfo
 {
-	ELOG
 	CURL *easy;
 	char *url;
 	GlobalInfo *global;
@@ -100,7 +99,6 @@ typedef struct _ConnInfo
 /* Information associated with a specific socket */
 typedef struct _SockInfo
 {
-	ELOG
 	curl_socket_t sockfd;
 	CURL *easy;
 	int action;

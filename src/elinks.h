@@ -39,6 +39,20 @@
 #define C_(str) (char *)((str))
 
 #define ELOG
+#if 0
+#define ELOG2 do { \
+char outstr[200]; \
+time_t t; \
+struct tm *tmp; \
+t = time(NULL); \
+tmp = localtime(&t); \
+if (tmp != NULL) { \
+	if (strftime(outstr, sizeof(outstr), "%F-%T", tmp) != 0) { \
+		fprintf(stderr, "%s %s\n", outstr, __FUNCTION__); \
+	} \
+} \
+} while (0)
+#endif
 
 #ifdef CONFIG_OS_DOS
 #define loop_select(a, b, c, d, e) dos_select(a, b, c, d, e, 1)
