@@ -76,7 +76,6 @@ static const char *volatile charset_aliases;
 static const char *
 get_charset_aliases(void)
 {
-	ELOG
 	const char *cp;
 
 	cp = charset_aliases;
@@ -197,7 +196,6 @@ STATIC
 const char *
 elinks_locale_charset(void)
 {
-	ELOG
 	const char *codeset;
 	const char *aliases;
 
