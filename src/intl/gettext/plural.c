@@ -135,7 +135,6 @@
 /* Symbol kind.  */
 enum yysymbol_kind_t
 {
-	ELOG
   YYSYMBOL_YYEMPTY = -2,
   YYSYMBOL_YYEOF = 0,                      /* "end of file"  */
   YYSYMBOL_YYerror = 1,                    /* error  */
@@ -184,7 +183,6 @@ static void yyerror(struct parse_args *arg, const char *str);
 static struct expression *
 new_exp(int nargs, enum operator_ op, struct expression * const *args)
 {
-	ELOG
   int i;
   struct expression *newp;
 
@@ -214,14 +212,12 @@ new_exp(int nargs, enum operator_ op, struct expression * const *args)
 static inline struct expression *
 new_exp_0(enum operator_ op)
 {
-	ELOG
   return new_exp (0, op, NULL);
 }
 
 static inline struct expression *
 new_exp_1(enum operator_ op, struct expression *right)
 {
-	ELOG
   struct expression *args[1];
 
   args[0] = right;
@@ -231,7 +227,6 @@ new_exp_1(enum operator_ op, struct expression *right)
 static struct expression *
 new_exp_2(enum operator_ op, struct expression *left, struct expression *right)
 {
-	ELOG
   struct expression *args[2];
 
   args[0] = left;
@@ -243,7 +238,6 @@ static inline struct expression *
 new_exp_3(enum operator_ op, struct expression *bexp, struct expression *tbranch,
           struct expression *fbranch)
 {
-	ELOG
   struct expression *args[3];
 
   args[0] = bexp;
@@ -503,7 +497,6 @@ void free (void *); /* INFRINGES ON USER NAME SPACE */
 /* A type that is properly aligned for any stack member.  */
 union yyalloc
 {
-	ELOG
   yy_state_t yyss_alloc;
   YYSTYPE yyvs_alloc;
 };
@@ -586,7 +579,6 @@ union yyalloc
    as returned by yylex.  */
 static const yytype_int8 yytranslate[] =
 {
-	ELOG
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -620,7 +612,6 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-	ELOG
        0,   155,   155,   163,   167,   171,   175,   179,   183,   187,
      191,   195,   199,   204
 };
@@ -638,7 +629,6 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-	ELOG
   "\"end of file\"", "error", "\"invalid token\"", "'?'", "'|'", "'&'",
   "'!'", "EQUOP2", "CMPOP2", "ADDOP2", "MULOP2", "NUMBER", "':'", "'n'",
   "'('", "')'", "$accept", "start", "exp", YY_NULLPTR
@@ -647,7 +637,6 @@ static const char *const yytname[] =
 static const char *
 yysymbol_name (yysymbol_kind_t yysymbol)
 {
-	ELOG
   return yytname[yysymbol];
 }
 #endif
@@ -657,7 +646,6 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    (internal) symbol number NUM (which must be that of a token).  */
 static const yytype_int16 yytoknum[] =
 {
-	ELOG
        0,   256,   257,    63,   124,    38,    33,   258,   259,   260,
      261,   262,    58,   110,    40,    41
 };
@@ -677,7 +665,6 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-	ELOG
       27,    27,    -4,    -4,    27,     1,    39,    -4,    13,    -4,
       27,    27,    27,    27,    27,    27,    27,    -4,    22,    -3,
       43,    46,    26,    -2,    -4,    27,    39
@@ -688,7 +675,6 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-	ELOG
        0,     0,    12,    11,     0,     0,     2,    10,     0,     1,
        0,     0,     0,     0,     0,     0,     0,    13,     0,     4,
        5,     6,     7,     8,     9,     0,     3
@@ -697,14 +683,12 @@ static const yytype_int8 yydefact[] =
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-	ELOG
       -4,    -4,    -1
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-	ELOG
       -1,     5,     6
 };
 
@@ -713,7 +697,6 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-	ELOG
        7,     9,    12,     8,    13,    14,    15,    16,    16,    18,
       19,    20,    21,    22,    23,    24,    10,    11,    12,     0,
       13,    14,    15,    16,    26,    10,    11,    12,    17,    13,
@@ -724,7 +707,6 @@ static const yytype_int8 yytable[] =
 
 static const yytype_int8 yycheck[] =
 {
-	ELOG
        1,     0,     5,     4,     7,     8,     9,    10,    10,    10,
       11,    12,    13,    14,    15,    16,     3,     4,     5,    -1,
        7,     8,     9,    10,    25,     3,     4,     5,    15,     7,
@@ -737,7 +719,6 @@ static const yytype_int8 yycheck[] =
      symbol of state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-	ELOG
        0,     6,    11,    13,    14,    17,    18,    18,    18,     0,
        3,     4,     5,     7,     8,     9,    10,    15,    18,    18,
       18,    18,    18,    18,    18,    12,    18
@@ -746,7 +727,6 @@ static const yytype_int8 yystos[] =
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_int8 yyr1[] =
 {
-	ELOG
        0,    16,    17,    18,    18,    18,    18,    18,    18,    18,
       18,    18,    18,    18
 };
@@ -754,7 +734,6 @@ static const yytype_int8 yyr1[] =
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_int8 yyr2[] =
 {
-	ELOG
        0,     2,     1,     5,     3,     3,     3,     3,     3,     3,
        2,     1,     1,     3
 };
@@ -834,7 +813,6 @@ static void
 yy_symbol_value_print (FILE *yyo,
                        yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, struct parse_args *arg)
 {
-	ELOG
   FILE *yyoutput = yyo;
   YYUSE (yyoutput);
   YYUSE (arg);
@@ -858,7 +836,6 @@ static void
 yy_symbol_print (FILE *yyo,
                  yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, struct parse_args *arg)
 {
-	ELOG
   YYFPRINTF (yyo, "%s %s (",
              yykind < YYNTOKENS ? "token" : "nterm", yysymbol_name (yykind));
 
@@ -874,7 +851,6 @@ yy_symbol_print (FILE *yyo,
 static void
 yy_stack_print (yy_state_t *yybottom, yy_state_t *yytop)
 {
-	ELOG
   YYFPRINTF (stderr, "Stack now");
   for (; yybottom <= yytop; yybottom++)
     {
@@ -899,7 +875,6 @@ static void
 yy_reduce_print (yy_state_t *yyssp, YYSTYPE *yyvsp,
                  int yyrule, struct parse_args *arg)
 {
-	ELOG
   int yylno = yyrline[yyrule];
   int yynrhs = yyr2[yyrule];
   int yyi;
@@ -962,7 +937,6 @@ static void
 yydestruct (const char *yymsg,
             yysymbol_kind_t yykind, YYSTYPE *yyvaluep, struct parse_args *arg)
 {
-	ELOG
   YYUSE (yyvaluep);
   YYUSE (arg);
   if (!yymsg)
@@ -986,7 +960,6 @@ yydestruct (const char *yymsg,
 int
 yyparse (struct parse_args *arg)
 {
-	ELOG
 /* Lookahead token kind.  */
 int yychar;
 
@@ -1537,7 +1510,6 @@ yyreturn:
 void
 gettext_free_exp__(struct expression *exp)
 {
-	ELOG
   if (exp == NULL)
     return;
 
@@ -1564,7 +1536,6 @@ gettext_free_exp__(struct expression *exp)
 static int
 yylex(YYSTYPE *lval, struct parse_args *arg)
 {
-	ELOG
   const char *exp = arg->cp;
   int result;
 
@@ -1708,6 +1679,5 @@ yylex(YYSTYPE *lval, struct parse_args *arg)
 static void
 yyerror(struct parse_args *arg, const char *str)
 {
-	ELOG
   /* Do nothing.  We don't print error messages here.  */
 }
