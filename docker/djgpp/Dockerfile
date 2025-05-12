@@ -5,7 +5,7 @@
 # [*] base system
 
 # get latest fedora
-FROM fedora:40
+FROM fedora:41
 
 # prepare system
 RUN dnf -y update && dnf -y install bash wget \
