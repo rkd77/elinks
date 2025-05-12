@@ -1165,7 +1165,6 @@ void terminate_osdep(void)
 
 #define LINKS_BIN_SEARCH(entries, eq, ab, key, result)                        \
 {                                                                       \
-	ELOG
 	int s_ = 0, e_ = (entries) - 1;                                 \
 	(result) = -1;                                                  \
 	while (s_ <= e_) {                                              \
