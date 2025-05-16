@@ -14,6 +14,10 @@ inline int operator<(JSValueConst a, JSValueConst b)
 extern "C" {
 #endif
 
+#ifndef JS_VALUE_GET_STRING
+#define JS_VALUE_GET_STRING(v) ((JSString *)JS_VALUE_GET_PTR(v))
+#endif
+
 #ifdef ECMASCRIPT_DEBUG
 
 #define RETURN_JS(obj) \
