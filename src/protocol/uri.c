@@ -1071,6 +1071,11 @@ find_uri_protocol(char *newurl)
 		/* Contains user/password/ftp-hostname */
 		return PROTOCOL_FTP;
 
+#ifdef CONFIG_GOPHER
+	} else if (!c_strncasecmp(newurl, "gopher.", 7)) {
+		return PROTOCOL_GOPHER;
+#endif
+
 #ifdef CONFIG_IPV6
 	} else if (*newurl == '[' && *ch == ':') {
 		/* Candidate for IPv6 address */
@@ -1166,6 +1171,11 @@ parse_uri:
 				case PROTOCOL_FTP:
 					add_to_string(&str, "ftp://");
 					encode_uri_string(&str, newurl, -1, 0);
+					break;
+
+				case PROTOCOL_GOPHER:
+					add_to_string(&str, "gopher://");
+					add_to_string(&str, newurl);
 					break;
 
 				case PROTOCOL_HTTP:
@@ -1288,6 +1298,11 @@ parse_uri:
 			case PROTOCOL_FTP:
 				add_to_string(&str, "ftp://");
 				encode_uri_string(&str, newurl, -1, 0);
+				break;
+
+			case PROTOCOL_GOPHER:
+				add_to_string(&str, "gopher://");
+				add_to_string(&str, newurl);
 				break;
 
 			case PROTOCOL_HTTP:
