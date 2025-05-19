@@ -54,7 +54,7 @@ For more details about ELinks history, please see
 <http://elinks.cz/history.html>.
 
 If you are more interested in the history and various Links clones and
-versions, you can examine the website at <http://links.sf.net/>.
+versions, you can examine the website at <https://web.archive.org/web/20100925114203/http://links.sourceforge.net/>.
 
 Old ELinks team lost interest in ELinks development somehow. felinks
 (fork of elinks) is continuation of elinks based on the master branch of
