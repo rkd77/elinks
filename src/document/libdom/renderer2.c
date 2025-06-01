@@ -769,7 +769,9 @@ get_element_rect(struct document *document, int offset)
 
 	return n;
 }
+#if 0
 static void dump_results(struct document *document);
+#endif
 
 void
 scan_document(struct document *document)
@@ -827,7 +829,7 @@ scan_document(struct document *document)
 //	dump_results(doc_view->document);
 }
 
-#if 1
+#if 0
 static void
 dump_results(struct document *document)
 {
