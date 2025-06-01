@@ -32,6 +32,11 @@
  * the GPL.  If you do not delete the provisions above, a recipient
  * may use your version of this file under either the MPL or the
  * GPL. */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include "elinks.h"
 
 #include "util/sha1.h"
 
