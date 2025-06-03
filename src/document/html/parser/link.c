@@ -240,7 +240,7 @@ html_img_sixel(struct html_context *html_context, char *a,
         char *html, char *eof, char **end)
 {
 	ELOG
-	if (!html_context->options->sixel || !html_context->document) {
+	if (!html_context->options->html_sixel || !html_context->document) {
 		return;
 	}
 	unsigned char *data = NULL;

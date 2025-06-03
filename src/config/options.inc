@@ -866,6 +866,12 @@ static union option_info config_options_info[] = {
 		"4 is type in addition\n"
 		"5 is everything")),
 
+#ifdef CONFIG_LIBSIXEL
+	INIT_OPT_BOOL("document.html", N_("Sixel"),
+		"sixel", OPT_ZERO, 0,
+		N_("Whether to display sixel images in html documents.")),
+#endif
+
 	INIT_OPT_BOOL("document.html", N_("Substitute frame chars"),
 		"subst_frame_chars", OPT_ZERO, 0,
 		N_("Replace ascii frame chars by border frame chars in html documents.")),

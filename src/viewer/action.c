@@ -740,7 +740,7 @@ do_action(struct session *ses, main_action_T action_id, int verbose)
 
 		case ACT_MAIN_TOGGLE_DISPLAY_SIXEL:
 #ifdef CONFIG_LIBSIXEL
-			toggle_document_option(ses, "document.plain.sixel");
+			toggle_document_option(ses, "document.html.sixel");
 			reload(ses, CACHE_MODE_INCREMENT);
 #endif
 			break;

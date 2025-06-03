@@ -164,6 +164,7 @@ struct document_options {
 
 #ifdef CONFIG_LIBSIXEL
 	unsigned int sixel:1;
+	unsigned int html_sixel:1;
 #endif
 	/** Active link coloring.
 	 * This is mostly here to make use of this option cache so
