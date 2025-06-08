@@ -1,6 +1,7 @@
 top_builddir=../..
 include $(top_builddir)/Makefile.config
 
+OBJS-$(CONFIG_KITTY) += kitty.o
 OBJS-$(CONFIG_MOUSE) += mouse.o
 OBJS-$(CONFIG_LIBSIXEL) += sixel.o
 OBJS-$(CONFIG_TERMINFO) += terminfo.o

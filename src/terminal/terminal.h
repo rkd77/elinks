@@ -158,6 +158,7 @@ struct terminal {
 #ifdef CONFIG_LIBSIXEL
 	unsigned int sixel:1;
 #endif
+	unsigned int kitty:1;
 	/** The current tab number. */
 	int current_tab;
 
@@ -179,6 +180,11 @@ struct terminal {
 	void *textarea_data;
 
 	struct term_event_mouse prev_mouse_event;
+
+#ifdef CONFIG_KITTY
+	int number_of_images;
+	struct k_image **k_images;
+#endif
 
 #ifdef CONFIG_LIBSIXEL
 	LIST_OF(struct image) images;

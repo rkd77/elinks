@@ -36,6 +36,9 @@
 #include "terminal/event.h"
 #include "terminal/hardio.h"
 #include "terminal/kbd.h"
+#ifdef CONFIG_KITTY
+#include "terminal/kitty.h"
+#endif
 #include "terminal/screen.h"
 #ifdef CONFIG_LIBSIXEL
 #include "terminal/sixel.h"
@@ -116,7 +119,7 @@ redraw_terminal(struct terminal *term)
 	ELOG
 	struct term_event ev;
 
-#ifdef CONFIG_LIBSIXEL
+#if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
 	set_redraw_term_event(&ev, term->width, term->height, term->cell_width, term->cell_height);
 #else
 	set_redraw_term_event(&ev, term->width, term->height, 0, 0);
@@ -130,7 +133,7 @@ redraw_terminal_cls(struct terminal *term)
 	ELOG
 	struct term_event ev;
 
-#ifdef CONFIG_LIBSIXEL
+#if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
 	set_resize_term_event(&ev, term->width, term->height, term->cell_width, term->cell_height);
 #else
 	set_resize_term_event(&ev, term->width, term->height, 0, 0);
@@ -190,6 +193,9 @@ init_term(int fdin, int fdout)
 #endif
 	init_list(term->windows);
 
+#ifdef CONFIG_KITTY
+	term->kitty = 1;
+#endif
 #ifdef CONFIG_LIBSIXEL
 	init_list(term->images);
 	term->sixel = 1;
@@ -266,6 +272,10 @@ destroy_terminal(struct terminal *term)
 
 	while (!list_empty(term->windows))
 		delete_window((struct window *)term->windows.next);
+
+#ifdef CONFIG_KITTY
+	mem_free_if(term->k_images);
+#endif
 
 #ifdef CONFIG_LIBSIXEL
 	while (!list_empty(term->images)) {

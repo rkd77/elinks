@@ -40,6 +40,9 @@
 #include "globhist/globhist.h"
 #include "mime/mime.h"
 #include "protocol/uri.h"
+#ifdef CONFIG_KITTY
+#include "terminal/kitty.h"
+#endif
 #ifdef CONFIG_LIBSIXEL
 #include "terminal/sixel.h"
 #endif
@@ -233,6 +236,103 @@ put_image_label(char *a, char *label,
 	elformat.style.color.foreground = saved_foreground;
 	elformat.style.attr = saved_attr;
 }
+
+#ifdef CONFIG_KITTY
+
+static unsigned int kitty_image_number;
+
+static void
+html_img_kitty(struct html_context *html_context, char *a,
+        char *html, char *eof, char **end)
+{
+	ELOG
+	if (!html_context->document) {
+		return;
+	}
+	unsigned char *data = NULL;
+	int datalen = 0;
+	int width = 0;
+	int height = 0;
+	int im_number = 0;
+	char *url = get_attr_val(a, "src", html_context->doc_cp);
+
+	if (!url) {
+		return;
+	}
+	char *url2 = join_urls(html_context->base_href, url);
+
+	if (url2) {
+		struct uri *uri = get_uri(url2, URI_BASE);
+
+		if (uri) {
+			struct cache_entry *cached = get_redirected_cache_entry(uri);
+
+			if (cached && !cached->incomplete) {
+				struct fragment *fragment = get_cache_fragment(cached);
+
+				if (fragment) {
+					if (cached->kitty) {
+						data = (unsigned char *)memacpy(fragment->data, fragment->length);
+						datalen = fragment->length;
+						width = cached->width;
+						height = cached->height;
+						im_number = cached->number;
+					} else {
+						data = el_kitty_get_image(fragment->data, fragment->length, &datalen, &width, &height);
+
+						if (data) {
+							(void)add_fragment(cached, 0, (const char *)data, datalen);
+							normalize_cache_entry(cached, datalen);
+							cached->kitty = 1;
+							cached->width = width;
+							cached->height = height;
+							cached->number = im_number = ++kitty_image_number;
+						}
+					}
+				}
+			}
+			if (!data) {
+				html_context->special_f(html_context, SP_IMAGE, uri);
+			}
+			done_uri(uri);
+		}
+		mem_free(url2);
+	}
+	mem_free(url);
+
+	if (!data) {
+		return;
+	}
+	struct document *document = html_context->document;
+	html_linebrk(html_context, a, html, eof, end);
+	put_chrs(html_context, "&nbsp;", 6);
+	ln_break(html_context, 1);
+
+	int lineno = html_context->part->cy + html_context->part->box.y;
+
+	struct k_image *im = NULL;
+
+	int how_many = add_kitty_image_to_document(document, (const char *)data, datalen, lineno, &im, width, height);
+	mem_free(data);
+
+	if (!im) {
+		return;
+	}
+	int xw = (im->width + document->options.cell_width - 1) / document->options.cell_width;
+	int y;
+	im->id = html_top->name - document->text.source;
+	im->number = im_number;
+
+	for (y = 0; y < how_many; y++) {
+		int x;
+
+		for (x = 0; x < xw; x++) {
+			put_chrs(html_context, "&#9608;", 7);
+		}
+		ln_break(html_context, 1);
+	}
+}
+#endif
 
 #ifdef CONFIG_LIBSIXEL
 static void
@@ -473,7 +573,15 @@ html_img(struct html_context *html_context, char *a,
          char *html, char *eof, char **end)
 {
 	ELOG
+#ifdef CONFIG_KITTY
+	if (html_context->options->html_kitty) {
+		html_img_kitty(html_context, a, html, eof, end);
+	}
+#endif
 #ifdef CONFIG_LIBSIXEL
+#ifdef CONFIG_KITTY
+	else
+#endif
 	html_img_sixel(html_context, a, html, eof, end);
 #endif
 	html_img_do(a, NULL, html_context);

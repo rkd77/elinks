@@ -77,6 +77,9 @@
 #include "network/dns.h"
 #include "protocol/uri.h"
 #include "terminal/draw.h"
+#ifdef CONFIG_KITTY
+#include "terminal/kitty.h"
+#endif
 #ifdef CONFIG_LIBSIXEL
 #include "terminal/sixel.h"
 #endif
@@ -221,6 +224,10 @@ init_document(struct cache_entry *cached, struct document_options *options)
 
 #ifdef CONFIG_ECMASCRIPT
 	init_list(document->onload_snippets);
+#endif
+
+#ifdef CONFIG_KITTY
+	init_list(document->k_images);
 #endif
 
 #ifdef CONFIG_LIBSIXEL
@@ -496,10 +503,19 @@ done_document(struct document *document)
 		done_form((struct form *)document->forms.next);
 	}
 
+#ifdef CONFIG_KITTY
+	while (!list_empty(document->k_images)) {
+		delete_k_image((struct k_image *)document->k_images.next);
+	}
+#endif
+
 #ifdef CONFIG_LIBSIXEL
 	while (!list_empty(document->images)) {
 		delete_image((struct image *)document->images.next);
 	}
+#endif
+
+#if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
 	free_uri_list(&document->image_uris);
 #endif
 
@@ -585,7 +601,7 @@ get_document_css_magic(struct document *document)
 		if (cached) css_magic += cached->cache_id + cached->data_size;
 	}
 
-#ifdef CONFIG_LIBSIXEL
+#if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
 	foreach_uri (uri, index, &document->image_uris) {
 		struct cache_entry *cached = find_in_cache(uri);
 
@@ -924,6 +940,28 @@ insert_document_into_document(struct document *dest, struct document *src, int y
 	}
 
 	/* old images */
+#ifdef CONFIG_KITTY
+	struct k_image *k_im;
+	foreach (k_im, dest->k_images) {
+		if (k_im->y < y) {
+			continue;
+		};
+		k_im->y += src->height;
+	}
+	/* new images */
+	foreach (k_im, src->k_images) {
+		struct k_image *imcopy = mem_calloc(1, sizeof(*imcopy));
+
+		if (!imcopy) {
+			continue;
+		}
+		copy_struct(imcopy, k_im);
+		imcopy->y += y;
+		add_to_list(dest->k_images, imcopy);
+	}
+#endif
+
+	/* old images */
 #ifdef CONFIG_LIBSIXEL
 	struct image *im;
 	foreach (im, dest->images) {
@@ -944,6 +982,7 @@ insert_document_into_document(struct document *dest, struct document *src, int y
 		add_to_list(dest->images, imcopy);
 	}
 #endif
+
 	dest->height += src->height;
 	dest->nlinks += src->nlinks;
 	dest->links_sorted = 0;
@@ -1002,6 +1041,19 @@ remove_document_from_document(struct document *dest, struct document *src, int y
 	if (!ALIGN_LINK(&dest->links, before, dest->nlinks)) {
 		return;
 	}
+
+	/* old images */
+#ifdef CONFIG_KITTY
+	struct k_image *k_im, *k_next;
+	foreachsafe (k_im, k_next, dest->k_images) {
+		if (k_im->y >= y && k_im->y < (y + src->height)) {
+			del_from_list(k_im);
+			mem_free(k_im);
+			continue;
+		}
+		k_im->y -= src->height;
+	}
+#endif
 
 	/* old images */
 #ifdef CONFIG_LIBSIXEL

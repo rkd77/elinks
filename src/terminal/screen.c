@@ -19,6 +19,9 @@
 #include "terminal/draw.h"
 #include "terminal/hardio.h"
 #include "terminal/kbd.h"
+#ifdef CONFIG_KITTY
+#include "terminal/kitty.h"
+#endif
 #include "terminal/screen.h"
 #ifdef CONFIG_LIBSIXEL
 #include "terminal/sixel.h"
@@ -275,7 +278,9 @@ struct screen_driver_opt {
 	/* Whether use terminfo. */
 	unsigned int terminfo:1;
 #endif
-
+#ifdef CONFIG_KITTY
+	unsigned int kitty:1;
+#endif
 #ifdef CONFIG_LIBSIXEL
 	unsigned int sixel:1;
 #endif
@@ -319,6 +324,9 @@ static const struct screen_driver_opt dumb_screen_driver_opt = {
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
 #endif
+#ifdef CONFIG_KITTY
+	/* kitty */		0,
+#endif
 #ifdef CONFIG_LIBSIXEL
 	/* sixel */		0,
 #endif
@@ -342,6 +350,9 @@ static const struct screen_driver_opt vt100_screen_driver_opt = {
 #endif /* CONFIG_UTF8 */
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
+#endif
+#ifdef CONFIG_KITTY
+	/* kitty */		0,
 #endif
 #ifdef CONFIG_LIBSIXEL
 	/* sixel */		0,
@@ -367,6 +378,9 @@ static const struct screen_driver_opt linux_screen_driver_opt = {
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
 #endif
+#ifdef CONFIG_KITTY
+	/* kitty */		0,
+#endif
 #ifdef CONFIG_LIBSIXEL
 	/* sixel */		0,
 #endif
@@ -390,6 +404,9 @@ static const struct screen_driver_opt koi8_screen_driver_opt = {
 #endif /* CONFIG_UTF8 */
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
+#endif
+#ifdef CONFIG_KITTY
+	/* kitty */		0,
 #endif
 #ifdef CONFIG_LIBSIXEL
 	/* sixel */		0,
@@ -415,6 +432,9 @@ static const struct screen_driver_opt freebsd_screen_driver_opt = {
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
 #endif
+#ifdef CONFIG_KITTY
+	/* kitty */		0,
+#endif
 #ifdef CONFIG_LIBSIXEL
 	/* sixel */		0,
 #endif
@@ -438,6 +458,9 @@ static const struct screen_driver_opt fbterm_screen_driver_opt = {
 #endif /* CONFIG_UTF8 */
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
+#endif
+#ifdef CONFIG_KITTY
+	/* kitty */		0,
 #endif
 #ifdef CONFIG_LIBSIXEL
 	/* sixel */		0,
@@ -501,6 +524,9 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 	 * function need not carefully restore options one by one.  */
 	copy_struct(&driver->opt, screen_driver_opts[driver->type]);
 
+#ifdef CONFIG_KITTY
+	driver->opt.kitty = get_opt_bool_tree(term_spec, "kitty", NULL);
+#endif
 #ifdef CONFIG_LIBSIXEL
 	driver->opt.sixel = get_opt_bool_tree(term_spec, "sixel", NULL);
 #endif /* CONFIG_LIBSIXEL */
@@ -1585,6 +1611,12 @@ redraw_screen(struct terminal *term)
 
 	copy_screen_chars(screen->last_image, screen->image, term->width * term->height);
 	screen->was_dirty = 0;
+
+#ifdef CONFIG_KITTY
+	if (driver->opt.kitty) {
+		try_to_draw_k_images(term);
+	}
+#endif
 
 #ifdef CONFIG_LIBSIXEL
 	if (driver->opt.sixel) {

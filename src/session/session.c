@@ -537,7 +537,7 @@ load_css_imports(struct session *ses, struct document_view *doc_view)
 #define load_css_imports(ses, doc_view)
 #endif
 
-#ifdef CONFIG_LIBSIXEL
+#if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
 static void
 load_images(struct session *ses, struct document_view *doc_view)
 {

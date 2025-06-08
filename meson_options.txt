@@ -85,3 +85,4 @@ option('libsixel', type: 'boolean', value: false, description: 'whether to compi
 option('libcurl', type: 'boolean', value: true, description: 'whether to compile libcurl support. This option is recommended for js support')
 option('sftp', type: 'boolean', value: true, description: 'whether to compile SFTP protocol support. Requires libcurl')
 option('spartan', type: 'boolean', value: false, description: 'spartan protocol support')
+option('kitty', type: 'boolean', value: false, description: 'support for kitty graphics protocol')

@@ -856,6 +856,12 @@ static union option_info config_options_info[] = {
 		"display_sups", OPT_ZERO, 1,
 		N_("Display superscripts (as ^thing).")),
 
+#ifdef CONFIG_KITTY
+	INIT_OPT_BOOL("document.html", N_("Kitty"),
+		"kitty", OPT_ZERO, 0,
+		N_("Whether to display kitty images in html documents.")),
+#endif
+
 	INIT_OPT_INT("document.html", N_("Rendering of HTML link element"),
 		"link_display", OPT_ZERO, 0, 5, 2,
 		N_("How to render <link> tags from the HTML header:\n"
@@ -1151,6 +1157,10 @@ static union option_info config_options_info[] = {
 	INIT_OPT_BOOL("terminal._template_", N_("Italic"),
 		"italic", OPT_ZERO, 0,
 		N_("If we should use italics.")),
+
+	INIT_OPT_BOOL("terminal._template_", N_("Kitty"),
+		"kitty", OPT_ZERO, 0,
+		N_("Whether terminal supports kitty graphics protocol.")),
 
 #ifdef CONFIG_LIBSIXEL
 	INIT_OPT_BOOL("terminal._template_", N_("Sixel"),

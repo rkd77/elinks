@@ -36,6 +36,7 @@ conf_data.set('CONFIG_BITTORRENT', get_option('bittorrent'))
 conf_data.set('CONFIG_DATA', get_option('data'))
 conf_data.set('CONFIG_GEMINI', get_option('gemini'))
 conf_data.set('CONFIG_SPARTAN', get_option('spartan'))
+conf_data.set('CONFIG_KITTY', get_option('kitty'))
 
 conf_data.set('CONFIG_URI_REWRITE', get_option('uri-rewrite'))
 conf_data.set('CONFIG_CGI', get_option('cgi'))
@@ -179,7 +180,6 @@ if system != 'dos' and system != 'haiku' and system != 'windows'
 else
     conf_data.set('CONFIG_OS_UNIX', false)
 endif
-
 
 if conf_data.get('CONFIG_GNUTLS') or conf_data.get('CONFIG_OPENSSL')
     conf_data.set('CONFIG_SSL', true)

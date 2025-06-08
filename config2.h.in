@@ -128,6 +128,9 @@
 /* Define if you want: DBLATEX support */
 #mesondefine CONFIG_DBLATEX
 
+/* Define if you want: kitty graphics support */
+#mesondefine CONFIG_KITTY
+
 /* Define if you want: LEDs support */
 #mesondefine CONFIG_LEDS
 

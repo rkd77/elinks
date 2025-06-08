@@ -31,6 +31,9 @@
 #include "session/location.h"
 #include "session/session.h"
 #include "terminal/draw.h"
+#ifdef CONFIG_KITTY
+#include "terminal/kitty.h"
+#endif
 #include "terminal/screen.h"
 #ifdef CONFIG_LIBSIXEL
 #include "terminal/sixel.h"
@@ -436,7 +439,88 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	if (has_search_word(doc_view))
 		doc_view->last_x = doc_view->last_y = -1;
 
+#ifdef CONFIG_KITTY
+	{
+	struct terminal_screen *screen = term->screen;
+
+	if (!screen || !screen->was_dirty) {
+		return;
+	}
+	int iii;
+
+	for (iii = 0; iii < term->number_of_images; iii++) {
+		mem_free(term->k_images[iii]);
+	}
+	mem_free_set(&term->k_images, NULL);
+	term->number_of_images = 0;
+
+	if (term->kitty) {
+		struct k_image *im2;
+		struct line *data = doc_view->document->data;
+
+		foreach (im2, doc_view->document->k_images) {
+			struct k_image im;
+
+			copy_struct(&im, im2);
+
+			if (im.cy >= doc_view->document->height) {
+				continue;
+			}
+
+			if (im.cy + box->y >= vs->y + box->height) {
+				continue;
+			}
+
+			if (im.cy + box->y + ((im.height + term->cell_height - 1) / term->cell_height) < vs->y) {
+				continue;
+			}
+
+			int cx = 0;
+			int found = vs->plain;
+
+			if (!found) {
+				for (;cx < data[im.cy].length; cx++) {
+					if (im.id == data[im.cy].ch.chars[cx].number) {
+						found = 1;
+						break;
+					}
+				}
+
+				if (!found) {
+					continue;
+				}
+			}
+			im.cx += cx;
+
+			if (im.cx >= vs->x + box->width) {
+				continue;
+			}
+
+			if (im.cx + ((im.width + term->cell_width - 1) / term->cell_width) < vs->x) {
+				continue;
+			}
+			struct k_image *im_copy = copy_k_frame(&im, box, term->cell_width, term->cell_height, vs->x, vs->y);
+
+			if (im_copy) {
+				im_copy->cx += box->x;
+				im_copy->cy += box->y;
+
+				struct k_image **tmp = mem_realloc(term->k_images, (1 + term->number_of_images) * (sizeof(struct k_image *)));
+
+				if (tmp) {
+					term->k_images = tmp;
+					term->k_images[term->number_of_images++] = im_copy;
+				} else {
+					mem_free(im_copy);
+				}
+			}
+		}
+	}
+	}
+#endif
+
 #ifdef CONFIG_LIBSIXEL
+	{
 	struct terminal_screen *screen = term->screen;
 
 	if (!screen || !screen->was_dirty) {
@@ -500,6 +584,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 				add_to_list(term->images, im_copy);
 			}
 		}
+	}
 	}
 #endif
 }

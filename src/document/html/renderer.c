@@ -2303,7 +2303,7 @@ html_special(struct html_context *html_context, html_special_type_T c, ...)
 		}
 
 		case SP_IMAGE:
-#ifdef CONFIG_LIBSIXEL
+#if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
 		{
 			if (document) {
 				struct uri *uri = va_arg(l, struct uri *);

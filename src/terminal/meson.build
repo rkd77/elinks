@@ -1,3 +1,6 @@
+if conf_data.get('CONFIG_KITTY')
+	srcs += files('kitty.c')
+endif
 if conf_data.get('CONFIG_MOUSE')
 	srcs += files('mouse.c')
 endif

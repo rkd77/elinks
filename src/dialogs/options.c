@@ -99,6 +99,9 @@ enum termopt {
 	TERM_OPT_UNDERLINE,
 	TERM_OPT_ITALIC,
 	TERM_OPT_STRIKE,
+#ifdef CONFIG_KITTY
+	TERM_OPT_KITTY,
+#endif
 #ifdef CONFIG_LIBSIXEL
 	TERM_OPT_SIXEL,
 #endif
@@ -116,6 +119,9 @@ static struct option_resolver resolvers[] = {
 	{ TERM_OPT_UNDERLINE,	 "underline"	},
 	{ TERM_OPT_ITALIC,	 "italic"	},
 	{ TERM_OPT_STRIKE,	 "strike"	},
+#ifdef CONFIG_KITTY
+	{ TERM_OPT_KITTY,	 "kitty"	},
+#endif
 #ifdef CONFIG_LIBSIXEL
 	{ TERM_OPT_SIXEL,	 "sixel"	},
 #endif
@@ -245,6 +251,9 @@ terminal_options(struct terminal *term, void *xxx, struct session *ses)
 	add_dlg_checkbox(dlg, _("Underline", term), &values[TERM_OPT_UNDERLINE].number);
 	add_dlg_checkbox(dlg, _("Strikethrough", term), &values[TERM_OPT_STRIKE].number);
 	add_dlg_checkbox(dlg, _("UTF-8 I/O", term), &values[TERM_OPT_UTF_8_IO].number);
+#ifdef CONFIG_KITTY
+	add_dlg_checkbox(dlg, _("Kitty", term), &values[TERM_OPT_KITTY].number);
+#endif
 #ifdef CONFIG_LIBSIXEL
 	add_dlg_checkbox(dlg, _("Sixel", term), &values[TERM_OPT_SIXEL].number);
 #endif

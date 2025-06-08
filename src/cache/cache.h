@@ -60,6 +60,11 @@ struct cache_entry {
 	struct JSObject *jsobject;      /* Instance of cache_entry_class */
 #endif
 
+#ifdef CONFIG_KITTY
+	int width;
+	int height;
+	int number;
+#endif
 	timeval_T max_age;		/* Expiration time */
 
 	unsigned int expire:1;		/* Whether to honour max_age */
@@ -76,6 +81,7 @@ struct cache_entry {
 	unsigned int integrity_valid:1; /* Was integrity checked and valid */
 
 	unsigned int sixel:1; /* Is in sixel format? */
+	unsigned int kitty:1; /* Is in kitty base64? */
 
 	cache_mode_T cache_mode;	/* Reload condition */
 };

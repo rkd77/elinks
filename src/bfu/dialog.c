@@ -491,7 +491,10 @@ dialog_func(struct window *win, struct term_event *ev)
 		case EVENT_RESIZE:
 		case EVENT_REDRAW:
 			redraw_dialog(dlg_data, 1);
-#ifdef  CONFIG_LIBSIXEL                       
+#ifdef  CONFIG_KITTY
+			win->term->kitty = 0;
+#endif
+#ifdef  CONFIG_LIBSIXEL
 			win->term->sixel = 0;
 #endif
 			break;
@@ -508,7 +511,10 @@ dialog_func(struct window *win, struct term_event *ev)
 
 		case EVENT_ABORT:
 			dialog_ev_abort(dlg_data);
-#ifdef  CONFIG_LIBSIXEL                       
+#ifdef  CONFIG_KITTY
+			win->term->kitty = 1;
+#endif
+#ifdef  CONFIG_LIBSIXEL
 			win->term->sixel = 1;
 #endif
 			break;

@@ -46,7 +46,7 @@ redraw_windows(enum windows_to_redraw which, struct window *win)
 		return;
 	}
 
-#ifdef CONFIG_LIBSIXEL
+#if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
 	set_redraw_term_event(&ev, term->width, term->height, term->cell_width, term->cell_height);
 #else
 	set_redraw_term_event(&ev, term->width, term->height, 0, 0);
@@ -75,7 +75,7 @@ add_window(struct terminal *term, window_handler_T handler, void *data)
 	win->term = term;
 	win->type = WINDOW_NORMAL;
 	add_at_pos((struct window *) &term->windows, win);
-#ifdef CONFIG_LIBSIXEL
+#if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
 	set_init_term_event(&ev, term->width, term->height, term->cell_width, term->cell_height);
 #else
 	set_init_term_event(&ev, term->width, term->height, 0, 0);

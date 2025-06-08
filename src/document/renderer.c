@@ -39,6 +39,9 @@
 #include "protocol/uri.h"
 #include "session/location.h"
 #include "session/session.h"
+#ifdef CONFIG_KITTY
+#include "terminal/kitty.h"
+#endif
 #ifdef CONFIG_LIBSIXEL
 #include "terminal/sixel.h"
 #endif
@@ -166,13 +169,28 @@ compress_empty_lines(struct document *document)
 	if (!offset) {
 		return;
 	}
-#ifdef CONFIG_LIBSIXEL
+#if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
 	struct bitfield *images = init_bitfield(maxy);
 
 	if (!images) {
 		mem_free(offset);
 		return;
 	}
+#ifdef CONFIG_KITTY
+	struct k_image *k_im;
+
+	foreach (k_im, document->k_images) {
+		int ystart = k_im->y;
+		int yend = k_im->y + (k_im->height + document->options.cell_height - 1) / document->options.cell_height;
+		int i;
+
+		for (i = ystart; i <= yend; i++) {
+			set_bitfield_bit(images, i);
+		}
+	}
+#endif
+
+#ifdef CONFIG_LIBSIXEL
 	struct image *im;
 
 	foreach (im, document->images) {
@@ -185,6 +203,7 @@ compress_empty_lines(struct document *document)
 		}
 	}
 #endif
+#endif
 	int lines = 0;
 
 	for (y = 0; y < maxy; y++) {
@@ -193,7 +212,7 @@ compress_empty_lines(struct document *document)
 		}
 		lines++;
 
-#ifdef CONFIG_LIBSIXEL
+#if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
 		if (test_bitfield_bit(images, y)) {
 			lines = 0;
 			goto skip_loop;
@@ -205,7 +224,7 @@ compress_empty_lines(struct document *document)
 				break;
 			}
 		}
-#ifdef CONFIG_LIBSIXEL
+#if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
 skip_loop:
 #endif
 		if (lines > 1) {
@@ -217,7 +236,7 @@ skip_loop:
 
 	if (!minus) {
 		mem_free(offset);
-#ifdef CONFIG_LIBSIXEL
+#if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
 		mem_free(images);
 #endif
 		return;
@@ -235,6 +254,17 @@ skip_loop:
 			link->points[c].y -= offset[oldy];
 		}
 	}
+#ifdef CONFIG_KITTY
+	foreach (k_im, document->k_images) {
+		int oldy = k_im->y;
+
+		assert(oldy < maxy && offset[oldy] >= 0);
+		if_assert_failed continue;
+
+		k_im->y -= offset[oldy];
+	}
+#endif
+
 #ifdef CONFIG_LIBSIXEL
 	foreach (im, document->images) {
 		int oldy = im->y;
@@ -244,8 +274,12 @@ skip_loop:
 
 		im->y -= offset[oldy];
 	}
+#endif
+
+#if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
 	mem_free(images);
 #endif
+
 	mem_free(offset);
 }
 

@@ -321,8 +321,13 @@ struct document {
 
 	struct el_box clipboard_box;
 	enum clipboard_status clipboard_status;
+#ifdef CONFIG_KITTY
+	LIST_OF(struct k_image) k_images;
+#endif
 #ifdef CONFIG_LIBSIXEL
 	LIST_OF(struct image) images;
+#endif
+#if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
 	struct uri_list image_uris;
 #endif
 };
