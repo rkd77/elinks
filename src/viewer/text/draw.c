@@ -510,6 +510,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 				if (tmp) {
 					term->k_images = tmp;
 					term->k_images[term->number_of_images++] = im_copy;
+					im2->sent = 1;
 				} else {
 					mem_free(im_copy);
 				}
