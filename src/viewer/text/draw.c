@@ -480,7 +480,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 
 			if (!found) {
 				for (;cx < data[im.cy].length; cx++) {
-					if (im.id == data[im.cy].ch.chars[cx].number) {
+					if (im.number == data[im.cy].ch.chars[cx].number) {
 						found = 1;
 						break;
 					}

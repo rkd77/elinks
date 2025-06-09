@@ -38,6 +38,9 @@
 #include "terminal/hardio.h"
 #include "terminal/itrm.h"
 #include "terminal/kbd.h"
+#ifdef CONFIG_KITTY
+#include "terminal/map.h"
+#endif
 #include "terminal/mouse.h"
 #include "terminal/terminal.h"
 #include "util/error.h"
@@ -785,6 +788,74 @@ get_ui_double_esc(void)
 	return ui_double_esc;
 }
 
+#ifdef CONFIG_KITTY
+static int
+decode_kitty_escape_sequence(struct itrm *itrm)
+{
+	ELOG
+	int i = 3;
+	int was_esc = 0;
+
+	if (itrm->in.queue.len < 3) {
+		return -1;
+	}
+
+	if (itrm->in.queue.data[2] != 'G') {
+		return -1;
+	}
+
+	for (i = 3; i < itrm->in.queue.len; i++) {
+		if (itrm->in.queue.data[i] == ASCII_ESC) {
+			was_esc = i + 1;
+			break;
+		}
+	}
+	if (!was_esc) {
+		return -1;
+	}
+
+	if (was_esc >= itrm->in.queue.len || itrm->in.queue.data[was_esc] != '\\') {
+		return -1;
+	}
+	itrm->in.queue.data[was_esc] = '\0';
+	const char *data = (const char *)(itrm->in.queue.data + 3);
+	char *ok = strstr(data, "OK");
+	int id = -1;
+	int ID = -1;
+
+	if (ok) {
+		char *ieq = strstr(data, "i=");
+
+		if (ieq) {
+			id = atoi(ieq + 2);
+		}
+		char *Ieq = strstr(data, "I=");
+		if (Ieq) {
+			ID = atoi(Ieq + 2);
+		}
+		if (id >= 0 && ID >= 0) {
+			set_id_ID(id, ID);
+		}
+	} else {
+		char *enoent = strstr(data, "ENOENT");
+
+		if (enoent) {
+			char *ieq = strstr(data, "i=");
+
+			if (ieq) {
+				id = atoi(ieq + 2);
+			}
+			if (id >= 0) {
+				remove_id(id);
+			}
+		}
+	}
+	itrm->in.queue.data[was_esc] = '\\';
+
+	return was_esc + 1;
+}
+#endif
+
 /** Decode a control sequence that begins with CSI (CONTROL SEQUENCE
  * INTRODUCER) encoded as ESC [, and set @a *ev accordingly.
  * (ECMA-48 also allows 0x9B as a single-byte CSI, but we don't
@@ -1163,6 +1234,10 @@ process_queue(struct itrm *itrm)
 			el = decode_terminal_escape_sequence(itrm, &ev);
 		} else if (itrm->in.queue.data[1] == 0x4F /* SS3 */) {
 			el = decode_terminal_application_key(itrm, &ev);
+#ifdef CONFIG_KITTY
+		} else if (itrm->in.queue.data[1] == '_') {
+			el = decode_kitty_escape_sequence(itrm);
+#endif
 		} else if (itrm->in.queue.data[1] == ASCII_ESC) {
 			/* ESC ESC can be either Alt-Esc or the
 			 * beginning of e.g. ESC ESC 0x5B 0x41,

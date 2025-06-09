@@ -21,6 +21,7 @@ struct k_image {
 	int width;
 	int height;
 	int id;
+	int ID;
 	int number;
 	int x;
 	int y;

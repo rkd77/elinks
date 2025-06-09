@@ -320,8 +320,8 @@ html_img_kitty(struct html_context *html_context, char *a,
 	}
 	int xw = (im->width + document->options.cell_width - 1) / document->options.cell_width;
 	int y;
-	im->id = html_top->name - document->text.source;
-	im->number = im_number;
+	im->number = html_top->name - document->text.source;
+	im->ID = im_number;
 
 	for (y = 0; y < how_many; y++) {
 		int x;

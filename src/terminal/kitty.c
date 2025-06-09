@@ -16,6 +16,7 @@
 #include "osdep/osdep.h"
 #include "terminal/hardio.h"
 #include "terminal/kitty.h"
+#include "terminal/map.h"
 #include "terminal/screen.h"
 #include "terminal/terminal.h"
 #include "util/base64.h"
@@ -91,7 +92,7 @@ try_to_draw_k_images(struct terminal *term)
 {
 	ELOG
 
-	if (!term->kitty || !term->number_of_images) {
+	if (!term->kitty) {
 		return;
 	}
 	struct string text;
@@ -118,13 +119,15 @@ try_to_draw_k_images(struct terminal *term)
 		}
 		add_cursor_move_to_string(&text, im->cy + 1, im->cx + 1);
 
-		if (!im->sent) {
+		int id = get_id_from_ID(im->ID);
+
+		if (id < 0) {
 			int m;
 			int left = im->pixels.length;
 			int sent = 0;
 			while (1) {
 				m = left >= 4000;
-				add_format_to_string(&text, "\033_Gf=32,i=%d,s=%d,v=%d,m=%d,t=d,q=1;", im->number, im->width, im->height, m);
+				add_format_to_string(&text, "\033_Gf=32,I=%d,s=%d,v=%d,m=%d,t=d,a=T;", im->ID, im->width, im->height, m);
 				add_bytes_to_string(&text, im->pixels.source + sent, m ? 4000 : left);
 				add_to_string(&text, "\033\\");
 				if (!m) {
@@ -133,9 +136,9 @@ try_to_draw_k_images(struct terminal *term)
 				sent += 4000;
 				left -= 4000;
 			};
-			im->sent = 1;
+		} else {
+			add_format_to_string(&text, "\033_Gi=%d,x=%d,y=%d,w=%d,h=%d,a=p,q=1\033\\", id, im->x, im->y, im->w, im->h);
 		}
-		add_format_to_string(&text, "\033_Gi=%d,x=%d,y=%d,w=%d,h=%d,a=p,q=1\033\\", im->number, im->x, im->y, im->w, im->h);
 
 		if (text.length) {
 			if (term->master) want_draw();
@@ -194,7 +197,7 @@ copy_k_frame(struct k_image *src, struct el_box *box, int cell_width, int cell_h
 	dest->width = src->width;
 	dest->height = src->height;
 
-	dest->id = src->id;
+	dest->ID = src->ID;
 	dest->number = src->number;
 	dest->sent = src->sent;
 

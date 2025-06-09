@@ -1,5 +1,5 @@
 if conf_data.get('CONFIG_KITTY')
-	srcs += files('kitty.c')
+	srcs += files('kitty.c', 'map.cpp')
 endif
 if conf_data.get('CONFIG_MOUSE')
 	srcs += files('mouse.c')
