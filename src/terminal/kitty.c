@@ -10,6 +10,10 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
+#ifdef CONFIG_GZIP
+#include <zlib.h>
+#endif
+
 #include "elinks.h"
 
 #include "document/document.h"
@@ -20,13 +24,13 @@
 #include "terminal/screen.h"
 #include "terminal/terminal.h"
 #include "util/base64.h"
-#include "util/memcount.h"
+#include "util/memory.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "terminal/stb_image.h"
 
 unsigned char *
-el_kitty_get_image(char *data, int length, int *outlen, int *width, int *height)
+el_kitty_get_image(char *data, int length, int *outlen, int *width, int *height, int *compressed)
 {
 	ELOG
 	int comp;
@@ -37,7 +41,25 @@ el_kitty_get_image(char *data, int length, int *outlen, int *width, int *height)
 		return NULL;
 	}
 	int size = *width * *height * 4;
+	*compressed = 0;
 
+#ifdef CONFIG_GZIP
+	unsigned char *complace = (unsigned char *)mem_alloc(size);
+
+	if (complace) {
+		unsigned long compsize = size;
+		int res = compress(complace, &compsize, pixels, size);
+
+		if (res == Z_OK) {
+			*compressed = 1;
+			b64 = base64_encode_bin(complace, compsize, outlen);
+			stbi_image_free(pixels);
+			mem_free(complace);
+			return b64;
+		}
+		mem_free(complace);
+	}
+#endif
 	b64 = base64_encode_bin(pixels, size, outlen);
 	stbi_image_free(pixels);
 
@@ -127,7 +149,7 @@ try_to_draw_k_images(struct terminal *term)
 			int sent = 0;
 			while (1) {
 				m = left >= 4000;
-				add_format_to_string(&text, "\033_Gf=32,I=%d,s=%d,v=%d,m=%d,t=d,a=T;", im->ID, im->width, im->height, m);
+				add_format_to_string(&text, "\033_Gf=32,I=%d,s=%d,v=%d,m=%d,t=d,a=T%s;", im->ID, im->width, im->height, m, (im->compressed ? ",o=z": ""));
 				add_bytes_to_string(&text, im->pixels.source + sent, m ? 4000 : left);
 				add_to_string(&text, "\033\\");
 				if (!m) {
@@ -200,6 +222,7 @@ copy_k_frame(struct k_image *src, struct el_box *box, int cell_width, int cell_h
 	dest->ID = src->ID;
 	dest->number = src->number;
 	dest->sent = src->sent;
+	dest->compressed = src->compressed;
 
 	return dest;
 }

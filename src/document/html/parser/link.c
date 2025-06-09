@@ -254,6 +254,7 @@ html_img_kitty(struct html_context *html_context, char *a,
 	int width = 0;
 	int height = 0;
 	int im_number = 0;
+	int compressed = 0;
 	char *url = get_attr_val(a, "src", html_context->doc_cp);
 
 	if (!url) {
@@ -277,8 +278,9 @@ html_img_kitty(struct html_context *html_context, char *a,
 						width = cached->width;
 						height = cached->height;
 						im_number = cached->number;
+						compressed = cached->compressed;
 					} else {
-						data = el_kitty_get_image(fragment->data, fragment->length, &datalen, &width, &height);
+						data = el_kitty_get_image(fragment->data, fragment->length, &datalen, &width, &height, &compressed);
 
 						if (data) {
 							(void)add_fragment(cached, 0, (const char *)data, datalen);
@@ -287,6 +289,7 @@ html_img_kitty(struct html_context *html_context, char *a,
 							cached->width = width;
 							cached->height = height;
 							cached->number = im_number = ++kitty_image_number;
+							cached->compressed = compressed;
 						}
 					}
 				}
@@ -322,6 +325,7 @@ html_img_kitty(struct html_context *html_context, char *a,
 	int y;
 	im->number = html_top->name - document->text.source;
 	im->ID = im_number;
+	im->compressed = compressed;
 
 	for (y = 0; y < how_many; y++) {
 		int x;

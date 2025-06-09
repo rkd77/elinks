@@ -28,6 +28,7 @@ struct k_image {
 	int w;
 	int h;
 	unsigned int sent:1;
+	unsigned int compressed:1;
 };
 
 void delete_k_image(struct k_image *im);
@@ -39,7 +40,7 @@ int add_kitty_image_to_document(struct document *doc, const char *data, int data
 
 struct k_image *copy_k_frame(struct k_image *src, struct el_box *box, int cell_width, int cell_height, int dx, int dy);
 
-unsigned char *el_kitty_get_image(char *data, int len, int *outlen, int *width, int *height);
+unsigned char *el_kitty_get_image(char *data, int len, int *outlen, int *width, int *height, int *compressed);
 
 #endif
 

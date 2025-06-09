@@ -82,6 +82,7 @@ struct cache_entry {
 
 	unsigned int sixel:1; /* Is in sixel format? */
 	unsigned int kitty:1; /* Is in kitty base64? */
+	unsigned int compressed:1; /* Is kitty zlib? */
 
 	cache_mode_T cache_mode;	/* Reload condition */
 };
