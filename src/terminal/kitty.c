@@ -34,13 +34,13 @@ el_kitty_get_image(char *data, int length, int *outlen, int *width, int *height,
 {
 	ELOG
 	int comp;
-	unsigned char *pixels = stbi_load_from_memory((unsigned char *)data, length, width, height, &comp, 4);
+	unsigned char *pixels = stbi_load_from_memory((unsigned char *)data, length, width, height, &comp, KITTY_BYTES_PER_PIXEL);
 	unsigned char *b64;
 
 	if (!pixels) {
 		return NULL;
 	}
-	int size = *width * *height * 4;
+	int size = *width * *height * KITTY_BYTES_PER_PIXEL;
 	*compressed = 0;
 
 #ifdef CONFIG_GZIP
@@ -149,7 +149,7 @@ try_to_draw_k_images(struct terminal *term)
 			int sent = 0;
 			while (1) {
 				m = left >= 4000;
-				add_format_to_string(&text, "\033_Gf=32,I=%d,s=%d,v=%d,m=%d,t=d,a=T%s;", im->ID, im->width, im->height, m, (im->compressed ? ",o=z": ""));
+				add_format_to_string(&text, "\033_Gf=%d,I=%d,s=%d,v=%d,m=%d,t=d,a=T%s;", KITTY_BYTES_PER_PIXEL * 8, im->ID, im->width, im->height, m, (im->compressed ? ",o=z": ""));
 				add_bytes_to_string(&text, im->pixels.source + sent, m ? 4000 : left);
 				add_to_string(&text, "\033\\");
 				if (!m) {
