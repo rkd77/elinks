@@ -467,7 +467,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 				continue;
 			}
 
-			if (im.cy + box->y >= vs->y + box->height) {
+			if (im.cy >= vs->y + box->height) {
 				continue;
 			}
 
@@ -545,7 +545,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 				continue;
 			}
 
-			if (im.y + box->y >= vs->y + box->height) {
+			if (im.y >= vs->y + box->height) {
 				continue;
 			}
 
