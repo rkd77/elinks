@@ -471,7 +471,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 				continue;
 			}
 
-			if (im.cy + box->y + ((im.height + term->cell_height - 1) / term->cell_height) < vs->y) {
+			if (im.cy + ((im.height + term->cell_height - 1) / term->cell_height) <= vs->y) {
 				continue;
 			}
 
@@ -549,7 +549,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 				continue;
 			}
 
-			if (im.y + box->y + ((im.height + term->cell_height - 1) / term->cell_height) < vs->y) {
+			if (im.y + ((im.height + term->cell_height - 1) / term->cell_height) <= vs->y) {
 				continue;
 			}
 
