@@ -943,10 +943,10 @@ insert_document_into_document(struct document *dest, struct document *src, int y
 #ifdef CONFIG_KITTY
 	struct k_image *k_im;
 	foreach (k_im, dest->k_images) {
-		if (k_im->y < y) {
+		if (k_im->cy < y) {
 			continue;
 		};
-		k_im->y += src->height;
+		k_im->cy += src->height;
 	}
 	/* new images */
 	foreach (k_im, src->k_images) {
@@ -956,7 +956,8 @@ insert_document_into_document(struct document *dest, struct document *src, int y
 			continue;
 		}
 		copy_struct(imcopy, k_im);
-		imcopy->y += y;
+		imcopy->cy += y;
+		imcopy->pixels->refcnt++;
 		add_to_list(dest->k_images, imcopy);
 	}
 #endif
@@ -1046,12 +1047,11 @@ remove_document_from_document(struct document *dest, struct document *src, int y
 #ifdef CONFIG_KITTY
 	struct k_image *k_im, *k_next;
 	foreachsafe (k_im, k_next, dest->k_images) {
-		if (k_im->y >= y && k_im->y < (y + src->height)) {
-			del_from_list(k_im);
-			mem_free(k_im);
+		if (k_im->cy >= y && k_im->cy < (y + src->height)) {
+			delete_k_image(k_im);
 			continue;
 		}
-		k_im->y -= src->height;
+		k_im->cy -= src->height;
 	}
 #endif
 
