@@ -496,7 +496,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 				continue;
 			}
 
-			if (im.cx + ((im.width + term->cell_width - 1) / term->cell_width) < vs->x) {
+			if (im.cx + ((im.width + term->cell_width - 1) / term->cell_width) <= vs->x) {
 				continue;
 			}
 			struct k_image *im_copy = copy_k_frame(&im, box, term->cell_width, term->cell_height, vs->x, vs->y);
