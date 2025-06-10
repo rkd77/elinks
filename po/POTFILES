@@ -709,6 +709,10 @@ src/protocol/rewrite/rewrite.c
 src/protocol/rewrite/rewrite.h
 src/protocol/smb/smb.h
 src/protocol/smb/smb2.c
+src/protocol/spartan/codes.c
+src/protocol/spartan/codes.h
+src/protocol/spartan/spartan.c
+src/protocol/spartan/spartan.h
 src/protocol/test/stub.c
 src/protocol/test/uri-test.c
 src/protocol/uri.c
@@ -811,6 +815,10 @@ src/terminal/itrm.h
 src/terminal/kbd.c
 src/terminal/kbd.h
 src/terminal/key.inc
+src/terminal/kitty.c
+src/terminal/kitty.h
+src/terminal/map.cpp
+src/terminal/map.h
 src/terminal/mouse.c
 src/terminal/mouse.h
 src/terminal/palette.inc
@@ -818,6 +826,7 @@ src/terminal/screen.c
 src/terminal/screen.h
 src/terminal/sixel.c
 src/terminal/sixel.h
+src/terminal/stb_image.h
 src/terminal/tab.c
 src/terminal/tab.h
 src/terminal/terminal.c
