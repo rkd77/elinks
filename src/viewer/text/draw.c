@@ -574,7 +574,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 				continue;
 			}
 
-			if (im.x + ((im.width + term->cell_width - 1) / term->cell_width) < vs->x) {
+			if (im.x + ((im.width + term->cell_width - 1) / term->cell_width) <= vs->x) {
 				continue;
 			}
 			struct image *im_copy = copy_frame(&im, box, term->cell_width, term->cell_height, vs->x, vs->y);
