@@ -79,8 +79,9 @@ add_kitty_image_to_document(struct document *doc, const char *data, int datalen,
 	if (!im) {
 		return 0;
 	}
+	im->pixels = (struct el_string *)mem_calloc(1, sizeof(struct el_string));
 
-	if (!init_string(&im->pixels)) {
+	if (!im->pixels) {
 		mem_free(im);
 		return 0;
 	}
@@ -88,7 +89,9 @@ add_kitty_image_to_document(struct document *doc, const char *data, int datalen,
 	im->cx = 0;
 	im->width = width;
 	im->height = height;
-	add_bytes_to_string(&im->pixels, data, datalen);
+	im->pixels->data = data;
+	im->pixels->length = datalen;
+	im->pixels->refcnt = 1;
 
 	int ile = (height + doc->options.cell_height - 1) / doc->options.cell_height;
 	add_to_list(doc->k_images, im);
@@ -105,7 +108,11 @@ delete_k_image(struct k_image *im)
 {
 	ELOG
 	del_from_list(im);
-	done_string(&im->pixels);
+
+	if (--(im->pixels->refcnt) <= 0) {
+		mem_free(im->pixels->data);
+		mem_free(im->pixels);
+	}
 	mem_free(im);
 }
 
@@ -145,12 +152,12 @@ try_to_draw_k_images(struct terminal *term)
 
 		if (id < 0) {
 			int m;
-			int left = im->pixels.length;
+			int left = im->pixels->length;
 			int sent = 0;
 			while (1) {
 				m = left >= 4000;
 				add_format_to_string(&text, "\033_Gf=%d,I=%d,s=%d,v=%d,m=%d,t=d,a=T%s;", KITTY_BYTES_PER_PIXEL * 8, im->ID, im->width, im->height, m, (im->compressed ? ",o=z": ""));
-				add_bytes_to_string(&text, im->pixels.source + sent, m ? 4000 : left);
+				add_bytes_to_string(&text, im->pixels->data + sent, m ? 4000 : left);
 				add_to_string(&text, "\033\\");
 				if (!m) {
 					break;
@@ -180,12 +187,8 @@ copy_k_frame(struct k_image *src, struct el_box *box, int cell_width, int cell_h
 	if (!dest) {
 		return NULL;
 	}
-
-	if (!init_string(&dest->pixels)) {
-		mem_free(dest);
-		return NULL;
-	}
-	add_string_to_string(&dest->pixels, &src->pixels);
+	dest->pixels = src->pixels;
+	dest->pixels->refcnt++;
 
 	int cx = src->cx - dx;
 	int cy = src->cy - dy;

@@ -315,8 +315,8 @@ html_img_kitty(struct html_context *html_context, char *a,
 
 	struct k_image *im = NULL;
 
+	/* data will be freed later */
 	int how_many = add_kitty_image_to_document(document, (const char *)data, datalen, lineno, &im, width, height);
-	mem_free(data);
 
 	if (!im) {
 		return;

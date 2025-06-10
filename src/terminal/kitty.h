@@ -13,9 +13,15 @@ struct document;
 struct el_box;
 struct terminal;
 
+struct el_string {
+	unsigned char *data;
+	unsigned int length;
+	int refcnt;
+};
+
 struct k_image {
 	LIST_HEAD_EL(struct k_image);
-	struct string pixels;
+	struct el_string *pixels;
 	int cx;
 	int cy;
 	int width;
