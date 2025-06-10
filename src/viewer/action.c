@@ -738,6 +738,13 @@ do_action(struct session *ses, main_action_T action_id, int verbose)
 			toggle_document_option(ses, "document.browse.images.show_as_links");
 			break;
 
+		case ACT_MAIN_TOGGLE_DISPLAY_KITTY:
+#ifdef CONFIG_KITTY
+			toggle_document_option(ses, "document.html.kitty");
+			reload(ses, CACHE_MODE_INCREMENT);
+#endif
+			break;
+
 		case ACT_MAIN_TOGGLE_DISPLAY_SIXEL:
 #ifdef CONFIG_LIBSIXEL
 			toggle_document_option(ses, "document.html.sixel");
