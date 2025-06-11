@@ -424,7 +424,7 @@ html_img_sixel(struct html_context *html_context, char *a,
 		int x;
 
 		for (x = 0; x < xw; x++) {
-			put_chrs(html_context, "&#9608;", 7);
+			put_chrs(html_context, "&nbsp;", 6);
 		}
 		ln_break(html_context, 1);
 	}
