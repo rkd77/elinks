@@ -25,7 +25,7 @@
 #include "util/memory.h"
 #include "util/string.h"
 
-#if defined(CONFIG_KITTY) || defined(CONFIG_SIXEL)
+#if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
 #define STB_IMAGE_IMPLEMENTATION
 #include "terminal/stb_image.h"
 #endif
