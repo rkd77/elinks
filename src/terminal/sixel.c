@@ -27,11 +27,6 @@
 #include "config.h"
 #endif
 
-#ifdef HAVE_MEMFD_CREATE
-#define _GNU_SOURCE         /* See feature_test_macros(7) */
-#include <sys/mman.h>
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1054,77 +1049,4 @@ end:
 	}
 
 	return dest;
-}
-
-unsigned char *
-el_sixel_get_image(char *data, int length, int *outlen)
-{
-	ELOG
-	SIXELSTATUS status = SIXEL_FALSE;
-	sixel_encoder_t *encoder = NULL;
-	unsigned char *ret = NULL;
-	*outlen = 0;
-
-#ifdef HAVE_MEMFD_CREATE
-#ifdef CONFIG_MEMCOUNT
-	init_allocator();
-	status = sixel_encoder_new(&encoder, el_sixel_allocator);
-#else
-	status = sixel_encoder_new(&encoder, NULL);
-#endif
-
-	if (SIXEL_FAILED(status)) {
-		goto error;
-	}
-	int fdout = -1;
-
-	encoder->outfd = memfd_create("out.sixel", 0);
-	fdout = dup(encoder->outfd);
-	encoder->fstatic = 1;
-
-	int fdin = memfd_create("input.sixel", 0);
-	FILE *f = fdopen(fdin, "wb");
-
-	if (!f) {
-		goto error;
-	}
-	fwrite(data, 1, length, f);
-	rewind(f);
-
-	struct string name;
-	if (!init_string(&name)) {
-		goto error;
-	}
-	add_format_to_string(&name, "/proc/self/fd/%d", fdin);
-	status = sixel_encoder_encode(encoder, name.source);
-	done_string(&name);
-
-	if (SIXEL_FAILED(status)) {
-		goto error;
-	}
-
-	struct stat sb;
-	fstat(fdout, &sb);
-
-	if (sb.st_size > 0) {
-		ret = (unsigned char *)mem_alloc(sb.st_size);
-
-		if (ret) {
-			FILE *f2 = fdopen(fdout, "rb");
-			if (f2) {
-				rewind(f2);
-				*outlen = (int)fread(ret, 1, (size_t)sb.st_size, f2);
-				fclose(f2);
-			}
-		}
-	}
-	close(fdout);
-
-error:
-	if (f) {
-		fclose(f);
-	}
-	sixel_encoder_unref(encoder);
-#endif
-	return ret;
 }

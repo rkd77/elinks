@@ -11,6 +11,7 @@ OBJS = \
  draw.o \
  event.o \
  hardio.o \
+ image.o \
  kbd.o \
  screen.o \
  tab.o \

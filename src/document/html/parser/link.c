@@ -40,6 +40,7 @@
 #include "globhist/globhist.h"
 #include "mime/mime.h"
 #include "protocol/uri.h"
+#include "terminal/image.h"
 #ifdef CONFIG_KITTY
 #include "terminal/kitty.h"
 #endif

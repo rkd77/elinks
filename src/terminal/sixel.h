@@ -34,8 +34,6 @@ int add_image_to_document(struct document *doc, struct string *pixels, int linen
 
 struct image *copy_frame(struct image *src, struct el_box *box, int cell_width, int cell_height, int dx, int dy);
 
-unsigned char *el_sixel_get_image(char *data, int len, int *outlen);
-
 #endif
 
 #ifdef __cplusplus

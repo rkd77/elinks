@@ -10,4 +10,4 @@ endif
 if conf_data.get('CONFIG_TERMINFO')
 	srcs += files('terminfo.c')
 endif
-srcs += files('color.c', 'draw.c', 'event.c', 'hardio.c', 'kbd.c', 'screen.c', 'tab.c', 'terminal.c', 'window.c')
+srcs += files('color.c', 'draw.c', 'event.c', 'hardio.c', 'image.c', 'kbd.c', 'screen.c', 'tab.c', 'terminal.c', 'window.c')

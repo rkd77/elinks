@@ -10,10 +10,6 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-#ifdef CONFIG_GZIP
-#include <zlib.h>
-#endif
-
 #include "elinks.h"
 
 #include "document/document.h"
@@ -25,46 +21,6 @@
 #include "terminal/terminal.h"
 #include "util/base64.h"
 #include "util/memory.h"
-
-#define STB_IMAGE_IMPLEMENTATION
-#include "terminal/stb_image.h"
-
-unsigned char *
-el_kitty_get_image(char *data, int length, int *outlen, int *width, int *height, int *compressed)
-{
-	ELOG
-	int comp;
-	unsigned char *pixels = stbi_load_from_memory((unsigned char *)data, length, width, height, &comp, KITTY_BYTES_PER_PIXEL);
-	unsigned char *b64;
-
-	if (!pixels) {
-		return NULL;
-	}
-	int size = *width * *height * KITTY_BYTES_PER_PIXEL;
-	*compressed = 0;
-
-#ifdef CONFIG_GZIP
-	unsigned char *complace = (unsigned char *)mem_alloc(size);
-
-	if (complace) {
-		unsigned long compsize = size;
-		int res = compress(complace, &compsize, pixels, size);
-
-		if (res == Z_OK) {
-			*compressed = 1;
-			b64 = base64_encode_bin(complace, compsize, outlen);
-			stbi_image_free(pixels);
-			mem_free(complace);
-			return b64;
-		}
-		mem_free(complace);
-	}
-#endif
-	b64 = base64_encode_bin(pixels, size, outlen);
-	stbi_image_free(pixels);
-
-	return b64;
-}
 
 int
 add_kitty_image_to_document(struct document *doc, char *data, int datalen, int lineno, struct k_image **imagine, int width, int height)
