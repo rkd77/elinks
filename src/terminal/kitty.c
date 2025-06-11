@@ -67,7 +67,7 @@ el_kitty_get_image(char *data, int length, int *outlen, int *width, int *height,
 }
 
 int
-add_kitty_image_to_document(struct document *doc, const char *data, int datalen, int lineno, struct k_image **imagine, int width, int height)
+add_kitty_image_to_document(struct document *doc, char *data, int datalen, int lineno, struct k_image **imagine, int width, int height)
 {
 	ELOG
 	struct k_image *im = mem_calloc(1, sizeof(*im));

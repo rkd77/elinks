@@ -14,7 +14,7 @@ struct el_box;
 struct terminal;
 
 struct el_string {
-	unsigned char *data;
+	char *data;
 	unsigned int length;
 	int refcnt;
 };
@@ -42,7 +42,7 @@ void delete_k_image(struct k_image *im);
 void try_to_draw_k_images(struct terminal *term);
 
 /* return height of image in terminal lines */
-int add_kitty_image_to_document(struct document *doc, const char *data, int datalen, int lineno, struct k_image **imagine, int width, int height);
+int add_kitty_image_to_document(struct document *doc, char *data, int datalen, int lineno, struct k_image **imagine, int width, int height);
 
 struct k_image *copy_k_frame(struct k_image *src, struct el_box *box, int cell_width, int cell_height, int dx, int dy);
 

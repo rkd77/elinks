@@ -249,7 +249,7 @@ html_img_kitty(struct html_context *html_context, char *a,
 	if (!html_context->document) {
 		return;
 	}
-	unsigned char *data = NULL;
+	char *data = NULL;
 	int datalen = 0;
 	int width = 0;
 	int height = 0;
@@ -273,17 +273,17 @@ html_img_kitty(struct html_context *html_context, char *a,
 
 				if (fragment) {
 					if (cached->kitty) {
-						data = (unsigned char *)memacpy(fragment->data, fragment->length);
+						data = memacpy(fragment->data, fragment->length);
 						datalen = fragment->length;
 						width = cached->width;
 						height = cached->height;
 						im_number = cached->number;
 						compressed = cached->compressed;
 					} else {
-						data = el_kitty_get_image(fragment->data, fragment->length, &datalen, &width, &height, &compressed);
+						data = (char *)el_kitty_get_image(fragment->data, fragment->length, &datalen, &width, &height, &compressed);
 
 						if (data) {
-							(void)add_fragment(cached, 0, (const char *)data, datalen);
+							(void)add_fragment(cached, 0, data, datalen);
 							normalize_cache_entry(cached, datalen);
 							cached->kitty = 1;
 							cached->width = width;
@@ -316,7 +316,7 @@ html_img_kitty(struct html_context *html_context, char *a,
 	struct k_image *im = NULL;
 
 	/* data will be freed later */
-	int how_many = add_kitty_image_to_document(document, (const char *)data, datalen, lineno, &im, width, height);
+	int how_many = add_kitty_image_to_document(document, data, datalen, lineno, &im, width, height);
 
 	if (!im) {
 		return;
