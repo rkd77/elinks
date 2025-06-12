@@ -125,6 +125,25 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 			render_plain_document(cached, document, &buffer);
 
 	} else {
+#if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
+		if (!c_strcasecmp("image/png", cached->content_type)
+			|| !c_strcasecmp("image/jpg", cached->content_type)
+			|| !c_strcasecmp("image/jpeg", cached->content_type)) {
+			struct string img;
+
+			if (init_string(&img)) {
+				add_format_to_string(&img, "<img src=\"%s\">", struri(cached->uri));
+
+				if (encoding != ENCODING_NONE) {
+					done_string(&buffer);
+				}
+				encoding = ENCODINGS_KNOWN;
+				buffer.source = img.source;
+				buffer.length = img.length;
+			}
+		}
+#endif
+
 #ifdef CONFIG_DOM
 		if (cached->content_type
 		    && (!c_strlcasecmp("application/rss+xml", 19, cached->content_type, -1)))
@@ -137,7 +156,7 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 		else
 #ifdef CONFIG_LIBDOM
 			if (1) {
-				if (encoding != ENCODING_NONE) {
+				if (encoding != ENCODING_NONE && encoding != ENCODINGS_KNOWN) {
 					done_string(&buffer);
 					encoding = ENCODING_NONE;
 				}

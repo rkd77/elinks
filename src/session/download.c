@@ -1959,6 +1959,11 @@ struct {
 	{ "application/xbel",		1 },
 	{ "application/x-xbel",		1 },
 #endif
+#if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
+	{ "image/png",			0 },
+	{ "image/jpg",			0 },
+	{ "image/jpeg",			0 },
+#endif
 	{ NULL,				1 },
 };
 
