@@ -39,7 +39,7 @@ struct k_image {
 
 void delete_k_image(struct k_image *im);
 
-void try_to_draw_k_images(struct terminal *term);
+void try_to_draw_k_images(struct terminal *term, struct string *text);
 
 /* return height of image in terminal lines */
 int add_kitty_image_to_document(struct document *doc, char *data, int datalen, int lineno, struct k_image **imagine, int width, int height);

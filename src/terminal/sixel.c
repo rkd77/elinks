@@ -805,7 +805,7 @@ end:
 
 
 void
-try_to_draw_images(struct terminal *term)
+try_to_draw_images(struct terminal *term, struct string *text)
 {
 	ELOG
 	struct image *im;
@@ -813,22 +813,9 @@ try_to_draw_images(struct terminal *term)
 	if (!term->sixel) {
 		return;
 	}
-
 	foreach (im, term->images) {
-		struct string text;
-
-		if (!init_string(&text)) {
-			return;
-		}
-		add_cursor_move_to_string(&text, im->y + 1, im->x + 1);
-		add_string_to_string(&text, &im->pixels);
-
-		if (text.length) {
-			if (term->master) want_draw();
-			hard_write(term->fdout, text.source, text.length);
-			if (term->master) done_draw();
-		}
-		done_string(&text);
+		add_cursor_move_to_string(text, im->y + 1, im->x + 1);
+		add_string_to_string(text, &im->pixels);
 	}
 }
 

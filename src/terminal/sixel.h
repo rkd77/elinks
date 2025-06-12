@@ -27,7 +27,7 @@ struct image {
 
 void delete_image(struct image *im);
 
-void try_to_draw_images(struct terminal *term);
+void try_to_draw_images(struct terminal *term, struct string *text);
 
 /* return height of image in terminal rows */
 int add_image_to_document(struct document *doc, struct string *pixels, int lineno, struct image **imagine);

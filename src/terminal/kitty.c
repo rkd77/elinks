@@ -73,36 +73,21 @@ delete_k_image(struct k_image *im)
 }
 
 void
-try_to_draw_k_images(struct terminal *term)
+try_to_draw_k_images(struct terminal *term, struct string *text)
 {
 	ELOG
 
 	if (!term->kitty) {
 		return;
 	}
-	struct string text;
-
-	if (!init_string(&text)) {
-		return;
-	}
-	add_to_string(&text, "\033_Ga=d\033\\");
-
-	if (text.length) {
-		if (term->master) want_draw();
-		hard_write(term->fdout, text.source, text.length);
-		if (term->master) done_draw();
-	}
-	done_string(&text);
+	add_to_string(text, "\033_Ga=d\033\\");
 
 	int i;
 
 	for (i = 0; i < term->number_of_images; i++) {
 		struct k_image *im = term->k_images[i];
 
-		if (!init_string(&text)) {
-			return;
-		}
-		add_cursor_move_to_string(&text, im->cy + 1, im->cx + 1);
+		add_cursor_move_to_string(text, im->cy + 1, im->cx + 1);
 
 		int id = get_id_from_ID(im->ID);
 
@@ -112,9 +97,9 @@ try_to_draw_k_images(struct terminal *term)
 			int sent = 0;
 			while (1) {
 				m = left >= 4000;
-				add_format_to_string(&text, "\033_Gf=%d,I=%d,s=%d,v=%d,m=%d,t=d,a=T%s;", KITTY_BYTES_PER_PIXEL * 8, im->ID, im->width, im->height, m, (im->compressed ? ",o=z": ""));
-				add_bytes_to_string(&text, im->pixels->data + sent, m ? 4000 : left);
-				add_to_string(&text, "\033\\");
+				add_format_to_string(text, "\033_Gf=%d,I=%d,s=%d,v=%d,m=%d,t=d,a=T%s;", KITTY_BYTES_PER_PIXEL * 8, im->ID, im->width, im->height, m, (im->compressed ? ",o=z": ""));
+				add_bytes_to_string(text, im->pixels->data + sent, m ? 4000 : left);
+				add_to_string(text, "\033\\");
 				if (!m) {
 					break;
 				}
@@ -122,15 +107,8 @@ try_to_draw_k_images(struct terminal *term)
 				left -= 4000;
 			};
 		} else {
-			add_format_to_string(&text, "\033_Gi=%d,x=%d,y=%d,w=%d,h=%d,a=p,q=1\033\\", id, im->x, im->y, im->w, im->h);
+			add_format_to_string(text, "\033_Gi=%d,x=%d,y=%d,w=%d,h=%d,a=p,q=1\033\\", id, im->x, im->y, im->w, im->h);
 		}
-
-		if (text.length) {
-			if (term->master) want_draw();
-			hard_write(term->fdout, text.source, text.length);
-			if (term->master) done_draw();
-		}
-		done_string(&text);
 	}
 }
 
