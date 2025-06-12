@@ -130,6 +130,7 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 			|| !c_strcasecmp("image/gif", cached->content_type)
 			|| !c_strcasecmp("image/jpg", cached->content_type)
 			|| !c_strcasecmp("image/jpeg", cached->content_type)) {
+
 			struct string img;
 
 			if (init_string(&img)) {

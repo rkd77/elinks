@@ -2009,6 +2009,26 @@ setup_download_handler(struct session *ses, struct download *loading,
 			continue;
 
 		plaintext = known_types[i].plain;
+
+#if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
+		int image = !c_strncasecmp(ctype, "image", 5);
+
+#ifdef CONFIG_KITTY
+		if (image && get_opt_bool("document.html.kitty", ses)) {
+			goto plaintext_follow;
+		}
+#endif
+
+#ifdef CONFIG_LIBSIXEL
+		if (image && get_opt_bool("document.html.sixel", ses)) {
+			goto plaintext_follow;
+		}
+#endif
+		if (image) {
+			plaintext = 1;
+			continue;
+		}
+#endif
 		goto plaintext_follow;
 	}
 	xwin = ses->tab->term->environment & ENV_XWIN;
