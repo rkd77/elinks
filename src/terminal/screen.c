@@ -1588,16 +1588,15 @@ redraw_screen(struct terminal *term)
 			add_term_string(&image, driver->opt.frame_seqs[0]);
 
 	}
+#ifdef CONFIG_KITTY
+	if (driver->opt.kitty) {
+		try_to_draw_k_images(term, &image);
+	}
+#endif
 
 #ifdef CONFIG_LIBSIXEL
 	if (driver->opt.sixel) {
 		try_to_draw_images(term, &image);
-	}
-#endif
-
-#ifdef CONFIG_KITTY
-	if (driver->opt.kitty) {
-		try_to_draw_k_images(term, &image);
 	}
 #endif
 	/* Even if nothing was redrawn, we possibly still need to move
@@ -1622,7 +1621,6 @@ redraw_screen(struct terminal *term)
 
 	copy_screen_chars(screen->last_image, screen->image, term->width * term->height);
 	screen->was_dirty = 0;
-
 }
 
 void

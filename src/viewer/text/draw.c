@@ -449,7 +449,11 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	int iii;
 
 	for (iii = 0; iii < term->number_of_images; iii++) {
-		mem_free(term->k_images[iii]);
+		struct k_image *im = term->k_images[iii];
+		int yend = im->cy + (im->height + term->cell_height - 1) / term->cell_height;
+
+		set_screen_dirty_image(term->screen, im->cy, yend);
+		mem_free(im);
 	}
 	mem_free_set(&term->k_images, NULL);
 	term->number_of_images = 0;
@@ -529,6 +533,9 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	}
 	while (!list_empty(term->images)) {
 		struct image *im = (struct image *)term->images.next;
+		int yend = im->y + (im->height + term->cell_height - 1) / term->cell_height;
+
+		set_screen_dirty_image(term->screen, im->y, yend);
 		delete_image(im);
 	}
 
