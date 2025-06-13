@@ -215,8 +215,8 @@ compress_empty_lines(struct document *document)
 	struct image *im;
 
 	foreach (im, document->images) {
-		int ystart = im->y;
-		int yend = im->y + (im->height + document->options.cell_height - 1) / document->options.cell_height;
+		int ystart = im->cy;
+		int yend = im->cy + (im->height + document->options.cell_height - 1) / document->options.cell_height;
 		int i;
 
 		for (i = ystart; i <= yend; i++) {
@@ -288,12 +288,12 @@ skip_loop:
 
 #ifdef CONFIG_LIBSIXEL
 	foreach (im, document->images) {
-		int oldy = im->y;
+		int oldy = im->cy;
 
 		assert(oldy < maxy && offset[oldy] >= 0);
 		if_assert_failed continue;
 
-		im->y -= offset[oldy];
+		im->cy -= offset[oldy];
 	}
 #endif
 

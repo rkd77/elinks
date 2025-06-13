@@ -18,8 +18,8 @@ struct terminal;
 struct image {
 	LIST_HEAD_EL(struct image);
 	struct string pixels;
-	int x;
-	int y;
+	int cx;
+	int cy;
 	int width;
 	int height;
 	int image_number;

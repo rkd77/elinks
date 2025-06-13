@@ -533,9 +533,9 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	}
 	while (!list_empty(term->images)) {
 		struct image *im = (struct image *)term->images.next;
-		int yend = im->y + (im->height + term->cell_height - 1) / term->cell_height;
+		int yend = im->cy + (im->height + term->cell_height - 1) / term->cell_height;
 
-		set_screen_dirty_image(term->screen, im->y, yend);
+		set_screen_dirty_image(term->screen, im->cy, yend);
 		delete_image(im);
 	}
 
@@ -548,15 +548,15 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 
 			copy_struct(&im, im2);
 
-			if (im.y >= doc_view->document->height) {
+			if (im.cy >= doc_view->document->height) {
 				continue;
 			}
 
-			if (im.y >= vs->y + box->height) {
+			if (im.cy >= vs->y + box->height) {
 				continue;
 			}
 
-			if (im.y + ((im.height + term->cell_height - 1) / term->cell_height) <= vs->y) {
+			if (im.cy + ((im.height + term->cell_height - 1) / term->cell_height) <= vs->y) {
 				continue;
 			}
 
@@ -564,8 +564,8 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 			int found = vs->plain;
 
 			if (!found) {
-				for (;x < data[im.y].length; x++) {
-					if (im.image_number == data[im.y].ch.chars[x].number) {
+				for (;x < data[im.cy].length; x++) {
+					if (im.image_number == data[im.cy].ch.chars[x].number) {
 						found = 1;
 						break;
 					}
@@ -575,20 +575,20 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 					continue;
 				}
 			}
-			im.x += x;
+			im.cx += x;
 
-			if (im.x >= vs->x + box->width) {
+			if (im.cx >= vs->x + box->width) {
 				continue;
 			}
 
-			if (im.x + ((im.width + term->cell_width - 1) / term->cell_width) <= vs->x) {
+			if (im.cx + ((im.width + term->cell_width - 1) / term->cell_width) <= vs->x) {
 				continue;
 			}
 			struct image *im_copy = copy_frame(&im, box, term->cell_width, term->cell_height, vs->x, vs->y);
 
 			if (im_copy) {
-				im_copy->x += box->x;
-				im_copy->y += box->y;
+				im_copy->cx += box->x;
+				im_copy->cy += box->y;
 				add_to_list(term->images, im_copy);
 			}
 		}

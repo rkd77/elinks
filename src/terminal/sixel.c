@@ -814,7 +814,7 @@ try_to_draw_images(struct terminal *term, struct string *text)
 		return;
 	}
 	foreach (im, term->images) {
-		add_cursor_move_to_string(text, im->y + 1, im->x + 1);
+		add_cursor_move_to_string(text, im->cy + 1, im->cx + 1);
 		add_string_to_string(text, &im->pixels);
 	}
 }
@@ -895,8 +895,8 @@ add_image_to_document(struct document *doc, struct string *pixels, int lineno, s
 	if (SIXEL_FAILED(status)) {
 		goto end;
 	}
-	im->y = lineno;
-	im->x = 0;
+	im->cy = lineno;
+	im->cx = 0;
 	im->width = width;
 	im->height = height;
 	add_string_to_string(&im->pixels, pixels);
@@ -988,8 +988,8 @@ copy_frame(struct image *src, struct el_box *box, int cell_width, int cell_heigh
 	if (SIXEL_FAILED(status)) {
 		goto end;
 	}
-	x = src->x - dx;
-	y = src->y - dy;
+	x = src->cx - dx;
+	y = src->cy - dy;
 
 	encoder->clipx = x >= 0 ? 0 : (-x * cell_width);
 	encoder->clipy = y >= 0 ? 0 : (-y * cell_height);
@@ -1019,8 +1019,8 @@ copy_frame(struct image *src, struct el_box *box, int cell_width, int cell_heigh
 	if (SIXEL_FAILED(status)) {
 		goto end;
 	}
-	dest->x = x < 0 ? 0 : x;
-	dest->y = y < 0 ? 0 : y;
+	dest->cx = x < 0 ? 0 : x;
+	dest->cy = y < 0 ? 0 : y;
 	dest->width = encoder->clipx >= src->width ? 0 : sixel_frame_get_width(frame);
 	dest->height = encoder->clipy >= src->height ? 0 : sixel_frame_get_height(frame);
 end:

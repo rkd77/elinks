@@ -966,10 +966,10 @@ insert_document_into_document(struct document *dest, struct document *src, int y
 #ifdef CONFIG_LIBSIXEL
 	struct image *im;
 	foreach (im, dest->images) {
-		if (im->y < y) {
+		if (im->cy < y) {
 			continue;
 		};
-		im->y += src->height;
+		im->cy += src->height;
 	}
 	/* new images */
 	foreach (im, src->images) {
@@ -979,7 +979,7 @@ insert_document_into_document(struct document *dest, struct document *src, int y
 			continue;
 		}
 		copy_struct(imcopy, im);
-		imcopy->y += y;
+		imcopy->cy += y;
 		add_to_list(dest->images, imcopy);
 	}
 #endif
@@ -1059,12 +1059,12 @@ remove_document_from_document(struct document *dest, struct document *src, int y
 #ifdef CONFIG_LIBSIXEL
 	struct image *im, *next;
 	foreachsafe (im, next, dest->images) {
-		if (im->y >= y && im->y < (y + src->height)) {
+		if (im->cy >= y && im->cy < (y + src->height)) {
 			del_from_list(im);
 			mem_free(im);
 			continue;
 		}
-		im->y -= src->height;
+		im->cy -= src->height;
 	}
 #endif
 	dest->height -= src->height;
