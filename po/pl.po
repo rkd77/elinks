@@ -3862,7 +3862,7 @@ msgstr "Czy pamiętać historię powrotów."
 #
 #: src/config/options.inc:820
 msgid "HTML rendering"
-msgstr "Formatowanie HTMLa"
+msgstr "Formatowanie HTML-a"
 
 #: src/config/options.inc:822
 msgid "Options concerning the display of HTML pages."
