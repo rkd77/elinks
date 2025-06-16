@@ -829,7 +829,7 @@ delete_image(struct image *im)
 }
 
 int
-add_image_to_document(struct document *doc, struct string *pixels, int lineno, struct image **imagine)
+add_image_to_document(struct document *doc, char *data, int datalen, int lineno, struct image **imagine)
 {
 	ELOG
 	unsigned char *indexed_pixels = NULL;
@@ -864,8 +864,8 @@ add_image_to_document(struct document *doc, struct string *pixels, int lineno, s
 		goto end;
 	}
 	status = sixel_decode_raw(
-		(unsigned char *)pixels->source,
-		pixels->length,
+		(unsigned char *)data,
+		datalen,
 		&indexed_pixels,
 		&width,
 		&height,
@@ -899,7 +899,7 @@ add_image_to_document(struct document *doc, struct string *pixels, int lineno, s
 	im->cx = 0;
 	im->width = width;
 	im->height = height;
-	add_string_to_string(&im->pixels, pixels);
+	add_bytes_to_string(&im->pixels, data, datalen);
 
 	ile = (height + doc->options.cell_height - 1) / doc->options.cell_height;
 	add_to_list(doc->images, im);

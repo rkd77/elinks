@@ -393,14 +393,6 @@ html_img_sixel(struct html_context *html_context, char *a,
 	if (!data) {
 		return;
 	}
-	struct string pixels;
-
-	if (!init_string(&pixels)) {
-		mem_free(data);
-		return;
-	}
-	add_bytes_to_string(&pixels, (const char *)data, datalen);
-	mem_free(data);
 	struct document *document = html_context->document;
 	html_linebrk(html_context, a, html, eof, end);
 	put_chrs(html_context, "&nbsp;", 6);
@@ -410,8 +402,8 @@ html_img_sixel(struct html_context *html_context, char *a,
 
 	struct image *im = NULL;
 
-	int how_many = add_image_to_document(document, &pixels, lineno, &im);
-	done_string(&pixels);
+	int how_many = add_image_to_document(document, data, datalen, lineno, &im);
+	mem_free(data);
 
 	if (!im) {
 		return;

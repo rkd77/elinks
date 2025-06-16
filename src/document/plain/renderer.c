@@ -663,15 +663,7 @@ add_document_line(struct plain_renderer *renderer,
 						break;
 					}
 					if (end[1] == '\\') {
-						struct string sixels;
-						int how_many;
-
-						if (!init_string(&sixels)) {
-							break;
-						}
-						add_bytes_to_string(&sixels, line + line_pos, end + 2 - line - line_pos);
-						how_many = add_image_to_document(document, &sixels, lineno, NULL) + 1;
-						done_string(&sixels);
+						int how_many = add_image_to_document(document, line + line_pos, end + 2 - line - line_pos, lineno, NULL) + 1;
 
 						realloc_line(document, pos - startpos, lineno);
 
