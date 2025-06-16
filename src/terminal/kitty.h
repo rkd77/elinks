@@ -46,8 +46,6 @@ int add_kitty_image_to_document(struct document *doc, char *data, int datalen, i
 
 struct k_image *copy_k_frame(struct k_image *src, struct el_box *box, int cell_width, int cell_height, int dx, int dy);
 
-unsigned char *el_kitty_get_image(char *data, int len, int *outlen, int *width, int *height, int *compressed);
-
 #endif
 
 #ifdef __cplusplus

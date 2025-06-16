@@ -348,7 +348,7 @@ html_img_sixel(struct html_context *html_context, char *a,
 	if (!html_context->options->html_sixel || !html_context->document) {
 		return;
 	}
-	unsigned char *data = NULL;
+	char *data = NULL;
 	int datalen = 0;
 	char *url = get_attr_val(a, "src", html_context->doc_cp);
 
@@ -368,7 +368,7 @@ html_img_sixel(struct html_context *html_context, char *a,
 
 				if (fragment) {
 					if (cached->sixel) {
-						data = (unsigned char *)memacpy(fragment->data, fragment->length);
+						data = memacpy(fragment->data, fragment->length);
 						datalen = fragment->length;
 					} else {
 						data = el_sixel_get_image(fragment->data, fragment->length, &datalen);

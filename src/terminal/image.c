@@ -31,7 +31,7 @@
 #endif
 
 #ifdef CONFIG_KITTY
-unsigned char *
+char *
 el_kitty_get_image(char *data, int length, int *outlen, int *width, int *height, int *compressed)
 {
 	ELOG
@@ -57,7 +57,7 @@ el_kitty_get_image(char *data, int length, int *outlen, int *width, int *height,
 			b64 = base64_encode_bin(complace, compsize, outlen);
 			stbi_image_free(pixels);
 			mem_free(complace);
-			return b64;
+			return (char *)b64;
 		}
 		mem_free(complace);
 	}
@@ -65,7 +65,7 @@ el_kitty_get_image(char *data, int length, int *outlen, int *width, int *height,
 	b64 = base64_encode_bin(pixels, size, outlen);
 	stbi_image_free(pixels);
 
-	return b64;
+	return (char *)b64;
 }
 #endif
 
@@ -80,14 +80,13 @@ sixel_write_callback(char *data, int size, void *priv)
 	return size;
 }
 
-unsigned char *
+char *
 el_sixel_get_image(char *data, int length, int *outlen)
 {
 	ELOG
 	int comp;
 	int width;
 	int height;
-	unsigned char *outdata = NULL;
 	unsigned char *pixels = stbi_load_from_memory((unsigned char *)data, length, &width, &height, &comp, 3);
 
 	if (!pixels) {
@@ -95,7 +94,6 @@ el_sixel_get_image(char *data, int length, int *outlen)
 	}
 	sixel_output_t *output = NULL;
 	sixel_dither_t *dither = NULL;
-
 	struct string ret;
 
 	if (!init_string(&ret)) {
@@ -109,7 +107,7 @@ el_sixel_get_image(char *data, int length, int *outlen)
 	dither = sixel_dither_get(SIXEL_BUILTIN_XTERM256);
 	sixel_dither_set_pixelformat(dither, SIXEL_PIXELFORMAT_RGB888);
 	status = sixel_encode(pixels, width, height, 3, dither, output);
-	outdata = (unsigned char *)memacpy(ret.source, ret.length);
+	char *outdata = memacpy(ret.source, ret.length);
 
 	if (outdata) {
 		*outlen = ret.length;
@@ -117,6 +115,14 @@ el_sixel_get_image(char *data, int length, int *outlen)
 	done_string(&ret);
 end:
 	stbi_image_free(pixels);
+
+	if (output) {
+		sixel_output_unref(output);
+	}
+
+	if (dither) {
+		sixel_dither_unref(dither);
+	}
 
 	return outdata;
 }
