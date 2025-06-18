@@ -746,7 +746,9 @@ sixel_encoder_encode_frame(
     sixel_output_set_penetrate_multiplexer(
         output, encoder->penetrate_multiplexer);
     sixel_output_set_encode_policy(output, encoder->encode_policy);
+#ifdef SIXEL_OPTFLAG_ORMODE
     sixel_output_set_ormode(output, encoder->ormode);
+#endif
 
 #if 0
     if (sixel_frame_get_multiframe(frame) && !encoder->fstatic) {
