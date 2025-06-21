@@ -126,10 +126,10 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 
 	} else {
 #if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
-		if (!c_strcasecmp("image/png", cached->content_type)
+		if (cached->content_type && (!c_strcasecmp("image/png", cached->content_type)
 			|| !c_strcasecmp("image/gif", cached->content_type)
 			|| !c_strcasecmp("image/jpg", cached->content_type)
-			|| !c_strcasecmp("image/jpeg", cached->content_type)) {
+			|| !c_strcasecmp("image/jpeg", cached->content_type))) {
 
 			struct string img;
 
