@@ -72,6 +72,8 @@ delete_k_image(struct k_image *im)
 	mem_free(im);
 }
 
+#define EL_KITTY_CHUNK 4096
+
 void
 try_to_draw_k_images(struct terminal *term, struct string *text)
 {
@@ -97,25 +99,27 @@ try_to_draw_k_images(struct terminal *term, struct string *text)
 			int left = im->pixels->length;
 			int sent = 0;
 			while (1) {
-				m = left > 4000;
+				m = left > EL_KITTY_CHUNK;
 				if (!sent) {
 					add_format_to_string(text, "\033_Gf=%d,I=%d,s=%d,v=%d,m=%d,t=d,a=T%s,x=%d,y=%d,w=%d,h=%d;", KITTY_BYTES_PER_PIXEL * 8, im->ID, im->width, im->height, m, (im->compressed ? ",o=z": ""), im->x, im->y, im->w, im->h);
 				} else {
 					add_format_to_string(text, "\033_Gm=%d;", m);
 				}
-				add_bytes_to_string(text, im->pixels->data + sent, m ? 4000 : left);
+				add_bytes_to_string(text, im->pixels->data + sent, m ? EL_KITTY_CHUNK : left);
 				add_to_string(text, "\033\\");
 				if (!m) {
 					break;
 				}
-				sent += 4000;
-				left -= 4000;
+				sent += EL_KITTY_CHUNK;
+				left -= EL_KITTY_CHUNK;
 			};
 		} else {
 			add_format_to_string(text, "\033_Gi=%d,x=%d,y=%d,w=%d,h=%d,a=p,q=1\033\\", id, im->x, im->y, im->w, im->h);
 		}
 	}
 }
+
+#undef EL_KITTY_CHUNK
 
 struct k_image *
 copy_k_frame(struct k_image *src, struct el_box *box, int cell_width, int cell_height, int dx, int dy)
