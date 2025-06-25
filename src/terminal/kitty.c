@@ -98,7 +98,7 @@ try_to_draw_k_images(struct terminal *term, struct string *text)
 			int sent = 0;
 			while (1) {
 				m = left >= 4000;
-				add_format_to_string(text, "\033_Gf=%d,I=%d,s=%d,v=%d,m=%d,t=d,a=T%s;", KITTY_BYTES_PER_PIXEL * 8, im->ID, im->width, im->height, m, (im->compressed ? ",o=z": ""));
+				add_format_to_string(text, "\033_Gf=%d,I=%d,s=%d,v=%d,m=%d,t=d,a=T%s,x=%d,y=%d,w=%d,h=%d;", KITTY_BYTES_PER_PIXEL * 8, im->ID, im->width, im->height, m, (im->compressed ? ",o=z": ""), im->x, im->y, im->w, im->h);
 				add_bytes_to_string(text, im->pixels->data + sent, m ? 4000 : left);
 				add_to_string(text, "\033\\");
 				if (!m) {
