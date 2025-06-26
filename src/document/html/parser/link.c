@@ -367,18 +367,7 @@ html_img_sixel(struct html_context *html_context, char *a,
 				struct fragment *fragment = get_cache_fragment(cached);
 
 				if (fragment) {
-					if (cached->sixel) {
-						data = memacpy(fragment->data, fragment->length);
-						datalen = fragment->length;
-					} else {
-						data = el_sixel_get_image(fragment->data, fragment->length, &datalen);
-
-						if (data) {
-							(void)add_fragment(cached, 0, (const char *)data, datalen);
-							normalize_cache_entry(cached, datalen);
-							cached->sixel = 1;
-						}
-					}
+					data = el_sixel_get_image(fragment->data, fragment->length, &datalen);
 				}
 			}
 			if (!data) {

@@ -80,7 +80,6 @@ struct cache_entry {
 	unsigned int cgi:1;		/* Is a CGI output? */
 	unsigned int integrity_valid:1; /* Was integrity checked and valid */
 
-	unsigned int sixel:1; /* Is in sixel format? */
 	unsigned int kitty:1; /* Is in kitty base64? */
 	unsigned int compressed:1; /* Is kitty zlib? */
 

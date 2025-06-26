@@ -681,7 +681,7 @@ maybe_pre_format_html(struct cache_entry *cached, struct session *ses)
 	struct fragment *fragment;
 	static int pre_format_html_event = EVENT_NONE;
 
-	if (!cached || cached->preformatted || cached->sixel)
+	if (!cached || cached->preformatted)
 		return;
 	char *ctype = get_content_type(cached);
 
