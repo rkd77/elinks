@@ -273,25 +273,16 @@ html_img_kitty(struct html_context *html_context, char *a,
 				struct fragment *fragment = get_cache_fragment(cached);
 
 				if (fragment) {
-					if (cached->kitty) {
-						data = memacpy(fragment->data, fragment->length);
-						datalen = fragment->length;
-						width = cached->width;
-						height = cached->height;
-						im_number = cached->number;
-						compressed = cached->compressed;
-					} else {
-						data = (char *)el_kitty_get_image(fragment->data, fragment->length, &datalen, &width, &height, &compressed);
+					data = (char *)el_kitty_get_image(fragment->data, fragment->length, &datalen, &width, &height, &compressed);
 
-						if (data) {
-							(void)add_fragment(cached, 0, data, datalen);
-							normalize_cache_entry(cached, datalen);
-							cached->kitty = 1;
-							cached->width = width;
-							cached->height = height;
+					if (data) {
+						cached->width = width;
+						cached->height = height;
+
+						if (!cached->number) {
 							cached->number = im_number = ++kitty_image_number;
-							cached->compressed = compressed;
 						}
+						cached->compressed = compressed;
 					}
 				}
 			}

@@ -79,8 +79,6 @@ struct cache_entry {
 	unsigned int gc_target:1;	/* The GC touch of death */
 	unsigned int cgi:1;		/* Is a CGI output? */
 	unsigned int integrity_valid:1; /* Was integrity checked and valid */
-
-	unsigned int kitty:1; /* Is in kitty base64? */
 	unsigned int compressed:1; /* Is kitty zlib? */
 
 	cache_mode_T cache_mode;	/* Reload condition */
