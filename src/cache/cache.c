@@ -26,6 +26,9 @@
 #ifdef CONFIG_SCRIPTING_SPIDERMONKEY
 # include "scripting/smjs/smjs.h"
 #endif
+#ifdef CONFIG_KITTY
+#include "terminal/kitty.h"
+#endif
 #include "util/base64.h"
 #include "util/error.h"
 #include "util/memory.h"
@@ -703,6 +706,12 @@ done_cache_entry(struct cache_entry *cached)
 	mem_free_if(cached->encoding_info);
 	mem_free_if(cached->etag);
 
+#ifdef CONFIG_KITTY
+	if (cached->pixels && --(cached->pixels->refcnt) <= 0) {
+		mem_free(cached->pixels->data);
+		mem_free(cached->pixels);
+	}
+#endif
 	mem_free(cached);
 }
 

@@ -250,8 +250,7 @@ html_img_kitty(struct html_context *html_context, char *a,
 	if (!html_context->document) {
 		return;
 	}
-	char *data = NULL;
-	int datalen = 0;
+	struct el_string *pixels = NULL;
 	int width = 0;
 	int height = 0;
 	int im_number = 0;
@@ -270,23 +269,29 @@ html_img_kitty(struct html_context *html_context, char *a,
 			struct cache_entry *cached = get_redirected_cache_entry(uri);
 
 			if (cached && !cached->incomplete) {
-				struct fragment *fragment = get_cache_fragment(cached);
+				if (cached->pixels) {
+					pixels = cached->pixels;
+					width = cached->width;
+					height = cached->height;
+					im_number = cached->number;
+					compressed = cached->compressed;
+				} else {
+					struct fragment *fragment = get_cache_fragment(cached);
 
-				if (fragment) {
-					data = (char *)el_kitty_get_image(fragment->data, fragment->length, &datalen, &width, &height, &compressed);
+					if (fragment) {
+						pixels = el_kitty_get_image(fragment->data, fragment->length, &width, &height, &compressed);
 
-					if (data) {
-						cached->width = width;
-						cached->height = height;
-
-						if (!cached->number) {
+						if (pixels) {
+							cached->pixels = pixels;
+							cached->width = width;
+							cached->height = height;
 							cached->number = im_number = ++kitty_image_number;
+							cached->compressed = compressed;
 						}
-						cached->compressed = compressed;
 					}
 				}
 			}
-			if (!data) {
+			if (!pixels) {
 				html_context->special_f(html_context, SP_IMAGE, uri);
 			}
 			done_uri(uri);
@@ -295,7 +300,7 @@ html_img_kitty(struct html_context *html_context, char *a,
 	}
 	mem_free(url);
 
-	if (!data) {
+	if (!pixels) {
 		return;
 	}
 	struct document *document = html_context->document;
@@ -304,11 +309,8 @@ html_img_kitty(struct html_context *html_context, char *a,
 	ln_break(html_context, 1);
 
 	int lineno = html_context->part->cy + html_context->part->box.y;
-
 	struct k_image *im = NULL;
-
-	/* data will be freed later */
-	int how_many = add_kitty_image_to_document(document, data, datalen, lineno, &im, width, height);
+	int how_many = add_kitty_image_to_document(document, pixels, lineno, &im, width, height);
 
 	if (!im) {
 		return;

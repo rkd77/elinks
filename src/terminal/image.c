@@ -21,6 +21,9 @@
 #include "elinks.h"
 
 #include "terminal/image.h"
+#ifdef CONFIG_KITTY
+#include "terminal/kitty.h"
+#endif
 #include "util/base64.h"
 #include "util/memory.h"
 #include "util/string.h"
@@ -31,15 +34,23 @@
 #endif
 
 #ifdef CONFIG_KITTY
-char *
-el_kitty_get_image(char *data, int length, int *outlen, int *width, int *height, int *compressed)
+struct el_string *
+el_kitty_get_image(char *data, int length, int *width, int *height, int *compressed)
 {
 	ELOG
 	int comp;
+	int outlen = 0;
 	unsigned char *pixels = stbi_load_from_memory((unsigned char *)data, length, width, height, &comp, KITTY_BYTES_PER_PIXEL);
 	unsigned char *b64;
 
 	if (!pixels) {
+		return NULL;
+	}
+
+	struct el_string *ret = mem_calloc(1, sizeof(*ret));
+
+	if (!ret) {
+		stbi_image_free(pixels);
 		return NULL;
 	}
 	int size = *width * *height * KITTY_BYTES_PER_PIXEL;
@@ -54,18 +65,36 @@ el_kitty_get_image(char *data, int length, int *outlen, int *width, int *height,
 
 		if (res == Z_OK) {
 			*compressed = 1;
-			b64 = base64_encode_bin(complace, compsize, outlen);
+			b64 = base64_encode_bin(complace, compsize, &outlen);
 			stbi_image_free(pixels);
 			mem_free(complace);
-			return (char *)b64;
+
+			if (b64) {
+				ret->data = (char *)b64;
+				ret->length = outlen;
+				ret->refcnt = 1;
+
+				return ret;
+			} else {
+				mem_free(ret);
+				return NULL;
+			}
 		}
 		mem_free(complace);
 	}
 #endif
-	b64 = base64_encode_bin(pixels, size, outlen);
+	b64 = base64_encode_bin(pixels, size, &outlen);
 	stbi_image_free(pixels);
 
-	return (char *)b64;
+	if (b64) {
+		ret->data = (char *)b64;
+		ret->length = outlen;
+		ret->refcnt = 1;
+		return ret;
+	} else {
+		mem_free(ret);
+		return NULL;
+	}
 }
 #endif
 

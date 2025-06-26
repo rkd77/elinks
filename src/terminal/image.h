@@ -5,8 +5,10 @@
 extern "C" {
 #endif
 
+struct el_string;
+
 #ifdef CONFIG_KITTY
-char *el_kitty_get_image(char *data, int len, int *outlen, int *width, int *height, int *compressed);
+struct el_string *el_kitty_get_image(char *data, int len, int *width, int *height, int *compressed);
 #endif
 
 #ifdef CONFIG_LIBSIXEL

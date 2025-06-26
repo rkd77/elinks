@@ -9,6 +9,7 @@
 extern "C" {
 #endif
 
+struct el_string;
 struct listbox_item;
 struct uri;
 
@@ -61,6 +62,7 @@ struct cache_entry {
 #endif
 
 #ifdef CONFIG_KITTY
+	struct el_string *pixels;
 	int width;
 	int height;
 	int number;

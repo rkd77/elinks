@@ -42,7 +42,7 @@ void delete_k_image(struct k_image *im);
 void try_to_draw_k_images(struct terminal *term, struct string *text);
 
 /* return height of image in terminal lines */
-int add_kitty_image_to_document(struct document *doc, char *data, int datalen, int lineno, struct k_image **imagine, int width, int height);
+int add_kitty_image_to_document(struct document *doc, struct el_string *pixels, int lineno, struct k_image **imagine, int width, int height);
 
 struct k_image *copy_k_frame(struct k_image *src, struct el_box *box, int cell_width, int cell_height, int dx, int dy);
 

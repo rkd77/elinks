@@ -23,7 +23,7 @@
 #include "util/memory.h"
 
 int
-add_kitty_image_to_document(struct document *doc, char *data, int datalen, int lineno, struct k_image **imagine, int width, int height)
+add_kitty_image_to_document(struct document *doc, struct el_string *pixels, int lineno, struct k_image **imagine, int width, int height)
 {
 	ELOG
 	struct k_image *im = mem_calloc(1, sizeof(*im));
@@ -35,19 +35,12 @@ add_kitty_image_to_document(struct document *doc, char *data, int datalen, int l
 	if (!im) {
 		return 0;
 	}
-	im->pixels = (struct el_string *)mem_calloc(1, sizeof(struct el_string));
-
-	if (!im->pixels) {
-		mem_free(im);
-		return 0;
-	}
+	im->pixels = pixels;
 	im->cy = lineno;
 	im->cx = 0;
 	im->width = width;
 	im->height = height;
-	im->pixels->data = data;
-	im->pixels->length = datalen;
-	im->pixels->refcnt = 1;
+	im->pixels->refcnt++;
 
 	int ile = (height + doc->options.cell_height - 1) / doc->options.cell_height;
 	add_to_list(doc->k_images, im);
