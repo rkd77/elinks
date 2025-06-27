@@ -842,8 +842,9 @@ add_image_to_document(struct document *doc, char *data, int datalen, int lineno,
 		mem_free(im);
 		return 0;
 	}
+	sixel_allocator_t *el_sixel_allocator = NULL;
 #ifdef CONFIG_MEMCOUNT
-	init_sixel_allocator();
+	el_sixel_allocator = init_sixel_allocator();
 #endif
 	status = sixel_decoder_new(&decoder, el_sixel_allocator);
 
@@ -893,6 +894,7 @@ add_image_to_document(struct document *doc, char *data, int datalen, int lineno,
 end:
 	sixel_frame_unref(frame);
 	sixel_decoder_unref(decoder);
+	sixel_allocator_unref(el_sixel_allocator);
 
 	if (imagine) {
 		*imagine = im;
@@ -927,8 +929,9 @@ copy_frame(struct image *src, struct el_box *box, int cell_width, int cell_heigh
 		mem_free(dest);
 		return NULL;
 	}
+	sixel_allocator_t *el_sixel_allocator = NULL;
 #ifdef CONFIG_MEMCOUNT
-	init_sixel_allocator();
+	el_sixel_allocator = init_sixel_allocator();
 #endif
 	status = sixel_decoder_new(&decoder, el_sixel_allocator);
 
@@ -994,7 +997,7 @@ copy_frame(struct image *src, struct el_box *box, int cell_width, int cell_heigh
 	if (y * cell_height + encoder->clipheight >= box->height * cell_height) {
 		encoder->clipheight = ((box->height * cell_height - y * cell_height) / 6) * 6;
 	}
-	status = sixel_output_new(&output, sixel_write_callback, &dest->pixels, NULL);
+	status = sixel_output_new(&output, sixel_write_callback, &dest->pixels, el_sixel_allocator);
 
 	if (SIXEL_FAILED(status)) {
 		goto end;
@@ -1013,6 +1016,7 @@ end:
 	sixel_output_unref(output);
 	sixel_decoder_unref(decoder);
 	sixel_encoder_unref(encoder);
+	sixel_allocator_unref(el_sixel_allocator);
 
 	if (!dest->width || !dest->height) {
 		done_string(&dest->pixels);

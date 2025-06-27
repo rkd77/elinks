@@ -107,18 +107,17 @@ el_kitty_get_image(char *data, int length, int *width, int *height, int *compres
 #endif
 
 #ifdef CONFIG_LIBSIXEL
-sixel_allocator_t *el_sixel_allocator;
 
 #ifdef CONFIG_MEMCOUNT
-void
+sixel_allocator_t *
 init_sixel_allocator(void)
 {
 	ELOG
-	static int initialized = 0;
-	if (!initialized) {
-		sixel_allocator_new(&el_sixel_allocator, el_sixel_malloc, el_sixel_calloc, el_sixel_realloc, el_sixel_free);
-		initialized = 1;
-	}
+
+	sixel_allocator_t *el_sixel_allocator = NULL;
+	sixel_allocator_new(&el_sixel_allocator, el_sixel_malloc, el_sixel_calloc, el_sixel_realloc, el_sixel_free);
+
+	return el_sixel_allocator;
 }
 #endif
 
@@ -151,8 +150,9 @@ el_sixel_get_image(char *data, int length, int *outlen)
 	if (!init_string(&ret)) {
 		goto end;
 	}
+	sixel_allocator_t *el_sixel_allocator = NULL;
 #ifdef CONFIG_MEMCOUNT
-	init_sixel_allocator();
+	el_sixel_allocator = init_sixel_allocator();
 #endif
 	SIXELSTATUS status = sixel_output_new(&output, sixel_write_callback, &ret, el_sixel_allocator);
 
@@ -178,6 +178,7 @@ end:
 	if (dither) {
 		sixel_dither_unref(dither);
 	}
+	sixel_allocator_unref(el_sixel_allocator);
 
 	return outdata;
 }
