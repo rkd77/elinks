@@ -39,6 +39,7 @@
 #include "document/document.h"
 #include "osdep/osdep.h"
 #include "terminal/hardio.h"
+#include "terminal/image.h"
 #include "terminal/screen.h"
 #include "terminal/sixel.h"
 #include "terminal/terminal.h"
@@ -95,21 +96,6 @@ struct sixel_encoder {
     int *cancel_flag;
     void *dither_cache;
 };
-
-#ifdef CONFIG_MEMCOUNT
-static sixel_allocator_t *el_sixel_allocator;
-
-static void
-init_allocator(void)
-{
-	ELOG
-	static int initialized = 0;
-	if (!initialized) {
-		sixel_allocator_new(&el_sixel_allocator, el_sixel_malloc, el_sixel_calloc, el_sixel_realloc, el_sixel_free);
-		initialized = 1;
-	}
-}
-#endif
 
 /* palette type */
 #define SIXEL_COLOR_OPTION_DEFAULT          0   /* use default settings */
@@ -857,11 +843,10 @@ add_image_to_document(struct document *doc, char *data, int datalen, int lineno,
 		return 0;
 	}
 #ifdef CONFIG_MEMCOUNT
-	init_allocator();
-	status = sixel_decoder_new(&decoder, el_sixel_allocator);
-#else
-	status = sixel_decoder_new(&decoder, NULL);
+	init_sixel_allocator();
 #endif
+	status = sixel_decoder_new(&decoder, el_sixel_allocator);
+
 	if (SIXEL_FAILED(status)) {
 		goto end;
 	}
@@ -943,11 +928,9 @@ copy_frame(struct image *src, struct el_box *box, int cell_width, int cell_heigh
 		return NULL;
 	}
 #ifdef CONFIG_MEMCOUNT
-	init_allocator();
-	status = sixel_decoder_new(&decoder, el_sixel_allocator);
-#else
-	status = sixel_decoder_new(&decoder, NULL);
+	init_sixel_allocator();
 #endif
+	status = sixel_decoder_new(&decoder, el_sixel_allocator);
 
 	if (SIXEL_FAILED(status)) {
 		goto end;

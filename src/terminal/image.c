@@ -25,6 +25,7 @@
 #include "terminal/kitty.h"
 #endif
 #include "util/base64.h"
+#include "util/memcount.h"
 #include "util/memory.h"
 #include "util/string.h"
 
@@ -99,6 +100,21 @@ el_kitty_get_image(char *data, int length, int *width, int *height, int *compres
 #endif
 
 #ifdef CONFIG_LIBSIXEL
+sixel_allocator_t *el_sixel_allocator;
+
+#ifdef CONFIG_MEMCOUNT
+void
+init_sixel_allocator(void)
+{
+	ELOG
+	static int initialized = 0;
+	if (!initialized) {
+		sixel_allocator_new(&el_sixel_allocator, el_sixel_malloc, el_sixel_calloc, el_sixel_realloc, el_sixel_free);
+		initialized = 1;
+	}
+}
+#endif
+
 static int
 sixel_write_callback(char *data, int size, void *priv)
 {
@@ -128,7 +144,10 @@ el_sixel_get_image(char *data, int length, int *outlen)
 	if (!init_string(&ret)) {
 		goto end;
 	}
-	SIXELSTATUS status = sixel_output_new(&output, sixel_write_callback, &ret, NULL);
+#ifdef CONFIG_MEMCOUNT
+	init_sixel_allocator();
+#endif
+	SIXELSTATUS status = sixel_output_new(&output, sixel_write_callback, &ret, el_sixel_allocator);
 
 	if (SIXEL_FAILED(status)) {
 		goto end;
