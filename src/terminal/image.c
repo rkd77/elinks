@@ -170,14 +170,8 @@ el_sixel_get_image(char *data, int length, int *outlen)
 	done_string(&ret);
 end:
 	stbi_image_free(pixels);
-
-	if (output) {
-		sixel_output_unref(output);
-	}
-
-	if (dither) {
-		sixel_dither_unref(dither);
-	}
+	sixel_output_unref(output);
+	sixel_dither_unref(dither);
 	sixel_allocator_unref(el_sixel_allocator);
 
 	return outdata;

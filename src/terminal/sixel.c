@@ -485,9 +485,7 @@ sixel_encoder_prepare_palette(
         goto end;
     }
 
-    if (encoder->dither_cache) {
-        sixel_dither_unref(encoder->dither_cache);
-    }
+    sixel_dither_unref(encoder->dither_cache);
     status = sixel_dither_new(dither, encoder->reqcolors, encoder->allocator);
     if (SIXEL_FAILED(status)) {
         goto end;
@@ -781,12 +779,8 @@ sixel_encoder_encode_frame(
     }
 
 end:
-    if (output) {
-        sixel_output_unref(output);
-    }
-    if (dither) {
-        sixel_dither_unref(dither);
-    }
+    sixel_output_unref(output);
+    sixel_dither_unref(dither);
 
     return status;
 }
