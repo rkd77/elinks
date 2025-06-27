@@ -36,6 +36,15 @@ uint64_t get_gzip_size(void);
 uint64_t get_gzip_active(void);
 #endif
 
+#if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
+void *el_stbi_malloc(size_t size);
+void *el_stbi_realloc(void *p, size_t n);
+void el_stbi_free(void *p);
+uint64_t get_stbi_total_allocs(void);
+uint64_t get_stbi_size(void);
+uint64_t get_stbi_active(void);
+#endif
+
 #ifdef CONFIG_LIBCURL
 void *el_curl_malloc(size_t size);
 void *el_curl_calloc(size_t nelm, size_t elsize);

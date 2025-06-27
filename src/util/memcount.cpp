@@ -97,7 +97,7 @@ el_gzip_alloc(void *opaque, unsigned int items, unsigned int size)
 }
 
 void
-el_gzip_free(void  *opaque, void *ptr)
+el_gzip_free(void *opaque, void *ptr)
 {
 	auto el = el_gzip_allocs.find(ptr);
 
@@ -128,6 +128,113 @@ get_gzip_active(void)
 	return el_gzip_allocs.size();
 }
 #endif
+
+#if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
+
+static std::map<void *, uint64_t> el_stbi_allocs;
+static uint64_t el_stbi_total_allocs;
+static uint64_t el_stbi_size;
+
+/* call custom malloc() */
+void *
+el_stbi_malloc(
+    size_t              /* in */ size)          /* allocation size */
+{
+	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+	pthread_mutex_lock(&mutex);
+
+	void *res = mem_alloc(size);
+
+	if (res) {
+		el_stbi_allocs[res] = size;
+		el_stbi_total_allocs++;
+		el_stbi_size += size;
+	}
+	pthread_mutex_unlock(&mutex);
+
+	return res;
+}
+
+/* call custom realloc() */
+void *
+el_stbi_realloc(
+    void                /* in */ *p,          /* existing buffer to be re-allocated */
+    size_t              /* in */ n)          /* re-allocation size */
+{
+	if (!p) {
+		return el_stbi_malloc(n);
+	}
+	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+	pthread_mutex_lock(&mutex);
+
+	auto el = el_stbi_allocs.find(p);
+	size_t size = 0;
+	bool todelete = false;
+
+	if (el == el_stbi_allocs.end()) {
+		fprintf(stderr, "stbi %p not found\n", p);
+	} else {
+		size = el->second;
+		todelete = true;
+	}
+	void *ret = mem_realloc(p, n);
+
+	if (todelete) {
+		el_stbi_allocs.erase(el);
+	}
+	if (ret) {
+		el_stbi_allocs[ret] = n;
+		el_stbi_total_allocs++;
+		el_stbi_size += n - size;
+	}
+	pthread_mutex_unlock(&mutex);
+
+	return ret;
+}
+
+/* call custom free() */
+void
+el_stbi_free(
+    void                /* in */ *p)         /* existing buffer to be freed */
+{
+	if (!p) {
+		return;
+	}
+	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+	pthread_mutex_lock(&mutex);
+
+	auto el = el_stbi_allocs.find(p);
+
+	if (el == el_stbi_allocs.end()) {
+		fprintf(stderr, "stbi %p not found\n", p);
+		pthread_mutex_unlock(&mutex);
+		return;
+	}
+	el_stbi_size -= el->second;
+	el_stbi_allocs.erase(el);
+	mem_free(p);
+	pthread_mutex_unlock(&mutex);
+}
+
+uint64_t
+get_stbi_total_allocs(void)
+{
+	return el_stbi_total_allocs;
+}
+
+uint64_t
+get_stbi_size(void)
+{
+	return el_stbi_size;
+}
+
+uint64_t
+get_stbi_active(void)
+{
+	return el_stbi_allocs.size();
+}
+#endif
+
 
 #ifdef CONFIG_LIBCURL
 

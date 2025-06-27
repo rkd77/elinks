@@ -30,6 +30,13 @@
 #include "util/string.h"
 
 #if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
+#ifdef CONFIG_MEMCOUNT
+
+#define STBI_MALLOC(sz)           el_stbi_malloc(sz)
+#define STBI_REALLOC(p,newsz)     el_stbi_realloc(p,newsz)
+#define STBI_FREE(p)              el_stbi_free(p)
+
+#endif
 #define STB_IMAGE_IMPLEMENTATION
 #include "terminal/stb_image.h"
 #endif
