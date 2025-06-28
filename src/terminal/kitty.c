@@ -52,6 +52,20 @@ add_kitty_image_to_document(struct document *doc, struct el_string *pixels, int 
 }
 
 struct el_string *
+el_string_init(char *data, unsigned int length)
+{
+	struct el_string *el_string = mem_calloc(1, sizeof(*el_string));
+
+	if (el_string) {
+		el_string->data = data;
+		el_string->length = length;
+		el_string->refcnt = 1;
+	}
+
+	return el_string;
+}
+
+struct el_string *
 el_string_ref(struct el_string *el_string)
 {
 	if (el_string) {

@@ -37,6 +37,7 @@ struct k_image {
 	unsigned int compressed:1;
 };
 
+struct el_string *el_string_init(char *data, unsigned int length);
 struct el_string *el_string_ref(struct el_string *el_string);
 void el_string_unref(struct el_string *el_string);
 

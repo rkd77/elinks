@@ -54,13 +54,6 @@ el_kitty_get_image(char *data, int length, int *width, int *height, int *compres
 	if (!pixels) {
 		return NULL;
 	}
-
-	struct el_string *ret = mem_calloc(1, sizeof(*ret));
-
-	if (!ret) {
-		stbi_image_free(pixels);
-		return NULL;
-	}
 	int size = *width * *height * KITTY_BYTES_PER_PIXEL;
 	*compressed = 0;
 
@@ -77,16 +70,7 @@ el_kitty_get_image(char *data, int length, int *width, int *height, int *compres
 			stbi_image_free(pixels);
 			mem_free(complace);
 
-			if (b64) {
-				ret->data = (char *)b64;
-				ret->length = outlen;
-				ret->refcnt = 1;
-
-				return ret;
-			} else {
-				mem_free(ret);
-				return NULL;
-			}
+			return (b64 ? el_string_init((char *)b64, (unsigned int)outlen) : NULL);
 		}
 		mem_free(complace);
 	}
@@ -94,15 +78,7 @@ el_kitty_get_image(char *data, int length, int *width, int *height, int *compres
 	b64 = base64_encode_bin(pixels, size, &outlen);
 	stbi_image_free(pixels);
 
-	if (b64) {
-		ret->data = (char *)b64;
-		ret->length = outlen;
-		ret->refcnt = 1;
-		return ret;
-	} else {
-		mem_free(ret);
-		return NULL;
-	}
+	return (b64 ? el_string_init((char *)b64, (unsigned int)outlen) : NULL);
 }
 #endif
 
