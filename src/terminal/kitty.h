@@ -37,6 +37,9 @@ struct k_image {
 	unsigned int compressed:1;
 };
 
+struct el_string *el_string_ref(struct el_string *el_string);
+void el_string_unref(struct el_string *el_string);
+
 void delete_k_image(struct k_image *im);
 
 void try_to_draw_k_images(struct terminal *term, struct string *text);

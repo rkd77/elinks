@@ -707,10 +707,7 @@ done_cache_entry(struct cache_entry *cached)
 	mem_free_if(cached->etag);
 
 #ifdef CONFIG_KITTY
-	if (cached->pixels && --(cached->pixels->refcnt) <= 0) {
-		mem_free(cached->pixels->data);
-		mem_free(cached->pixels);
-	}
+	el_string_unref(cached->pixels);
 #endif
 	mem_free(cached);
 }

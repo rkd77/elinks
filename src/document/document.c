@@ -957,7 +957,7 @@ insert_document_into_document(struct document *dest, struct document *src, int y
 		}
 		copy_struct(imcopy, k_im);
 		imcopy->cy += y;
-		imcopy->pixels->refcnt++;
+		el_string_ref(imcopy->pixels);
 		add_to_list(dest->k_images, imcopy);
 	}
 #endif

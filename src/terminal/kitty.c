@@ -35,12 +35,11 @@ add_kitty_image_to_document(struct document *doc, struct el_string *pixels, int 
 	if (!im) {
 		return 0;
 	}
-	im->pixels = pixels;
+	im->pixels = el_string_ref(pixels);
 	im->cy = lineno;
 	im->cx = 0;
 	im->width = width;
 	im->height = height;
-	im->pixels->refcnt++;
 
 	int ile = (height + doc->options.cell_height - 1) / doc->options.cell_height;
 	add_to_list(doc->k_images, im);
@@ -52,16 +51,33 @@ add_kitty_image_to_document(struct document *doc, struct el_string *pixels, int 
 	return ile;
 }
 
+struct el_string *
+el_string_ref(struct el_string *el_string)
+{
+	if (el_string) {
+		el_string->refcnt++;
+	}
+
+	return el_string;
+}
+
+void
+el_string_unref(struct el_string *el_string)
+{
+	if (el_string) {
+		if (--(el_string->refcnt) <= 0) {
+			mem_free(el_string->data);
+			mem_free(el_string);
+		}
+	}
+}
+
 void
 delete_k_image(struct k_image *im)
 {
 	ELOG
 	del_from_list(im);
-
-	if (--(im->pixels->refcnt) <= 0) {
-		mem_free(im->pixels->data);
-		mem_free(im->pixels);
-	}
+	el_string_unref(im->pixels);
 	mem_free(im);
 }
 
@@ -123,8 +139,7 @@ copy_k_frame(struct k_image *src, struct el_box *box, int cell_width, int cell_h
 	if (!dest) {
 		return NULL;
 	}
-	dest->pixels = src->pixels;
-	dest->pixels->refcnt++;
+	dest->pixels = el_string_ref(src->pixels);
 
 	int cx = src->cx - dx;
 	int cy = src->cy - dy;
