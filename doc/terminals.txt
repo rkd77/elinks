@@ -145,6 +145,19 @@ The value 'System' (which is the default) will set the charset according to the
 current locale.  The default is to use the charset of the current locale.
 
 
+Images
+~~~~~~
+
+When elinks is built with -Dkitty=true or -Dlibsixel=true it can display
+inline images. (gif, jpeg, png, animated images not supported).
+To enable them tick kitty or sixel in terminal options and enable
+document.html.kitty or document.html.sixel.
+Kitty protocol graphics are supported by terminals such as:
+kitty, konsole or wezterm. IMO kitty is better than sixel support.
+I know images flicker on some terminals. To minimize flickering, you can disable
+LEDs (ui.leds.enable = 0).
+
+
 Terminal Configurations
 ~~~~~~~~~~~~~~~~~~~~~~~
 
