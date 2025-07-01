@@ -53,6 +53,7 @@
 #include "terminal/window.h"
 #include "util/conv.h"
 #include "util/error.h"
+#include "util/file.h"
 #include "util/memlist.h"
 #include "util/memory.h"
 #include "util/string.h"
@@ -972,6 +973,20 @@ dialog_goto_url_open(void *data)
 	dialog_goto_url((struct session *) data, NULL);
 }
 
+static int
+is_home_elinks(void)
+{
+	char *filename = expand_tilde("~/.elinks");
+
+	if (!filename) {
+		return 0;
+	}
+	int ret = file_is_dir(filename);
+	mem_free(filename);
+
+	return ret;
+}
+
 /** @returns 0 if the first session was not properly initialized and
  * setup_session() should be called on the session as well. */
 static int
@@ -1029,11 +1044,15 @@ setup_first_session(struct session *ses, struct uri *uri)
 
 		msg_box(term, NULL, 0,
 			N_("Welcome"), ALIGN_CENTER,
+			is_home_elinks() ? 
 			N_("Welcome to ELinks!\n\n"
 			"Press ESC for menu. Documentation is available in "
 			"Help menu.\n"
 			"ATTENTION. Since 0.17.GIT configuration is read from and written to $XDG_CONFIG_HOME/elinks or ~/.config/elinks.\n"
-			"So if you did not copy it yet from ~/.elinks, do it now and start again."),
+			"So if you did not copy it yet from ~/.elinks, do it now and start again.")
+			: N_("Welcome to ELinks!\n\n"
+			"Press ESC for menu. Documentation is available in "
+			"Help menu."),
 			ses, 1,
 			MSG_BOX_BUTTON(N_("~OK"), (void (*)(void *))handler, B_ENTER | B_ESC));
 
