@@ -386,14 +386,15 @@ get_curl_active(void)
 static std::map<void *, uint64_t> el_libevent_allocs;
 static uint64_t el_libevent_total_allocs;
 static uint64_t el_libevent_size;
+static pthread_mutex_t el_libevent_mutex = PTHREAD_MUTEX_INITIALIZER;
+
 
 /* call custom malloc() */
 void *
 el_libevent_malloc(
     size_t              /* in */ size)          /* allocation size */
 {
-	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&el_libevent_mutex);
 
 	void *res = mem_alloc(size);
 
@@ -402,7 +403,7 @@ el_libevent_malloc(
 		el_libevent_total_allocs++;
 		el_libevent_size += size;
 	}
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&el_libevent_mutex);
 
 	return res;
 }
@@ -416,8 +417,7 @@ el_libevent_realloc(
 	if (!p) {
 		return el_libevent_malloc(n);
 	}
-	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&el_libevent_mutex);
 
 	auto el = el_libevent_allocs.find(p);
 	size_t size = 0;
@@ -439,7 +439,7 @@ el_libevent_realloc(
 		el_libevent_total_allocs++;
 		el_libevent_size += n - size;
 	}
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&el_libevent_mutex);
 
 	return ret;
 }
@@ -449,20 +449,19 @@ void
 el_libevent_free(
     void                /* in */ *p)         /* existing buffer to be freed */
 {
-	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&el_libevent_mutex);
 
 	auto el = el_libevent_allocs.find(p);
 
 	if (el == el_libevent_allocs.end()) {
 		fprintf(stderr, "libevent %p not found\n", p);
-		pthread_mutex_unlock(&mutex);
+		pthread_mutex_unlock(&el_libevent_mutex);
 		return;
 	}
 	el_libevent_size -= el->second;
 	el_libevent_allocs.erase(el);
 	mem_free(p);
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&el_libevent_mutex);
 }
 
 uint64_t
