@@ -241,14 +241,14 @@ get_stbi_active(void)
 static std::map<void *, uint64_t> el_curl_allocs;
 static uint64_t el_curl_total_allocs;
 static uint64_t el_curl_size;
+static pthread_mutex_t el_curl_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 /* call custom malloc() */
 void *
 el_curl_malloc(
     size_t              /* in */ size)          /* allocation size */
 {
-	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&el_curl_mutex);
 
 	void *res = mem_alloc(size);
 
@@ -257,7 +257,7 @@ el_curl_malloc(
 		el_curl_total_allocs++;
 		el_curl_size += size;
 	}
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&el_curl_mutex);
 
 	return res;
 }
@@ -266,14 +266,10 @@ el_curl_malloc(
 char *
 el_curl_strdup(const char *str)
 {
-	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-	pthread_mutex_lock(&mutex);
-
 	if (!str) {
-		pthread_mutex_unlock(&mutex);
 		return NULL;
 	}
-
+	pthread_mutex_lock(&el_curl_mutex);
 	size_t size = strlen(str) + 1;
 	char *ret = stracpy(str);
 
@@ -282,7 +278,7 @@ el_curl_strdup(const char *str)
 		el_curl_total_allocs++;
 		el_curl_size += size;
 	}
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&el_curl_mutex);
 
 	return ret;
 }
@@ -293,8 +289,7 @@ el_curl_calloc(
     size_t              /* in */ nelm,        /* allocation size */
     size_t              /* in */ elsize)     /* allocation size */
 {
-	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&el_curl_mutex);
 
 	uint64_t alloc_size = nelm * elsize;
 	void *res = mem_calloc(nelm, elsize);
@@ -304,7 +299,7 @@ el_curl_calloc(
 		el_curl_total_allocs++;
 		el_curl_size += alloc_size;
 	}
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&el_curl_mutex);
 
 	return res;
 }
@@ -315,11 +310,10 @@ el_curl_realloc(
     void                /* in */ *p,          /* existing buffer to be re-allocated */
     size_t              /* in */ n)          /* re-allocation size */
 {
-	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 	if (!p) {
 		return el_curl_malloc(n);
 	}
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&el_curl_mutex);
 	auto el = el_curl_allocs.find(p);
 	size_t size = 0;
 	bool todelete = false;
@@ -340,7 +334,7 @@ el_curl_realloc(
 		el_curl_total_allocs++;
 		el_curl_size += n - size;
 	}
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&el_curl_mutex);
 
 	return ret;
 }
@@ -350,23 +344,22 @@ void
 el_curl_free(
     void                /* in */ *p)         /* existing buffer to be freed */
 {
-	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 	if (!p) {
 		return;
 	}
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&el_curl_mutex);
 
 	auto el = el_curl_allocs.find(p);
 
 	if (el == el_curl_allocs.end()) {
 		fprintf(stderr, "curl free %p not found\n", p);
-		pthread_mutex_unlock(&mutex);
+		pthread_mutex_unlock(&el_curl_mutex);
 		return;
 	}
 	el_curl_size -= el->second;
 	el_curl_allocs.erase(el);
 	mem_free(p);
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&el_curl_mutex);
 }
 
 uint64_t
