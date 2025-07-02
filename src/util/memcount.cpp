@@ -134,14 +134,14 @@ get_gzip_active(void)
 static std::map<void *, uint64_t> el_stbi_allocs;
 static uint64_t el_stbi_total_allocs;
 static uint64_t el_stbi_size;
+static pthread_mutex_t el_stbi_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 /* call custom malloc() */
 void *
 el_stbi_malloc(
     size_t              /* in */ size)          /* allocation size */
 {
-	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&el_stbi_mutex);
 
 	void *res = mem_alloc(size);
 
@@ -150,7 +150,7 @@ el_stbi_malloc(
 		el_stbi_total_allocs++;
 		el_stbi_size += size;
 	}
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&el_stbi_mutex);
 
 	return res;
 }
@@ -164,8 +164,7 @@ el_stbi_realloc(
 	if (!p) {
 		return el_stbi_malloc(n);
 	}
-	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&el_stbi_mutex);
 
 	auto el = el_stbi_allocs.find(p);
 	size_t size = 0;
@@ -187,7 +186,7 @@ el_stbi_realloc(
 		el_stbi_total_allocs++;
 		el_stbi_size += n - size;
 	}
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&el_stbi_mutex);
 
 	return ret;
 }
@@ -200,20 +199,19 @@ el_stbi_free(
 	if (!p) {
 		return;
 	}
-	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&el_stbi_mutex);
 
 	auto el = el_stbi_allocs.find(p);
 
 	if (el == el_stbi_allocs.end()) {
 		fprintf(stderr, "stbi %p not found\n", p);
-		pthread_mutex_unlock(&mutex);
+		pthread_mutex_unlock(&el_stbi_mutex);
 		return;
 	}
 	el_stbi_size -= el->second;
 	el_stbi_allocs.erase(el);
 	mem_free(p);
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&el_stbi_mutex);
 }
 
 uint64_t
