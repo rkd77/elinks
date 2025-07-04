@@ -336,25 +336,24 @@ move_link_dir(struct session *ses, struct document_view *doc_view, int dir_x, in
 }
 
 /*! @a steps > 0 -> down */
-enum frame_event_status
-vertical_scroll(struct session *ses, struct document_view *doc_view, int steps)
+static enum frame_event_status
+vertical_scroll_extended(struct session *ses, struct document_view *doc_view, int steps, int extended)
 {
 	ELOG
 	int y;
+	int max_height;
 
 	assert(ses && doc_view && doc_view->vs && doc_view->document);
 	if_assert_failed return FRAME_EVENT_OK;
 
 	y = doc_view->vs->y + steps;
-	if (steps > 0) {
-		/* DOWN */
-		int max_height = doc_view->document->height - doc_view->box.height;
 
-		if (doc_view->vs->y >= max_height) return FRAME_EVENT_OK;
-		int_upper_bound(&y, max_height);
+	if (extended) {
+		max_height = doc_view->document->height - 1;
+	} else {
+		max_height = int_max(doc_view->vs->y, doc_view->document->height - doc_view->box.height);
 	}
-
-	int_lower_bound(&y, 0);
+	int_bounds(&y, 0, max_height);
 
 	if (doc_view->vs->y == y) return FRAME_EVENT_OK;
 
@@ -369,6 +368,18 @@ vertical_scroll(struct session *ses, struct document_view *doc_view, int steps)
 		find_link_page_up(doc_view);
 
 	return FRAME_EVENT_REFRESH;
+}
+
+/*! @a steps > 0 -> down */
+enum frame_event_status
+vertical_scroll(struct session *ses, struct document_view *doc_view, int steps)
+{
+	ELOG
+	assert(ses && doc_view && doc_view->vs && doc_view->document);
+	if_assert_failed return FRAME_EVENT_OK;
+
+	return vertical_scroll_extended(ses, doc_view, steps,
+		get_opt_bool("document.browse.scrolling.vertical_extended", ses));
 }
 
 /*! @a steps > 0 -> right */

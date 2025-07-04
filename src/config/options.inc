@@ -438,6 +438,10 @@ static union option_info config_options_info[] = {
 		N_("Number of overlapping lines between the new page displayed "
 		"and the previous one when scrolling one page up or down.")),
 
+	INIT_OPT_BOOL("document.browse.scrolling", N_("Extended vertical scrolling"),
+		"vertical_extended", OPT_ZERO, 1,
+		N_("Whether to allow vertical scrolling when the document "
+		"does not extend off the screen.")),
 
 	INIT_OPT_TREE("document.browse", N_("Searching"),
 		"search", OPT_ZERO,
