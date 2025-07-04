@@ -19,7 +19,7 @@ unsigned char *
 base64_encode(unsigned char *in)
 {
 	ELOG
-	assert(in && *in);
+	assert(in);
 	if_assert_failed return NULL;
 
 	return base64_encode_bin(in, strlen((const char*)in), NULL);
@@ -32,7 +32,7 @@ base64_encode_bin(unsigned char *in, int inlen, int *outlen)
 	unsigned char *out;
 	unsigned char *outstr;
 
-	assert(in && *in);
+	assert(in);
 	if_assert_failed return NULL;
 
 	out = outstr = (unsigned char *)mem_alloc((inlen / 3) * 4 + 4 + 1);
