@@ -43,7 +43,7 @@
 #include "util/string.h"
 #include "vernum.h"
 
-#if defined(CONFIG_LIBEV) || defined(CONFIG_LIBEVENT)
+#if defined(CONFIG_LIBEV) || defined(CONFIG_LIBEVENT) || defined(CONFIG_LIBUV)
 extern int event_enabled;
 #endif 
 
@@ -194,6 +194,9 @@ get_dyn_full_version(struct terminal *term, int more)
 #endif
 #ifdef CONFIG_LIBEVENT
 		comma, (event_enabled ? _("libevent", term) : _("libevent (disabled)", term)), "(", get_libevent_version(), ")",
+#endif
+#ifdef CONFIG_LIBUV
+		comma, (event_enabled ? _("libuv", term) : _("libuv (disabled)", term)), "(", get_libuv_version(), ")",
 #endif
 #ifdef CONFIG_TERMINFO
 		comma, (get_cmd_opt_bool("terminfo") ? _("terminfo", term) : _("terminfo (disabled)", term)),

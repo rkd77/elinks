@@ -156,6 +156,7 @@ int can_write(int fd);
 void terminate_select(void);
 
 const char *get_libevent_version(void);
+const char *get_libuv_version(void);
 
 #ifdef __cplusplus
 }

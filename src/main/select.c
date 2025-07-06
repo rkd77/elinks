@@ -46,6 +46,12 @@
 #define USE_LIBEVENT
 #endif
 
+#ifdef CONFIG_LIBUV
+#ifdef HAVE_UV_H
+#include <uv.h>
+#endif
+#endif
+
 #ifdef HAVE_SYS_SELECT_H
 #include <sys/select.h>
 #endif
@@ -692,6 +698,22 @@ get_libevent_version(void)
 }
 #endif
 
+#ifdef CONFIG_LIBUV
+const char *
+get_libuv_version(void)
+{
+	ELOG
+	return uv_version_string();
+}
+#else
+const char *
+get_libuv_version(void)
+{
+	ELOG
+	return "";
+}
+#endif
+
 /*
 #define DEBUG_CALLS
 */
@@ -783,6 +805,10 @@ check_bottom_halves(void)
 		fn(data);
 	}
 }
+
+#ifdef CONFIG_LIBUV
+int event_enabled = 0;
+#endif
 
 #ifdef USE_LIBEVENT
 
@@ -963,6 +989,20 @@ terminate_libevent(void)
 	}
 }
 
+#ifdef CONFIG_LIBUV
+
+#undef EVLOOP_ONCE
+#undef EVLOOP_NONBLOCK
+#define EVLOOP_ONCE EV_RUN_ONCE
+#define EVLOOP_NONBLOCK EV_RUN_NOWAIT
+
+static void
+do_event_loop(int flags)
+{
+	ELOG
+	uv_run(uv_default_loop(), flags);
+}
+#else
 static void
 do_event_loop(int flags)
 {
@@ -976,6 +1016,8 @@ do_event_loop(int flags)
 	if (e == -1)
 		elinks_internal("ERROR: event_base_loop failed: %s", strerror(errno));
 }
+#endif
+
 #endif
 
 
