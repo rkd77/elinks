@@ -823,6 +823,10 @@ static void
 one_cb(uv_poll_t *handle, int status, int events)
 {
 	ELOG
+	if (!handle) {
+		return;
+	}
+
 	struct libuv_priv *priv = (struct libuv_priv *)uv_handle_get_data((uv_handle_t *)handle);
 
 	if (!priv) {
