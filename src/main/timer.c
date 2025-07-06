@@ -24,6 +24,10 @@
 #define USE_LIBEVENT
 #endif
 
+#ifdef CONFIG_LIBUV
+#include <uv.h>
+#endif
+
 #include "elinks.h"
 
 #include "main/select.h"
@@ -53,6 +57,10 @@ get_timers_count(void)
 extern struct event_base *event_base;
 #endif
 
+#ifdef CONFIG_LIBUV
+extern int event_enabled;
+#endif
+
 #ifdef USE_LIBEVENT
 extern int event_enabled;
 #ifndef HAVE_EVENT_GET_STRUCT_EVENT_SIZE
@@ -77,6 +85,22 @@ struct event *timer_event(struct timer *tm)
 {
 	ELOG
 	return (struct event *)((char *)tm - sizeof_struct_event);
+}
+#endif
+
+#ifdef CONFIG_LIBUV
+static void
+timer_cb(uv_timer_t *handle)
+{
+	ELOG
+	struct timer *tm = (struct timer *)uv_handle_get_data((uv_handle_t *)handle);
+
+	if (!tm) {
+		return;
+	}
+	tm->func(tm->data);
+	kill_timer(&tm);
+	check_bottom_halves();
 }
 #endif
 
@@ -147,6 +171,24 @@ set_event_for_timer(timer_id_T tm)
 }
 #endif
 
+#ifdef CONFIG_LIBUV
+static void
+set_event_for_timer(timer_id_T tm)
+{
+	ELOG
+	uv_timer_t *handle = mem_calloc(1, sizeof(*handle));
+
+	if (!handle) {
+		return;
+	}
+	uint64_t timeout = tm->interval.sec * 1000 + tm->interval.usec / 1000;
+	tm->handle = handle;
+	uv_timer_init(uv_default_loop(), handle);
+	uv_handle_set_data((uv_handle_t *)handle, tm);
+	uv_timer_start(handle, timer_cb, timeout, 0);
+}
+#endif
+
 /* Install a timer that calls @func(@data) after @delay milliseconds.
  * Store to *@id either the ID of the new timer, or TIMER_ID_UNDEF if
  * the timer cannot be installed.  (This function ignores the previous
@@ -175,7 +217,7 @@ install_timer(timer_id_T *id, milliseconds_T delay, void (*func)(void *), void *
 	timeval_from_milliseconds(&new_timer->interval, delay);
 	new_timer->func = func;
 	new_timer->data = data;
-#ifdef USE_LIBEVENT
+#if defined(USE_LIBEVENT) || defined(CONFIG_LIBUV)
 	if (event_enabled) {
 		set_event_for_timer(new_timer);
 		add_to_list(timers, new_timer);
@@ -211,6 +253,11 @@ kill_timer(timer_id_T *id)
 	}
 	mem_free(timer_event(timer));
 #else
+#ifdef CONFIG_LIBUV
+	if (event_enabled) {
+		uv_timer_stop(timer->handle);
+	}
+#endif
 	mem_free(timer);
 #endif
 	*id = TIMER_ID_UNDEF;
@@ -233,7 +280,7 @@ void
 set_events_for_timer(void)
 {
 	ELOG
-#ifdef USE_LIBEVENT
+#if defined(USE_LIBEVENT) || defined(CONFIG_LIBUV)
 	timer_id_T tm;
 
 	foreach(tm, timers)

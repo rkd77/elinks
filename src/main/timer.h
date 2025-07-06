@@ -1,6 +1,10 @@
 #ifndef EL__MAIN_TIMER_H
 #define EL__MAIN_TIMER_H
 
+#ifdef CONFIG_LIBUV
+#include <uv.h>
+#endif
+
 #include "util/lists.h"
 #include "util/time.h"
 
@@ -14,6 +18,9 @@ struct timer {
 	timeval_T interval;
 	void (*func)(void *);
 	void *data;
+#ifdef CONFIG_LIBUV
+	uv_timer_t *handle;
+#endif
 };
 
 /* Little hack, timer_id_T is in fact a pointer to the timer, so

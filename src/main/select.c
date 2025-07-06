@@ -720,6 +720,13 @@ get_libuv_version(void)
 
 static int n_threads = 0;
 
+#ifdef CONFIG_LIBUV
+struct libuv_priv {
+	int fd;
+};
+
+#endif
+
 struct thread {
 	select_handler_T read_func;
 	select_handler_T write_func;
@@ -728,6 +735,9 @@ struct thread {
 #ifdef USE_LIBEVENT
 	struct event *read_event;
 	struct event *write_event;
+#endif
+#ifdef CONFIG_LIBUV
+	uv_poll_t *handle;
 #endif
 };
 
@@ -808,9 +818,111 @@ check_bottom_halves(void)
 
 #ifdef CONFIG_LIBUV
 int event_enabled = 0;
-#endif
 
-#ifdef USE_LIBEVENT
+static void
+one_cb(uv_poll_t *handle, int status, int events)
+{
+	ELOG
+	struct libuv_priv *priv = (struct libuv_priv *)uv_handle_get_data((uv_handle_t *)handle);
+
+	if (!priv) {
+		return;
+	}
+	int fd = priv->fd;
+
+	if (events & UV_READABLE) {
+		select_handler_T hr = get_handler(fd, SELECT_HANDLER_READ);
+
+		if (hr) {
+			hr(get_handler_data(fd));
+		}
+	}
+
+	if (events & UV_WRITABLE) {
+		select_handler_T hw = get_handler(fd, SELECT_HANDLER_WRITE);
+
+		if (hw) {
+			hw(get_handler_data(fd));
+		}
+	}
+}
+
+static void
+set_events_for_handle(int h)
+{
+	ELOG
+	struct libuv_priv *priv = NULL;
+	uv_poll_t *handle = NULL;
+
+	if (!threads[h].read_func && !threads[h].write_func) {
+		if (!threads[h].handle) {
+			return;
+		}
+		handle = threads[h].handle;
+		uv_poll_stop(handle);
+		priv = (struct libuv_priv *)uv_handle_get_data((uv_handle_t *)handle);
+		mem_free_if(priv);
+		mem_free_set(&threads[h].handle, NULL);
+		return;
+	}
+	if (!threads[h].handle) {
+		priv = mem_calloc(1, sizeof(*priv));
+
+		if (!priv) {
+			return;
+		}
+		handle = mem_calloc(1, sizeof(*handle));
+		if (!handle) {
+			mem_free(priv);
+			return;
+		}
+		uv_poll_init(uv_default_loop(), handle, h);
+		threads[h].handle = handle;
+	} else {
+		handle = threads[h].handle;
+		priv = (struct libuv_priv *)uv_handle_get_data((uv_handle_t *)handle);
+	}
+	priv->fd = h;
+	uv_handle_set_data((uv_handle_t *)handle, priv);
+
+	if (threads[h].read_func) {
+		uv_poll_start(handle, UV_READABLE, one_cb);
+	}
+
+	if (threads[h].write_func) {
+		uv_poll_start(handle, UV_WRITABLE, one_cb);
+	}
+}
+
+static void
+enable_libevent(void)
+{
+	ELOG
+	int i;
+
+	if (get_cmd_opt_bool("no-libevent"))
+		return;
+
+	event_enabled = 1;
+
+	for (i = 0; i < w_max; i++) {
+		set_events_for_handle(i);
+	}
+	set_events_for_timer();
+}
+
+#undef EVLOOP_ONCE
+#undef EVLOOP_NONBLOCK
+#define EVLOOP_ONCE UV_RUN_ONCE
+#define EVLOOP_NONBLOCK UV_RUN_NOWAIT
+
+static void
+do_event_loop(int flags)
+{
+	ELOG
+	uv_run(uv_default_loop(), flags);
+}
+#endif
 
 #if defined(USE_POLL)
 
@@ -835,6 +947,8 @@ skip_limit:;
 #endif
 }
 #endif /* USE_POLL */
+
+#ifdef USE_LIBEVENT
 
 int event_enabled = 0;
 
@@ -989,20 +1103,6 @@ terminate_libevent(void)
 	}
 }
 
-#ifdef CONFIG_LIBUV
-
-#undef EVLOOP_ONCE
-#undef EVLOOP_NONBLOCK
-#define EVLOOP_ONCE EV_RUN_ONCE
-#define EVLOOP_NONBLOCK EV_RUN_NOWAIT
-
-static void
-do_event_loop(int flags)
-{
-	ELOG
-	uv_run(uv_default_loop(), flags);
-}
-#else
 static void
 do_event_loop(int flags)
 {
@@ -1016,8 +1116,6 @@ do_event_loop(int flags)
 	if (e == -1)
 		elinks_internal("ERROR: event_base_loop failed: %s", strerror(errno));
 }
-#endif
-
 #endif
 
 
@@ -1080,7 +1178,7 @@ set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
 	}
 #endif /* __GNU__ */
 
-#if defined(USE_POLL) && defined(USE_LIBEVENT)
+#if defined(USE_POLL) && (defined(USE_LIBEVENT) || defined(CONFIG_LIBUV))
 	if (!event_enabled)
 #endif
 		if (fd >= (int)FD_SETSIZE) {
@@ -1121,7 +1219,7 @@ set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
 		w_max = i + 1;
 	}
 
-#ifdef USE_LIBEVENT
+#if defined(USE_LIBEVENT) || defined(CONFIG_LIBUV)
 	if (event_enabled) {
 		set_events_for_handle(fd);
 		return;
@@ -1249,7 +1347,7 @@ select_loop(void (*init)(void))
 #endif
 	init();
 
-#ifdef USE_LIBEVENT
+#if defined(USE_LIBEVENT) || defined(CONFIG_LIBUV)
 	enable_libevent();
 #if defined(USE_POLL)
 	if (!event_enabled) {
@@ -1257,7 +1355,7 @@ select_loop(void (*init)(void))
 	}
 #endif
 #endif
-#ifdef USE_LIBEVENT
+#if defined(USE_LIBEVENT) || defined(CONFIG_LIBUV)
 	if (event_enabled) {
 #if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBEVENT)
 		memset(&g, 0, sizeof(GlobalInfo));

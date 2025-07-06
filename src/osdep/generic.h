@@ -44,7 +44,7 @@ extern "C" {
 /* Attempt to workaround the EINTR mess. */
 #if defined(EINTR) && !defined(CONFIG_OS_WIN32) && !defined(CONFIG_OS_DOS)
 
-#ifdef TEMP_FAILURE_RETRY	/* GNU libc */
+#if defined(TEMP_FAILURE_RETRY) && !defined(CONFIG_LIBUV)	/* GNU libc */
 #define safe_read(fd, buf, count) TEMP_FAILURE_RETRY(read(fd, buf, count))
 #define safe_write(fd, buf, count) TEMP_FAILURE_RETRY(write(fd, buf, count))
 #else /* TEMP_FAILURE_RETRY */
@@ -58,7 +58,7 @@ safe_read(int fd, void *buf, size_t count) {
 	do {
 		ssize_t r = read(fd, buf, count);
 
-		if (r == -1 && errno == EINTR) continue;
+		if (r == -1 && (errno == EINTR || errno == EAGAIN)) continue;
 		return r;
 	} while (1);
 }
@@ -68,7 +68,7 @@ safe_write(int fd, const void *buf, size_t count) {
 	do {
 		ssize_t w = write(fd, buf, count);
 
-		if (w == -1 && errno == EINTR) continue;
+		if (w == -1 && (errno == EINTR || errno == EAGAIN)) continue;
 		return w;
 	} while (1);
 }
