@@ -75,6 +75,16 @@ uint64_t get_sixel_size(void);
 uint64_t get_sixel_active(void);
 #endif
 
+#ifdef CONFIG_LIBUV
+void *el_libuv_malloc(size_t size);
+void *el_libuv_calloc(size_t nelm, size_t elsize);
+void *el_libuv_realloc(void *p, size_t n);
+void el_libuv_free(void *p);
+uint64_t get_libuv_total_allocs(void);
+uint64_t get_libuv_size(void);
+uint64_t get_libuv_active(void);
+#endif
+
 #ifdef CONFIG_MUJS
 void *el_mujs_alloc(void *memctx, void *ptr, int size);
 uint64_t get_mujs_total_allocs(void);

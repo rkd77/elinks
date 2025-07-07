@@ -907,6 +907,10 @@ enable_libevent(void)
 	if (get_cmd_opt_bool("no-libevent"))
 		return;
 
+#ifdef CONFIG_MEMCOUNT
+	uv_replace_allocator(el_libuv_malloc, el_libuv_realloc, el_libuv_calloc, el_libuv_free);
+#endif
+
 	event_enabled = 1;
 
 	for (i = 0; i < w_max; i++) {
@@ -1046,6 +1050,7 @@ enable_libevent(void)
 #if !defined(EVENT__DISABLE_MM_REPLACEMENT) && defined(CONFIG_MEMCOUNT)
 	event_set_mem_functions(el_libevent_malloc, el_libevent_realloc, el_libevent_free);
 #endif
+
 
 #if defined(HAVE_EVENT_CONFIG_SET_FLAG)
 	{
