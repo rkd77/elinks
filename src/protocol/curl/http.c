@@ -73,7 +73,11 @@ struct http_curl_connection_info {
 	struct http_post post;
 	struct string post_headers;
 	struct string headers;
+#ifdef CONFIG_LIBUV
+	struct curl_context *global;
+#else
 	GlobalInfo *global;
+#endif
 	char error[CURL_ERROR_SIZE];
 	int conn_state;
 	int buf_pos;
@@ -535,6 +539,49 @@ http_curl_protocol_handler(struct connection *conn)
 	}
 }
 
+#ifdef CONFIG_LIBUV
+void check_multi_info(struct datauv *g)
+{
+	ELOG
+	CURLMsg *msg;
+	int pending;
+	struct connection *conn;
+	CURL *easy;
+	CURLcode res;
+
+	while ((msg = curl_multi_info_read(g->multi, &pending))) {
+		if (msg->msg == CURLMSG_DONE) {
+			easy = msg->easy_handle;
+			res = msg->data.result;
+			curl_easy_getinfo(easy, CURLINFO_PRIVATE, &conn);
+
+			if (conn->uri->protocol == PROTOCOL_HTTP || conn->uri->protocol == PROTOCOL_HTTPS) {
+				http_curl_handle_error(conn, res);
+				continue;
+			}
+
+#ifdef CONFIG_FTP
+			if (conn->uri->protocol == PROTOCOL_FTP || conn->uri->protocol == PROTOCOL_FTPES) {
+				ftp_curl_handle_error(conn, res);
+				continue;
+			}
+#endif
+
+#ifdef CONFIG_SFTP
+			if (conn->uri->protocol == PROTOCOL_SFTP) {
+				ftp_curl_handle_error(conn, res);
+				continue;
+			}
+#endif
+			else {
+				abort_connection(conn, connection_state(S_OK));
+			}
+		}
+	}
+	check_bottom_halves();
+}
+
+#else
 /* Check for completed transfers, and remove their easy handles */
 void
 check_multi_info(GlobalInfo *g)
@@ -585,3 +632,4 @@ check_multi_info(GlobalInfo *g)
 	}
 #endif
 }
+#endif

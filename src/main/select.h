@@ -90,7 +90,28 @@ void check_multi_info(GlobalInfo *g);
 void mcode_or_die(const char *where, CURLMcode code);
 #endif
 
-#if defined(CONFIG_LIBCURL) && !defined(CONFIG_LIBEV) && !defined(CONFIG_LIBEVENT)
+#if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBUV)
+struct datauv {
+	uv_timer_t timeout;
+	uv_loop_t *loop;
+	CURLM *multi;
+};
+
+struct curl_context {
+	uv_poll_t poll_handle;
+	curl_socket_t sockfd;
+	struct datauv *uv;
+};
+
+extern struct datauv g;
+
+void check_multi_info(struct datauv *g);
+
+void mcode_or_die(const char *where, CURLMcode code);
+#endif
+
+
+#if defined(CONFIG_LIBCURL) && !defined(CONFIG_LIBEV) && !defined(CONFIG_LIBEVENT) && !defined(CONFIG_LIBUV)
 /* Global information, common to all connections */
 typedef struct _GlobalInfo
 {

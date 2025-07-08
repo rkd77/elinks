@@ -91,6 +91,158 @@
 #define SOCK_SHIFT 0
 #endif
 
+#if defined(CONFIG_LIBUV) && defined(CONFIG_LIBCURL)
+struct datauv g;
+
+#define mycase(code) \
+	case code: s = __STRING(code)
+
+/* Die if we get a bad CURLMcode somewhere */
+void
+mcode_or_die(const char *where, CURLMcode code)
+{
+	ELOG
+	if (CURLM_OK != code) {
+		const char *s;
+
+		switch(code) {
+		mycase(CURLM_BAD_HANDLE); break;
+		mycase(CURLM_BAD_EASY_HANDLE); break;
+		mycase(CURLM_OUT_OF_MEMORY); break;
+		mycase(CURLM_INTERNAL_ERROR); break;
+		mycase(CURLM_UNKNOWN_OPTION); break;
+		mycase(CURLM_LAST); break;
+		default: s = "CURLM_unknown"; break;
+		mycase(CURLM_BAD_SOCKET);
+			fprintf(stderr, "ERROR: %s returns %s\n", where, s);
+			/* ignore this error */
+			return;
+		}
+		fprintf(stderr, "ERROR: %s returns %s\n", where, s);
+		//exit(code);
+	}
+}
+
+static struct curl_context *
+create_curl_context(curl_socket_t sockfd, struct datauv *uv)
+{
+	ELOG
+	struct curl_context *context = (struct curl_context *)mem_alloc(sizeof(*context));
+	context->sockfd = sockfd;
+	context->uv = uv;
+
+	uv_poll_init_socket(uv->loop, &context->poll_handle, sockfd);
+	context->poll_handle.data = context;
+
+	return context;
+}
+
+static void
+curl_close_cb(uv_handle_t *handle)
+{
+	ELOG
+	struct curl_context *context = (struct curl_context *) handle->data;
+	mem_free(context);
+}
+
+static void
+destroy_curl_context(struct curl_context *context)
+{
+	ELOG
+	uv_close((uv_handle_t *) &context->poll_handle, curl_close_cb);
+}
+
+/* callback from libuv on socket activity */
+static void
+on_uv_socket(uv_poll_t *req, int status, int events)
+{
+	ELOG
+	int running_handles;
+	int flags = 0;
+	struct curl_context *context = (struct curl_context *) req->data;
+	(void)status;
+
+	if (events & UV_READABLE) {
+		flags |= CURL_CSELECT_IN;
+	}
+
+	if (events & UV_WRITABLE) {
+		flags |= CURL_CSELECT_OUT;
+	}
+	curl_multi_socket_action(context->uv->multi, context->sockfd, flags, &running_handles);
+	check_multi_info(&g);
+}
+
+/* callback from libuv when timeout expires */
+static void
+on_uv_timeout(uv_timer_t *req)
+{
+	ELOG
+
+	if (1) {
+		int running_handles;
+		curl_multi_socket_action(g.multi, CURL_SOCKET_TIMEOUT, 0, &running_handles);
+	}
+	check_multi_info(&g);
+}
+
+/* callback from libcurl to update the timeout expiry */
+static int
+cb_timeout(CURLM *multi, long timeout_ms, struct datauv *uv)
+{
+	ELOG
+	(void)multi;
+
+	if (timeout_ms < 0) {
+		uv_timer_stop(&uv->timeout);
+	} else {
+		if (timeout_ms == 0) {
+			timeout_ms = 1; /* 0 means call curl_multi_socket_action asap but NOT within the callback itself */
+		}
+		uv_timer_start(&uv->timeout, on_uv_timeout, (uint64_t)timeout_ms, 0); /* do not repeat */
+	}
+	return 0;
+}
+
+/* callback from libcurl to update socket activity to wait for */
+static int
+cb_socket(CURL *easy, curl_socket_t s, int action, struct datauv *uv, void *socketp)
+{
+	ELOG
+	struct curl_context *curl_context;
+	int events = 0;
+	(void)easy;
+
+	switch(action) {
+	case CURL_POLL_IN:
+	case CURL_POLL_OUT:
+	case CURL_POLL_INOUT:
+		curl_context = socketp ? (struct curl_context *) socketp : create_curl_context(s, uv);
+		curl_multi_assign(uv->multi, s, (void *) curl_context);
+
+		if (action != CURL_POLL_IN) {
+			events |= UV_WRITABLE;
+		}
+
+		if (action != CURL_POLL_OUT) {
+			events |= UV_READABLE;
+		}
+		uv_poll_start(&curl_context->poll_handle, events, on_uv_socket);
+		break;
+	case CURL_POLL_REMOVE:
+		if (socketp) {
+			uv_poll_stop(&((struct curl_context*)socketp)->poll_handle);
+			destroy_curl_context((struct curl_context*) socketp);
+			curl_multi_assign(uv->multi, s, NULL);
+		}
+		break;
+	default:
+		fprintf(stderr, "Something went bad");
+	}
+	return 0;
+}
+#endif
+
 #if defined(CONFIG_LIBEVENT) && defined(CONFIG_LIBCURL)
 
 /* Information associated with a specific easy handle */
@@ -489,7 +641,7 @@ sock_cb(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp)
 }
 #endif
 
-#if !defined(CONFIG_LIBEVENT) && !defined(CONFIG_LIBEV) && defined(CONFIG_LIBCURL)
+#if !defined(CONFIG_LIBEVENT) && !defined(CONFIG_LIBEV) && !defined(CONFIG_LIBUV) && defined(CONFIG_LIBCURL)
 
 /* Information associated with a specific easy handle */
 typedef struct _ConnInfo
@@ -545,7 +697,7 @@ mcode_or_die(const char *where, CURLMcode code)
 
 #endif
 
-#ifdef CONFIG_LIBCURL
+#if defined(CONFIG_LIBCURL) && (defined(CONFIG_LIBEV) || defined(CONFIG_LIBEVENT))
 
 /* Called by libevent when our timeout expires */
 static void
@@ -1411,6 +1563,26 @@ select_loop(void (*init)(void))
 
 		/* we do not call any curl_multi_socket*() function yet as we have no handles added! */
 #endif
+
+#if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBUV)
+		memset(&g, 0, sizeof(struct datauv));
+		g.loop = uv_default_loop();
+		uv_timer_init(g.loop, &g.timeout);
+#ifdef CONFIG_MEMCOUNT
+		curl_global_init_mem(CURL_GLOBAL_DEFAULT, el_curl_malloc, el_curl_free, el_curl_realloc, el_curl_strdup, el_curl_calloc);
+#else
+		curl_global_init(CURL_GLOBAL_DEFAULT);
+#endif
+		g.multi = curl_multi_init();
+
+		/* setup the generic multi interface options we want */
+		curl_multi_setopt(g.multi, CURLMOPT_SOCKETFUNCTION, cb_socket);
+		curl_multi_setopt(g.multi, CURLMOPT_SOCKETDATA, &g);
+		curl_multi_setopt(g.multi, CURLMOPT_TIMERFUNCTION, cb_timeout);
+		curl_multi_setopt(g.multi, CURLMOPT_TIMERDATA, &g);
+
+		/* we do not call any curl_multi_socket*() function yet as we have no handles added! */
+#endif
 		check_bottom_halves();
 		while (!program.terminate) {
 			check_signals();
@@ -1439,11 +1611,16 @@ select_loop(void (*init)(void))
 		curl_multi_cleanup(g.multi);
 		curl_global_cleanup();
 #endif
+
+#if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBUV)
+		curl_multi_cleanup(g.multi);
+		curl_global_cleanup();
+#endif
 		return;
 	} else
 #endif
 	{
-#if defined(CONFIG_LIBCURL)
+#if defined(CONFIG_LIBCURL) && !defined(CONFIG_LIBUV) && !defined(CONFIG_LIBEV) && !defined(CONFIG_LIBEVENT)
 		memset(&g, 0, sizeof(GlobalInfo));
 #ifdef CONFIG_MEMCOUNT
 		curl_global_init_mem(CURL_GLOBAL_DEFAULT, el_curl_malloc, el_curl_free, el_curl_realloc, el_curl_strdup, el_curl_calloc);
