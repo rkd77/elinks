@@ -1227,8 +1227,8 @@ content-type:text/html.
 	# demoronizer
 #	if ($content_type =~ 'text/html')
 #	{
-#		$html =~ s/Ñ/\&mdash;/g;
-#		$html =~ s/\&#252/ü/g;
+#		$html =~ s/Ã‘/\&mdash;/g;
+#		$html =~ s/\&#252/Ã¼/g;
 #		$html =~ s/\&#039(?!;)/'/g;
 #		$html =~ s/]\n>$//gsm;
 		#$html =~ s/%5B/[/g;
