@@ -108,7 +108,7 @@ itrm_queue_write(struct itrm *itrm)
 			     get_handler(itrm->out.sock, SELECT_HANDLER_READ),
 			     NULL,
 			     get_handler(itrm->out.sock, SELECT_HANDLER_ERROR),
-			     get_handler_data(itrm->out.sock));
+			     get_handler_data(itrm->out.sock), EL_TYPE_FD);
 	} else {
 		assert(itrm->out.queue.len > 0);
 		memmove(itrm->out.queue.data, itrm->out.queue.data + written, itrm->out.queue.len);
@@ -148,7 +148,7 @@ itrm_queue_event(struct itrm *itrm, char *data, int len)
 		set_handlers(itrm->out.sock,
 			     get_handler(itrm->out.sock, SELECT_HANDLER_READ),
 			     (select_handler_T) itrm_queue_write,
-			     (select_handler_T) free_itrm, itrm);
+			     (select_handler_T) free_itrm, itrm, EL_TYPE_FD);
 	}
 }
 
@@ -399,7 +399,7 @@ handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
 
 	if (sock_in != std_out)
 		set_handlers(sock_in, (select_handler_T) in_sock,
-			     NULL, (select_handler_T) free_itrm, itrm);
+			     NULL, (select_handler_T) free_itrm, itrm, EL_TYPE_FD);
 
 	get_terminal_name(info.name);
 
@@ -732,11 +732,11 @@ has_nul_byte:
 		if (fg == TERM_EXEC_FG) {
 			set_handlers(blockh, (select_handler_T) unblock_itrm_x,
 				     NULL, (select_handler_T) unblock_itrm_x,
-				     (void *) (intptr_t) blockh);
+				     (void *) (intptr_t) blockh, EL_TYPE_FD);
 
 		} else {
 			set_handlers(blockh, close_handle, NULL, close_handle,
-				     (void *) (intptr_t) blockh);
+				     (void *) (intptr_t) blockh, EL_TYPE_FD);
 		}
 	}
 
@@ -1371,7 +1371,7 @@ handle_itrm_stdin(struct itrm *itrm)
 	if_assert_failed return;
 
 	set_handlers(itrm->in.std, (select_handler_T) in_kbd, NULL,
-		     (select_handler_T) free_itrm, itrm);
+		     (select_handler_T) free_itrm, itrm, EL_TYPE_TTY);
 }
 
 /** Disable reading from itrm_in.std.  Reading should be disabled
@@ -1385,5 +1385,5 @@ unhandle_itrm_stdin(struct itrm *itrm)
 	if_assert_failed return;
 
 	set_handlers(itrm->in.std, (select_handler_T) NULL, NULL,
-		     (select_handler_T) free_itrm, itrm);
+		     (select_handler_T) free_itrm, itrm, EL_TYPE_TTY);
 }

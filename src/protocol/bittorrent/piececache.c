@@ -1245,7 +1245,7 @@ start_bittorrent_resume(struct bittorrent_connection *bittorrent,
 
 	set_handlers(cache->resume_fd,
 		     (select_handler_T) bittorrent_resume_reader, NULL,
-		     (select_handler_T) end_bittorrent_resume, bittorrent);
+		     (select_handler_T) end_bittorrent_resume, bittorrent, EL_TYPE_FD);
 }
 
 

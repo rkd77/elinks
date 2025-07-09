@@ -772,7 +772,7 @@ remsock_select(SockInfo *f)
 	//fprintf(stderr, "remsock f=%p\n", f);
 	if (f) {
 		if (f->sockfd) {
-			set_handlers(f->sockfd + SOCK_SHIFT, NULL, NULL, NULL, NULL);
+			set_handlers(f->sockfd + SOCK_SHIFT, NULL, NULL, NULL, NULL, EL_TYPE_TCP);
 		}
 		mem_free(f);
 	}
@@ -790,7 +790,7 @@ setsock_select(SockInfo *f, curl_socket_t s, CURL *e, int act, GlobalInfo *g)
 	f->action = act;
 	f->easy = e;
 
-	set_handlers(s + SOCK_SHIFT, in ? event_read_cb_select : NULL, out ? event_write_cb_select : NULL, NULL, f);
+	set_handlers(s + SOCK_SHIFT, in ? event_read_cb_select : NULL, out ? event_write_cb_select : NULL, NULL, f, EL_TYPE_TCP);
 }
 
 /* Initialize a new SockInfo structure */
@@ -1004,7 +1004,7 @@ one_cb(uv_poll_t *handle, int status, int events)
 }
 
 static void
-set_events_for_handle(int h)
+set_events_for_handle(int h, enum el_type_hint type_hint)
 {
 	ELOG
 	struct libuv_priv *priv = NULL;
@@ -1032,7 +1032,19 @@ set_events_for_handle(int h)
 			mem_free(priv);
 			return;
 		}
-		uv_poll_init(uv_default_loop(), handle, h);
+
+		switch (type_hint) {
+		case EL_TYPE_TCP:
+		case EL_TYPE_UDP:
+			uv_poll_init_socket(uv_default_loop(), handle, h);
+			break;
+		case EL_TYPE_TTY:
+			uv_tty_init(uv_default_loop(), (uv_tty_t *)handle, h, 0);
+			break;
+		default:
+			uv_poll_init(uv_default_loop(), handle, h);
+			break;
+		}
 		threads[h].handle = handle;
 	} else {
 		handle = threads[h].handle;
@@ -1066,7 +1078,7 @@ enable_libevent(void)
 	event_enabled = 1;
 
 	for (i = 0; i < w_max; i++) {
-		set_events_for_handle(i);
+		set_events_for_handle(i, EL_TYPE_FD);
 	}
 	set_events_for_timer();
 }
@@ -1177,7 +1189,7 @@ set_event_for_action(int h, void (*func)(void *), struct event **evptr, short ev
 }
 
 static void
-set_events_for_handle(int h)
+set_events_for_handle(int h, enum el_type_hint type_hint)
 {
 	ELOG
 	set_event_for_action(h, threads[h].read_func, &threads[h].read_event, EV_READ);
@@ -1234,7 +1246,7 @@ enable_libevent(void)
 	event_enabled = 1;
 
 	for (i = 0; i < w_max; i++)
-		set_events_for_handle(i);
+		set_events_for_handle(i, EL_TYPE_FD);
 
 /*
 	foreach(tm, timers)
@@ -1311,7 +1323,7 @@ get_handler_data(int fd)
 
 void
 set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
-	     select_handler_T error_func, void *data)
+	     select_handler_T error_func, void *data, enum el_type_hint type_hint)
 {
 	ELOG
 	if (fd < 0) {
@@ -1382,7 +1394,7 @@ set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
 
 #if defined(USE_LIBEVENT) || defined(CONFIG_LIBUV)
 	if (event_enabled) {
-		set_events_for_handle(fd);
+		set_events_for_handle(fd, type_hint);
 		return;
 	}
 #endif
@@ -1496,14 +1508,14 @@ select_loop(void (*init)(void))
 	if ((signal_efd = eventfd(0, EFD_NONBLOCK)) < 0) {
 		elinks_internal("ERROR: can't create eventfd for signal handling");
 	}
-	set_handlers(signal_efd, clear_events_ptr, NULL, NULL, (void *)(intptr_t)signal_efd);
+	set_handlers(signal_efd, clear_events_ptr, NULL, NULL, (void *)(intptr_t)signal_efd, EL_TYPE_FD);
 #else
 	if (c_pipe(signal_pipe)) {
 		elinks_internal("ERROR: can't create pipe for signal handling");
 	}
 	set_nonblocking_fd(signal_pipe[0]);
 	set_nonblocking_fd(signal_pipe[1]);
-	set_handlers(signal_pipe[0], clear_events_ptr, NULL, NULL, (void *)(intptr_t)signal_pipe[0]);
+	set_handlers(signal_pipe[0], clear_events_ptr, NULL, NULL, (void *)(intptr_t)signal_pipe[0], EL_TYPE_FD);
 #endif
 #endif
 	init();

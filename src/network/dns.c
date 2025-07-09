@@ -382,7 +382,7 @@ init_async_dns_lookup(struct dnsquery *dnsquery, int force_async)
 		return 0;
 
 	set_handlers(dnsquery->h, (select_handler_T) async_dns_reader, NULL,
-		     (select_handler_T) async_dns_error, dnsquery);
+		     (select_handler_T) async_dns_error, dnsquery, EL_TYPE_FD);
 
 	return 1;
 }

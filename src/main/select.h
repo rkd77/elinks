@@ -153,6 +153,13 @@ enum select_handler_type {
 	SELECT_HANDLER_ERROR,
 };
 
+enum el_type_hint {
+	EL_TYPE_TCP,
+	EL_TYPE_UDP,
+	EL_TYPE_TTY,
+	EL_TYPE_FD,
+};
+
 /* Get a registered select handler. */
 select_handler_T get_handler(int fd, enum select_handler_type type);
 
@@ -163,11 +170,12 @@ void set_handlers(int fd,
 		  select_handler_T read_handler,
 		  select_handler_T write_handler,
 		  select_handler_T error_handler,
-		  void *data);
+		  void *data,
+		  enum el_type_hint type_hint);
 
 /* Clear handlers associated with @fd. */
 #define clear_handlers(fd) \
-	set_handlers(fd, NULL, NULL, NULL, NULL)
+	set_handlers(fd, NULL, NULL, NULL, NULL, EL_TYPE_TCP)
 
 /* Checks which can be used for querying the read/write state of the @fd
  * descriptor without blocking. The interlink code are the only users. */

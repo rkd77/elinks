@@ -562,7 +562,7 @@ ssl_connect(struct socket *socket)
 		case SSL_ERROR_WANT_READ2:
 			socket->ops->set_state(socket, connection_state(S_SSL_NEG));
 			set_handlers(socket->fd, (select_handler_T) ssl_want_read,
-				     NULL, (select_handler_T) dns_exception, socket);
+				     NULL, (select_handler_T) dns_exception, socket, EL_TYPE_TCP);
 			return -1;
 
 		case SSL_ERROR_NONE:

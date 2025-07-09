@@ -217,7 +217,7 @@ init_term(int fdin, int fdout)
 	add_to_list(terminals, term);
 
 	set_handlers(fdin, (select_handler_T) in_term, NULL,
-		     (select_handler_T) destroy_terminal, term);
+		     (select_handler_T) destroy_terminal, term, term->master ? EL_TYPE_TTY : EL_TYPE_FD);
 	return term;
 }
 
@@ -368,7 +368,7 @@ unblock_terminal(struct terminal *term)
 	close_handle((void *) (intptr_t) term->blocked);
 	term->blocked = -1;
 	set_handlers(term->fdin, (select_handler_T) in_term, NULL,
-		     (select_handler_T) destroy_terminal, term);
+		     (select_handler_T) destroy_terminal, term, term->master ? EL_TYPE_TTY : EL_TYPE_FD);
 	unblock_itrm();
 	redraw_terminal_cls(term);
 	if (term->textarea_data)	/* XXX */
@@ -431,14 +431,14 @@ exec_on_master_terminal(struct terminal *term,
 			     (select_handler_T) unblock_terminal,
 			     NULL,
 			     (select_handler_T) unblock_terminal,
-			     term);
+			     term, EL_TYPE_FD);
 		set_handlers(term->fdin, NULL, NULL,
 			     (select_handler_T) destroy_terminal,
-			     term);
+			     term, term->master ? EL_TYPE_TTY : EL_TYPE_FD);
 
 	} else {
 		set_handlers(blockh, close_handle, NULL,
-			     close_handle, (void *) (intptr_t) blockh);
+			     close_handle, (void *) (intptr_t) blockh, EL_TYPE_FD);
 	}
 }
 
