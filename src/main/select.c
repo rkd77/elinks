@@ -697,7 +697,7 @@ mcode_or_die(const char *where, CURLMcode code)
 
 #endif
 
-#if defined(CONFIG_LIBCURL) && (defined(CONFIG_LIBEV) || defined(CONFIG_LIBEVENT))
+#if defined(CONFIG_LIBCURL) && !defined(CONFIG_LIBEV) && !defined(CONFIG_LIBEVENT) && !defined(CONFIG_LIBUV)
 
 /* Called by libevent when our timeout expires */
 static void
