@@ -508,6 +508,7 @@ static struct element_info elements[] = {
  {"I",           html_italic,      NULL,                 0, ET_NESTABLE    },
  {"IFRAME",      html_iframe,      NULL,                 1, ET_NON_PAIRABLE},
  {"IMG",         html_img,         NULL,                 0, ET_NON_PAIRABLE},
+ {"INCLUDE-FRAGMENT", html_include_fragment, NULL,       1, ET_NON_NESTABLE},
  {"INPUT",       html_input,       NULL,                 0, ET_NON_PAIRABLE},
  {"LI",          html_li,          NULL,                 1, ET_LI          },
  {"LINK",        html_link,        NULL,                 1, ET_NON_PAIRABLE},

@@ -789,6 +789,27 @@ html_iframe_do(struct html_context *html_context, char *a,
 }
 
 void
+html_include_fragment(struct html_context *html_context, char *a,
+                      char *html, char *eof, char **end)
+{
+	ELOG
+	char *url = get_url_val(a, "src", html_context->doc_cp);
+
+	elformat.top_name = html_top->name;
+	html_focusable(html_context, a);
+
+	char *url2 = url ? join_urls(html_context->base_href, url) : NULL;
+	html_linebrk(html_context, a, html, eof, end);
+	put_chrs(html_context, "&nbsp;", 6);
+	ln_break(html_context, 1);
+
+	int y = html_context->part->cy;
+	html_context->special_f(html_context, SP_IFRAME, url2, "", html_context->image_number++, y, 0, 0, 0);
+	mem_free_if(url2);
+	mem_free_if(url);
+}
+
+void
 html_iframe(struct html_context *html_context, char *a,
          char *html, char *eof, char **end)
 {

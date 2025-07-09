@@ -16,6 +16,7 @@ element_handler_T html_a;
 element_handler_T html_applet;
 element_handler_T html_iframe;
 element_handler_T html_img;
+element_handler_T html_include_fragment;
 element_handler_T html_link;
 element_handler_T html_object;
 element_handler_T html_source;
