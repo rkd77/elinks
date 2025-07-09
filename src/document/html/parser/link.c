@@ -796,7 +796,7 @@ html_include_fragment(struct html_context *html_context, char *a,
 	char *url = get_url_val(a, "src", html_context->doc_cp);
 
 	elformat.top_name = html_top->name;
-	html_focusable(html_context, a);
+	html_skip(html_context, a);
 
 	char *url2 = url ? join_urls(html_context->base_href, url) : NULL;
 	html_linebrk(html_context, a, html, eof, end);
