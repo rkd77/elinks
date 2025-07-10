@@ -407,7 +407,7 @@ smb_got_error(struct socket *socket, struct read_buffer *rb)
 		error = connection_state(atoi(rb->data + 1));
 		break;
 	default:
-		ERROR("malformed error code: %s", rb->data);
+		EL_ERROR("malformed error code: %s", rb->data);
 		error = connection_state(S_INTERNAL);
 		break;
 	}

@@ -88,7 +88,7 @@ __(char *file, unsigned int line, char *func,
 
 	/* Prevent useless (and possibly dangerous) calls. */
 	if (!msg || !*msg) {
-		ERROR("%s:%u %s msg parameter", file, line, msg ? "empty": "NULL");
+		EL_ERROR("%s:%u %s msg parameter", file, line, msg ? "empty": "NULL");
 		return msg;
 	}
 
@@ -99,7 +99,7 @@ __(char *file, unsigned int line, char *func,
 	if (!strcmp(result, last_result)
 	    && !strcmp(file, last_file)
 	    && !strcmp(func, last_func)) {
-		ERROR("%s:%u Duplicate call to _() in %s() (previous at line %u)",
+		EL_ERROR("%s:%u Duplicate call to _() in %s() (previous at line %u)",
 		      file, line, func, last_line);
 	}
 

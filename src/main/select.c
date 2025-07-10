@@ -1706,7 +1706,7 @@ select_loop(void (*init)(void))
 			const int errno_from_select = errno;
 
 			if (errno_from_select != EINTR) {
-				ERROR(gettext("The call to %s failed: %d (%s)"),
+				EL_ERROR(gettext("The call to %s failed: %d (%s)"),
 				      "select()", errno_from_select, (char *) strerror(errno_from_select));
 				if (++select_errors > 10) /* Infinite loop prevention. */
 					INTERNAL(gettext("%d select() failures."),

@@ -82,7 +82,7 @@ term_send_event(struct terminal *term, struct term_event *ev)
 		int height = ev->info.size.height;
 
 		if (width < 0 || height < 0) {
-			ERROR(gettext("Bad terminal size: %d, %d"),
+			EL_ERROR(gettext("Bad terminal size: %d, %d"),
 			      width, height);
 			break;
 		}
@@ -459,7 +459,7 @@ invalid_utf8_start_byte:
 		return 0;
 
 	default:
-		ERROR(gettext("Bad event %d"), ilev->ev);
+		EL_ERROR(gettext("Bad event %d"), ilev->ev);
 	}
 
 	/* For EVENT_INIT we read a liitle more */
@@ -503,7 +503,7 @@ in_term(struct terminal *term)
 	r = safe_read(term->fdin, iq + interlink->qlen, interlink->qfreespace);
 	if (r <= 0) {
 		if (r == -1 && errno != ECONNRESET)
-			ERROR(gettext("Could not read event: %d (%s)"),
+			EL_ERROR(gettext("Could not read event: %d (%s)"),
 			      errno, (char *) strerror(errno));
 
 		destroy_terminal(term);

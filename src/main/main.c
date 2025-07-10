@@ -170,7 +170,7 @@ init(void)
 	/* XXX: OS/2 has some stupid bug and the pipe must be created before
 	 * socket :-/. -- Mikulas */
 	if (check_terminal_pipes()) {
-		ERROR(gettext("Cannot create a pipe for internal communication."));
+		EL_ERROR(gettext("Cannot create a pipe for internal communication."));
 		program.retval = RET_FATAL;
 		program.terminate = 1;
 		return;
@@ -254,7 +254,7 @@ init(void)
 		struct terminal *term = NULL;
 
 		if (!encode_session_info(&info, &url_list)) {
-			ERROR(gettext("Unable to encode session info."));
+			EL_ERROR(gettext("Unable to encode session info."));
 			program.retval = RET_FATAL;
 			program.terminate = 1;
 
@@ -272,7 +272,7 @@ init(void)
 			term = attach_terminal(get_input_handle(), get_output_handle(),
 					       get_ctl_handle(), info.source, info.length);
 			if (!term) {
-				ERROR(gettext("Unable to attach_terminal()."));
+				EL_ERROR(gettext("Unable to attach_terminal()."));
 				program.retval = RET_FATAL;
 				program.terminate = 1;
 			}

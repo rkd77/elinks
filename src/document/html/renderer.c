@@ -1996,7 +1996,7 @@ html_special_form(struct part *part, struct form *form)
 		return;
 	}
 
-	ERROR("hole between forms");
+	EL_ERROR("hole between forms");
 	done_form(form);
 	return;
 }

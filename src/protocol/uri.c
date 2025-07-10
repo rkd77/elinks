@@ -1144,7 +1144,7 @@ parse_uri:
 	/* Bail out if the same error occurs twice */
 	if (uri_errno == prev_errno || retries++ > MAX_TRANSLATION_ATTEMPTS) {
 		if (retries > MAX_TRANSLATION_ATTEMPTS) {
-			ERROR("Maximum number of parsing attempts exceeded "
+			EL_ERROR("Maximum number of parsing attempts exceeded "
 			      "for %s.", url);
 		}
 		mem_free(newurl);

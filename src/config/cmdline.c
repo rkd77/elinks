@@ -217,7 +217,7 @@ lookup_cmd(struct option *o, char ***argv, int *argc)
 				(addr.sin6_family == AF_INET6 ? (void *) &addr.sin6_addr
 							      : (void *) &((struct sockaddr_in *) &addr)->sin_addr),
 				p, INET6_ADDRSTRLEN))
-			ERROR(gettext("Resolver error"));
+			EL_ERROR(gettext("Resolver error"));
 		else
 			printf("%s\n", p);
 #else

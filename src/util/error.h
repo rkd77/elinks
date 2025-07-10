@@ -40,8 +40,8 @@ void elinks_wdebug(const char *fmt, ...);
  * cases of non-severe internal inconsistences etc, never as an indication of
  * user error (bad parameter, config file error etc.). We have usrerror() for
  * this kind of stuff, and there's nothing naughty about using that. */
-#undef ERROR
-#define ERROR errfile = __FILE__, errline = __LINE__, elinks_error
+#undef EL_ERROR
+#define EL_ERROR errfile = __FILE__, errline = __LINE__, elinks_error
 void elinks_error(const char *fmt, ...);
 
 /** @c INTERNAL(format_string) is used to report fatal errors during the ELinks

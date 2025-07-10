@@ -103,7 +103,7 @@ read_bookmarks_xbel(FILE *f)
 
 	p = XML_ParserCreate(NULL);
 	if (!p) {
-		ERROR(gettext("read_bookmarks_xbel(): Error in XML_ParserCreate()"));
+		EL_ERROR(gettext("read_bookmarks_xbel(): Error in XML_ParserCreate()"));
 		return;
 	}
 
@@ -114,7 +114,7 @@ read_bookmarks_xbel(FILE *f)
 		size_t len = fread(in_buffer, 1, BUFSIZ, f);
 
 		if (ferror(f)) {
-			ERROR(gettext("read_bookmarks_xbel(): Error reading %s"),
+			EL_ERROR(gettext("read_bookmarks_xbel(): Error reading %s"),
 			      filename_bookmarks_xbel(0));
 			err = 1;
 		} else {

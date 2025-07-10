@@ -276,7 +276,7 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 			 * without gradual_loading set. I'm not sure about
 			 * the implications though so I won't do it before
 			 * 0.10.0. --pasky */
-			ERROR("The script of %s was lost in too full a cache!",
+			EL_ERROR("The script of %s was lost in too full a cache!",
 			      uristring);
 #endif
 			return;

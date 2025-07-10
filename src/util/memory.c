@@ -32,7 +32,7 @@ patience(const char *of)
 	//ELOG
 	++alloc_try;
 	if (alloc_try < ALLOC_MAXTRIES) {
-		ERROR("Out of memory (%s returned NULL): retry #%d/%d, "
+		EL_ERROR("Out of memory (%s returned NULL): retry #%d/%d, "
 		      "I still exercise my patience and retry tirelessly.",
 		      of, alloc_try, ALLOC_MAXTRIES);
 		sleep(ALLOC_DELAY);
@@ -44,7 +44,7 @@ patience(const char *of)
 		 "I give up. See ya on the other side.",
 		 of, alloc_try);
 #else
-	ERROR("Out of memory (%s returned NULL) after %d tries, "
+	EL_ERROR("Out of memory (%s returned NULL) after %d tries, "
 	      "I give up and try to continue. Pray for me, please.",
 	      of, alloc_try);
 #endif

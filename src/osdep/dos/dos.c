@@ -67,7 +67,7 @@ typedef unsigned long tcount;
 
 #define overalloc_at(f, l)                                              \
 do {                                                                    \
-	ERROR("ERROR: attempting to allocate too large block at %s:%d", f, l);\
+	EL_ERROR("ERROR: attempting to allocate too large block at %s:%d", f, l);\
 	fflush(stdout); \
 	fflush(stderr); \
 	exit(RET_FATAL); \
@@ -115,7 +115,7 @@ get_absolute_time(void)
 	EINTRLOOP(rs, gettimeofday(&tv, NULL));
 
 	if (rs) {
-		ERROR("gettimeofday failed: %d", errno);
+		EL_ERROR("gettimeofday failed: %d", errno);
 		fflush(stdout);
 		fflush(stderr);
 		exit(RET_FATAL);
@@ -136,7 +136,7 @@ get_time(void)
 	int rc;
 	rc = DosQuerySysInfo(QSV_MS_COUNT, QSV_MS_COUNT, &tim, sizeof tim);
 	if (rc) {
-		ERROR("DosQuerySysInfo failed: %d", rc);
+		EL_ERROR("DosQuerySysInfo failed: %d", rc);
 		fflush(stdout);
 		fflush(stderr);
 		exit(RET_FATAL);
@@ -227,7 +227,7 @@ void dos_poll_break(void)
 	ELOG
 	if (break_pressed && !break_exiting) {
 		break_exiting = 1;
-		ERROR("Exiting on Ctrl+Break");
+		EL_ERROR("Exiting on Ctrl+Break");
 		fflush(stdout);
 		fflush(stderr);
 		exit(RET_FATAL);
@@ -938,7 +938,7 @@ int dos_select(int n, fd_set *rs, fd_set *ws, fd_set *es, struct timeval *t, int
 	if (t) {
 		EINTRLOOP(r, gettimeofday(&xtime, NULL));
 		if (r) {
-			ERROR("gettimeofday failed: %d", errno);
+			EL_ERROR("gettimeofday failed: %d", errno);
 			fflush(stdout);
 			fflush(stderr);
 			exit(RET_FATAL);
@@ -1012,7 +1012,7 @@ int dos_select(int n, fd_set *rs, fd_set *ws, fd_set *es, struct timeval *t, int
 		if (r) return r;
 		EINTRLOOP(r, gettimeofday(&now, NULL));
 		if (r) {
-			ERROR("gettimeofday failed: %d", errno);
+			EL_ERROR("gettimeofday failed: %d", errno);
 			fflush(stdout);
 			fflush(stderr);
 			exit(RET_FATAL);

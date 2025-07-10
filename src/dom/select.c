@@ -989,7 +989,7 @@ dom_select_push_text(struct dom_stack *stack, struct dom_node *node, void *data)
 	case DOM_NODE_ENTITY_REFERENCE:
 		break;
 	default:
-		ERROR("Unhandled type");
+		EL_ERROR("Unhandled type");
 	}
 
 	return DOM_CODE_OK;

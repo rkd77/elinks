@@ -363,7 +363,7 @@ init_home(void)
 	first_use = 1;
 	xdg_config_home = get_xdg_config_home_internal();
 	if (!xdg_config_home) {
-		ERROR(gettext("Unable to find or create ELinks config "
+		EL_ERROR(gettext("Unable to find or create ELinks config "
 		      "directory. Please check if you have $HOME "
 		      "variable set correctly and if you have "
 		      "write permission to your home directory."));

@@ -42,7 +42,7 @@ redraw_windows(enum windows_to_redraw which, struct window *win)
 		term->redrawing = TREDRAW_DELAYED;
 		break;
 	default:
-		ERROR("invalid enum windows_to_redraw: which==%d", (int) which);
+		EL_ERROR("invalid enum windows_to_redraw: which==%d", (int) which);
 		return;
 	}
 

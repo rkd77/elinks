@@ -337,7 +337,7 @@ static void
 report_af_unix_error(const char *function, int error)
 {
 	ELOG
-	ERROR(gettext("The call to %s failed: %d (%s)"),
+	EL_ERROR(gettext("The call to %s failed: %d (%s)"),
 	      function, error, (char *) strerror(error));
 }
 

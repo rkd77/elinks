@@ -1352,7 +1352,7 @@ in_kbd(struct itrm *itrm)
 
 	itrm->in.queue.len += r;
 	if (itrm->in.queue.len > ITRM_IN_QUEUE_SIZE) {
-		ERROR(gettext("Too many bytes read from the itrm!"));
+		EL_ERROR(gettext("Too many bytes read from the itrm!"));
 		itrm->in.queue.len = ITRM_IN_QUEUE_SIZE;
 	}
 

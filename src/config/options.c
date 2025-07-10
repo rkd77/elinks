@@ -649,7 +649,7 @@ delete_option_do(struct option *option, int recursive)
 	}
 
 	if (recursive == -1) {
-		ERROR("Orphaned option %s", option->name);
+		EL_ERROR("Orphaned option %s", option->name);
 	}
 
 	if (option->type == OPT_TREE && option->value.tree
@@ -658,7 +658,7 @@ delete_option_do(struct option *option, int recursive)
 			if (option->flags & OPT_AUTOCREATE) {
 				recursive = 1;
 			} else {
-				ERROR("Orphaned unregistered "
+				EL_ERROR("Orphaned unregistered "
 					"option in subtree %s!",
 					option->name);
 				recursive = -1;

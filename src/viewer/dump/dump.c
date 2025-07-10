@@ -608,10 +608,10 @@ nextfrag:
 			detach_connection(download, dump_pos);
 
 			if (w < 0)
-				ERROR(gettext("Can't write to stdout: %s"),
+				EL_ERROR(gettext("Can't write to stdout: %s"),
 				      (char *) strerror(errno));
 			else
-				ERROR(gettext("Can't write to stdout."));
+				EL_ERROR(gettext("Can't write to stdout."));
 
 			program.retval = RET_ERROR;
 			return 1;
