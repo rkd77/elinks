@@ -746,19 +746,19 @@ load_cookies(void) {
 	while (fgets(in_buffer, 6 * MAX_STR_LEN, fp)) {
 		struct cookie *cookie;
 		char *p, *q = in_buffer;
-		enum { NAME = 0, VALUE, SERVER, PATH, DOMAIN, EXPIRES, SECURE, HTTPONLY, MEMBERS };
+		enum { COOKIE_NAME = 0, COOKIE_VALUE, COOKIE_SERVER, COOKIE_PATH, COOKIE_DOMAIN, COOKIE_EXPIRES, COOKIE_SECURE, COOKIE_HTTPONLY, COOKIE_MEMBERS };
 		int member;
 		struct {
 			char *pos;
 			int len;
-		} members[MEMBERS];
+		} members[COOKIE_MEMBERS];
 		time_t expires;
 
 		/* First find all members. */
-		for (member = NAME; member < MEMBERS; member++, q = ++p) {
+		for (member = COOKIE_NAME; member < COOKIE_MEMBERS; member++, q = ++p) {
 			p = strchr(q, '\t');
 			if (!p) {
-				if (member + 1 != MEMBERS) break; /* last field ? */
+				if (member + 1 != COOKIE_MEMBERS) break; /* last field ? */
 				p = strchr(q, '\n');
 				if (!p) break;
 			}
@@ -767,10 +767,10 @@ load_cookies(void) {
 			members[member].len = p - q;
 		}
 
-		if ((member != HTTPONLY) && (member != MEMBERS)) continue;	/* Invalid line. */
+		if ((member != COOKIE_HTTPONLY) && (member != COOKIE_MEMBERS)) continue;	/* Invalid line. */
 
 		/* Skip expired cookies if any. */
-		expires = str_to_time_t(members[EXPIRES].pos);
+		expires = str_to_time_t(members[COOKIE_EXPIRES].pos);
 		if (!expires || expires <= now) {
 			set_cookies_dirty();
 			continue;
@@ -780,11 +780,11 @@ load_cookies(void) {
 		cookie = (struct cookie *)mem_calloc(1, sizeof(*cookie));
 		if (!cookie) continue;
 
-		cookie->server  = get_cookie_server(members[SERVER].pos, members[SERVER].len);
-		cookie->name	= memacpy(members[NAME].pos, members[NAME].len);
-		cookie->value	= memacpy(members[VALUE].pos, members[VALUE].len);
-		cookie->path	= memacpy(members[PATH].pos, members[PATH].len);
-		cookie->domain	= memacpy(members[DOMAIN].pos, members[DOMAIN].len);
+		cookie->server  = get_cookie_server(members[COOKIE_SERVER].pos, members[COOKIE_SERVER].len);
+		cookie->name	= memacpy(members[COOKIE_NAME].pos, members[COOKIE_NAME].len);
+		cookie->value	= memacpy(members[COOKIE_VALUE].pos, members[COOKIE_VALUE].len);
+		cookie->path	= memacpy(members[COOKIE_PATH].pos, members[COOKIE_PATH].len);
+		cookie->domain	= memacpy(members[COOKIE_DOMAIN].pos, members[COOKIE_DOMAIN].len);
 
 		/* Check whether all fields were correctly allocated. */
 		if (!cookie->server || !cookie->name || !cookie->value
@@ -794,8 +794,8 @@ load_cookies(void) {
 		}
 
 		cookie->expires = expires;
-		cookie->secure  = !!atoi(members[SECURE].pos);
-		cookie->httponly = (member == MEMBERS) && !!atoi(members[HTTPONLY].pos);
+		cookie->secure  = !!atoi(members[COOKIE_SECURE].pos);
+		cookie->httponly = (member == COOKIE_MEMBERS) && !!atoi(members[COOKIE_HTTPONLY].pos);
 
 		accept_cookie(cookie);
 	}
