@@ -1602,6 +1602,7 @@ select_loop(void (*init)(void))
 				do_event_loop(EVLOOP_NONBLOCK);
 				check_signals();
 				try_redraw_all_terminals();
+				check_bottom_halves();
 			}
 			if (program.terminate) break;
 			do_event_loop(EVLOOP_ONCE);
@@ -1625,6 +1626,7 @@ select_loop(void (*init)(void))
 #endif
 
 #if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBUV)
+		uv_timer_stop(&g.timeout);
 		curl_multi_cleanup(g.multi);
 		curl_global_cleanup();
 #endif
