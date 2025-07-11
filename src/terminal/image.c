@@ -18,6 +18,10 @@
 #include <sixel.h>
 #endif
 
+#ifdef CONFIG_LIBWEBP
+#include <webp/decode.h>
+#endif
+
 #include "elinks.h"
 
 #include "terminal/image.h"
@@ -52,7 +56,12 @@ el_kitty_get_image(char *data, int length, int *width, int *height, int *compres
 	unsigned char *b64;
 
 	if (!pixels) {
-		return NULL;
+#ifdef CONFIG_LIBWEBP
+		pixels = WebPDecodeRGBA((const uint8_t*)data, length, width, height);
+#endif
+		if (!pixels) {
+			return NULL;
+		}
 	}
 	int size = *width * *height * KITTY_BYTES_PER_PIXEL;
 	*compressed = 0;
@@ -117,7 +126,12 @@ el_sixel_get_image(char *data, int length, int *outlen)
 	unsigned char *pixels = stbi_load_from_memory((unsigned char *)data, length, &width, &height, &comp, 3);
 
 	if (!pixels) {
-		return NULL;
+#ifdef CONFIG_LIBWEBP
+		pixels = WebPDecodeRGB((const uint8_t*)data, length, &width, &height);
+#endif
+		if (!pixels) {
+			return NULL;
+		}
 	}
 	sixel_output_t *output = NULL;
 	sixel_dither_t *dither = NULL;

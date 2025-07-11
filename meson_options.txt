@@ -88,3 +88,4 @@ option('libcurl', type: 'boolean', value: true, description: 'whether to compile
 option('sftp', type: 'boolean', value: true, description: 'whether to compile SFTP protocol support. Requires libcurl')
 option('spartan', type: 'boolean', value: false, description: 'spartan protocol support')
 option('kitty', type: 'boolean', value: false, description: 'support for kitty graphics protocol')
+option('libwebp', type: 'boolean', value: false, description: 'support for WEBP images')
