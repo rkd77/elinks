@@ -52,12 +52,14 @@ el_kitty_get_image(char *data, int length, int *width, int *height, int *compres
 	ELOG
 	int comp;
 	int outlen = 0;
+	int webp = 0;
 	unsigned char *pixels = stbi_load_from_memory((unsigned char *)data, length, width, height, &comp, KITTY_BYTES_PER_PIXEL);
 	unsigned char *b64;
 
 	if (!pixels) {
 #ifdef CONFIG_LIBWEBP
 		pixels = WebPDecodeRGBA((const uint8_t*)data, length, width, height);
+		webp = 1;
 #endif
 		if (!pixels) {
 			return NULL;
@@ -76,7 +78,12 @@ el_kitty_get_image(char *data, int length, int *width, int *height, int *compres
 		if (res == Z_OK) {
 			*compressed = 1;
 			b64 = base64_encode_bin(complace, compsize, &outlen);
-			stbi_image_free(pixels);
+
+			if (webp) {
+				WebPFree(pixels);
+			} else {
+				stbi_image_free(pixels);
+			}
 			mem_free(complace);
 
 			return (b64 ? el_string_init((char *)b64, (unsigned int)outlen) : NULL);
@@ -85,8 +92,12 @@ el_kitty_get_image(char *data, int length, int *width, int *height, int *compres
 	}
 #endif
 	b64 = base64_encode_bin(pixels, size, &outlen);
-	stbi_image_free(pixels);
 
+	if (webp) {
+		WebPFree(pixels);
+	} else {
+		stbi_image_free(pixels);
+	}
 	return (b64 ? el_string_init((char *)b64, (unsigned int)outlen) : NULL);
 }
 #endif
@@ -124,10 +135,12 @@ el_sixel_get_image(char *data, int length, int *outlen)
 	int width;
 	int height;
 	unsigned char *pixels = stbi_load_from_memory((unsigned char *)data, length, &width, &height, &comp, 3);
+	int webp = 0;
 
 	if (!pixels) {
 #ifdef CONFIG_LIBWEBP
 		pixels = WebPDecodeRGB((const uint8_t*)data, length, &width, &height);
+		webp = 1;
 #endif
 		if (!pixels) {
 			return NULL;
@@ -159,7 +172,11 @@ el_sixel_get_image(char *data, int length, int *outlen)
 	}
 	done_string(&ret);
 end:
-	stbi_image_free(pixels);
+	if (webp) {
+		WebPFree(pixels);
+	} else {
+		stbi_image_free(pixels);
+	}
 	sixel_output_unref(output);
 	sixel_dither_unref(dither);
 	sixel_allocator_unref(el_sixel_allocator);
