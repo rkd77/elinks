@@ -80,7 +80,9 @@ el_kitty_get_image(char *data, int length, int *width, int *height, int *compres
 			b64 = base64_encode_bin(complace, compsize, &outlen);
 
 			if (webp) {
+#ifdef CONFIG_LIBWEBP
 				WebPFree(pixels);
+#endif
 			} else {
 				stbi_image_free(pixels);
 			}
@@ -94,7 +96,9 @@ el_kitty_get_image(char *data, int length, int *width, int *height, int *compres
 	b64 = base64_encode_bin(pixels, size, &outlen);
 
 	if (webp) {
+#ifdef CONFIG_LIBWEBP
 		WebPFree(pixels);
+#endif
 	} else {
 		stbi_image_free(pixels);
 	}
@@ -173,7 +177,9 @@ el_sixel_get_image(char *data, int length, int *outlen)
 	done_string(&ret);
 end:
 	if (webp) {
+#ifdef CONFIG_LIBWEBP
 		WebPFree(pixels);
+#endif
 	} else {
 		stbi_image_free(pixels);
 	}
