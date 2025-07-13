@@ -44,7 +44,7 @@ do {							\
 
 #ifndef NO_SIGNAL_HANDLERS
 extern pid_t signal_pid;
-#ifdef HAVE_SYS_EVENTFD_H
+#if defined(HAVE_SYS_EVENTFD_H) && !defined(CONFIG_LIBUV)
 extern int signal_efd;
 #else
 extern int signal_pipe[2];
