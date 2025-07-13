@@ -1530,7 +1530,7 @@ select_loop(void (*init)(void))
 	if (uv_pipe_open(pipe_handle, signal_pipe[0])) {
 		elinks_internal("ERROR: uv_pipe_open failed");
 	}
-	if (uv_read_start(pipe_handle, alloc_pipe_cb, read_pipe_cb)) {
+	if (uv_read_start((uv_stream_t *)pipe_handle, alloc_pipe_cb, read_pipe_cb)) {
 		elinks_internal("ERROR: uv_read_start failed");
 	}
 #else
