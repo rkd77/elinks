@@ -1485,6 +1485,21 @@ clear_events_ptr(void *handle)
 }
 #endif
 
+#ifdef CONFIG_LIBUV
+static void
+alloc_pipe_cb(uv_handle_t* handle, size_t suggested_size, uv_buf_t* buf)
+{
+	buf->base = mem_alloc(suggested_size);
+	buf->len = suggested_size;
+}
+
+static void
+read_pipe_cb(uv_stream_t *stream, ssize_t nread, const uv_buf_t *buf)
+{
+	mem_free_if(buf->base);
+}
+#endif
+
 void
 select_loop(void (*init)(void))
 {
@@ -1510,12 +1525,26 @@ select_loop(void (*init)(void))
 	}
 	set_handlers(signal_efd, clear_events_ptr, NULL, NULL, (void *)(intptr_t)signal_efd, EL_TYPE_FD);
 #else
+#ifdef CONFIG_LIBUV
+	uv_pipe_t *pipe_handle;
+	if (uv_pipe(signal_pipe, UV_NONBLOCKING_PIPE, UV_NONBLOCKING_PIPE)) {
+		elinks_internal("ERROR: can't create pipe for signal handling 1");
+	}
+	if (uv_pipe_init(uv_default_loop(), pipe_handle, 0)) {
+		elinks_internal("ERROR: can't create pipe for signal handling 2");
+	}
+	if (uv_read_start(pipe_handle, alloc_pipe_cb, read_pipe_cb)) {
+		elinks_internal("ERROR: can't create pipe for signal handling 3");
+	}
+	//set_handlers(signal_pipe[0], clear_events_ptr, NULL, NULL, (void *)(intptr_t)signal_pipe[0], EL_TYPE_PIPE);
+#else
 	if (c_pipe(signal_pipe)) {
 		elinks_internal("ERROR: can't create pipe for signal handling");
 	}
 	set_nonblocking_fd(signal_pipe[0]);
 	set_nonblocking_fd(signal_pipe[1]);
 	set_handlers(signal_pipe[0], clear_events_ptr, NULL, NULL, (void *)(intptr_t)signal_pipe[0], EL_TYPE_FD);
+#endif
 #endif
 #endif
 	init();
