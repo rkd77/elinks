@@ -1489,8 +1489,8 @@ clear_events_ptr(void *handle)
 static void
 alloc_pipe_cb(uv_handle_t* handle, size_t suggested_size, uv_buf_t* buf)
 {
-	buf->base = mem_alloc(suggested_size);
-	buf->len = suggested_size;
+	buf->base = mem_alloc(64);
+	buf->len = 64;
 }
 
 static void
