@@ -23,6 +23,10 @@ struct itrm_queue {
 	 * struct itrm_queue does not keep track of that, and has
 	 * no global policy on whether the buffer can be resized.  */
 	int len;
+
+	/** Capacity in bytes. On start ITRM_IN_QUEUE_SIZE,
+	 * but can be resized.  */
+	int size;
 };
 
 /** Things coming into an itrm, whether from the terminal or from the

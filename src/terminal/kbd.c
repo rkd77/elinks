@@ -364,6 +364,7 @@ handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
 		mem_free(itrm);
 		return;
 	}
+	itrm->in.queue.size = ITRM_IN_QUEUE_SIZE;
 
 	ditrm = itrm;
 	itrm->in.std = std_in;
@@ -907,7 +908,7 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct interlink_event *ev)
 		 * kbd_timeout might call in_kbd and thus process_input
 		 * and come right back here.  Better just reject the whole
 		 * thing and let the initial CSI be handled as Alt-[.  */
-		if (itrm->in.queue.len == ITRM_IN_QUEUE_SIZE)
+		if (itrm->in.queue.len == itrm->in.queue.size)
 			return 0;
 		else
 			return -1;
@@ -1317,7 +1318,7 @@ return_without_event:
 		if (itrm->in.queue.len)
 			memmove(itrm->in.queue.data, itrm->in.queue.data + el, itrm->in.queue.len);
 
-		if (itrm->in.queue.len < ITRM_IN_QUEUE_SIZE)
+		if (itrm->in.queue.len < itrm->in.queue.size)
 			handle_itrm_stdin(itrm);
 
 		return el;
@@ -1337,23 +1338,23 @@ in_kbd(struct itrm *itrm)
 
 	kill_timer(&itrm->timer);
 
-	if (itrm->in.queue.len >= ITRM_IN_QUEUE_SIZE) {
+	if (itrm->in.queue.len >= itrm->in.queue.size) {
 		unhandle_itrm_stdin(itrm);
 		while (process_queue(itrm));
 		return;
 	}
 
 	r = safe_read(itrm->in.std, itrm->in.queue.data + itrm->in.queue.len,
-		      ITRM_IN_QUEUE_SIZE - itrm->in.queue.len);
+		      itrm->in.queue.size - itrm->in.queue.len);
 	if (r < 0) {
 		free_itrm(itrm);
 		return;
 	}
 
 	itrm->in.queue.len += r;
-	if (itrm->in.queue.len > ITRM_IN_QUEUE_SIZE) {
+	if (itrm->in.queue.len > itrm->in.queue.size) {
 		EL_ERROR(gettext("Too many bytes read from the itrm!"));
-		itrm->in.queue.len = ITRM_IN_QUEUE_SIZE;
+		itrm->in.queue.len = itrm->in.queue.size;
 	}
 
 	while (process_queue(itrm));
