@@ -187,6 +187,12 @@ void terminate_select(void);
 const char *get_libevent_version(void);
 const char *get_libuv_version(void);
 
+#ifdef CONFIG_LIBUV
+struct libuv_priv {
+	int fd;
+};
+#endif
+
 #ifdef __cplusplus
 }
 #endif

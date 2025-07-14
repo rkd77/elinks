@@ -1,6 +1,10 @@
 #ifndef EL__TERMINAL_EVENT_H
 #define EL__TERMINAL_EVENT_H
 
+#ifdef CONFIG_LIBUV
+#include <uv.h>
+#endif
+
 #include "terminal/kbd.h"
 #include "terminal/mouse.h"
 
@@ -178,6 +182,11 @@ struct terminal_info {
 
 void term_send_event(struct terminal *, struct term_event *);
 void in_term(struct terminal *);
+
+#ifdef CONFIG_LIBUV
+void read_interm_cb(uv_stream_t *stream, ssize_t nread, const uv_buf_t *buf);
+void alloc_interm_cb(uv_handle_t* handle, size_t suggested_size, uv_buf_t* buf);
+#endif
 
 /** @name For keyboard events handling
  * @{ */

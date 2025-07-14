@@ -69,6 +69,8 @@
 #include "osdep/osdep.h"
 #include "osdep/signals.h"
 #include "session/download.h"
+#include "terminal/event.h"
+#include "terminal/kbd.h"
 #include "terminal/terminal.h"
 #include "util/error.h"
 #include "util/memcount.h"
@@ -872,13 +874,6 @@ get_libuv_version(void)
 
 static int n_threads = 0;
 
-#ifdef CONFIG_LIBUV
-struct libuv_priv {
-	int fd;
-};
-
-#endif
-
 struct thread {
 	select_handler_T read_func;
 	select_handler_T write_func;
@@ -889,7 +884,7 @@ struct thread {
 	struct event *write_event;
 #endif
 #ifdef CONFIG_LIBUV
-	uv_poll_t *handle;
+	uv_handle_t *handle;
 #endif
 };
 
@@ -1008,14 +1003,24 @@ set_events_for_handle(int h, enum el_type_hint type_hint)
 {
 	ELOG
 	struct libuv_priv *priv = NULL;
-	uv_poll_t *handle = NULL;
+	uv_handle_t *handle = NULL;
+	int res;
+
+	if (h == 0) {
+		type_hint = EL_TYPE_TTY;
+	}
 
 	if (!threads[h].read_func && !threads[h].write_func) {
 		if (!threads[h].handle) {
 			return;
 		}
 		handle = threads[h].handle;
-		uv_poll_stop(handle);
+
+		if (type_hint == EL_TYPE_TTY) {
+			uv_read_stop((uv_stream_t *)handle);
+		} else {
+			uv_poll_stop((uv_poll_t *)handle);
+		}
 		priv = (struct libuv_priv *)uv_handle_get_data((uv_handle_t *)handle);
 		mem_free_if(priv);
 		mem_free_set(&threads[h].handle, NULL);
@@ -1027,22 +1032,44 @@ set_events_for_handle(int h, enum el_type_hint type_hint)
 		if (!priv) {
 			return;
 		}
-		handle = mem_calloc(1, sizeof(*handle));
-		if (!handle) {
-			mem_free(priv);
-			return;
-		}
-
 		switch (type_hint) {
 		case EL_TYPE_TCP:
 		case EL_TYPE_UDP:
-			uv_poll_init_socket(uv_default_loop(), handle, h);
+			handle = mem_calloc(1, sizeof(uv_poll_t));
+			if (!handle) {
+				mem_free(priv);
+				return;
+			}
+			res = uv_poll_init_socket(uv_default_loop(), (uv_poll_t *)handle, h);
+
+			if (res) {
+				fprintf(stderr, "Something went bad: %s:%d\n", __FILE__, __LINE__);
+			}
+
 			break;
 		case EL_TYPE_TTY:
-			uv_tty_init(uv_default_loop(), (uv_tty_t *)handle, h, 0);
+			handle = mem_calloc(1, sizeof(uv_tty_t));
+			if (!handle) {
+				mem_free(priv);
+				return;
+			}
+			res = uv_tty_init(uv_default_loop(), (uv_tty_t *)handle, h, 0);
+
+			if (res) {
+				fprintf(stderr, "Something went bad: %s:%d\n", __FILE__, __LINE__);
+			}
 			break;
 		default:
-			uv_poll_init(uv_default_loop(), handle, h);
+			handle = mem_calloc(1, sizeof(uv_poll_t));
+			if (!handle) {
+				mem_free(priv);
+				return;
+			}
+			res = uv_poll_init(uv_default_loop(), (uv_poll_t *)handle, h);
+
+			if (res) {
+				fprintf(stderr, "Something went bad: %s:%d\n", __FILE__, __LINE__);
+			}
 			break;
 		}
 		threads[h].handle = handle;
@@ -1054,11 +1081,19 @@ set_events_for_handle(int h, enum el_type_hint type_hint)
 	uv_handle_set_data((uv_handle_t *)handle, priv);
 
 	if (threads[h].read_func) {
-		uv_poll_start(handle, UV_READABLE, one_cb);
+		if (type_hint == EL_TYPE_TTY) {
+			if (threads[h].read_func == (select_handler_T)in_kbd) {
+				uv_read_start((uv_stream_t *)handle, alloc_kbd_cb, read_kbd_cb);
+			} else if (threads[h].read_func == (select_handler_T)in_term) {
+				uv_read_start((uv_stream_t *)handle, alloc_interm_cb, read_interm_cb);
+			}
+		} else {
+			uv_poll_start((uv_poll_t *)handle, UV_READABLE, one_cb);
+		}
 	}
 
 	if (threads[h].write_func) {
-		uv_poll_start(handle, UV_WRITABLE, one_cb);
+		uv_poll_start((uv_poll_t *)handle, UV_WRITABLE, one_cb);
 	}
 }
 

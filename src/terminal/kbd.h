@@ -1,6 +1,10 @@
 #ifndef EL__TERMINAL_KBD_H
 #define EL__TERMINAL_KBD_H
 
+#ifdef CONFIG_LIBUV
+#include <uv.h>
+#endif
+
 #include "intl/charsets.h"
 
 #ifdef __cplusplus
@@ -143,6 +147,13 @@ void dispatch_special(const char *);
 void kbd_ctrl_c(void);
 int is_blocked(void);
 void get_terminal_name(char[MAX_TERM_LEN]);
+
+void in_kbd(struct itrm *itrm);
+
+#ifdef CONFIG_LIBUV
+void read_kbd_cb(uv_stream_t *stream, ssize_t nread, const uv_buf_t *buf);
+void alloc_kbd_cb(uv_handle_t* handle, size_t suggested_size, uv_buf_t* buf);
+#endif
 
 #define kbd_get_key(kbd_)	((kbd_)->key)
 #define kbd_key_is(kbd_, key)	(kbd_get_key(kbd_) == (key))

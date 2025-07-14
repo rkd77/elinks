@@ -16,11 +16,16 @@
 #include <sys/socket.h>
 #endif
 
+#ifdef CONFIG_LIBUV
+#include <uv.h>
+#endif
+
 #include "elinks.h"
 
 #include "intl/libintl.h"
 #include "main/main.h"			/* terminate */
 #include "main/object.h"
+#include "main/select.h"
 #include "session/session.h"
 #include "terminal/draw.h"
 #include "terminal/event.h"
@@ -531,3 +536,95 @@ in_term(struct terminal *term)
 		memmove(iq, iq + event_size, interlink->qlen);
 	}
 }
+
+#ifdef CONFIG_LIBUV
+void
+read_interm_cb(uv_stream_t *stream, ssize_t r, const uv_buf_t *buf)
+{
+	ELOG
+	struct libuv_priv *priv = (struct libuv_priv *)uv_handle_get_data((uv_handle_t *)stream);
+
+	if (!priv) {
+		return;
+	}
+	int fd = priv->fd;
+	struct terminal *term = (struct terminal *)get_handler_data(fd);
+
+	if (!term) {
+		return;
+	}
+
+	if (r <= 0) {
+		if (r == -1 && errno != ECONNRESET)
+			EL_ERROR(gettext("Could not read event: %d (%s)"),
+			      errno, (char *) strerror(errno));
+
+		destroy_terminal(term);
+		return;
+	}
+	struct terminal_interlink *interlink = term->interlink;
+	char *iq;
+
+	/* Mark this as the most recently used terminal.  */
+	move_to_top_of_list(terminals, term);
+
+	if (!interlink
+	    || !interlink->qfreespace
+	    || interlink->qfreespace < r
+	    || interlink->qfreespace - interlink->qlen > ALLOC_GR) {
+		int qlen = interlink ? interlink->qlen : 0;
+		int queuesize = ((qlen + ALLOC_GR) & ~(ALLOC_GR - 1));
+
+		if (queuesize < r) {
+			queuesize = r;
+		}
+		int newsize = sizeof(*interlink) + queuesize;
+
+		interlink = (struct terminal_interlink *)mem_realloc(interlink, newsize);
+		if (!interlink) {
+			mem_free(buf->base);
+			destroy_terminal(term);
+			return;
+		}
+
+		/* Blank the members for the first allocation */
+		if (!term->interlink)
+			memset(interlink, 0, sizeof(*interlink));
+
+		term->interlink = interlink;
+		interlink->qfreespace = queuesize - interlink->qlen;
+	}
+	iq = interlink->input_queue;
+	memcpy(iq + interlink->qlen, buf->base, r);
+	mem_free(buf->base);
+
+	interlink->qlen += r;
+	interlink->qfreespace -= r;
+
+	while (interlink->qlen >= sizeof(struct interlink_event)) {
+		struct interlink_event *ev = (struct interlink_event *) iq;
+		int event_size = handle_interlink_event(term, ev);
+
+		/* If the event was not handled save the bytes in the queue for
+		 * later in case more stuff is read later. */
+		if (!event_size) break;
+
+		/* Acount for the handled bytes */
+		interlink->qlen -= event_size;
+		interlink->qfreespace += event_size;
+
+		/* If there are no more bytes to handle stop else move next
+		 * event bytes to the front of the queue. */
+		if (!interlink->qlen) break;
+		memmove(iq, iq + event_size, interlink->qlen);
+	}
+}
+
+void
+alloc_interm_cb(uv_handle_t* handle, size_t suggested_size, uv_buf_t* buf)
+{
+	ELOG
+	buf->base = mem_alloc(suggested_size);
+	buf->len = suggested_size;
+}
+#endif

@@ -26,6 +26,10 @@
 #define HPUX_PIPE	1
 #endif
 
+#ifdef CONFIG_LIBUV
+#include <uv.h>
+#endif
+
 #include "elinks.h"
 
 #include "config/options.h"
@@ -51,7 +55,6 @@
 struct itrm *ditrm = NULL;
 
 static void free_itrm(struct itrm *);
-static void in_kbd(struct itrm *);
 static void in_sock(struct itrm *);
 static int process_queue(struct itrm *);
 static void handle_itrm_stdin(struct itrm *);
@@ -398,9 +401,10 @@ handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
 		if (std_in >= 0) handle_itrm_stdin(itrm);
 	}
 
-	if (sock_in != std_out)
+	if (sock_in != std_out) {
 		set_handlers(sock_in, (select_handler_T) in_sock,
-			     NULL, (select_handler_T) free_itrm, itrm, EL_TYPE_FD);
+			     NULL, (select_handler_T) free_itrm, itrm, EL_TYPE_TCP);
+	}
 
 	get_terminal_name(info.name);
 
@@ -1328,7 +1332,7 @@ return_without_event:
 
 /** A select_handler_T read_func for itrm_in.std.  This is called when
  * characters typed by the user arrive from the terminal. */
-static void
+void
 in_kbd(struct itrm *itrm)
 {
 	ELOG
@@ -1359,6 +1363,59 @@ in_kbd(struct itrm *itrm)
 
 	while (process_queue(itrm));
 }
+
+#ifdef CONFIG_LIBUV
+void
+read_kbd_cb(uv_stream_t *stream, ssize_t nread, const uv_buf_t *buf)
+{
+	ELOG
+	struct libuv_priv *priv = (struct libuv_priv *)uv_handle_get_data((uv_handle_t *)stream);
+
+	if (!priv) {
+		return;
+	}
+	int fd = priv->fd;
+	struct itrm *itrm = (struct itrm *)get_handler_data(fd);
+
+	if (!itrm) {
+		return;
+	}
+	kill_timer(&itrm->timer);
+
+	if (nread < 0) {
+		uv_read_stop(stream);
+		unhandle_itrm_stdin(itrm);
+		while (process_queue(itrm));
+		return;
+	}
+	if (itrm->in.queue.len + nread > itrm->in.queue.size) {
+		unsigned char *tmp = mem_realloc(itrm->in.queue.data, itrm->in.queue.len + nread);
+
+		if (!tmp) {
+			mem_free_if(buf->base);
+			uv_read_stop(stream);
+			unhandle_itrm_stdin(itrm);
+			while (process_queue(itrm));
+			return;
+		}
+		itrm->in.queue.data = tmp;
+		itrm->in.queue.size = itrm->in.queue.len + nread;
+	}
+	memcpy(itrm->in.queue.data + itrm->in.queue.len, buf->base, nread);
+	itrm->in.queue.len += nread;
+	mem_free_if(buf->base);
+
+	while (process_queue(itrm));
+}
+
+void
+alloc_kbd_cb(uv_handle_t* handle, size_t suggested_size, uv_buf_t* buf)
+{
+	ELOG
+	buf->base = mem_alloc(ITRM_IN_QUEUE_SIZE);
+	buf->len = ITRM_IN_QUEUE_SIZE;
+}
+#endif
 
 /** Enable reading from itrm_in.std.  ELinks will read any available
  * bytes from the tty into itrm->in.queue and then parse them.
