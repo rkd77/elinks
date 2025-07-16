@@ -87,7 +87,7 @@
 #endif
 
 #undef SOCK_SHIFT
-#ifdef CONFIG_OS_WIN32
+#if defined(CONFIG_OS_WIN32) && !defined(CONFIG_LIBUV)
 #define SOCK_SHIFT 1024
 #else
 #define SOCK_SHIFT 0
