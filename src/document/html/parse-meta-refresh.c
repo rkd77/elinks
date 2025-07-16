@@ -20,7 +20,6 @@ html_parse_meta_refresh(const char *content,
 			unsigned long *delay_out,
 			char **url_out)
 {
-	ELOG
 	const char *scan = content;
 	char *delay_end;
 	int saw_delay = 0;

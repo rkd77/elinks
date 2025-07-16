@@ -23,20 +23,17 @@ get_ctl_handle() {
 char *
 gettext(const char *text)
 {
-	ELOG
 	return (char *)text;
 }
 
 int
 os_default_charset(void)
 {
-	ELOG
 	return -1;
 }
 
 struct meta_refresh_test_case
 {
-	ELOG
 	const char *content;
 	int error;
 	unsigned long delay;

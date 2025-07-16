@@ -885,6 +885,7 @@ struct thread {
 #endif
 #ifdef CONFIG_LIBUV
 	uv_handle_t *handle;
+	enum el_type_hint type_hint;
 #endif
 };
 
@@ -999,15 +1000,22 @@ one_cb(uv_poll_t *handle, int status, int events)
 }
 
 static void
-set_events_for_handle(int h, enum el_type_hint type_hint)
+set_events_for_handle(int h)
 {
 	ELOG
 	struct libuv_priv *priv = NULL;
 	uv_handle_t *handle = NULL;
 	int res;
+	enum el_type_hint type_hint;
 
 	if (h == 0) {
 		type_hint = EL_TYPE_TTY;
+	} else {
+		type_hint = threads[h].type_hint;
+	}
+
+	if (type_hint == EL_TYPE_NONE) {
+		return;
 	}
 
 	if (!threads[h].read_func && !threads[h].write_func) {
@@ -1019,7 +1027,9 @@ set_events_for_handle(int h, enum el_type_hint type_hint)
 		if (type_hint == EL_TYPE_TTY) {
 			uv_read_stop((uv_stream_t *)handle);
 		} else {
-			uv_poll_stop((uv_poll_t *)handle);
+			if (type_hint != EL_TYPE_NONE) {
+				uv_poll_stop((uv_poll_t *)handle);
+			}
 		}
 		priv = (struct libuv_priv *)uv_handle_get_data((uv_handle_t *)handle);
 		mem_free_if(priv);
@@ -1043,7 +1053,7 @@ set_events_for_handle(int h, enum el_type_hint type_hint)
 			res = uv_poll_init_socket(uv_default_loop(), (uv_poll_t *)handle, h);
 
 			if (res) {
-				fprintf(stderr, "Something went bad: %s:%d\n", __FILE__, __LINE__);
+				fprintf(stderr, "Something went bad: res=%d %s:%d\n", res, __FILE__, __LINE__);
 			}
 
 			break;
@@ -1056,7 +1066,7 @@ set_events_for_handle(int h, enum el_type_hint type_hint)
 			res = uv_tty_init(uv_default_loop(), (uv_tty_t *)handle, h, 0);
 
 			if (res) {
-				fprintf(stderr, "Something went bad: %s:%d\n", __FILE__, __LINE__);
+				fprintf(stderr, "Something went bad: res=%d %s:%d\n", res, __FILE__, __LINE__);
 			}
 			break;
 		default:
@@ -1068,7 +1078,7 @@ set_events_for_handle(int h, enum el_type_hint type_hint)
 			res = uv_poll_init(uv_default_loop(), (uv_poll_t *)handle, h);
 
 			if (res) {
-				fprintf(stderr, "Something went bad: %s:%d\n", __FILE__, __LINE__);
+				fprintf(stderr, "Something went bad: res=%d %s:%d\n", res, __FILE__, __LINE__);
 			}
 			break;
 		}
@@ -1113,7 +1123,7 @@ enable_libevent(void)
 	event_enabled = 1;
 
 	for (i = 0; i < w_max; i++) {
-		set_events_for_handle(i, EL_TYPE_FD);
+		set_events_for_handle(i);
 	}
 	set_events_for_timer();
 }
@@ -1224,7 +1234,7 @@ set_event_for_action(int h, void (*func)(void *), struct event **evptr, short ev
 }
 
 static void
-set_events_for_handle(int h, enum el_type_hint type_hint)
+set_events_for_handle(int h)
 {
 	ELOG
 	set_event_for_action(h, threads[h].read_func, &threads[h].read_event, EV_READ);
@@ -1281,7 +1291,7 @@ enable_libevent(void)
 	event_enabled = 1;
 
 	for (i = 0; i < w_max; i++)
-		set_events_for_handle(i, EL_TYPE_FD);
+		set_events_for_handle(i);
 
 /*
 	foreach(tm, timers)
@@ -1428,8 +1438,13 @@ set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
 	}
 
 #if defined(USE_LIBEVENT) || defined(CONFIG_LIBUV)
+#ifdef CONFIG_LIBUV
+	if (read_func || write_func) {
+		threads[fd].type_hint = type_hint;
+	}
+#endif
 	if (event_enabled) {
-		set_events_for_handle(fd, type_hint);
+		set_events_for_handle(fd);
 		return;
 	}
 #endif

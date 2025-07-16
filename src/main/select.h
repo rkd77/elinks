@@ -154,6 +154,7 @@ enum select_handler_type {
 };
 
 enum el_type_hint {
+	EL_TYPE_NONE = 0,
 	EL_TYPE_TCP,
 	EL_TYPE_UDP,
 	EL_TYPE_TTY,
