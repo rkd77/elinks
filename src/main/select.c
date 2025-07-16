@@ -1024,7 +1024,7 @@ set_events_for_handle(int h)
 		}
 		handle = threads[h].handle;
 
-		if (type_hint == EL_TYPE_TTY) {
+		if (type_hint == EL_TYPE_TTY || type_hint == EL_TYPE_PIPE) {
 			uv_read_stop((uv_stream_t *)handle);
 		} else {
 			if (type_hint != EL_TYPE_NONE) {
@@ -1069,6 +1069,21 @@ set_events_for_handle(int h)
 				fprintf(stderr, "Something went bad: res=%d %s:%d\n", res, __FILE__, __LINE__);
 			}
 			break;
+		case EL_TYPE_PIPE:
+			handle = mem_calloc(1, sizeof(uv_pipe_t));
+			if (!handle) {
+				mem_free(priv);
+				return;
+			}
+			res = uv_pipe_init(uv_default_loop(), (uv_pipe_t *)handle, 0);
+
+			if (res) {
+				fprintf(stderr, "Something went bad: res=%d %s:%d\n", res, __FILE__, __LINE__);
+			}
+			if (uv_pipe_open((uv_pipe_t *)handle, h)) {
+				elinks_internal("ERROR: uv_pipe_open failed");
+			}
+			break;
 		default:
 			handle = mem_calloc(1, sizeof(uv_poll_t));
 			if (!handle) {
@@ -1091,7 +1106,7 @@ set_events_for_handle(int h)
 	uv_handle_set_data((uv_handle_t *)handle, priv);
 
 	if (threads[h].read_func) {
-		if (type_hint == EL_TYPE_TTY) {
+		if (type_hint == EL_TYPE_TTY || type_hint == EL_TYPE_PIPE) {
 			if (threads[h].read_func == (select_handler_T)in_kbd) {
 				uv_read_start((uv_stream_t *)handle, alloc_kbd_cb, read_kbd_cb);
 			} else if (threads[h].read_func == (select_handler_T)in_term) {

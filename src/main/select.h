@@ -159,6 +159,7 @@ enum el_type_hint {
 	EL_TYPE_UDP,
 	EL_TYPE_TTY,
 	EL_TYPE_FD,
+	EL_TYPE_PIPE,
 };
 
 /* Get a registered select handler. */
