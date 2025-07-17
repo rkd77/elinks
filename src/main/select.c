@@ -1731,7 +1731,9 @@ select_loop(void (*init)(void))
 		curl_global_cleanup();
 #endif
 #ifdef CONFIG_LIBUV
+#ifdef CONFIG_OS_WIN32
 		uv_tty_reset_mode();
+#endif
 #endif
 		return;
 	} else
