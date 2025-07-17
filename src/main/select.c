@@ -1067,6 +1067,8 @@ set_events_for_handle(int h)
 
 			if (res) {
 				fprintf(stderr, "Something went bad: res=%d %s:%d\n", res, __FILE__, __LINE__);
+			} else {
+				uv_tty_set_mode((uv_tty_t *)handle, UV_TTY_MODE_RAW);
 			}
 			break;
 		case EL_TYPE_PIPE:
@@ -1727,6 +1729,9 @@ select_loop(void (*init)(void))
 		uv_timer_stop(&g.timeout);
 		curl_multi_cleanup(g.multi);
 		curl_global_cleanup();
+#endif
+#ifdef CONFIG_LIBUV
+		uv_tty_reset_mode();
 #endif
 		return;
 	} else
