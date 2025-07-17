@@ -17,6 +17,7 @@
 
 #include <io.h>
 #include <direct.h>
+#include <synchapi.h>
 
 #define mkdir(dir,access)	(mkdir)(dir)
 #define sleep(s)		Sleep(1000*(s))

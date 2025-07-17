@@ -25,8 +25,11 @@ void create_timer_queue(void);
 
 /* Stub functions: */
 
-int mkstemp (char *template_);
-int gettimeofday (struct timeval *tv, void *tz);
+int mkstemp(char *template_);
+
+#ifndef CONFIG_LIBUV
+int gettimeofday(struct timeval *tv, void *tz);
+#endif
 
 /* fake termios for Win32 (excluding CygWin) */
 

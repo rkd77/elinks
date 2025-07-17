@@ -25,13 +25,18 @@
 #include "intl/libintl.h"
 #include "osdep/osdep.h"
 #include "osdep/win32/overrides.h"
+#ifndef CONFIG_LIBUV
 #include "osdep/win32/vt100.h"
+#endif
 #include "osdep/win32/win32.h"
 #include "terminal/mouse.h"
 #include "terminal/terminal.h"
 
+#ifdef CONFIG_LIBUV
+#define SOCK_SHIFT  0
+#else
 #define SOCK_SHIFT  1024
-
+#endif
 
 enum fd_types {
 	FDT_FILE = 1,
@@ -290,6 +295,7 @@ console_peek(HANDLE hnd)
 	return rc;
 }
 
+#ifndef CONFIG_LIBUV
 int
 win32_write(int fd, const void *buf, unsigned len)
 {
@@ -408,6 +414,7 @@ win32_close(int fd)
 
 	return rc;
 }
+#endif
 
 int
 win32_ioctl(int fd, long option, int *flag)
@@ -454,6 +461,7 @@ win32_ioctl(int fd, long option, int *flag)
 	return rc;
 }
 
+#ifndef CONFIG_LIBUV
 int
 win32_socket(int pf, int type, int protocol)
 {
@@ -574,6 +582,7 @@ win32_getsockopt(int fd, int level, int option, void *optval, int *optlen)
 
 	return rc;
 }
+#endif
 
 int
 win32_pipe(int *fds)
@@ -732,6 +741,7 @@ select_one_loop(int num_fds, struct fd_set *rd, struct fd_set *wr,
 	return (rc);
 }
 
+#ifndef CONFIG_LIBUV
 int win32_select (int num_fds, struct fd_set *rd, struct fd_set *wr,
 		struct fd_set *ex, struct timeval *tv)
 {
@@ -812,6 +822,7 @@ int win32_select (int num_fds, struct fd_set *rd, struct fd_set *wr,
 
 	return rc;
 }
+#endif
 
 /* This function handles most Winsock errors we're able to produce. */
 static char *
@@ -994,6 +1005,7 @@ get_winsock_error(int err, char *buf, size_t len)
 	return buf;
 }
 
+#ifndef CONFIG_LIBUV
 /* A smarter strerror() */
 char *
 win32_strerror(int err)
@@ -1057,3 +1069,4 @@ win32_recv(int sockfd, void *buf, unsigned len, int flags)
 
 	return rc;
 }
+#endif

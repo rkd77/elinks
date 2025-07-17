@@ -42,7 +42,7 @@ extern "C" {
 #endif
 
 /* Attempt to workaround the EINTR mess. */
-#if defined(EINTR) && !defined(CONFIG_OS_WIN32) && !defined(CONFIG_OS_DOS)
+#if defined(EINTR) && !defined(CONFIG_OS_DOS)
 
 #if defined(TEMP_FAILURE_RETRY) && !defined(CONFIG_LIBUV)	/* GNU libc */
 #define safe_read(fd, buf, count) TEMP_FAILURE_RETRY(read(fd, buf, count))
