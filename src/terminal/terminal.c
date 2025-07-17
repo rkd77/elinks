@@ -595,7 +595,11 @@ int
 check_terminal_pipes(void)
 {
 	ELOG
+#ifdef CONFIG_LIBUV
+	return uv_pipe(terminal_pipe, UV_NONBLOCK_PIPE, UV_NONBLOCK_PIPE);
+#else
 	return c_pipe(terminal_pipe);
+#endif
 }
 
 void
@@ -612,8 +616,10 @@ attach_terminal(int in, int out, int ctl, void *info, int len)
 	ELOG
 	struct terminal *term;
 
+#ifndef CONFIG_LIBUV
 	if (set_nonblocking_fd(terminal_pipe[0]) < 0) return NULL;
 	if (set_nonblocking_fd(terminal_pipe[1]) < 0) return NULL;
+#endif
 	handle_trm(in, out, out, terminal_pipe[1], ctl, info, len, 0);
 
 	term = init_term(terminal_pipe[0], out);

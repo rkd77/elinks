@@ -1080,8 +1080,10 @@ set_events_for_handle(int h)
 			if (res) {
 				fprintf(stderr, "Something went bad: res=%d %s:%d\n", res, __FILE__, __LINE__);
 			}
-			if (uv_pipe_open((uv_pipe_t *)handle, h)) {
-				elinks_internal("ERROR: uv_pipe_open failed");
+			res = uv_pipe_open((uv_pipe_t *)handle, h);
+
+			if (res) {
+				fprintf(stderr, "Something went bad: res=%d %s:%d\n", res, __FILE__, __LINE__);
 			}
 			break;
 		default:
