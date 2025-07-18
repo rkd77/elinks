@@ -32,7 +32,7 @@
 #include "terminal/mouse.h"
 #include "terminal/terminal.h"
 
-#ifdef CONFIG_LIBUV
+#if defined(CONFIG_LIBUV) && defined(CONFIG_LIBCURL)
 #define SOCK_SHIFT  0
 #else
 #define SOCK_SHIFT  1024
@@ -295,7 +295,7 @@ console_peek(HANDLE hnd)
 	return rc;
 }
 
-#ifndef CONFIG_LIBUV
+#if !defined(CONFIG_LIBUV) || !defined(CONFIG_LIBCURL)
 int
 win32_write(int fd, const void *buf, unsigned len)
 {
@@ -317,13 +317,18 @@ win32_write(int fd, const void *buf, unsigned len)
 		break;
 
 	case FDT_TERMINAL:
+#ifdef CONFIG_LIBUV
+		if (0) {}
+#else
 		if (isatty(STDOUT_FILENO) > 0) {
 			if (is_xterm()) {
 				rc = write(STDOUT_FILENO, buf, len);
 			} else {
 				rc = VT100_decode((HANDLE)(intptr_t)fd, buf, len);
 			}
-		} else {
+		}
+#endif
+		else {
 			/* stdout redirected */
 			rc = write(STDOUT_FILENO, buf, len);
 		}
@@ -336,9 +341,10 @@ win32_write(int fd, const void *buf, unsigned len)
 		break;
 	}
 
+#ifndef CONFIG_LIBUV
 	TRACE("fd %d, buf 0x%p, len %u -> rc %d; %s",
 	      orig_fd, buf, len, rc, rc < 0 ? win32_strerror(errno) : "okay");
-
+#endif
 	return rc;
 }
 
@@ -461,7 +467,7 @@ win32_ioctl(int fd, long option, int *flag)
 	return rc;
 }
 
-#ifndef CONFIG_LIBUV
+#if !defined(CONFIG_LIBUV) || !defined(CONFIG_LIBCURL)
 int
 win32_socket(int pf, int type, int protocol)
 {
@@ -741,7 +747,7 @@ select_one_loop(int num_fds, struct fd_set *rd, struct fd_set *wr,
 	return (rc);
 }
 
-#ifndef CONFIG_LIBUV
+#if !defined(CONFIG_LIBUV) || !defined(CONFIG_LIBCURL)
 int win32_select (int num_fds, struct fd_set *rd, struct fd_set *wr,
 		struct fd_set *ex, struct timeval *tv)
 {
@@ -1005,7 +1011,7 @@ get_winsock_error(int err, char *buf, size_t len)
 	return buf;
 }
 
-#ifndef CONFIG_LIBUV
+#if !defined(CONFIG_LIBUV) || !defined(CONFIG_LIBCURL)
 /* A smarter strerror() */
 char *
 win32_strerror(int err)

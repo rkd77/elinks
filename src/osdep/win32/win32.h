@@ -27,7 +27,7 @@ void create_timer_queue(void);
 
 int mkstemp(char *template_);
 
-#ifndef CONFIG_LIBUV
+#if !defined(CONFIG_LIBUV) || !defined(CONFIG_LIBCURL)
 int gettimeofday(struct timeval *tv, void *tz);
 #endif
 

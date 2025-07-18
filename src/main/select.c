@@ -87,7 +87,7 @@
 #endif
 
 #undef SOCK_SHIFT
-#if defined(CONFIG_OS_WIN32) && !defined(CONFIG_LIBUV)
+#if defined(CONFIG_OS_WIN32) && (!defined(CONFIG_LIBUV) || !defined(CONFIG_LIBCURL))
 #define SOCK_SHIFT 1024
 #else
 #define SOCK_SHIFT 0
@@ -1050,10 +1050,10 @@ set_events_for_handle(int h)
 				mem_free(priv);
 				return;
 			}
-			res = uv_poll_init_socket(uv_default_loop(), (uv_poll_t *)handle, h);
+			res = uv_poll_init_socket(uv_default_loop(), (uv_poll_t *)handle, h - SOCK_SHIFT);
 
 			if (res) {
-				fprintf(stderr, "Something went bad: res=%d %s:%d\n", res, __FILE__, __LINE__);
+				fprintf(stderr, "Something went bad: res=%d h=%d %s:%d\n", res, h, __FILE__, __LINE__);
 			}
 
 			break;
@@ -1704,7 +1704,9 @@ select_loop(void (*init)(void))
 				try_redraw_all_terminals();
 				check_bottom_halves();
 			}
-			if (program.terminate) break;
+			if (program.terminate) {
+				break;
+			}
 			do_event_loop(EVLOOP_ONCE);
 		}
 		if (was_installed_timer) {
