@@ -18,6 +18,7 @@
 #include "cookies/cookies.h"
 #include "dialogs/status.h"
 #include "document/document.h"
+#include "document/libdom/corestrings.h"
 #include "document/libdom/doc.h"
 #include "document/libdom/mapa.h"
 #include "document/view.h"
@@ -585,10 +586,29 @@ js_document_get_property_head(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-// TODO
-	return JS_NULL;
+	dom_html_document *doc = (struct dom_html_document *)js_doc_getopaque(this_val);
+	NODEINFO(doc);
 
-//	return getNode(ctx, element);
+	if (!doc) {
+		return JS_NULL;
+	}
+	dom_nodelist *nodes = NULL;
+	dom_exception exc = dom_document_get_elements_by_tag_name(doc, corestring_dom_HEAD, &nodes);
+
+	if (exc != DOM_NO_ERR || !nodes) {
+		return JS_NULL;
+	}
+	dom_node *head = NULL;
+	exc = dom_nodelist_item(nodes, 0, &head);
+	dom_nodelist_unref(nodes);
+
+	if (exc != DOM_NO_ERR || !head) {
+		return JS_NULL;
+	}
+	JSValue rr = getElement(ctx, head);
+	JS_FreeValue(ctx, rr);
+
+	RETURN_JS(rr);
 }
 
 static JSValue
