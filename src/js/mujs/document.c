@@ -25,6 +25,7 @@
 #include "document/html/frames.h"
 #include "document/document.h"
 #include "document/forms.h"
+#include "document/libdom/corestrings.h"
 #include "document/libdom/doc.h"
 #include "document/libdom/mapa.h"
 #include "document/view.h"
@@ -503,30 +504,29 @@ mjs_document_get_property_head(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
+	dom_html_document *doc = (dom_html_document *)mjs_doc_getprivate(J, 0);
+	NODEINFO(doc);
 
-	if (!document->dom) {
+	if (!doc) {
 		js_pushnull(J);
 		return;
 	}
-// TODO
-#if 0
-	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
-	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
+	dom_nodelist *nodes = NULL;
+	dom_exception exc = dom_document_get_elements_by_tag_name(doc, corestring_dom_HEAD, &nodes);
 
-	xmlpp::ustring xpath = "//head";
-	xmlpp::Node::NodeSet elements = root->find(xpath);
-
-	if (elements.size() == 0) {
+	if (exc != DOM_NO_ERR || !nodes) {
 		js_pushnull(J);
 		return;
 	}
-	auto element = elements[0];
-	mjs_push_node(J, element);
-#endif
-	js_pushnull(J);
+	dom_node *head = NULL;
+	exc = dom_nodelist_item(nodes, 0, &head);
+	dom_nodelist_unref(nodes);
+
+	if (exc != DOM_NO_ERR || !head) {
+		js_pushnull(J);
+		return;
+	}
+	mjs_push_node(J, head);
 }
 
 static void
