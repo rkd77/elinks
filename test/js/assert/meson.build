@@ -1,7 +1,6 @@
 tofail = [
 'console.assert.html',
 #'document.getElementsByName.html', // not implemented
-'document.head.html',
 'element.namedItem.html'
 ]
 took = [
@@ -22,6 +21,7 @@ took = [
 'document.getElementsByClassName.html',
 'document.getElementsByClassName_2.html',
 'document.getElementsByTagName.html',
+'document.head.html',
 'document.images.html',
 'document.links.html',
 'document.location.href.html',

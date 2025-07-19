@@ -12,8 +12,10 @@
 
 <script>
 function myFunction() {
-  var x = document.head; //.innerHTML;
-  console.assert(x === '<TITLE>HEAD></TITLE>', x);
+  var x = document.head.innerHTML;
+  //var x = document.getElementsByTagName('head')[0].innerHTML;
+
+  console.assert(x === '<title>HEAD</title>', x);
 }
 
 console.error('document.head.html');
