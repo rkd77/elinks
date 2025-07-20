@@ -9,8 +9,14 @@
 extern "C" {
 #endif
 
+struct string;
+
 #ifdef CONFIG_GOPHER
 extern protocol_handler_T gopher_protocol_handler;
+
+void add_gopher_menu_line(struct string *buffer, char *line);
+char *get_gopher_line_end(char *data, int datalen);
+
 #else
 #define gopher_protocol_handler NULL
 #endif

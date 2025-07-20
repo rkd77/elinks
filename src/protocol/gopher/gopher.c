@@ -41,6 +41,9 @@
 #include "network/connection.h"
 #include "network/socket.h"
 #include "protocol/common.h"
+#ifdef CONFIG_LIBCURL
+#include "protocol/curl/gopher.h"
+#endif
 #include "protocol/gopher/gopher.h"
 #include "protocol/protocol.h"
 #include "protocol/uri.h"
@@ -426,7 +429,7 @@ encode_selector_string(struct string *buffer, char *selector)
 	encode_uri_string(buffer, selector, -1, 0);
 }
 
-static void
+void
 add_gopher_menu_line(struct string *buffer, char *line)
 {
 	ELOG
@@ -594,7 +597,7 @@ add_gopher_menu_line(struct string *buffer, char *line)
 
 
 /* Search for line ending \r\n pair */
-static char *
+char *
 get_gopher_line_end(char *data, int datalen)
 {
 	ELOG
@@ -609,7 +612,7 @@ get_gopher_line_end(char *data, int datalen)
 	return NULL;
 }
 
-static inline char *
+static char *
 check_gopher_last_line(char *line, char *end)
 {
 	ELOG
@@ -828,6 +831,12 @@ void
 gopher_protocol_handler(struct connection *conn)
 {
 	ELOG
+#if defined(CONFIG_LIBCURL)
+	if (get_opt_bool("protocol.gopher.use_curl", NULL)) {
+		gophers_protocol_handler(conn);
+		return;
+	}
+#endif
 	struct uri *uri = conn->uri;
 	struct connection_state state = connection_state(S_CONN);
 

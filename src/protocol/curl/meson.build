@@ -1,1 +1,1 @@
-srcs += files('ftp.c', 'http.c')
+srcs += files('ftp.c', 'gopher.c', 'http.c')

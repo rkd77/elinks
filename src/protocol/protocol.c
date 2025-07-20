@@ -34,6 +34,7 @@
 #include "protocol/bittorrent/bittorrent.h"
 #include "protocol/bittorrent/connection.h"
 #include "protocol/curl/ftpes.h"
+#include "protocol/curl/gopher.h"
 #include "protocol/curl/http.h"
 #include "protocol/curl/sftp.h"
 #include "protocol/data.h"
@@ -343,6 +344,9 @@ static struct module *protocol_submodules[] = {
 #endif
 #ifdef CONFIG_GOPHER
 	&gopher_protocol_module,
+#if defined(CONFIG_LIBCURL)
+	&gophers_protocol_module,
+#endif
 #endif
 	&http_protocol_module,
 #ifdef CONFIG_NNTP
