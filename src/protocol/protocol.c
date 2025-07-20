@@ -344,9 +344,6 @@ static struct module *protocol_submodules[] = {
 #endif
 #ifdef CONFIG_GOPHER
 	&gopher_protocol_module,
-#if defined(CONFIG_LIBCURL)
-	&gophers_protocol_module,
-#endif
 #endif
 	&http_protocol_module,
 #ifdef CONFIG_NNTP

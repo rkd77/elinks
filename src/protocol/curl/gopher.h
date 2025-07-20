@@ -15,11 +15,8 @@ extern "C" {
 extern struct module gopher_protocol_module;
 
 #if defined(CONFIG_GOPHER) && defined(CONFIG_LIBCURL)
-extern struct module gophers_protocol_module;
-extern protocol_handler_T gophers_protocol_handler;
+void gophers_protocol_handler(struct connection *conn);
 void gophers_curl_handle_error(struct connection *conn, CURLcode res);
-#else
-#define gophers_protocol_handler NULL
 #endif
 
 #ifdef __cplusplus

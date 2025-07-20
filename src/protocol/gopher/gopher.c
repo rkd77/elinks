@@ -51,9 +51,25 @@
 #include "util/memory.h"
 #include "util/string.h"
 
+union option_info gopher_options[] = {
+	INIT_OPT_TREE("protocol", N_("Gopher"),
+		"gopher", OPT_ZERO,
+		N_("Gopher specific options.")),
+#if defined(CONFIG_LIBCURL)
+	INIT_OPT_BOOL("protocol.gopher", N_("Use libcurl"),
+		"use_curl", OPT_ZERO, 0,
+		N_("Use libcurl implementation of gopher.")),
+
+	INIT_OPT_STRING("protocol.gopher", N_("Curl TLS13 ciphers"),
+		"curl_tls13_ciphers", OPT_ZERO, "",
+		N_("Colon separated list of TLS13 ciphers. See https://curl.se/docs/ssl-ciphers.html")),
+#endif
+	NULL_OPTION_INFO,
+};
+
 struct module gopher_protocol_module = struct_module(
 	/* name: */		N_("Gopher"),
-	/* options: */		NULL,
+	/* options: */		gopher_options,
 	/* hooks: */		NULL,
 	/* submodules: */	NULL,
 	/* data: */		NULL,

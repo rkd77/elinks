@@ -569,7 +569,7 @@ void check_multi_info(struct datauv *g)
 #endif
 
 #ifdef CONFIG_GOPHER
-			if (conn->uri->protocol == PROTOCOL_GOPHER || conn->uri->protocol == PROTOCOL_GOPHERS) {
+			if (conn->uri->protocol == PROTOCOL_GOPHER) {
 				gophers_curl_handle_error(conn, res);
 				continue;
 			}
@@ -623,7 +623,7 @@ check_multi_info(GlobalInfo *g)
 #endif
 
 #ifdef CONFIG_GOPHER
-			if (conn->uri->protocol == PROTOCOL_GOPHER || conn->uri->protocol == PROTOCOL_GOPHERS) {
+			if (conn->uri->protocol == PROTOCOL_GOPHER) {
 				gophers_curl_handle_error(conn, res);
 				continue;
 			}
