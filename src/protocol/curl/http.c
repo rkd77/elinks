@@ -51,6 +51,7 @@
 #include "protocol/auth/auth.h"
 #include "protocol/common.h"
 #include "protocol/curl/ftpes.h"
+#include "protocol/curl/gopher.h"
 #include "protocol/curl/http.h"
 #include "protocol/curl/sftp.h"
 #include "protocol/header.h"
@@ -567,6 +568,13 @@ void check_multi_info(struct datauv *g)
 			}
 #endif
 
+#ifdef CONFIG_GOPHER
+			if (conn->uri->protocol == PROTOCOL_GOPHER || conn->uri->protocol == PROTOCOL_GOPHERS) {
+				gophers_curl_handle_error(conn, res);
+				continue;
+			}
+#endif
+
 #ifdef CONFIG_SFTP
 			if (conn->uri->protocol == PROTOCOL_SFTP) {
 				ftp_curl_handle_error(conn, res);
@@ -610,6 +618,13 @@ check_multi_info(GlobalInfo *g)
 #ifdef CONFIG_FTP
 			if (conn->uri->protocol == PROTOCOL_FTP || conn->uri->protocol == PROTOCOL_FTPES) {
 				ftp_curl_handle_error(conn, res);
+				continue;
+			}
+#endif
+
+#ifdef CONFIG_GOPHER
+			if (conn->uri->protocol == PROTOCOL_GOPHER || conn->uri->protocol == PROTOCOL_GOPHERS) {
+				gophers_curl_handle_error(conn, res);
 				continue;
 			}
 #endif
