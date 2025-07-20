@@ -71,6 +71,7 @@ struct gophers_connection_info {
 	int conn_state;
 	int buf_pos;
 	size_t info_number;
+	struct string data;
 
 	unsigned int dir:1;          /* Directory listing in progress */
 };
@@ -94,6 +95,7 @@ done_gophers(struct connection *conn)
 	if (!gopher || !gopher->easy) {
 		return;
 	}
+	done_string(&gopher->data);
 
 	if (!program.terminate) {
 		curl_multi_remove_handle(g.multi, gopher->easy);
@@ -111,7 +113,7 @@ do_gophers(struct connection *conn)
 	struct string u;
 	CURL *curl;
 
-	if (!gopher) {
+	if (!gopher || !init_string(&gopher->data)) {
 		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
@@ -227,21 +229,13 @@ check_gopher_last_line(char *line, char *end)
 
 /* Parse a Gopher Menu document */
 static void
-read_gopher_directory_data(void *stream, void *buf, size_t len)
+read_gopher_directory_data(struct connection *conn)
 {
 	ELOG
-	struct connection *conn = (struct connection *)stream;
 	struct gophers_connection_info *gopher = (struct gophers_connection_info *)conn->info;
 
-	char *data = mem_alloc(len + 1);
-
-	if (!data) {
-		return;
-	}
-	memcpy(data, buf, len);
-	data[len] = '\0';
-
-	char *data2 = data;
+	char *data = gopher->data.source;
+	int len = gopher->data.length;
 
 	struct connection_state state = connection_state(S_TRANS);
 	struct string buffer;
@@ -250,17 +244,15 @@ read_gopher_directory_data(void *stream, void *buf, size_t len)
 	if (conn->from == 0) {
 		struct connection_state state = init_directory_listing(&buffer, conn->uri);
 		if (!is_in_state(state, S_OK)) {
-			mem_free(data);
 			abort_connection(conn, state);
 		}
 	} else if (!init_string(&buffer)) {
-		mem_free(data);
 		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
 
-	while ((end = get_gopher_line_end(data2, len))) {
-		char *line = check_gopher_last_line(data2, end);
+	while ((end = get_gopher_line_end(data, len))) {
+		char *line = check_gopher_last_line(data, end);
 
 		/* Break on line with a dot by itself */
 		if (!line) {
@@ -268,9 +260,9 @@ read_gopher_directory_data(void *stream, void *buf, size_t len)
 			break;
 		}
 		add_gopher_menu_line(&buffer, line);
-		int step = end - data2;
+		int step = end - data;
 		conn->received += step;
-		data2 += step;
+		data += step;
 		len -= step;
 	}
 
@@ -284,7 +276,6 @@ read_gopher_directory_data(void *stream, void *buf, size_t len)
 	conn->from += buffer.length;
 
 	done_string(&buffer);
-	mem_free(data);
 }
 
 static void
@@ -313,7 +304,7 @@ gophers_got_data(void *stream, void *buf, size_t len)
 	}
 
 	if (gopher->dir) {
-		read_gopher_directory_data(stream, buffer, len);
+		add_bytes_to_string(&gopher->data, buffer, len);
 	} else {
 		if (len > 0) {
 			if (add_fragment(conn->cached, conn->from, buffer, len) == 1) {
@@ -332,6 +323,12 @@ gophers_curl_handle_error(struct connection *conn, CURLcode res)
 {
 	ELOG
 	if (res == CURLE_OK) {
+		struct gophers_connection_info *gopher = (struct gophers_connection_info *)conn->info;
+
+		if (gopher->dir) {
+			read_gopher_directory_data(conn);
+		}
+
 		abort_connection(conn, connection_state(S_OK));
 		return;
 	}
