@@ -237,18 +237,12 @@ read_gopher_directory_data(struct connection *conn)
 	char *data = gopher->data.source;
 	int len = gopher->data.length;
 
-	struct connection_state state = connection_state(S_TRANS);
 	struct string buffer;
 	char *end;
 
-	if (conn->from == 0) {
-		struct connection_state state = init_directory_listing(&buffer, conn->uri);
-		if (!is_in_state(state, S_OK)) {
-			abort_connection(conn, state);
-		}
-	} else if (!init_string(&buffer)) {
-		abort_connection(conn, connection_state(S_OUT_OF_MEM));
-		return;
+	struct connection_state state = init_directory_listing(&buffer, conn->uri);
+	if (!is_in_state(state, S_OK)) {
+		abort_connection(conn, state);
 	}
 
 	while ((end = get_gopher_line_end(data, len))) {
@@ -256,7 +250,6 @@ read_gopher_directory_data(struct connection *conn)
 
 		/* Break on line with a dot by itself */
 		if (!line) {
-			state = connection_state(S_OK);
 			break;
 		}
 		add_gopher_menu_line(&buffer, line);
@@ -266,12 +259,10 @@ read_gopher_directory_data(struct connection *conn)
 		len -= step;
 	}
 
-	if (!is_in_state(state, S_TRANS)) {
-		add_to_string(&buffer,
-			"</pre>\n"
-			"</body>\n"
-			"</html>\n");
-	}
+	add_to_string(&buffer,
+		"</pre>\n"
+		"</body>\n"
+		"</html>\n");
 	add_fragment(conn->cached, conn->from, buffer.source, buffer.length);
 	conn->from += buffer.length;
 
