@@ -265,7 +265,7 @@ read_gopher_directory_data(struct connection *conn)
 		"</html>\n");
 	add_fragment(conn->cached, conn->from, buffer.source, buffer.length);
 	conn->from += buffer.length;
-
+	mem_free_set(&conn->cached->head, stracpy("\nContent-Type: text/html\r\n"));
 	done_string(&buffer);
 }
 
