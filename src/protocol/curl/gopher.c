@@ -265,7 +265,6 @@ read_gopher_directory_data(struct connection *conn)
 		"</html>\n");
 	add_fragment(conn->cached, conn->from, buffer.source, buffer.length);
 	conn->from += buffer.length;
-	mem_free_set(&conn->cached->head, stracpy("\nContent-Type: text/html\r\n"));
 	done_string(&buffer);
 }
 
@@ -286,6 +285,9 @@ gophers_got_data(void *stream, void *buf, size_t len)
 		if (!conn->cached) {
 			abort_connection(conn, connection_state(S_OUT_OF_MEM));
 			return;
+		}
+		if (gopher->dir) {
+			mem_free_set(&conn->cached->content_type, stracpy("text/html"));
 		}
 	}
 
