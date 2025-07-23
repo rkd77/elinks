@@ -13,6 +13,7 @@
 
 #include "elinks.h"
 
+#include "terminal/color.h"
 #include "util/color.h"
 #include "util/conv.h"
 #include "util/fastfind.h"
@@ -114,6 +115,20 @@ decode_hex_color:
 		}
 	} else {
 		const struct color_spec *cs;
+
+	if (!strncmp(str, "color", 5)) {
+		int number = atoi(str+5);
+#ifdef CONFIG_256_COLORS
+		*color = get_term_color256(number);
+		return 0;
+#elif defined(CONFIG_88_COLORS)
+		*color = get_term_color88(number);
+		return 0;
+#else
+		*color = get_term_color16(number);
+		return 0;
+#endif
+	}
 
 #ifndef USE_FASTFIND
 		for (cs = color_specs; cs->name; cs++)
