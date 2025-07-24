@@ -130,7 +130,7 @@ do_gophers(struct connection *conn)
 		entity = *selector++;
 		selectorlen--;
 	}
-	gopher->dir = (entity == '1');
+	gopher->dir = (entity == '1' || entity == '7');
 
 	url = get_uri_string(conn->uri, URI_HOST | URI_PORT | URI_DATA);
 
@@ -138,7 +138,9 @@ do_gophers(struct connection *conn)
 		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
+
 	if (!init_string(&u)) {
+		mem_free(url);
 		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
@@ -155,7 +157,19 @@ do_gophers(struct connection *conn)
 		add_to_string(&u, auth->password);
 		add_char_to_string(&u, '@');
 	}
-	add_to_string(&u, url);
+	char *query = strchr(url, '?');
+
+	if (query) {
+		*query++ = '\0';
+		if (!strncmp(query, "search=", 7)) {
+			query += 7;
+		}
+		add_to_string(&u, url);
+		add_char_to_string(&u, '?');
+		add_to_string(&u, query);
+	} else {
+		add_to_string(&u, url);
+	}
 	mem_free(url);
 	curl = curl_easy_init();
 
