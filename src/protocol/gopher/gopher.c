@@ -582,10 +582,6 @@ add_gopher_menu_line(struct string *buffer, char *line)
 			add_format_to_string(&address, "gopher://%s/%c",
 				host, entity);
 
-			/* Ensure we put a slash after entity type */
-			if (selector[0] != '/')
-				add_char_to_string(&address, '/');
-
 			/* Encode selector string */
 			encode_selector_string(&address, selector);
 		}
