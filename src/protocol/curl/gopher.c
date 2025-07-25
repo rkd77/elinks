@@ -328,7 +328,7 @@ void
 gophers_curl_handle_error(struct connection *conn, CURLcode res)
 {
 	ELOG
-	if (res == CURLE_OK) {
+	if (res == CURLE_OK || res == CURLE_RECV_ERROR) {
 		struct gophers_connection_info *gopher = (struct gophers_connection_info *)conn->info;
 
 		if (gopher->dir && conn->cached) {
