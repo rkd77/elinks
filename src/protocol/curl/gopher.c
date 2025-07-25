@@ -128,7 +128,6 @@ do_gophers(struct connection *conn)
 	/* Pick up gopher_entity */
 	if (selectorlen > 1 && selector[1] == '/') {
 		entity = *selector++;
-		selectorlen--;
 	}
 	gopher->dir = (entity == '1' || entity == '7');
 
@@ -332,7 +331,7 @@ gophers_curl_handle_error(struct connection *conn, CURLcode res)
 	if (res == CURLE_OK) {
 		struct gophers_connection_info *gopher = (struct gophers_connection_info *)conn->info;
 
-		if (gopher->dir) {
+		if (gopher->dir && conn->cached) {
 			read_gopher_directory_data(conn);
 		}
 
