@@ -111,6 +111,7 @@ void mcode_or_die(const char *where, CURLMcode code);
 #endif
 
 
+
 #if defined(CONFIG_LIBCURL) && !defined(CONFIG_LIBEV) && !defined(CONFIG_LIBEVENT) && !defined(CONFIG_LIBUV)
 /* Global information, common to all connections */
 typedef struct _GlobalInfo
@@ -178,6 +179,23 @@ void set_handlers(int fd,
 /* Clear handlers associated with @fd. */
 #define clear_handlers(fd) \
 	set_handlers(fd, NULL, NULL, NULL, NULL, EL_TYPE_TCP)
+
+struct thread {
+	select_handler_T read_func;
+	select_handler_T write_func;
+	select_handler_T error_func;
+	void *data;
+#ifdef USE_LIBEVENT
+	struct event *read_event;
+	struct event *write_event;
+#endif
+#ifdef CONFIG_LIBUV
+	uv_handle_t *handle;
+	enum el_type_hint type_hint;
+#endif
+};
+
+extern struct thread *threads;
 
 /* Checks which can be used for querying the read/write state of the @fd
  * descriptor without blocking. The interlink code are the only users. */

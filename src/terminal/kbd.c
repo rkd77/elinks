@@ -111,7 +111,7 @@ itrm_queue_write(struct itrm *itrm)
 			     get_handler(itrm->out.sock, SELECT_HANDLER_READ),
 			     NULL,
 			     get_handler(itrm->out.sock, SELECT_HANDLER_ERROR),
-			     get_handler_data(itrm->out.sock), EL_TYPE_FD);
+			     get_handler_data(itrm->out.sock), EL_TYPE_PIPE);
 	} else {
 		assert(itrm->out.queue.len > 0);
 		memmove(itrm->out.queue.data, itrm->out.queue.data + written, itrm->out.queue.len);
@@ -151,7 +151,7 @@ itrm_queue_event(struct itrm *itrm, char *data, int len)
 		set_handlers(itrm->out.sock,
 			     get_handler(itrm->out.sock, SELECT_HANDLER_READ),
 			     (select_handler_T) itrm_queue_write,
-			     (select_handler_T) free_itrm, itrm, EL_TYPE_FD);
+			     (select_handler_T) free_itrm, itrm, EL_TYPE_PIPE);
 	}
 }
 
@@ -472,7 +472,6 @@ block_itrm(void)
 	suspend_mouse(ditrm->mouse_h);
 }
 
-
 static void
 free_itrm(struct itrm *itrm)
 {
@@ -737,11 +736,11 @@ has_nul_byte:
 		if (fg == TERM_EXEC_FG) {
 			set_handlers(blockh, (select_handler_T) unblock_itrm_x,
 				     NULL, (select_handler_T) unblock_itrm_x,
-				     (void *) (intptr_t) blockh, EL_TYPE_FD);
+				     (void *) (intptr_t) blockh, EL_TYPE_PIPE);
 
 		} else {
 			set_handlers(blockh, close_handle, NULL, close_handle,
-				     (void *) (intptr_t) blockh, EL_TYPE_FD);
+				     (void *) (intptr_t) blockh, EL_TYPE_PIPE);
 		}
 	}
 
@@ -1386,8 +1385,15 @@ read_kbd_cb(uv_stream_t *stream, ssize_t nread, const uv_buf_t *buf)
 		uv_read_stop(stream);
 		unhandle_itrm_stdin(itrm);
 		while (process_queue(itrm));
+
+		if (nread == UV_EOF) {
+			mem_free_set(&threads[fd].handle, NULL);
+			mem_free(priv);
+			mem_free_if(buf->base);
+		}
 		return;
 	}
+
 	if (itrm->in.queue.len + nread > itrm->in.queue.size) {
 		unsigned char *tmp = mem_realloc(itrm->in.queue.data, itrm->in.queue.len + nread);
 

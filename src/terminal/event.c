@@ -554,6 +554,13 @@ read_interm_cb(uv_stream_t *stream, ssize_t r, const uv_buf_t *buf)
 		return;
 	}
 
+	if (r == UV_EOF) {
+		mem_free_set(&threads[fd].handle, NULL);
+		mem_free(priv);
+		mem_free_if(buf->base);
+		return;
+	}
+
 	if (r <= 0) {
 		if (r == -1 && errno != ECONNRESET)
 			EL_ERROR(gettext("Could not read event: %d (%s)"),
@@ -562,11 +569,11 @@ read_interm_cb(uv_stream_t *stream, ssize_t r, const uv_buf_t *buf)
 		destroy_terminal(term);
 		return;
 	}
-	struct terminal_interlink *interlink = term->interlink;
 	char *iq;
 
 	/* Mark this as the most recently used terminal.  */
 	move_to_top_of_list(terminals, term);
+	struct terminal_interlink *interlink = term->interlink;
 
 	if (!interlink
 	    || !interlink->qfreespace
@@ -601,6 +608,7 @@ read_interm_cb(uv_stream_t *stream, ssize_t r, const uv_buf_t *buf)
 	interlink->qlen += r;
 	interlink->qfreespace -= r;
 
+eof:
 	while (interlink->qlen >= sizeof(struct interlink_event)) {
 		struct interlink_event *ev = (struct interlink_event *) iq;
 		int event_size = handle_interlink_event(term, ev);

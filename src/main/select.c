@@ -874,28 +874,13 @@ get_libuv_version(void)
 
 static int n_threads = 0;
 
-struct thread {
-	select_handler_T read_func;
-	select_handler_T write_func;
-	select_handler_T error_func;
-	void *data;
-#ifdef USE_LIBEVENT
-	struct event *read_event;
-	struct event *write_event;
-#endif
-#ifdef CONFIG_LIBUV
-	uv_handle_t *handle;
-	enum el_type_hint type_hint;
-#endif
-};
-
 #ifdef CONFIG_OS_WIN32
 /* CreatePipe produces big numbers for handles */
 #undef FD_SETSIZE
 #define FD_SETSIZE 4096
 #endif
 
-static struct thread *threads = NULL;
+struct thread *threads = NULL;
 
 static fd_set w_read;
 static fd_set w_write;
@@ -971,6 +956,7 @@ static void
 one_cb(uv_poll_t *handle, int status, int events)
 {
 	ELOG
+
 	if (!handle) {
 		return;
 	}
@@ -995,6 +981,39 @@ one_cb(uv_poll_t *handle, int status, int events)
 
 		if (hw) {
 			hw(get_handler_data(fd));
+		}
+	}
+}
+
+static void
+alloc_one_cb(uv_handle_t* handle, size_t suggested_size, uv_buf_t* buf)
+{
+	ELOG
+	buf->base = mem_alloc(suggested_size);
+	buf->len = suggested_size;
+}
+
+static void
+read_one_cb(uv_stream_t *stream, ssize_t r, const uv_buf_t *buf)
+{
+	ELOG
+	mem_free_if(buf->base);
+
+	if (!stream) {
+		return;
+	}
+	struct libuv_priv *priv = (struct libuv_priv *)uv_handle_get_data((uv_handle_t *)stream);
+
+	if (!priv) {
+		return;
+	}
+	int fd = priv->fd;
+
+	if (r >= 0) {
+		select_handler_T hr = get_handler(fd, SELECT_HANDLER_READ);
+
+		if (hr) {
+			hr(get_handler_data(fd));
 		}
 	}
 }
@@ -1031,9 +1050,6 @@ set_events_for_handle(int h)
 				uv_poll_stop((uv_poll_t *)handle);
 			}
 		}
-		priv = (struct libuv_priv *)uv_handle_get_data((uv_handle_t *)handle);
-		mem_free_if(priv);
-		mem_free_set(&threads[h].handle, NULL);
 		return;
 	}
 	if (!threads[h].handle) {
@@ -1115,6 +1131,8 @@ set_events_for_handle(int h)
 				uv_read_start((uv_stream_t *)handle, alloc_kbd_cb, read_kbd_cb);
 			} else if (threads[h].read_func == (select_handler_T)in_term) {
 				uv_read_start((uv_stream_t *)handle, alloc_interm_cb, read_interm_cb);
+			} else {
+				uv_read_start((uv_stream_t *)handle, alloc_one_cb, read_one_cb);
 			}
 		} else {
 			uv_poll_start((uv_poll_t *)handle, UV_READABLE, one_cb);

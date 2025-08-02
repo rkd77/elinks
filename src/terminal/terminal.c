@@ -431,14 +431,15 @@ exec_on_master_terminal(struct terminal *term,
 			     (select_handler_T) unblock_terminal,
 			     NULL,
 			     (select_handler_T) unblock_terminal,
-			     term, EL_TYPE_TTY);
+			     term, EL_TYPE_PIPE);
+
 		set_handlers(term->fdin, NULL, NULL,
 			     (select_handler_T) destroy_terminal,
-			     term, term->master ? EL_TYPE_TTY : EL_TYPE_TTY);
+			     term, term->fdin ? EL_TYPE_PIPE : EL_TYPE_TTY);
 
 	} else {
 		set_handlers(blockh, close_handle, NULL,
-			     close_handle, (void *) (intptr_t) blockh, EL_TYPE_TTY);
+			     close_handle, (void *) (intptr_t) blockh, EL_TYPE_PIPE);
 	}
 }
 
