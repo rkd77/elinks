@@ -162,6 +162,10 @@ do_real_lookup(char *name, struct sockaddr_storage **addrs, int *addrno,
 	if (!name || !addrs || !addrno)
 		return DNS_ERROR;
 
+	if (strlen(name) >= 6 && !strcasecmp(name + strlen(name) - 6, ".onion")) {
+		return DNS_ERROR;
+	}
+
 #ifdef CONFIG_IPV6
 	/* I had a strong preference for the following, but the glibc is really
 	 * obsolete so I had to rather use much more complicated getaddrinfo().
