@@ -315,6 +315,7 @@ void free_files(struct session *);
 void display_timer(struct session *ses);
 void load_common(struct session *ses);
 
+struct uri *get_open_onion_location(struct session *ses);
 
 /** session_is_loading() is like !!get_current_download() but doesn't take
  * session.req_sent into account.

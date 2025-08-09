@@ -37,6 +37,7 @@
 #include "network/connection.h"
 #include "network/state.h"
 #include "osdep/newwin.h"
+#include "protocol/header.h"
 #include "protocol/http/blacklist.h"
 #include "protocol/protocol.h"
 #include "protocol/uri.h"
@@ -1799,4 +1800,72 @@ get_ui_clipboard_file(void)
 {
 	ELOG
 	return get_opt_str("ui.clipboard_file", NULL);
+}
+
+struct uri *
+get_open_onion_location(struct session *ses)
+{
+	ELOG
+	struct uri *retval = NULL;
+	struct document_view *doc_view = ses->doc_view;
+
+	if (!doc_view) {
+		return NULL;
+	}
+	struct document *doc = doc_view->document;
+
+	if (!doc) {
+		return NULL;
+	}
+	struct cache_entry *cached = doc->cached;
+
+	if (!cached || !cached->head) {
+		return NULL;
+	}
+	char *onion_location = parse_header(cached->head, "Onion-Location", NULL);
+
+	if (!onion_location) {
+		return NULL;
+	}
+	struct uri *onion_uri = get_uri(onion_location, URI_NONE);
+
+	if (!onion_uri) {
+		goto ret;
+	}
+
+	if (onion_uri->protocol != PROTOCOL_HTTP && onion_uri->protocol != PROTOCOL_HTTPS) {
+		goto ret;
+	}
+
+	if (!onion_uri->host || onion_uri->hostlen < 6) {
+		goto ret;
+	}
+
+	// Onion-Location not ends with .onion
+	if (strncasecmp(onion_uri->host + onion_uri->hostlen - 6, ".onion", 6)) {
+		goto ret;
+	}
+
+	struct uri *uri = cached->uri;
+
+	if (!uri || !uri->host || uri->protocol != PROTOCOL_HTTPS) {
+		goto ret;
+	}
+
+	// Current document ends with .onion
+	if (!strncasecmp(uri->host + uri->hostlen - 6, ".onion", 6)) {
+		goto ret;
+	}
+	retval = onion_uri;
+ret:
+	mem_free(onion_location);
+
+	if (retval) {
+		return retval;
+	}
+
+	if (onion_uri) {
+		done_uri(onion_uri);
+	}
+	return NULL;
 }

@@ -35,6 +35,7 @@
 #include "network/connection.h"
 #include "protocol/auth/auth.h"
 #include "protocol/auth/dialogs.h"
+#include "protocol/uri.h"
 #include "terminal/tab.h"
 #include "terminal/terminal.h"
 #include "terminal/window.h"
@@ -74,6 +75,7 @@ do_action(struct session *ses, main_action_T action_id, int verbose)
 	struct terminal *term = ses->tab->term;
 	struct document_view *doc_view = current_frame(ses);
 	struct link *link = NULL;
+	struct uri *onion = NULL;
 
 	if (action_id == -1) goto unknown_action;
 
@@ -572,6 +574,15 @@ do_action(struct session *ses, main_action_T action_id, int verbose)
 
 		case ACT_MAIN_OPEN_NEW_WINDOW:
 			open_in_new_window(term, (void *)send_open_new_window, ses);
+			break;
+
+		case ACT_MAIN_OPEN_ONION_LOCATION:
+			onion = get_open_onion_location(ses);
+
+			if (onion) {
+				goto_uri(ses, onion);
+				done_uri(onion);
+			}
 			break;
 
 		case ACT_MAIN_OPEN_OS_SHELL:

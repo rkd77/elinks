@@ -94,6 +94,7 @@ ACTION_(MAIN, "open-link-in-new-window", OPEN_LINK_IN_NEW_WINDOW, N__("Open the 
 ACTION_(MAIN, "open-new-tab", OPEN_NEW_TAB, N__("Open a new tab"), 0),
 ACTION_(MAIN, "open-new-tab-in-background", OPEN_NEW_TAB_IN_BACKGROUND, N__("Open a new tab in the background"), 0),
 ACTION_(MAIN, "open-new-window", OPEN_NEW_WINDOW, N__("Open a new window"), ACTION_RESTRICT_ANONYMOUS),
+ACTION_(MAIN, "open-onion-location", OPEN_ONION_LOCATION, N__("Open the onion location link"), ACTION_REQUIRE_VIEW_STATE | ACTION_REQUIRE_LOCATION),
 ACTION_(MAIN, "open-os-shell", OPEN_OS_SHELL, N__("Open an OS shell"), ACTION_RESTRICT_ANONYMOUS),
 ACTION_(MAIN, "options-manager", OPTIONS_MANAGER, N__("Open options manager"), ACTION_RESTRICT_ANONYMOUS),
 ACTION_(MAIN, "quit", QUIT, N__("Open a quit confirmation dialog box"), 0),
