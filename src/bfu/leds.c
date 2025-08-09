@@ -527,7 +527,7 @@ menu_leds_info(struct terminal *term, void *xxx, void *xxxx)
 		 	"\n"
 			"[SIJP--]\n"
 			" |||||`- Download in progress\n"
-			" ||||`-- Unused\n"
+			" ||||`-- 'O' means an onion domain, 'o' exists the onion location\n"
 			" |||`--- A JavaScript pop-up window was blocked\n"
 			" ||`---- A JavaScript error has occurred\n"
 			" |`----- The state of insert mode for text-input form-fields\n"

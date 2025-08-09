@@ -132,6 +132,7 @@ struct session_status {
 	struct led *ecmascript_led;
 	struct led *popup_led;
 	struct led *download_led;
+	struct led *onion_led;
 #endif
 	/** Has the tab been visited yet. */
 	unsigned int visited:1;

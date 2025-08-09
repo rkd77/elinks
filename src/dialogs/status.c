@@ -520,6 +520,15 @@ display_window_title(struct session *ses, struct terminal *term)
 }
 
 #ifdef CONFIG_LEDS
+static int
+is_onion_uri(struct uri *uri)
+{
+	if (!uri || !uri->host || uri->hostlen < 6) {
+		return 0;
+	}
+	return !strncasecmp(uri->host + uri->hostlen - 6, ".onion", 6);
+}
+
 static inline void
 display_leds(struct session *ses, struct session_status *status)
 {
@@ -528,13 +537,23 @@ display_leds(struct session *ses, struct session_status *status)
 		struct cache_entry *cached = ses->doc_view->document->cached;
 
 		if (cached) {
-			if (cached->ssl_info)
+			struct uri *uri = get_open_onion_location(ses);
+
+			if (uri) {
+				set_led_value(status->onion_led, 'o');
+				done_uri(uri);
+			} else {
+				set_led_value(status->onion_led, is_onion_uri(cached->uri) ? 'O' : '-');
+			}
+			if (cached->ssl_info) {
 				set_led_value(status->ssl_led, 'S');
-			else
+			} else {
 				unset_led_value(status->ssl_led);
+			}
 		} else {
 			/* FIXME: We should do this thing better. */
 			set_led_value(status->ssl_led, '?');
+			set_led_value(status->onion_led, '-');
 		}
 	}
 
