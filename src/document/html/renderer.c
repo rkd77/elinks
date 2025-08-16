@@ -2287,7 +2287,6 @@ html_special(struct html_context *html_context, html_special_type_T c, ...)
 			break;
 
 		case SP_IFRAME:
-		{
 			if (document) {
 				char *url = va_arg(l, char *);
 				char *name = va_arg(l, char *);
@@ -2300,7 +2299,6 @@ html_special(struct html_context *html_context, html_special_type_T c, ...)
 				add_iframeset_entry(document, url, name, x, y, width, height, document->nlinks, hidden);
 			}
 			break;
-		}
 
 		case SP_IMAGE:
 #if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
