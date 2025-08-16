@@ -823,14 +823,19 @@ load_config_file(const char *prefix, const char *name,
 	ELOG
 	char *config_str, *config_file;
 
-	config_file = straconcat(prefix, STRING_DIR_SEP, name,
+	int prefixlen = strlen(prefix);
+	int prefix_has_slash = (prefixlen && dir_sep(prefix[prefixlen - 1]));
+	int name_has_slash = dir_sep(name[0]);
+	const char *slash = name_has_slash || prefix_has_slash ? "" : STRING_DIR_SEP;
+
+	config_file = straconcat(prefix, slash, name,
 				 (char *) NULL);
 	if (!config_file) return 1;
 
 	config_str = read_config_file(config_file);
 	if (!config_str) {
 		mem_free(config_file);
-		config_file = straconcat(prefix, STRING_DIR_SEP, ".", name,
+		config_file = straconcat(prefix, slash, ".", name,
 					 (char *) NULL);
 		if (!config_file) return 2;
 
