@@ -769,14 +769,14 @@ init_ecmascript_module(struct module *module)
 
 	if (xdg_config_home) {
 		/* ecmascript console log */
-		console_log_filename = straconcat(xdg_config_home, "/console.log", NULL);
-		console_warn_filename = straconcat(xdg_config_home, "/console.warn", NULL);
-		console_error_filename = program.testjs ? stracpy("/dev/stderr") : straconcat(xdg_config_home, "/console.err", NULL);
+		console_log_filename = straconcat(xdg_config_home, STRING_DIR_SEP, "console.log", NULL);
+		console_warn_filename = straconcat(xdg_config_home, STRING_DIR_SEP, "console.warn", NULL);
+		console_error_filename = program.testjs ? stracpy("/dev/stderr") : straconcat(xdg_config_home, STRING_DIR_SEP, "console.err", NULL);
 		/* ecmascript local storage db location */
 #ifdef CONFIG_OS_DOS
 		local_storage_filename = stracpy("elinks_ls.db");
 #else
-		local_storage_filename = straconcat(xdg_config_home, "/elinks_ls.db", NULL);
+		local_storage_filename = straconcat(xdg_config_home, STRING_DIR_SEP, "elinks_ls.db", NULL);
 #endif
 	}
 	ecmascript_enabled = get_opt_bool("ecmascript.enable", NULL);
