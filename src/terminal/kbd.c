@@ -1431,7 +1431,7 @@ static void
 handle_itrm_stdin(struct itrm *itrm)
 {
 	ELOG
-	assert(itrm->in.std >= 0);
+	assert(program.testjs || itrm->in.std >= 0);
 	if_assert_failed return;
 
 	set_handlers(itrm->in.std, (select_handler_T) in_kbd, NULL,
