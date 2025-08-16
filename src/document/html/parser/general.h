@@ -56,6 +56,7 @@ element_handler_T html_subscript;
 element_handler_T html_subscript_close;
 element_handler_T html_superscript;
 element_handler_T html_superscript_close;
+element_handler_T html_svg;
 element_handler_T html_table;
 element_handler_T html_td;
 element_handler_T html_template;

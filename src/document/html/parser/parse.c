@@ -536,6 +536,7 @@ static struct element_info elements[] = {
  {"STYLE",       html_style,       html_style_close,     0, ET_NESTABLE    },
  {"SUB",         html_subscript,   html_subscript_close, 0, ET_NESTABLE    },
  {"SUP",         html_superscript, NULL,                 0, ET_NESTABLE    },
+ {"SVG",         html_svg,         NULL,                 0, ET_NON_NESTABLE},
  {"TABLE",       html_table,       NULL,                 2, ET_NESTABLE    },
  {"TD",          html_td,          NULL,                 0, ET_NESTABLE    },
  {"TEMPLATE",    html_template,    NULL,                 0, ET_NON_NESTABLE},

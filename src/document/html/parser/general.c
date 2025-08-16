@@ -134,6 +134,14 @@ html_superscript(struct html_context *html_context, char *a,
 	put_chrs(html_context, "^", 1);
 }
 
+void
+html_svg(struct html_context *html_context, char *a,
+                 char *xxx3, char *xxx4, char **xxx5)
+{
+	ELOG
+	html_skip(html_context, a);
+}
+
 /* TODO: Add more languages.
  * Entities can be used in these strings.  */
 static char *quote_char[2] = { C_("\""), C_("'") };
