@@ -512,6 +512,7 @@ request_iframes(struct session *ses, struct iframeset_desc *iframeset_desc, int 
 
 	for (i = 0; i < iframeset_desc->n; i++) {
 		struct iframe_desc *iframe_desc = &iframeset_desc->iframe_desc[i];
+		iframe_desc->to_load = 0;
 
 		if (iframe_desc->uri) {
 			request_iframe(ses, iframe_desc->name,

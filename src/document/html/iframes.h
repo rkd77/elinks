@@ -27,6 +27,7 @@ struct iframe_desc {
 	int cache_id;
 	unsigned int inserted:1;
 	unsigned int hidden:1;
+	unsigned int to_load:1;
 };
 
 struct iframeset_desc {

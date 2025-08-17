@@ -55,6 +55,7 @@ void add_iframeset_entry(struct document *parent, char *url, char *name, int num
 		iframe_desc->name = stracpy(name);
 	}
 	iframe_desc->uri = url ? get_uri(url, URI_NONE) : NULL;
+	iframe_desc->to_load = url ? 1 : 0;
 	iframe_desc->box.x = 1;
 	iframe_desc->box.y = y;
 	iframe_desc->box.width = width;

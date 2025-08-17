@@ -489,6 +489,19 @@ render_document_frames(struct session *ses, int no_cache)
 	}
 
 	if (document_has_iframes(ses->doc_view->document)) {
+		struct iframeset_desc *iframeset_desc = ses->doc_view->document->iframeset_desc;
+		int i;
+
+		for (i = 0; i < iframeset_desc->n; i++) {
+			struct iframe_desc *iframe_desc = &iframeset_desc->iframe_desc[i];
+
+			if (iframe_desc->to_load) {
+				if (ses->display_timer == TIMER_ID_UNDEF) {
+					load_common(ses);
+				}
+				break;
+			}
+		}
 		format_iframes(ses, ses->doc_view->document, &doc_opts, 0);
 	}
 
