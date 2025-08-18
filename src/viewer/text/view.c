@@ -1494,7 +1494,7 @@ frame_ev_mouse(struct session *ses, struct document_view *doc_view, struct term_
 
 			if (check_mouse_button(ev, B_LEFT)
 			     || check_mouse_button(ev, B_MIDDLE)) {
-				if (check_mouse_action(ev, B_DOWN))
+				if (0 && check_mouse_action(ev, B_DOWN))
 					do_not_ignore_next_mouse_event(ses->tab->term);
 				else if (check_mouse_button(ev, B_LEFT))
 					status = enter(ses, doc_view, 0);
@@ -1686,6 +1686,7 @@ send_mouse_event(struct session *ses, struct document_view *doc_view,
 	struct term_event_mouse *mouse = &ev->info.mouse;
 
 	if (mouse->y == 0
+	    && ses->status.show_title_bar
 	    && check_mouse_action(ev, B_DOWN)
 	    && !check_mouse_wheel(ev)) {
 		struct window *m;
