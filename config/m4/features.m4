@@ -21,7 +21,7 @@ AC_DEFUN([EL_LOG_CONFIG],
 	[msgdots2="`echo $about | sed 's/[0-9]/./g'`"]
 	[msgdots1="`echo $msgdots2 | sed 's/[a-z]/./g'`"]
 	[msgdots0="`echo $msgdots1 | sed 's/[A-Z]/./g'`"]
-	[msgdots="`echo $msgdots0 | sed 's/[-_ ()]/./g'`"]
+	[msgdots="`echo $msgdots0 | sed 's/[-_ ()+]/./g'`"]
 	DOTS="................................"
 	dots=`echo $DOTS | sed "s/$msgdots//"`
 
