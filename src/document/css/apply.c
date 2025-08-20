@@ -90,6 +90,24 @@ css_apply_display(struct html_context *html_context, struct html_element *elemen
 }
 
 static void
+css_apply_visibility(struct html_context *html_context, struct html_element *element,
+		  struct css_property *prop)
+{
+	ELOG
+	assert(prop->value_type == CSS_VT_VISIBILITY);
+
+	switch (prop->value.display) {
+		case EL_CSS_VISIBILITY_VISIBLE:
+		default:
+			html_context->visibility_hidden = element->visibility_hidden = 0;
+			break;
+		case EL_CSS_VISIBILITY_HIDDEN:
+			html_context->visibility_hidden = element->visibility_hidden = 1;
+			break;
+	}
+}
+
+static void
 css_apply_font_attribute(struct html_context *html_context,
 			 struct html_element *element, struct css_property *prop)
 {
@@ -158,6 +176,7 @@ static const css_applier_T css_appliers[CSS_PT_LAST] = {
 	/* CSS_PT_LIST_STYLE_TYPE */	css_apply_list_style,
 	/* CSS_PT_TEXT_ALIGN */		css_apply_text_align,
 	/* CSS_PT_TEXT_DECORATION */	css_apply_font_attribute,
+	/* CSS_PT_VISIBILITY */		css_apply_visibility,
 	/* CSS_PT_WHITE_SPACE */	css_apply_font_attribute,
 };
 

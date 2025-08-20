@@ -26,6 +26,7 @@ struct css_property_info css_property_info[CSS_PT_LAST] = {
 	{ "list-style-type",	CSS_PT_LIST_STYLE_TYPE,	 CSS_VT_LIST_STYLE,	css_parse_list_style_value },
 	{ "text-align",		CSS_PT_TEXT_ALIGN,	 CSS_VT_TEXT_ALIGN,	css_parse_text_align_value },
 	{ "text-decoration",	CSS_PT_TEXT_DECORATION,	 CSS_VT_FONT_ATTRIBUTE,	css_parse_text_decoration_value },
+	{ "visibility",		CSS_PT_VISIBILITY,	CSS_VT_VISIBILITY,	css_parse_visibility_value },
 	{ "white-space",	CSS_PT_WHITE_SPACE,	 CSS_VT_FONT_ATTRIBUTE,	css_parse_white_space_value },
 
 	{ NULL, CSS_PT_NONE, CSS_VT_NONE },

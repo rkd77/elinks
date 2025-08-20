@@ -401,6 +401,37 @@ css_parse_display_value(struct css_property_info *propinfo,
 	return 1;
 }
 
+int
+css_parse_visibility_value(struct css_property_info *propinfo,
+			union css_property_value *value,
+			struct scanner *scanner)
+{
+	ELOG
+	struct scanner_token *token = get_scanner_token(scanner);
+
+	assert(propinfo->value_type == CSS_VT_VISIBILITY);
+
+	if (token->type != CSS_TOKEN_IDENT) return 0;
+
+	/* FIXME: This is _very_ simplistic */
+	if (scanner_token_contains(token, "visible")) {
+		value->visibility = EL_CSS_VISIBILITY_VISIBLE;
+	} else if (scanner_token_contains(token, "hidden")) {
+		value->visibility = EL_CSS_VISIBILITY_HIDDEN; /* XXX */
+	} else if (scanner_token_contains(token, "collapse")) {
+		value->visibility = EL_CSS_VISIBILITY_COLLAPSE;
+	} else if (scanner_token_contains(token, "initial")) {
+		value->visibility = EL_CSS_VISIBILITY_INITIAL;
+	} else if (scanner_token_contains(token, "inherit")) {
+		value->visibility = EL_CSS_VISIBILITY_INHERIT;
+	} else {
+		return 0;
+	}
+
+	skip_css_tokens(scanner, CSS_TOKEN_IDENT);
+	return 1;
+}
+
 
 int
 css_parse_value(struct css_property_info *propinfo,

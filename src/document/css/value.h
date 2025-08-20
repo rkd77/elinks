@@ -41,6 +41,11 @@ int css_parse_display_value(struct css_property_info *propinfo,
 			    struct scanner *scanner);
 
 /*! Takes no parser_data. */
+int css_parse_visibility_value(struct css_property_info *propinfo,
+			    union css_property_value *value,
+			    struct scanner *scanner);
+
+/*! Takes no parser_data. */
 int css_parse_text_decoration_value(struct css_property_info *propinfo,
 				union css_property_value *value,
 				struct scanner *scanner);

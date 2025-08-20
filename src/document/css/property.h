@@ -24,6 +24,7 @@ enum css_property_type {
 	CSS_PT_LIST_STYLE_TYPE,
 	CSS_PT_TEXT_ALIGN,
 	CSS_PT_TEXT_DECORATION,
+	CSS_PT_VISIBILITY,
 	CSS_PT_WHITE_SPACE,
 	CSS_PT_LAST,
 };
@@ -35,6 +36,7 @@ enum css_property_value_type {
 	CSS_VT_FONT_ATTRIBUTE,
 	CSS_VT_LIST_STYLE,
 	CSS_VT_TEXT_ALIGN,
+	CSS_VT_VISIBILITY,
 	CSS_VT_LAST,
 };
 
@@ -42,6 +44,14 @@ enum css_display {
 	CSS_DISP_INLINE,
 	CSS_DISP_BLOCK,
 	CSS_DISP_NONE,
+};
+
+enum css_visibility {
+	EL_CSS_VISIBILITY_VISIBLE,
+	EL_CSS_VISIBILITY_HIDDEN,
+	EL_CSS_VISIBILITY_COLLAPSE,
+	EL_CSS_VISIBILITY_INITIAL,
+	EL_CSS_VISIBILITY_INHERIT,
 };
 
 enum css_list_style {
@@ -73,6 +83,7 @@ union css_property_value {
 	void *none;
 	color_T color;
 	enum css_display display;
+	enum css_visibility visibility;
 	struct {
 		text_style_format_T add, rem;
 	} font_attribute;

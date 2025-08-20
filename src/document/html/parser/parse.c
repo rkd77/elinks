@@ -1049,6 +1049,8 @@ start_element(struct element_info *ei,
 							&html_context->css_styles,
 							&html_context->stack);
 
+			html_context->visibility_hidden = 0;
+
 			if (selector) {
 				apply_css_selector_style(html_context, html_top, selector);
 				done_css_selector(selector);
@@ -1088,6 +1090,8 @@ start_element(struct element_info *ei,
 	} else
 #endif
 	do {
+		html_context->visibility_hidden = 0;
+
 		if (selector && html_top->options) {
 			/* Call it now to override default colors of the elements. */
 			selector = get_css_selector_for_element(html_context, html_top,
