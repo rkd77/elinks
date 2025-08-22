@@ -26,10 +26,12 @@ meson setup /root/tmp/builddir_js \
 -Dguile=false \
 -Didn=true \
 -Dipv6=true \
+-Dkitty=true \
 -Dlibcss=true \
 -Dlibcurl=true \
 -Dlibev=false \
 -Dlibevent=true \
+-Dlibwebp=true \
 -Dluapkg='luajit' \
 -Dlzma=true \
 -Dmailcap=true \

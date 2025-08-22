@@ -107,6 +107,8 @@ RUN cd /root; git clone https://github.com/rkd77/elinks
 #
 RUN apk add upx bsd-compat-headers
 
+RUN apk add libwebp-dev libwebp-static
+
 ADD mes_static.sh /root/elinks/mes_static.sh
 RUN cd /root/elinks; \
 ./mes_static.sh;
