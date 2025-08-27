@@ -271,6 +271,9 @@ ecmascript_get_interpreter(struct view_state *vs)
 	interpreter->current_writecode = (struct ecmascript_string_list_item *)interpreter->writecode.next;
 	init_list(interpreter->timeouts);
 	add_to_list(ecmascript_interpreters, interpreter);
+#ifdef CONFIG_QUICKJS
+	interpreter->request_func = JS_NULL;
+#endif
 	install_timer(&interpreter->ani, 100, ecmascript_request, interpreter);
 
 	return interpreter;
@@ -564,15 +567,25 @@ ecmascript_request(void *val)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)val;
 
 	if (interpreter->vs->doc_view != NULL) {
-		if (interpreter->request_func) {
 #ifdef CONFIG_ECMASCRIPT_SMJS
-		JS::RootedValue vfun((JSContext *)interpreter->backend_data, *(interpreter->request_func));
-		delete interpreter->request_func;
-		interpreter->request_func = NULL;
-		ecmascript_call_function(interpreter, vfun, NULL);
-		check_for_rerender(interpreter, "request");
-#endif
+		if (interpreter->request_func) {
+			JS::RootedValue vfun((JSContext *)interpreter->backend_data, *(interpreter->request_func));
+			delete interpreter->request_func;
+			interpreter->request_func = NULL;
+			ecmascript_call_function(interpreter, vfun, NULL);
+			check_for_rerender(interpreter, "request");
 		}
+#endif
+#ifdef CONFIG_QUICKJS
+		if (!JS_IsNull(interpreter->request_func)) {
+			JSValue tmp = JS_DupValue(interpreter->backend_data, interpreter->request_func);
+			JS_FreeValue(interpreter->backend_data, interpreter->request_func);
+			interpreter->request_func = JS_NULL;
+			ecmascript_call_function(interpreter, tmp, NULL);
+			JS_FreeValue(interpreter->backend_data, tmp);
+			check_for_rerender(interpreter, "request");
+		}
+#endif
 	}
 	install_timer(&interpreter->ani, 100, ecmascript_request, val);
 }
@@ -732,6 +745,24 @@ ecmascript_set_timeout2(void *c, JS::HandleValue f, int timeout, int timeout_nex
 #endif
 
 #ifdef CONFIG_QUICKJS
+int
+ecmascript_set_request2(void *c, JSValueConst fun)
+{
+	ELOG
+	JSContext *ctx = (JSContext *)c;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	assert(interpreter && interpreter->vs->doc_view->document);
+
+	if (!JS_IsNull(interpreter->request_func)) {
+		JS_FreeValue(ctx, interpreter->request_func);
+	}
+	interpreter->request_func = JS_DupValue(ctx, fun);
+	interpreter->request++;
+
+	return interpreter->request;
+}
+
+
 struct ecmascript_timeout *
 ecmascript_set_timeout2q(void *c, JSValueConst fun, int timeout, int timeout_next)
 {

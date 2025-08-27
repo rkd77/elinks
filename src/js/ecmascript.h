@@ -107,6 +107,7 @@ struct ecmascript_interpreter {
 	JSValue document_obj;
 	JSValue location_obj;
 	JSValueConst fun;
+	JSValueConst request_func;
 #endif
 #ifdef CONFIG_MUJS
 	void *document_obj;
@@ -183,6 +184,7 @@ int ecmascript_set_request2(void *ctx, JS::HandleValue f);
 
 #ifdef CONFIG_QUICKJS
 struct ecmascript_timeout *ecmascript_set_timeout2q(void *ctx, JSValue f, int timeout, int timeout_next);
+int ecmascript_set_request2(void *ctx, JSValue f);
 #endif
 
 #ifdef CONFIG_MUJS

@@ -433,6 +433,30 @@ js_window_scroll(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *
 	return js_window_scrollTo(ctx, this_val, argc, argv);
 }
 
+/* @window_funcs{"requestAninationFrame"} */
+JSValue
+js_window_requestAnimationFrame(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	JSValueConst func;
+
+	if (argc != 1) {
+		return JS_UNDEFINED;
+	}
+	func = argv[0];
+
+	if (JS_IsFunction(ctx, func)) {
+		int id = ecmascript_set_request2(ctx, func);
+		return JS_NewInt32(ctx, id);
+	}
+	return JS_UNDEFINED;
+}
+
+
 /* @window_funcs{"setInterval"} */
 JSValue
 js_window_setInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
@@ -580,6 +604,39 @@ js_window_clearInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 
 	if (found_in_map_timer(t)) {
 		t->timeout_next = -1;
+	}
+
+	return JS_UNDEFINED;
+}
+
+/* @window_funcs{"clearRequestAnimationFrame"} */
+JSValue
+js_window_clearRequestAnimationFrame(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	if (argc != 1 || JS_IsNull(argv[0])) {
+		return JS_UNDEFINED;
+	}
+	int id;
+
+	if (JS_ToInt32(ctx, &id, argv[0])) {
+		return JS_UNDEFINED;
+	}
+
+	if (!id) {
+		return JS_UNDEFINED;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+
+	if (id == interpreter->request) {
+		interpreter->request = 0;
+		JS_FreeValue(ctx, interpreter->request_func);
+		interpreter->request_func = JS_NULL;
 	}
 
 	return JS_UNDEFINED;
@@ -1218,11 +1275,13 @@ static const JSCFunctionListEntry js_window_proto_funcs[] = {
 	JS_CFUNC_DEF("addEventListener", 3, js_window_addEventListener),
 	JS_CFUNC_DEF("alert", 1, js_window_alert),
 	JS_CFUNC_DEF("clearInterval", 1, js_window_clearInterval),
+	JS_CFUNC_DEF("clearRequestAnimationFrame", 1, js_window_clearRequestAnimationFrame),
 	JS_CFUNC_DEF("clearTimeout", 1, js_window_clearTimeout),
 	JS_CFUNC_DEF("getComputedStyle", 2, js_window_getComputedStyle),
 	JS_CFUNC_DEF("open", 3, js_window_open),
 	JS_CFUNC_DEF("postMessage", 3, js_window_postMessage),
 	JS_CFUNC_DEF("removeEventListener", 3, js_window_removeEventListener),
+	JS_CFUNC_DEF("requestAnimationFrame", 1, js_window_requestAnimationFrame),
 	JS_CFUNC_DEF("scroll", 2, js_window_scroll),
 	JS_CFUNC_DEF("scrollBy", 2, js_window_scrollBy),
 	JS_CFUNC_DEF("scrollByLines", 1, js_window_scrollByLines),
