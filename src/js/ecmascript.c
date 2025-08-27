@@ -586,6 +586,14 @@ ecmascript_request(void *val)
 			check_for_rerender(interpreter, "request");
 		}
 #endif
+#ifdef CONFIG_MUJS
+		if (interpreter->request_func) {
+			char *handle = interpreter->request_func;
+			interpreter->request_func = NULL;
+			ecmascript_call_function(interpreter, handle, NULL);
+			check_for_rerender(interpreter, "request");
+		}
+#endif
 	}
 	install_timer(&interpreter->ani, 100, ecmascript_request, val);
 }
@@ -792,6 +800,19 @@ ecmascript_set_timeout2q(void *c, JSValueConst fun, int timeout, int timeout_nex
 #endif
 
 #ifdef CONFIG_MUJS
+int
+ecmascript_set_request2(js_State *J, const char *handle)
+{
+	ELOG
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	assert(interpreter && interpreter->vs->doc_view->document);
+
+	interpreter->request_func = handle;
+	interpreter->request++;
+
+	return interpreter->request;
+}
+
 struct ecmascript_timeout *
 ecmascript_set_timeout2m(js_State *J, const char *handle, int timeout, int timeout_next)
 {

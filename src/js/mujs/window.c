@@ -415,6 +415,28 @@ mjs_window_clearInterval(js_State *J)
 }
 
 static void
+mjs_window_clearRequestAnimationFrame(js_State *J)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	int id = js_toint32(J, 1);
+
+	if (!id) {
+		js_pushundefined(J);
+		return;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+
+	if (id == interpreter->request) {
+		interpreter->request = 0;
+		interpreter->request_func = NULL;
+	}
+	js_pushundefined(J);
+}
+
+static void
 mjs_window_clearTimeout(js_State *J)
 {
 	ELOG
@@ -700,6 +722,19 @@ mjs_window_scroll(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	mjs_window_scrollTo(J);
+}
+
+static void
+mjs_window_requestAnimationFrame(js_State *J)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	js_copy(J, 1);
+	const char *handle = js_ref(J);
+	int id = ecmascript_set_request2(J, handle);
+	js_pushnumber(J, id);
 }
 
 static void
@@ -1004,11 +1039,13 @@ mjs_window_init(js_State *J)
 		addmethod(J, "window.addEventListener", mjs_window_addEventListener, 3);
 		addmethod(J, "window.alert", mjs_window_alert, 1);
 		addmethod(J, "window.clearInterval", mjs_window_clearInterval, 1);
+		addmethod(J, "window.clearRequestAnimationFrame", mjs_window_clearRequestAnimationFrame, 1);
 		addmethod(J, "window.clearTimeout", mjs_window_clearTimeout, 1);
 		addmethod(J, "window.getComputedStyle", mjs_window_getComputedStyle, 2);
 		addmethod(J, "window.open", mjs_window_open, 3);
 		addmethod(J, "window.postMessage", mjs_window_postMessage, 3);
 		addmethod(J, "window.removeEventListener", mjs_window_removeEventListener, 3);
+		addmethod(J, "window.requestAnimationFrame", mjs_window_requestAnimationFrame, 1);
 		addmethod(J, "window.scroll", mjs_window_scroll, 2);
 		addmethod(J, "window.scrollBy", mjs_window_scrollBy, 2);
 		addmethod(J, "window.scrollByLines", mjs_window_scrollByLines, 1);
@@ -1061,11 +1098,13 @@ mjs_push_window(js_State *J, struct view_state *vs)
 		addmethod(J, "window.addEventListener", mjs_window_addEventListener, 3);
 		addmethod(J, "window.alert", mjs_window_alert, 1);
 		addmethod(J, "window.clearInterval", mjs_window_clearInterval, 1);
+		addmethod(J, "window.clearRequestAnimationFrame", mjs_window_clearRequestAnimationFrame, 1);
 		addmethod(J, "window.clearTimeout", mjs_window_clearTimeout, 1);
 		addmethod(J, "window.getComputedStyle", mjs_window_getComputedStyle, 2);
 		addmethod(J, "window.open", mjs_window_open, 3);
 		addmethod(J, "window.postMessage", mjs_window_postMessage, 3);
 		addmethod(J, "window.removeEventListener", mjs_window_removeEventListener, 3);
+		addmethod(J, "window.requestAnimationFrame", mjs_window_requestAnimationFrame, 1);
 		addmethod(J, "window.scroll", mjs_window_scroll, 2);
 		addmethod(J, "window.scrollBy", mjs_window_scrollBy, 2);
 		addmethod(J, "window.scrollByLines", mjs_window_scrollByLines, 1);

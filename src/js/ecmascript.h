@@ -113,6 +113,7 @@ struct ecmascript_interpreter {
 	void *document_obj;
 	void *location_obj;
 	const char *fun;
+	const char *request_func;
 	void *doc;
 #endif
 	timer_id_T ani;
@@ -189,6 +190,7 @@ int ecmascript_set_request2(void *ctx, JSValue f);
 
 #ifdef CONFIG_MUJS
 struct ecmascript_timeout *ecmascript_set_timeout2m(js_State *J, const char *handle, int timeout, int timeout_next);
+int ecmascript_set_request2(js_State *J, const char *handle);
 #endif
 
 int get_ecmascript_enable(struct ecmascript_interpreter *interpreter);
