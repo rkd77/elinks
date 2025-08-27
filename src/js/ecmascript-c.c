@@ -398,6 +398,7 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 #endif
 	interpreter->vs->ecmascript = NULL;
 	interpreter->vs->ecmascript_fragile = 1;
+	kill_timer(&interpreter->ani);
 	del_from_list(interpreter);
 	mem_free(interpreter);
 	--interpreter_count;

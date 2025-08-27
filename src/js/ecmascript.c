@@ -124,6 +124,8 @@ char *local_storage_filename;
 
 int local_storage_ready;
 
+static void ecmascript_request(void *val);
+
 static int
 is_prefix(char *prefix, char *url, int dl)
 {
@@ -269,6 +271,8 @@ ecmascript_get_interpreter(struct view_state *vs)
 	interpreter->current_writecode = (struct ecmascript_string_list_item *)interpreter->writecode.next;
 	init_list(interpreter->timeouts);
 	add_to_list(ecmascript_interpreters, interpreter);
+	install_timer(&interpreter->ani, 100, ecmascript_request, interpreter);
+
 	return interpreter;
 }
 
@@ -553,6 +557,27 @@ skip:
 	check_for_rerender(interpreter, "handler");
 }
 
+static void
+ecmascript_request(void *val)
+{
+	ELOG
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)val;
+
+	if (interpreter->vs->doc_view != NULL) {
+		if (interpreter->request_func) {
+#ifdef CONFIG_ECMASCRIPT_SMJS
+		JS::RootedValue vfun((JSContext *)interpreter->backend_data, *(interpreter->request_func));
+		delete interpreter->request_func;
+		interpreter->request_func = NULL;
+		ecmascript_call_function(interpreter, vfun, NULL);
+		check_for_rerender(interpreter, "request");
+#endif
+		}
+	}
+	install_timer(&interpreter->ani, 100, ecmascript_request, val);
+}
+
+
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 /* Timer callback for @interpreter->vs->doc_view->document->timeout.
  * As explained in @install_timer, this function must erase the
@@ -655,6 +680,26 @@ ecmascript_set_timeout(void *c, char *code, int timeout, int timeout_next)
 }
 
 #ifdef CONFIG_ECMASCRIPT_SMJS
+int
+ecmascript_set_request2(void *c, JS::HandleValue f)
+{
+	ELOG
+	JSContext *ctx = (JSContext *)c;
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	assert(interpreter && interpreter->vs->doc_view->document);
+
+	JS::RootedValue fun((JSContext *)interpreter->backend_data, f);
+
+	if (interpreter->request_func) {
+		delete interpreter->request_func;
+	}
+	interpreter->request_func = new JS::Heap<JS::Value>(fun);
+	interpreter->request++;
+
+	return interpreter->request;
+}
+
 struct ecmascript_timeout *
 ecmascript_set_timeout2(void *c, JS::HandleValue f, int timeout, int timeout_next)
 {

@@ -100,6 +100,7 @@ struct ecmascript_interpreter {
 	JSObject *document_obj;
 	JSObject *location_obj;
 	JS::Heap<JS::Value> *fun;
+	JS::Heap<JS::Value> *request_func;
 #endif
 #ifdef CONFIG_QUICKJS
 	JSRuntime *rt;
@@ -113,7 +114,9 @@ struct ecmascript_interpreter {
 	const char *fun;
 	void *doc;
 #endif
+	timer_id_T ani;
 	int element_offset;
+	int request;
 	unsigned int changed:1;
 	unsigned int was_write:1;
 };
@@ -175,6 +178,7 @@ struct ecmascript_timeout *ecmascript_set_timeout(void *ctx, char *code, int tim
 
 #ifdef CONFIG_ECMASCRIPT_SMJS
 struct ecmascript_timeout *ecmascript_set_timeout2(void *ctx, JS::HandleValue f, int timeout, int timeout_next);
+int ecmascript_set_request2(void *ctx, JS::HandleValue f);
 #endif
 
 #ifdef CONFIG_QUICKJS

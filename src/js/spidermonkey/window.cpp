@@ -226,11 +226,13 @@ find_child_frame(struct document_view *doc_view, struct frame_desc *tframe)
 static bool window_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_alert(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_clearInterval(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool window_clearRequestAnimationFrame(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_clearTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_getComputedStyle(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_open(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_postMessage(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool window_requestAnimationFrame(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_scroll(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_scrollBy(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_scrollByLines(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -244,11 +246,13 @@ const spidermonkeyFunctionSpec window_funcs[] = {
 	{ "addEventListener", window_addEventListener, 3 },
 	{ "alert",	window_alert,		1 },
 	{ "clearInterval",	window_clearInterval,	1 },
+	{ "clearRequestAnimationFrame",	window_clearRequestAnimationFrame,	1 },
 	{ "clearTimeout",	window_clearTimeout,	1 },
 	{ "getComputedStyle",	window_getComputedStyle,	2 },
 	{ "open",	window_open,		3 },
 	{ "postMessage",	window_postMessage,	3 },
 	{ "removeEventListener", window_removeEventListener, 3 },
+	{ "requestAnimationFrame",	window_requestAnimationFrame, 1 },
 	{ "scroll",	window_scroll, 2 },
 	{ "scrollBy",	window_scrollBy, 2 },
 	{ "scrollByLines",	window_scrollByLines, 1 },
@@ -904,6 +908,33 @@ window_setInterval(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	return true;
 }
 
+/* @window_funcs{"requestAnimationFrame"} */
+static bool
+window_requestAnimationFrame(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+
+	if (argc != 1) {
+		return true;
+	}
+	int id = ecmascript_set_request2(ctx, args[0]);
+	args.rval().setInt32(id);
+
+	return true;
+}
+
+
 /* @window_funcs{"setTimeout"} */
 static bool
 window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
@@ -982,6 +1013,42 @@ window_clearInterval(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	if (found_in_map_timer(t)) {
 		t->timeout_next = -1;
+	}
+	return true;
+}
+
+
+/* @window_funcs{"clearRequestAnimationFrame"} */
+static bool
+window_clearRequestAnimationFrame(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+
+	if (argc != 1 || args[0].isNull()) {
+		return true;
+	}
+	int id = args[0].toInt32();
+
+	if (!id) {
+		return true;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	if (interpreter->request == id) {
+		interpreter->request = 0;
+		delete interpreter->request_func;
+		interpreter->request_func = NULL;
 	}
 	return true;
 }
