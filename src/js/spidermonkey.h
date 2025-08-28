@@ -21,6 +21,7 @@ char *spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter, s
 int spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter, struct string *code);
 
 void spidermonkey_call_function(struct ecmascript_interpreter *interpreter, JS::HandleValue fun, struct string *ret);
+void spidermonkey_call_function_timestamp(struct ecmascript_interpreter *interpreter, JS::HandleValue fun, struct string *ret);
 
 extern struct module spidermonkey_module;
 

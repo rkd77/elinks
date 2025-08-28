@@ -361,6 +361,20 @@ mujs_call_function(struct ecmascript_interpreter *interpreter,
 	js_pop(J, 1);
 }
 
+void
+mujs_call_function_timestamp(struct ecmascript_interpreter *interpreter,
+                  const char *fun, struct string *ret)
+{
+	ELOG
+	js_State *J = (js_State *)interpreter->backend_data;
+	interpreter->ret = ret;
+	js_getregistry(J, fun); /* retrieve the js function from the registry */
+	js_pushnull(J);
+	js_pushnumber(J, interpreter->timestamp);
+	js_pcall(J, 1);
+	js_pop(J, 1);
+}
+
 char *
 mujs_eval_stringback(struct ecmascript_interpreter *interpreter,
 			     struct string *code)

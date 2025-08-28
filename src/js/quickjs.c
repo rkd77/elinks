@@ -586,6 +586,38 @@ quickjs_call_function(struct ecmascript_interpreter *interpreter,
 	}
 }
 
+void
+quickjs_call_function_timestamp(struct ecmascript_interpreter *interpreter,
+                  JSValueConst fun, struct string *ret)
+{
+	ELOG
+	JSContext *ctx;
+
+	assert(interpreter);
+//	if (!js_module_init_ok) {
+//		return;
+//	}
+	ctx = (JSContext *)interpreter->backend_data;
+
+	interpreter->heartbeat = add_heartbeat(interpreter);
+	interpreter->ret = ret;
+
+	JSValue global_object = JS_GetGlobalObject(ctx);
+	REF_JS(global_object);
+
+	JSValue arg = JS_NewFloat64(ctx, interpreter->timestamp);
+	JSValue r = JS_Call(ctx, fun, global_object, 1, (JSValueConst *) &arg);
+	JS_FreeValue(ctx, global_object);
+	JS_FreeValue(ctx, arg);
+
+	done_heartbeat(interpreter->heartbeat);
+
+	if (JS_IsException(r)) {
+		error_reporter(interpreter, ctx);
+	}
+}
+
+
 char *
 quickjs_eval_stringback(struct ecmascript_interpreter *interpreter,
 			     struct string *code)

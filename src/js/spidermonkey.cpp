@@ -735,6 +735,31 @@ spidermonkey_call_function(struct ecmascript_interpreter *interpreter,
 	done_heartbeat(interpreter->heartbeat);
 }
 
+void
+spidermonkey_call_function_timestamp(struct ecmascript_interpreter *interpreter,
+                  JS::HandleValue fun, struct string *ret)
+{
+	JSContext *ctx;
+	JS::Value rval;
+
+	assert(interpreter);
+	if (!js_module_init_ok) {
+		return;
+	}
+	ctx = (JSContext *)interpreter->backend_data;
+	JSAutoRealm ar(ctx, (JSObject *)interpreter->ac->get());
+
+	interpreter->heartbeat = add_heartbeat(interpreter);
+	interpreter->ret = ret;
+
+	JS::RootedValue r_val(ctx, rval);
+	JS::RootedObject cg(ctx, JS::CurrentGlobalOrNull(ctx));
+
+	JS::RootedValueArray<1> argv(ctx);
+	argv[0].setNumber(interpreter->timestamp);
+	JS_CallFunctionValue(ctx, cg, fun, argv, &r_val);
+	done_heartbeat(interpreter->heartbeat);
+}
 
 char *
 spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,

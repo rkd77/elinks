@@ -119,6 +119,7 @@ struct ecmascript_interpreter {
 	timer_id_T ani;
 	int element_offset;
 	int request;
+	double timestamp;
 	unsigned int changed:1;
 	unsigned int was_write:1;
 };

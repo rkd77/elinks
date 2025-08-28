@@ -59,6 +59,7 @@ char *quickjs_eval_stringback(struct ecmascript_interpreter *interpreter, struct
 int quickjs_eval_boolback(struct ecmascript_interpreter *interpreter, struct string *code);
 
 void quickjs_call_function(struct ecmascript_interpreter *interpreter, JSValueConst fun, struct string *ret);
+void quickjs_call_function_timestamp(struct ecmascript_interpreter *interpreter, JSValueConst fun, struct string *ret);
 
 extern void *interps;
 extern struct module quickjs_module;

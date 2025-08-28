@@ -451,6 +451,35 @@ ecmascript_call_function(struct ecmascript_interpreter *interpreter,
 	interpreter->backend_nesting--;
 }
 
+#ifdef CONFIG_MUJS
+static void
+ecmascript_call_function_timestamp(struct ecmascript_interpreter *interpreter,
+                const char *fun, struct string *ret)
+#elif defined(CONFIG_QUICKJS)
+static void
+ecmascript_call_function_timestamp(struct ecmascript_interpreter *interpreter,
+                JSValueConst fun, struct string *ret)
+#else
+static void
+ecmascript_call_function_timestamp(struct ecmascript_interpreter *interpreter,
+                JS::HandleValue fun, struct string *ret)
+#endif
+{
+	ELOG
+	if (!get_ecmascript_enable(interpreter))
+		return;
+	assert(interpreter);
+	interpreter->backend_nesting++;
+#ifdef CONFIG_MUJS
+	mujs_call_function_timestamp(interpreter, fun, ret);
+#elif defined(CONFIG_QUICKJS)
+	quickjs_call_function_timestamp(interpreter, fun, ret);
+#else
+	spidermonkey_call_function_timestamp(interpreter, fun, ret);
+#endif
+	interpreter->backend_nesting--;
+}
+
 char *
 ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter,
 			   struct string *code)
@@ -566,13 +595,15 @@ ecmascript_request(void *val)
 	ELOG
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)val;
 
+	interpreter->timestamp += 100.0;
+
 	if (interpreter->vs->doc_view != NULL) {
 #ifdef CONFIG_ECMASCRIPT_SMJS
 		if (interpreter->request_func) {
 			JS::RootedValue vfun((JSContext *)interpreter->backend_data, *(interpreter->request_func));
 			delete interpreter->request_func;
 			interpreter->request_func = NULL;
-			ecmascript_call_function(interpreter, vfun, NULL);
+			ecmascript_call_function_timestamp(interpreter, vfun, NULL);
 			check_for_rerender(interpreter, "request");
 		}
 #endif
@@ -581,7 +612,7 @@ ecmascript_request(void *val)
 			JSValue tmp = JS_DupValue(interpreter->backend_data, interpreter->request_func);
 			JS_FreeValue(interpreter->backend_data, interpreter->request_func);
 			interpreter->request_func = JS_NULL;
-			ecmascript_call_function(interpreter, tmp, NULL);
+			ecmascript_call_function_timestamp(interpreter, tmp, NULL);
 			JS_FreeValue(interpreter->backend_data, tmp);
 			check_for_rerender(interpreter, "request");
 		}
@@ -590,7 +621,7 @@ ecmascript_request(void *val)
 		if (interpreter->request_func) {
 			char *handle = interpreter->request_func;
 			interpreter->request_func = NULL;
-			ecmascript_call_function(interpreter, handle, NULL);
+			ecmascript_call_function_timestamp(interpreter, handle, NULL);
 			check_for_rerender(interpreter, "request");
 		}
 #endif
