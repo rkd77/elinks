@@ -1,0 +1,15 @@
+<script>
+var counter = 0;
+function proc(timestamp)
+{
+	counter++;
+
+	if (counter == 5) {
+		console.assert(true, "True");
+		console.exit();
+	}
+	requestAnimationFrame(proc);
+}
+console.error("window.requestAnimationFrame.html");
+requestAnimationFrame(proc);
+</script>

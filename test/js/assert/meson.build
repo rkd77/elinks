@@ -93,6 +93,7 @@ took = [
 'node.nodeType.html',
 'nodelist.forEach.html',
 'style.backgroundClip.html',
+'window.requestAnimationFrame.html',
 'window.setTimeout.html',
 'URL.html',
 'URLSearchParams.html'
