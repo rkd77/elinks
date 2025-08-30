@@ -29,6 +29,7 @@
 #include "js/quickjs.h"
 #include "js/quickjs/collection.h"
 #include "js/quickjs/event.h"
+#include "js/quickjs/keyboard.h"
 #include "js/quickjs/form.h"
 #include "js/quickjs/forms.h"
 #include "js/quickjs/fragment.h"
@@ -66,6 +67,8 @@ struct js_document_private {
 	struct ecmascript_interpreter *interpreter;
 	JSValue thisval;
 	JSValue images;
+	JSValue onkeydown;
+	JSValue onkeyup;
 	dom_event_listener *listener;
 	void *node;
 	enum readyState state;
@@ -112,6 +115,8 @@ js_document_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 		foreach(l, doc_private->listeners) {
 			JS_MarkValue(rt, l->fun, mark_func);
 		}
+		JS_MarkValue(rt, doc_private->onkeydown, mark_func);
+		JS_MarkValue(rt, doc_private->onkeyup, mark_func);
 	}
 }
 
@@ -717,6 +722,139 @@ js_document_get_property_nodeType(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	return JS_NewInt32(ctx, 9);
+}
+
+static JSValue
+js_document_get_property_onkeydown(JSContext *ctx, JSValueConst this_val)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	struct js_document_private *doc_private = (struct js_document_private *)(JS_GetOpaque(this_val, js_document_class_id));
+
+	if (!doc_private) {
+		return JS_NULL;
+	}
+	JSValue ret = JS_DupValue(ctx, doc_private->onkeydown);
+
+	RETURN_JS(ret);
+}
+
+static JSValue
+js_document_set_property_onkeydown(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	struct js_document_private *doc_private = (struct js_document_private *)(JS_GetOpaque(this_val, js_document_class_id));
+
+	if (!doc_private) {
+		return JS_UNDEFINED;
+	}
+	JS_FreeValue(ctx, doc_private->onkeydown);
+	doc_private->onkeydown = JS_DupValue(ctx, val);
+
+	return JS_UNDEFINED;
+}
+
+
+static JSValue
+js_document_get_property_onkeyup(JSContext *ctx, JSValueConst this_val)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	struct js_document_private *doc_private = (struct js_document_private *)(JS_GetOpaque(this_val, js_document_class_id));
+
+	if (!doc_private) {
+		return JS_NULL;
+	}
+	JSValue ret = JS_DupValue(ctx, doc_private->onkeyup);
+
+	RETURN_JS(ret);
+}
+
+int
+quickjs_document_fire_onkeydown(struct ecmascript_interpreter *interpreter, struct term_event *ev)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JSContext *ctx = (JSContext *)interpreter->backend_data;
+	JSValue obj = interpreter->document_obj;
+
+	REF_JS(obj);
+	struct js_document_private *doc_private = (struct js_document_private *)(JS_GetOpaque(obj, js_document_class_id));
+
+	if (!doc_private) {
+		return 0;
+	}
+	if (JS_IsNull(doc_private->onkeydown)) {
+		return 0;
+	}
+	JSValue func = JS_DupValue(ctx, doc_private->onkeydown);
+	JSValue arg = get_keyboardEvent(ctx, ev);
+	JSValue ret = JS_Call(ctx, func, doc_private->thisval, 1, (JSValueConst *) &arg);
+	JS_FreeValue(ctx, ret);
+	JS_FreeValue(ctx, func);
+	JS_FreeValue(ctx, arg);
+	check_for_rerender(interpreter, "onkeydown");
+	return 1;
+}
+
+int
+quickjs_document_fire_onkeyup(struct ecmascript_interpreter *interpreter, struct term_event *ev)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JSContext *ctx = (JSContext *)interpreter->backend_data;
+	JSValue obj = interpreter->document_obj;
+
+	REF_JS(obj);
+	struct js_document_private *doc_private = (struct js_document_private *)(JS_GetOpaque(obj, js_document_class_id));
+
+	if (!doc_private) {
+		return 0;
+	}
+	if (JS_IsNull(doc_private->onkeyup)) {
+		return 0;
+	}
+	JSValue func = JS_DupValue(ctx, doc_private->onkeyup);
+	JSValue arg = get_keyboardEvent(ctx, ev);
+	JSValue ret = JS_Call(ctx, func, doc_private->thisval, 1, (JSValueConst *) &arg);
+	JS_FreeValue(ctx, ret);
+	JS_FreeValue(ctx, func);
+	JS_FreeValue(ctx, arg);
+	check_for_rerender(interpreter, "onkeyup");
+	return 1;
+}
+
+static JSValue
+js_document_set_property_onkeyup(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	struct js_document_private *doc_private = (struct js_document_private *)(JS_GetOpaque(this_val, js_document_class_id));
+
+	if (!doc_private) {
+		return JS_UNDEFINED;
+	}
+	JS_FreeValue(ctx, doc_private->onkeyup);
+	doc_private->onkeyup = JS_DupValue(ctx, val);
+
+	return JS_UNDEFINED;
 }
 
 static JSValue
@@ -2002,6 +2140,8 @@ static const JSCFunctionListEntry js_document_proto_funcs[] = {
 	JS_CGETSET_DEF("links", js_document_get_property_links, NULL),
 	JS_CGETSET_DEF("location",	js_document_get_property_location, js_document_set_property_location),
 	JS_CGETSET_DEF("nodeType", js_document_get_property_nodeType, NULL),
+	JS_CGETSET_DEF("onkeydown",	js_document_get_property_onkeydown, js_document_set_property_onkeydown),
+	JS_CGETSET_DEF("onkeyup",	js_document_get_property_onkeyup, js_document_set_property_onkeyup),
 	JS_CGETSET_DEF("readyState", js_document_get_property_readyState, NULL),
 	JS_CGETSET_DEF("referrer", js_document_get_property_referrer, NULL),
 	JS_CGETSET_DEF("scripts", js_document_get_property_scripts, NULL),
@@ -2047,6 +2187,8 @@ js_document_finalizer(JSRuntime *rt, JSValue val)
 			mem_free_set(&l->typ, NULL);
 			JS_FreeValueRT(rt, l->fun);
 		}
+		JS_FreeValueRT(rt, doc_private->onkeydown);
+		JS_FreeValueRT(rt, doc_private->onkeyup);
 		free_list(doc_private->listeners);
 		NODEINFO(doc_private->node);
 #ifdef ECMASCRIPT_DEBUG
@@ -2198,6 +2340,8 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 	JS_FreeValue(ctx, global_obj);
 	doc_private->thisval = document_obj;
 	doc_private->images = JS_NULL;
+	doc_private->onkeydown = JS_NULL;
+	doc_private->onkeyup = JS_NULL;
 
 	RETURN_JS(document_obj);
 }
@@ -2229,6 +2373,8 @@ getDocument2(JSContext *ctx, void *doc)
 	JS_SetOpaque(document_obj, doc_private);
 	doc_private->thisval = document_obj;
 	doc_private->images = JS_NULL;
+	doc_private->onkeydown = JS_NULL;
+	doc_private->onkeyup = JS_NULL;
 
 	RETURN_JS(document_obj);
 }
@@ -2274,6 +2420,8 @@ js_document_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSVal
 	JS_SetPropertyFunctionList(ctx, document_obj, js_document_proto_funcs, countof(js_document_proto_funcs));
 	JS_SetOpaque(document_obj, doc_private);
 	doc_private->thisval = document_obj;
+	doc_private->onkeydown = JS_NULL;
+	doc_private->onkeyup = JS_NULL;
 
 	RETURN_JS(document_obj);
 }

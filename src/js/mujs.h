@@ -31,6 +31,7 @@ struct ecmascript_interpreter;
 struct form_view;
 struct form_state;
 struct string;
+struct term_event;
 
 void *mujs_get_interpreter(struct ecmascript_interpreter *interpreter);
 void mujs_put_interpreter(struct ecmascript_interpreter *interpreter);
@@ -44,6 +45,9 @@ char *mujs_eval_stringback(struct ecmascript_interpreter *interpreter, struct st
 int mujs_eval_boolback(struct ecmascript_interpreter *interpreter, struct string *code);
 void mujs_call_function(struct ecmascript_interpreter *interpreter, const char *fun, struct string *ret);
 void mujs_call_function_timestamp(struct ecmascript_interpreter *interpreter, const char *fun, struct string *ret);
+
+int mujs_document_fire_onkeydown(struct ecmascript_interpreter *interpreter, struct term_event *ev);
+int mujs_document_fire_onkeyup(struct ecmascript_interpreter *interpreter, struct term_event *ev);
 
 void addmethod(js_State *J, const char *name, js_CFunction fun, int n);
 void addproperty(js_State *J, const char *name, js_CFunction getfun, js_CFunction setfun);

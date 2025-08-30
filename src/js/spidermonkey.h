@@ -8,6 +8,7 @@ struct ecmascript_interpreter;
 struct form_view;
 struct form_state;
 struct string;
+struct term_event;
 
 void *spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter);
 void spidermonkey_put_interpreter(struct ecmascript_interpreter *interpreter);
@@ -22,6 +23,9 @@ int spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter, struc
 
 void spidermonkey_call_function(struct ecmascript_interpreter *interpreter, JS::HandleValue fun, struct string *ret);
 void spidermonkey_call_function_timestamp(struct ecmascript_interpreter *interpreter, JS::HandleValue fun, struct string *ret);
+
+int spidermonkey_document_fire_onkeydown(struct ecmascript_interpreter *interpreter, struct term_event *ev);
+int spidermonkey_document_fire_onkeyup(struct ecmascript_interpreter *interpreter, struct term_event *ev);
 
 extern struct module spidermonkey_module;
 

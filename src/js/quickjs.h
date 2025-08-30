@@ -46,6 +46,7 @@ struct ecmascript_interpreter;
 struct form_view;
 struct form_state;
 struct string;
+struct term_event;
 
 void *quickjs_get_interpreter(struct ecmascript_interpreter *interpreter);
 void quickjs_put_interpreter(struct ecmascript_interpreter *interpreter);
@@ -60,6 +61,9 @@ int quickjs_eval_boolback(struct ecmascript_interpreter *interpreter, struct str
 
 void quickjs_call_function(struct ecmascript_interpreter *interpreter, JSValueConst fun, struct string *ret);
 void quickjs_call_function_timestamp(struct ecmascript_interpreter *interpreter, JSValueConst fun, struct string *ret);
+
+int quickjs_document_fire_onkeydown(struct ecmascript_interpreter *interpreter, struct term_event *ev);
+int quickjs_document_fire_onkeyup(struct ecmascript_interpreter *interpreter, struct term_event *ev);
 
 extern void *interps;
 extern struct module quickjs_module;

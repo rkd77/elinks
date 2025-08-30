@@ -47,6 +47,7 @@ struct form_state;
 struct form_view;
 struct string;
 struct terminal;
+struct term_event;
 struct uri;
 struct view_state;
 

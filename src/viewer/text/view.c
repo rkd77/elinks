@@ -42,6 +42,7 @@
 #include "intl/charsets.h"
 #include "intl/libintl.h"
 #include "main/event.h"
+#include "main/main.h"
 #include "osdep/osdep.h"
 #include "protocol/uri.h"
 #include "session/download.h"
@@ -1371,8 +1372,21 @@ try_form_action(struct session *ses, struct document_view *doc_view,
 		memset(&last_event, 0, sizeof(last_event));
 	}
 
-	if (!link_is_textinput(link))
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
+	if (program.ecmascript_keys) {
+		if (ev) {
+			int ret = document_fire_onkeydown(doc_view->vs->ecmascript, ev);
+			int ret2 = document_fire_onkeyup(doc_view->vs->ecmascript, ev);
+			if (ret || ret2) {
+				return FRAME_EVENT_JS;
+			}
+		}
+	}
+#endif
+
+	if (!link_is_textinput(link)) {
 		return FRAME_EVENT_IGNORED;
+	}
 
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 	if (ses->insert_mode == INSERT_MODE_ON) {
@@ -1813,11 +1827,20 @@ send_kbd_event(struct session *ses, struct document_view *doc_view,
 	ELOG
 	int event;
 	main_action_T action_id;
+	enum frame_event_status status = FRAME_EVENT_IGNORED;
 
-	if (doc_view && send_to_frame(ses, doc_view, ev) != FRAME_EVENT_IGNORED)
-		return NULL;
+	if (doc_view) {
+		status = send_to_frame(ses, doc_view, ev);
 
+		if (status != FRAME_EVENT_IGNORED && status != FRAME_EVENT_JS) {
+			return NULL;
+		}
+	}
 	action_id = kbd_action(KEYMAP_MAIN, ev, &event);
+
+	if (status == FRAME_EVENT_JS && action_id != ACT_MAIN_TOGGLE_ECMASCRIPT_KEYS) {
+		return NULL;
+	}
 
 	if (action_id == ACT_MAIN_QUIT) {
 		if (check_kbd_key(ev, KBD_CTRL_C))
@@ -1829,6 +1852,7 @@ quit:
 		case FRAME_EVENT_SESSION_DESTROYED:
 			return NULL;
 		case FRAME_EVENT_IGNORED:
+		case FRAME_EVENT_JS:
 			break;
 		case FRAME_EVENT_OK:
 		case FRAME_EVENT_REFRESH:

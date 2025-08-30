@@ -38,6 +38,7 @@
 #include "js/spidermonkey/form.h"
 #include "js/spidermonkey/forms.h"
 #include "js/spidermonkey/implementation.h"
+#include "js/spidermonkey/keyboard.h"
 #include "js/spidermonkey/location.h"
 #include "js/spidermonkey/document.h"
 #include "js/spidermonkey/element.h"
@@ -94,6 +95,8 @@ struct document_private {
 	JS::Heap<JSObject *> thisval;
 	JS::Heap<JSObject *> *images;
 	dom_event_listener *listener;
+	JS::Heap<JS::Value> *onkeydown;
+	JS::Heap<JS::Value> *onkeyup;
 	int ref_count;
 	enum readyState state;
 };
@@ -129,6 +132,12 @@ static void document_finalize(JS::GCContext *op, JSObject *obj)
 		free_list(doc_private->listeners);
 		if (doc_private->images) {
 			delete (doc_private->images);
+		}
+		if (doc_private->onkeyup) {
+			delete (doc_private->onkeyup);
+		}
+		if (doc_private->onkeydown) {
+			delete (doc_private->onkeydown);
 		}
 		mem_free(doc_private);
 		JS::SetReservedSlot(obj, 1, JS::UndefinedValue());
@@ -922,6 +931,168 @@ document_get_property_nodeType(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 static bool
+document_get_property_onkeydown(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct document_private *doc_private = JS::GetMaybePtrFromReservedSlot<struct document_private>(hobj, 1);
+	args.rval().set(*(doc_private->onkeydown));
+
+	return true;
+}
+
+static bool
+document_set_property_onkeydown(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct document_private *doc_private = JS::GetMaybePtrFromReservedSlot<struct document_private>(hobj, 1);
+
+	if (doc_private->onkeydown) {
+		delete doc_private->onkeydown;
+	}
+	doc_private->onkeydown = new JS::Heap<JS::Value>(args[0]);
+
+	return true;
+}
+
+static bool
+document_get_property_onkeyup(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct document_private *doc_private = JS::GetMaybePtrFromReservedSlot<struct document_private>(hobj, 1);
+	args.rval().set(*(doc_private->onkeyup));
+
+	return true;
+}
+
+int
+spidermonkey_document_fire_onkeydown(struct ecmascript_interpreter *interpreter, struct term_event *ev)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JSContext *ctx = (JSContext *)interpreter->backend_data;
+	JSObject *obj = interpreter->document_obj;
+	JS::RootedObject hobj(ctx, obj);
+
+	struct document_private *doc_private = JS::GetMaybePtrFromReservedSlot<struct document_private>(hobj, 1);
+
+	if (!doc_private->onkeydown) {
+		return 0;
+	}
+	JSObject *obj_ev = get_keyboardEvent(ctx, ev);
+	interpreter->heartbeat = add_heartbeat(interpreter);
+	JS::RootedValueArray<1> argv(ctx);
+	argv[0].setObject(*obj_ev);
+	JS::RootedValue r_val(ctx);
+	JS::RootedObject thisv(ctx, doc_private->thisval);
+	JS::RootedValue vfun(ctx, *(doc_private->onkeydown));
+	JS_CallFunctionValue(ctx, thisv, vfun, argv, &r_val);
+	done_heartbeat(interpreter->heartbeat);
+	check_for_rerender(interpreter, "onkeydown");
+	return 1;
+}
+
+int
+spidermonkey_document_fire_onkeyup(struct ecmascript_interpreter *interpreter, struct term_event *ev)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JSContext *ctx = (JSContext *)interpreter->backend_data;
+	JSObject *obj = interpreter->document_obj;
+	JS::RootedObject hobj(ctx, obj);
+
+	struct document_private *doc_private = JS::GetMaybePtrFromReservedSlot<struct document_private>(hobj, 1);
+
+	if (!doc_private->onkeyup) {
+		return 0;
+	}
+	JSObject *obj_ev = get_keyboardEvent(ctx, ev);
+	interpreter->heartbeat = add_heartbeat(interpreter);
+	JS::RootedValueArray<1> argv(ctx);
+	argv[0].setObject(*obj_ev);
+	JS::RootedValue r_val(ctx);
+	JS::RootedObject thisv(ctx, doc_private->thisval);
+	JS::RootedValue vfun(ctx, *(doc_private->onkeyup));
+	JS_CallFunctionValue(ctx, thisv, vfun, argv, &r_val);
+	done_heartbeat(interpreter->heartbeat);
+	check_for_rerender(interpreter, "onkeyup");
+	return 1;
+}
+
+static bool
+document_set_property_onkeyup(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct document_private *doc_private = JS::GetMaybePtrFromReservedSlot<struct document_private>(hobj, 1);
+
+	if (doc_private->onkeyup) {
+		delete doc_private->onkeyup;
+	}
+	doc_private->onkeyup = new JS::Heap<JS::Value>(args[0]);
+
+	return true;
+}
+
+static bool
 document_get_property_readyState(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1308,6 +1479,8 @@ JSPropertySpec document_props[] = {
 	JS_PSG("links", document_get_property_links, JSPROP_ENUMERATE),
 	JS_PSGS("location",	document_get_property_location, document_set_property_location, JSPROP_ENUMERATE),
 	JS_PSG("nodeType", document_get_property_nodeType, JSPROP_ENUMERATE),
+	JS_PSGS("onkeydown", document_get_property_onkeydown, document_set_property_onkeydown, JSPROP_ENUMERATE),
+	JS_PSGS("onkeyup", document_get_property_onkeyup, document_set_property_onkeyup, JSPROP_ENUMERATE),
 	JS_PSG("readyState", document_get_property_readyState, JSPROP_ENUMERATE),
 	JS_PSG("referrer",	document_get_property_referrer, JSPROP_ENUMERATE),
 	JS_PSG("scripts",	document_get_property_scripts, JSPROP_ENUMERATE),

@@ -21,6 +21,7 @@ struct program {
 	enum retval retval;
 	char *path;
 	unsigned int testjs:1;
+	unsigned int ecmascript_keys:1;
 };
 
 extern struct program program;

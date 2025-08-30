@@ -140,6 +140,7 @@ ACTION_(MAIN, "toggle-display-tables", TOGGLE_DISPLAY_TABLES, N__("Toggle render
 ACTION_(MAIN, "toggle-document-colors", TOGGLE_DOCUMENT_COLORS, N__("Toggle usage of document specific colors"), 0),
 ACTION_(MAIN, "toggle-document-width", TOGGLE_DOCUMENT_WIDTH, N__("Toggle use of document width"), 0),
 ACTION_(MAIN, "toggle-ecmascript", TOGGLE_ECMASCRIPT, N__("Toggle Ecmascript handling"), 0),
+ACTION_(MAIN, "toggle-ecmascript-keys", TOGGLE_ECMASCRIPT_KEYS, N__("Toggle Ecmascript keyboard handling"), 0),
 ACTION_(MAIN, "toggle-html-plain", TOGGLE_HTML_PLAIN, N__("Toggle rendering page as HTML / plain text"), 0),
 ACTION_(MAIN, "toggle-mouse", TOGGLE_MOUSE, N__("Toggle mouse handling"), 0),
 ACTION_(MAIN, "toggle-numbered-links", TOGGLE_NUMBERED_LINKS, N__("Toggle displaying of links numbers"), 0),

@@ -40,6 +40,7 @@
 #include "js/mujs/forms.h"
 #include "js/mujs/fragment.h"
 #include "js/mujs/implementation.h"
+#include "js/mujs/keyboard.h"
 #include "js/mujs/location.h"
 #include "js/mujs/document.h"
 #include "js/mujs/element.h"
@@ -88,6 +89,8 @@ struct mjs_document_private {
 	LIST_OF(struct el_listener) listeners;
 	dom_event_listener *listener;
 	void *node;
+	const char *onkeydown;
+	const char *onkeyup;
 	int ref_count;
 	enum readyState state;
 };
@@ -595,6 +598,102 @@ mjs_document_get_property_location(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	mjs_push_location(J, NULL);
+}
+
+static void
+mjs_document_get_property_onkeydown(js_State *J)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct mjs_document_private *doc_private = (struct mjs_document_private *)js_touserdata(J, 0, "document");
+
+	if (!doc_private) {
+		js_pushnull(J);
+		return;
+	}
+	// TODO
+	js_pushnull(J);
+}
+
+static void
+mjs_document_get_property_onkeyup(js_State *J)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct mjs_document_private *doc_private = (struct mjs_document_private *)js_touserdata(J, 0, "document");
+
+	if (!doc_private) {
+		js_pushnull(J);
+		return;
+	}
+	// TODO
+	js_pushnull(J);
+}
+
+static void
+mjs_document_set_property_onkeydown(js_State *J)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct mjs_document_private *doc_private = (struct mjs_document_private *)js_touserdata(J, 0, "document");
+
+	if (!doc_private) {
+		js_pushundefined(J);
+		return;
+	}
+	js_copy(J, 1);
+	doc_private->onkeydown = js_ref(J);
+	js_pushundefined(J);
+}
+
+static void
+mjs_document_set_property_onkeyup(js_State *J)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct mjs_document_private *doc_private = (struct mjs_document_private *)js_touserdata(J, 0, "document");
+
+	if (!doc_private) {
+		js_pushundefined(J);
+		return;
+	}
+	js_copy(J, 1);
+	doc_private->onkeyup = js_ref(J);
+	js_pushundefined(J);
+}
+
+int
+mujs_document_fire_onkeydown(struct ecmascript_interpreter *interpreter, struct term_event *ev)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	js_State *J = (js_State *)interpreter->backend_data;
+
+	// TODO
+	return 0;
+}
+
+int
+mujs_document_fire_onkeyup(struct ecmascript_interpreter *interpreter, struct term_event *ev)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	js_State *J = (js_State *)interpreter->backend_data;
+
+	// TODO
+	return 0;
 }
 
 static void mjs_document_set_property_url(js_State *J);

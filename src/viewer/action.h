@@ -18,6 +18,8 @@ enum frame_event_status {
 	FRAME_EVENT_OK,
 	/* The event was handled, and the current session was destroyed */
 	FRAME_EVENT_SESSION_DESTROYED,
+	/* Event was handled by JS */
+	FRAME_EVENT_JS,
 };
 
 enum frame_event_status do_action(struct session *ses,

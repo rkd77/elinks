@@ -552,6 +552,35 @@ void ecmascript_moved_form_state(struct form_state *fs)
 #endif
 }
 
+int
+document_fire_onkeydown(struct ecmascript_interpreter *interpreter, struct term_event *ev)
+{
+#ifdef CONFIG_ECMASCRIPT_SMJS
+	return spidermonkey_document_fire_onkeydown(interpreter, ev);
+#endif
+#ifdef CONFIG_QUICKJS
+	return quickjs_document_fire_onkeydown(interpreter, ev);
+#endif
+#ifdef CONFIG_MUJS
+	return mujs_document_fire_onkeydown(interpreter, ev);
+#endif
+}
+
+int
+document_fire_onkeyup(struct ecmascript_interpreter *interpreter, struct term_event *ev)
+{
+#ifdef CONFIG_ECMASCRIPT_SMJS
+	return spidermonkey_document_fire_onkeyup(interpreter, ev);
+#endif
+#ifdef CONFIG_QUICKJS
+	return quickjs_document_fire_onkeyup(interpreter, ev);
+#endif
+#ifdef CONFIG_MUJS
+	return mujs_document_fire_onkeyup(interpreter, ev);
+#endif
+}
+
+
 void *
 walk_tree_query(dom_node *node, const char *selector, int depth)
 {
