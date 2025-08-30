@@ -256,7 +256,6 @@ $(document).ready(function() {
                 this.timer++;
             if (this.timer == -24) {
                 this.clearBlocks();
-                this.modified = true;
                 this.toClear = false;
                 this.timer = 0;
             }
