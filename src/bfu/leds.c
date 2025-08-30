@@ -35,7 +35,7 @@
 /* Current leds allocation:
  * 0 - SSL connection indicator
  * 1 - Insert-mode indicator
- * 2 - JavaScript Error indicator
+ * 2 - JavaScript Error indicator or application mode
  * 3 - JavaScript pop-up blocking indicator
  * 4 - unused, reserved for Lua
  * 5 - download in progress */
@@ -529,7 +529,7 @@ menu_leds_info(struct terminal *term, void *xxx, void *xxxx)
 			" |||||`- Download in progress\n"
 			" ||||`-- 'O' means an onion domain, 'o' exists the onion location\n"
 			" |||`--- A JavaScript pop-up window was blocked\n"
-			" ||`---- A JavaScript error has occurred\n"
+			" ||`---- A JavaScript error has occurred or application keyboard mode (A)\n"
 			" |`----- The state of insert mode for text-input form-fields\n"
 			" |       'i' means modeless, 'I' means insert mode is on\n"
 			" `------ Whether an SSL connection was used\n"

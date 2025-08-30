@@ -785,6 +785,7 @@ do_action(struct session *ses, main_action_T action_id, int verbose)
 		case ACT_MAIN_TOGGLE_ECMASCRIPT_KEYS:
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 			program.ecmascript_keys = !program.ecmascript_keys;
+			set_led_value(ses->status.ecmascript_led, program.ecmascript_keys ? 'A' : '-');
 #endif
 			break;
 
