@@ -153,6 +153,7 @@ $(document).ready(function() {
             this.gameMatrix = [];
             this.gameMatrixBuffer = [];
             this.delay = 32;
+            this.modified = false;
             for (var i = 0; i < 20; i++) {
                 var arr1 = [];
                 var arr2 = [];
@@ -201,6 +202,7 @@ $(document).ready(function() {
             this.downKey = false;
             this.leftKey = false;
             this.rightKey = false;
+            this.modified = false;
             for (var i = 0; i < 20; i++) {
                 for (var j = 0; j < 10; j++) {
                     this.gameMatrix[i][j] = 0;
@@ -254,6 +256,7 @@ $(document).ready(function() {
                 this.timer++;
             if (this.timer == -24) {
                 this.clearBlocks();
+                this.modified = true;
                 this.toClear = false;
                 this.timer = 0;
             }
@@ -266,8 +269,9 @@ $(document).ready(function() {
                 }
             }
             if (this.downKey && !this.toClear && !this.waitForDownKeyRelease) {
-                if (this.downkeytimer % 3 == 0)
+                if (this.downkeytimer % 3 == 0) {
                     this.moveDown();
+                }
             }
             if (this.leftKey && !this.toClear) {
                 if (this.leftkeytimer == 1 || (this.leftkeytimer > 15 && this.leftkeytimer % 3 == 0)) {
@@ -285,7 +289,7 @@ $(document).ready(function() {
                 this.timer = 0;
                 this.moveDown();
             }
-            this.findShadow();
+            //this.findShadow();
         };
         MyApp.prototype.gameover = function () {
             //var referrer = document.referrer;
@@ -420,6 +424,7 @@ $(document).ready(function() {
         MyApp.prototype.moveLeft = function () {
             if (this.game_mode != GAME_MODE.PLAYING)
                 return;
+            this.modified = true;
             var success = true;
             for (var i = 0; i < 10; i++) {
                 for (var j = 0; j < 20; j++) {
@@ -444,6 +449,7 @@ $(document).ready(function() {
         MyApp.prototype.moveRight = function () {
             if (this.game_mode != GAME_MODE.PLAYING)
                 return;
+            this.modified = true;
             var success = true;
             for (var i = 9; i > -1; i--) {
                 for (var j = 0; j < 20; j++) {
@@ -471,8 +477,9 @@ $(document).ready(function() {
                 counter++;
                 if (counter > 100)
                     return;
-                if (this.game_mode == GAME_MODE.PLAYING)
+                if (this.game_mode == GAME_MODE.PLAYING) {
                     this.moveDown();
+                }
             }
         };
         MyApp.prototype.findShadow = function () {
@@ -520,6 +527,7 @@ $(document).ready(function() {
             }
         };
         MyApp.prototype.moveDown = function () {
+            this.modified = true;
             var success = true;
             for (var i = 0; i < 10; i++) {
                 for (var j = 0; j < 20; j++) {
@@ -559,6 +567,7 @@ $(document).ready(function() {
                 return;
             if (this.toClear)
                 return;
+            this.modified = true;
             if (this.piece == 1) {
                 if (this.state == 1) {
                     if (this.centY != 19 && this.gameMatrix[this.centY + 1][this.centX] == 0) {
@@ -785,6 +794,7 @@ $(document).ready(function() {
             }
         };
         MyApp.prototype.clearBlocks = function () {
+            this.modified = true;
             var tempLines = 0;
             for (var i = 0; i < 20; i++) {
                 var temp = false;
@@ -851,6 +861,10 @@ $(document).ready(function() {
             return color;
         };
         MyApp.prototype.newPaint = function () {
+			if (!this.modified) {
+				return;
+			}
+			this.modified = false;
             var _this = this;
             this.countFPS();
             var randomColor = this.getRandomColor();
