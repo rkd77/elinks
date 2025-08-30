@@ -274,7 +274,7 @@ ecmascript_get_interpreter(struct view_state *vs)
 #ifdef CONFIG_QUICKJS
 	interpreter->request_func = JS_NULL;
 #endif
-	install_timer(&interpreter->ani, 100, ecmascript_request, interpreter);
+	install_timer(&interpreter->ani, 20, ecmascript_request, interpreter);
 
 	return interpreter;
 }
@@ -595,7 +595,7 @@ ecmascript_request(void *val)
 	ELOG
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)val;
 
-	interpreter->timestamp += 100.0;
+	interpreter->timestamp += 20.0;
 
 	if (interpreter->vs->doc_view != NULL) {
 #ifdef CONFIG_ECMASCRIPT_SMJS
@@ -626,7 +626,7 @@ ecmascript_request(void *val)
 		}
 #endif
 	}
-	install_timer(&interpreter->ani, 100, ecmascript_request, val);
+	install_timer(&interpreter->ani, 20, ecmascript_request, val);
 }
 
 
