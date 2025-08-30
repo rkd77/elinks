@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tetris JS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="keywords" content="Neil Barkhina, Tetris, HtML5, Desktop, Keyboard Controls" />
+    <meta name="description" content="Tetris Game written in Pure HTML, no Canvas. Minimalist Design and Wide browser support accross Desktop. Keyboard Controls." />
+    <script src="jquery-3.3.1.min.js"></script>
+    <script src="tetris.js"></script>
+</head>
+<body>
+    <div id="divMain" style="text-align:center;">
+        <div id="header">
+            <h3>
+                Tetris JS
+                <a href="https://github.com/nbarkhina/TetrisJS" target="_blank">
+                    <img src="github_logo.png" style="height: 25px; padding-bottom: 5px; padding-left: 10px;">
+                </a>
+            </h3>
+            <button id="btnStart" onclick="myApp.btnClick()">New Game</button>
+            <button id="btnStart2" onclick="myApp.btnPause()"
+            rv-text="data.getPauseButtonText | call data.game_mode">Pause</button>
+            <br>
+        </div>
+        <div id="gameArea">
+            </div>
+            <div id="gamediv">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
