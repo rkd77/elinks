@@ -569,9 +569,14 @@ ecmascript_timeout_handler(void *val)
 	if (t->timeout_next < 0) {
 		goto skip;
 	}
-	assertm(interpreter->vs->doc_view != NULL,
-		"setTimeout: vs with no document (e_f %d)",
-		interpreter->vs->ecmascript_fragile);
+
+	if (!interpreter->vs->doc_view) {
+		goto skip;
+	}
+
+//	assertm(interpreter->vs->doc_view != NULL,
+//		"setTimeout: vs with no document (e_f %d)",
+//		interpreter->vs->ecmascript_fragile);
 	ecmascript_eval(interpreter, &t->code, NULL, 0);
 
 	if (t->timeout_next > 0) {
