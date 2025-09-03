@@ -601,6 +601,7 @@ ecmascript_request(void *val)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)val;
 
 	interpreter->timestamp += 20.0;
+	install_timer(&interpreter->ani, 20, ecmascript_request, val);
 
 	if (interpreter->vs->doc_view != NULL) {
 #ifdef CONFIG_ECMASCRIPT_SMJS
@@ -631,7 +632,6 @@ ecmascript_request(void *val)
 		}
 #endif
 	}
-	install_timer(&interpreter->ani, 20, ecmascript_request, val);
 }
 
 
