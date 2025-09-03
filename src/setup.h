@@ -125,6 +125,8 @@
 #define FG_POLL_TIME			500
 #define TERMINAL_POLL_TIMEOUT		1000
 
+#define REQUEST_ANIMATION_FRAME		((milliseconds_T) 20)
+
 /* Either 3 or 4 */
 #define KITTY_BYTES_PER_PIXEL	4
 //#define ECMASCRIPT_DEBUG 1
