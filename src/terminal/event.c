@@ -608,7 +608,7 @@ read_interm_cb(uv_stream_t *stream, ssize_t r, const uv_buf_t *buf)
 	interlink->qlen += r;
 	interlink->qfreespace -= r;
 
-eof:
+//eof:
 	while (interlink->qlen >= sizeof(struct interlink_event)) {
 		struct interlink_event *ev = (struct interlink_event *) iq;
 		int event_size = handle_interlink_event(term, ev);
