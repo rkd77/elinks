@@ -1534,6 +1534,7 @@ try_redraw_all_terminals(void)
 }
 
 #ifndef NO_SIGNAL_HANDLERS
+#ifndef CONFIG_LIBUV
 static void
 clear_events(int h, int blocking)
 {
@@ -1556,6 +1557,7 @@ clear_events(int h, int blocking)
 	}
 #endif
 }
+#endif
 
 pid_t signal_pid;
 #if defined(HAVE_SYS_EVENTFD_H) && !defined(CONFIG_LIBUV)
@@ -1564,12 +1566,14 @@ int signal_efd = -1;
 int signal_pipe[2] = { -1, -1 };
 #endif
 
+#ifndef CONFIG_LIBUV
 static void
 clear_events_ptr(void *handle)
 {
 	ELOG
 	clear_events((int)(intptr_t)handle, 0);
 }
+#endif
 #endif
 
 #ifdef CONFIG_LIBUV
