@@ -68,6 +68,7 @@ init_template_by_style(struct screen_char *template_, struct document_options *o
 			case CSS_PT_LIST_STYLE_TYPE:
 			case CSS_PT_TEXT_ALIGN:
 			case CSS_PT_WHITE_SPACE:
+			case CSS_PT_VISIBILITY:
 			case CSS_PT_LAST:
 				break;
 			}
