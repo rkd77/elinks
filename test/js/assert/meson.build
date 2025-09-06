@@ -3,6 +3,8 @@ tofail = [
 #'document.getElementsByName.html', // not implemented
 'element.namedItem.html'
 ]
+
+
 took = [
 'customEvent.html',
 'doctype.publicId.html',
@@ -19,7 +21,6 @@ took = [
 'document.documentURI.html',
 'document.domain.html',
 'document.getElementsByClassName.html',
-'document.getElementsByClassName_2.html',
 'document.getElementsByTagName.html',
 'document.head.html',
 'document.images.html',
@@ -72,7 +73,6 @@ took = [
 'element.parentNode.html',
 'element.previousElementSibling.html',
 'element.previousSibling.html',
-'element.prototype.matches.html',
 'element.querySelectorAll.html',
 'element.querySelector.html',
 'element.remove.html',
@@ -81,7 +81,6 @@ took = [
 'element.textContent.html',
 #'event.html',
 'eventListener.html',
-'fetch.html',
 'fragment.appendChild.html',
 'fragment.firstChild.html',
 'fragment.getElementsByTagName.html',
@@ -96,8 +95,24 @@ took = [
 'window.requestAnimationFrame.html',
 'window.setTimeout.html',
 'URL.html',
+]
+
+mujs_fail = [
+'element.prototype.matches.html'
+]
+
+mujs_timeout = [
+'document.getElementsByClassName_2.html',
+'fetch.html',
 'URLSearchParams.html'
 ]
+
+if conf_data.get('CONFIG_MUJS')
+    tofail += mujs_fail
+else
+    took += mujs_fail
+    took += mujs_timeout
+endif
 
 term = environment({'TERM':'dumb'})
 
