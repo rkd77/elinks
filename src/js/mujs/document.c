@@ -71,30 +71,6 @@
 
 //static xmlpp::Document emptyDoc;
 
-struct el_listener {
-	LIST_HEAD_EL(struct el_listener);
-	char *typ;
-	const char *fun;
-};
-
-enum readyState {
-	LOADING = 0,
-	INTERACTIVE,
-	COMPLETE
-};
-
-struct mjs_document_private {
-	struct ecmascript_interpreter *interpreter;
-	const char *thisval;
-	LIST_OF(struct el_listener) listeners;
-	dom_event_listener *listener;
-	void *node;
-	const char *onkeydown;
-	const char *onkeyup;
-	int ref_count;
-	enum readyState state;
-};
-
 static void document_event_handler(dom_event *event, void *pw);
 
 void *
@@ -609,12 +585,11 @@ mjs_document_get_property_onkeydown(js_State *J)
 #endif
 	struct mjs_document_private *doc_private = (struct mjs_document_private *)js_touserdata(J, 0, "document");
 
-	if (!doc_private) {
+	if (!doc_private || !doc_private->onkeydown) {
 		js_pushnull(J);
 		return;
 	}
-	// TODO
-	js_pushnull(J);
+	js_getregistry(J, doc_private->onkeydown);
 }
 
 static void
@@ -626,12 +601,11 @@ mjs_document_get_property_onkeyup(js_State *J)
 #endif
 	struct mjs_document_private *doc_private = (struct mjs_document_private *)js_touserdata(J, 0, "document");
 
-	if (!doc_private) {
+	if (!doc_private || !doc_private->onkeyup) {
 		js_pushnull(J);
 		return;
 	}
-	// TODO
-	js_pushnull(J);
+	js_getregistry(J, doc_private->onkeyup);
 }
 
 static void
@@ -679,8 +653,22 @@ mujs_document_fire_onkeydown(struct ecmascript_interpreter *interpreter, struct 
 #endif
 	js_State *J = (js_State *)interpreter->backend_data;
 
-	// TODO
-	return 0;
+	if (!J) {
+		return 0;
+	}
+	struct mjs_document_private *doc_private = (struct mjs_document_private *)interpreter->doc_private;
+
+	if (!doc_private || !doc_private->onkeydown) {
+		return 0;
+	}
+	js_getregistry(J, doc_private->onkeydown); /* retrieve the js function from the registry */
+	js_getregistry(J, doc_private->thisval);
+	mjs_push_keyboardEvent(J, ev, "onkeydown");
+	js_pcall(J, 1);
+	js_pop(J, 1);
+
+	check_for_rerender(interpreter, "onkeydown");
+	return 1;
 }
 
 int
@@ -692,8 +680,22 @@ mujs_document_fire_onkeyup(struct ecmascript_interpreter *interpreter, struct te
 #endif
 	js_State *J = (js_State *)interpreter->backend_data;
 
-	// TODO
-	return 0;
+	if (!J) {
+		return 0;
+	}
+	struct mjs_document_private *doc_private = (struct mjs_document_private *)interpreter->doc_private;
+
+	if (!doc_private || !doc_private->onkeyup) {
+		return 0;
+	}
+	js_getregistry(J, doc_private->onkeyup); /* retrieve the js function from the registry */
+	js_getregistry(J, doc_private->thisval);
+	mjs_push_keyboardEvent(J, ev, "onkeyup");
+	js_pcall(J, 1);
+	js_pop(J, 1);
+
+	check_for_rerender(interpreter, "onkeyup");
+	return 1;
 }
 
 static void mjs_document_set_property_url(js_State *J);
@@ -1795,6 +1797,12 @@ mjs_doc_private_finalizer(js_State *J, void *priv)
 			mem_free_set(&l->typ, NULL);
 			if (l->fun) js_unref(J, l->fun);
 		}
+		if (doc_private->onkeydown) {
+			js_unref(J, doc_private->onkeydown);
+		}
+		if (doc_private->onkeyup) {
+			js_unref(J, doc_private->onkeyup);
+		}
 		free_list(doc_private->listeners);
 		NODEINFO(doc_private->node);
 #ifdef ECMASCRIPT_DEBUG
@@ -1865,6 +1873,8 @@ mjs_push_document(js_State *J, void *doc)
 		addproperty(J, "links", mjs_document_get_property_links, NULL);
 		addproperty(J, "location", mjs_document_get_property_location, mjs_document_set_property_location);
 		addproperty(J, "nodeType", mjs_document_get_property_nodeType, NULL);
+		addproperty(J, "onkeydown", mjs_document_get_property_onkeydown, mjs_document_set_property_onkeydown);
+		addproperty(J, "onkeyup", mjs_document_get_property_onkeyup, mjs_document_set_property_onkeyup);
 		addproperty(J, "readyState", mjs_document_get_property_readyState, NULL);
 		addproperty(J, "referrer", mjs_document_get_property_referrer, NULL);
 		addproperty(J, "scripts", mjs_document_get_property_scripts, NULL);
@@ -1876,7 +1886,8 @@ mjs_push_document(js_State *J, void *doc)
 	init_list(doc_private->listeners);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	doc_private->interpreter = interpreter;
-	interpreter->doc = doc_private->node = doc;
+	doc_private->node = doc;
+	interpreter->doc_private = doc_private;
 	doc_private->ref_count = 1;
 	doc_private->thisval = js_ref(J);
 	if (doc) {
@@ -1944,6 +1955,8 @@ mjs_push_document2(js_State *J, void *doc)
 		addproperty(J, "links", mjs_document_get_property_links, NULL);
 		addproperty(J, "location", mjs_document_get_property_location, mjs_document_set_property_location);
 		addproperty(J, "nodeType", mjs_document_get_property_nodeType, NULL);
+		addproperty(J, "onkeydown", mjs_document_get_property_onkeydown, mjs_document_set_property_onkeydown);
+		addproperty(J, "onkeyup", mjs_document_get_property_onkeyup, mjs_document_set_property_onkeyup);
 		addproperty(J, "readyState", mjs_document_get_property_readyState, NULL);
 		addproperty(J, "referrer", mjs_document_get_property_referrer, NULL);
 		addproperty(J, "scripts", mjs_document_get_property_scripts, NULL);
@@ -2043,6 +2056,8 @@ mjs_document_constructor(js_State *J)
 		addproperty(J, "links", mjs_document_get_property_links, NULL);
 		addproperty(J, "location", mjs_document_get_property_location, mjs_document_set_property_location);
 		addproperty(J, "nodeType", mjs_document_get_property_nodeType, NULL);
+		addproperty(J, "onkeydown", mjs_document_get_property_onkeydown, mjs_document_set_property_onkeydown);
+		addproperty(J, "onkeyup", mjs_document_get_property_onkeyup, mjs_document_set_property_onkeyup);
 		addproperty(J, "readyState", mjs_document_get_property_readyState, NULL);
 		addproperty(J, "referrer", mjs_document_get_property_referrer, NULL);
 		addproperty(J, "scripts", mjs_document_get_property_scripts, NULL);

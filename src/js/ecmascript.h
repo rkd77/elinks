@@ -115,7 +115,7 @@ struct ecmascript_interpreter {
 	void *location_obj;
 	const char *fun;
 	const char *request_func;
-	void *doc;
+	void *doc_private;
 #endif
 	timer_id_T ani;
 	int element_offset;

@@ -1447,7 +1447,13 @@ mjs_DocumentFragment_constructor(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	dom_document *doc = (dom_document *)interpreter->doc;
+	struct mjs_document_private *doc_private = (struct mjs_document_private *)interpreter->doc_private;
+
+	if (!doc_private) {
+		js_pushnull(J);
+		return;
+	}
+	dom_document *doc = (dom_document *)doc_private->node;
 
 	if (!doc) {
 		js_pushnull(J);

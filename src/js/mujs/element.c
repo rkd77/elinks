@@ -2752,15 +2752,17 @@ mjs_element_append(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct mjs_document_private *doc_private = (struct mjs_document_private *)interpreter->doc_private;
+
 	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
 	NODEINFO(el);
 
-	if (!el) {
+	if (!el || !doc_private) {
 		js_pushundefined(J);
 		return;
 	}
 	dom_exception exc;
-	dom_html_document *doc = (dom_html_document *)interpreter->doc;
+	dom_html_document *doc = (dom_html_document *)doc_private->node;
 	NODEINFO(doc);
 
 	if (!doc) {
