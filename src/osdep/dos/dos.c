@@ -851,7 +851,12 @@ int dos_select(int n, fd_set *rs, fd_set *ws, fd_set *es, struct timeval *t, int
 
 	int r;
 	fd_set rsb, wsb, esb;
-	struct timeval xtime;
+	uclock_t start, tt;
+
+	if (t) {
+		start = uclock();
+		tt = (t->tv_sec + (t->tv_usec / 1000000.0)) * UCLOCKS_PER_SEC;
+	}
 
 	dos_mouse_poll();
 
@@ -935,21 +940,7 @@ int dos_select(int n, fd_set *rs, fd_set *ws, fd_set *es, struct timeval *t, int
 	else FD_ZERO(&wsb);
 	if (es) esb = *es;
 	else FD_ZERO(&esb);
-	if (t) {
-		EINTRLOOP(r, gettimeofday(&xtime, NULL));
-		if (r) {
-			EL_ERROR("gettimeofday failed: %d", errno);
-			fflush(stdout);
-			fflush(stderr);
-			exit(RET_FATAL);
-		}
-		xtime.tv_usec += t->tv_usec;
-		if (xtime.tv_usec >= 1000000) {
-			xtime.tv_usec -= 1000000;
-			xtime.tv_sec++;
-		}
-		xtime.tv_sec += t->tv_sec;
-	}
+
 	while (1) {
 		struct timeval zero = { 0, 0 };
 		struct timeval now;
@@ -1018,9 +1009,9 @@ int dos_select(int n, fd_set *rs, fd_set *ws, fd_set *es, struct timeval *t, int
 			exit(RET_FATAL);
 		}
 		if (t) {
-			if (now.tv_sec > xtime.tv_sec ||
-			   (now.tv_sec == xtime.tv_sec && now.tv_usec >= xtime.tv_usec))
+			if (uclock() - start >= tt) {
 				return 0;
+			}
 		}
 		if (rs) *rs = rsb;
 		if (ws) *ws = wsb;
