@@ -604,7 +604,7 @@ bookmark_terminal(struct terminal *term, struct bookmark *folder)
 	foreachback_tab (tab, term->windows) {
 		struct session *ses = (struct session *)tab->data;
 
-		if (!get_current_url(ses, url, MAX_STR_LEN))
+		if (!get_current_url_with_pos(ses, url, MAX_STR_LEN))
 			continue;
 
 		if (!get_current_title(ses, title, MAX_STR_LEN))

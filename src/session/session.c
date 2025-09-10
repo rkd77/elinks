@@ -39,6 +39,7 @@
 #include "osdep/newwin.h"
 #include "protocol/header.h"
 #include "protocol/http/blacklist.h"
+#include "protocol/map.h"
 #include "protocol/protocol.h"
 #include "protocol/uri.h"
 #ifdef CONFIG_SCRIPTING_SPIDERMONKEY
@@ -822,6 +823,24 @@ doc_loading_callback(struct download *download, struct session *ses)
 		process_file_requests(ses);
 
 		start_document_refreshes(ses);
+
+		char *s = struri(ses->doc_view->document->uri);
+		const char *position = get_url_pos(s);
+
+		if (position) {
+			char *xs = strstr(position, "x=");
+			char *ys = strstr(position, ",y=");
+
+			if (xs) {
+				int x = atoi(xs + 2);
+				horizontal_scroll(ses, ses->doc_view, x);
+			}
+			if (ys) {
+				int y = atoi(ys + 3);
+				vertical_scroll(ses, ses->doc_view, y);
+			}
+			del_position(s);
+		}
 
 		if (!is_in_state(download->state, S_OK)) {
 			print_error_dialog(ses, download->state,
@@ -1665,6 +1684,44 @@ get_current_url(struct session *ses, char *str, size_t str_size)
 	length = int_min(get_real_uri_length(uri), str_size - 1);
 
 	return safe_strncpy(str, struri(uri), length + 1);
+}
+
+char *
+get_current_url_with_pos(struct session *ses, char *str, size_t str_size)
+{
+	ELOG
+	struct uri *uri;
+	int length;
+
+	assert(str && str_size > 0);
+
+	uri = have_location(ses) ? cur_loc(ses)->vs.uri : ses->loading_uri;
+
+	/* Not looking or loading anything */
+	if (!uri) return NULL;
+
+	/* Ensure that the url size is not greater than str_size.
+	 * We can't just happily strncpy(str, here, str_size)
+	 * because we have to stop at POST_CHAR, not only at NULL. */
+	length = int_min(get_real_uri_length(uri), str_size - 1);
+
+	safe_strncpy(str, struri(uri), length + 1);
+
+	struct document_view *doc_view = ses->doc_view;
+
+	if (doc_view && doc_view->vs) {
+		struct string frag;
+
+		if (init_string(&frag)) {
+			add_format_to_string(&frag, POSITION_CHAR_S "x=%d,y=%d", doc_view->vs->x, doc_view->vs->y);
+
+			int length_frag = int_min(frag.length, str_size - length - 1);
+
+			safe_strncpy(str + length, frag.source, length_frag + 1);
+			done_string(&frag);
+		}
+	}
+	return str;
 }
 
 /**

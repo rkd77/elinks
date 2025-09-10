@@ -37,6 +37,7 @@
 
 #include "intl/libintl.h"
 #include "main/object.h"
+#include "protocol/map.h"
 #include "protocol/protocol.h"
 #include "protocol/uri.h"
 #include "util/conv.h"
@@ -231,6 +232,13 @@ parse_uri(struct uri *uri, char *uristring)
 	/* Nothing to do for an empty url. */
 	if_assert_failed return 0;
 	if (!*uristring) return URI_ERRNO_EMPTY;
+
+	char *position = strchr(uristring, POSITION_CHAR);
+
+	if (position) {
+		*position = '\0';
+		save_in_uri_map(uristring, position + 1);
+	}
 
 	uri->string = uristring;
 	uri->protocollen = get_protocol_length(uristring);

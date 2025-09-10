@@ -326,6 +326,7 @@ struct download *get_current_download(struct session *ses);
 
 /** Information about the current document */
 char *get_current_url(struct session *, char *, size_t);
+char *get_current_url_with_pos(struct session *, char *, size_t);
 char *get_current_title(struct session *, char *, size_t);
 
 struct link *get_current_session_link(struct session *ses);

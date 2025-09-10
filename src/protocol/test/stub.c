@@ -154,3 +154,9 @@ mailcap_protocol_handler(struct connection *conn)
 	ELOG
 	stub_called("mailcap_protocol_handler");
 }
+
+void
+save_in_uri_map(char *a, char *b)
+{
+	ELOG
+}

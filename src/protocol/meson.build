@@ -43,7 +43,7 @@ if conf_data.get('CONFIG_FTP') or conf_data.get('CONFIG_SFTP')
 	srcs += files('ftpparse.c')
 endif
 
-srcs += files('about.c', 'common.c', 'date.c', 'header.c', 'protocol.c', 'proxy.c', 'uri.c', 'user.c')
+srcs += files('about.c', 'common.c', 'date.c', 'header.c', 'map.cpp', 'protocol.c', 'proxy.c', 'uri.c', 'user.c')
 
 if get_option('test')
     subdir('test')
