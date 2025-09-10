@@ -825,7 +825,7 @@ doc_loading_callback(struct download *download, struct session *ses)
 		start_document_refreshes(ses);
 
 		char *s = struri(ses->doc_view->document->uri);
-		const char *position = get_url_pos(s);
+		char *position = get_url_pos(s);
 
 		if (position) {
 			char *xs = strstr(position, "x=");
@@ -839,7 +839,7 @@ doc_loading_callback(struct download *download, struct session *ses)
 				int y = atoi(ys + 3);
 				vertical_scroll(ses, ses->doc_view, y);
 			}
-			del_position(s);
+			mem_free(position);
 		}
 
 		if (!is_in_state(download->state, S_OK)) {
