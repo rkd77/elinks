@@ -842,7 +842,7 @@ int dos_close(int fd)
 	return close(fd);
 }
 
-int dos_select(int n, fd_set *rs, fd_set *ws, fd_set *es, struct timeval *t, int from_main_loop)
+int dos_select(int n, fd_set *rs, fd_set *ws, fd_set *es, timeval_T *t, int from_main_loop)
 {
 	ELOG
 	int i;
@@ -855,7 +855,8 @@ int dos_select(int n, fd_set *rs, fd_set *ws, fd_set *es, struct timeval *t, int
 
 	if (t) {
 		start = uclock();
-		tt = (t->tv_sec + (t->tv_usec / 1000000.0)) * UCLOCKS_PER_SEC;
+		tt = t->ticks;
+		//tt = (t->tv_sec + (t->tv_usec / 1000000.0)) * UCLOCKS_PER_SEC;
 	}
 
 	dos_mouse_poll();
@@ -943,7 +944,6 @@ int dos_select(int n, fd_set *rs, fd_set *ws, fd_set *es, struct timeval *t, int
 
 	while (1) {
 		struct timeval zero = { 0, 0 };
-		struct timeval now;
 #ifdef DOS_EXTRA_KEYBOARD
 		if (rs && FD_ISSET(0, rs)) {
 			if (dos_select_keyboard()) {

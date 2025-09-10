@@ -32,7 +32,13 @@ typedef long time_print_T;
  * unsigned fields.
  * @bug 923: Assumes time_t values fit in long.  (This structure is
  * used for both timestamps and durations.)  */
-typedef struct { long sec; long usec; } timeval_T;
+typedef struct {
+	long sec;
+	long usec;
+#ifdef CONFIG_OS_DOS
+	uclock_t ticks;
+#endif
+} timeval_T;
 
 timeval_T *timeval_from_milliseconds(timeval_T *t, milliseconds_T milliseconds);
 timeval_T *timeval_from_seconds(timeval_T *t, long seconds);

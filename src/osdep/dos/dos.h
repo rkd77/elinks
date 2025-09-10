@@ -26,7 +26,7 @@ do {                                \
 #define EINTRLOOP(ret_, call_)  EINTRLOOPX(ret_, call_, -1)
 
 #include <sys/types.h>
-
+#include "util/time.h"
 
 struct timeval;
 
@@ -34,7 +34,7 @@ int dos_read(int fd, void *buf, size_t size);
 int dos_write(int fd, const void *buf, size_t size);
 int dos_pipe(int fd[2]);
 int dos_close(int fd);
-int dos_select(int n, fd_set *rs, fd_set *ws, fd_set *es, struct timeval *t, int from_main_loop);
+int dos_select(int n, fd_set *rs, fd_set *ws, fd_set *es, timeval_T *t, int from_main_loop);
 void save_terminal(void);
 void restore_terminal(void);
 int dos_setraw(int ctl, int save);

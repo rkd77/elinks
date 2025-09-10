@@ -1783,7 +1783,11 @@ select_loop(void (*init)(void))
 
 	while (!program.terminate) {
 		struct timeval timeout = { 0, 0 };
+#ifdef CONFIG_OS_DOS
+		timeval_T *timeout_ptr = NULL;
+#else
 		struct timeval *timeout_ptr = NULL;
+#endif
 		int n, i, has_timer;
 		timeval_T t;
 
@@ -1823,9 +1827,13 @@ select_loop(void (*init)(void))
 		if (has_timer) {
 			/* Be sure timeout is not negative. */
 			timeval_limit_to_zero_or_one(&t);
+#ifdef CONFIG_OS_DOS
+			timeout_ptr = &t;
+#else
 			timeout.tv_sec = t.sec;
 			timeout.tv_usec = t.usec;
 			timeout_ptr = &timeout;
+#endif
 		}
 
 		n = loop_select(w_max, &x_read, &x_write, &x_error, timeout_ptr);
@@ -1923,8 +1931,12 @@ can_read_or_write(int fd, int write)
 		wfds = &fds;
 	else
 		rfds = &fds;
-
+#ifdef CONFIG_OS_DOS
+	timeval_T tt = {0,0,0};
+	return select2(fd + 1, rfds, wfds, NULL, &tt);
+#else
 	return select2(fd + 1, rfds, wfds, NULL, &tv);
+#endif
 #endif
 }
 
