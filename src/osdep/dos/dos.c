@@ -1001,13 +1001,6 @@ int dos_select(int n, fd_set *rs, fd_set *ws, fd_set *es, struct timeval *t, int
 			r = 0;
 		}
 		if (r) return r;
-		EINTRLOOP(r, gettimeofday(&now, NULL));
-		if (r) {
-			EL_ERROR("gettimeofday failed: %d", errno);
-			fflush(stdout);
-			fflush(stderr);
-			exit(RET_FATAL);
-		}
 		if (t) {
 			if (uclock() - start >= tt) {
 				return 0;
