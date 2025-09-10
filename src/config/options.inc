@@ -1602,6 +1602,12 @@ static union option_info config_options_info[] = {
 		"\n"
 		"This only makes sense with bookmark support.")),
 
+	INIT_OPT_BOOL("ui.sessions", N_("Auto save latest positions"),
+		"auto_save_positions", OPT_ZERO, 1,
+		N_("Whether to save view positions of documents.\n"
+		"\n"
+		"This feature requires bookmark support.")),
+
 	INIT_OPT_BOOL("ui.sessions", N_("Fork on start"),
 		"fork_on_start", OPT_ZERO, 0,
 		N_("Fork on start to let other terminals function even "

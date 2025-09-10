@@ -1709,7 +1709,7 @@ get_current_url_with_pos(struct session *ses, char *str, size_t str_size)
 
 	struct document_view *doc_view = ses->doc_view;
 
-	if (doc_view && doc_view->vs) {
+	if (doc_view && doc_view->vs && get_opt_bool("ui.sessions.auto_save_positions", NULL)) {
 		struct string frag;
 
 		if (init_string(&frag)) {
