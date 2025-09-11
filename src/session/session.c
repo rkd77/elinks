@@ -833,11 +833,11 @@ doc_loading_callback(struct download *download, struct session *ses)
 
 			if (xs) {
 				int x = atoi(xs + 2);
-				horizontal_scroll(ses, ses->doc_view, x);
+				horizontal_scroll(ses, ses->doc_view, x - ses->doc_view->vs->x);
 			}
 			if (ys) {
 				int y = atoi(ys + 3);
-				vertical_scroll(ses, ses->doc_view, y);
+				vertical_scroll(ses, ses->doc_view, y - ses->doc_view->vs->y);
 			}
 			mem_free(position);
 		}
