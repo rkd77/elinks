@@ -860,6 +860,11 @@ static union option_info config_options_info[] = {
 		"display_sups", OPT_ZERO, 1,
 		N_("Display superscripts (as ^thing).")),
 
+	INIT_OPT_BOOL("document.html", N_("Whether to show documents which are not fully loaded"),
+		"display_unfinished", OPT_ZERO, 1,
+		N_("ELinks periodically display documents, even if they are not fully loaded."
+		"You can disable it here.")),
+
 #ifdef CONFIG_KITTY
 	INIT_OPT_BOOL("document.html", N_("Kitty"),
 		"kitty", OPT_ZERO, 0,
@@ -881,6 +886,7 @@ static union option_info config_options_info[] = {
 		"sixel", OPT_ZERO, 0,
 		N_("Whether to display sixel images in html documents.")),
 #endif
+
 
 	INIT_OPT_BOOL("document.html", N_("Substitute frame chars"),
 		"subst_frame_chars", OPT_ZERO, 0,

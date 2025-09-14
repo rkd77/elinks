@@ -616,7 +616,9 @@ display_timer(struct session *ses)
 	milliseconds_T t;
 
 	timeval_now(&start);
-	draw_formatted(ses, 3);
+	if (get_opt_bool("document.html.display_unfinished", NULL)) {
+		draw_formatted(ses, 3);
+	}
 	timeval_now(&stop);
 	timeval_sub(&duration, &start, &stop);
 
@@ -808,7 +810,6 @@ doc_loading_callback(struct download *download, struct session *ses)
 		doc_rerender_after_document_update(ses);
 #endif
 
-
 		if (get_cmd_opt_bool("auto-submit")) {
 			if (!list_empty(ses->doc_view->document->forms)) {
 				get_cmd_opt_bool("auto-submit") = 0;
@@ -857,7 +858,7 @@ doc_loading_callback(struct download *download, struct session *ses)
 	print_screen_status_delayed(ses);
 
 #ifdef CONFIG_GLOBHIST
-	if (download->pri != PRI_CSS) {
+	if (download->pri != PRI_CSS && ses->doc_view && ses->doc_view->document) {
 		char *title = ses->doc_view->document->title;
 		struct uri *uri;
 

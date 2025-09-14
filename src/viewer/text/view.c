@@ -1603,8 +1603,9 @@ current_frame(struct session *ses)
 
 	doc_view = ses->doc_view;
 
-	assert(doc_view && doc_view->document);
-	if_assert_failed return NULL;
+	if (!(doc_view && doc_view->document)) {
+		return NULL;
+	}
 
 	if (document_has_frames(doc_view->document)) return NULL;
 	return doc_view;
