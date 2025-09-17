@@ -1110,6 +1110,66 @@ get_system_str(int xwin)
 	return xwin ? SYSTEM_STR "-xwin" : SYSTEM_STR;
 }
 
+static uttime
+get_absolute_time(void)
+{
+	ELOG
+	struct timeval tv;
+	int rs;
+	EINTRLOOP(rs, gettimeofday(&tv, NULL));
+
+	if (rs) {
+		EL_ERROR("gettimeofday failed: %d", errno);
+		fflush(stdout);
+		fflush(stderr);
+		exit(RET_FATAL);
+	}
+
+	return (uttime)tv.tv_sec * 1000 + (unsigned)tv.tv_usec / 1000;
+}
+
+uttime
+get_time(void)
+{
+	ELOG
+#if defined(OS2) || defined(WIN)
+	static unsigned last_tim = 0;
+	static uttime add = 0;
+	unsigned tim;
+#if defined(OS2)
+	int rc;
+	rc = DosQuerySysInfo(QSV_MS_COUNT, QSV_MS_COUNT, &tim, sizeof tim);
+	if (rc) {
+		EL_ERROR("DosQuerySysInfo failed: %d", rc);
+		fflush(stdout);
+		fflush(stderr);
+		exit(RET_FATAL);
+	}
+#elif defined(WIN)
+	tim = GetTickCount();
+#endif
+	if (tim < last_tim) {
+		add += (uttime)1 << 31 << 1;
+	}
+	last_tim = tim;
+	return tim | add;
+#else
+#if defined(HAVE_CLOCK_GETTIME) && defined(TIME_WITH_SYS_TIME) && (defined(CLOCK_MONOTONIC_RAW) || defined(CLOCK_MONOTONIC))
+	struct timespec ts;
+	int rs;
+#if defined(CLOCK_MONOTONIC_RAW)
+	EINTRLOOP(rs, clock_gettime(CLOCK_MONOTONIC_RAW, &ts));
+	if (!rs) return (uttime)ts.tv_sec * 1000 + (unsigned)ts.tv_nsec / 1000000;
+#endif
+#if defined(CLOCK_MONOTONIC)
+	EINTRLOOP(rs, clock_gettime(CLOCK_MONOTONIC, &ts));
+	if (!rs) return (uttime)ts.tv_sec * 1000 + (unsigned)ts.tv_nsec / 1000000;
+#endif
+#endif
+	return get_absolute_time();
+#endif
+}
+
 #ifdef HAVE_MKSTEMPS
 
 /* tempnam() replacement without races */
