@@ -20,14 +20,6 @@ extern "C" {
 #define STRING_DIR_SEP "/"
 #endif
 
-#ifdef HAVE_LONG_LONG
-typedef unsigned long long uttime;
-typedef unsigned long long tcount;
-#else
-typedef unsigned long uttime;
-typedef unsigned long tcount;
-#endif
-
 int get_system_env(void);
 int get_e(const char *env);
 int is_xterm(void);

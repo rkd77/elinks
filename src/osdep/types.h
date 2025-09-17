@@ -129,6 +129,14 @@ typedef unsigned long long uint32_t;
 #define longlong long
 #endif
 
+#ifdef HAVE_LONG_LONG
+typedef unsigned long long uttime;
+typedef unsigned long long tcount;
+#else
+typedef unsigned long uttime;
+typedef unsigned long tcount;
+#endif
+
 /* These are mostly for shutting up sparse warnings. */
 #ifndef __INT_MAX__
 #define __INT_MAX__ 0x7fffffff
