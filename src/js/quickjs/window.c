@@ -28,6 +28,7 @@
 #include "js/quickjs/keyboard.h"
 #include "js/quickjs/location.h"
 #include "js/quickjs/message.h"
+#include "js/quickjs/performance.h"
 #include "js/quickjs/window.h"
 #include "js/timer.h"
 #include "intl/libintl.h"
@@ -862,6 +863,18 @@ js_window_get_property_parent(JSContext *ctx, JSValueConst this_val)
 }
 
 static JSValue
+js_window_get_property_performance(JSContext *ctx, JSValueConst this_val)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	return getPerformance(ctx);
+}
+
+static JSValue
 js_window_get_property_scrollX(JSContext *ctx, JSValueConst this_val)
 {
 	ELOG
@@ -1266,6 +1279,7 @@ static const JSCFunctionListEntry js_window_proto_funcs[] = {
 	JS_CGETSET_DEF("innerWidth", js_window_get_property_innerWidth, NULL),
 	JS_CGETSET_DEF("location", js_window_get_property_location, js_window_set_property_location),
 	JS_CGETSET_DEF("parent", js_window_get_property_parent, NULL),
+	JS_CGETSET_DEF("performance", js_window_get_property_performance, NULL),
 	JS_CGETSET_DEF("scrollX", js_window_get_property_scrollX, NULL),
 	JS_CGETSET_DEF("scrollY", js_window_get_property_scrollY, NULL),
 	JS_CGETSET_DEF("self", js_window_get_property_self, NULL),
