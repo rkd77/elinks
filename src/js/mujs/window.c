@@ -35,6 +35,7 @@
 #include "js/mujs/keyboard.h"
 #include "js/mujs/location.h"
 #include "js/mujs/message.h"
+#include "js/mujs/performance.h"
 #include "js/mujs/window.h"
 #include "js/timer.h"
 #include "intl/libintl.h"
@@ -242,6 +243,16 @@ mjs_window_get_property_parent(js_State *J)
 	 * frames. Better something than nothing. */
 
 	js_pushundefined(J);
+}
+
+static void
+mjs_window_get_property_performance(js_State *J)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	mjs_push_performance(J);
 }
 
 static void
@@ -1061,6 +1072,7 @@ mjs_window_init(js_State *J)
 		addproperty(J, "window.innerWidth", mjs_window_get_property_innerWidth, NULL);
 		addproperty(J, "window.location", mjs_window_get_property_location, mjs_window_set_property_location);
 		addproperty(J, "window.parent", mjs_window_get_property_parent, NULL);
+		addproperty(J, "window.performance", mjs_window_get_property_performance, NULL);
 		addproperty(J, "window.scrollX", mjs_window_get_property_scrollX, NULL);
 		addproperty(J, "window.scrollY", mjs_window_get_property_scrollY, NULL);
 		addproperty(J, "window.self", mjs_window_get_property_self, NULL);
@@ -1120,6 +1132,7 @@ mjs_push_window(js_State *J, struct view_state *vs)
 		addproperty(J, "innerWidth", mjs_window_get_property_innerWidth, NULL);
 		addproperty(J, "location", mjs_window_get_property_location, mjs_window_set_property_location);
 		addproperty(J, "parent", mjs_window_get_property_parent, NULL);
+		addproperty(J, "performance", mjs_window_get_property_performance, NULL);
 		addproperty(J, "scrollX", mjs_window_get_property_scrollX, NULL);
 		addproperty(J, "scrollY", mjs_window_get_property_scrollY, NULL);
 		addproperty(J, "self", mjs_window_get_property_self, NULL);
