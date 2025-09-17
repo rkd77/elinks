@@ -117,6 +117,7 @@ struct ecmascript_interpreter {
 	const char *request_func;
 	void *doc_private;
 #endif
+	uttime time_origin;
 	timer_id_T ani;
 	int element_offset;
 	int request;

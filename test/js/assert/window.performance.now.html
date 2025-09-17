@@ -1,0 +1,10 @@
+<script>
+function proc()
+{
+	console.assert(performance.now() > 0, "True");
+	console.exit();
+}
+console.error("window.performance.now.html");
+console.assert(performance.timeOrigin > 0, "timeOrigin");
+window.setTimeout(proc, 100);
+</script>

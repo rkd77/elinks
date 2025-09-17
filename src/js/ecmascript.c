@@ -274,6 +274,7 @@ ecmascript_get_interpreter(struct view_state *vs)
 #ifdef CONFIG_QUICKJS
 	interpreter->request_func = JS_NULL;
 #endif
+	interpreter->time_origin = get_time();
 	install_timer(&interpreter->ani, REQUEST_ANIMATION_FRAME, ecmascript_request, interpreter);
 
 	return interpreter;

@@ -31,6 +31,7 @@
 #include "js/spidermonkey/keyboard.h"
 #include "js/spidermonkey/location.h"
 #include "js/spidermonkey/message.h"
+#include "js/spidermonkey/performance.h"
 #include "js/spidermonkey/window.h"
 #include "js/spidermonkey/xhr.h"
 #include "js/timer.h"
@@ -65,6 +66,7 @@ static bool window_get_property_innerWidth(JSContext *cx, unsigned int argc, JS:
 static bool window_get_property_location(JSContext *cx, unsigned int argc, JS::Value *vp);
 static bool window_set_property_location(JSContext *cx, unsigned int argc, JS::Value *vp);
 static bool window_get_property_parent(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool window_get_property_performance(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool window_get_property_scrollX(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool window_get_property_scrollY(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool window_get_property_self(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -189,6 +191,7 @@ JSPropertySpec window_props[] = {
 	JS_PSG("innerWidth",	window_get_property_innerWidth, JSPROP_ENUMERATE),
 	JS_PSGS("location",	window_get_property_location, window_set_property_location, JSPROP_ENUMERATE),
 	JS_PSG("parent",	window_get_property_parent, JSPROP_ENUMERATE),
+	JS_PSG("performance",	window_get_property_performance, JSPROP_ENUMERATE),
 	JS_PSG("scrollX",	window_get_property_scrollX, JSPROP_ENUMERATE),
 	JS_PSG("scrollY",	window_get_property_scrollY, JSPROP_ENUMERATE),
 	JS_PSG("self",	window_get_property_self, JSPROP_ENUMERATE),
@@ -1373,6 +1376,27 @@ window_get_property_parent(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	 * frames. Better something than nothing. */
 	args.rval().setUndefined();
 
+	return true;
+}
+
+static bool
+window_get_property_performance(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	JSObject *performance = getPerformance(ctx);
+	args.rval().setObject(*performance);
 	return true;
 }
 
