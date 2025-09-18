@@ -89,3 +89,4 @@ option('sftp', type: 'boolean', value: true, description: 'whether to compile SF
 option('spartan', type: 'boolean', value: false, description: 'spartan protocol support')
 option('kitty', type: 'boolean', value: false, description: 'support for kitty graphics protocol')
 option('libwebp', type: 'boolean', value: false, description: 'support for WEBP images')
+option('libavif', type: 'boolean', value: false, description: 'support for AVIF images')

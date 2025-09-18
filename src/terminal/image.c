@@ -22,6 +22,10 @@
 #include <webp/decode.h>
 #endif
 
+#ifdef CONFIG_LIBAVIF
+#include <avif/avif.h>
+#endif
+
 #include "elinks.h"
 
 #include "terminal/image.h"
@@ -45,6 +49,83 @@
 #include "terminal/stb_image.h"
 #endif
 
+#ifdef CONFIG_LIBAVIF
+static avifResult
+el_avifRGBImageAllocatePixels(avifRGBImage *rgb)
+{
+	const uint32_t pixelSize = avifRGBImagePixelSize(rgb);
+
+	if (rgb->width > UINT32_MAX / pixelSize) {
+		return AVIF_RESULT_INVALID_ARGUMENT;
+	}
+	const uint32_t rowBytes = rgb->width * pixelSize;
+
+	if (rgb->height > PTRDIFF_MAX / rowBytes) {
+		return AVIF_RESULT_INVALID_ARGUMENT;
+	}
+	rgb->pixels = (uint8_t *)mem_alloc((size_t)rowBytes * rgb->height);
+
+	if (!rgb->pixels) {
+		return AVIF_RESULT_OUT_OF_MEMORY;
+	}
+	rgb->rowBytes = rowBytes;
+
+	return AVIF_RESULT_OK;
+}
+
+static unsigned char *
+eldecode_avif(const unsigned char *data, int length, int *width, int *height, int typ)
+{
+	avifRGBImage rgb;
+	memset(&rgb, 0, sizeof(rgb));
+	avifDecoder *decoder = avifDecoderCreate();
+
+	if (!decoder) {
+		return NULL;
+	}
+	avifResult result = avifDecoderSetIOMemory(decoder, data, (long)length);
+
+	if (result != AVIF_RESULT_OK) {
+		goto cleanup;
+	}
+	result = avifDecoderParse(decoder);
+
+	if (result != AVIF_RESULT_OK) {
+		goto cleanup;
+	}
+	result = avifDecoderNextImage(decoder);
+
+	if (result != AVIF_RESULT_OK) {
+		goto cleanup;
+	}
+
+	avifRGBImageSetDefaults(&rgb, decoder->image);
+	rgb.depth = 8;
+	rgb.format = (typ == 4 ? AVIF_RGB_FORMAT_RGBA : AVIF_RGB_FORMAT_RGB);
+	*width = decoder->image->width;
+	*height = decoder->image->height;
+	result = el_avifRGBImageAllocatePixels(&rgb);
+
+	if (result != AVIF_RESULT_OK) {
+		goto cleanup;
+	}
+	result = avifImageYUVToRGB(decoder->image, &rgb);
+
+	if (result != AVIF_RESULT_OK) {
+		goto cleanup;
+	}
+cleanup:
+	avifDecoderDestroy(decoder);
+
+	if (result != AVIF_RESULT_OK) {
+		mem_free_if(rgb.pixels);
+		return NULL;
+	}
+
+	return rgb.pixels;
+}
+#endif
+
 #ifdef CONFIG_KITTY
 struct el_string *
 el_kitty_get_image(char *data, int length, int *width, int *height, int *compressed)
@@ -53,6 +134,7 @@ el_kitty_get_image(char *data, int length, int *width, int *height, int *compres
 	int comp;
 	int outlen = 0;
 	int webp = 0;
+	int avif = 0;
 	unsigned char *pixels = stbi_load_from_memory((unsigned char *)data, length, width, height, &comp, KITTY_BYTES_PER_PIXEL);
 	unsigned char *b64;
 
@@ -60,6 +142,13 @@ el_kitty_get_image(char *data, int length, int *width, int *height, int *compres
 #ifdef CONFIG_LIBWEBP
 		pixels = WebPDecodeRGBA((const uint8_t*)data, length, width, height);
 		webp = 1;
+#endif
+
+#ifdef CONFIG_LIBAVIF
+		if (!pixels) {
+			pixels = eldecode_avif((const uint8_t*)data, length, width, height, 4);
+			avif = 1;
+		}
 #endif
 		if (!pixels) {
 			return NULL;
@@ -83,6 +172,8 @@ el_kitty_get_image(char *data, int length, int *width, int *height, int *compres
 #ifdef CONFIG_LIBWEBP
 				WebPFree(pixels);
 #endif
+			} else if (avif) {
+				mem_free(pixels);
 			} else {
 				stbi_image_free(pixels);
 			}
@@ -99,6 +190,8 @@ el_kitty_get_image(char *data, int length, int *width, int *height, int *compres
 #ifdef CONFIG_LIBWEBP
 		WebPFree(pixels);
 #endif
+	} else if (avif) {
+		mem_free(pixels);
 	} else {
 		stbi_image_free(pixels);
 	}
@@ -140,11 +233,18 @@ el_sixel_get_image(char *data, int length, int *outlen)
 	int height;
 	unsigned char *pixels = stbi_load_from_memory((unsigned char *)data, length, &width, &height, &comp, 3);
 	int webp = 0;
+	int avif = 0;
 
 	if (!pixels) {
 #ifdef CONFIG_LIBWEBP
 		pixels = WebPDecodeRGB((const uint8_t*)data, length, &width, &height);
 		webp = 1;
+#endif
+#ifdef CONFIG_LIBAVIF
+		if (!pixels) {
+			pixels = eldecode_avif((const uint8_t*)data, length, &width, &height, 3);
+			avif = 1;
+		}
 #endif
 		if (!pixels) {
 			return NULL;
@@ -180,6 +280,8 @@ end:
 #ifdef CONFIG_LIBWEBP
 		WebPFree(pixels);
 #endif
+	} else if (avif) {
+		mem_free(pixels);
 	} else {
 		stbi_image_free(pixels);
 	}
