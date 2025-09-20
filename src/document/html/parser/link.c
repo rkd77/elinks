@@ -293,7 +293,7 @@ again:
 				}
 			}
 			if (!pixels) {
-				if (!cached && uri->protocol == PROTOCOL_DATA) {
+				if (!cached && (uri->protocol == PROTOCOL_DATA || uri->protocol == PROTOCOL_FILE)) {
 					try_to_load_image(uri);
 					cached = find_in_cache(uri);
 
@@ -373,7 +373,7 @@ again:
 				}
 			}
 			if (!data) {
-				if (!cached && uri->protocol == PROTOCOL_DATA) {
+				if (!cached && (uri->protocol == PROTOCOL_DATA || uri->protocol == PROTOCOL_FILE)) {
 					try_to_load_image(uri);
 					cached = find_in_cache(uri);
 
