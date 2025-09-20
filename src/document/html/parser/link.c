@@ -39,6 +39,7 @@
 #include "document/html/renderer.h"
 #include "globhist/globhist.h"
 #include "mime/mime.h"
+#include "network/connection.h"
 #include "protocol/uri.h"
 #include "terminal/image.h"
 #ifdef CONFIG_KITTY
@@ -267,7 +268,7 @@ html_img_kitty(struct html_context *html_context, char *a,
 
 		if (uri) {
 			struct cache_entry *cached = get_redirected_cache_entry(uri);
-
+again:
 			if (cached && !cached->incomplete) {
 				if (cached->pixels) {
 					pixels = cached->pixels;
@@ -292,6 +293,14 @@ html_img_kitty(struct html_context *html_context, char *a,
 				}
 			}
 			if (!pixels) {
+				if (!cached && uri->protocol == PROTOCOL_DATA) {
+					try_to_load_image(uri);
+					cached = find_in_cache(uri);
+
+					if (cached) {
+						goto again;
+					}
+				}
 				html_context->special_f(html_context, SP_IMAGE, uri);
 			}
 			done_uri(uri);
@@ -355,7 +364,7 @@ html_img_sixel(struct html_context *html_context, char *a,
 
 		if (uri) {
 			struct cache_entry *cached = get_redirected_cache_entry(uri);
-
+again:
 			if (cached && !cached->incomplete) {
 				struct fragment *fragment = get_cache_fragment(cached);
 
@@ -364,6 +373,14 @@ html_img_sixel(struct html_context *html_context, char *a,
 				}
 			}
 			if (!data) {
+				if (!cached && uri->protocol == PROTOCOL_DATA) {
+					try_to_load_image(uri);
+					cached = find_in_cache(uri);
+
+					if (cached) {
+						goto again;
+					}
+				}
 				html_context->special_f(html_context, SP_IMAGE, uri);
 			}
 			done_uri(uri);

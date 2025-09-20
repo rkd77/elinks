@@ -123,6 +123,8 @@ void shutdown_connection_stream(struct connection *conn);
 int load_uri(struct uri *uri, struct uri *referrer, struct download *download,
 	     connection_priority_T pri, cache_mode_T cache_mode, off_t start);
 
+void try_to_load_image(struct uri *uri);
+
 int is_entry_used(struct cache_entry *cached);
 
 #ifdef __cplusplus

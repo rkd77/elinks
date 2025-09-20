@@ -1082,6 +1082,26 @@ load_uri(struct uri *uri, struct uri *referrer, struct download *download,
 	return 0;
 }
 
+void
+try_to_load_image(struct uri *uri)
+{
+	struct connection_state error_state = connection_state(S_OK);
+	struct uri *proxy_uri   = get_proxy_uri(uri, &error_state);
+	struct uri *proxied_uri = get_proxied_uri(uri);
+
+	if (!proxy_uri || !proxied_uri) {
+		return;
+	}
+	struct connection *conn = init_connection(proxy_uri, proxied_uri, NULL, 0, CACHE_MODE_NORMAL, PRI_CSS);
+
+	if (!conn) {
+		return;
+	}
+	add_to_queue(conn);
+	set_connection_state(conn, connection_state(S_WAIT));
+	run_connection(conn);
+}
+
 
 /* FIXME: one object in more connections */
 void
