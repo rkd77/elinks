@@ -300,8 +300,9 @@ again:
 					if (cached) {
 						goto again;
 					}
+				} else {
+					html_context->special_f(html_context, SP_IMAGE, uri);
 				}
-				html_context->special_f(html_context, SP_IMAGE, uri);
 			}
 			done_uri(uri);
 		}
@@ -380,8 +381,9 @@ again:
 					if (cached) {
 						goto again;
 					}
+				} else {
+					html_context->special_f(html_context, SP_IMAGE, uri);
 				}
-				html_context->special_f(html_context, SP_IMAGE, uri);
 			}
 			done_uri(uri);
 		}
