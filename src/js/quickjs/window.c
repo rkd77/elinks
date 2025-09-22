@@ -169,7 +169,7 @@ js_window_open(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *ar
 	doc_view = vs->doc_view;
 	ses = doc_view->session;
 
-	if (get_opt_bool("ecmascript.block_window_opening", ses)) {
+	if (get_opt_bool("ecmascript.block_window_opening", NULL)) {
 #ifdef CONFIG_LEDS
 		set_led_value(ses->status.popup_led, 'P');
 #endif

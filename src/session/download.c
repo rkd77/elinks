@@ -2048,7 +2048,7 @@ setup_download_handler(struct session *ses, struct download *loading,
 			if (c_strcasecmp(ctype, compressed_types[i])) {
 				continue;
 			}
-			if (get_opt_bool("document.download.compressed_as_plain", ses)) {
+			if (get_opt_bool("document.download.compressed_as_plain", NULL)) {
 				goto plaintext_follow;
 			}
 		}

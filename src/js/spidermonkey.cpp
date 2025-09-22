@@ -120,7 +120,7 @@ error_reporter(JSContext *ctx, JSErrorReport *report)
 	set_led_value(ses->status.ecmascript_led, 'J');
 #endif
 
-	if (!get_opt_bool("ecmascript.error_reporting", ses))
+	if (!get_opt_bool("ecmascript.error_reporting", NULL))
 		goto reported;
 
 	f = open_memstream(&ptr, &size);
