@@ -286,7 +286,7 @@ got_signal(int sig)
 
 	s->mask = 1;
 
-#if defined(HAVE_SYS_EVENTFD_H) && !defined(CONFIG_LIBUV)
+#if defined(HAVE_SYS_EVENTFD_H)
 	if (can_write(signal_efd)) {
 		uint64_t t = 1;
 		int wr;

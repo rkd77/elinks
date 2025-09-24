@@ -1534,7 +1534,6 @@ try_redraw_all_terminals(void)
 }
 
 #ifndef NO_SIGNAL_HANDLERS
-#ifndef CONFIG_LIBUV
 static void
 clear_events(int h, int blocking)
 {
@@ -1557,37 +1556,19 @@ clear_events(int h, int blocking)
 	}
 #endif
 }
-#endif
 
 pid_t signal_pid;
-#if defined(HAVE_SYS_EVENTFD_H) && !defined(CONFIG_LIBUV)
+#if defined(HAVE_SYS_EVENTFD_H)
 int signal_efd = -1;
 #else
 int signal_pipe[2] = { -1, -1 };
 #endif
 
-#ifndef CONFIG_LIBUV
 static void
 clear_events_ptr(void *handle)
 {
 	ELOG
 	clear_events((int)(intptr_t)handle, 0);
-}
-#endif
-#endif
-
-#ifdef CONFIG_LIBUV
-static void
-alloc_pipe_cb(uv_handle_t* handle, size_t suggested_size, uv_buf_t* buf)
-{
-	buf->base = mem_alloc(64);
-	buf->len = 64;
-}
-
-static void
-read_pipe_cb(uv_stream_t *stream, ssize_t nread, const uv_buf_t *buf)
-{
-	mem_free_if(buf->base);
 }
 #endif
 
@@ -1610,21 +1591,6 @@ select_loop(void (*init)(void))
 #if !defined(NO_SIGNAL_HANDLERS)
 	signal_pid = getpid();
 
-#ifdef CONFIG_LIBUV
-	uv_pipe_t *pipe_handle = mem_calloc(1, sizeof(*pipe_handle));
-	if (!pipe_handle || uv_pipe(signal_pipe, UV_NONBLOCK_PIPE, UV_NONBLOCK_PIPE)) {
-		elinks_internal("ERROR: can't create pipe for signal handling 1");
-	}
-	if (uv_pipe_init(uv_default_loop(), pipe_handle, 0)) {
-		elinks_internal("ERROR: uv_pipe_init failed");
-	}
-	if (uv_pipe_open(pipe_handle, signal_pipe[0])) {
-		elinks_internal("ERROR: uv_pipe_open failed");
-	}
-	if (uv_read_start((uv_stream_t *)pipe_handle, alloc_pipe_cb, read_pipe_cb)) {
-		elinks_internal("ERROR: uv_read_start failed");
-	}
-#else
 #ifdef HAVE_SYS_EVENTFD_H
 	if ((signal_efd = eventfd(0, EFD_NONBLOCK)) < 0) {
 		elinks_internal("ERROR: can't create eventfd for signal handling");
@@ -1637,7 +1603,6 @@ select_loop(void (*init)(void))
 	set_nonblocking_fd(signal_pipe[0]);
 	set_nonblocking_fd(signal_pipe[1]);
 	set_handlers(signal_pipe[0], clear_events_ptr, NULL, NULL, (void *)(intptr_t)signal_pipe[0], EL_TYPE_FD);
-#endif
 #endif
 #endif
 	init();
