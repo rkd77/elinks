@@ -95,8 +95,19 @@ init_directory_listing(struct string *page, struct uri *uri)
 	    || !add_html_to_string(page, dirpath.source, dirpath.length))
 		goto out_of_memory;
 
-	if (!add_to_string(page, "\" />\n<script>function onload() { document.getElementById('first').focus(); }</script></head>\n<body onload='onload();'>\n<h2>"))
+	if (!add_to_string(page, "\" />\n")) {
 		goto out_of_memory;
+	}
+
+	if (local) {
+		if (!add_to_string(page, "<script>function onload() { document.getElementById('first').focus(); }</script></head>\n<body onload='onload();'>\n<h2>")) {
+			goto out_of_memory;
+		}
+	} else {
+		if (!add_to_string(page, "</head>\n<body>\n<h2>")) {
+			goto out_of_memory;
+		}
+	}
 
 	/* Use module names? */
 	switch (uri->protocol) {
