@@ -338,8 +338,11 @@ init_connection(struct uri *uri, struct uri *proxied_uri, struct uri *referrer,
 		 * available while preventing information about the local
 		 * system from being leaked to external servers. */
 		if (referrer->protocol != PROTOCOL_FILE
-		    || uri->protocol == PROTOCOL_FILE)
-			conn->referrer = get_uri_reference(referrer);
+		    || (uri->protocol == PROTOCOL_FILE
+			|| uri->protocol == PROTOCOL_MAILCAP
+			|| uri->protocol == PROTOCOL_MAILCAP_HTML)) {
+				conn->referrer = get_uri_reference(referrer);
+			}
 	}
 
 	return conn;
