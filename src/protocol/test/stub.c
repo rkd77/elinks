@@ -57,6 +57,8 @@ STUB_MODULE(ftpes_protocol_module);
 STUB_MODULE(gemini_protocol_module);
 STUB_MODULE(gopher_protocol_module);
 STUB_MODULE(http_protocol_module);
+STUB_MODULE(mailcap_protocol_module);
+STUB_MODULE(mailcap_html_protocol_module);
 STUB_MODULE(nntp_protocol_module);
 STUB_MODULE(sftp_protocol_module);
 STUB_MODULE(smb_protocol_module);
@@ -99,6 +101,8 @@ STUB_PROTOCOL_HANDLER(ftpes_protocol_handler);
 STUB_PROTOCOL_HANDLER(gemini_protocol_handler);
 STUB_PROTOCOL_HANDLER(gopher_protocol_handler);
 STUB_PROTOCOL_HANDLER(http_protocol_handler);
+STUB_PROTOCOL_HANDLER(mailcap_protocol_handler);
+STUB_PROTOCOL_HANDLER(mailcap_html_protocol_handler);
 STUB_PROTOCOL_HANDLER(news_protocol_handler);
 STUB_PROTOCOL_HANDLER(nntp_protocol_handler);
 STUB_PROTOCOL_HANDLER(proxy_protocol_handler);
@@ -145,22 +149,6 @@ msg_box(struct terminal *term, struct memory_list *mem_list,
 	 * test program it won't matter.  */
 	stub_called("msg_box");
 	return NULL;
-}
-
-/* declared in "protocol/file/mailcap.h" */
-void
-mailcap_protocol_handler(struct connection *conn)
-{
-	ELOG
-	stub_called("mailcap_protocol_handler");
-}
-
-/* declared in "protocol/file/mailcap.h" */
-void
-mailcap_html_protocol_handler(struct connection *conn)
-{
-	ELOG
-	stub_called("mailcap_protocol_handler");
 }
 
 void

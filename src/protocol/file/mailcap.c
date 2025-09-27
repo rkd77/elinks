@@ -39,9 +39,25 @@
 #include "util/env.h"
 #include "util/string.h"
 
+static union option_info mailcap_options[] = {
+	INIT_OPT_TREE("protocol", N_("Mailcap"),
+		"mailcap", OPT_ZERO,
+		N_("Options specific to mailcap.")),
+
+	INIT_OPT_BOOL("protocol.mailcap", N_("Allow empty referrer"),
+		"allow_empty_referrer", OPT_ZERO, 0,
+		N_("Whether to allow empty referrer for mailcap protocol. "
+		"It can be helpful for restoring sessions, but it is a bit dangerous. "
+		"When allowed you can execute any command in goto url dialog. "
+		"For example mailcap:ls")),
+
+	NULL_OPTION_INFO,
+};
+
+
 struct module mailcap_protocol_module = struct_module(
 	/* name: */		N_("Mailcap"),
-	/* options: */		NULL,
+	/* options: */		mailcap_options,
 	/* hooks: */		NULL,
 	/* submodules: */	NULL,
 	/* data: */		NULL,
@@ -99,6 +115,11 @@ mailcap_protocol_handler_common(struct connection *conn, int html)
 	int pipe_read[2];
 
 	/* security checks */
+
+	if (!conn->referrer && !get_opt_bool("protocol.mailcap.allow_empty_referrer", NULL)) {
+		goto bad;
+	}
+
 	if (conn->referrer && (conn->referrer->protocol != PROTOCOL_MAILCAP && conn->referrer->protocol != PROTOCOL_MAILCAP_HTML)) {
 		goto bad;
 	}
