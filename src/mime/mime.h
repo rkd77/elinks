@@ -19,6 +19,7 @@ struct mime_handler {
 	unsigned int block:1;
 	unsigned int copiousoutput:1;
 	unsigned int dgi:1;
+	unsigned int x_htmloutput:1;
 	char program[1]; /* XXX: Keep last! */
 };
 

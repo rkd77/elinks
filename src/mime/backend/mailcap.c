@@ -68,6 +68,7 @@ struct mailcap_entry {
 	 * pipe the output into a buffer and let ELinks display it but this
 	 * will have to do for now. */
 	unsigned int copiousoutput:1;
+	unsigned int x_htmloutput:1;
 
 	/* The 'raw' unformatted (view)command from the mailcap files. */
 	char command[1];
@@ -304,6 +305,9 @@ parse_optional_fields(struct mailcap_entry *entry, char *line)
 		} else if (!c_strncasecmp(field, "copiousoutput", 13)) {
 			entry->copiousoutput = 1;
 
+		} else if (!c_strncasecmp(field, "x-htmloutput", 12)) {
+			entry->x_htmloutput = 1;
+
 		} else if (!c_strncasecmp(field, "test", 4)) {
 			/* Don't leak memory if a corrupted mailcap
 			 * file has multiple test commands in the same
@@ -518,7 +522,7 @@ init_mailcap(struct module *module)
 /* The formatting is postponed until the command is needed. This means
  * @type can be NULL. If '%t' is used in command we bail out. */
 static char *
-format_command(char *command, char *type, int copiousoutput)
+format_command(char *command, char *type, int copiousoutput, int x_htmloutput)
 {
 	ELOG
 	struct string cmd;
@@ -594,7 +598,7 @@ check_entries(struct mailcap_hash_item *item)
 			return entry;
 
 		/* We have to run the test command */
-		test = format_command(entry->testcommand, NULL, 0);
+		test = format_command(entry->testcommand, NULL, 0, 0);
 		if (test) {
 			int exitcode = exe(test);
 
@@ -777,16 +781,17 @@ get_mime_handler_mailcap(char *type, int xwin)
 #endif
 	if (!entry) return NULL;
 
-	program = format_command(entry->command, type, entry->copiousoutput);
+	program = format_command(entry->command, type, entry->copiousoutput, entry->x_htmloutput);
 	if (!program) return NULL;
 
-	block = (entry->needsterminal || entry->copiousoutput);
+	block = (entry->needsterminal || entry->copiousoutput || entry->x_htmloutput);
 	handler = init_mime_handler(program, entry->description,
 				    mailcap_mime_module.name,
 				    get_mailcap_ask(), block);
 	mem_free(program);
 
 	handler->copiousoutput = entry->copiousoutput;
+	handler->x_htmloutput = entry->x_htmloutput;
 	return handler;
 }
 

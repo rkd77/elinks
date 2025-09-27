@@ -52,16 +52,22 @@ struct module mailcap_protocol_module = struct_module(
 
 #ifdef HAVE_FORK
 static void
-get_request(struct connection *conn)
+get_request(struct connection *conn, int x_htmloutput)
 {
 	ELOG
 	struct read_buffer *rb = alloc_read_buffer(conn->socket);
 
 	if (!rb) return;
 
-	memcpy(rb->data, "HTTP/1.0 200 OK\r\nContent-Type: text/plain\r\n\r\n", 45);
-	rb->length = 45;
-	rb->freespace -= 45;
+	if (x_htmloutput) {
+		memcpy(rb->data, "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n", 44);
+		rb->length = 44;
+		rb->freespace -= 44;
+	} else {
+		memcpy(rb->data, "HTTP/1.0 200 OK\r\nContent-Type: text/plain\r\n\r\n", 45);
+		rb->length = 45;
+		rb->freespace -= 45;
+	}
 
 	conn->unrestartable = 1;
 
@@ -79,20 +85,33 @@ mailcap_protocol_handler(struct connection *conn)
 	char *script, *ref;
 	pid_t pid;
 	struct connection_state state = connection_state(S_OK);
-	int pipe_read[2], check;
+	int pipe_read[2];
+	int html = 0;
+	int check = 0;
 
 	/* security checks */
 	if (!conn->referrer || conn->referrer->protocol != PROTOCOL_MAILCAP) {
 		goto bad;
 	}
 	ref = get_uri_string(conn->referrer, URI_DATA);
+
 	if (!ref) {
 		goto bad;
 	}
-	check = strcmp(ref, "elmailcap");
+
+	if (!strcmp(ref, "elmailcaphtml")) {
+		html = 1;
+	} else if (!strcmp(ref, "elmailcap")) {
+		html = 0;
+	} else {
+		check = 1;
+	}
 	mem_free(ref);
-	if (check) goto bad;
-	
+
+	if (check) {
+		goto bad;
+	}
+
 	script = get_uri_string(conn->uri, URI_DATA);
 	if (!script) {
 		state = connection_state(S_OUT_OF_MEM);
@@ -135,7 +154,7 @@ mailcap_protocol_handler(struct connection *conn)
 		conn->cgi = 1;
 		set_nonblocking_fd(conn->socket->fd);
 
-		get_request(conn);
+		get_request(conn, html);
 		return;
 	}
 

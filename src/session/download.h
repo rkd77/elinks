@@ -131,6 +131,7 @@ struct type_query {
 
 	/** mailcap entry with copiousoutput */
 	unsigned int copiousoutput:1;
+	unsigned int x_htmloutput:1;
 	/* int frame; */
 };
 
@@ -177,6 +178,7 @@ struct file_download {
 	unsigned int dgi:1;
 	/** Mailcap entry with copiousoutput */
 	unsigned int copiousoutput:1;
+	unsigned int x_htmloutput:1;
 	
 	/** The current dialog for this download. Can be NULL. */
 	struct dialog_data *dlg_data;

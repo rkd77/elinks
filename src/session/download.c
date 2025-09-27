@@ -403,6 +403,7 @@ struct exec_mailcap {
 	struct session *ses;
 	char *command;
 	char *file;
+	unsigned int x_htmloutput:1;
 };
 
 static void
@@ -440,7 +441,14 @@ exec_mailcap_command(void *data)
 
 			if (init_string(&string)) {
 				static char mailcap_elmailcap[] = "mailcap:elmailcap";
-				struct uri *ref = get_uri(mailcap_elmailcap, URI_NONE);
+				static char mailcap_elmailcap_html[] = "mailcap:elmailcaphtml";
+				struct uri *ref;
+
+				if (exec_mailcap->x_htmloutput) {
+					ref = get_uri(mailcap_elmailcap_html, URI_NONE);
+				} else {
+					ref = get_uri(mailcap_elmailcap, URI_NONE);
+				}
 				struct uri *uri;
 				struct session *ses = exec_mailcap->ses;
 
@@ -467,7 +475,7 @@ exec_mailcap_command(void *data)
 }
 
 static void
-exec_later(struct session *ses, char *handler, char *file)
+exec_later(struct session *ses, char *handler, char *file, int x_htmloutput)
 {
 	ELOG
 	struct exec_mailcap *exec_mailcap = (struct exec_mailcap *)mem_calloc(1, sizeof(*exec_mailcap));
@@ -476,6 +484,7 @@ exec_later(struct session *ses, char *handler, char *file)
 		exec_mailcap->ses = ses;
 		exec_mailcap->command = null_or_stracpy(handler);
 		exec_mailcap->file = null_or_stracpy(file);
+		exec_mailcap->x_htmloutput = x_htmloutput;
 		register_bottom_half(exec_mailcap_command, exec_mailcap);
 	}
 }
@@ -597,9 +606,9 @@ download_data_store(struct download *download, struct file_download *file_downlo
 		prealloc_truncate(file_download->handle, file_download->seek);
 		close(file_download->handle);
 		file_download->handle = -1;
-		if (file_download->copiousoutput) {
+		if (file_download->copiousoutput || file_download->x_htmloutput) {
 			exec_later(file_download->ses,
-				   file_download->external_handler, file_download->file);
+				   file_download->external_handler, file_download->file, file_download->x_htmloutput);
 			/* Temporary file is deleted by the mailcap_protocol_handler */
 			file_download->delete_ = 0;
 		} else if (file_download->dgi) {
@@ -1443,6 +1452,7 @@ continue_download_do(struct terminal *term, int fd, void *data,
 							     type_query->uri->string);
 		file_download->delete_ = 1;
 		file_download->copiousoutput = type_query->copiousoutput;
+		file_download->x_htmloutput = type_query->x_htmloutput;
 		mem_free(codw_hop->file);
 		mem_free_set(&type_query->external_handler, NULL);
 	}
@@ -1717,8 +1727,8 @@ tp_open(struct type_query *type_query)
 		}
 
 		if (handler) {
-			if (type_query->copiousoutput) {
-				exec_later(type_query->ses, handler, NULL);
+			if (type_query->copiousoutput || type_query->x_htmloutput) {
+				exec_later(type_query->ses, handler, NULL, type_query->x_htmloutput);
 			} else {
 				exec_on_terminal(type_query->ses->tab->term,
 						 handler, "", type_query->block ?
@@ -1740,8 +1750,8 @@ tp_open(struct type_query *type_query)
 					char *handler = subst_file(type_query->external_handler, filename, filename);
 
 					if (handler) {
-						if (type_query->copiousoutput) {
-							exec_later(type_query->ses, handler, NULL);
+						if (type_query->copiousoutput || type_query->x_htmloutput) {
+							exec_later(type_query->ses, handler, NULL, type_query->x_htmloutput);
 						} else {
 							exec_on_terminal(type_query->ses->tab->term,
 							handler, "", type_query->block ?
@@ -1792,6 +1802,7 @@ do_type_query(struct type_query *type_query, char *ct, struct mime_handler *hand
 	if (handler) {
 		type_query->block = handler->block;
 		type_query->copiousoutput = handler->copiousoutput;
+		type_query->x_htmloutput = handler->x_htmloutput;
 		type_query->dgi = handler->dgi;
 		type_query->inpext = null_or_stracpy(handler->inpext);
 		type_query->outext = null_or_stracpy(handler->outext);
