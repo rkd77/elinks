@@ -155,6 +155,14 @@ mailcap_protocol_handler(struct connection *conn)
 	stub_called("mailcap_protocol_handler");
 }
 
+/* declared in "protocol/file/mailcap.h" */
+void
+mailcap_html_protocol_handler(struct connection *conn)
+{
+	ELOG
+	stub_called("mailcap_protocol_handler");
+}
+
 void
 save_in_uri_map(char *a, char *b)
 {

@@ -452,7 +452,11 @@ exec_mailcap_command(void *data)
 				struct uri *uri;
 				struct session *ses = exec_mailcap->ses;
 
-				add_to_string(&string, "mailcap:");
+				if (exec_mailcap->x_htmloutput) {
+					add_to_string(&string, "mailcaphtml:");
+				} else {
+					add_to_string(&string, "mailcap:");
+				}
 				add_to_string(&string, exec_mailcap->command);
 				if (exec_mailcap->file) {
 					add_to_string(&string, " && /bin/rm -f ");

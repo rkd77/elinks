@@ -11,6 +11,9 @@ extern "C" {
 extern struct module mailcap_protocol_module;
 extern protocol_handler_T mailcap_protocol_handler;
 
+extern struct module mailcap_html_protocol_module;
+extern protocol_handler_T mailcap_html_protocol_handler;
+
 #ifdef __cplusplus
 }
 #endif

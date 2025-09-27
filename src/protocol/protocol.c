@@ -84,6 +84,7 @@ static const struct protocol_backend protocol_backends[] = {
 	{ "https",	 443, https_protocol_handler,		1, 1, 0, 1, 1 },
 	{ "javascript",	   0, NULL,				0, 0, 1, 0, 1 },
 	{ "mailcap",	   0, mailcap_protocol_handler,		0, 0, 1, 0, 0 },
+	{ "mailcaphtml",	   0, mailcap_html_protocol_handler,		0, 0, 1, 0, 0 },
 	{ "news",	   0, news_protocol_handler,		0, 0, 1, 0, 1 },
 	{ "nntp",	 119, nntp_protocol_handler,		1, 1, 0, 0, 0 },
 	{ "nntps",	 563, nntp_protocol_handler,		1, 1, 0, 1, 0 },

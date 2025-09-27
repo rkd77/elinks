@@ -32,7 +32,7 @@ get_blacklist_entry(struct uri *uri)
 	ELOG
 	struct blacklist_entry *entry;
 
-	if (uri->protocol != PROTOCOL_MAILCAP) {
+	if (uri->protocol != PROTOCOL_MAILCAP && uri->protocol != PROTOCOL_MAILCAP_HTML) {
 		assert(uri && uri->hostlen > 0);
 		if_assert_failed return NULL;
 	}

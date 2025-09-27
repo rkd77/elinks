@@ -50,6 +50,17 @@ struct module mailcap_protocol_module = struct_module(
 	/* getname: */	NULL
 );
 
+struct module mailcap_html_protocol_module = struct_module(
+	/* name: */		N_("Mailcap html"),
+	/* options: */		NULL,
+	/* hooks: */		NULL,
+	/* submodules: */	NULL,
+	/* data: */		NULL,
+	/* init: */		NULL,
+	/* done: */		NULL,
+	/* getname: */	NULL
+);
+
 #ifdef HAVE_FORK
 static void
 get_request(struct connection *conn, int x_htmloutput)
@@ -77,42 +88,22 @@ get_request(struct connection *conn, int x_htmloutput)
 }
 #endif
 
-void
-mailcap_protocol_handler(struct connection *conn)
+static void
+mailcap_protocol_handler_common(struct connection *conn, int html)
 {
 	ELOG
 #ifdef HAVE_FORK
-	char *script, *ref;
+	char *script;
 	pid_t pid;
 	struct connection_state state = connection_state(S_OK);
 	int pipe_read[2];
-	int html = 0;
-	int check = 0;
 
 	/* security checks */
-	if (!conn->referrer || conn->referrer->protocol != PROTOCOL_MAILCAP) {
+	if (conn->referrer && (conn->referrer->protocol != PROTOCOL_MAILCAP && conn->referrer->protocol != PROTOCOL_MAILCAP_HTML)) {
 		goto bad;
 	}
-	ref = get_uri_string(conn->referrer, URI_DATA);
-
-	if (!ref) {
-		goto bad;
-	}
-
-	if (!strcmp(ref, "elmailcaphtml")) {
-		html = 1;
-	} else if (!strcmp(ref, "elmailcap")) {
-		html = 0;
-	} else {
-		check = 1;
-	}
-	mem_free(ref);
-
-	if (check) {
-		goto bad;
-	}
-
 	script = get_uri_string(conn->uri, URI_DATA);
+
 	if (!script) {
 		state = connection_state(S_OUT_OF_MEM);
 		goto end2;
@@ -168,4 +159,18 @@ end2:
 bad:
 #endif
 	abort_connection(conn, connection_state(S_BAD_URL));
+}
+
+void
+mailcap_protocol_handler(struct connection *conn)
+{
+	ELOG
+	mailcap_protocol_handler_common(conn, 0);
+}
+
+void
+mailcap_html_protocol_handler(struct connection *conn)
+{
+	ELOG
+	mailcap_protocol_handler_common(conn, 1);
 }
