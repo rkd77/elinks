@@ -247,9 +247,9 @@ js::ObjectOps dataset_obj_ops = {
 };
 
 JSClass dataset_class = {
-	"dataset",
-	JSCLASS_HAS_RESERVED_SLOTS(1),
-	&dataset_ops,
+	.name = "dataset",
+	.flags = JSCLASS_HAS_RESERVED_SLOTS(1),
+	.cOps = &dataset_ops,
 	.oOps = &dataset_obj_ops
 };
 
