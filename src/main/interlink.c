@@ -526,7 +526,7 @@ int
 init_interlink(void)
 {
 	ELOG
-	int efd;
+	int efd = 0;
 	uint64_t trigger = 1;
 	ssize_t n;
 	int fd = connect_to_af_unix();
