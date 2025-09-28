@@ -253,10 +253,6 @@ JSClass dataset_class = {
 	.oOps = &dataset_obj_ops
 };
 
-static const spidermonkeyFunctionSpec dataset_funcs[] = {
-	{ NULL }
-};
-
 JSObject *
 getDataset(JSContext *ctx, void *node)
 {
