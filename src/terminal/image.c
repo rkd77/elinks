@@ -232,6 +232,7 @@ el_sixel_get_image(char *data, int length, int *outlen)
 	int width;
 	int height;
 	unsigned char *pixels = stbi_load_from_memory((unsigned char *)data, length, &width, &height, &comp, 3);
+	char *outdata = NULL;
 	int webp = 0;
 	int avif = 0;
 
@@ -252,12 +253,12 @@ el_sixel_get_image(char *data, int length, int *outlen)
 	}
 	sixel_output_t *output = NULL;
 	sixel_dither_t *dither = NULL;
+	sixel_allocator_t *el_sixel_allocator = NULL;
 	struct string ret;
 
 	if (!init_string(&ret)) {
 		goto end;
 	}
-	sixel_allocator_t *el_sixel_allocator = NULL;
 #ifdef CONFIG_MEMCOUNT
 	el_sixel_allocator = init_sixel_allocator();
 #endif
@@ -269,7 +270,7 @@ el_sixel_get_image(char *data, int length, int *outlen)
 	dither = sixel_dither_get(SIXEL_BUILTIN_XTERM256);
 	sixel_dither_set_pixelformat(dither, SIXEL_PIXELFORMAT_RGB888);
 	status = sixel_encode(pixels, width, height, 3, dither, output);
-	char *outdata = memacpy(ret.source, ret.length);
+	outdata = memacpy(ret.source, ret.length);
 
 	if (outdata) {
 		*outlen = ret.length;
