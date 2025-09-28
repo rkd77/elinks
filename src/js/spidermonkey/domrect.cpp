@@ -109,10 +109,6 @@ JSPropertySpec domRect_props[] = {
 	JS_PS_END
 };
 
-const spidermonkeyFunctionSpec domRect_funcs[] = {
-	{ NULL }
-};
-
 static bool
 domRect_get_property_bottom(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
