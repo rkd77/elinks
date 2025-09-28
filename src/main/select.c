@@ -1178,8 +1178,8 @@ do_event_loop(int flags)
 }
 #endif
 
+#if defined(USE_LIBEVENT) || defined(CONFIG_LIBUV)
 #if defined(USE_POLL)
-
 static void
 restrict_fds(void)
 {
@@ -1201,6 +1201,7 @@ skip_limit:;
 #endif
 }
 #endif /* USE_POLL */
+#endif /* USE_LIBEVENT || CONFIG_LIBUV */
 
 #ifdef USE_LIBEVENT
 
