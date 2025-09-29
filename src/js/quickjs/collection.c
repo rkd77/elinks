@@ -323,7 +323,6 @@ js_htmlCollection_set_items(JSContext *ctx, JSValue this_val, void *node)
 #endif
 	REF_JS(this_val);
 
-	int counter = 0;
 	uint32_t size, i;
 	dom_html_collection *ns = (dom_html_collection *)(node);
 	dom_exception err;
@@ -363,7 +362,6 @@ js_htmlCollection_set_items(JSContext *ctx, JSValue this_val, void *node)
 			}
 		}
 		JS_FreeValue(ctx, obj);
-		counter++;
 		dom_string_unref(name);
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
