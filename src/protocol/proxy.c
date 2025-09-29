@@ -202,8 +202,9 @@ get_proxy_worker(struct uri *uri, char *proxy,
 		if (!proxy_probe_no_proxy(uri->host, no_proxy))
 			return proxy_uri(uri, protocol_proxy, error_state);
 	}
-
+#ifdef CONFIG_LIBCURL
 end:
+#endif
 	return get_composed_uri(uri, URI_BASE);
 }
 
