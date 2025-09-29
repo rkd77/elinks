@@ -626,7 +626,7 @@ ecmascript_request(void *val)
 #endif
 #ifdef CONFIG_MUJS
 		if (interpreter->request_func) {
-			char *handle = interpreter->request_func;
+			const char *handle = interpreter->request_func;
 			interpreter->request_func = NULL;
 			ecmascript_call_function_timestamp(interpreter, handle, NULL);
 			check_for_rerender(interpreter, "request");
