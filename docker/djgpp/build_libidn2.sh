@@ -1,8 +1,8 @@
 cd
-rm -rf libidn2-2.3.4
-wget https://ftp.gnu.org/gnu/libidn/libidn2-2.3.4.tar.gz
-tar xvf libidn2-2.3.4.tar.gz
-cd libidn2-2.3.4
+rm -rf libidn2-2.3.8
+wget https://ftp.gnu.org/gnu/libidn/libidn2-2.3.8.tar.gz
+tar xvf libidn2-2.3.8.tar.gz
+cd libidn2-2.3.8
 patch -p1 < ../getprogname.diff || exit 1
 
 export PKG_CONFIG_PATH=$HOME/lib/pkgconfig
