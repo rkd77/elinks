@@ -416,14 +416,6 @@ check_if_local_address6(struct sockaddr_in6 *addr)
 				local = 1;
 				break;
 			}
-
-			if (ifa->ifa_addr->sa_family == AF_INET
-			    && !memcmp(&((struct sockaddr_in *) &addr)->sin_addr.s_addr,
-				&((struct sockaddr_in *) ifa->ifa_addr)->sin_addr.s_addr,
-				sizeof(((struct sockaddr_in *) &addr)->sin_addr.s_addr))) {
-					local = 1;
-					break;
-			}
 		}
 
 		freeifaddrs(ifaddrs);
