@@ -407,9 +407,7 @@ quickjs_put_interpreter(struct ecmascript_interpreter *interpreter)
 #ifdef ECMASCRIPT_DEBUG
 fprintf(stderr, "Before JS_FreeContext: %s:%d\n", __FUNCTION__, __LINE__);
 #endif
-	if (!JS_IsNull(interpreter->request_func)) {
-		JS_FreeValue(ctx, interpreter->request_func);
-	}
+	JS_FreeValue(ctx, interpreter->request_func);
 	JS_FreeContext(ctx);
 	interpreter->backend_data = NULL;
 	interp_erase_from_map(map_interp, interpreter);

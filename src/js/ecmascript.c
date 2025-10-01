@@ -798,9 +798,7 @@ ecmascript_set_request2(void *c, JSValueConst fun)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter && interpreter->vs->doc_view->document);
 
-	if (!JS_IsNull(interpreter->request_func)) {
-		JS_FreeValue(ctx, interpreter->request_func);
-	}
+	JS_FreeValue(ctx, interpreter->request_func);
 	interpreter->request_func = JS_DupValue(ctx, fun);
 	interpreter->request++;
 
