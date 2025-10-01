@@ -611,7 +611,6 @@ js_document_get_property_head(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 	JSValue rr = getElement(ctx, head);
-	JS_FreeValue(ctx, rr);
 
 	RETURN_JS(rr);
 }
