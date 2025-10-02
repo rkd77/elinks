@@ -351,6 +351,8 @@ src/js/mujs/nodelist.c
 src/js/mujs/nodelist.h
 src/js/mujs/nodelist2.c
 src/js/mujs/nodelist2.h
+src/js/mujs/performance.c
+src/js/mujs/performance.h
 src/js/mujs/screen.c
 src/js/mujs/screen.h
 src/js/mujs/style.c
@@ -428,6 +430,8 @@ src/js/quickjs/nodelist.c
 src/js/quickjs/nodelist.h
 src/js/quickjs/nodelist2.c
 src/js/quickjs/nodelist2.h
+src/js/quickjs/performance.c
+src/js/quickjs/performance.h
 src/js/quickjs/screen.c
 src/js/quickjs/screen.h
 src/js/quickjs/style.c
@@ -506,6 +510,8 @@ src/js/spidermonkey/nodelist.cpp
 src/js/spidermonkey/nodelist.h
 src/js/spidermonkey/nodelist2.cpp
 src/js/spidermonkey/nodelist2.h
+src/js/spidermonkey/performance.cpp
+src/js/spidermonkey/performance.h
 src/js/spidermonkey/screen.cpp
 src/js/spidermonkey/screen.h
 src/js/spidermonkey/style.cpp
@@ -646,6 +652,8 @@ src/protocol/common.c
 src/protocol/common.h
 src/protocol/curl/ftp.c
 src/protocol/curl/ftpes.h
+src/protocol/curl/gopher.c
+src/protocol/curl/gopher.h
 src/protocol/curl/http.c
 src/protocol/curl/http.h
 src/protocol/curl/sftp.h
@@ -694,6 +702,8 @@ src/protocol/http/http_negotiate.c
 src/protocol/http/http_negotiate.h
 src/protocol/http/post.c
 src/protocol/http/post.h
+src/protocol/map.cpp
+src/protocol/map.h
 src/protocol/nntp/codes.h
 src/protocol/nntp/connection.c
 src/protocol/nntp/connection.h
@@ -811,6 +821,8 @@ src/terminal/event.c
 src/terminal/event.h
 src/terminal/hardio.c
 src/terminal/hardio.h
+src/terminal/image.c
+src/terminal/image.h
 src/terminal/itrm.h
 src/terminal/kbd.c
 src/terminal/kbd.h
