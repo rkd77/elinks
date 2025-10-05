@@ -1362,8 +1362,6 @@ window_get_property_parent(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JS::CallArgs args = CallArgsFromVp(argc, vp);
-
 	/* XXX: It would be nice if the following worked, yes.
 	 * The problem is that we get called at the point where
 	 * document.frame properties are going to be mostly NULL.
@@ -1374,9 +1372,8 @@ window_get_property_parent(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* FIXME: So now we alias window.parent to window.top, which is
 	 * INCORRECT but works for the most common cases of just two
 	 * frames. Better something than nothing. */
-	args.rval().setUndefined();
 
-	return true;
+	return window_get_property_top(ctx, argc, vp);
 }
 
 static bool

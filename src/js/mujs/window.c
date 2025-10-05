@@ -224,6 +224,8 @@ mjs_window_set_property_location(js_State *J)
 	js_pushundefined(J);
 }
 
+static void mjs_window_get_property_top(js_State *J);
+
 static void
 mjs_window_get_property_parent(js_State *J)
 {
@@ -241,8 +243,7 @@ mjs_window_get_property_parent(js_State *J)
 	/* FIXME: So now we alias window.parent to window.top, which is
 	 * INCORRECT but works for the most common cases of just two
 	 * frames. Better something than nothing. */
-
-	js_pushundefined(J);
+	mjs_window_get_property_top(J);
 }
 
 static void

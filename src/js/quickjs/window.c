@@ -838,6 +838,7 @@ js_window_set_property_location(JSContext *ctx, JSValueConst this_val, JSValue v
 	return JS_UNDEFINED;
 }
 
+static JSValue js_window_get_property_top(JSContext *ctx, JSValueConst this_val);
 
 static JSValue
 js_window_get_property_parent(JSContext *ctx, JSValueConst this_val)
@@ -846,8 +847,6 @@ js_window_get_property_parent(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	REF_JS(this_val);
-
 	/* XXX: It would be nice if the following worked, yes.
 	 * The problem is that we get called at the point where
 	 * document.frame properties are going to be mostly NULL.
@@ -859,7 +858,7 @@ js_window_get_property_parent(JSContext *ctx, JSValueConst this_val)
 	 * INCORRECT but works for the most common cases of just two
 	 * frames. Better something than nothing. */
 
-	return JS_UNDEFINED;
+	return js_window_get_property_top(ctx, this_val);
 }
 
 static JSValue
