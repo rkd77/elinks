@@ -1848,7 +1848,7 @@ css_error ua_default_for_property(void *pw, uint32_t property, css_hint *hint)
 	UNUSED(pw);
 
 	if (property == CSS_PROP_COLOR) {
-		hint->data.color = 0x00bfbfbf;
+		hint->data.color = 0;
 		hint->status = CSS_COLOR_COLOR;
 	} else if (property == CSS_PROP_FONT_FAMILY) {
 		hint->data.strings = NULL;
