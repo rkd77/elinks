@@ -13,7 +13,6 @@ void print_screen_status(struct session *);
 void print_screen_status_delayed(struct session *);
 
 void update_status(void);
-void update_status_dirty(void);
 
 char *
 get_download_msg(struct download *download, struct terminal *term,
