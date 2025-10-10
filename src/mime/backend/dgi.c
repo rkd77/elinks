@@ -221,12 +221,18 @@ static void
 parse_dgi_file(char *filename)
 {
 	ELOG
-	FILE *file = fopen(filename, "rb");
+	char *expanded_filename = expand_tilde(filename);
+
+	if (!expanded_filename) {
+		return;
+	}
+	FILE *file = fopen(expanded_filename, "rb");
+	mem_free(expanded_filename);
+	if (!file) return;
+
 	char *line = NULL;
 	size_t linelen = MAX_STR_LEN;
 	int lineno = 1;
-
-	if (!file) return;
 
 	while ((line = file_read_line(line, &linelen, file, &lineno))) {
 		struct dgi_entry *entry;
