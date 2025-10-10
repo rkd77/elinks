@@ -533,6 +533,8 @@ exec_dgi_command(void *data)
 
 				do_follow_url_mailcap(ses, uri);
 				if (uri) done_uri(uri);
+
+				set_screen_dirty(ses->tab->term->screen, 0, ses->tab->term->height);
 			}
 			mem_free(exec_dgi->command);
 		}
