@@ -65,8 +65,9 @@ get_download_msg(struct download *download, struct terminal *term,
 
 #define show_tabs(option, tabs) (((option) > 0) && !((option) == 1 && (tabs) < 2))
 
-void
-update_status(void)
+
+static void
+update_status_common(int dirty2)
 {
 	ELOG
 	int show_title_bar = get_opt_bool("ui.show_title_bar", NULL);
@@ -85,7 +86,7 @@ update_status(void)
 
 	foreach (ses, sessions) {
 		struct session_status *status = &ses->status;
-		int dirty = 0;
+		int dirty = dirty2;
 
 		/* Try to descrease the number of tab calculation using that
 		 * tab sessions share the same term. */
@@ -142,6 +143,20 @@ update_status(void)
 
 		set_screen_dirty(term->screen, 0, term->height);
 	}
+}
+
+void
+update_status(void)
+{
+	ELOG
+	update_status_common(0);
+}
+
+void
+update_status_dirty(void)
+{
+	ELOG
+	update_status_common(1);
 }
 
 static char *

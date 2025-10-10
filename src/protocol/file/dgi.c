@@ -23,6 +23,7 @@
 
 #include "config/options.h"
 #include "cookies/cookies.h"
+#include "dialogs/status.h"
 #include "intl/libintl.h"
 #include "mime/backend/common.h"
 #include "mime/backend/dgi.h"
@@ -311,6 +312,7 @@ dgi_protocol_handler(struct connection *conn)
 	if (tempfilename) {
 		unlink(tempfilename);
 	}
+	update_status_dirty();
 
 	if (!outputfilename) {
 		state = connection_state(S_OK);
