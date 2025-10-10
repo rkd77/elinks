@@ -7,6 +7,11 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#ifdef HAVE_SYS_CYGWIN_H
+#include <sys/cygwin.h>
+#endif
+
 #include <sys/types.h>
 #ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h> /* OS/2 needs this after sys/types.h */
@@ -231,7 +236,17 @@ prepare_command(char *program, const char *filename, const char *query, char *in
 					break;
 				case '1':
 					if (filename) {
-						add_to_string(cmd, filename);
+#if defined(HAVE_CYGWIN_CONV_TO_FULL_WIN32_PATH)
+#ifdef MAX_PATH
+						char new_path[MAX_PATH];
+#else
+						char new_path[1024];
+#endif
+						cygwin_conv_to_full_win32_path(filename, new_path);
+						add_to_string(cmd, new_path);
+#else
+						add_shell_quoted_to_string(cmd, filename, strlen(filename));
+#endif
 					} else {
 						*inp = tempname(NULL, "elinks", inpext);
 						if (*inp) {
