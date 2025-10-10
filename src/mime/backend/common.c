@@ -27,7 +27,7 @@
 
 static const struct mime_backend *const mime_backends[] = {
 	&default_mime_backend,
-#ifdef CONFIG_DGI
+#if defined(CONFIG_DGI) && !defined(TEST_MAILCAP)
 	&dgi_mime_backend,
 #endif
 #ifdef CONFIG_MAILCAP
