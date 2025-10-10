@@ -1,4 +1,3 @@
-
 #ifndef EL__OSDEP_DOS_SYSINFO_H
 #define EL__OSDEP_DOS_SYSINFO_H
 
@@ -14,6 +13,8 @@
 /* #define NO_FG_EXEC */
 #define DOS_FS
 #define NO_FORK_ON_EXIT
+
+#define ELINKS_TEMPNAME_PREFIX "el"
 
 #endif
 #endif

@@ -1,4 +1,3 @@
-
 #ifndef EL__SETUP_H
 #define EL__SETUP_H
 
@@ -22,7 +21,10 @@
 
 #define ELINKS_SOCK_NAME		"socket"
 #define ELINKS_PORT			23456
+
+#ifndef ELINKS_TEMPNAME_PREFIX
 #define ELINKS_TEMPNAME_PREFIX		"elinks"
+#endif
 
 #define ALLOWED_ECMASCRIPT_URL_PREFIXES	"allow.txt"
 #define DISALLOWED_ECMASCRIPT_URL_PREFIXES	"disallow.txt"

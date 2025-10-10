@@ -202,7 +202,7 @@ prepare_command(char *program, const char *filename, const char *query, char *in
 					state = NORMAL;
 					break;
 				case 'q':
-					*queryfile = tempname(NULL, "elinks", inpext);
+					*queryfile = tempname(NULL, ELINKS_TEMPNAME_PREFIX, inpext);
 					if (*queryfile) {
 						add_to_string(cmd, *queryfile);
 					}
@@ -248,7 +248,7 @@ prepare_command(char *program, const char *filename, const char *query, char *in
 						add_shell_quoted_to_string(cmd, filename, strlen(filename));
 #endif
 					} else {
-						*inp = tempname(NULL, "elinks", inpext);
+						*inp = tempname(NULL, ELINKS_TEMPNAME_PREFIX, inpext);
 						if (*inp) {
 							add_to_string(cmd, *inp);
 						}
@@ -256,7 +256,7 @@ prepare_command(char *program, const char *filename, const char *query, char *in
 					state = NORMAL;
 					break;
 				case '2':
-					*out = tempname(NULL, "elinks", outext);
+					*out = tempname(NULL, ELINKS_TEMPNAME_PREFIX, outext);
 					if (*out) {
 						add_to_string(cmd, *out);
 					}
