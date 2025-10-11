@@ -4,7 +4,7 @@
 #ifdef CONFIG_OS_DOS
 
 #define SYSTEM_NAME	"DOS"
-#define SYSTEM_STR	"DOS"
+#define SYSTEM_STR	"dos"
 #define DEFAULT_SHELL	"command.com"
 #define GETSHELL	getenv("COMSPEC")
 
