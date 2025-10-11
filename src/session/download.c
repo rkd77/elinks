@@ -1172,13 +1172,13 @@ create_download_file(struct terminal *term, char *fi,
 
 
 static char *
-get_temp_name(struct uri *uri)
+get_temp_name(struct uri *uri, char *ext)
 {
 	ELOG
 	char *extension;
 	char *nm;
 
-	extension = get_extension_from_uri(uri);
+	extension = ext ? stracpy(ext) : get_extension_from_uri(uri);
 	if (!extension)
 		extension = stracpy("");
 
@@ -1503,7 +1503,7 @@ continue_download(void *data, char *file)
 	}
 
 	if (type_query->external_handler) {
-		file = get_temp_name(type_query->uri);
+		file = get_temp_name(type_query->uri, type_query->inpext);
 		if (!file) {
 			mem_free(codw_hop);
 			tp_cancel(type_query);
