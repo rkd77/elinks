@@ -4,7 +4,7 @@ DOS Gateway Interface
 DOS Gateway Interface (DGI) introduced by Arachne browser is similar to
 CGI scripts and mailcap. DGI programs usually take input from command line
 or files and write output to temporary files. Similarity to mailcap
-is config file. You can assign various file externsions with DGI, and
+is config file. You can assign various file extensions with DGI, and
 run to get output.
 
 See Arachne documentation for details of configuration file mime.cfg.
