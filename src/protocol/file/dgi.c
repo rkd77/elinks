@@ -316,7 +316,7 @@ dgi_protocol_handler(struct connection *conn)
 	}
 	prepare_command(command, filename, NULL, inpext, outext, &command_str, &tempfilename, &outputfilename, NULL);
 
-	(void)!system(command_str.source);
+	(void)system(command_str.source);
 	done_string(&command_str);
 
 	if (del) {
