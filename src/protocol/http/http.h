@@ -1,4 +1,3 @@
-
 #ifndef EL__PROTOCOL_HTTP_HTTP_H
 #define EL__PROTOCOL_HTTP_HTTP_H
 
@@ -30,7 +29,7 @@ struct http_connection_info {
 	struct http_version sent_version;
 
 	int close;
-	int length;
+	off_t length;
 	int chunk_remaining;
 	int code;
 
