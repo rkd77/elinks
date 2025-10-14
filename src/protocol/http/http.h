@@ -30,7 +30,7 @@ struct http_connection_info {
 
 	int close;
 	off_t length;
-	off_t chunk_remaining;
+	int chunk_remaining;
 	int code;
 
 	struct http_post post;
