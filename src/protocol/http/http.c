@@ -1244,11 +1244,11 @@ read_chunked_http_data(struct connection *conn, struct read_buffer *rb)
 
 			if (l) {
 				char *de;
-				int n = 0;
+				long long n = 0;
 
 				if (l != -1) {
 					errno = 0;
-					n = strtol(rb->data, (char **) &de, 16);
+					n = strtoll(rb->data, (char **) &de, 16);
 					if (errno || !*de) {
 						return -1;
 					}
