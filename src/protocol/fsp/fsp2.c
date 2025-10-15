@@ -472,7 +472,7 @@ _x_adr(const char *xhost, unsigned short port, struct sockaddr_in *his)
 static int
 _x_udp(unsigned short *port)
 {
-	int f, zz;
+	int f, zz = 1;
 	struct sockaddr_in me ;
 	struct sockaddr_in sin;
 	socklen_t len;
