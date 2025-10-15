@@ -109,6 +109,8 @@ typedef struct FSP_SESSION {
                         unsigned int last_resends;/* last resends        */
                         int fd;                   /* i/o descriptor      */
                         char *password;           /* host acccess password */
+                        struct sockaddr_in host_addr;
+
                 } FSP_SESSION;
 
 /* fsp directory handle */

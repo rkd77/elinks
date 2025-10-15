@@ -40,6 +40,8 @@ use of this software.
 #include <netdb.h>
 #endif
 
+#include <arpa/inet.h>
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
@@ -328,9 +330,9 @@ fsp_transaction_send_loop(void *data)
 	fsp->l_delay = fsp->w_delay;
 
 	/* send packet */
-	if (send(s->fd, fsp->buf, l, 0) < 0) {
-#if 1
-		fprintf(stderr, "Send failed.\n");
+	if (sendto(s->fd, fsp->buf, l, 0, (struct sockaddr *)&s->host_addr, sizeof(s->host_addr)) < 0) {
+#if 0
+		fprintf(stderr, "Send failed errno=%d\n", errno);
 #endif
 		if (errno == EBADF || errno == ENOTSOCK) {
 			client_set_key((FSP_LOCK *)s->lock, fsp->out.key);
@@ -447,6 +449,70 @@ fsp_transaction_continue(void *data)
 	}
 }
 
+static int
+_x_adr(const char *xhost, unsigned short port, struct sockaddr_in *his)
+{
+	struct hostent *H;
+	int    i;
+	char *s, *d;
+
+	memset(his, 0, sizeof(*his));
+
+	if (inet_aton(xhost, &his->sin_addr)) {
+		his->sin_family = AF_INET;
+	} else if ((H = gethostbyname(xhost))) {
+		for (s = (char *)H->h_addr, d = (char *)&his->sin_addr, i = H->h_length; i--; *d++ = *s++);
+		his->sin_family = H->h_addrtype;
+	} else return -1;
+	his->sin_port = htons((unsigned short) port);
+
+	return 0;
+}
+
+static int
+_x_udp(unsigned short *port)
+{
+	int f, zz;
+	struct sockaddr_in me ;
+	struct sockaddr_in sin;
+	socklen_t len;
+
+	memset(&me, 0, sizeof(me));
+	me.sin_port = htons(*port);
+	me.sin_family = AF_INET;
+
+	if ((f = socket(AF_INET,SOCK_DGRAM,0)) == -1) return -1;
+
+	if (setsockopt(f, SOL_SOCKET, SO_REUSEADDR, &zz, sizeof(zz)) < 0 ||
+		bind(f, (struct sockaddr *)&me, (len = sizeof(me))) < 0 ||
+		getsockname(f, (struct sockaddr*)&sin, &len) < 0) {
+		int tmp = errno;
+		close(f);
+		errno = tmp;
+		return -1;
+	}
+	if (!*port) *port = ntohs((unsigned short)sin.sin_port);
+	return f;
+}
+
+
+static int
+init_client(const char *myhost, unsigned short port, unsigned short myport, struct sockaddr_in *server_addr)
+{
+	int myfd;
+
+	if ((myfd = _x_udp(&myport)) == -1) {
+		return -1;
+	}
+
+	if (_x_adr(myhost, port, server_addr) == -1) {
+		close(myfd);
+		return -1;
+	}
+
+	return myfd;
+}
+
 /* ******************* Session management functions ************ */
 
 /* initializes a session */
@@ -456,66 +522,16 @@ fsp_open_session(const char *host, unsigned short port, const char *password)
 	ELOG
 	FSP_SESSION *s;
 	int fd;
-	struct addrinfo hints,*res;
-	char port_s[6];
-	struct sockaddr_in *addrin;
+	struct sockaddr_in addrin;
+
 	FSP_LOCK *lock;
 
-	memset(&hints, 0, sizeof (hints));
-	/* fspd do not supports inet6 */
-	hints.ai_family = PF_INET;
-	hints.ai_socktype = SOCK_DGRAM;
-
-	if (port == 0) {
-		strcpy(port_s, "fsp");
-	} else {
-		sprintf(port_s,"%hu", port);
-	}
-
-	if ((fd = getaddrinfo(host, port_s, &hints, &res)) != 0) {
-
-#ifdef CONFIG_OS_WIN32
-		if (1) {
-#else
-		if (fd != EAI_SYSTEM) {
-#endif
-			/* We need to set errno ourself */
-			switch (fd) {
-			case EAI_SOCKTYPE:
-			case EAI_SERVICE:
-			case EAI_FAMILY:
-				errno = EOPNOTSUPP;
-				break;
-			case EAI_AGAIN:
-				errno = EAGAIN;
-				break;
-			case EAI_FAIL:
-				errno = ECONNRESET;
-				break;
-			case EAI_BADFLAGS:
-				errno = EINVAL;
-				break;
-			case EAI_MEMORY:
-				errno = ENOMEM;
-				break;
-			default:
-				errno = EFAULT;
-			}
-		}
-		return NULL; /* host not found */
-	}
-
-	/* create socket */
-	fd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+	fd = init_client(host, port, 0, &addrin);
 
 	if (fd < 0) {
 		return NULL;
 	}
-	/* connect socket */
-	if (connect(fd, res->ai_addr, res->ai_addrlen)) {
-		close(fd);
-		return NULL;
-	}
+
 	/* allocate memory */
 	s = calloc(1, sizeof(FSP_SESSION));
 
@@ -534,9 +550,8 @@ fsp_open_session(const char *host, unsigned short port, const char *password)
 	}
 	s->lock = lock;
 	/* init locking subsystem */
-	addrin = (struct sockaddr_in *)res->ai_addr;
 
-	if (client_init_key((FSP_LOCK *)s->lock, addrin->sin_addr.s_addr, ntohs(addrin->sin_port))) {
+	if (client_init_key((FSP_LOCK *)s->lock, addrin.sin_addr.s_addr, ntohs(addrin.sin_port))) {
 		free(s);
 		close(fd);
 		free(lock);
@@ -550,6 +565,7 @@ fsp_open_session(const char *host, unsigned short port, const char *password)
 	if (password) {
 		s->password = strdup(password);
 	}
+	s->host_addr = addrin;
 
 	return s;
 }
