@@ -40,8 +40,9 @@ use of this software.
 #include <netdb.h>
 #endif
 
+#ifdef HAVE_ARPA_INET_H
 #include <arpa/inet.h>
-
+#endif
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
@@ -458,7 +459,14 @@ _x_adr(const char *xhost, unsigned short port, struct sockaddr_in *his)
 
 	memset(his, 0, sizeof(*his));
 
+#ifdef HAVE_INET_PTON
+	if (inet_pton(AF_INET, xhost, &his->sin_addr)) {
+#elif defined(HAVE_INET_ATON)
 	if (inet_aton(xhost, &his->sin_addr)) {
+#else
+	his->sin_addr.s_addr = inet_addr(xhost);
+	if (his->sin_addr.s_addr != INADDR_NONE) {
+#endif
 		his->sin_family = AF_INET;
 	} else if ((H = gethostbyname(xhost))) {
 		for (s = (char *)H->h_addr, d = (char *)&his->sin_addr, i = H->h_length; i--; *d++ = *s++);
@@ -481,11 +489,25 @@ _x_udp(unsigned short *port)
 	me.sin_port = htons(*port);
 	me.sin_family = AF_INET;
 
-	if ((f = socket(AF_INET,SOCK_DGRAM,0)) == -1) return -1;
+	if ((f = socket(AF_INET,SOCK_DGRAM,0)) == -1) {
+		return -1;
+	}
 
-	if (setsockopt(f, SOL_SOCKET, SO_REUSEADDR, &zz, sizeof(zz)) < 0 ||
-		bind(f, (struct sockaddr *)&me, (len = sizeof(me))) < 0 ||
-		getsockname(f, (struct sockaddr*)&sin, &len) < 0) {
+	if (setsockopt(f, SOL_SOCKET, SO_REUSEADDR, (const char *)&zz, sizeof(zz)) < 0) {
+		int tmp = errno;
+		close(f);
+		errno = tmp;
+		return -1;
+	}
+
+	if (bind(f, (struct sockaddr *)&me, (len = sizeof(me))) < 0) {
+		int tmp = errno;
+		close(f);
+		errno = tmp;
+		return -1;
+	}
+
+	if (getsockname(f, (struct sockaddr*)&sin, &len) < 0) {
 		int tmp = errno;
 		close(f);
 		errno = tmp;
@@ -494,7 +516,6 @@ _x_udp(unsigned short *port)
 	if (!*port) *port = ntohs((unsigned short)sin.sin_port);
 	return f;
 }
-
 
 static int
 init_client(const char *myhost, unsigned short port, unsigned short myport, struct sockaddr_in *server_addr)
