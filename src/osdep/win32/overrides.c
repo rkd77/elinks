@@ -583,6 +583,22 @@ win32_getsockopt(int fd, int level, int option, void *optval, int *optlen)
 }
 
 int
+win32_setsockopt(int fd, int level, int optname, const char *optval, int optlen)
+{
+	ELOG
+	int rc = setsockopt(fd - SOCK_SHIFT, level, optname, optval, optlen);
+
+	if (rc < 0) {
+		errno = WSAGetLastError();
+	}
+
+	TRACE("fd %d, level %d, optname %d -> rc %d; %s",
+	      fd, level, optname, rc, rc < 0 ? win32_strerror(errno) : "okay");
+
+	return rc;
+}
+
+int
 win32_pipe(int *fds)
 {
 	ELOG
@@ -1041,6 +1057,20 @@ win32_send(int sockfd, const void *buf, unsigned len, int flags)
 	rc = send(sockfd, buf, len, flags);
 
 	if (rc != len) {
+		errno = WSAGetLastError();
+	}
+
+	return rc;
+}
+
+int
+win32_sendto(int sockfd, const char *buf, int len, int flags, const void *to, int tolen)
+{
+	ELOG
+
+	int rc = sendto(sockfd - SOCK_SHIFT, buf, len, flags, to, tolen);
+
+	if (rc < 0) {
 		errno = WSAGetLastError();
 	}
 
