@@ -129,8 +129,12 @@ verify_certificates(struct socket *socket)
 
 
 	ret = gnutls_certificate_verify_peers2(session, &status);
+
 	if (ret) return ret;
-	if (status) return status;
+
+	if (status && (conn->proxied_uri->protocol != PROTOCOL_GEMINI)) {
+		return status;
+	}
 
 	/* If the certificate is of a type for which verification has
 	 * not yet been implemented, then reject it.  This way, a fake
@@ -503,8 +507,7 @@ ssl_connect(struct socket *socket)
 #ifdef CONFIG_GEMINI
 		else if (conn->proxied_uri->protocol == PROTOCOL_GEMINI) {
 			if (get_opt_bool("connection.ssl.gemini_cert_verify", NULL)) {
-				SSL_set_verify((SSL *)socket->ssl, SSL_VERIFY_PEER
-					  | SSL_VERIFY_FAIL_IF_NO_PEER_CERT,
+				SSL_set_verify((SSL *)socket->ssl, SSL_VERIFY_NONE,
 					  verify_callback);
 			}
 		}
