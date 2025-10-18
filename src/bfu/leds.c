@@ -73,6 +73,7 @@ enum led_option {
 
 	LEDS_PANEL_TREE,
 	LEDS_PANEL_ENABLE,
+	LEDS_PANEL_REDRAW_INTERVAL,
 
 	LEDS_OPTIONS,
 };
@@ -123,6 +124,12 @@ static union option_info led_options[] = {
 		N_("Enable LEDs. These visual indicators will inform you "
 		"about various states.")),
 
+	INIT_OPT_INT("ui.leds", N_("Redraw interval"),
+		"redraw_interval", OPT_ZERO, 0, 86400000, 1000,
+		N_("Redraw interval in milliseconds. If you don't have the clock enabled, "
+		"you can set it higher. Default value is 1000. Note that active downloads "
+		"take precedence and enforce interval 100ms.")),
+
 	NULL_OPTION_INFO,
 };
 
@@ -134,6 +141,7 @@ static union option_info led_options[] = {
 #define get_leds_show_mem_enable()	get_opt_leds(LEDS_SHOW_MEM_ENABLE).number
 #define get_leds_temperature_enable()	get_opt_leds(LEDS_TEMPERATURE_ENABLE).number
 #define get_leds_temperature_filename()		get_opt_leds(LEDS_TEMPERATURE_FILENAME).string
+#define get_leds_redraw_interval()	get_opt_leds(LEDS_PANEL_REDRAW_INTERVAL).number
 
 void
 init_leds(struct module *module)
@@ -323,13 +331,9 @@ compute_redraw_interval(void)
 	if (are_there_downloads())
 		return 100;
 
-	/* TODO: Check whether the time format includes seconds.  If not,
-	 * return milliseconds to next minute. */
-
-	if (get_leds_clock_enable())
-		return 1000;
-
-	return 0;
+	return (get_leds_clock_enable() || get_leds_temperature_enable()
+		|| get_leds_show_mem_enable() || get_leds_show_ip_enable()
+		) ? get_leds_redraw_interval() : 0;
 }
 
 void
