@@ -102,11 +102,10 @@ try_to_draw_k_images(struct terminal *term, struct string *text)
 {
 	ELOG
 
-	add_to_string(text, "\033_Ga=d\033\\");
-
 	if (!term->kitty) {
 		return;
 	}
+	add_to_string(text, "\033_Ga=d\033\\");
 
 	int i;
 
