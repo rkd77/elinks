@@ -983,6 +983,7 @@ one_cb(uv_poll_t *handle, int status, int events)
 			hw(get_handler_data(fd));
 		}
 	}
+	check_bottom_halves();
 }
 
 static void
@@ -1016,6 +1017,7 @@ read_one_cb(uv_stream_t *stream, ssize_t r, const uv_buf_t *buf)
 			hr(get_handler_data(fd));
 		}
 	}
+	check_bottom_halves();
 }
 
 static void

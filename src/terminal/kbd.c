@@ -1391,6 +1391,7 @@ read_kbd_cb(uv_stream_t *stream, ssize_t nread, const uv_buf_t *buf)
 			mem_free(priv);
 			mem_free_if(buf->base);
 		}
+		check_bottom_halves();
 		return;
 	}
 
@@ -1402,6 +1403,7 @@ read_kbd_cb(uv_stream_t *stream, ssize_t nread, const uv_buf_t *buf)
 			uv_read_stop(stream);
 			unhandle_itrm_stdin(itrm);
 			while (process_queue(itrm));
+			check_bottom_halves();
 			return;
 		}
 		itrm->in.queue.data = tmp;
@@ -1412,6 +1414,7 @@ read_kbd_cb(uv_stream_t *stream, ssize_t nread, const uv_buf_t *buf)
 	mem_free_if(buf->base);
 
 	while (process_queue(itrm));
+	check_bottom_halves();
 }
 
 void

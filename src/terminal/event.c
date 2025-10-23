@@ -558,6 +558,7 @@ read_interm_cb(uv_stream_t *stream, ssize_t r, const uv_buf_t *buf)
 		mem_free_set(&threads[fd].handle, NULL);
 		mem_free(priv);
 		mem_free_if(buf->base);
+		check_bottom_halves();
 		return;
 	}
 
@@ -567,6 +568,7 @@ read_interm_cb(uv_stream_t *stream, ssize_t r, const uv_buf_t *buf)
 			      errno, (char *) strerror(errno));
 
 		destroy_terminal(term);
+		check_bottom_halves();
 		return;
 	}
 	char *iq;
@@ -591,6 +593,7 @@ read_interm_cb(uv_stream_t *stream, ssize_t r, const uv_buf_t *buf)
 		if (!interlink) {
 			mem_free(buf->base);
 			destroy_terminal(term);
+			check_bottom_halves();
 			return;
 		}
 
@@ -626,6 +629,7 @@ read_interm_cb(uv_stream_t *stream, ssize_t r, const uv_buf_t *buf)
 		if (!interlink->qlen) break;
 		memmove(iq, iq + event_size, interlink->qlen);
 	}
+	check_bottom_halves();
 }
 
 void
