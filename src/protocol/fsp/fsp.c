@@ -271,7 +271,7 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 	fsp_closedir(dir);
 	puts("</pre><hr/></body></html>");
 	fsp_close_session(ses);
-	exit(0);
+	_exit(0);
 }
 
 #define READ_SIZE	4096
