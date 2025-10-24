@@ -1721,8 +1721,8 @@ done_screen(struct terminal_screen *screen)
 {
 	//ELOG
 	mem_free_if(screen->image);
-	mem_free(screen->dirty);
-	mem_free(screen->dirty_image);
+	mem_free_if(screen->dirty);
+	mem_free_if(screen->dirty_image);
 	mem_free(screen);
 }
 
