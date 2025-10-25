@@ -717,6 +717,17 @@ if conf_data.get('CONFIG_TERMINFO')
     deps += terminfodeps
 endif
 
+if conf_data.get('CONFIG_KITTY')
+    if not conf_data.get('CONFIG_LIBDOM')
+        libdomdeps = dependency('libdom', static: st, version: '>=0.4.2', required: false)
+        if not libdomdeps.found()
+            libdomdeps = dependency('libdom', static: true, version: '>=0.4.2')
+        endif
+        deps += libdomdeps
+        conf_data.set('CONFIG_LIBDOM', true)
+    endif
+endif
+
 if conf_data.get('CONFIG_LIBSIXEL')
     sixeldeps = dependency('libsixel', static: st)
     deps += sixeldeps
