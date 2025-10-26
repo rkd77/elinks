@@ -52,7 +52,13 @@ RUN apk add \
  musl-dev \
  nghttp2-dev \
  nghttp2-static \
- c-ares-dev
+ c-ares-dev \
+ upx \
+ bsd-compat-headers \
+ libwebp-dev \
+ libwebp-static \
+ nghttp3-dev \
+ nghttp3-static
 
 ## [*] netsurf libs
 # get netsurf source
@@ -105,9 +111,6 @@ RUN cd /root; git clone https://github.com/rkd77/elinks
 
 ## [*] Compilation
 #
-RUN apk add upx bsd-compat-headers
-
-RUN apk add libwebp-dev libwebp-static
 
 ADD mes_static.sh /root/elinks/mes_static.sh
 RUN cd /root/elinks; \
