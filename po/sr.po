@@ -1,5 +1,5 @@
 # Serbian ELinks translation
-# Strahinya Radich <contact@strahinja.org>, 2005, 2021
+# Strahinya Radich <sr@strahinja.org>, 2005, 2021
 # License: GPLv2 or later (preferably GPLv3 or later, no tivoization)
 msgid ""
 msgstr ""
