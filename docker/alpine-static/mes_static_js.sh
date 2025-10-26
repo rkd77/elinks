@@ -1,10 +1,13 @@
 #!/bin/sh
 
-rm -rf /root/tmp/builddir_js
+rm -rf /tmp/builddir_js
 
-CFLAGS="-O2 -static -no-pie" \
-CXXFLAGS="-O2 -static -no-pie" \
-meson setup /root/tmp/builddir_js \
+LIBRARY_PATH="$HOME/lib" \
+PKG_CONFIG_PATH="$HOME/lib/pkgconfig" \
+LDFLAGS="-L$HOME/lib" \
+CFLAGS="-O2 -I$HOME/include -DCURL_STATICLIB -static -no-pie" \
+CXXFLAGS="-O2 -I$HOME/include -DCURL_STATICLIB -static -no-pie" \
+meson setup /tmp/builddir_js \
 -D88-colors=true \
 -D256-colors=true \
 -Dbacktrace=false \
@@ -14,6 +17,7 @@ meson setup /root/tmp/builddir_js \
 -Dcgi=true \
 -Dcss=true \
 -Ddgi=true \
+-Ddoc=false \
 -Dexmode=true \
 -Dfastmem=true \
 -Dfsp=false \
@@ -24,9 +28,12 @@ meson setup /root/tmp/builddir_js \
 -Dgopher=true \
 -Dgpm=false \
 -Dguile=false \
+-Dhtmldoc=false \
+-Dhtml-highlight=true \
 -Didn=true \
 -Dipv6=true \
 -Dkitty=true \
+-Dlibavif=false \
 -Dlibcss=true \
 -Dlibcurl=true \
 -Dlibev=false \
@@ -39,14 +46,16 @@ meson setup /root/tmp/builddir_js \
 -Dnls=true \
 -Dnntp=true \
 -Dopenssl=true \
+-Dpdfdoc=false \
 -Dperl=false \
 -Dpython=false \
 -Dquickjs=true \
 -Druby=false \
 -Dsm-scripting=false \
+-Dspartan=true \
 -Dspidermonkey=false \
 -Dstatic=true \
--Dterminfo=false \
+-Dterminfo=true \
 -Dtest=false \
 -Dtre=true \
 -Dtrue-color=true \
@@ -57,8 +66,6 @@ meson setup /root/tmp/builddir_js \
 -Dzlib=true \
 -Dzstd=true || exit 1
 
-meson compile -j $(($(nproc) - 1)) -C /root/tmp/builddir_js || exit 2
-
-strip /root/tmp/builddir_js/src/elinks || exit 3
-
-upx /root/tmp/builddir_js/src/elinks || exit 4
+meson compile -C /tmp/builddir_js || exit 2
+strip /tmp/builddir_js/src/elinks || exit 3
+upx /tmp/builddir_js/src/elinks || exit 4

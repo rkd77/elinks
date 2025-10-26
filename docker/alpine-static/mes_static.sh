@@ -1,13 +1,13 @@
 #!/bin/sh
 
-rm -rf /root/tmp/builddir
+rm -rf /tmp/builddir
 
 LIBRARY_PATH="/usr/local/lib" \
 PKG_CONFIG_PATH="/usr/local/lib/pkgconfig" \
 LDFLAGS="-L/usr/local/lib" \
 CFLAGS="-O2 -I/usr/local/include -static -no-pie" \
 CXXFLAGS="-O2 -I/usr/local/include -static -no-pie" \
-meson setup /root/tmp/builddir \
+meson setup /tmp/builddir \
 -D88-colors=true \
 -D256-colors=true \
 -Dbacktrace=false \
@@ -17,6 +17,7 @@ meson setup /root/tmp/builddir \
 -Dcgi=true \
 -Dcss=true \
 -Ddgi=true \
+-Ddoc=false \
 -Dexmode=true \
 -Dfastmem=true \
 -Dfsp=false \
@@ -27,9 +28,12 @@ meson setup /root/tmp/builddir \
 -Dgopher=true \
 -Dgpm=false \
 -Dguile=false \
+-Dhtmldoc=false \
+-Dhtml-highlight=true \
 -Didn=true \
 -Dipv6=true \
 -Dkitty=true \
+-Dlibavif=false \
 -Dlibcss=true \
 -Dlibcurl=true \
 -Dlibev=false \
@@ -42,14 +46,16 @@ meson setup /root/tmp/builddir \
 -Dnls=true \
 -Dnntp=true \
 -Dopenssl=true \
+-Dpdfdoc=false \
 -Dperl=false \
 -Dpython=false \
 -Dquickjs=false \
 -Druby=false \
 -Dsm-scripting=false \
+-Dspartan=true \
 -Dspidermonkey=false \
 -Dstatic=true \
--Dterminfo=false \
+-Dterminfo=true \
 -Dtest=false \
 -Dtre=true \
 -Dtrue-color=true \
@@ -60,8 +66,8 @@ meson setup /root/tmp/builddir \
 -Dzlib=true \
 -Dzstd=true || exit 1
 
-meson compile -C /root/tmp/builddir || exit 2
+meson compile -C /tmp/builddir || exit 2
 
-strip /root/tmp/builddir/src/elinks || exit 3
-
-upx /root/tmp/builddir/src/elinks || exit 4
+mv /tmp/builddir/src/elinks /tmp/builddir/src/elinks-lite || exit 3
+strip /tmp/builddir/src/elinks-lite || exit 4
+upx /tmp/builddir/src/elinks-lite || exit 5
