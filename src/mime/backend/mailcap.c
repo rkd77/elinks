@@ -839,10 +839,14 @@ char *get_ui_clipboard_file(void) { return NULL; }
 
 /* Some ugly shortcuts for getting defined symbols to work. */
 int default_mime_backend,
-    install_signal_handler,
     mimetypes_mime_backend,
     program;
 LIST_OF(struct terminal) terminals;
+
+void
+install_signal_handler(int sig, void (*fn)(void *), void *data, int critical)
+{
+}
 
 int
 main(int argc, char *argv[])
