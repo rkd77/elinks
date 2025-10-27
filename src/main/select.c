@@ -1052,6 +1052,7 @@ set_events_for_handle(int h)
 				uv_poll_stop((uv_poll_t *)handle);
 			}
 		}
+		mem_free_set(&threads[h].handle, NULL);
 		return;
 	}
 	if (!threads[h].handle) {
