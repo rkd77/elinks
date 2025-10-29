@@ -503,48 +503,49 @@ exec_dgi_command(void *data)
 	if (!exec_dgi) {
 		return;
 	}
+	struct string string;
 
-	if (exec_dgi->command) {
-		struct string string;
-
-		if (init_string(&string)) {
-			static char dgi_dgi[] = "dgi://";
-			struct uri *ref = get_uri(dgi_dgi, URI_NONE);
-			struct uri *uri;
-			struct session *ses = exec_dgi->ses;
-
-			add_to_string(&string, "dgi:///dgi?command=");
-			add_to_string(&string, exec_dgi->command);
-			add_to_string(&string, "&filename=");
-
-			if (exec_dgi->file) {
-				add_to_string(&string, exec_dgi->file);
-			}
-			add_to_string(&string, "&inpext=");
-
-			if (exec_dgi->inpext) {
-				add_to_string(&string, exec_dgi->inpext);
-			}
-			add_to_string(&string, "&outext=");
-
-			if (exec_dgi->outext) {
-				add_to_string(&string, exec_dgi->outext);
-			}
-
-			if (exec_dgi->del) {
-				add_to_string(&string, "&delete=1");
-			}
-			uri = get_uri(string.source, URI_BASE_FRAGMENT);
-			done_string(&string);
-			set_session_referrer(ses, ref);
-
-			if (ref) done_uri(ref);
-			do_follow_url_mailcap(ses, uri);
-
-			if (uri) done_uri(uri);
-		}
-		mem_free(exec_dgi->command);
+	if (!exec_dgi->command || !init_string(&string)) {
+		goto out;
 	}
+
+	static char dgi_dgi[] = "dgi://";
+	struct uri *ref = get_uri(dgi_dgi, URI_NONE);
+	struct uri *uri;
+	struct session *ses = exec_dgi->ses;
+
+	add_to_string(&string, "dgi:///dgi?command=");
+	add_to_string(&string, exec_dgi->command);
+	add_to_string(&string, "&filename=");
+
+	if (exec_dgi->file) {
+		add_to_string(&string, exec_dgi->file);
+	}
+	add_to_string(&string, "&inpext=");
+
+	if (exec_dgi->inpext) {
+		add_to_string(&string, exec_dgi->inpext);
+	}
+	add_to_string(&string, "&outext=");
+
+	if (exec_dgi->outext) {
+		add_to_string(&string, exec_dgi->outext);
+	}
+
+	if (exec_dgi->del) {
+		add_to_string(&string, "&delete=1");
+	}
+	uri = get_uri(string.source, URI_BASE_FRAGMENT);
+	done_string(&string);
+	set_session_referrer(ses, ref);
+
+	if (ref) done_uri(ref);
+	do_follow_url_mailcap(ses, uri);
+
+	if (uri) done_uri(uri);
+
+out:
+	mem_free_if(exec_dgi->command);
 	mem_free_if(exec_dgi->file);
 	mem_free_if(exec_dgi->inpext);
 	mem_free_if(exec_dgi->outext);
