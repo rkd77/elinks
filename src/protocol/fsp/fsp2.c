@@ -554,14 +554,14 @@ fsp_open_session(const char *host, unsigned short port, const char *password)
 	}
 
 	/* allocate memory */
-	s = calloc(1, sizeof(FSP_SESSION));
+	s = calloc(1, sizeof(*s));
 
 	if (!s) {
 		close(fd);
 		errno = ENOMEM;
 		return NULL;
 	}
-	lock = calloc(1, sizeof(FSP_LOCK));
+	lock = calloc(1, sizeof(*lock));
 
 	if (!lock) {
 		close(fd);
@@ -750,7 +750,7 @@ fsp_fopen(struct connection *conn, const char *path, const char *modeflags)
 		return NULL;
 	}
 
-	f = calloc(1, sizeof(FSP_FILE));
+	f = calloc(1, sizeof(*f));
 
 	if (f == NULL) {
 		return NULL;
@@ -1137,7 +1137,7 @@ try_fsp_opendir(void *data)
 	}
 
 	if (fsp->dir == NULL) {
-		fsp->dir = calloc(1, sizeof(FSP_DIR));
+		fsp->dir = calloc(1, sizeof(*fsp->dir));
 
 		if (!fsp->dir) {
 			abort_connection(conn, connection_state(S_OUT_OF_MEM));
