@@ -438,44 +438,43 @@ exec_mailcap_command(void *data)
 	if (!exec_mailcap) {
 		return;
 	}
+	struct string string;
 
-	if (exec_mailcap->command) {
-		struct string string;
-
-		if (init_string(&string)) {
-			static char mailcap_elmailcap[] = "mailcap:elmailcap";
-			static char mailcap_elmailcap_html[] = "mailcap:elmailcaphtml";
-			struct uri *ref;
-
-			if (exec_mailcap->x_htmloutput) {
-				ref = get_uri(mailcap_elmailcap_html, URI_NONE);
-			} else {
-				ref = get_uri(mailcap_elmailcap, URI_NONE);
-			}
-			struct uri *uri;
-			struct session *ses = exec_mailcap->ses;
-
-			if (exec_mailcap->x_htmloutput) {
-				add_to_string(&string, "mailcaphtml:");
-			} else {
-				add_to_string(&string, "mailcap:");
-			}
-			add_to_string(&string, exec_mailcap->command);
-			if (exec_mailcap->file) {
-				add_to_string(&string, " && /bin/rm -f ");
-				add_to_string(&string, exec_mailcap->file);
-			}
-
-			uri = get_uri(string.source, URI_NONE);
-			done_string(&string);
-			set_session_referrer(ses, ref);
-			if (ref) done_uri(ref);
-
-			do_follow_url_mailcap(ses, uri);
-			if (uri) done_uri(uri);
-		}
-		mem_free(exec_mailcap->command);
+	if (!exec_mailcap->command || !init_string(&string)) {
+		goto out;
 	}
+	static char mailcap_elmailcap[] = "mailcap:elmailcap";
+	static char mailcap_elmailcap_html[] = "mailcap:elmailcaphtml";
+	struct uri *ref;
+
+	if (exec_mailcap->x_htmloutput) {
+		ref = get_uri(mailcap_elmailcap_html, URI_NONE);
+	} else {
+		ref = get_uri(mailcap_elmailcap, URI_NONE);
+	}
+	struct uri *uri;
+	struct session *ses = exec_mailcap->ses;
+
+	if (exec_mailcap->x_htmloutput) {
+		add_to_string(&string, "mailcaphtml:");
+	} else {
+		add_to_string(&string, "mailcap:");
+	}
+	add_to_string(&string, exec_mailcap->command);
+
+	if (exec_mailcap->file) {
+		add_to_string(&string, " && /bin/rm -f ");
+		add_to_string(&string, exec_mailcap->file);
+	}
+	uri = get_uri(string.source, URI_NONE);
+	done_string(&string);
+	set_session_referrer(ses, ref);
+	if (ref) done_uri(ref);
+
+	do_follow_url_mailcap(ses, uri);
+	if (uri) done_uri(uri);
+out:
+	mem_free_if(exec_mailcap->command);
 	mem_free_if(exec_mailcap->file);
 	mem_free(exec_mailcap);
 }
