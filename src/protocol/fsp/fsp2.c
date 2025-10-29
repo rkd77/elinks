@@ -331,7 +331,7 @@ fsp_transaction_send_loop(void *data)
 	fsp->l_delay = fsp->w_delay;
 
 	/* send packet */
-	if (sendto(s->fd, fsp->buf, l, 0, (struct sockaddr *)&s->host_addr, sizeof(s->host_addr)) < 0) {
+	if (l <= 0 || sendto(s->fd, fsp->buf, l, 0, (struct sockaddr *)&s->host_addr, sizeof(s->host_addr)) < 0) {
 #if 0
 		fprintf(stderr, "Send failed errno=%d\n", errno);
 #endif
@@ -561,7 +561,7 @@ fsp_open_session(const char *host, unsigned short port, const char *password)
 		errno = ENOMEM;
 		return NULL;
 	}
-	lock = malloc(sizeof(FSP_LOCK));
+	lock = calloc(1, sizeof(FSP_LOCK));
 
 	if (!lock) {
 		close(fd);
