@@ -460,14 +460,12 @@ execute_dgi(struct connection *conn)
 		unlink(queryfile);
 	}
 
-
 	if (!outputfilename) {
 		mem_free(handler);
 		state = connection_state(S_OK);
 		abort_connection(conn, state);
 		return 0;
 	}
-
 	struct string page;
 	struct string name;
 
@@ -481,50 +479,51 @@ execute_dgi(struct connection *conn)
 	unlink(outputfilename);
 	done_string(&name);
 
-	if (is_in_state(state, S_OK)) {
-		struct cache_entry *cached;
-
-		/* Try to add fragment data to the connection cache if either
-		 * file reading or directory listing worked out ok. */
-		cached = conn->cached = get_cache_entry(conn->uri);
-		if (!conn->cached) {
-			state = connection_state(S_OUT_OF_MEM);
-		} else {
-			add_fragment(cached, 0, page.source, page.length);
-			conn->from += page.length;
-
-			if (1) {
-				char *head;
-				char *otype = NULL;
-
-				if (handler->outext) {
-					otype = get_extension_content_type(handler->outext);
-				}
-				if (!otype) {
-					otype = stracpy("text/html");
-				}
-
-				/* If the system charset somehow
-				 * changes after the directory listing
-				 * has been generated, it should be
-				 * parsed with the original charset.  */
-				head = straconcat("\r\nContent-Type: ", otype, "; charset=",
-						  get_cp_mime_name(get_cp_index("System")),
-						  "\r\n", (char *) NULL);
-
-				mem_free_if(otype);
-
-				/* Not so gracefully handle failed memory
-				 * allocation. */
-				if (!head)
-					state = connection_state(S_OUT_OF_MEM);
-
-				/* Setup directory listing for viewing. */
-				mem_free_set(&cached->head, head);
-			}
-			done_string(&page);
-		}
+	if (!is_in_state(state, S_OK)) {
+		goto out;
 	}
+	struct cache_entry *cached;
+
+	/* Try to add fragment data to the connection cache if either
+	 * file reading or directory listing worked out ok. */
+	cached = conn->cached = get_cache_entry(conn->uri);
+	if (!conn->cached) {
+		state = connection_state(S_OUT_OF_MEM);
+	} else {
+		add_fragment(cached, 0, page.source, page.length);
+		conn->from += page.length;
+
+		char *head;
+		char *otype = NULL;
+
+		if (handler->outext) {
+			otype = get_extension_content_type(handler->outext);
+		}
+		if (!otype) {
+			otype = stracpy("text/html");
+		}
+
+		/* If the system charset somehow
+		 * changes after the directory listing
+		 * has been generated, it should be
+		 * parsed with the original charset.  */
+		head = straconcat("\r\nContent-Type: ", otype, "; charset=",
+				  get_cp_mime_name(get_cp_index("System")),
+				  "\r\n", (char *) NULL);
+
+		mem_free_if(otype);
+
+		/* Not so gracefully handle failed memory
+		 * allocation. */
+		if (!head) {
+			state = connection_state(S_OUT_OF_MEM);
+		}
+
+		/* Setup directory listing for viewing. */
+		mem_free_set(&cached->head, head);
+	}
+	done_string(&page);
+out:
 	mem_free(handler);
 	abort_connection(conn, state);
 	return 0;
