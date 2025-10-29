@@ -554,18 +554,18 @@ fsp_open_session(const char *host, unsigned short port, const char *password)
 	}
 
 	/* allocate memory */
-	s = calloc(1, sizeof(*s));
+	s = mem_calloc(1, sizeof(*s));
 
 	if (!s) {
 		close(fd);
 		errno = ENOMEM;
 		return NULL;
 	}
-	lock = calloc(1, sizeof(*lock));
+	lock = mem_calloc(1, sizeof(*lock));
 
 	if (!lock) {
 		close(fd);
-		free(s);
+		mem_free(s);
 		errno = ENOMEM;
 		return NULL;
 	}
@@ -573,9 +573,9 @@ fsp_open_session(const char *host, unsigned short port, const char *password)
 	/* init locking subsystem */
 
 	if (client_init_key((FSP_LOCK *)s->lock, addrin.sin_addr.s_addr, ntohs(addrin.sin_port))) {
-		free(s);
+		mem_free(s);
 		close(fd);
-		free(lock);
+		mem_free(lock);
 		return NULL;
 	}
 	s->fd = fd;
@@ -584,7 +584,7 @@ fsp_open_session(const char *host, unsigned short port, const char *password)
 	s->seq = random() & 0xfff8;
 
 	if (password) {
-		s->password = strdup(password);
+		s->password = stracpy(password);
 	}
 	s->host_addr = addrin;
 
@@ -624,12 +624,12 @@ bye_bye(void *data)
 
 	kill_timer(&fsp->send_timer);
 	close(s->fd);
-	if (s->password) free(s->password);
+	mem_free_if(s->password);
 	client_destroy_key((FSP_LOCK *)s->lock);
-	free(s->lock);
+	mem_free(s->lock);
 	memset(s, 0, sizeof(FSP_SESSION));
 	s->fd = -1;
-	free(s);
+	mem_free(s);
 
 	fsp->return_func = NULL;
 }
@@ -727,11 +727,9 @@ fsp_closedir(FSP_DIR *dirp)
 		return -1;
 	}
 
-	if (dirp->dirname) {
-		free(dirp->dirname);
-	}
-	free(dirp->data);
-	free(dirp);
+	mem_free_if(dirp->dirname);
+	mem_free(dirp->data);
+	mem_free(dirp);
 
 	return 0;
 }
@@ -750,7 +748,7 @@ fsp_fopen(struct connection *conn, const char *path, const char *modeflags)
 		return NULL;
 	}
 
-	f = calloc(1, sizeof(*f));
+	f = mem_calloc(1, sizeof(*f));
 
 	if (f == NULL) {
 		return NULL;
@@ -761,13 +759,13 @@ fsp_fopen(struct connection *conn, const char *path, const char *modeflags)
 	case 'r':
 		break;
 	default:
-		free(f);
+		mem_free(f);
 		errno = EINVAL;
 		 return NULL;
 	}
 
 	if (*modeflags == '+' || ( *modeflags == 'b' && modeflags[1] == '+')) {
-		free(f);
+		mem_free(f);
 		return NULL;
 	}
 
@@ -776,7 +774,7 @@ fsp_fopen(struct connection *conn, const char *path, const char *modeflags)
 		f->out.cmd = FSP_CC_UP_LOAD;
 	} else {
 		if (buildfilename(session, &fsp->out, path)) {
-			free(f);
+			mem_free(f);
 			return NULL;
 		}
 		f->bufpos = FSP_SPACE;
@@ -785,10 +783,10 @@ fsp_fopen(struct connection *conn, const char *path, const char *modeflags)
 	fsp->out.xlen = 0;
 	/* setup control variables */
 	f->s = session;
-	f->name = strdup(path);
+	f->name = stracpy(path);
 
 	if (f->name == NULL) {
-		free(f);
+		mem_free(f);
 		errno = ENOMEM;
 		return NULL;
 	}
@@ -804,8 +802,8 @@ fsp_fclose(FSP_FILE *file)
 
 	rc = 0;
 	errno = 0;
-	free(file->name);
-	free(file);
+	mem_free(file->name);
+	mem_free(file);
 
 	return rc;
 }
@@ -821,7 +819,7 @@ try_fsp_stat(struct connection *conn, const char *path)
 		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
-	fsp->path = strdup(path);
+	fsp->path = stracpy(path);
 
 	if (!fsp->path) {
 		abort_connection(conn, connection_state(S_OUT_OF_MEM));
@@ -1060,7 +1058,7 @@ show_fsp_directory(struct connection *conn)
 
 	fsp->dir->inuse = 1;
 	fsp->dir->blocksize = fsp->blocksize;
-	fsp->dir->dirname = strdup(fsp->path);
+	fsp->dir->dirname = stracpy(fsp->path);
 	fsp->dir->datasize = fsp->pos;
 
 	errno = 0;
@@ -1137,14 +1135,14 @@ try_fsp_opendir(void *data)
 	}
 
 	if (fsp->dir == NULL) {
-		fsp->dir = calloc(1, sizeof(*fsp->dir));
+		fsp->dir = mem_calloc(1, sizeof(*fsp->dir));
 
 		if (!fsp->dir) {
 			abort_connection(conn, connection_state(S_OUT_OF_MEM));
 			return;
 		}
 	}
-	tmp = realloc(fsp->dir->data, fsp->pos + fsp->in.len);
+	tmp = mem_realloc(fsp->dir->data, fsp->pos + fsp->in.len);
 
 	if (tmp == NULL) {
 		abort_connection(conn, connection_state(S_OUT_OF_MEM));
@@ -1227,10 +1225,7 @@ done_fsp_connection(struct connection *conn)
 	if (fsp->ses) {
 		try_fsp_close_session(conn);
 	}
-
-	if (fsp->path) {
-		free(fsp->path);
-	}
+	mem_free_if(fsp->path);
 }
 
 static void
