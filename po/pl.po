@@ -276,9 +276,8 @@ msgid ""
 msgstr "Włączenie LEDów. Te wskaźniki poinformują cię o różnych stanach."
 
 #: src/bfu/leds.c:127
-#, fuzzy
 msgid "Redraw interval"
-msgstr "Przedział czasu aktualności"
+msgstr "Przedział czasu odrysowania"
 
 #: src/bfu/leds.c:129
 msgid ""
@@ -286,6 +285,9 @@ msgid ""
 "can set it higher. Default value is 1000. Note that active downloads take "
 "precedence and enforce interval 100ms."
 msgstr ""
+"Przedział czasu odrysowania ekranu w milisekundach. Jeśli nie masz włączonego "
+"zegarka, możesz ustawić na wyższą wartość. Domyślnie jest 1000. Wiedz, że "
+"aktywne pobierania wymuszają ten przedział na 100ms."
 
 #. name:
 #: src/bfu/leds.c:529 src/bfu/leds.c:573
@@ -293,7 +295,7 @@ msgid "LED indicators"
 msgstr "Wskaźniki LED"
 
 #: src/bfu/leds.c:530
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "What the different LEDs indicate:\n"
 "\n"
@@ -312,7 +314,7 @@ msgstr ""
 "\n"
 "[SIJP--]\n"
 " |||||`- pobieranie w trakcie\n"
-" ||||`-- nieużywane\n"
+" ||||`-- 'O' oznacza domenę .onion, 'o' istniejącą lokację .onion dla URL-a\n"
 " |||`--- okienko pop-up JavaScriptu zostało zablokowane\n"
 " ||`---- wystąpił błąd JavaScriptu\n"
 " |`----- Stan trybu wpisania dla pól tekstowych formularza\n"
@@ -1234,9 +1236,8 @@ msgid "Open a new window"
 msgstr "Otwórz nowe okno"
 
 #: src/config/actions-main.inc:97
-#, fuzzy
 msgid "Open the onion location link"
-msgstr "Otwórz menadżera uwierzytelniania"
+msgstr "Otwórz odnośnik lokacji typu .onion"
 
 #: src/config/actions-main.inc:98
 msgid "Open an OS shell"
@@ -1352,9 +1353,8 @@ msgid "Pass URI of current tab to external command"
 msgstr "Prześlij URI bieżącej karty do zewnętrznego polecenia"
 
 #: src/config/actions-main.inc:128
-#, fuzzy
 msgid "Open tab manager"
-msgstr "Otwórz menadżera pamięci podręcznej"
+msgstr "Otwórz menadżera kart"
 
 #: src/config/actions-main.inc:129
 msgid "Open the tab menu"
@@ -1389,14 +1389,12 @@ msgid "Toggle displaying of links to images"
 msgstr "Zmień sposób wyświetlania odnośników do obrazków"
 
 #: src/config/actions-main.inc:137
-#, fuzzy
 msgid "Toggle displaying of kitty images"
-msgstr "Zmień sposób wyświetlania odnośników do obrazków"
+msgstr "Przełącz wyświetlanie obrazków dla protokołu kitty"
 
 #: src/config/actions-main.inc:138
-#, fuzzy
 msgid "Toggle displaying of sixel images"
-msgstr "Zmień sposób wyświetlania odnośników do obrazków"
+msgstr "Przełącz wyświetlanie obrazków sixel"
 
 #: src/config/actions-main.inc:139
 msgid "Toggle rendering of tables"
@@ -1415,9 +1413,8 @@ msgid "Toggle Ecmascript handling"
 msgstr "Włącz/wyłącz obsługę Ecmascript"
 
 #: src/config/actions-main.inc:143
-#, fuzzy
 msgid "Toggle Ecmascript keyboard handling"
-msgstr "Włącz/wyłącz obsługę Ecmascript"
+msgstr "Włącz/wyłącz obsługę klawiatury przez skrypty Ecmascript"
 
 #: src/config/actions-main.inc:144
 msgid "Toggle rendering page as HTML / plain text"
@@ -2953,13 +2950,15 @@ msgstr "Czy podświetlać odnośniki do katalogów na FTP i lokalnie."
 
 #: src/config/options.inc:333
 msgid "Force reload when follow"
-msgstr ""
+msgstr "Wymuś przeładowanie gdy klikniesz odnośnik"
 
 #: src/config/options.inc:335
 msgid ""
 "When enabled, following links, clicking the left mouse button on links, etc. "
 "will force reloading. The same as the link-follow-reload action."
 msgstr ""
+"Gdy włączone, kliknięcie lewym przyciskiem myszy na odnośniku, itp. "
+"wymusi przeładowanie strony. To samo co akcja link-follow-reload."
 
 #: src/config/options.inc:338
 msgid "Handling of hierbox's \"Go to\" button"
@@ -3169,18 +3168,16 @@ msgstr ""
 "przewijaniu o stronę w dół lub górę."
 
 #: src/config/options.inc:441
-#, fuzzy
 msgid "Extended vertical scrolling"
-msgstr "Rozszerz poziome przewijanie"
+msgstr "Rozszerzone pionowe przewijanie"
 
 #: src/config/options.inc:443
-#, fuzzy
 msgid ""
 "Whether to allow vertical scrolling when the document does not extend off "
 "the screen."
 msgstr ""
-"Czy zezwolić na poziome przewijanie w przypadku, gdy dokument nie jest "
-"większy niż szerokość ekranu. Przydatne przy operacjach kopiowania/wklejania."
+"Czy zezwolić na pionowe przewijanie w przypadku, gdy dokument nie jest "
+"większy niż wysokość ekranu. Przydatne przy operacjach kopiowania/wklejania."
 
 #: src/config/options.inc:446
 msgid "Searching"
@@ -3320,15 +3317,16 @@ msgstr ""
 "     dokumencie"
 
 #: src/config/options.inc:510
-#, fuzzy
 msgid "Whether to set margin automatically"
-msgstr "Czy używać bazy terminfo"
+msgstr "Czy ustawić marginesy automatycznie"
 
 #: src/config/options.inc:512
 msgid ""
 "Whether to set margins automatically. Note, that preferred_document_width, "
 "and use_preferred_document_width must be non-zero."
 msgstr ""
+"Czy ustawić marginesy automatycznie. Zauważ, że preferred_document_width "
+"i use_preferred_document_width muszą być niezerowe."
 
 #: src/config/options.inc:515
 msgid "Horizontal text margin"
@@ -3965,7 +3963,7 @@ msgstr "Wyświetlanie pływających ramek"
 
 #: src/config/options.inc:849
 msgid "Display iframes. This code is experimental."
-msgstr ""
+msgstr "Wyświetlaj pływające ramki. Ten kod jest eksperymentalny."
 
 #
 #: src/config/options.inc:851
@@ -3997,23 +3995,24 @@ msgstr "Pokazuj indeks górny (jako ^coś)."
 
 #: src/config/options.inc:863
 msgid "Whether to show documents which are not fully loaded"
-msgstr ""
+msgstr "Czy wyświetlać dokumenty, które nie zostały całkowicie wczytane"
 
 #: src/config/options.inc:865
 msgid ""
 "ELinks periodically display documents, even if they are not fully loaded.You "
 "can disable it here."
 msgstr ""
+"ELinks co jakiś czas wyświetla dokumenty, nawet jeśli nie zostaly jeszcze do końca "
+"wczytane. Możesz to wyłączyć tutaj."
 
 #: src/config/options.inc:869 src/config/options.inc:1171
 #: src/dialogs/options.c:255
 msgid "Kitty"
-msgstr ""
+msgstr "Kitty"
 
 #: src/config/options.inc:871
-#, fuzzy
 msgid "Whether to display kitty images in html documents."
-msgstr "Czy pokazywać obrazki sixel zawarte w dokumentach tekstowych."
+msgstr "Czy pokazywać obrazki korzystając z protokołu kitty w dokumentach HTML."
 
 #: src/config/options.inc:874
 msgid "Rendering of HTML link element"
@@ -4043,9 +4042,8 @@ msgid "Sixel"
 msgstr "Sixel"
 
 #: src/config/options.inc:887
-#, fuzzy
 msgid "Whether to display sixel images in html documents."
-msgstr "Czy pokazywać obrazki sixel zawarte w dokumentach tekstowych."
+msgstr "Czy pokazywać obrazki sixel zawarte w dokumentach HTML."
 
 #: src/config/options.inc:891
 msgid "Substitute frame chars"
@@ -4458,9 +4456,8 @@ msgid "If we should use italics."
 msgstr "Czy powinniśmy wyświetlać kursywę."
 
 #: src/config/options.inc:1173
-#, fuzzy
 msgid "Whether terminal supports kitty graphics protocol."
-msgstr "Czy terminal obsługuje grafikę sixel."
+msgstr "Czy terminal obsługuje protokół kitty."
 
 #: src/config/options.inc:1178
 msgid "Whether terminal supports sixel graphics."
@@ -5037,13 +5034,12 @@ msgid "Display style"
 msgstr "Sposób pokazywania"
 
 #: src/config/options.inc:1528
-#, fuzzy
 msgid ""
 "What to display in tab manager dialog:\n"
 "0 is URLs\n"
 "1 is page titles"
 msgstr ""
-"Co pokazywać w okienku dialogowym globalnej historii:\n"
+"Co pokazywać w okienku dialogowym menadżera kart:\n"
 "0 - URL-e\n"
 "1 - tytuły stron"
 
@@ -5218,18 +5214,16 @@ msgstr ""
 "Ma to sens jedynie wtedy, gdy wkompilowana jest obsługa zakładek."
 
 #: src/config/options.inc:1611
-#, fuzzy
 msgid "Auto save latest positions"
-msgstr "Automatyczne zapisywanie sesji"
+msgstr "Automatyczne zapisywanie pozycji w dokumentach"
 
 #: src/config/options.inc:1613
-#, fuzzy
 msgid ""
 "Whether to save view positions of documents.\n"
 "\n"
 "This feature requires bookmark support."
 msgstr ""
-"Automatycznie zapisuj sesję przy kończeniu działania.\n"
+"Zapisuj pozycję kursora w dokumentach przy zapisywaniu sesji.\n"
 "\n"
 "Wymagana jest obsługa zakładek."
 
@@ -6048,7 +6042,7 @@ msgstr "Naprzó~d"
 #. accelerator_context(src/dialogs/menu.c:file_menu, tab_menu)
 #: src/dialogs/menu.c:258 src/dialogs/menu.c:341
 msgid "Bookm~ark document"
-msgstr "Dodaj doku~ment do zakładek"
+msgstr "Dodaj dokum~ent do zakładek"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:262 src/dialogs/menu.c:435
@@ -6082,9 +6076,8 @@ msgstr "Poprzednia ~karta"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:278
-#, fuzzy
 msgid "Tab ~manager"
-msgstr "Menadżer pamięci podręcznej"
+msgstr "Menadżer pamięci p~odręcznej"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:281 src/dialogs/menu.c:449
@@ -6602,57 +6595,51 @@ msgstr "Brak dokumentu"
 
 #. cant_delete_item
 #: src/dialogs/tabs.c:182
-#, fuzzy, c-format
+#, c-format
 msgid "Sorry, but tabs entry \"%s\" cannot be deleted."
-msgstr "Przykro mi, ale pozycja uwierzytelniania \"%s\" nie może być usunięta."
+msgstr "Przykro mi, ale element karty \"%s\" nie może być usunięty."
 
 #. cant_delete_used_item
 #: src/dialogs/tabs.c:184
-#, fuzzy, c-format
+#, c-format
 msgid "Sorry, but tabs entry \"%s\" is being used by something else."
 msgstr ""
-"Przykro mi, ale pozycja uwierzytelniania \"%s\" jest używana przez coś "
+"Przykro mi, ale element karty \"%s\" jest używany przez coś "
 "innego."
 
 #. delete_marked_items_title
 #: src/dialogs/tabs.c:190
-#, fuzzy
 msgid "Delete marked tabs entries"
-msgstr "Usuwanie zaznaczonych pozycji uwierzytelniania"
+msgstr "Usuwanie zaznaczonych elementów kart"
 
 #. delete_marked_items
 #: src/dialogs/tabs.c:192
-#, fuzzy
 msgid "Delete marked tabs entries?"
-msgstr "Czy usunąć zaznaczone pozycje uwierzytelniania?"
+msgstr "Czy usunąć zaznaczone elementy kart?"
 
 #. delete_item_title
 #: src/dialogs/tabs.c:198
-#, fuzzy
 msgid "Delete tab entry"
-msgstr "Usuwanie pozycji uwierzytelniania"
+msgstr "Usuwanie elementu karty"
 
 #: src/dialogs/tabs.c:200
-#, fuzzy, c-format
+#, c-format
 msgid "Delete this tab entry?"
-msgstr "Czy usunąć tę pozycję uwierzytelniania?"
+msgstr "Czy usunąć ten element karty?"
 
 #. clear_all_items_title
 #: src/dialogs/tabs.c:202
-#, fuzzy
 msgid "Clear all tabs entries"
-msgstr "Skasowanie wszystkich pozycji"
+msgstr "Skasowanie wszystkich pozycji kart"
 
 #. clear_all_items_title
 #: src/dialogs/tabs.c:204
-#, fuzzy
 msgid "Do you really want to remove all tabs entries?"
-msgstr "Czy na pewno chcesz skasować wszystkie pozycje uwierzytelniania?"
+msgstr "Czy na pewno chcesz skasować wszystkie elementy kart?"
 
 #: src/dialogs/tabs.c:289
-#, fuzzy
 msgid "Search tabs"
-msgstr "Szukaj"
+msgstr "Szukaj w kartach"
 
 #
 #. accelerator_context(src/dialogs/tabs.c:globhist_buttons, src/globhist/dialogs.c:globhist_buttons)
@@ -6662,14 +6649,12 @@ msgstr "~Zakładki"
 
 #. accelerator_context(src/dialogs/tabs.c:globhist_buttons)
 #: src/dialogs/tabs.c:374
-#, fuzzy
 msgid "~Toggle display url/title"
-msgstr "~Krótki/długi opis"
+msgstr "Przełącz wyświetlanie adresu url/~tytułu"
 
 #: src/dialogs/tabs.c:383
-#, fuzzy
 msgid "Tabs manager"
-msgstr "Menadżer pamięci podręcznej"
+msgstr "Menadżer kart"
 
 #. name:
 #: src/document/css/css.c:30 src/document/css/css.c:252
@@ -7366,12 +7351,11 @@ msgstr "libevent (wyłączone)"
 
 #: src/main/version.c:199
 msgid "libuv"
-msgstr ""
+msgstr "libuv"
 
 #: src/main/version.c:199
-#, fuzzy
 msgid "libuv (disabled)"
-msgstr "libev (wyłączone)"
+msgstr "libuv (wyłączone)"
 
 #: src/main/version.c:202
 msgid "terminfo"
@@ -9092,13 +9076,12 @@ msgid "File"
 msgstr "Plik"
 
 #: src/protocol/file/mailcap.c:45
-#, fuzzy
 msgid "Options specific to mailcap."
-msgstr "Ustawienia dotyczące QuickJS."
+msgstr "Ustawienia dotyczące mailcap."
 
 #: src/protocol/file/mailcap.c:47
 msgid "Allow empty referrer"
-msgstr ""
+msgstr "Zezwalaj na pusty refererrer"
 
 #: src/protocol/file/mailcap.c:49
 msgid ""
@@ -9106,12 +9089,15 @@ msgid ""
 "restoring sessions, but it is a bit dangerous. When allowed you can execute "
 "any command in goto url dialog. For example mailcap:ls"
 msgstr ""
+"Czy pozwalać na pusty \"referrer\" dla protokołu mailcap. To może być przydatne "
+"przy odtwarzaniu sesji, ale jest trochę niebezpieczne. Gdy włączone możesz "
+"wykonać dowolną komendę w okienku dialogowym \"Przejdź do URL-a\". Na przykład "
+"mailcap:ls"
 
 #. name:
 #: src/protocol/file/mailcap.c:70
-#, fuzzy
 msgid "Mailcap html"
-msgstr "Mailcap"
+msgstr "Mailcap - tryb html"
 
 #. name:
 #: src/protocol/finger/finger.c:26
@@ -9247,14 +9233,12 @@ msgid "Gopher"
 msgstr "Gopher"
 
 #: src/protocol/gopher/gopher.c:57
-#, fuzzy
 msgid "Gopher specific options."
-msgstr "Opcje dotyczące protokołu FTP."
+msgstr "Opcje dotyczące protokołu gopher."
 
 #: src/protocol/gopher/gopher.c:61
-#, fuzzy
 msgid "Use libcurl implementation of gopher."
-msgstr "Przełącz na implementację ftp biblioteki libcurl."
+msgstr "Przełącz na implementację gopher biblioteki libcurl."
 
 #: src/protocol/http/codes.c:113
 #, c-format
@@ -9770,15 +9754,14 @@ msgid "SMB"
 msgstr "SMB"
 
 #: src/protocol/spartan/codes.c:53
-#, fuzzy, c-format
+#, c-format
 msgid "spartan error %d"
-msgstr "[Błąd %s] %s"
+msgstr "błąd spartana %d"
 
 #. name:
 #: src/protocol/spartan/spartan.c:48
-#, fuzzy
 msgid "spartan"
-msgstr "częściowy"
+msgstr "spartan"
 
 #
 #. name:
@@ -9803,7 +9786,6 @@ msgstr ""
 "drzewie zgodnie z Twoim systemem (np. unix, unix-xwin)."
 
 #: src/protocol/user.c:53
-#, fuzzy
 msgid ""
 "Handler (external program) for this protocol and system.\n"
 "%f in the string means file name to include form data from\n"
@@ -9820,7 +9802,8 @@ msgstr ""
 "%p - numer portu\n"
 "%d - ścieżka (wszystko za numerem portu)\n"
 "%s - tytuł maila (?subject=<tytuł>)\n"
-"%u - cały URL"
+"%u - cały URL z \"eskejpowanymi\" znakami specjalnymi\n"
+"%U - cały URL otoczony apostrofami"
 
 #: src/protocol/user.c:291
 msgid "No program"
