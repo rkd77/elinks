@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2025-10-26 18:36+0100\n"
+"POT-Creation-Date: 2025-11-01 14:26+0100\n"
 "PO-Revision-Date: 2009-03-24 00:31+0200\n"
 "Last-Translator: Kalle Olavi Niemitalo <kon@iki.fi>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
@@ -187,8 +187,8 @@ msgstr "Tyhjä merkkijono ei sallittu"
 #: src/dialogs/edit.c:107 src/dialogs/options.c:263 src/dialogs/options.c:346
 #: src/mime/dialogs.c:138 src/protocol/auth/dialogs.c:163
 #: src/protocol/bittorrent/dialogs.c:840 src/scripting/lua/core.c:443
-#: src/scripting/lua/core.c:526 src/session/download.c:1011
-#: src/session/download.c:1940 src/viewer/text/search.c:2025
+#: src/scripting/lua/core.c:526 src/session/download.c:1020
+#: src/session/download.c:1949 src/viewer/text/search.c:2025
 #, fuzzy
 msgid "~Cancel"
 msgstr "~Keskeytä"
@@ -2165,7 +2165,7 @@ msgstr ""
 #. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
 #: src/config/dialogs.c:524 src/config/dialogs.c:973 src/cookies/dialogs.c:570
 #: src/dialogs/options.c:262 src/formhist/dialogs.c:226
-#: src/protocol/bittorrent/dialogs.c:827 src/session/download.c:1924
+#: src/protocol/bittorrent/dialogs.c:827 src/session/download.c:1933
 msgid "Sa~ve"
 msgstr "~Tallenna"
 
@@ -3700,8 +3700,8 @@ msgstr ""
 
 #: src/config/options.inc:865
 msgid ""
-"ELinks periodically display documents, even if they are not fully loaded.You "
-"can disable it here."
+"ELinks periodically display documents, even if they are not fully loaded. "
+"You can disable it here."
 msgstr ""
 
 #: src/config/options.inc:869 src/config/options.inc:1171
@@ -5255,7 +5255,7 @@ msgid "No header info."
 msgstr ""
 
 #: src/dialogs/download.c:273 src/dialogs/menu.c:621
-#: src/protocol/bittorrent/dialogs.c:240 src/session/download.c:655
+#: src/protocol/bittorrent/dialogs.c:240 src/session/download.c:664
 msgid "Download"
 msgstr "Lataa"
 
@@ -6724,7 +6724,7 @@ msgstr ""
 msgid "SpiderMonkey"
 msgstr ""
 
-#: src/main/interlink.c:340 src/main/select.c:1814
+#: src/main/interlink.c:340 src/main/select.c:1815
 #, c-format
 msgid "The call to %s failed: %d (%s)"
 msgstr "Funktio %s epäonnistui: %d (%s)"
@@ -6758,7 +6758,7 @@ msgid "Unable to attach_terminal()."
 msgstr ""
 
 #. Infinite loop prevention.
-#: src/main/select.c:1817
+#: src/main/select.c:1818
 #, c-format
 msgid "%d select() failures."
 msgstr ""
@@ -8090,7 +8090,7 @@ msgstr "Tiedostot"
 msgid "Comment"
 msgstr "Kommentti"
 
-#: src/protocol/bittorrent/dialogs.c:241 src/session/download.c:656
+#: src/protocol/bittorrent/dialogs.c:241 src/session/download.c:665
 #, c-format
 msgid ""
 "Download complete:\n"
@@ -8275,7 +8275,7 @@ msgstr "Mitä haluat tehdä tiedostolla \"%s\"?"
 msgid "Information about the torrent"
 msgstr "Näytä tietoja nykyisestä sivusta"
 
-#: src/protocol/bittorrent/dialogs.c:802 src/session/download.c:1822
+#: src/protocol/bittorrent/dialogs.c:802 src/session/download.c:1831
 msgid "What to do?"
 msgstr "Mitä tehdä?"
 
@@ -8285,12 +8285,12 @@ msgid "Down~load"
 msgstr "~Lataa"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:830 src/session/download.c:1930
+#: src/protocol/bittorrent/dialogs.c:830 src/session/download.c:1939
 msgid "~Display"
 msgstr "~Näytä"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:834 src/session/download.c:1934
+#: src/protocol/bittorrent/dialogs.c:834 src/session/download.c:1943
 msgid "Show ~header"
 msgstr "Näytä ~otsake"
 
@@ -8304,17 +8304,17 @@ msgstr ""
 msgid "SFTP"
 msgstr ""
 
-#: src/protocol/curl/ftp.c:213 src/protocol/fsp/fsp2.c:968
+#: src/protocol/curl/ftp.c:213 src/protocol/fsp/fsp2.c:966
 #: src/protocol/fsp/fsp.c:169 src/protocol/ftp/ftp.c:1303 src/util/file.h:256
 msgid "%b %e  %Y"
 msgstr ""
 
-#: src/protocol/curl/ftp.c:215 src/protocol/fsp/fsp2.c:970
+#: src/protocol/curl/ftp.c:215 src/protocol/fsp/fsp2.c:968
 #: src/protocol/fsp/fsp.c:171 src/protocol/ftp/ftp.c:1305 src/util/file.h:258
 msgid "%b %e %H:%M"
 msgstr ""
 
-#: src/protocol/curl/ftp.c:222 src/protocol/fsp/fsp2.c:976
+#: src/protocol/curl/ftp.c:222 src/protocol/fsp/fsp2.c:974
 #: src/protocol/fsp/fsp.c:177 src/protocol/ftp/ftp.c:1312 src/util/file.h:265
 msgid "             "
 msgstr ""
@@ -9117,12 +9117,12 @@ msgstr ""
 msgid "Spidermonkey ECMAScript"
 msgstr ""
 
-#: src/session/download.c:328 src/session/download.c:592
-#: src/session/download.c:967 src/session/download.c:1073
+#: src/session/download.c:328 src/session/download.c:601
+#: src/session/download.c:976 src/session/download.c:1082
 msgid "Download error"
 msgstr "Vastaanottovirhe"
 
-#: src/session/download.c:329 src/session/download.c:1074
+#: src/session/download.c:329 src/session/download.c:1083
 #, c-format
 msgid ""
 "Could not create file '%s':\n"
@@ -9131,7 +9131,7 @@ msgstr ""
 "Tiedostoa \"%s\" ei voi perustaa:\n"
 "%s"
 
-#: src/session/download.c:593
+#: src/session/download.c:602
 #, c-format
 msgid ""
 "Error downloading %s:\n"
@@ -9142,16 +9142,16 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/session/download.c:968
+#: src/session/download.c:977
 #, c-format
 msgid "'%s' is a directory."
 msgstr "\"%s\" on hakemisto."
 
-#: src/session/download.c:997
+#: src/session/download.c:1006
 msgid "File exists"
 msgstr "Tiedosto on olemassa"
 
-#: src/session/download.c:998
+#: src/session/download.c:1007
 #, c-format
 msgid ""
 "This file already exists:\n"
@@ -9167,50 +9167,50 @@ msgstr ""
 "%s"
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:1005
+#: src/session/download.c:1014
 msgid "Sa~ve under the alternative name"
 msgstr "~Tallenna vaihtoehtoisella nimellä"
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:1006
+#: src/session/download.c:1015
 msgid "~Overwrite the original file"
 msgstr "~Kirjoita alkuperäisen tiedoston päälle"
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:1008
+#: src/session/download.c:1017
 msgid "~Resume download of the original file"
 msgstr "~Jatka alkuperäisen tiedoston latausta"
 
-#: src/session/download.c:1825
+#: src/session/download.c:1834
 msgid "Unknown type"
 msgstr "Tuntematon tyyppi"
 
-#: src/session/download.c:1850
+#: src/session/download.c:1859
 #, c-format
 msgid "What would you like to do with the file '%s' (type: %s%s%s)?"
 msgstr "Mitä haluat tehdä tiedostolla \"%s\" (tyyppi: %s%s%s)?"
 
-#: src/session/download.c:1853
+#: src/session/download.c:1862
 #, c-format
 msgid "What would you like to do with the file (type: %s%s%s)?"
 msgstr "Mitä haluat tehdä tiedostolla (tyyppi: %s%s%s)?"
 
-#: src/session/download.c:1885
+#: src/session/download.c:1894
 #, fuzzy, c-format
 msgid "Program ('%f' will be replaced by the filename, '%u' by the uri)"
 msgstr "Ohjelma (\"%\" korvataan tiedoston nimellä)"
 
-#: src/session/download.c:1890
+#: src/session/download.c:1899
 msgid "Block the terminal"
 msgstr "Varaa pääte"
 
-#: src/session/download.c:1896
+#: src/session/download.c:1905
 #, c-format
 msgid "The file will be opened with the program '%s'."
 msgstr "Tiedosto avataan ohjelmalla \"%s\"."
 
 #. accelerator_context(src/session/download.c:do_type_query)
-#: src/session/download.c:1917
+#: src/session/download.c:1926
 msgid "~Open"
 msgstr "~Avaa"
 

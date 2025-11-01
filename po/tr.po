@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.5pre0.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2025-10-26 18:36+0100\n"
+"POT-Creation-Date: 2025-11-01 14:26+0100\n"
 "PO-Revision-Date: 2003-01-03 03:41+0100\n"
 "Last-Translator: Baris Metin <baris@gelecek.com.tr>\n"
 "Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
@@ -187,8 +187,8 @@ msgstr "Boş söz dizimine izin verilmiyor"
 #: src/dialogs/edit.c:107 src/dialogs/options.c:263 src/dialogs/options.c:346
 #: src/mime/dialogs.c:138 src/protocol/auth/dialogs.c:163
 #: src/protocol/bittorrent/dialogs.c:840 src/scripting/lua/core.c:443
-#: src/scripting/lua/core.c:526 src/session/download.c:1011
-#: src/session/download.c:1940 src/viewer/text/search.c:2025
+#: src/scripting/lua/core.c:526 src/session/download.c:1020
+#: src/session/download.c:1949 src/viewer/text/search.c:2025
 #, fuzzy
 msgid "~Cancel"
 msgstr "İptal"
@@ -2170,7 +2170,7 @@ msgstr ""
 #. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
 #: src/config/dialogs.c:524 src/config/dialogs.c:973 src/cookies/dialogs.c:570
 #: src/dialogs/options.c:262 src/formhist/dialogs.c:226
-#: src/protocol/bittorrent/dialogs.c:827 src/session/download.c:1924
+#: src/protocol/bittorrent/dialogs.c:827 src/session/download.c:1933
 #, fuzzy
 msgid "Sa~ve"
 msgstr "Kaydet"
@@ -3696,8 +3696,8 @@ msgstr ""
 
 #: src/config/options.inc:865
 msgid ""
-"ELinks periodically display documents, even if they are not fully loaded.You "
-"can disable it here."
+"ELinks periodically display documents, even if they are not fully loaded. "
+"You can disable it here."
 msgstr ""
 
 #: src/config/options.inc:869 src/config/options.inc:1171
@@ -5287,7 +5287,7 @@ msgid "No header info."
 msgstr ""
 
 #: src/dialogs/download.c:273 src/dialogs/menu.c:621
-#: src/protocol/bittorrent/dialogs.c:240 src/session/download.c:655
+#: src/protocol/bittorrent/dialogs.c:240 src/session/download.c:664
 msgid "Download"
 msgstr "İndir"
 
@@ -6823,7 +6823,7 @@ msgstr ""
 msgid "SpiderMonkey"
 msgstr ""
 
-#: src/main/interlink.c:340 src/main/select.c:1814
+#: src/main/interlink.c:340 src/main/select.c:1815
 #, c-format
 msgid "The call to %s failed: %d (%s)"
 msgstr ""
@@ -6857,7 +6857,7 @@ msgid "Unable to attach_terminal()."
 msgstr ""
 
 #. Infinite loop prevention.
-#: src/main/select.c:1817
+#: src/main/select.c:1818
 #, c-format
 msgid "%d select() failures."
 msgstr ""
@@ -8222,7 +8222,7 @@ msgstr "~Dosya"
 msgid "Comment"
 msgstr "belgeler"
 
-#: src/protocol/bittorrent/dialogs.c:241 src/session/download.c:656
+#: src/protocol/bittorrent/dialogs.c:241 src/session/download.c:665
 #, fuzzy, c-format
 msgid ""
 "Download complete:\n"
@@ -8405,7 +8405,7 @@ msgstr ""
 msgid "Information about the torrent"
 msgstr "Resmi in~dir"
 
-#: src/protocol/bittorrent/dialogs.c:802 src/session/download.c:1822
+#: src/protocol/bittorrent/dialogs.c:802 src/session/download.c:1831
 msgid "What to do?"
 msgstr "Ne yapacaksınız?"
 
@@ -8416,13 +8416,13 @@ msgid "Down~load"
 msgstr "İndir"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:830 src/session/download.c:1930
+#: src/protocol/bittorrent/dialogs.c:830 src/session/download.c:1939
 #, fuzzy
 msgid "~Display"
 msgstr "Görüntüle"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:834 src/session/download.c:1934
+#: src/protocol/bittorrent/dialogs.c:834 src/session/download.c:1943
 msgid "Show ~header"
 msgstr ""
 
@@ -8436,17 +8436,17 @@ msgstr ""
 msgid "SFTP"
 msgstr ""
 
-#: src/protocol/curl/ftp.c:213 src/protocol/fsp/fsp2.c:968
+#: src/protocol/curl/ftp.c:213 src/protocol/fsp/fsp2.c:966
 #: src/protocol/fsp/fsp.c:169 src/protocol/ftp/ftp.c:1303 src/util/file.h:256
 msgid "%b %e  %Y"
 msgstr ""
 
-#: src/protocol/curl/ftp.c:215 src/protocol/fsp/fsp2.c:970
+#: src/protocol/curl/ftp.c:215 src/protocol/fsp/fsp2.c:968
 #: src/protocol/fsp/fsp.c:171 src/protocol/ftp/ftp.c:1305 src/util/file.h:258
 msgid "%b %e %H:%M"
 msgstr ""
 
-#: src/protocol/curl/ftp.c:222 src/protocol/fsp/fsp2.c:976
+#: src/protocol/curl/ftp.c:222 src/protocol/fsp/fsp2.c:974
 #: src/protocol/fsp/fsp.c:177 src/protocol/ftp/ftp.c:1312 src/util/file.h:265
 msgid "             "
 msgstr ""
@@ -9249,19 +9249,19 @@ msgstr ""
 msgid "Spidermonkey ECMAScript"
 msgstr ""
 
-#: src/session/download.c:328 src/session/download.c:592
-#: src/session/download.c:967 src/session/download.c:1073
+#: src/session/download.c:328 src/session/download.c:601
+#: src/session/download.c:976 src/session/download.c:1082
 msgid "Download error"
 msgstr "İndirme hatası"
 
-#: src/session/download.c:329 src/session/download.c:1074
+#: src/session/download.c:329 src/session/download.c:1083
 #, fuzzy, c-format
 msgid ""
 "Could not create file '%s':\n"
 "%s"
 msgstr "Dosya yaratılamıyor"
 
-#: src/session/download.c:593
+#: src/session/download.c:602
 #, fuzzy, c-format
 msgid ""
 "Error downloading %s:\n"
@@ -9269,17 +9269,17 @@ msgid ""
 "%s"
 msgstr "Error downloading"
 
-#: src/session/download.c:968
+#: src/session/download.c:977
 #, c-format
 msgid "'%s' is a directory."
 msgstr ""
 
-#: src/session/download.c:997
+#: src/session/download.c:1006
 #, fuzzy
 msgid "File exists"
 msgstr "Dosya ~uzantıları"
 
-#: src/session/download.c:998
+#: src/session/download.c:1007
 #, c-format
 msgid ""
 "This file already exists:\n"
@@ -9290,51 +9290,51 @@ msgid ""
 msgstr ""
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:1005
+#: src/session/download.c:1014
 msgid "Sa~ve under the alternative name"
 msgstr ""
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:1006
+#: src/session/download.c:1015
 msgid "~Overwrite the original file"
 msgstr ""
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:1008
+#: src/session/download.c:1017
 msgid "~Resume download of the original file"
 msgstr ""
 
-#: src/session/download.c:1825
+#: src/session/download.c:1834
 msgid "Unknown type"
 msgstr "Bilinmeyen tür"
 
-#: src/session/download.c:1850
+#: src/session/download.c:1859
 #, c-format
 msgid "What would you like to do with the file '%s' (type: %s%s%s)?"
 msgstr ""
 
-#: src/session/download.c:1853
+#: src/session/download.c:1862
 #, c-format
 msgid "What would you like to do with the file (type: %s%s%s)?"
 msgstr ""
 
-#: src/session/download.c:1885
+#: src/session/download.c:1894
 #, c-format
 msgid "Program ('%f' will be replaced by the filename, '%u' by the uri)"
 msgstr ""
 
-#: src/session/download.c:1890
+#: src/session/download.c:1899
 #, fuzzy
 msgid "Block the terminal"
 msgstr "~BeOS terminali"
 
-#: src/session/download.c:1896
+#: src/session/download.c:1905
 #, c-format
 msgid "The file will be opened with the program '%s'."
 msgstr ""
 
 #. accelerator_context(src/session/download.c:do_type_query)
-#: src/session/download.c:1917
+#: src/session/download.c:1926
 #, fuzzy
 msgid "~Open"
 msgstr "Aç"
