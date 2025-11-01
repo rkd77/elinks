@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.18.GIT\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2025-10-26 18:36+0100\n"
+"POT-Creation-Date: 2025-11-01 14:26+0100\n"
 "PO-Revision-Date: 2021-12-02 17:36+0100\n"
 "Last-Translator: Witold Filipczyk <witekfl@poczta.onet.pl>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -188,8 +188,8 @@ msgstr "Musisz wpisać jakieś wyrażenie"
 #: src/dialogs/edit.c:107 src/dialogs/options.c:263 src/dialogs/options.c:346
 #: src/mime/dialogs.c:138 src/protocol/auth/dialogs.c:163
 #: src/protocol/bittorrent/dialogs.c:840 src/scripting/lua/core.c:443
-#: src/scripting/lua/core.c:526 src/session/download.c:1011
-#: src/session/download.c:1940 src/viewer/text/search.c:2025
+#: src/scripting/lua/core.c:526 src/session/download.c:1020
+#: src/session/download.c:1949 src/viewer/text/search.c:2025
 msgid "~Cancel"
 msgstr "~Anuluj"
 
@@ -285,9 +285,9 @@ msgid ""
 "can set it higher. Default value is 1000. Note that active downloads take "
 "precedence and enforce interval 100ms."
 msgstr ""
-"Przedział czasu odrysowania ekranu w milisekundach. Jeśli nie masz włączonego "
-"zegarka, możesz ustawić na wyższą wartość. Domyślnie jest 1000. Wiedz, że "
-"aktywne pobierania wymuszają ten przedział na 100ms."
+"Przedział czasu odrysowania ekranu w milisekundach. Jeśli nie masz "
+"włączonego zegarka, możesz ustawić na wyższą wartość. Domyślnie jest 1000. "
+"Wiedz, że aktywne pobierania wymuszają ten przedział na 100ms."
 
 #. name:
 #: src/bfu/leds.c:529 src/bfu/leds.c:573
@@ -2211,7 +2211,7 @@ msgstr "Nie można dodać tu opcji."
 #. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
 #: src/config/dialogs.c:524 src/config/dialogs.c:973 src/cookies/dialogs.c:570
 #: src/dialogs/options.c:262 src/formhist/dialogs.c:226
-#: src/protocol/bittorrent/dialogs.c:827 src/session/download.c:1924
+#: src/protocol/bittorrent/dialogs.c:827 src/session/download.c:1933
 msgid "Sa~ve"
 msgstr "~Zapisz"
 
@@ -2957,8 +2957,8 @@ msgid ""
 "When enabled, following links, clicking the left mouse button on links, etc. "
 "will force reloading. The same as the link-follow-reload action."
 msgstr ""
-"Gdy włączone, kliknięcie lewym przyciskiem myszy na odnośniku, itp. "
-"wymusi przeładowanie strony. To samo co akcja link-follow-reload."
+"Gdy włączone, kliknięcie lewym przyciskiem myszy na odnośniku, itp. wymusi "
+"przeładowanie strony. To samo co akcja link-follow-reload."
 
 #: src/config/options.inc:338
 msgid "Handling of hierbox's \"Go to\" button"
@@ -3325,8 +3325,8 @@ msgid ""
 "Whether to set margins automatically. Note, that preferred_document_width, "
 "and use_preferred_document_width must be non-zero."
 msgstr ""
-"Czy ustawić marginesy automatycznie. Zauważ, że preferred_document_width "
-"i use_preferred_document_width muszą być niezerowe."
+"Czy ustawić marginesy automatycznie. Zauważ, że preferred_document_width i "
+"use_preferred_document_width muszą być niezerowe."
 
 #: src/config/options.inc:515
 msgid "Horizontal text margin"
@@ -3999,11 +3999,11 @@ msgstr "Czy wyświetlać dokumenty, które nie zostały całkowicie wczytane"
 
 #: src/config/options.inc:865
 msgid ""
-"ELinks periodically display documents, even if they are not fully loaded.You "
-"can disable it here."
+"ELinks periodically display documents, even if they are not fully loaded. "
+"You can disable it here."
 msgstr ""
-"ELinks co jakiś czas wyświetla dokumenty, nawet jeśli nie zostaly jeszcze do końca "
-"wczytane. Możesz to wyłączyć tutaj."
+"ELinks co jakiś czas wyświetla dokumenty, nawet jeśli nie zostały jeszcze do "
+"końca wczytane. Możesz to wyłączyć tutaj."
 
 #: src/config/options.inc:869 src/config/options.inc:1171
 #: src/dialogs/options.c:255
@@ -4012,7 +4012,8 @@ msgstr "Kitty"
 
 #: src/config/options.inc:871
 msgid "Whether to display kitty images in html documents."
-msgstr "Czy pokazywać obrazki korzystając z protokołu kitty w dokumentach HTML."
+msgstr ""
+"Czy pokazywać obrazki korzystając z protokołu kitty w dokumentach HTML."
 
 #: src/config/options.inc:874
 msgid "Rendering of HTML link element"
@@ -5730,7 +5731,7 @@ msgid "No header info."
 msgstr "Brak nagłówka."
 
 #: src/dialogs/download.c:273 src/dialogs/menu.c:621
-#: src/protocol/bittorrent/dialogs.c:240 src/session/download.c:655
+#: src/protocol/bittorrent/dialogs.c:240 src/session/download.c:664
 msgid "Download"
 msgstr "Pobieranie"
 
@@ -6603,9 +6604,7 @@ msgstr "Przykro mi, ale element karty \"%s\" nie może być usunięty."
 #: src/dialogs/tabs.c:184
 #, c-format
 msgid "Sorry, but tabs entry \"%s\" is being used by something else."
-msgstr ""
-"Przykro mi, ale element karty \"%s\" jest używany przez coś "
-"innego."
+msgstr "Przykro mi, ale element karty \"%s\" jest używany przez coś innego."
 
 #. delete_marked_items_title
 #: src/dialogs/tabs.c:190
@@ -7255,7 +7254,7 @@ msgstr "Limit pamięci w bajtach."
 msgid "SpiderMonkey"
 msgstr "SpiderMonkey"
 
-#: src/main/interlink.c:340 src/main/select.c:1814
+#: src/main/interlink.c:340 src/main/select.c:1815
 #, c-format
 msgid "The call to %s failed: %d (%s)"
 msgstr "Wywołanie %s nieudane: %d (%s)"
@@ -7289,7 +7288,7 @@ msgid "Unable to attach_terminal()."
 msgstr "Nie jestem w stanie przyłączyć terminala."
 
 #. Infinite loop prevention.
-#: src/main/select.c:1817
+#: src/main/select.c:1818
 #, c-format
 msgid "%d select() failures."
 msgstr "%d błędów select()."
@@ -8763,7 +8762,7 @@ msgstr "Pliki"
 msgid "Comment"
 msgstr "Komentarz"
 
-#: src/protocol/bittorrent/dialogs.c:241 src/session/download.c:656
+#: src/protocol/bittorrent/dialogs.c:241 src/session/download.c:665
 #, c-format
 msgid ""
 "Download complete:\n"
@@ -8951,7 +8950,7 @@ msgstr "Co chcesz zrobić z plikiem '%s'?"
 msgid "Information about the torrent"
 msgstr "Informacje o potoku"
 
-#: src/protocol/bittorrent/dialogs.c:802 src/session/download.c:1822
+#: src/protocol/bittorrent/dialogs.c:802 src/session/download.c:1831
 msgid "What to do?"
 msgstr "Co mam zrobić?"
 
@@ -8961,12 +8960,12 @@ msgid "Down~load"
 msgstr "~Pobierz"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:830 src/session/download.c:1930
+#: src/protocol/bittorrent/dialogs.c:830 src/session/download.c:1939
 msgid "~Display"
 msgstr "~Wyświetl"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:834 src/session/download.c:1934
+#: src/protocol/bittorrent/dialogs.c:834 src/session/download.c:1943
 msgid "Show ~header"
 msgstr "Pokaż ~nagłówek"
 
@@ -8980,17 +8979,17 @@ msgstr "FTPES"
 msgid "SFTP"
 msgstr "SFTP"
 
-#: src/protocol/curl/ftp.c:213 src/protocol/fsp/fsp2.c:968
+#: src/protocol/curl/ftp.c:213 src/protocol/fsp/fsp2.c:966
 #: src/protocol/fsp/fsp.c:169 src/protocol/ftp/ftp.c:1303 src/util/file.h:256
 msgid "%b %e  %Y"
 msgstr "%e.%m.%Y "
 
-#: src/protocol/curl/ftp.c:215 src/protocol/fsp/fsp2.c:970
+#: src/protocol/curl/ftp.c:215 src/protocol/fsp/fsp2.c:968
 #: src/protocol/fsp/fsp.c:171 src/protocol/ftp/ftp.c:1305 src/util/file.h:258
 msgid "%b %e %H:%M"
 msgstr "%e.%m %H:%M"
 
-#: src/protocol/curl/ftp.c:222 src/protocol/fsp/fsp2.c:976
+#: src/protocol/curl/ftp.c:222 src/protocol/fsp/fsp2.c:974
 #: src/protocol/fsp/fsp.c:177 src/protocol/ftp/ftp.c:1312 src/util/file.h:265
 msgid "             "
 msgstr "             "
@@ -9089,10 +9088,10 @@ msgid ""
 "restoring sessions, but it is a bit dangerous. When allowed you can execute "
 "any command in goto url dialog. For example mailcap:ls"
 msgstr ""
-"Czy pozwalać na pusty \"referrer\" dla protokołu mailcap. To może być przydatne "
-"przy odtwarzaniu sesji, ale jest trochę niebezpieczne. Gdy włączone możesz "
-"wykonać dowolną komendę w okienku dialogowym \"Przejdź do URL-a\". Na przykład "
-"mailcap:ls"
+"Czy pozwalać na pusty \"referrer\" dla protokołu mailcap. To może być "
+"przydatne przy odtwarzaniu sesji, ale jest trochę niebezpieczne. Gdy "
+"włączone możesz wykonać dowolną komendę w okienku dialogowym \"Przejdź do "
+"URL-a\". Na przykład mailcap:ls"
 
 #. name:
 #: src/protocol/file/mailcap.c:70
@@ -9913,12 +9912,12 @@ msgstr "Błąd skryptu użytkownika"
 msgid "Spidermonkey ECMAScript"
 msgstr "ECMAScript Spidermonkey"
 
-#: src/session/download.c:328 src/session/download.c:592
-#: src/session/download.c:967 src/session/download.c:1073
+#: src/session/download.c:328 src/session/download.c:601
+#: src/session/download.c:976 src/session/download.c:1082
 msgid "Download error"
 msgstr "Błąd pobierania"
 
-#: src/session/download.c:329 src/session/download.c:1074
+#: src/session/download.c:329 src/session/download.c:1083
 #, c-format
 msgid ""
 "Could not create file '%s':\n"
@@ -9927,7 +9926,7 @@ msgstr ""
 "Nie można utworzyć pliku '%s':\n"
 "%s"
 
-#: src/session/download.c:593
+#: src/session/download.c:602
 #, c-format
 msgid ""
 "Error downloading %s:\n"
@@ -9938,17 +9937,17 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/session/download.c:968
+#: src/session/download.c:977
 #, c-format
 msgid "'%s' is a directory."
 msgstr "'%s' to katalog."
 
 #
-#: src/session/download.c:997
+#: src/session/download.c:1006
 msgid "File exists"
 msgstr "Plik istnieje"
 
-#: src/session/download.c:998
+#: src/session/download.c:1007
 #, c-format
 msgid ""
 "This file already exists:\n"
@@ -9964,51 +9963,51 @@ msgstr ""
 "%s"
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:1005
+#: src/session/download.c:1014
 msgid "Sa~ve under the alternative name"
 msgstr "Zap~isz pod alternatywną nazwą"
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:1006
+#: src/session/download.c:1015
 msgid "~Overwrite the original file"
 msgstr "Nadpisz ~oryginalny plik"
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:1008
+#: src/session/download.c:1017
 msgid "~Resume download of the original file"
 msgstr "Wznów pobie~ranie oryginalnego pliku"
 
-#: src/session/download.c:1825
+#: src/session/download.c:1834
 msgid "Unknown type"
 msgstr "Nieznany typ"
 
-#: src/session/download.c:1850
+#: src/session/download.c:1859
 #, c-format
 msgid "What would you like to do with the file '%s' (type: %s%s%s)?"
 msgstr "Co chcesz zrobić z plikiem '%s' (typu %s%s%s)?"
 
-#: src/session/download.c:1853
+#: src/session/download.c:1862
 #, c-format
 msgid "What would you like to do with the file (type: %s%s%s)?"
 msgstr "Co chcesz zrobić z plikiem (typu %s%s%s)?"
 
-#: src/session/download.c:1885
+#: src/session/download.c:1894
 #, c-format
 msgid "Program ('%f' will be replaced by the filename, '%u' by the uri)"
 msgstr "Program ('%f' zostanie zastąpione nazwą pliku, '%u' - uri)"
 
 #
-#: src/session/download.c:1890
+#: src/session/download.c:1899
 msgid "Block the terminal"
 msgstr "Blokowanie terminala"
 
-#: src/session/download.c:1896
+#: src/session/download.c:1905
 #, c-format
 msgid "The file will be opened with the program '%s'."
 msgstr "Plik zostanie otwarty przy użyciu programu '%s'."
 
 #. accelerator_context(src/session/download.c:do_type_query)
-#: src/session/download.c:1917
+#: src/session/download.c:1926
 msgid "~Open"
 msgstr "~Otwórz"
 
