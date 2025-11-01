@@ -862,7 +862,7 @@ static union option_info config_options_info[] = {
 
 	INIT_OPT_BOOL("document.html", N_("Whether to show documents which are not fully loaded"),
 		"display_unfinished", OPT_ZERO, 1,
-		N_("ELinks periodically display documents, even if they are not fully loaded."
+		N_("ELinks periodically display documents, even if they are not fully loaded. "
 		"You can disable it here.")),
 
 #ifdef CONFIG_KITTY
