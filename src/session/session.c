@@ -847,6 +847,7 @@ doc_loading_callback(struct download *download, struct session *ses)
 			print_error_dialog(ses, download->state,
 					   ses->doc_view->document->uri,
 					   download->pri);
+			download->state = connection_state(0);
 		}
 
 	} else if (is_in_transfering_state(download->state)
