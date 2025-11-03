@@ -212,7 +212,9 @@ do_http(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_PRIVATE, conn);
 		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 0L);
-		curl_easy_setopt(curl, CURLOPT_ACCEPT_ENCODING, "");
+		if (!no_verify) {
+			curl_easy_setopt(curl, CURLOPT_ACCEPT_ENCODING, "");
+		}
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 0L);
 		curl_easy_setopt(curl, CURLOPT_RESUME_FROM_LARGE, offset);
 		curl_easy_setopt(curl, CURLOPT_MAX_RECV_SPEED_LARGE, (curl_off_t)get_opt_long("protocol.http.curl_max_recv_speed", NULL));
