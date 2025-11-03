@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.10.6.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2025-11-01 14:26+0100\n"
-"PO-Revision-Date: 2025-10-26 16:55+0100\n"
+"POT-Creation-Date: 2025-11-03 19:58+0100\n"
+"PO-Revision-Date: 2025-11-03 19:57+0100\n"
 "Last-Translator: Strahinya Radich (Страхиња Радић) <sr@strahinja.org>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "Language: sr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: poe 1.8.5\n"
+"X-Generator: poe 1.8.6-g8e8ab2c\n"
 
 #: src/bfu/hierbox.c:343
 msgid "Close"
@@ -41,7 +41,7 @@ msgstr "Притисните размак да бисте проширили о�
 #: src/dialogs/options.c:345 src/mime/dialogs.c:137
 #: src/protocol/auth/dialogs.c:162 src/protocol/protocol.c:274
 #: src/scripting/lua/core.c:442 src/scripting/lua/core.c:525
-#: src/scripting/python/dialogs.c:92 src/session/session.c:1079
+#: src/scripting/python/dialogs.c:92 src/session/session.c:1080
 #: src/viewer/text/search.c:2024
 msgid "~OK"
 msgstr "~У реду"
@@ -271,9 +271,8 @@ msgstr ""
 "стањима."
 
 #: src/bfu/leds.c:127
-#, fuzzy
 msgid "Redraw interval"
-msgstr "Интервал поновне валидације"
+msgstr "Интервал поновног исцртавања"
 
 #: src/bfu/leds.c:129
 msgid ""
@@ -281,6 +280,9 @@ msgid ""
 "can set it higher. Default value is 1000. Note that active downloads take "
 "precedence and enforce interval 100ms."
 msgstr ""
+"Интервал поновног исцртавања у милисекундама. Ако нисте активирали сат, "
+"можете га поставити на више. Подразумевана вредност је 1000. Имајте у виду "
+"да активна преузимања имају предност и намећу интервал од 100ms."
 
 #. name:
 #: src/bfu/leds.c:529 src/bfu/leds.c:573
@@ -288,7 +290,7 @@ msgid "LED indicators"
 msgstr "Индикатори диода"
 
 #: src/bfu/leds.c:530
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "What the different LEDs indicate:\n"
 "\n"
@@ -307,7 +309,7 @@ msgstr ""
 "\n"
 "[SIJP--]\n"
 " |||||`- Преузимање у току\n"
-" ||||`-- Неискоришћено\n"
+" ||||`-- „O“ значи onion домен, „o“ постоји onion локација\n"
 " |||`--- Блокиран је искачући прозор JavaScript-а\n"
 " ||`---- Десила се грешка JavaScript-а\n"
 " |`----- Стање режима за уметање за поља за унос текста\n"
@@ -406,8 +408,8 @@ msgid ""
 "\n"
 "This feature requires bookmark support."
 msgstr ""
-"Повремено ће аутоматски чувати снимак свих језичака. Ово ће повремено "
-"забележити језичке сваког терминала у одвојену фасциклу ради опоравка после "
+"Повремено ће аутоматски чувати снимак свих картица. Ово ће повремено "
+"забележити картице сваког терминала у одвојену фасциклу ради опоравка после "
 "пада програма.\n"
 "\n"
 "Ова могућност захтева подршку за обележиваче."
@@ -611,7 +613,7 @@ msgstr "Сачувана сесија"
 
 #: src/bookmarks/dialogs.c:1017
 msgid "Bookmark tabs"
-msgstr "Језичци обележивача"
+msgstr "Картице обележивача"
 
 #: src/bookmarks/dialogs.c:1017
 msgid "Enter folder name"
@@ -886,7 +888,7 @@ msgstr "Додавање новог обележивача на основу т�
 
 #: src/config/actions-main.inc:11
 msgid "Bookmark all open tabs"
-msgstr "Додавање свих отворених језичака"
+msgstr "Додавање свих отворених картица"
 
 #: src/config/actions-main.inc:12
 msgid "Open authentication manager"
@@ -1198,11 +1200,11 @@ msgstr "Померање за једну страницу навише"
 
 #: src/config/actions-main.inc:91
 msgid "Open the current link in a new tab"
-msgstr "Отварање текуће везе у новом језичку"
+msgstr "Отварање текуће везе у новој картици"
 
 #: src/config/actions-main.inc:92
 msgid "Open the current link in a new tab in the background"
-msgstr "Отварање текуће везе у новом позадинском језичку"
+msgstr "Отварање текуће везе у новој позадинској картици"
 
 #: src/config/actions-main.inc:93
 msgid "Open the current link in a new window"
@@ -1210,20 +1212,19 @@ msgstr "Отварање текуће везе у новом прозору"
 
 #: src/config/actions-main.inc:94
 msgid "Open a new tab"
-msgstr "Отварање новог језичка"
+msgstr "Отварање нове картице"
 
 #: src/config/actions-main.inc:95
 msgid "Open a new tab in the background"
-msgstr "Отварање новог језичка у позадини"
+msgstr "Отварање нове картице у позадини"
 
 #: src/config/actions-main.inc:96
 msgid "Open a new window"
 msgstr "Отварање новог прозора"
 
 #: src/config/actions-main.inc:97
-#, fuzzy
 msgid "Open the onion location link"
-msgstr "Отварање управљача аутентификације"
+msgstr "Отварање везе onion локације"
 
 #: src/config/actions-main.inc:98
 msgid "Open an OS shell"
@@ -1247,7 +1248,7 @@ msgstr "Поновно учитавање текуће странице"
 
 #: src/config/actions-main.inc:104
 msgid "Reopen last closed tab"
-msgstr "Поновно отварање последњег затвореног језичка"
+msgstr "Поновно отварање последње затворене картице"
 
 #: src/config/actions-main.inc:105
 msgid "Re-render the current page"
@@ -1328,40 +1329,39 @@ msgstr "Предавање обрасца и поновно учитавање"
 #: src/config/actions-main.inc:125 src/terminal/tab.c:235
 #: src/terminal/tab.c:281
 msgid "Close tab"
-msgstr "Затварање језичка"
+msgstr "Затварање картице"
 
 #: src/config/actions-main.inc:126
 msgid "Close all tabs but the current one"
-msgstr "Затварање свих језичака осим текућег"
+msgstr "Затварање свих картица осим текуће"
 
 #: src/config/actions-main.inc:127
 msgid "Pass URI of current tab to external command"
-msgstr "Прослеђивање УРИ-ја текућег језичка спољашњој наредби"
+msgstr "Прослеђивање УРИ-ја текуће картице спољашњој наредби"
 
 #: src/config/actions-main.inc:128
-#, fuzzy
 msgid "Open tab manager"
-msgstr "Отварање управљача кеша"
+msgstr "Отварање управљача картица"
 
 #: src/config/actions-main.inc:129
 msgid "Open the tab menu"
-msgstr "Отварање менија језичка"
+msgstr "Отварање менија картица"
 
 #: src/config/actions-main.inc:130
 msgid "Move the current tab to the left"
-msgstr "Померање текућег језичка налево"
+msgstr "Померање текуће картице налево"
 
 #: src/config/actions-main.inc:131
 msgid "Move the current tab to the right"
-msgstr "Померање текућег језичка надесно"
+msgstr "Померање текуће картице надесно"
 
 #: src/config/actions-main.inc:132
 msgid "Next tab"
-msgstr "Следећи језичак"
+msgstr "Следећа картица"
 
 #: src/config/actions-main.inc:133
 msgid "Previous tab"
-msgstr "Претходни језичак"
+msgstr "Претходна картица"
 
 #: src/config/actions-main.inc:134
 msgid "Open the terminal resize dialog"
@@ -1376,14 +1376,12 @@ msgid "Toggle displaying of links to images"
 msgstr "Смењивање приказивања веза ка сликама"
 
 #: src/config/actions-main.inc:137
-#, fuzzy
 msgid "Toggle displaying of kitty images"
-msgstr "Смењивање приказивања веза ка сликама"
+msgstr "Смењивање приказивања kitty слика"
 
 #: src/config/actions-main.inc:138
-#, fuzzy
 msgid "Toggle displaying of sixel images"
-msgstr "Смењивање приказивања веза ка сликама"
+msgstr "Смењивање приказивања сикселских слика"
 
 #: src/config/actions-main.inc:139
 msgid "Toggle rendering of tables"
@@ -1402,9 +1400,8 @@ msgid "Toggle Ecmascript handling"
 msgstr "Смењивање руковања преко Ecmascript-а"
 
 #: src/config/actions-main.inc:143
-#, fuzzy
 msgid "Toggle Ecmascript keyboard handling"
-msgstr "Смењивање руковања преко Ecmascript-а"
+msgstr "Смењивање руковања тастатуром преко Ecmascript-а"
 
 #: src/config/actions-main.inc:144
 msgid "Toggle rendering page as HTML / plain text"
@@ -1889,18 +1886,18 @@ msgstr ""
 "додатни аргумент који садржи метод који би требало покренути и параметре "
 "који би требало да се проследе. Ради лакше употребе, додатни аргумент метода "
 "се може изоставити, и тада ће сви аргументи УРЛ-а бити отворени у новим "
-"језичцима у удаљеној инстанци.\n"
+"картицама у удаљеној инстанци.\n"
 "\n"
 "Следи списак подржаних метода:\n"
 "\tping()                    : тражи удаљену инстанцу\n"
-"\topenURL()                 : пита за УРЛ у текућем језичку\n"
-"\topenURL(URL)              : отвара УРЛ у текућем језичку\n"
-"\topenURL(URL, new-tab)     : отвара УРЛ у новом језичку\n"
+"\topenURL()                 : пита за УРЛ у текућој картици\n"
+"\topenURL(URL)              : отвара УРЛ у текућој картици\n"
+"\topenURL(URL, new-tab)     : отвара УРЛ у новој картици\n"
 "\topenURL(URL, new-window)  : отвара УРЛ у новом прозору\n"
 "\taddBookmark(URL, наслов)  : додаје УРЛ у обележиваче под насловом\n"
 "\tinfoBox(текст)            : приказује текст у прозору са поруком\n"
-"\treload()                  : поново учитава документ у текућем језичку\n"
-"\tsearch(ниска)             : претрага у текућем језичку\n"
+"\treload()                  : поново учитава документ у текућој картици\n"
+"\tsearch(ниска)             : претрага у текућој картици\n"
 "\txfeDoCommand(openBrowser) : отвара нови прозор"
 
 #: src/config/cmdline.c:1011
@@ -2158,7 +2155,7 @@ msgstr "Опис"
 
 #: src/config/dialogs.c:304 src/protocol/bittorrent/dialogs.c:616
 #: src/protocol/protocol.c:268 src/session/session.c:339
-#: src/session/session.c:352 src/session/session.c:1279
+#: src/session/session.c:352 src/session/session.c:1280
 #: src/viewer/text/textarea.c:642
 msgid "Error"
 msgstr "Грешка"
@@ -2925,13 +2922,15 @@ msgstr ""
 
 #: src/config/options.inc:333
 msgid "Force reload when follow"
-msgstr ""
+msgstr "Наметање поновног учитавања при праћењу"
 
 #: src/config/options.inc:335
 msgid ""
 "When enabled, following links, clicking the left mouse button on links, etc. "
 "will force reloading. The same as the link-follow-reload action."
 msgstr ""
+"Када је активирано, праћење веза, кликтање левим дугметом миша на везе, итд. "
+"ће наметнути поновно учитавање. Исто као и link-follow-reload акција."
 
 #: src/config/options.inc:338
 msgid "Handling of hierbox's \"Go to\" button"
@@ -2948,9 +2947,9 @@ msgid ""
 msgstr ""
 "Задавање начина руковања hierbox-овим дугметом „Иди на“ (нпр. у управљачу "
 "обележивача):\n"
-"0 значи отварање везе у текућем језичку\n"
-"1 значи отварање везе у новом језичку у прочељу\n"
-"2 значи отварање везе у новом језичку у позадини\n"
+"0 значи отварање везе у текућој картици\n"
+"1 значи отварање везе у новој картици у прочељу\n"
+"2 значи отварање везе у новој картици у позадини\n"
 "3 значи отварање везе у новом прозору"
 
 #: src/config/options.inc:346
@@ -2985,9 +2984,9 @@ msgid ""
 msgstr ""
 "Задавање начина руковања везама које имају подешен\n"
 "атрибут target=_blank:\n"
-"0 веза ће се отварати у текућем језичку\n"
-"1 веза ће се отварати у новом језичку у прочељу\n"
-"2 веза ће се отварати у новом језичку у позадини\n"
+"0 веза ће се отварати у текућој картици\n"
+"1 веза ће се отварати у новој картици у прочељу\n"
+"2 веза ће се отварати у новој картици у позадини\n"
 "3 веза ће се отварати у новом прозору"
 
 #: src/config/options.inc:369
@@ -3140,18 +3139,16 @@ msgstr ""
 "скролује једну страницу навише или наниже."
 
 #: src/config/options.inc:441
-#, fuzzy
 msgid "Extended vertical scrolling"
-msgstr "Проширено хоризонтално скроловање"
+msgstr "Проширено вертикално скроловање"
 
 #: src/config/options.inc:443
-#, fuzzy
 msgid ""
 "Whether to allow vertical scrolling when the document does not extend off "
 "the screen."
 msgstr ""
-"Да ли ће се дозволити хоризонтално скроловање када ширина документа не "
-"прелази ширину екрана. Корисно за операције копирај-и-залепи."
+"Да ли ће се дозволити вертикално скроловање када висина документа не прелази "
+"висину екрана."
 
 #: src/config/options.inc:446
 msgid "Searching"
@@ -3289,15 +3286,17 @@ msgstr ""
 "  текст документа"
 
 #: src/config/options.inc:510
-#, fuzzy
 msgid "Whether to set margin automatically"
-msgstr "Да ли да се користи terminfo"
+msgstr "Да ли да се аутоматски поставља маргина"
 
 #: src/config/options.inc:512
 msgid ""
 "Whether to set margins automatically. Note, that preferred_document_width, "
 "and use_preferred_document_width must be non-zero."
 msgstr ""
+"Да ли ће се маргине постављати аутоматски. Имајте у виду да "
+"preferred_document_width и use_preferred_document_width морају бити "
+"различити од нуле."
 
 #: src/config/options.inc:515
 msgid "Horizontal text margin"
@@ -3918,7 +3917,7 @@ msgstr "Приказивање iframe-ова"
 
 #: src/config/options.inc:849
 msgid "Display iframes. This code is experimental."
-msgstr ""
+msgstr "Приказује iframe-ове. Овај код је експерименталан."
 
 #: src/config/options.inc:851
 msgid "Display tables"
@@ -3946,24 +3945,24 @@ msgstr "Приказивање степена (као ^нешто)."
 
 #: src/config/options.inc:863
 msgid "Whether to show documents which are not fully loaded"
-msgstr ""
+msgstr "Да ли да се приказују документи који нису сасвим учитани"
 
 #: src/config/options.inc:865
 msgid ""
 "ELinks periodically display documents, even if they are not fully loaded. "
 "You can disable it here."
 msgstr ""
+"ELinks повремено приказује документе, чак иако нису сасвим учитани. То "
+"можете деактивирати овде."
 
 #: src/config/options.inc:869 src/config/options.inc:1171
 #: src/dialogs/options.c:255
 msgid "Kitty"
-msgstr ""
+msgstr "Kitty"
 
 #: src/config/options.inc:871
-#, fuzzy
 msgid "Whether to display kitty images in html documents."
-msgstr ""
-"Да ли да се приказују сикселске слике унутар докумената у чистом тексту."
+msgstr "Да ли да се приказују kitty слике унутар html докумената."
 
 #: src/config/options.inc:874
 msgid "Rendering of HTML link element"
@@ -3993,10 +3992,8 @@ msgid "Sixel"
 msgstr "Сиксел"
 
 #: src/config/options.inc:887
-#, fuzzy
 msgid "Whether to display sixel images in html documents."
-msgstr ""
-"Да ли да се приказују сикселске слике унутар докумената у чистом тексту."
+msgstr "Да ли да се приказују сикселске слике унутар html докумената."
 
 #: src/config/options.inc:891
 msgid "Substitute frame chars"
@@ -4082,9 +4079,9 @@ msgid ""
 "behaviour: the command receives standard input and elinks is blocked."
 msgstr ""
 "Правила за прослеђивање УРИ-ја спољашњим наредбама. Када је задато једно "
-"правило, мени везе и језичка ће имати ставку која омогућава да се УРИ везе, "
-"оквира или језичка проследи спољашњој наредби. Ако је задато више правила, "
-"мени везе и језичка ће имати подмени са ставкама за свако правило.\n"
+"правило, мени везе и картице ће имати ставку која омогућава да се УРИ везе, "
+"оквира или картица проследи спољашњој наредби. Ако је задато више правила, "
+"мени везе и картице ће имати подмени са ставкама за свако правило.\n"
 "\n"
 "Акција и подменији су такође доступни доделом тастера акцијама frame-"
 "external-command, link-external-command и tab-external-command.\n"
@@ -4406,9 +4403,8 @@ msgid "If we should use italics."
 msgstr "Да ли да се користи курзив."
 
 #: src/config/options.inc:1173
-#, fuzzy
 msgid "Whether terminal supports kitty graphics protocol."
-msgstr "Да ли терминал подржава сикселску графику."
+msgstr "Да ли терминал подржава протокол за kitty графику."
 
 #: src/config/options.inc:1178
 msgid "Whether terminal supports sixel graphics."
@@ -4767,52 +4763,52 @@ msgstr "Боје текста статусне линије."
 
 #: src/config/options.inc:1415
 msgid "Tabs bar"
-msgstr "Линија са језичцима"
+msgstr "Линија са картицама"
 
 #: src/config/options.inc:1417
 msgid "Tabs bar colors."
-msgstr "Боје линије са језичцима."
+msgstr "Боје линије са картицама."
 
 #: src/config/options.inc:1419
 msgid "Unvisited tab"
-msgstr "Непосећени језичак"
+msgstr "Непосећена картица"
 
 #: src/config/options.inc:1421
 msgid ""
 "Tab colors for tabs that have not been selected since they completed loading."
-msgstr "Боје језичка који није изабрани од завршетка учитавања."
+msgstr "Боје картице која није изабрана од завршетка учитавања."
 
 #: src/config/options.inc:1424
 msgid "Unselected tab"
-msgstr "Неизабрани језичак"
+msgstr "Неизабрана картица"
 
 #: src/config/options.inc:1426
 msgid "Unselected tab colors."
-msgstr "Боје неизабраног језичка."
+msgstr "Боје неизабране картице."
 
 #: src/config/options.inc:1428
 msgid "Loading tab"
-msgstr "Језичак који се учитава"
+msgstr "Картица која се учитава"
 
 #: src/config/options.inc:1430
 msgid "Tab colors for tabs that are loading in the background."
-msgstr "Боје језичка који се учитава у позадини."
+msgstr "Боје картице која се учитава у позадини."
 
 #: src/config/options.inc:1432
 msgid "Selected tab"
-msgstr "Изабрани језичак"
+msgstr "Изабрана картица"
 
 #: src/config/options.inc:1434
 msgid "Selected tab colors."
-msgstr "Боје изабраног језичка."
+msgstr "Боје изабране картице."
 
 #: src/config/options.inc:1436
 msgid "Tab separator"
-msgstr "Раздвајач језичака"
+msgstr "Раздвајач картица"
 
 #: src/config/options.inc:1438
 msgid "Tab separator colors."
-msgstr "Боје раздвајача језичака."
+msgstr "Боје раздвајача картица."
 
 #: src/config/options.inc:1440
 msgid "Clipboard"
@@ -4954,30 +4950,29 @@ msgstr "Акција са тастатуре која ће бити покрен
 
 #: src/config/options.inc:1522
 msgid "Window tabs"
-msgstr "Језичци прозора"
+msgstr "Картице прозора"
 
 #: src/config/options.inc:1524
 msgid "Window tabs settings."
-msgstr "Поставке језичака прозора."
+msgstr "Поставке картица прозора."
 
 #: src/config/options.inc:1526 src/globhist/globhist.c:71
 msgid "Display style"
 msgstr "Стил приказа"
 
 #: src/config/options.inc:1528
-#, fuzzy
 msgid ""
 "What to display in tab manager dialog:\n"
 "0 is URLs\n"
 "1 is page titles"
 msgstr ""
-"Шта приказивати у дијалогу „Глобална историја“:\n"
+"Шта приказивати у дијалогу управљача картица:\n"
 "0 УРЛ-ове\n"
 "1 наслове страница"
 
 #: src/config/options.inc:1532
 msgid "Display tabs bar"
-msgstr "Приказивање линије језичака"
+msgstr "Приказивање линије картица"
 
 #: src/config/options.inc:1534
 msgid ""
@@ -4986,37 +4981,37 @@ msgid ""
 "1 means only if two or more tabs are open\n"
 "2 means always"
 msgstr ""
-"Приказује линију језичака на екрану:\n"
+"Приказује линију картица на екрану:\n"
 "0 никад\n"
-"1 само уколико је отворено два или више језичака\n"
+"1 само уколико је отворено две или више картица\n"
 "2 увек"
 
 #: src/config/options.inc:1539
 msgid "Tab bar at top"
-msgstr "Линија језичака на врху"
+msgstr "Линија картица на врху"
 
 #: src/config/options.inc:1541
 msgid "Whether display tab bar at top like other browsers do."
-msgstr "Да ли да се линија језичака приказује на врху, као код других читача."
+msgstr "Да ли да се линија картица приказује на врху, као код других читача."
 
 #: src/config/options.inc:1543
 msgid "Wrap-around tabs cycling"
-msgstr "Кружно кретање кроз језичке"
+msgstr "Кружно кретање кроз картице"
 
 #: src/config/options.inc:1545
 msgid ""
 "When moving right from the last tab, jump to the first one, and vice versa."
 msgstr ""
-"Када се на последњем језичку притисне стрелица надесно, скочиће на први, и "
+"Када се на последњој картици притисне стрелица надесно, скочиће на прву, и "
 "обрнуто."
 
 #: src/config/options.inc:1548
 msgid "Confirm tab closing"
-msgstr "Потврда затварања језичака"
+msgstr "Потврда затварања картица"
 
 #: src/config/options.inc:1550
 msgid "When closing a tab show confirmation dialog."
-msgstr "Приказивање дијалога за потврду пре затварања језичка."
+msgstr "Приказивање дијалога за потврду пре затварања картице."
 
 #: src/config/options.inc:1552
 msgid "Disallow writing to terminal"
@@ -5065,14 +5060,14 @@ msgstr "На екрану ће се приказивати насловна ли
 
 #: src/config/options.inc:1574
 msgid "Display goto dialog in new tabs"
-msgstr "Приказивање дијалога „Иди на“ у новим језичцима"
+msgstr "Приказивање дијалога „Иди на“ у новим картицама"
 
 #: src/config/options.inc:1576
 msgid ""
 "Pop up goto dialog in newly created tabs when there's no homepage set. This "
 "means also showing goto dialog on startup."
 msgstr ""
-"Отвара дијалог „Иди на“ у новокреираним језичцима када није задата почетна "
+"Отвара дијалог „Иди на“ у новокреираним картицама када није задата почетна "
 "страница. Ово такође значи да ће се тај дијалог приказивати при покретању."
 
 #: src/config/options.inc:1580
@@ -5141,18 +5136,16 @@ msgstr ""
 "Ово има смисла једино уз подршку за обележиваче."
 
 #: src/config/options.inc:1611
-#, fuzzy
 msgid "Auto save latest positions"
-msgstr "Аутоматско чување сесије"
+msgstr "Аутоматско чување најновијих позиција"
 
 #: src/config/options.inc:1613
-#, fuzzy
 msgid ""
 "Whether to save view positions of documents.\n"
 "\n"
 "This feature requires bookmark support."
 msgstr ""
-"Аутоматски ће се чувати сесија приликом завршетка.\n"
+"Да ли да се аутоматски чувају позиције прегледања докумената.\n"
 "\n"
 "Ова могућност захтева подршку за обележиваче."
 
@@ -5252,7 +5245,7 @@ msgstr "Назад у излаз"
 
 #: src/config/options.inc:1665
 msgid "Going back from initial page exits tab or elinks."
-msgstr "Премештање уназад са почетне странице затвара језичак или elinks."
+msgstr "Премештање уназад са почетне странице затвара картицу или elinks."
 
 #: src/config/options.inc:1667
 msgid "Double ESC"
@@ -5989,48 +5982,47 @@ msgstr "~Проследи УРИ оквира спољашњој наредби"
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:276 src/dialogs/menu.c:447
 msgid "Nex~t tab"
-msgstr "Следећи ~језичак"
+msgstr "~Следећа картица"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:277 src/dialogs/menu.c:448
 msgid "Pre~v tab"
-msgstr "Прет~ходни језичак"
+msgstr "Прет~ходна картица"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:278
-#, fuzzy
 msgid "Tab ~manager"
-msgstr "Управљач кеша"
+msgstr "~Управљач картица"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:281 src/dialogs/menu.c:449
 msgid "~Close tab"
-msgstr "Зат~вори језичак"
+msgstr "Зат~вори картицу"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:284
 msgid "C~lose all tabs but the current"
-msgstr "З~атвори све језичке осим текућег"
+msgstr "З~атвори све картице осим текуће"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:288
 msgid "B~ookmark all tabs"
-msgstr "Додај све језичке у ~обележиваче"
+msgstr "Додај све картице у ~обележиваче"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:296
 msgid "Pass tab URI to e~xternal command"
-msgstr "Проследи УРИ ~језичка спољашњој наредби"
+msgstr "Проследи УРИ ~картице спољашњој наредби"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:325
 msgid "Open new ~tab"
-msgstr "Отвори нови ~језичак"
+msgstr "Отвори нову ~картицу"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:326
 msgid "Open new tab in backgroun~d"
-msgstr "Отвори нови језичак у ~позадини"
+msgstr "Отвори нову картицу у ~позадини"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:327
@@ -6513,55 +6505,49 @@ msgstr "Нема документа"
 
 #. cant_delete_item
 #: src/dialogs/tabs.c:182
-#, fuzzy, c-format
+#, c-format
 msgid "Sorry, but tabs entry \"%s\" cannot be deleted."
-msgstr "Нажалост, ставка аутентификације „%s“ се не може обрисати."
+msgstr "Нажалост, ставка картица „%s“ се не може обрисати."
 
 #. cant_delete_used_item
 #: src/dialogs/tabs.c:184
-#, fuzzy, c-format
+#, c-format
 msgid "Sorry, but tabs entry \"%s\" is being used by something else."
-msgstr "Нажалост, ставка аутентификације „%s“ се већ користи негде другде."
+msgstr "Нажалост, ставка картица „%s“ се већ користи негде другде."
 
 #. delete_marked_items_title
 #: src/dialogs/tabs.c:190
-#, fuzzy
 msgid "Delete marked tabs entries"
-msgstr "Брисање означених ставки аутентификације"
+msgstr "Брисање означених ставки картица"
 
 #. delete_marked_items
 #: src/dialogs/tabs.c:192
-#, fuzzy
 msgid "Delete marked tabs entries?"
-msgstr "Обрисати означене ставке аутентификације?"
+msgstr "Обрисати означене ставке картица?"
 
 #. delete_item_title
 #: src/dialogs/tabs.c:198
-#, fuzzy
 msgid "Delete tab entry"
-msgstr "Брисање ставке аутентификације"
+msgstr "Брисање ставке картице"
 
 #: src/dialogs/tabs.c:200
-#, fuzzy, c-format
+#, c-format
 msgid "Delete this tab entry?"
-msgstr "Обрисати ову ставку аутентификације?"
+msgstr "Обрисати ову ставку картице?"
 
 #. clear_all_items_title
 #: src/dialogs/tabs.c:202
-#, fuzzy
 msgid "Clear all tabs entries"
-msgstr "Чишћење свих ставки аутентификације"
+msgstr "Чишћење свих ставки картица"
 
 #. clear_all_items_title
 #: src/dialogs/tabs.c:204
-#, fuzzy
 msgid "Do you really want to remove all tabs entries?"
-msgstr "Да ли заиста желите да уклоните све ставке аутентификације?"
+msgstr "Да ли заиста желите да уклоните све ставке картица?"
 
 #: src/dialogs/tabs.c:289
-#, fuzzy
 msgid "Search tabs"
-msgstr "Претрага"
+msgstr "Претрага картица"
 
 #. accelerator_context(src/dialogs/tabs.c:globhist_buttons, src/globhist/dialogs.c:globhist_buttons)
 #: src/dialogs/tabs.c:371 src/globhist/dialogs.c:245
@@ -6570,14 +6556,12 @@ msgstr "~Направи обележивач"
 
 #. accelerator_context(src/dialogs/tabs.c:globhist_buttons)
 #: src/dialogs/tabs.c:374
-#, fuzzy
 msgid "~Toggle display url/title"
-msgstr "~Смени приказ"
+msgstr "~Смени приказ УРЛ-а/наслова"
 
 #: src/dialogs/tabs.c:383
-#, fuzzy
 msgid "Tabs manager"
-msgstr "Управљач кеша"
+msgstr "Управљач картица"
 
 #. name:
 #: src/document/css/css.c:30 src/document/css/css.c:252
@@ -7019,6 +7003,14 @@ msgstr "Турски"
 msgid "Ukrainian"
 msgstr "Украјински"
 
+#: src/js/ecmascript-c.c:61
+msgid "Ecmascript enabled"
+msgstr "Ecmascript активиран"
+
+#: src/js/ecmascript-c.c:63
+msgid "Ecmascript disabled"
+msgstr "Ecmascript деактивиран"
+
 #: src/js/ecmascript.c:75
 msgid "ECMAScript options."
 msgstr "Опције ECMAScript-а."
@@ -7037,7 +7029,7 @@ msgstr "Блокирање искачућих прозора"
 
 #: src/js/ecmascript.c:83
 msgid "Whether to disallow scripts to open new windows or tabs."
-msgstr "Да ли да се скриптовима забрани отварање нових прозора или језичака."
+msgstr "Да ли да се скриптовима забрани отварање нових прозора или картица."
 
 #: src/js/ecmascript.c:85
 msgid "Check integrity"
@@ -7106,14 +7098,6 @@ msgstr ""
 "%d секунди. То вероватно значи да у скрипту постоји\n"
 "грешка и да би могао да заустави цео ELinks, па је зато\n"
 "извршавање скрипта прекинуто."
-
-#: src/js/ecmascript-c.c:61
-msgid "Ecmascript enabled"
-msgstr "Ecmascript активиран"
-
-#: src/js/ecmascript-c.c:63
-msgid "Ecmascript disabled"
-msgstr "Ecmascript деактивиран"
 
 #: src/js/mujs.c:280 src/js/quickjs.c:495 src/js/spidermonkey.cpp:137
 msgid "A script embedded in the current document raised the following:\n"
@@ -7269,12 +7253,11 @@ msgstr "libevent (деактивиран)"
 
 #: src/main/version.c:199
 msgid "libuv"
-msgstr ""
+msgstr "libuv"
 
 #: src/main/version.c:199
-#, fuzzy
 msgid "libuv (disabled)"
-msgstr "libev (деактивиран)"
+msgstr "libuv (деактивиран)"
 
 #: src/main/version.c:202
 msgid "terminfo"
@@ -8877,18 +8860,18 @@ msgstr "FTPES"
 msgid "SFTP"
 msgstr "SFTP"
 
-#: src/protocol/curl/ftp.c:213 src/protocol/fsp/fsp2.c:966
-#: src/protocol/fsp/fsp.c:169 src/protocol/ftp/ftp.c:1303 src/util/file.h:256
+#: src/protocol/curl/ftp.c:213 src/protocol/fsp/fsp.c:169
+#: src/protocol/fsp/fsp2.c:966 src/protocol/ftp/ftp.c:1303 src/util/file.h:256
 msgid "%b %e  %Y"
 msgstr "%b %e  %Y"
 
-#: src/protocol/curl/ftp.c:215 src/protocol/fsp/fsp2.c:968
-#: src/protocol/fsp/fsp.c:171 src/protocol/ftp/ftp.c:1305 src/util/file.h:258
+#: src/protocol/curl/ftp.c:215 src/protocol/fsp/fsp.c:171
+#: src/protocol/fsp/fsp2.c:968 src/protocol/ftp/ftp.c:1305 src/util/file.h:258
 msgid "%b %e %H:%M"
 msgstr "%b %e %H:%M"
 
-#: src/protocol/curl/ftp.c:222 src/protocol/fsp/fsp2.c:974
-#: src/protocol/fsp/fsp.c:177 src/protocol/ftp/ftp.c:1312 src/util/file.h:265
+#: src/protocol/curl/ftp.c:222 src/protocol/fsp/fsp.c:177
+#: src/protocol/fsp/fsp2.c:974 src/protocol/ftp/ftp.c:1312 src/util/file.h:265
 msgid "             "
 msgstr "             "
 
@@ -8971,13 +8954,12 @@ msgid "File"
 msgstr "Датотека"
 
 #: src/protocol/file/mailcap.c:45
-#, fuzzy
 msgid "Options specific to mailcap."
-msgstr "Опције у вези са QuickJS-ом."
+msgstr "Опције у вези са mailcap-ом."
 
 #: src/protocol/file/mailcap.c:47
 msgid "Allow empty referrer"
-msgstr ""
+msgstr "Дозволити празан referrer"
 
 #: src/protocol/file/mailcap.c:49
 msgid ""
@@ -8985,12 +8967,14 @@ msgid ""
 "restoring sessions, but it is a bit dangerous. When allowed you can execute "
 "any command in goto url dialog. For example mailcap:ls"
 msgstr ""
+"Да ли да се дозволи празан referrer за mailcap протокол. Ово може бити "
+"корисно за враћање сесија, али је помало опасно. Када је дозвољено, можете "
+"извршити било коју наредбу у дијалогу иди на урл. На пример: mailcap:ls"
 
 #. name:
 #: src/protocol/file/mailcap.c:70
-#, fuzzy
 msgid "Mailcap html"
-msgstr "Mailcap"
+msgstr "Mailcap html"
 
 #. name:
 #: src/protocol/finger/finger.c:26
@@ -8998,7 +8982,7 @@ msgid "Finger"
 msgstr "Finger"
 
 #. name:
-#: src/protocol/fsp/fsp2.c:110 src/protocol/fsp/fsp.c:56
+#: src/protocol/fsp/fsp.c:56 src/protocol/fsp/fsp2.c:110
 msgid "FSP"
 msgstr "FSP"
 
@@ -9126,14 +9110,12 @@ msgid "Gopher"
 msgstr "Gopher"
 
 #: src/protocol/gopher/gopher.c:57
-#, fuzzy
 msgid "Gopher specific options."
-msgstr "Опције у вези за FTP-ом."
+msgstr "Опције у вези за Gopher-ом."
 
 #: src/protocol/gopher/gopher.c:61
-#, fuzzy
 msgid "Use libcurl implementation of gopher."
-msgstr "Користиће се libcurl-ова имплементација ftp-а."
+msgstr "Користиће се libcurl-ова имплементација gopher-а."
 
 #: src/protocol/http/codes.c:113
 #, c-format
@@ -9421,7 +9403,7 @@ msgstr ""
 "%v у нисци означава верзију ELinks-а,\n"
 "%s у нисци означава идентификацију система,\n"
 "%t у нисци означава величину терминала,\n"
-"%b у нисци означава број посебних линија (мени, статус, језичци)\n"
+"%b у нисци означава број посебних линија (мени, статус, картице)\n"
 "   које приказује ELinks."
 
 #: src/protocol/http/http.c:234
@@ -9653,15 +9635,14 @@ msgid "SMB"
 msgstr "SMB"
 
 #: src/protocol/spartan/codes.c:53
-#, fuzzy, c-format
+#, c-format
 msgid "spartan error %d"
-msgstr "[Грешка %s] %s"
+msgstr "грешка спартана %d"
 
 #. name:
 #: src/protocol/spartan/spartan.c:48
-#, fuzzy
 msgid "spartan"
-msgstr "делимично"
+msgstr "спартан"
 
 #. name:
 #: src/protocol/user.c:34 src/protocol/user.c:86
@@ -9685,7 +9666,6 @@ msgstr ""
 "према називу вашег система (нпр. unix, unix-xwin)."
 
 #: src/protocol/user.c:53
-#, fuzzy
 msgid ""
 "Handler (external program) for this protocol and system.\n"
 "%f in the string means file name to include form data from\n"
@@ -9703,7 +9683,8 @@ msgstr ""
 "%p у нисци означава порт\n"
 "%d у нисци означава путању (све што следи после порта)\n"
 "%s у нисци означава тему (?subject=<ово>)\n"
-"%u у нисци означава цео УРЛ"
+"%u у нисци означава цео УРЛ са escape-ованим специјалним знацима\n"
+"%U у нисци означава цео УРЛ окружен једноструким наводницима"
 
 #: src/protocol/user.c:291
 msgid "No program"
@@ -9800,7 +9781,7 @@ msgstr ""
 
 #: src/scripting/smjs/action_object.cpp:105
 msgid "Cannot run actions in a tab that doesn't have the focus"
-msgstr "Не могу се покретати акције у језичку који није фокусиран"
+msgstr "Не могу се покретати акције у картици која није фокусирана"
 
 #: src/scripting/smjs/elinks_object.cpp:59
 msgid "User script alert"
@@ -9916,12 +9897,12 @@ msgstr "Поновни покушај без верификације?"
 #. * and formatting it with "%u" is safe,
 #. * because fc_maxlength is smaller than
 #. * file.length, which is an int.
-#: src/session/session.c:1023 src/session/session.c:1042 src/session/task.c:299
+#: src/session/session.c:1024 src/session/session.c:1043 src/session/task.c:299
 #: src/viewer/text/textarea.c:698
 msgid "Warning"
 msgstr "Упозорење"
 
-#: src/session/session.c:1024
+#: src/session/session.c:1025
 msgid ""
 "You have an empty string in protocol.http.user_agent - this was a default "
 "value in the past, substituted by default ELinks User-Agent string. However, "
@@ -9940,7 +9921,7 @@ msgstr ""
 "последње), па ће бити коришћена само подразумевана поставка. Извињавамо се "
 "због евентуалних непријатности које су овим проузроковане."
 
-#: src/session/session.c:1043
+#: src/session/session.c:1044
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
 "configuration saving algorithms of ELinks were changed from the last time "
@@ -9962,12 +9943,12 @@ msgstr ""
 "3, како бисте добили „исправно“ понашање. Извињавамо се због евентуалних "
 "непријатности које су овим проузроковане."
 
-#: src/session/session.c:1068
+#: src/session/session.c:1069
 msgid "Welcome"
 msgstr "Добродошли"
 
 #. accelerator_context(setup_first_session)
-#: src/session/session.c:1070
+#: src/session/session.c:1071
 msgid ""
 "Welcome to ELinks!\n"
 "\n"
@@ -9984,7 +9965,7 @@ msgstr ""
 "Уколико их још нисте ископирали из ~/.elinks, учините то сада и поново "
 "покрените програм."
 
-#: src/session/session.c:1075
+#: src/session/session.c:1076
 msgid ""
 "Welcome to ELinks!\n"
 "\n"
@@ -9994,7 +9975,7 @@ msgstr ""
 "\n"
 "Притисните ESC за мени. Документација је доступна у менију „Помоћ“."
 
-#: src/session/session.c:1291
+#: src/session/session.c:1292
 msgid "Incorrect search uri"
 msgstr "Неисправан УРИ за претрагу"
 
@@ -10076,11 +10057,11 @@ msgstr "Миш је деактивиран"
 
 #: src/terminal/tab.c:236
 msgid "Do you really want to close the current tab?"
-msgstr "Да ли заиста желите да затворите текући језичак?"
+msgstr "Да ли заиста желите да затворите текућу картицу?"
 
 #: src/terminal/tab.c:282
 msgid "Do you really want to close all except the current tab?"
-msgstr "Да ли заиста желите да затворите све изузев текућег језичка?"
+msgstr "Да ли заиста желите да затворите све осим текуће картице?"
 
 #: src/util/secsave.c:374
 msgid "Cannot read the file"
@@ -10250,12 +10231,12 @@ msgstr "Отвори у новом п~розору"
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1406
 msgid "Open in new ~tab"
-msgstr "Отвори у новом ~језичку"
+msgstr "Отвори у новој ~картици"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1408
 msgid "Open in new tab in ~background"
-msgstr "Отвори у новом позадинском је~зичку"
+msgstr "Отвори у новој позадинској ка~ртици"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1413
@@ -10300,12 +10281,12 @@ msgstr "Предај образац и отвори у новом п~розор�
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1461
 msgid "Submit form and open in new ~tab"
-msgstr "Предај образац и отвори у новом ј~езичку"
+msgstr "Предај образац и отвори у новој к~артици"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1464
 msgid "Submit form and open in new tab in ~background"
-msgstr "Предај образац и отвори у новом п~озадинском језичку"
+msgstr "Предај образац и отвори у новој п~озадинској картици"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1469
