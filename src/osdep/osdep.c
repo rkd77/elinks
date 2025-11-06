@@ -344,6 +344,11 @@ int
 is_xterm(void)
 {
 	ELOG
+#ifdef CONFIG_WIN32_VT100_NATIVE
+	{
+		return 1;
+	}
+#endif
 	static int xt = -1;
 
 	if (xt == -1) {

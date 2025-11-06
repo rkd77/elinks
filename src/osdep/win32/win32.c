@@ -299,11 +299,16 @@ get_input_handle(void)
 	static HANDLE hStdIn = INVALID_HANDLE_VALUE;
 
 	if (hStdIn == INVALID_HANDLE_VALUE) {
+		DWORD dwInMode = 0;
 		SetConsoleTitle("ELinks - Console mode browser");
 
 		hStdIn = GetStdHandle(STD_INPUT_HANDLE);
-		SetConsoleMode(hStdIn, ENABLE_EXTENDED_FLAGS);
-		SetConsoleMode(hStdIn, (ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT));
+		GetConsoleMode(hStdIn, &dwInMode);
+		dwInMode |= ENABLE_EXTENDED_FLAGS | (ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT);
+#ifdef CONFIG_WIN32_VT100_NATIVE
+		dwInMode |= ENABLE_VIRTUAL_TERMINAL_INPUT;
+#endif
+		SetConsoleMode(hStdIn, dwInMode);
 	}
 	return (int)(intptr_t)hStdIn;
 #endif
@@ -323,6 +328,9 @@ get_output_handle(void)
 
 		hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
 		GetConsoleMode(hStdOut, &dwMode);
+#ifdef CONFIG_WIN32_VT100_NATIVE
+		dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING | DISABLE_NEWLINE_AUTO_RETURN;
+#endif
 		SetConsoleMode(hStdOut, dwMode);
 	}
 	return (int)(intptr_t)hStdOut;

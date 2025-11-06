@@ -294,6 +294,9 @@
 /* Define if you want: UTF-8 support */
 #mesondefine CONFIG_UTF8
 
+/* Define if you want: win32 native vt100 */
+#mesondefine CONFIG_WIN32_VT100_NATIVE
+
 /* Define if you want: XBEL bookmarks support */
 #mesondefine CONFIG_XBEL_BOOKMARKS
 

@@ -319,7 +319,9 @@ win32_write(int fd, const void *buf, unsigned len)
 			if (is_xterm()) {
 				rc = write(STDOUT_FILENO, buf, len);
 			} else {
+#ifndef CONFIG_WIN32_VT100_NATIVE
 				rc = VT100_decode((HANDLE)(intptr_t)fd, buf, len);
+#endif
 			}
 		}
 #endif

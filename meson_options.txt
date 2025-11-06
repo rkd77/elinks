@@ -90,3 +90,4 @@ option('spartan', type: 'boolean', value: false, description: 'spartan protocol 
 option('kitty', type: 'boolean', value: false, description: 'support for kitty graphics protocol')
 option('libwebp', type: 'boolean', value: false, description: 'support for WEBP images')
 option('libavif', type: 'boolean', value: false, description: 'support for AVIF images')
+option('win32-vt100-native', type: 'boolean', value: false, description: 'whether to use builtin in Windows 10 and higher VT100 emulation')

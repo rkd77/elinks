@@ -776,6 +776,10 @@ else
     conf_data.set('NONSTATIC_INLINE', 'inline')
 endif
 
+if conf_data.get('CONFIG_OS_WIN32')
+    conf_data.set('CONFIG_WIN32_VT100_NATIVE', get_option('win32-vt100-native'))
+endif
+
 #AC_SYS_LARGEFILE
 
 #AC_TYPE_SIZE_T
