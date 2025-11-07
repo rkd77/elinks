@@ -51,13 +51,19 @@ extern struct itrm *ditrm;
 
 #define INIT_TWIN_MOUSE_SEQ	"\033[?9h"	/**< Send MIT Mouse Row & Column on Button Press */
 #define INIT_XWIN_MOUSE_SEQ	"\033[?1000h\033[?1002h\033[?1005l\033[?1015l\033[?1006h"	/**< Send Mouse X & Y on button press and release */
+#define INIT_WIN32_MOUSE_SEQ	"\033[?1000h\033[?1002h\033[?1006h"
+
 
 void
 send_mouse_init_sequence(int h)
 {
 	ELOG
+#ifdef CONFIG_WIN32_VT100_NATIVE
+	write_sequence(h, INIT_WIN32_MOUSE_SEQ);
+#else
 	write_sequence(h, INIT_TWIN_MOUSE_SEQ);
 	write_sequence(h, INIT_XWIN_MOUSE_SEQ);
+#endif
 }
 
 #define DONE_TWIN_MOUSE_SEQ	"\033[?9l"	/**< Don't Send MIT Mouse Row & Column on Button Press */
@@ -70,8 +76,12 @@ send_mouse_done_sequence(int h)
 	/* This is a hack to make xterm + alternate screen working,
 	 * if we send only DONE_XWIN_MOUSE_SEQ, mouse is not totally
 	 * released it seems, in rxvt and xterm... --Zas */
+#ifdef CONFIG_WIN32_VT100_NATIVE
+	write_sequence(h, DONE_XWIN_MOUSE_SEQ);
+#else
 	write_sequence(h, DONE_TWIN_MOUSE_SEQ);
 	write_sequence(h, DONE_XWIN_MOUSE_SEQ);
+#endif
 }
 
 int mouse_enabled;

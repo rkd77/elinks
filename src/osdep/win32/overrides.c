@@ -1,4 +1,3 @@
-
 /* Elinks overrides for Win32 (MSVC + MingW)
  * Loosely based on osdep/beos/overrides.c by Mikulas Patocka.
  *
@@ -203,18 +202,24 @@ handle_mouse(int cons, void (*fn)(void *, char *, int),
 	     void *data)
 {
 	ELOG
+#ifdef CONFIG_WIN32_VT100_NATIVE
+	return NULL;
+#else
 	elm.cons = cons;
 	elm.fn = fn;
 	elm.data = data;
 
 	return &elm;
+#endif
 }
 
 void
 unhandle_mouse(void *h)
 {
 	ELOG
+#ifndef CONFIG_WIN32_VT100_NATIVE
 	memset(&elm, 0, sizeof(elm));
+#endif
 }
 
 void
@@ -252,10 +257,14 @@ console_read(HANDLE hnd, void *buf, int max, INPUT_RECORD *irp)
 
 #ifdef CONFIG_MOUSE
 	case MOUSE_EVENT:
+#ifdef CONFIG_WIN32_VT100_NATIVE
+		break;
+#else
 		TRACE("MOUSE_EVENT: flg %d, button-state %d, x %lu, y %lu",
 		      mer->dwEventFlags, mer->dwButtonState,
 		      mer->dwMousePosition.X, mer->dwMousePosition.Y);
 		return console_mouse_read(mer, buf, max);
+#endif
 #endif
 
 	case WINDOW_BUFFER_SIZE_EVENT:
@@ -366,11 +375,18 @@ win32_read(int fd, void *buf, unsigned len)
 		break;
 
 	case FDT_TERMINAL:
+#ifdef CONFIG_WIN32_VT100_NATIVE
+		if (!ReadFile((HANDLE)(intptr_t)fd, buf, len, &Read, NULL))
+			rc = -1;
+		else
+			rc = Read;
+		break;
+#else
 		rc = console_read((HANDLE)(intptr_t)fd, buf, len, NULL);
 		if (rc == 0)
 			TRACE("read 0 !!");
 		break;
-
+#endif
 	case FDT_SOCKET:
 		rc = recv(fd, buf, len, 0);
 		if (rc < 0)

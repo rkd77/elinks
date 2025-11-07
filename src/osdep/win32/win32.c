@@ -306,6 +306,7 @@ get_input_handle(void)
 		GetConsoleMode(hStdIn, &dwInMode);
 		dwInMode |= ENABLE_EXTENDED_FLAGS | (ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT);
 #ifdef CONFIG_WIN32_VT100_NATIVE
+		dwInMode &= ~(ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT | ENABLE_PROCESSED_INPUT);
 		dwInMode |= ENABLE_VIRTUAL_TERMINAL_INPUT;
 #endif
 		SetConsoleMode(hStdIn, dwInMode);
