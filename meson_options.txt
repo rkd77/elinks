@@ -84,6 +84,6 @@ option('win32-vt100-native', type: 'boolean', value: false, description: 'whethe
 option('withdebug', type: 'boolean', value: false, description: 'leak debug and internal error checking')
 option('x', type: 'boolean', value: false, description: 'use the X Window System')
 option('xbel', type: 'boolean', value: true, description: 'XBEL bookmark support (requires expat)')
-option('xterm', type: 'boolean', value: false, description: 'how to invoke the X terminal emulator')
+option('xterm', type: 'string', value: 'xterm -e', description: 'how to invoke the X terminal emulator')
 option('zlib', type: 'boolean', value: true, description: 'zlib support')
 option('zstd', type: 'boolean', value: false, description: 'zstd support')

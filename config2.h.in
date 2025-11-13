@@ -788,6 +788,9 @@
 /* Define as const if the declaration of iconv() needs const. */
 #mesondefine ICONV_CONST
 
+/* How to invoke XTerm */
+#define XTERM "@XTERM@"
+
 /* Directory containing libraries */
 #define LIBDIR "@LIBDIR@"
 
@@ -907,8 +910,6 @@
 /* Define if you have XFree under OS/2 */
 #undef X2
 
-/* How to invoke XTerm */
-#undef XTERM
 
 /* Define as 1 if you are using Tiny C Compiler with the GNU C Library, and
    <alloca.h> of glibc would otherwise override the alloca macro defined in
