@@ -16,8 +16,8 @@
 #include "util/memory.h"
 #include "util/string.h"
 
-#ifdef XTERM
-#define XTERM_CMD XTERM
+#ifdef CONFIG_XTERM
+#define XTERM_CMD CONFIG_XTERM
 #else
 #define XTERM_CMD DEFAULT_XTERM_CMD
 #endif

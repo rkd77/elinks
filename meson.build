@@ -70,7 +70,7 @@ conf_data.set('CONFIG_OWN_LIBC', get_option('own-libc'))
 conf_data.set('CONFIG_SMALL', get_option('small'))
 conf_data.set('CONFIG_UTF8', get_option('utf-8'))
 
-conf_data.set('XTERM', get_option('xterm'))
+conf_data.set('CONFIG_XTERM', get_option('xterm'))
 conf_data.set('CONFIG_GPM', get_option('gpm'))
 conf_data.set('CONFIG_TERMINFO', get_option('terminfo'))
 conf_data.set('CONFIG_GZIP', get_option('zlib'))

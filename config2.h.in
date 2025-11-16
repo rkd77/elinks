@@ -789,7 +789,7 @@
 #mesondefine ICONV_CONST
 
 /* How to invoke XTerm */
-#define XTERM "@XTERM@"
+#define CONFIG_XTERM "@CONFIG_XTERM@"
 
 /* Directory containing libraries */
 #define LIBDIR "@LIBDIR@"
