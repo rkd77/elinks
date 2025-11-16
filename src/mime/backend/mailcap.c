@@ -593,6 +593,54 @@ check_entries(struct mailcap_hash_item *item)
 	foreach (entry, item->entries) {
 		char *test;
 
+		if (!entry->x_htmloutput) {
+			continue;
+		}
+
+		/* Accept current if no test is needed */
+		if (!entry->testcommand)
+			return entry;
+
+		/* We have to run the test command */
+		test = format_command(entry->testcommand, NULL, 0, 0);
+		if (test) {
+			int exitcode = exe(test);
+
+			mem_free(test);
+			if (!exitcode)
+				return entry;
+		}
+	}
+
+	foreach (entry, item->entries) {
+		char *test;
+
+		if (!entry->copiousoutput) {
+			continue;
+		}
+
+		/* Accept current if no test is needed */
+		if (!entry->testcommand)
+			return entry;
+
+		/* We have to run the test command */
+		test = format_command(entry->testcommand, NULL, 0, 0);
+		if (test) {
+			int exitcode = exe(test);
+
+			mem_free(test);
+			if (!exitcode)
+				return entry;
+		}
+	}
+
+	foreach (entry, item->entries) {
+		char *test;
+
+		if (entry->x_htmloutput || entry->copiousoutput) {
+			continue;
+		}
+
 		/* Accept current if no test is needed */
 		if (!entry->testcommand)
 			return entry;
