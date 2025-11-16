@@ -430,7 +430,7 @@ fi
 
 AC_ARG_WITH(xterm, [  --with-xterm            how to invoke the X terminal emulator],
             [ if test "$withval" != no && test "$withval" != yes; then
-		AC_DEFINE_UNQUOTED(XTERM, "$withval", [How to invoke XTerm])
+		AC_DEFINE_UNQUOTED(CONFIG_XTERM, "$withval", [How to invoke XTerm])
 	      fi ])
 
 # ===================================================================
