@@ -51,6 +51,7 @@ struct mailcap_hash_item {
 enum {
 	MAILCAP_KIND_NORMAL,
 	MAILCAP_KIND_COPIOUSOUTPUT,
+	MAILCAP_KIND_X_ANSIOUTPUT,
 	MAILCAP_KIND_X_HTMLOUTPUT
 };
 
@@ -70,7 +71,7 @@ struct mailcap_entry {
 	/* Whether the program "blocks" the term. */
 	unsigned int needsterminal:1;
 
-	/* normal, copiousoutput or x_htmloutput */
+	/* normal, copiousoutput, x_ansioutput or x_htmloutput */
 	unsigned char kind;
 
 	/* The 'raw' unformatted (view)command from the mailcap files. */
@@ -307,6 +308,9 @@ parse_optional_fields(struct mailcap_entry *entry, char *line)
 
 		} else if (!c_strncasecmp(field, "copiousoutput", 13)) {
 			entry->kind = MAILCAP_KIND_COPIOUSOUTPUT;
+
+		} else if (!c_strncasecmp(field, "x-ansioutput", 12)) {
+			entry->kind = MAILCAP_KIND_X_ANSIOUTPUT;
 
 		} else if (!c_strncasecmp(field, "x-htmloutput", 12)) {
 			entry->kind = MAILCAP_KIND_X_HTMLOUTPUT;
@@ -803,7 +807,7 @@ get_mime_handler_mailcap(char *type, int xwin)
 				    get_mailcap_ask(), block);
 	mem_free(program);
 
-	handler->copiousoutput = (entry->kind == MAILCAP_KIND_COPIOUSOUTPUT);
+	handler->copiousoutput = ((entry->kind == MAILCAP_KIND_COPIOUSOUTPUT) || (entry->kind == MAILCAP_KIND_X_ANSIOUTPUT));
 	handler->x_htmloutput = (entry->kind == MAILCAP_KIND_X_HTMLOUTPUT);
 	return handler;
 }
