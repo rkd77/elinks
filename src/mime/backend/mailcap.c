@@ -48,6 +48,12 @@ struct mailcap_hash_item {
 	char type[1];
 };
 
+enum {
+	MAILCAP_KIND_NORMAL,
+	MAILCAP_KIND_COPIOUSOUTPUT,
+	MAILCAP_KIND_X_HTMLOUTPUT
+};
+
 struct mailcap_entry {
 	LIST_HEAD_EL(struct mailcap_entry);
 
@@ -64,11 +70,8 @@ struct mailcap_entry {
 	/* Whether the program "blocks" the term. */
 	unsigned int needsterminal:1;
 
-	/* If "| ${PAGER}" should be added. It would of course be better to
-	 * pipe the output into a buffer and let ELinks display it but this
-	 * will have to do for now. */
-	unsigned int copiousoutput:1;
-	unsigned int x_htmloutput:1;
+	/* normal, copiousoutput or x_htmloutput */
+	unsigned char kind;
 
 	/* The 'raw' unformatted (view)command from the mailcap files. */
 	char command[1];
@@ -303,10 +306,10 @@ parse_optional_fields(struct mailcap_entry *entry, char *line)
 			entry->needsterminal = 1;
 
 		} else if (!c_strncasecmp(field, "copiousoutput", 13)) {
-			entry->copiousoutput = 1;
+			entry->kind = MAILCAP_KIND_COPIOUSOUTPUT;
 
 		} else if (!c_strncasecmp(field, "x-htmloutput", 12)) {
-			entry->x_htmloutput = 1;
+			entry->kind = MAILCAP_KIND_X_HTMLOUTPUT;
 
 		} else if (!c_strncasecmp(field, "test", 4)) {
 			/* Don't leak memory if a corrupted mailcap
@@ -522,7 +525,7 @@ init_mailcap(struct module *module)
 /* The formatting is postponed until the command is needed. This means
  * @type can be NULL. If '%t' is used in command we bail out. */
 static char *
-format_command(char *command, char *type, int copiousoutput, int x_htmloutput)
+format_command(char *command, char *type, int kind)
 {
 	ELOG
 	struct string cmd;
@@ -590,69 +593,31 @@ check_entries(struct mailcap_hash_item *item)
 	ELOG
 	struct mailcap_entry *entry;
 
-	foreach (entry, item->entries) {
-		char *test;
+	unsigned char kind;
 
-		if (!entry->x_htmloutput) {
-			continue;
-		}
+	for (kind = MAILCAP_KIND_X_HTMLOUTPUT; kind >= MAILCAP_KIND_NORMAL; kind--) {
+		foreach (entry, item->entries) {
+			char *test;
 
-		/* Accept current if no test is needed */
-		if (!entry->testcommand)
-			return entry;
+			if (entry->kind != kind) {
+				continue;
+			}
 
-		/* We have to run the test command */
-		test = format_command(entry->testcommand, NULL, 0, 0);
-		if (test) {
-			int exitcode = exe(test);
-
-			mem_free(test);
-			if (!exitcode)
+			/* Accept current if no test is needed */
+			if (!entry->testcommand) {
 				return entry;
-		}
-	}
+			}
 
-	foreach (entry, item->entries) {
-		char *test;
+			/* We have to run the test command */
+			test = format_command(entry->testcommand, NULL, 0);
+			if (test) {
+				int exitcode = exe(test);
 
-		if (!entry->copiousoutput) {
-			continue;
-		}
-
-		/* Accept current if no test is needed */
-		if (!entry->testcommand)
-			return entry;
-
-		/* We have to run the test command */
-		test = format_command(entry->testcommand, NULL, 0, 0);
-		if (test) {
-			int exitcode = exe(test);
-
-			mem_free(test);
-			if (!exitcode)
-				return entry;
-		}
-	}
-
-	foreach (entry, item->entries) {
-		char *test;
-
-		if (entry->x_htmloutput || entry->copiousoutput) {
-			continue;
-		}
-
-		/* Accept current if no test is needed */
-		if (!entry->testcommand)
-			return entry;
-
-		/* We have to run the test command */
-		test = format_command(entry->testcommand, NULL, 0, 0);
-		if (test) {
-			int exitcode = exe(test);
-
-			mem_free(test);
-			if (!exitcode)
-				return entry;
+				mem_free(test);
+				if (!exitcode) {
+					return entry;
+				}
+			}
 		}
 	}
 
@@ -829,17 +794,17 @@ get_mime_handler_mailcap(char *type, int xwin)
 #endif
 	if (!entry) return NULL;
 
-	program = format_command(entry->command, type, entry->copiousoutput, entry->x_htmloutput);
+	program = format_command(entry->command, type, entry->kind);
 	if (!program) return NULL;
 
-	block = (entry->needsterminal || entry->copiousoutput || entry->x_htmloutput);
+	block = (entry->needsterminal || entry->kind);
 	handler = init_mime_handler(program, entry->description,
 				    mailcap_mime_module.name,
 				    get_mailcap_ask(), block);
 	mem_free(program);
 
-	handler->copiousoutput = entry->copiousoutput;
-	handler->x_htmloutput = entry->x_htmloutput;
+	handler->copiousoutput = (entry->kind == MAILCAP_KIND_COPIOUSOUTPUT);
+	handler->x_htmloutput = (entry->kind == MAILCAP_KIND_X_HTMLOUTPUT);
 	return handler;
 }
 

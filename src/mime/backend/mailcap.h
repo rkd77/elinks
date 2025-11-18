@@ -1,4 +1,3 @@
-
 #ifndef EL__MIME_BACKEND_MAILCAP_H
 #define EL__MIME_BACKEND_MAILCAP_H
 
