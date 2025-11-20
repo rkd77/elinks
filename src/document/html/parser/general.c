@@ -1257,9 +1257,14 @@ html_noscript(struct html_context *html_context, char *a,
 	 * halfway decent. */
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 	if (get_opt_bool("ecmascript.enable", NULL)
-            && get_opt_bool("ecmascript.ignore_noscript", NULL))
+            && get_opt_bool("ecmascript.ignore_noscript", NULL)) {
 		html_skip(html_context, a);
+		return;
+	}
 #endif
+	if (get_opt_bool("document.html.always_ignore_noscript", NULL)) {
+		html_skip(html_context, a);
+	}
 }
 
 void
