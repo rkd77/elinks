@@ -1141,6 +1141,19 @@ elif conf_data.get('CONFIG_OS_DOS')
     deps += iconvdeps
 endif
 
+if conf_data.get('CONFIG_GETTEXT')
+    intldeps = compiler.find_library('intl', static: st, required: false)
+    if intldeps.found()
+        deps += intldeps
+    elif conf_data.get('CONFIG_OS_DOS')
+        intldeps = compiler.find_library('libintl', dirs: ['/home/elinks/lib'], static: st)
+        deps += intldeps
+    elif conf_data.get('CONFIG_OS_WIN32')
+        intldeps = compiler.find_library('libintl', static: st)
+        deps += intldeps
+    endif
+endif
+
 if compiler.has_function('nl_langinfo', prefix: '#include <langinfo.h>')
     conf_data.set('HAVE_LANGINFO_CODESET', 1)
 endif
