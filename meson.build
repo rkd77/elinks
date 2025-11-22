@@ -1137,7 +1137,7 @@ iconvdeps = compiler.find_library('iconv', static: st, required: false)
 if iconvdeps.found()
     deps += iconvdeps
 elif conf_data.get('CONFIG_OS_DOS')
-    iconvdeps = compiler.find_library('libiconv', dirs: ['/home/elinks/lib'], static: st)
+    iconvdeps = compiler.find_library('iconv', dirs: ['/home/elinks/lib'], static: st)
     deps += iconvdeps
 endif
 
@@ -1146,10 +1146,10 @@ if conf_data.get('CONFIG_GETTEXT')
     if intldeps.found()
         deps += intldeps
     elif conf_data.get('CONFIG_OS_DOS')
-        intldeps = compiler.find_library('libintl', dirs: ['/home/elinks/lib'], static: st)
+        intldeps = compiler.find_library('intl', dirs: ['/home/elinks/lib'], static: st)
         deps += intldeps
     elif conf_data.get('CONFIG_OS_WIN32')
-        intldeps = compiler.find_library('libintl', static: st)
+        intldeps = compiler.find_library('intl', static: st)
         deps += intldeps
     endif
 endif
