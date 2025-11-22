@@ -23,7 +23,7 @@ meson setup /tmp/builddir \
 -Dfsp=false \
 -Dfsp2=true \
 -Dgemini=true \
--Dgettext=false \
+-Dgettext=true \
 -Dgnutls=false \
 -Dgopher=true \
 -Dgpm=false \

@@ -16,22 +16,36 @@ RUN cd /etc/apk && echo https://dl-cdn.alpinelinux.org/alpine/edge/testing >> re
 RUN apk add \
  brotli-dev \
  brotli-static \
+ bsd-compat-headers \
  bzip2-dev \
  bzip2-static \
+ c-ares-dev \
  curl-dev \
  curl-static \
  expat-dev \
  expat-static \
+ gettext-dev \
+ gettext-static \
  libevent-dev \
  libevent-static \
  libidn2-dev \
  libidn2-static \
+ libunistring-dev \
+ libunistring-static \
+ libwebp-dev \
+ libwebp-static \
  libxml2-dev \
  libxml2-static \
  linux-headers \
  luajit-dev \
+ make \
+ musl-dev \
  ncurses-dev \
  ncurses-static \
+ nghttp2-dev \
+ nghttp2-static \
+ nghttp3-dev \
+ nghttp3-static \
  openssl-dev \
  openssl-libs-static \
  perl \
@@ -40,25 +54,13 @@ RUN apk add \
  sqlite-static \
  tre-dev \
  tre-static \
- libunistring-dev \
- libunistring-static \
+ upx \
+ xz-dev \
+ xz-static \
  zlib-dev \
  zlib-static \
  zstd-dev \
- zstd-static \
- xz-dev \
- xz-static \
- make \
- musl-dev \
- nghttp2-dev \
- nghttp2-static \
- c-ares-dev \
- upx \
- bsd-compat-headers \
- libwebp-dev \
- libwebp-static \
- nghttp3-dev \
- nghttp3-static
+ zstd-static
 
 ## [*] netsurf libs
 # get netsurf source
