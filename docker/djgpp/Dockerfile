@@ -19,67 +19,67 @@ wget http://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/rpms/djcrx-2.0
 rpm -Uhv *.rpm
 
 # create user
-RUN useradd -m elinks -s /bin/bash
+## RUN useradd -m elinks -s /bin/bash
 
 # djgpp libraries
 RUN dnf -y install perl-FindBin pkgconf-pkg-config gettext
-ADD unpack_zips.sh /home/elinks/
-RUN runuser -u elinks bash /home/elinks/unpack_zips.sh
+ADD unpack_zips.sh /root
+RUN bash /root/unpack_zips.sh
 
 # libidn2
-ADD getprogname.diff /home/elinks/getprogname.diff
-ADD build_libidn2.sh /home/elinks/
-RUN runuser -u elinks bash /home/elinks/build_libidn2.sh
+ADD getprogname.diff /root/getprogname.diff
+ADD build_libidn2.sh /root
+RUN bash /root/build_libidn2.sh
 
 # openssl
-##ADD build_openssl.sh /home/elinks/
-##RUN runuser -u elinks bash /home/elinks/build_openssl.sh
+## ADD build_openssl.sh /home/elinks/
+## RUN bash /home/elinks/build_openssl.sh
 
 # brotli
-ADD cc.py /usr/local/bin/cc.py
-ADD brotli.diff /home/elinks/brotli.diff
-ADD build_brotli.sh /home/elinks/
-RUN runuser -u elinks bash /home/elinks/build_brotli.sh
+ADD cc.py /root/cc.py
+ADD brotli.diff /root/brotli.diff
+ADD build_brotli.sh /root/
+RUN bash /root/build_brotli.sh
 
 # quickjs
 RUN dnf -y install xz
-ADD quickjs-dos.diff /home/elinks/
-ADD build_quickjs.sh /home/elinks/
-RUN runuser -u elinks bash /home/elinks/build_quickjs.sh
+ADD quickjs-dos.diff /root/
+ADD build_quickjs.sh /root/
+RUN bash /root/build_quickjs.sh
 
 # netsurf_buildsystem
-ADD build_netsurf.sh /home/elinks/
-RUN runuser -u elinks bash /home/elinks/build_netsurf.sh
+ADD build_netsurf.sh /root/
+RUN bash /root/build_netsurf.sh
 
 # parserutils
-ADD build_parserutils.sh /home/elinks/
-RUN runuser -u elinks bash /home/elinks/build_parserutils.sh
+ADD build_parserutils.sh /root/
+RUN bash /root/build_parserutils.sh
 
 # libwapcaplet
-ADD build_wapcaplet.sh /home/elinks/
-RUN runuser -u elinks bash /home/elinks/build_wapcaplet.sh
+ADD build_wapcaplet.sh /root/
+RUN bash /root/build_wapcaplet.sh
 
 # libhubbub
 RUN dnf -y install gperf
-ADD build_hubbub.sh /home/elinks/
-RUN runuser -u elinks bash /home/elinks/build_hubbub.sh
+ADD build_hubbub.sh /root/
+RUN bash /root/build_hubbub.sh
 
 # libcss
-ADD build_libcss.sh /home/elinks/
-RUN runuser -u elinks bash /home/elinks/build_libcss.sh
+ADD build_libcss.sh /root/
+RUN bash /root/build_libcss.sh
 
 # libdom
-ADD build_libdom.sh /home/elinks/
-RUN runuser -u elinks bash /home/elinks/build_libdom.sh
+ADD build_libdom.sh /root/
+RUN bash /root/build_libdom.sh
 
 # libcurl
-##ADD build_curl.sh /home/elinks/
-##RUN runuser -u elinks bash /home/elinks/build_curl.sh
+##ADD build_curl.sh /root/
+##RUN bash /root/build_curl.sh
 
 # mujs
-ADD mujs.diff /home/elinks/
-ADD build_mujs.sh /home/elinks/
-RUN runuser -u elinks bash /home/elinks/build_mujs.sh
+##ADD mujs.diff /root/
+##ADD build_mujs.sh /root/
+##RUN bash /root/build_mujs.sh
 
 # dosemu
 ## RUN dnf install -y 'dnf-command(copr)'
@@ -87,7 +87,7 @@ RUN runuser -u elinks bash /home/elinks/build_mujs.sh
 ## RUN dnf install -y dosemu2
 
 # get elinks source
-RUN runuser -u elinks git clone https://github.com/rkd77/elinks /home/elinks/elinks
+RUN git clone https://github.com/rkd77/elinks /root/elinks
 
 # additional perl packages
 ## RUN dnf install -y perl-autouse
@@ -97,10 +97,10 @@ RUN runuser -u elinks git clone https://github.com/rkd77/elinks /home/elinks/eli
 ## RUN ldconfig
 
 # nojs
-ADD mes_djgpp.sh /home/elinks/elinks/
-RUN runuser -u elinks bash /home/elinks/elinks/mes_djgpp.sh
+ADD mes_djgpp.sh /root/elinks/
+RUN bash /root/elinks/mes_djgpp.sh
 
 # js
 RUN dnf install -y xxd
-ADD mes_djgpp_js.sh /home/elinks/elinks/mes_djgpp_js.sh
-RUN runuser -u elinks bash /home/elinks/elinks/mes_djgpp_js.sh
+ADD mes_djgpp_js.sh /root/elinks/mes_djgpp_js.sh
+RUN bash /root/elinks/mes_djgpp_js.sh
