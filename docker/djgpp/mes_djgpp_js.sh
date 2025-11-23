@@ -1,16 +1,21 @@
 #!/bin/sh
 
-rm -rf /tmp/builddir2
+rm -rf /tmp/builddir_js
 
-cd $HOME/elinks
+VER=0.19.0
+PREFIX=/opt/elinks
+DESTDIR=$HOME/elinks
 
-LIBRARY_PATH="$HOME/lib" \
-PKG_CONFIG_PATH="$HOME/lib/pkgconfig" \
-C_INCLUDE_PATH="$HOME/include" \
-CFLAGS="-O2 -I$HOME/include -DWATT32_NO_NAMESPACE -DWATT32_NO_OLDIES" \
-CXXFLAGS="-O2 -I$HOME/include -DWATT32_NO_NAMESPACE -DWATT32_NO_OLDIES" \
-LDFLAGS="-lm -L$HOME/lib" \
-meson setup /tmp/builddir2 --cross-file cross/linux-djgpp.txt \
+# -DWATT32_NO_NAMESPACE -DWATT32_NO_OLDIES" \
+# -DWATT32_NO_NAMESPACE -DWATT32_NO_OLDIES" \
+
+LIBRARY_PATH="$PREFIX/lib" \
+PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig" \
+C_INCLUDE_PATH="$PREFIX/include" \
+CFLAGS="-O2 -I$PREFIX/include" \
+CXXFLAGS="-O2 -I$PREFIX/include" \
+LDFLAGS="-L$PREFIX/lib" \
+meson setup /tmp/builddir_js --cross-file cross/linux-djgpp.txt \
 -D88-colors=false \
 -D256-colors=false \
 -Dapidoc=false \
@@ -27,7 +32,7 @@ meson setup /tmp/builddir2 --cross-file cross/linux-djgpp.txt \
 -Dfsp=false \
 -Dfsp2=true \
 -Dgemini=true \
--Dgettext=false \
+-Dgettext=true \
 -Dgnutls=false \
 -Dgopher=true \
 -Dgpm=false \
@@ -49,7 +54,7 @@ meson setup /tmp/builddir2 --cross-file cross/linux-djgpp.txt \
 -Dopenssl=true \
 -Dpdfdoc=false \
 -Dperl=false \
--Dprefix=$HOME \
+-Dprefix=$PREFIX \
 -Dpython=false \
 -Dquickjs=true \
 -Druby=false \
@@ -65,24 +70,12 @@ meson setup /tmp/builddir2 --cross-file cross/linux-djgpp.txt \
 -Dx=false \
 -Dxbel=true \
 -Dzlib=true \
--Dzstd=false
+-Dzstd=false || exit 1
 
-meson compile -C /tmp/builddir2
+meson compile -C /tmp/builddir_js || exit 2
+mkdir -p $DESTDIR
+meson install -C /tmp/builddir_js --destdir $DESTDIR || exit 3
 
-i586-pc-msdosdjgpp-strip /tmp/builddir2/src/elinks.exe
-
-upx /tmp/builddir2/src/elinks.exe
-
-# prepare zip
-rm -rf $HOME/ELINKS
-
-mkdir -p $HOME/ELINKS/src
-mkdir -p $HOME/ELINKS/po
-
-install /tmp/builddir2/src/elinks.exe $HOME/ELINKS/src/elinks.exe
-
-cd /tmp/builddir2/po
-for i in *; do cp -v $i/LC_MESSAGES/elinks.mo $HOME/ELINKS/po/$i.gmo; done
-cd -
-
-#cp -a /tmp/builddir2/src/elinks.exe ~/.dosemu/drive_c/ELINKS/src/
+mv -f $DESTDIR/$PREFIX/bin/elinks $DESTDIR/$PREFIX/bin/elinks.exe || exit 4
+i586-pc-msdosdjgpp-strip $DESTDIR/$PREFIX/bin/elinks.exe || exit 5
+upx $DESTDIR/$PREFIX/bin/elinks.exe || exit 6

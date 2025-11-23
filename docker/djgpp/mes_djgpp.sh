@@ -2,14 +2,16 @@
 
 rm -rf /tmp/builddir
 
-cd $HOME/elinks
+VER=0.19.0
+PREFIX=/opt/elinks
+DESTDIR=$HOME/elinks
 
-LIBRARY_PATH="$HOME/lib" \
-PKG_CONFIG_PATH="$HOME/lib/pkgconfig" \
-C_INCLUDE_PATH="$HOME/include" \
-CFLAGS="-O2 -I$HOME/include -DWATT32_NO_NAMESPACE -DWATT32_NO_OLDIES" \
-CXXFLAGS="-O2 -I$HOME/include -DWATT32_NO_NAMESPACE -DWATT32_NO_OLDIES" \
-LDFLAGS="-L$HOME/lib" \
+LIBPATH="$PREFIX/lib" \
+LIBRARY_PATH="$PREFIX/lib" \
+PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig" \
+C_INCLUDE_PATH="$PREFIX/include" \
+CFLAGS="-O2 -I$PREFIX/include -DWATT32_NO_NAMESPACE -DWATT32_NO_OLDIES" \
+CXXFLAGS="-O2 -I$PREFIX/include -DWATT32_NO_NAMESPACE -DWATT32_NO_OLDIES" \
 meson setup /tmp/builddir --cross-file cross/linux-djgpp.txt \
 -D88-colors=false \
 -D256-colors=false \
@@ -27,7 +29,7 @@ meson setup /tmp/builddir --cross-file cross/linux-djgpp.txt \
 -Dfsp=false \
 -Dfsp2=true \
 -Dgemini=true \
--Dgettext=false \
+-Dgettext=true \
 -Dgnutls=false \
 -Dgopher=true \
 -Dgpm=false \
@@ -48,7 +50,7 @@ meson setup /tmp/builddir --cross-file cross/linux-djgpp.txt \
 -Dopenssl=true \
 -Dpdfdoc=false \
 -Dperl=false \
--Dprefix=$HOME \
+-Dprefix=$PREFIX \
 -Dpython=false \
 -Dquickjs=false \
 -Druby=false \
@@ -67,9 +69,9 @@ meson setup /tmp/builddir --cross-file cross/linux-djgpp.txt \
 -Dzstd=false || exit 1
 
 meson compile -C /tmp/builddir || exit 2
+mkdir -p $DESTDIR
+meson install -C /tmp/builddir --destdir $DESTDIR || exit 3
 
-i586-pc-msdosdjgpp-strip /tmp/builddir/src/elinks.exe || exit 3
-
-upx /tmp/builddir/src/elinks.exe || exit 4
-
-#cp -a /tmp/builddir/src/elinks.exe ~/.dosemu/drive_c/ELINKS/src/
+mv -f $DESTDIR/$PREFIX/bin/elinks $DESTDIR/$PREFIX/bin/elajt.exe || exit 4
+i586-pc-msdosdjgpp-strip $DESTDIR/$PREFIX/bin/elajt.exe || exit 5
+upx $DESTDIR/$PREFIX/bin/elajt.exe || exit 6
