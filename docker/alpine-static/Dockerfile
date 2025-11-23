@@ -67,7 +67,7 @@ RUN apk add \
 RUN cd /root; \
 wget http://download.netsurf-browser.org/libs/releases/buildsystem-1.10.tar.gz; \
 tar -xf buildsystem-1.10.tar.gz; \
-make -C buildsystem-1.10 install PREFIX=/usr/local
+make -C buildsystem-1.10 install PREFIX=/opt/elinks
 ##rm -rf buildsystem-1.10
 
 #
@@ -75,14 +75,14 @@ RUN cd /root; \
 export CFLAGS="-Wno-error"; \
 wget http://download.netsurf-browser.org/libs/releases/libparserutils-0.2.5-src.tar.gz; \
 tar -xf libparserutils-0.2.5-src.tar.gz; \
-make -C libparserutils-0.2.5 install -j1 Q= PREFIX=/usr/local LIBDIR=lib COMPONENT_TYPE=lib-static
+make -C libparserutils-0.2.5 install -j1 Q= PREFIX=/opt/elinks LIBDIR=lib COMPONENT_TYPE=lib-static
 ##rm -rf libparserutils-0.2.5
 
 RUN cd /root; \
 export CFLAGS="-Wno-error"; \
 wget http://download.netsurf-browser.org/libs/releases/libwapcaplet-0.4.3-src.tar.gz; \
 tar -xf libwapcaplet-0.4.3-src.tar.gz; \
-make -C libwapcaplet-0.4.3 install -j1 Q= PREFIX=/usr/local LIBDIR=lib COMPONENT_TYPE=lib-static
+make -C libwapcaplet-0.4.3 install -j1 Q= PREFIX=/opt/elinks LIBDIR=lib COMPONENT_TYPE=lib-static
 ##rm -rf libwapcaplet-0.4.3
 
 RUN apk add gperf
@@ -90,21 +90,21 @@ RUN cd /root; \
 export CFLAGS="-Wno-error"; \
 wget http://download.netsurf-browser.org/libs/releases/libhubbub-0.3.8-src.tar.gz; \
 tar -xf libhubbub-0.3.8-src.tar.gz; \
-make -C libhubbub-0.3.8 install -j1 Q= PREFIX=/usr/local LIBDIR=lib COMPONENT_TYPE=lib-static
+make -C libhubbub-0.3.8 install -j1 Q= PREFIX=/opt/elinks LIBDIR=lib COMPONENT_TYPE=lib-static
 ##rm -rf libhubbub-0.3.8
 
 RUN apk add libpsl-dev libpsl-static
 RUN cd /root; \
 wget http://download.netsurf-browser.org/libs/releases/libcss-0.9.2-src.tar.gz; tar -xf libcss-0.9.2-src.tar.gz ; \
 export CFLAGS="-Wno-error"; \
-make -C libcss-0.9.2 install -j1 Q= PREFIX=/usr/local LIBDIR=lib COMPONENT_TYPE=lib-static
+make -C libcss-0.9.2 install -j1 Q= PREFIX=/opt/elinks LIBDIR=lib COMPONENT_TYPE=lib-static
 ##rm -rf libcss-0.9.2
 
 RUN cd /root; \
 export CFLAGS="-Wno-error"; \
 wget http://download.netsurf-browser.org/libs/releases/libdom-0.4.2-src.tar.gz; \
 tar -xf libdom-0.4.2-src.tar.gz; \
-make -C libdom-0.4.2 install -j1 Q= PREFIX=/usr/local LIBDIR=lib COMPONENT_TYPE=lib-static
+make -C libdom-0.4.2 install -j1 Q= PREFIX=/opt/elinks LIBDIR=lib COMPONENT_TYPE=lib-static
 ##rm -rf libdom-0.4.2
 
 ## [*] elinks sources

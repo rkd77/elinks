@@ -2,11 +2,11 @@
 
 rm -rf /tmp/builddir
 
-LIBRARY_PATH="/usr/local/lib" \
-PKG_CONFIG_PATH="/usr/local/lib/pkgconfig" \
-LDFLAGS="-L/usr/local/lib" \
-CFLAGS="-O2 -I/usr/local/include -static -no-pie" \
-CXXFLAGS="-O2 -I/usr/local/include -static -no-pie" \
+PREFIX=/opt/elinks
+DESTDIR=$HOME/elinks-bin
+
+CFLAGS="-O2 -static -no-pie" \
+CXXFLAGS="-O2 -static -no-pie" \
 meson setup /tmp/builddir \
 -D88-colors=true \
 -D256-colors=true \
@@ -48,6 +48,7 @@ meson setup /tmp/builddir \
 -Dopenssl=true \
 -Dpdfdoc=false \
 -Dperl=false \
+-Dprefix=$PREFIX \
 -Dpython=false \
 -Dquickjs=false \
 -Druby=false \
@@ -67,7 +68,10 @@ meson setup /tmp/builddir \
 -Dzstd=true || exit 1
 
 meson compile -C /tmp/builddir || exit 2
+mkdir -p $DESTDIR
 
-mv /tmp/builddir/src/elinks /tmp/builddir/src/elinks-lite || exit 3
-strip /tmp/builddir/src/elinks-lite || exit 4
-upx /tmp/builddir/src/elinks-lite || exit 5
+meson install -C /tmp/builddir --destdir $DESTDIR || exit 3
+
+mv $DESTDIR/$PREFIX/bin/elinks $DESTDIR/$PREFIX/bin/elinks-lite || exit 3
+strip $DESTDIR/$PREFIX/bin/elinks-lite || exit 4
+upx $DESTDIR/$PREFIX/bin/elinks-lite || exit 5

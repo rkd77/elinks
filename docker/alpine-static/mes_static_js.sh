@@ -2,11 +2,11 @@
 
 rm -rf /tmp/builddir_js
 
-LIBRARY_PATH="$HOME/lib" \
-PKG_CONFIG_PATH="$HOME/lib/pkgconfig" \
-LDFLAGS="-L$HOME/lib" \
-CFLAGS="-O2 -I$HOME/include -DCURL_STATICLIB -static -no-pie" \
-CXXFLAGS="-O2 -I$HOME/include -DCURL_STATICLIB -static -no-pie" \
+PREFIX=/opt/elinks
+DESTDIR=$HOME/elinks-bin
+
+CFLAGS="-O2 -static -no-pie" \
+CXXFLAGS="-O2 -static -no-pie" \
 meson setup /tmp/builddir_js \
 -D88-colors=true \
 -D256-colors=true \
@@ -48,6 +48,7 @@ meson setup /tmp/builddir_js \
 -Dopenssl=true \
 -Dpdfdoc=false \
 -Dperl=false \
+-Dprefix=$PREFIX \
 -Dpython=false \
 -Dquickjs=true \
 -Druby=false \
@@ -67,5 +68,10 @@ meson setup /tmp/builddir_js \
 -Dzstd=true || exit 1
 
 meson compile -C /tmp/builddir_js || exit 2
-strip /tmp/builddir_js/src/elinks || exit 3
-upx /tmp/builddir_js/src/elinks || exit 4
+
+mkdir -p $DESTDIR
+
+meson install -C /tmp/builddir_js --destdir $DESTDIR || exit 3
+
+strip $DESTDIR/$PREFIX/bin/elinks || exit 4
+upx $DESTDIR/$PREFIX/bin/elinks || exit 5
