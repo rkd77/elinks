@@ -1207,7 +1207,7 @@ if conf_data.get('CONFIG_GETTEXT')
     extern int _nl_msg_cat_cntr;
     void main() { _nl_msg_cat_cntr = 1; }
     '''
-    if compiler.links(code, name: 'test')
+    if compiler.links(code, dependencies: deps, name: 'test')
         conf_data.set('HAVE_NL_MSG_CAT_CNTR', 1)
     endif
 endif
