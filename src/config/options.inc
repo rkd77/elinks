@@ -837,8 +837,8 @@ static union option_info config_options_info[] = {
 
 	INIT_OPT_BOOL("document.html", N_("Always ignore <noscript> content"),
 		"always_ignore_noscript", OPT_ZERO, 0,
-		N_("Whether to ignore content enclosed by the <noscript> tag. "
-		"Even if ECMAScript is disabled, or not compiled-in.")),
+		N_("Whether to ignore content enclosed by the <noscript> tag, "
+		"even if ECMAScript is disabled or not compiled-in.")),
 
 	INIT_OPT_BOOL("document.html", N_("Compress empty lines"),
 		"compress_empty_lines", OPT_ZERO, 0,
