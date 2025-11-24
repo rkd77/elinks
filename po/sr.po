@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.10.6.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2025-11-03 19:58+0100\n"
+"POT-Creation-Date: 2025-11-24 10:57+0100\n"
 "PO-Revision-Date: 2025-11-03 19:57+0100\n"
 "Last-Translator: Strahinya Radich (Страхиња Радић) <sr@strahinja.org>\n"
 "Language-Team: Serbian <sr@li.org>\n"
@@ -197,9 +197,9 @@ msgid "Digital clock in the status bar."
 msgstr "Дигитални сат у статусној линији."
 
 #: src/bfu/leds.c:85 src/bfu/leds.c:109 src/bfu/leds.c:122
-#: src/config/options.inc:1496 src/config/options.inc:1503
+#: src/config/options.inc:1501 src/config/options.inc:1508
 #: src/globhist/globhist.c:62 src/js/ecmascript.c:89 src/mime/backend/dgi.c:61
-#: src/mime/backend/mailcap.c:94 src/mime/backend/mimetypes.c:52
+#: src/mime/backend/mailcap.c:98 src/mime/backend/mimetypes.c:52
 #: src/network/ssl/ssl.c:214 src/network/ssl/ssl.c:385
 msgid "Enable"
 msgstr "Активирање"
@@ -414,7 +414,7 @@ msgstr ""
 "\n"
 "Ова могућност захтева подршку за обележиваче."
 
-#: src/bookmarks/dialogs.c:119 src/config/options.inc:1328
+#: src/bookmarks/dialogs.c:119 src/config/options.inc:1333
 #: src/dialogs/document.c:167 src/dialogs/tabs.c:142 src/globhist/dialogs.c:73
 msgid "Title"
 msgstr "Наслов"
@@ -1054,43 +1054,43 @@ msgstr "Отварање менија поља обрасца"
 msgid "Open a Lua console"
 msgstr "Отварање Lua конзоле"
 
-#: src/config/actions-main.inc:55 src/config/options.inc:1005
+#: src/config/actions-main.inc:55 src/config/options.inc:1010
 msgid "Macro 0"
 msgstr "Макро 0"
 
-#: src/config/actions-main.inc:56 src/config/options.inc:1009
+#: src/config/actions-main.inc:56 src/config/options.inc:1014
 msgid "Macro 1"
 msgstr "Макро 1"
 
-#: src/config/actions-main.inc:57 src/config/options.inc:1013
+#: src/config/actions-main.inc:57 src/config/options.inc:1018
 msgid "Macro 2"
 msgstr "Макро 2"
 
-#: src/config/actions-main.inc:58 src/config/options.inc:1017
+#: src/config/actions-main.inc:58 src/config/options.inc:1022
 msgid "Macro 3"
 msgstr "Макро 3"
 
-#: src/config/actions-main.inc:59 src/config/options.inc:1021
+#: src/config/actions-main.inc:59 src/config/options.inc:1026
 msgid "Macro 4"
 msgstr "Макро 4"
 
-#: src/config/actions-main.inc:60 src/config/options.inc:1025
+#: src/config/actions-main.inc:60 src/config/options.inc:1030
 msgid "Macro 5"
 msgstr "Макро 5"
 
-#: src/config/actions-main.inc:61 src/config/options.inc:1029
+#: src/config/actions-main.inc:61 src/config/options.inc:1034
 msgid "Macro 6"
 msgstr "Макро 6"
 
-#: src/config/actions-main.inc:62 src/config/options.inc:1033
+#: src/config/actions-main.inc:62 src/config/options.inc:1038
 msgid "Macro 7"
 msgstr "Макро 7"
 
-#: src/config/actions-main.inc:63 src/config/options.inc:1037
+#: src/config/actions-main.inc:63 src/config/options.inc:1042
 msgid "Macro 8"
 msgstr "Макро 8"
 
-#: src/config/actions-main.inc:64 src/config/options.inc:1041
+#: src/config/actions-main.inc:64 src/config/options.inc:1046
 msgid "Macro 9"
 msgstr "Макро 9"
 
@@ -2126,7 +2126,7 @@ msgstr "(проширите притиском на размакницу)"
 #. * switch charsets.  So, it will work in any terminal that
 #. * understands UTF-8 and has the characters in its font.
 #: src/config/dialogs.c:157 src/config/dialogs.c:344
-#: src/config/options.inc:1078
+#: src/config/options.inc:1083
 msgid "Type"
 msgstr "Врста"
 
@@ -2207,7 +2207,7 @@ msgstr "Управљач опција"
 msgid "Keystroke"
 msgstr "Пречица"
 
-#: src/config/dialogs.c:705 src/config/options.inc:1516
+#: src/config/dialogs.c:705 src/config/options.inc:1521
 msgid "Action"
 msgstr "Акција"
 
@@ -2825,12 +2825,12 @@ msgid "Active link colors."
 msgstr "Боје текуће везе."
 
 #: src/config/options.inc:289 src/config/options.inc:659
-#: src/config/options.inc:1222
+#: src/config/options.inc:1227
 msgid "Background color"
 msgstr "Боја позадине"
 
 #: src/config/options.inc:291 src/config/options.inc:661
-#: src/config/options.inc:1223
+#: src/config/options.inc:1228
 msgid "Default background color."
 msgstr "Подразумевана боја позадине."
 
@@ -2843,12 +2843,12 @@ msgstr "Подразумевана боја позадине."
 #. The colors and mono tree should be similar but with different default
 #. * values of course so always use the macros below.
 #: src/config/options.inc:293 src/config/options.inc:655
-#: src/config/options.inc:1220
+#: src/config/options.inc:1225
 msgid "Text color"
 msgstr "Боја текста"
 
 #: src/config/options.inc:295 src/config/options.inc:657
-#: src/config/options.inc:1221
+#: src/config/options.inc:1226
 msgid "Default text color."
 msgstr "Подразумевана боја текста."
 
@@ -2901,7 +2901,7 @@ msgid "Invert the fore- and background color so the link stands out."
 msgstr ""
 "Боје позадине и текста ће бити инвертоване како би везе биле уочљивије."
 
-#: src/config/options.inc:323 src/config/options.inc:1184
+#: src/config/options.inc:323 src/config/options.inc:1189
 #: src/dialogs/options.c:251
 msgid "Underline"
 msgstr "Подвлачење"
@@ -3752,7 +3752,7 @@ msgid "Dump output options."
 msgstr "Опције истоварног излаза."
 
 #. OPT_CODEPAGE
-#: src/config/options.inc:763 src/config/options.inc:1188
+#: src/config/options.inc:763 src/config/options.inc:1193
 #: src/config/opttypes.c:520 src/dialogs/document.c:186
 msgid "Codepage"
 msgstr "Кодна страна"
@@ -3765,7 +3765,7 @@ msgstr ""
 "Кодна страна која се користи у истоварном излазу. „System“ значи да ће кодна "
 "страна бити одређена изабраним локалитетом."
 
-#: src/config/options.inc:768 src/config/options.inc:1133
+#: src/config/options.inc:768 src/config/options.inc:1138
 msgid "Color mode"
 msgstr "Режим боја"
 
@@ -3894,60 +3894,74 @@ msgstr "Приказ HTML-а"
 msgid "Options concerning the display of HTML pages."
 msgstr "Опције које се тичу приказивања HTML страница."
 
-#: src/config/options.inc:838 src/config/options.inc:914
+#: src/config/options.inc:838
+#, fuzzy
+msgid "Always ignore <noscript> content"
+msgstr "Игнорисање <noscript> садржаја"
+
+#: src/config/options.inc:840
+#, fuzzy
+msgid ""
+"Whether to ignore content enclosed by the <noscript> tag, even if ECMAScript "
+"is disabled or not compiled-in."
+msgstr ""
+"Да ли ће се игнорисати садржај окружен <noscript> ознакама када је омогућен "
+"ECMAScript."
+
+#: src/config/options.inc:843 src/config/options.inc:919
 msgid "Compress empty lines"
 msgstr "Компримовање празних редова"
 
-#: src/config/options.inc:840 src/config/options.inc:916
+#: src/config/options.inc:845 src/config/options.inc:921
 msgid "Compress successive empty lines to only one in displayed text."
 msgstr ""
 "Компримовање узастопних празних редова на један ред у приказаном тексту."
 
-#: src/config/options.inc:843
+#: src/config/options.inc:848
 msgid "Display frames"
 msgstr "Приказивање оквира"
 
-#: src/config/options.inc:845
+#: src/config/options.inc:850
 msgid "Display frames."
 msgstr "Приказивање оквира."
 
-#: src/config/options.inc:847
+#: src/config/options.inc:852
 msgid "Display iframes"
 msgstr "Приказивање iframe-ова"
 
-#: src/config/options.inc:849
+#: src/config/options.inc:854
 msgid "Display iframes. This code is experimental."
 msgstr "Приказује iframe-ове. Овај код је експерименталан."
 
-#: src/config/options.inc:851
+#: src/config/options.inc:856
 msgid "Display tables"
 msgstr "Приказивање табела"
 
-#: src/config/options.inc:853
+#: src/config/options.inc:858
 msgid "Display tables."
 msgstr "Приказивање табела."
 
-#: src/config/options.inc:855
+#: src/config/options.inc:860
 msgid "Display subscripts"
 msgstr "Приказивање индекса"
 
-#: src/config/options.inc:857
+#: src/config/options.inc:862
 msgid "Display subscripts (as [thing])."
 msgstr "Приказивање индекса (као [нешто])."
 
-#: src/config/options.inc:859
+#: src/config/options.inc:864
 msgid "Display superscripts"
 msgstr "Приказивање степена"
 
-#: src/config/options.inc:861
+#: src/config/options.inc:866
 msgid "Display superscripts (as ^thing)."
 msgstr "Приказивање степена (као ^нешто)."
 
-#: src/config/options.inc:863
+#: src/config/options.inc:868
 msgid "Whether to show documents which are not fully loaded"
 msgstr "Да ли да се приказују документи који нису сасвим учитани"
 
-#: src/config/options.inc:865
+#: src/config/options.inc:870
 msgid ""
 "ELinks periodically display documents, even if they are not fully loaded. "
 "You can disable it here."
@@ -3955,20 +3969,20 @@ msgstr ""
 "ELinks повремено приказује документе, чак иако нису сасвим учитани. То "
 "можете деактивирати овде."
 
-#: src/config/options.inc:869 src/config/options.inc:1171
+#: src/config/options.inc:874 src/config/options.inc:1176
 #: src/dialogs/options.c:255
 msgid "Kitty"
 msgstr "Kitty"
 
-#: src/config/options.inc:871
+#: src/config/options.inc:876
 msgid "Whether to display kitty images in html documents."
 msgstr "Да ли да се приказују kitty слике унутар html докумената."
 
-#: src/config/options.inc:874
+#: src/config/options.inc:879
 msgid "Rendering of HTML link element"
 msgstr "Приказивање HTML елемента link"
 
-#: src/config/options.inc:876
+#: src/config/options.inc:881
 msgid ""
 "How to render <link> tags from the HTML header:\n"
 "0 is nothing\n"
@@ -3986,36 +4000,36 @@ msgstr ""
 "4 приказиваће се и тип\n"
 "5 приказиваће се све"
 
-#: src/config/options.inc:885 src/config/options.inc:925
-#: src/config/options.inc:1176 src/dialogs/options.c:258
+#: src/config/options.inc:890 src/config/options.inc:930
+#: src/config/options.inc:1181 src/dialogs/options.c:258
 msgid "Sixel"
 msgstr "Сиксел"
 
-#: src/config/options.inc:887
+#: src/config/options.inc:892
 msgid "Whether to display sixel images in html documents."
 msgstr "Да ли да се приказују сикселске слике унутар html докумената."
 
-#: src/config/options.inc:891
+#: src/config/options.inc:896
 msgid "Substitute frame chars"
 msgstr "Замена знакова оквира"
 
-#: src/config/options.inc:893
+#: src/config/options.inc:898
 msgid "Replace ascii frame chars by border frame chars in html documents."
 msgstr "Замена ascii знакова оквира графичким знацима у html документима."
 
-#: src/config/options.inc:895
+#: src/config/options.inc:900
 msgid "Underline links"
 msgstr "Подвлачење веза"
 
-#: src/config/options.inc:897
+#: src/config/options.inc:902
 msgid "Underline links."
 msgstr "Подвлачење веза."
 
-#: src/config/options.inc:899
+#: src/config/options.inc:904
 msgid "Wrap non breaking space"
 msgstr "Прелом непреломивог размака"
 
-#: src/config/options.inc:901
+#: src/config/options.inc:906
 msgid ""
 "If set do not honour non breaking space (the nbsp entity) but allows one to "
 "wrap the text. This can help keeping the width of documents down so no "
@@ -4026,27 +4040,27 @@ msgstr ""
 "документа не пређе одређену границу, тако да се избегне хоризонтално "
 "скроловање."
 
-#: src/config/options.inc:906
+#: src/config/options.inc:911
 msgid "Plain rendering"
 msgstr "Чист приказ"
 
-#: src/config/options.inc:908
+#: src/config/options.inc:913
 msgid "Options concerning the display of plain text pages."
 msgstr "Опције које се тичу приказивања страница са чистим текстом."
 
-#: src/config/options.inc:910
+#: src/config/options.inc:915
 msgid "Display URIs"
 msgstr "Приказивање УРИ-ја"
 
-#: src/config/options.inc:912
+#: src/config/options.inc:917
 msgid "Display URIs in the document as links."
 msgstr "Приказивање УРИ-ја у документу као веза."
 
-#: src/config/options.inc:919
+#: src/config/options.inc:924
 msgid "Fixup frame borders of tables"
 msgstr "Поправљање ивица оквира табела"
 
-#: src/config/options.inc:921
+#: src/config/options.inc:926
 msgid ""
 "Change ascii border characters to frame borders. Usage example: mysql --"
 "pager=elinks"
@@ -4054,16 +4068,16 @@ msgstr ""
 "Промена ascii знакова за ивице на ивице оквира. Пример употребе: mysql --"
 "pager=elinks"
 
-#: src/config/options.inc:927
+#: src/config/options.inc:932
 msgid "Whether to display sixel images in plain text documents."
 msgstr ""
 "Да ли да се приказују сикселске слике унутар докумената у чистом тексту."
 
-#: src/config/options.inc:930
+#: src/config/options.inc:935
 msgid "URI passing"
 msgstr "Прослеђивање УРИ-ја"
 
-#: src/config/options.inc:932
+#: src/config/options.inc:937
 msgid ""
 "Rules for passing URIs to external commands. When one rule is defined the "
 "link and tab menu will have a menu item that makes it possible to pass the "
@@ -4090,11 +4104,11 @@ msgstr ""
 "не примају стандардни улаз. Подопција „foreground“ обрће ово понашање: "
 "наредба прима стандардни улаз а elinks је блокиран."
 
-#: src/config/options.inc:951
+#: src/config/options.inc:956
 msgid "A rule for passing URI to an external command."
 msgstr "Правило за прослеђивање УРИ-ја спољашњој наредби."
 
-#: src/config/options.inc:955
+#: src/config/options.inc:960
 msgid ""
 "The external command. The format is:\n"
 "%c in the string means the current URL\n"
@@ -4106,24 +4120,24 @@ msgstr ""
 "%% у нисци означава „%“\n"
 "_Немојте_ уносити апострофе или наводнике око %c."
 
-#: src/config/options.inc:963
+#: src/config/options.inc:968
 msgid "Run command in the foreground."
 msgstr "Покретање наредбе у прочељу."
 
 #. Keep options in alphabetical order.
-#: src/config/options.inc:969
+#: src/config/options.inc:974
 msgid "Information files"
 msgstr "Информативне датотеке"
 
-#: src/config/options.inc:971
+#: src/config/options.inc:976
 msgid "Options for information files in ~/.config/elinks."
 msgstr "Опције информативних датотека у директоријуму ~/.config/elinks."
 
-#: src/config/options.inc:973
+#: src/config/options.inc:978
 msgid "Save interval"
 msgstr "Интервал чувања"
 
-#: src/config/options.inc:975
+#: src/config/options.inc:980
 msgid ""
 "Interval at which to trigger information files in ~/.config/elinks to be "
 "saved to disk if they have changed (seconds; 0 to disable)"
@@ -4131,11 +4145,11 @@ msgstr ""
 "Интервал при коме ће се чувати информативне датотеке у директоријуму "
 "~/.config/elinks на диск уколико су оне измењене (у секундима; 0 деактивира)"
 
-#: src/config/options.inc:979
+#: src/config/options.inc:984
 msgid "Use secure file saving"
 msgstr "Употреба безбедног чувања датотека"
 
-#: src/config/options.inc:981
+#: src/config/options.inc:986
 msgid ""
 "First write data to unique temporary file, then rename this file upon "
 "successfully finishing this. Note that this relates only to config files, "
@@ -4158,11 +4172,11 @@ msgstr ""
 "не постоји када се позове rename(3), што квари атомичност и смањује "
 "поузданост ове могућности."
 
-#: src/config/options.inc:993
+#: src/config/options.inc:998
 msgid "Use fsync(3) with secure file saving"
 msgstr "Употреба fsync(3) при безбедном чувању датотека"
 
-#: src/config/options.inc:995
+#: src/config/options.inc:1000
 msgid ""
 "When using secure file saving, call fsync(3), if the OS supports it, to "
 "force the OS immediately to write the data to permanent storage. This is "
@@ -4173,69 +4187,69 @@ msgstr ""
 "складиштење. Ово није обавезно за оне који желе да избегну претеране У/И "
 "операције са диском."
 
-#: src/config/options.inc:1001
+#: src/config/options.inc:1006
 msgid "Macros"
 msgstr "Макрои"
 
-#: src/config/options.inc:1003
+#: src/config/options.inc:1008
 msgid "Macros for exmode."
 msgstr "Макрои за exmode."
 
-#: src/config/options.inc:1007
+#: src/config/options.inc:1012
 msgid "Macro 0 for exmode."
 msgstr "Макро 0 за exmode."
 
-#: src/config/options.inc:1011
+#: src/config/options.inc:1016
 msgid "Macro 1 for exmode."
 msgstr "Макро 1 за exmode."
 
-#: src/config/options.inc:1015
+#: src/config/options.inc:1020
 msgid "Macro 2 for exmode."
 msgstr "Макро 2 за exmode."
 
-#: src/config/options.inc:1019
+#: src/config/options.inc:1024
 msgid "Macro 3 for exmode."
 msgstr "Макро 3 за exmode."
 
-#: src/config/options.inc:1023
+#: src/config/options.inc:1028
 msgid "Macro 4 for exmode."
 msgstr "Макро 4 за exmode."
 
-#: src/config/options.inc:1027
+#: src/config/options.inc:1032
 msgid "Macro 5 for exmode."
 msgstr "Макро 5 за exmode."
 
-#: src/config/options.inc:1031
+#: src/config/options.inc:1036
 msgid "Macro 6 for exmode."
 msgstr "Макро 6 за exmode."
 
-#: src/config/options.inc:1035
+#: src/config/options.inc:1040
 msgid "Macro 7 for exmode."
 msgstr "Макро 7 за exmode."
 
-#: src/config/options.inc:1039
+#: src/config/options.inc:1044
 msgid "Macro 8 for exmode."
 msgstr "Макро 8 за exmode."
 
-#: src/config/options.inc:1043
+#: src/config/options.inc:1048
 msgid "Macro 9 for exmode."
 msgstr "Макро 9 за exmode."
 
 #. Keep options in alphabetical order.
-#: src/config/options.inc:1047
+#: src/config/options.inc:1052
 msgid "Terminals"
 msgstr "Терминали"
 
-#: src/config/options.inc:1049
+#: src/config/options.inc:1054
 msgid "Terminal options."
 msgstr "Опције терминала."
 
-#: src/config/options.inc:1053
+#: src/config/options.inc:1058
 msgid "Options specific to this terminal type (according to $TERM value)."
 msgstr ""
 "Опције специфичне за ову врсту терминала (према вредности променљиве $TERM)."
 
-#: src/config/options.inc:1080
+#: src/config/options.inc:1085
 msgid ""
 "Terminal type; matters mostly only when drawing frames and dialog box "
 "borders:\n"
@@ -4255,11 +4269,11 @@ msgstr ""
 "4 означава FreeBSD\n"
 "5 означава fbterm"
 
-#: src/config/options.inc:1089
+#: src/config/options.inc:1094
 msgid "Always encode xterm title in ISO-8859-1"
 msgstr "Увек кодирати xterm наслов у ISO-8859-1"
 
-#: src/config/options.inc:1091
+#: src/config/options.inc:1096
 msgid ""
 "When updating the window title of xterm or a similar terminal emulator, "
 "encode the title in ISO-8859-1 (Latin-1), rather than in the charset used "
@@ -4279,11 +4293,11 @@ msgstr ""
 "Ако ова опција не проради одмах, пробајте да се пребаците на другу страницу, "
 "тако да ELinks примети да треба да ажурира наслов."
 
-#: src/config/options.inc:1102 src/dialogs/options.c:246
+#: src/config/options.inc:1107 src/dialogs/options.c:246
 msgid "Switch fonts for line drawing"
 msgstr "Пребацивање фонтова за исцртавање линија"
 
-#: src/config/options.inc:1104
+#: src/config/options.inc:1109
 msgid ""
 "Switch fonts when drawing lines, enabling both local characters and lines "
 "working at the same time. ELinks uses this option only if UTF-8 I/O is "
@@ -4298,11 +4312,11 @@ msgstr ""
 #. * and if so, behave as if "utf_8_io" were 1.  (When CONFIG_UTF8 is
 #. * not defined, it should not be possible to set UTF-8 as "codepage";
 #. * please report any such possibilities as bugs.)
-#: src/config/options.inc:1114 src/dialogs/options.c:253
+#: src/config/options.inc:1119 src/dialogs/options.c:253
 msgid "UTF-8 I/O"
 msgstr "UTF-8 У/И"
 
-#: src/config/options.inc:1116
+#: src/config/options.inc:1121
 msgid ""
 "Enable I/O in UTF-8 for Unicode terminals. Note that currently, only the "
 "subset of UTF-8 according to terminal codepage is used. ELinks ignores this "
@@ -4313,11 +4327,11 @@ msgstr ""
 "страници терминала. ELinks игнорише ову опцију ако је кодна страна терминала "
 "UTF-8."
 
-#: src/config/options.inc:1121 src/dialogs/options.c:247
+#: src/config/options.inc:1126 src/dialogs/options.c:247
 msgid "Restrict frames in cp850/852"
 msgstr "Ограничавање оквира у cp850/852"
 
-#: src/config/options.inc:1123
+#: src/config/options.inc:1128
 msgid ""
 "Restrict the characters used when drawing lines. Makes sense only with linux "
 "terminals using the cp850/852 character sets."
@@ -4325,11 +4339,11 @@ msgstr ""
 "Ограничавање знакова који се користе при исцртавању линија. Има смисла само "
 "са терминалима врсте Linux који користе скупове знакова cp850/852."
 
-#: src/config/options.inc:1127 src/dialogs/options.c:248
+#: src/config/options.inc:1132 src/dialogs/options.c:248
 msgid "Block cursor"
 msgstr "Курсор у облику блока"
 
-#: src/config/options.inc:1129
+#: src/config/options.inc:1134
 msgid ""
 "Move cursor to bottom right corner when done drawing. This is particularly "
 "useful when we have a block cursor, so that inversed text is displayed "
@@ -4344,7 +4358,7 @@ msgstr ""
 #. * an outer list entry after an inner list.
 #. * TRANSLATORS: This restriction applies only to the
 #. * "en" (English) translation.  (See doc/Makefile.)
-#: src/config/options.inc:1140
+#: src/config/options.inc:1145
 msgid ""
 "The color mode controls what colors are used and how they are output to the "
 "terminal.\n"
@@ -4374,11 +4388,11 @@ msgstr ""
 "3 режим са 256 боја, користи XTerm RGB кодове\n"
 "4 режим true color, користи konsole RGB кодове"
 
-#: src/config/options.inc:1155 src/dialogs/options.c:250
+#: src/config/options.inc:1160 src/dialogs/options.c:250
 msgid "Transparency"
 msgstr "Провидност"
 
-#: src/config/options.inc:1157
+#: src/config/options.inc:1162
 msgid ""
 "If we should not set the background to black. This is particularly useful "
 "when we have a terminal (typically in some windowing environment) with a "
@@ -4394,35 +4408,35 @@ msgstr ""
 "је позадина црна, па ако имате светлу позадину, може доћи до проблема са "
 "контрастом). Приметите да ова опција има смисла само када су активиране боје."
 
-#: src/config/options.inc:1167 src/dialogs/options.c:249
+#: src/config/options.inc:1172 src/dialogs/options.c:249
 msgid "Italic"
 msgstr "Курзив"
 
-#: src/config/options.inc:1169
+#: src/config/options.inc:1174
 msgid "If we should use italics."
 msgstr "Да ли да се користи курзив."
 
-#: src/config/options.inc:1173
+#: src/config/options.inc:1178
 msgid "Whether terminal supports kitty graphics protocol."
 msgstr "Да ли терминал подржава протокол за kitty графику."
 
-#: src/config/options.inc:1178
+#: src/config/options.inc:1183
 msgid "Whether terminal supports sixel graphics."
 msgstr "Да ли терминал подржава сикселску графику."
 
-#: src/config/options.inc:1180 src/dialogs/options.c:252
+#: src/config/options.inc:1185 src/dialogs/options.c:252
 msgid "Strikethrough"
 msgstr "Прецртани текст"
 
-#: src/config/options.inc:1182
+#: src/config/options.inc:1187
 msgid "If we should use strikethrough."
 msgstr "Да ли да се користи прецртани текст."
 
-#: src/config/options.inc:1186
+#: src/config/options.inc:1191
 msgid "If we should use underline or enhance the color instead."
 msgstr "Да ли да се користи подвлачење или појачавање боја."
 
-#: src/config/options.inc:1190
+#: src/config/options.inc:1195
 msgid ""
 "Codepage of charset used for displaying content on terminal. 'System' stands "
 "for a codepage determined by a selected locale."
@@ -4432,405 +4446,405 @@ msgstr ""
 "локалитетом."
 
 #. Keep options in alphabetical order.
-#: src/config/options.inc:1198
+#: src/config/options.inc:1203
 msgid "User interface"
 msgstr "Кориснички интерфејс"
 
-#: src/config/options.inc:1200
+#: src/config/options.inc:1205
 msgid "User interface options."
 msgstr "Опције корисничког интерфејса."
 
-#: src/config/options.inc:1204
+#: src/config/options.inc:1209
 msgid "Color settings"
 msgstr "Подешавања боја"
 
-#: src/config/options.inc:1206
+#: src/config/options.inc:1211
 msgid "Default user interface color settings."
 msgstr "Подразумеване поставке боја корисничког интерфејса."
 
-#: src/config/options.inc:1233
+#: src/config/options.inc:1238
 msgid "Color terminals"
 msgstr "Терминали у боји"
 
-#: src/config/options.inc:1235
+#: src/config/options.inc:1240
 msgid "Color settings for color terminal."
 msgstr "Поставке боја за терминале у боји."
 
-#: src/config/options.inc:1237
+#: src/config/options.inc:1242
 msgid "Non-color terminals"
 msgstr "Црно-бели терминали"
 
-#: src/config/options.inc:1239
+#: src/config/options.inc:1244
 msgid "Color settings for non-color terminal."
 msgstr "Поставке боја за црно-беле терминале."
 
 #. FIXME: obsolete, how to alias them correctly ? --Zas
-#: src/config/options.inc:1242
+#: src/config/options.inc:1247
 msgid "Main menu bar"
 msgstr "Главни мени"
 
-#: src/config/options.inc:1244
+#: src/config/options.inc:1249
 msgid "Main menu bar colors."
 msgstr "Боје главног менија."
 
-#: src/config/options.inc:1246
+#: src/config/options.inc:1251
 msgid "Unselected main menu bar item"
 msgstr "Неизабране ставке главног менија"
 
-#: src/config/options.inc:1248
+#: src/config/options.inc:1253
 msgid "Unselected main menu bar item colors."
 msgstr "Боје неизабраних ставки главног менија."
 
-#: src/config/options.inc:1250
+#: src/config/options.inc:1255
 msgid "Selected main menu bar item"
 msgstr "Изабране ставке главног менија"
 
-#: src/config/options.inc:1252
+#: src/config/options.inc:1257
 msgid "Selected main menu bar item colors."
 msgstr "Боје изабраних ставки главног менија."
 
-#: src/config/options.inc:1254 src/config/options.inc:1283
+#: src/config/options.inc:1259 src/config/options.inc:1288
 msgid "Hotkey"
 msgstr "Пречице"
 
-#: src/config/options.inc:1256
+#: src/config/options.inc:1261
 msgid "Main menu hotkey colors."
 msgstr "Боје пречица главног менија."
 
-#: src/config/options.inc:1258 src/config/options.inc:1287
+#: src/config/options.inc:1263 src/config/options.inc:1292
 msgid "Unselected hotkey"
 msgstr "Неизабране пречице"
 
-#: src/config/options.inc:1260
+#: src/config/options.inc:1265
 msgid "Main menu unselected hotkey colors."
 msgstr "Боје неизабраних пречица главног менија."
 
-#: src/config/options.inc:1262 src/config/options.inc:1291
+#: src/config/options.inc:1267 src/config/options.inc:1296
 msgid "Selected hotkey"
 msgstr "Изабране пречице"
 
-#: src/config/options.inc:1264
+#: src/config/options.inc:1269
 msgid "Main menu selected hotkey colors."
 msgstr "Боје изабраних пречица главног менија."
 
-#: src/config/options.inc:1267
+#: src/config/options.inc:1272
 msgid "Menu bar"
 msgstr "Мени"
 
-#: src/config/options.inc:1269
+#: src/config/options.inc:1274
 msgid "Menu bar colors."
 msgstr "Боје менија."
 
-#: src/config/options.inc:1271
+#: src/config/options.inc:1276
 msgid "Unselected menu item"
 msgstr "Неизабране ставке менија"
 
-#: src/config/options.inc:1273
+#: src/config/options.inc:1278
 msgid "Unselected menu item colors."
 msgstr "Боје неизабраних ставки менија."
 
-#: src/config/options.inc:1275
+#: src/config/options.inc:1280
 msgid "Selected menu item"
 msgstr "Изабране ставке менија"
 
-#: src/config/options.inc:1277
+#: src/config/options.inc:1282
 msgid "Selected menu item colors."
 msgstr "Боје изабраних ставки менија."
 
-#: src/config/options.inc:1279
+#: src/config/options.inc:1284
 msgid "Marked menu item"
 msgstr "Означене ставке менија"
 
-#: src/config/options.inc:1281
+#: src/config/options.inc:1286
 msgid "Marked menu item colors."
 msgstr "Боје означених ставки менија."
 
-#: src/config/options.inc:1285
+#: src/config/options.inc:1290
 msgid "Menu item hotkey colors."
 msgstr "Боје пречица ставки менија."
 
-#: src/config/options.inc:1289
+#: src/config/options.inc:1294
 msgid "Menu item unselected hotkey colors."
 msgstr "Боје неизабраних пречица ставки менија."
 
-#: src/config/options.inc:1293
+#: src/config/options.inc:1298
 msgid "Menu item selected hotkey colors."
 msgstr "Боје изабраних пречица ставки менија."
 
-#: src/config/options.inc:1295
+#: src/config/options.inc:1300
 msgid "Menu frame"
 msgstr "Оквири менија"
 
-#: src/config/options.inc:1297
+#: src/config/options.inc:1302
 msgid "Menu frame colors."
 msgstr "Боје оквира менија."
 
-#: src/config/options.inc:1300
+#: src/config/options.inc:1305
 msgid "Dialog"
 msgstr "Дијалог"
 
-#: src/config/options.inc:1302
+#: src/config/options.inc:1307
 msgid "Dialog colors."
 msgstr "Боје дијалога."
 
-#: src/config/options.inc:1312
+#: src/config/options.inc:1317
 msgid "Generic"
 msgstr "Опште"
 
-#: src/config/options.inc:1314
+#: src/config/options.inc:1319
 msgid "Generic dialog colors."
 msgstr "Опште боје дијалога."
 
-#: src/config/options.inc:1316
+#: src/config/options.inc:1321
 msgid "Frame"
 msgstr "Оквир"
 
-#: src/config/options.inc:1318
+#: src/config/options.inc:1323
 msgid "Dialog frame colors."
 msgstr "Боје оквира дијалога."
 
-#: src/config/options.inc:1320
+#: src/config/options.inc:1325
 msgid "Scrollbar"
 msgstr "Клизач"
 
-#: src/config/options.inc:1322
+#: src/config/options.inc:1327
 msgid "Scrollbar colors."
 msgstr "Боје клизача."
 
-#: src/config/options.inc:1324
+#: src/config/options.inc:1329
 msgid "Selected scrollbar"
 msgstr "Изабрани клизач"
 
-#: src/config/options.inc:1326
+#: src/config/options.inc:1331
 msgid "Scrollbar selected colors."
 msgstr "Боје изабраног клизача."
 
-#: src/config/options.inc:1330
+#: src/config/options.inc:1335
 msgid "Dialog title colors."
 msgstr "Боје наслова дијалога."
 
-#: src/config/options.inc:1332
+#: src/config/options.inc:1337
 msgid "Text"
 msgstr "Текст"
 
-#: src/config/options.inc:1334
+#: src/config/options.inc:1339
 msgid "Dialog text colors."
 msgstr "Боје текста у дијалогу."
 
-#: src/config/options.inc:1336 src/viewer/text/form.c:1977
+#: src/config/options.inc:1341 src/viewer/text/form.c:1977
 msgid "Checkbox"
 msgstr "Кућица"
 
-#: src/config/options.inc:1338
+#: src/config/options.inc:1343
 msgid "Dialog checkbox colors."
 msgstr "Боје кућица у дијалогу."
 
-#: src/config/options.inc:1340
+#: src/config/options.inc:1345
 msgid "Selected checkbox"
 msgstr "Изабрана кућица"
 
-#: src/config/options.inc:1342
+#: src/config/options.inc:1347
 msgid "Dialog selected checkbox colors."
 msgstr "Боје изабране кућице у дијалогу."
 
-#: src/config/options.inc:1344
+#: src/config/options.inc:1349
 msgid "Checkbox label"
 msgstr "Натпис на кућици"
 
-#: src/config/options.inc:1346
+#: src/config/options.inc:1351
 msgid "Dialog checkbox label colors."
 msgstr "Боје натписа на кућици."
 
-#: src/config/options.inc:1348
+#: src/config/options.inc:1353
 msgid "Button"
 msgstr "Дугме"
 
-#: src/config/options.inc:1350 src/config/options.inc:1358
+#: src/config/options.inc:1355 src/config/options.inc:1363
 msgid "Dialog button colors."
 msgstr "Боје дугмета у дијалогу."
 
-#: src/config/options.inc:1352
+#: src/config/options.inc:1357
 msgid "Selected button"
 msgstr "Изабрано дугме"
 
-#: src/config/options.inc:1354 src/config/options.inc:1362
+#: src/config/options.inc:1359 src/config/options.inc:1367
 msgid "Dialog selected button colors."
 msgstr "Боје изабраног дугмета у дијалогу."
 
-#: src/config/options.inc:1356
+#: src/config/options.inc:1361
 msgid "Button shortcut"
 msgstr "Пречица дугмета"
 
-#: src/config/options.inc:1360
+#: src/config/options.inc:1365
 msgid "Selected button shortcut"
 msgstr "Пречица изабраног дугмета"
 
-#: src/config/options.inc:1364 src/viewer/text/form.c:1981
+#: src/config/options.inc:1369 src/viewer/text/form.c:1981
 msgid "Text field"
 msgstr "Текстуално поље"
 
-#: src/config/options.inc:1366
+#: src/config/options.inc:1371
 msgid "Dialog text field colors."
 msgstr "Боје текстуалног поља у дијалогу."
 
-#: src/config/options.inc:1368
+#: src/config/options.inc:1373
 msgid "Text field text"
 msgstr "Текст текстуалног поља"
 
-#: src/config/options.inc:1370
+#: src/config/options.inc:1375
 msgid "Dialog field text colors."
 msgstr "Боје текста текстуалног поља у дијалогу."
 
-#: src/config/options.inc:1372
+#: src/config/options.inc:1377
 msgid "Meter"
 msgstr "Лењир"
 
-#: src/config/options.inc:1374
+#: src/config/options.inc:1379
 msgid "Dialog meter colors."
 msgstr "Боје лењира у дијалогу."
 
-#: src/config/options.inc:1376
+#: src/config/options.inc:1381
 msgid "Shadow"
 msgstr "Сенка"
 
-#: src/config/options.inc:1378
+#: src/config/options.inc:1383
 msgid "Dialog shadow colors (see ui.shadows option)."
 msgstr "Боје сенке у дијалогу (погледајте опцију „ui.shadows“)."
 
-#: src/config/options.inc:1380
+#: src/config/options.inc:1385
 msgid "Title bar"
 msgstr "Насловна линија"
 
-#: src/config/options.inc:1382
+#: src/config/options.inc:1387
 msgid "Title bar colors."
 msgstr "Боје насловне линије."
 
-#: src/config/options.inc:1384
+#: src/config/options.inc:1389
 msgid "Generic title bar"
 msgstr "Општа насловна линија"
 
-#: src/config/options.inc:1386
+#: src/config/options.inc:1391
 msgid "Generic title bar colors."
 msgstr "Боје опште насловне линије."
 
-#: src/config/options.inc:1388
+#: src/config/options.inc:1393
 msgid "Title bar text"
 msgstr "Текст насловне линије"
 
-#: src/config/options.inc:1390
+#: src/config/options.inc:1395
 msgid "Title bar text colors."
 msgstr "Боје текста насловне линије."
 
-#: src/config/options.inc:1393
+#: src/config/options.inc:1398
 msgid "Status bar"
 msgstr "Статусна линија"
 
-#: src/config/options.inc:1395
+#: src/config/options.inc:1400
 msgid "Status bar colors."
 msgstr "Боје статусне линије."
 
-#: src/config/options.inc:1397
+#: src/config/options.inc:1402
 msgid "Status bar show ip"
 msgstr "Статусна линија приказује ip"
 
-#: src/config/options.inc:1399
+#: src/config/options.inc:1404
 msgid "Status bar show ip text colors."
 msgstr "Боје текста приказаног ip-ја у статусној линији."
 
-#: src/config/options.inc:1401
+#: src/config/options.inc:1406
 msgid "Status bar show available memory"
 msgstr "Статусна линија приказује доступну меморију."
 
-#: src/config/options.inc:1403
+#: src/config/options.inc:1408
 msgid "Status bar show available memory text colors."
 msgstr "Боје текста приказане доступне меморије у статусној линији."
 
-#: src/config/options.inc:1405
+#: src/config/options.inc:1410
 msgid "Generic status bar"
 msgstr "Општа статусна линија"
 
-#: src/config/options.inc:1407
+#: src/config/options.inc:1412
 msgid "Generic status bar colors."
 msgstr "Боје опште статусне линије."
 
-#: src/config/options.inc:1410
+#: src/config/options.inc:1415
 msgid "Status bar text"
 msgstr "Текст статусне линије"
 
-#: src/config/options.inc:1412
+#: src/config/options.inc:1417
 msgid "Status bar text colors."
 msgstr "Боје текста статусне линије."
 
-#: src/config/options.inc:1415
+#: src/config/options.inc:1420
 msgid "Tabs bar"
 msgstr "Линија са картицама"
 
-#: src/config/options.inc:1417
+#: src/config/options.inc:1422
 msgid "Tabs bar colors."
 msgstr "Боје линије са картицама."
 
-#: src/config/options.inc:1419
+#: src/config/options.inc:1424
 msgid "Unvisited tab"
 msgstr "Непосећена картица"
 
-#: src/config/options.inc:1421
+#: src/config/options.inc:1426
 msgid ""
 "Tab colors for tabs that have not been selected since they completed loading."
 msgstr "Боје картице која није изабрана од завршетка учитавања."
 
-#: src/config/options.inc:1424
+#: src/config/options.inc:1429
 msgid "Unselected tab"
 msgstr "Неизабрана картица"
 
-#: src/config/options.inc:1426
+#: src/config/options.inc:1431
 msgid "Unselected tab colors."
 msgstr "Боје неизабране картице."
 
-#: src/config/options.inc:1428
+#: src/config/options.inc:1433
 msgid "Loading tab"
 msgstr "Картица која се учитава"
 
-#: src/config/options.inc:1430
+#: src/config/options.inc:1435
 msgid "Tab colors for tabs that are loading in the background."
 msgstr "Боје картице која се учитава у позадини."
 
-#: src/config/options.inc:1432
+#: src/config/options.inc:1437
 msgid "Selected tab"
 msgstr "Изабрана картица"
 
-#: src/config/options.inc:1434
+#: src/config/options.inc:1439
 msgid "Selected tab colors."
 msgstr "Боје изабране картице."
 
-#: src/config/options.inc:1436
+#: src/config/options.inc:1441
 msgid "Tab separator"
 msgstr "Раздвајач картица"
 
-#: src/config/options.inc:1438
+#: src/config/options.inc:1443
 msgid "Tab separator colors."
 msgstr "Боје раздвајача картица."
 
-#: src/config/options.inc:1440
+#: src/config/options.inc:1445
 msgid "Clipboard"
 msgstr "Клипборд"
 
-#: src/config/options.inc:1442
+#: src/config/options.inc:1447
 msgid "Clipboard highlight colors."
 msgstr "Боје истицања клипборда."
 
-#: src/config/options.inc:1444
+#: src/config/options.inc:1449
 msgid "Desktop"
 msgstr "Позадина"
 
-#: src/config/options.inc:1446
+#: src/config/options.inc:1451
 msgid "Desktop background."
 msgstr "Боја позадине."
 
-#: src/config/options.inc:1448
+#: src/config/options.inc:1453
 msgid "Searched strings"
 msgstr "Тражене ниске"
 
-#: src/config/options.inc:1450
+#: src/config/options.inc:1455
 msgid "Searched string highlight colors."
 msgstr "Боје истицања тражених ниски."
 
@@ -4838,30 +4852,30 @@ msgstr "Боје истицања тражених ниски."
 #. ============= BORING PART (colors) END ===================
 #. ==========================================================
 #. Keep options in alphabetical order.
-#: src/config/options.inc:1459
+#: src/config/options.inc:1464
 msgid "Dialog settings"
 msgstr "Поставке дијалога"
 
-#: src/config/options.inc:1461
+#: src/config/options.inc:1466
 msgid "Dialogs-specific appearance and behaviour settings."
 msgstr "Поставке изгледа и понашања дијалога."
 
-#: src/config/options.inc:1464
+#: src/config/options.inc:1469
 msgid "Minimal height of listbox widget"
 msgstr "Минимална висина листе"
 
-#: src/config/options.inc:1466
+#: src/config/options.inc:1471
 msgid ""
 "Minimal height of the listbox widget (used e.g. for bookmarks or global "
 "history)."
 msgstr ""
 "Минимална висина виџета листе (нпр. код обележивача или глобалне историје)."
 
-#: src/config/options.inc:1469
+#: src/config/options.inc:1474
 msgid "Drop shadows"
 msgstr "Бацање сенки"
 
-#: src/config/options.inc:1471
+#: src/config/options.inc:1476
 msgid ""
 "Make dialogs drop shadows (the shadows are solid, you can adjust their color "
 "by ui.colors.*.dialog.shadow). You may also want to eliminate the wide "
@@ -4871,11 +4885,11 @@ msgstr ""
 "подесити преко опције ui.colors.*.dialog.shadow). Можда ћете такође желети "
 "да уклоните широке ивице подешавањем заглавља setup.h."
 
-#: src/config/options.inc:1476
+#: src/config/options.inc:1481
 msgid "Underline menu hotkeys"
 msgstr "Подвлачење пречица менија"
 
-#: src/config/options.inc:1478
+#: src/config/options.inc:1483
 msgid ""
 "Whether to underline hotkeys in menus to make them more visible. Requires "
 "that underlining is enabled for the terminal."
@@ -4883,11 +4897,11 @@ msgstr ""
 "Да ли ће се подвлачити пречице у менијима како би биле видљивије. Захтева "
 "активирање подвлачења на терминалу."
 
-#: src/config/options.inc:1482
+#: src/config/options.inc:1487
 msgid "Underline button shortcuts"
 msgstr "Подвлачење пречица дугмади"
 
-#: src/config/options.inc:1484
+#: src/config/options.inc:1489
 msgid ""
 "Whether to underline button shortcuts to make them more visible. Requires "
 "that underlining is enabled for the terminal."
@@ -4895,11 +4909,11 @@ msgstr ""
 "Да ли ће се подвлачити пречице дугмади како би биле видљивије. Захтева "
 "активирање подвлачења на терминалу."
 
-#: src/config/options.inc:1489
+#: src/config/options.inc:1494
 msgid "Timer options"
 msgstr "Опције тајмера"
 
-#: src/config/options.inc:1491
+#: src/config/options.inc:1496
 msgid ""
 "Timed action after certain interval of user inactivity. Someone can even "
 "find this useful, although you may not believe that."
@@ -4908,7 +4922,7 @@ msgstr ""
 "Некоме ће ово чак бити и од користи, иако ће вам можда бити тешко да у то "
 "поверујете."
 
-#: src/config/options.inc:1498
+#: src/config/options.inc:1503
 msgid ""
 "Whether to enable the timer or not:\n"
 "0 is don't count down anything\n"
@@ -4920,7 +4934,7 @@ msgstr ""
 "1 одбројава се, али се не приказује тајмер\n"
 "2 одбројава се и приказује се тајмер поред диода"
 
-#: src/config/options.inc:1505
+#: src/config/options.inc:1510
 msgid ""
 "Whether to enable the timer or not:\n"
 "0 is don't count down anything\n"
@@ -4932,11 +4946,11 @@ msgstr ""
 "1 одбројава се, али се не приказује тајмер\n"
 "2 одбројава се и приказује се тајмер поред диода (ДЕАКТИВИРАНО)"
 
-#: src/config/options.inc:1511
+#: src/config/options.inc:1516
 msgid "Duration"
 msgstr "Трајање"
 
-#: src/config/options.inc:1513
+#: src/config/options.inc:1518
 msgid ""
 "Inactivity timeout in seconds. The maximum of one day should be enough for "
 "just everyone (TM)."
@@ -4944,23 +4958,23 @@ msgstr ""
 "Дозвољено време неактивности у секундима. Максимум од једног дана би свима "
 "требало да буде довољан (ТМ)."
 
-#: src/config/options.inc:1518
+#: src/config/options.inc:1523
 msgid "Keybinding action to be triggered when timer reaches zero."
 msgstr "Акција са тастатуре која ће бити покренута кад тајмер достигне нулу."
 
-#: src/config/options.inc:1522
+#: src/config/options.inc:1527
 msgid "Window tabs"
 msgstr "Картице прозора"
 
-#: src/config/options.inc:1524
+#: src/config/options.inc:1529
 msgid "Window tabs settings."
 msgstr "Поставке картица прозора."
 
-#: src/config/options.inc:1526 src/globhist/globhist.c:71
+#: src/config/options.inc:1531 src/globhist/globhist.c:71
 msgid "Display style"
 msgstr "Стил приказа"
 
-#: src/config/options.inc:1528
+#: src/config/options.inc:1533
 msgid ""
 "What to display in tab manager dialog:\n"
 "0 is URLs\n"
@@ -4970,11 +4984,11 @@ msgstr ""
 "0 УРЛ-ове\n"
 "1 наслове страница"
 
-#: src/config/options.inc:1532
+#: src/config/options.inc:1537
 msgid "Display tabs bar"
 msgstr "Приказивање линије картица"
 
-#: src/config/options.inc:1534
+#: src/config/options.inc:1539
 msgid ""
 "Show tabs bar on the screen:\n"
 "0 means never\n"
@@ -4986,47 +5000,47 @@ msgstr ""
 "1 само уколико је отворено две или више картица\n"
 "2 увек"
 
-#: src/config/options.inc:1539
+#: src/config/options.inc:1544
 msgid "Tab bar at top"
 msgstr "Линија картица на врху"
 
-#: src/config/options.inc:1541
+#: src/config/options.inc:1546
 msgid "Whether display tab bar at top like other browsers do."
 msgstr "Да ли да се линија картица приказује на врху, као код других читача."
 
-#: src/config/options.inc:1543
+#: src/config/options.inc:1548
 msgid "Wrap-around tabs cycling"
 msgstr "Кружно кретање кроз картице"
 
-#: src/config/options.inc:1545
+#: src/config/options.inc:1550
 msgid ""
 "When moving right from the last tab, jump to the first one, and vice versa."
 msgstr ""
 "Када се на последњој картици притисне стрелица надесно, скочиће на прву, и "
 "обрнуто."
 
-#: src/config/options.inc:1548
+#: src/config/options.inc:1553
 msgid "Confirm tab closing"
 msgstr "Потврда затварања картица"
 
-#: src/config/options.inc:1550
+#: src/config/options.inc:1555
 msgid "When closing a tab show confirmation dialog."
 msgstr "Приказивање дијалога за потврду пре затварања картице."
 
-#: src/config/options.inc:1552
+#: src/config/options.inc:1557
 msgid "Disallow writing to terminal"
 msgstr "Забранити писање у терминал"
 
-#: src/config/options.inc:1554
+#: src/config/options.inc:1559
 msgid "Whether to disallow writing to terminal by background processes."
 msgstr "Да ли да се позадинским процесима забрани писање у терминал."
 
 #. OPT_LANGUAGE
-#: src/config/options.inc:1556 src/config/opttypes.c:522
+#: src/config/options.inc:1561 src/config/opttypes.c:522
 msgid "Language"
 msgstr "Језик"
 
-#: src/config/options.inc:1558
+#: src/config/options.inc:1563
 msgid ""
 "Language of user interface. 'System' means that the language will be "
 "extracted from the environment dynamically."
@@ -5034,35 +5048,35 @@ msgstr ""
 "Језик корисничког интерфејса. „System“ значи да ће језик бити динамички "
 "изведен из променљивих окружења."
 
-#: src/config/options.inc:1562
+#: src/config/options.inc:1567
 msgid "Display menu bar always"
 msgstr "Увек приказивати линију менија"
 
-#: src/config/options.inc:1564
+#: src/config/options.inc:1569
 msgid "Always show menu bar on the screen."
 msgstr "Увек ће се приказивати линија менија на екрану."
 
-#: src/config/options.inc:1566
+#: src/config/options.inc:1571
 msgid "Display status bar"
 msgstr "Приказивање статусне линије"
 
-#: src/config/options.inc:1568
+#: src/config/options.inc:1573
 msgid "Show status bar on the screen."
 msgstr "На екрану ће се приказивати статусна линија."
 
-#: src/config/options.inc:1570
+#: src/config/options.inc:1575
 msgid "Display title bar"
 msgstr "Приказивање насловне линије"
 
-#: src/config/options.inc:1572
+#: src/config/options.inc:1577
 msgid "Show title bar on the screen."
 msgstr "На екрану ће се приказивати насловна линија."
 
-#: src/config/options.inc:1574
+#: src/config/options.inc:1579
 msgid "Display goto dialog in new tabs"
 msgstr "Приказивање дијалога „Иди на“ у новим картицама"
 
-#: src/config/options.inc:1576
+#: src/config/options.inc:1581
 msgid ""
 "Pop up goto dialog in newly created tabs when there's no homepage set. This "
 "means also showing goto dialog on startup."
@@ -5070,11 +5084,11 @@ msgstr ""
 "Отвара дијалог „Иди на“ у новокреираним картицама када није задата почетна "
 "страница. Ово такође значи да ће се тај дијалог приказивати при покретању."
 
-#: src/config/options.inc:1580
+#: src/config/options.inc:1585
 msgid "Show a message box when file is saved successfully"
 msgstr "Приказивање дијалога са поруком када је датотека успешно сачувана"
 
-#: src/config/options.inc:1582
+#: src/config/options.inc:1587
 msgid ""
 "When you pressed a [ Save ] button in some manager, this option will make "
 "sure that a box confirming success of the operation will pop up."
@@ -5082,19 +5096,19 @@ msgstr ""
 "Када притиснете дугме [ Сачувај ] у неком управљачу, ова опција ће осигурати "
 "да се отвори дијалог који потврђује успешност операције."
 
-#: src/config/options.inc:1587
+#: src/config/options.inc:1592
 msgid "Sessions"
 msgstr "Сесије"
 
-#: src/config/options.inc:1589
+#: src/config/options.inc:1594
 msgid "Sessions settings."
 msgstr "Опције сесија."
 
-#: src/config/options.inc:1591
+#: src/config/options.inc:1596
 msgid "Auto restore session"
 msgstr "Аутоматско обнављање сесије"
 
-#: src/config/options.inc:1593
+#: src/config/options.inc:1598
 msgid ""
 "Automatically restore the session at start.\n"
 "\n"
@@ -5104,11 +5118,11 @@ msgstr ""
 "\n"
 "Ова могућност захтева подршку за обележиваче."
 
-#: src/config/options.inc:1597
+#: src/config/options.inc:1602
 msgid "Auto save session"
 msgstr "Аутоматско чување сесије"
 
-#: src/config/options.inc:1599
+#: src/config/options.inc:1604
 msgid ""
 "Automatically save the session when quitting.\n"
 "\n"
@@ -5118,11 +5132,11 @@ msgstr ""
 "\n"
 "Ова могућност захтева подршку за обележиваче."
 
-#: src/config/options.inc:1603
+#: src/config/options.inc:1608
 msgid "Auto save and restore session folder name"
 msgstr "Назив фасцикле за аутоматско чување и обнављање сесије"
 
-#: src/config/options.inc:1605
+#: src/config/options.inc:1610
 msgid ""
 "Name of the bookmarks folder used for auto saving and restoring session. The "
 "name has to be unique. Any folders with the same name will be deleted.\n"
@@ -5135,11 +5149,11 @@ msgstr ""
 "\n"
 "Ово има смисла једино уз подршку за обележиваче."
 
-#: src/config/options.inc:1611
+#: src/config/options.inc:1616
 msgid "Auto save latest positions"
 msgstr "Аутоматско чување најновијих позиција"
 
-#: src/config/options.inc:1613
+#: src/config/options.inc:1618
 msgid ""
 "Whether to save view positions of documents.\n"
 "\n"
@@ -5149,11 +5163,11 @@ msgstr ""
 "\n"
 "Ова могућност захтева подршку за обележиваче."
 
-#: src/config/options.inc:1617
+#: src/config/options.inc:1622
 msgid "Fork on start"
 msgstr "Fork-овање на почетку"
 
-#: src/config/options.inc:1619
+#: src/config/options.inc:1624
 msgid ""
 "Fork on start to let other terminals function even if the first terminal "
 "exits."
@@ -5161,11 +5175,11 @@ msgstr ""
 "Fork-овање на почетку, како би се другим терминалима омогућило да "
 "функционишу чак и ако се изађе из првог терминала."
 
-#: src/config/options.inc:1622
+#: src/config/options.inc:1627
 msgid "Homepage URI"
 msgstr "УРИ почетне странице"
 
-#: src/config/options.inc:1624
+#: src/config/options.inc:1629
 msgid ""
 "The URI to load either at startup time when no URI was given on the command "
 "line or when requested by the goto-url-home action. Set to \"\" if the "
@@ -5175,20 +5189,20 @@ msgstr ""
 "командној линији, или када се то захтева акцијом goto-url-home. Поставите на "
 "„“ ако желите да се као УРИ уместо тога користи променљива окружења WWW_HOME."
 
-#: src/config/options.inc:1629
+#: src/config/options.inc:1634
 msgid "Keep session active"
 msgstr "Одржавање сесије активном"
 
-#: src/config/options.inc:1631
+#: src/config/options.inc:1636
 msgid "Keep the session active even if the last terminal exits."
 msgstr ""
 "Сесија ће се одржавати активном чак и када се изађе из последњег терминала."
 
-#: src/config/options.inc:1634
+#: src/config/options.inc:1639
 msgid "Postpone unlink temporary files"
 msgstr "Одлагање брисања привремених датотека"
 
-#: src/config/options.inc:1636
+#: src/config/options.inc:1641
 msgid ""
 "Clean temporary files (created for example while viewing images) at exit of "
 "ELinks not immediately after preview."
@@ -5196,11 +5210,11 @@ msgstr ""
 "Привремене датотеке (креиране, на пример, при прегледању слика) ће се "
 "чистити приликом изласка из ELinks-а, а не одмах после прегледа."
 
-#: src/config/options.inc:1639
+#: src/config/options.inc:1644
 msgid "Clipboard filename"
 msgstr "Датотека клипборда"
 
-#: src/config/options.inc:1641
+#: src/config/options.inc:1646
 msgid ""
 "The filename of the clipboard. The 'copy-clipboard' action will append to "
 "it. This file can be also a named pipe. See contrib/clipboard/clip.sh for "
@@ -5212,54 +5226,54 @@ msgstr ""
 "имплементације. Приметите да ова датотека мора постојати пре копирања на "
 "клипборд."
 
-#: src/config/options.inc:1646
+#: src/config/options.inc:1651
 msgid "Date format"
 msgstr "Формат датума"
 
-#: src/config/options.inc:1648
+#: src/config/options.inc:1653
 msgid "Date format to use in dialogs. See strftime(3)."
 msgstr "Формат датума у дијалозима. Погледајте strftime(3)."
 
 #. date added
-#: src/config/options.inc:1653
+#: src/config/options.inc:1658
 msgid "Disable mouse"
 msgstr "Деактивирање миша"
 
-#: src/config/options.inc:1655
+#: src/config/options.inc:1660
 msgid "Disable mouse. Changes take effect at the next elinks restart."
 msgstr ""
 "Деактивирање миша. Промене ступају на снагу приликом следећег покретања "
 "elinks-а."
 
-#: src/config/options.inc:1659
+#: src/config/options.inc:1664
 msgid "Background character"
 msgstr "Позадински знак"
 
-#: src/config/options.inc:1661
+#: src/config/options.inc:1666
 msgid "Integer value of background character."
 msgstr "Целобројна вредност позадинског знака."
 
-#: src/config/options.inc:1663
+#: src/config/options.inc:1668
 msgid "Back to exit"
 msgstr "Назад у излаз"
 
-#: src/config/options.inc:1665
+#: src/config/options.inc:1670
 msgid "Going back from initial page exits tab or elinks."
 msgstr "Премештање уназад са почетне странице затвара картицу или elinks."
 
-#: src/config/options.inc:1667
+#: src/config/options.inc:1672
 msgid "Double ESC"
 msgstr "Двоструки ESC"
 
-#: src/config/options.inc:1669
+#: src/config/options.inc:1674
 msgid "Back to 0.12pre5 handling of ESC key."
 msgstr "Повратак на 0.12pre5 руковање ESC тастером."
 
-#: src/config/options.inc:1671
+#: src/config/options.inc:1676
 msgid "Set window title"
 msgstr "Постављање наслова прозора"
 
-#: src/config/options.inc:1673
+#: src/config/options.inc:1678
 msgid ""
 "Set the window title when running in a windowing environment in an xterm-"
 "like terminal. This way the document's title is shown on the window titlebar."
@@ -5447,7 +5461,7 @@ msgstr "ELinks је покренут уз опцију -anonymous."
 msgid "Domain"
 msgstr "Домен"
 
-#: src/cookies/dialogs.c:45 src/mime/backend/mailcap.c:98
+#: src/cookies/dialogs.c:45 src/mime/backend/mailcap.c:102
 #: src/mime/backend/mimetypes.c:56 src/protocol/file/cgi.c:48
 msgid "Path"
 msgstr "Путања"
@@ -7003,14 +7017,6 @@ msgstr "Турски"
 msgid "Ukrainian"
 msgstr "Украјински"
 
-#: src/js/ecmascript-c.c:61
-msgid "Ecmascript enabled"
-msgstr "Ecmascript активиран"
-
-#: src/js/ecmascript-c.c:63
-msgid "Ecmascript disabled"
-msgstr "Ecmascript деактивиран"
-
 #: src/js/ecmascript.c:75
 msgid "ECMAScript options."
 msgstr "Опције ECMAScript-а."
@@ -7098,6 +7104,14 @@ msgstr ""
 "%d секунди. То вероватно значи да у скрипту постоји\n"
 "грешка и да би могао да заустави цео ELinks, па је зато\n"
 "извршавање скрипта прекинуто."
+
+#: src/js/ecmascript-c.c:61
+msgid "Ecmascript enabled"
+msgstr "Ecmascript активиран"
+
+#: src/js/ecmascript-c.c:63
+msgid "Ecmascript disabled"
+msgstr "Ecmascript деактивиран"
 
 #: src/js/mujs.c:280 src/js/quickjs.c:495 src/js/spidermonkey.cpp:137
 msgid "A script embedded in the current document raised the following:\n"
@@ -7329,7 +7343,7 @@ msgstr ""
 "Опис руковаоца својствен одређеном систему (нпр. unix, unix-xwin, ...)."
 
 #: src/mime/backend/default.c:65 src/mime/backend/dgi.c:69
-#: src/mime/backend/mailcap.c:103
+#: src/mime/backend/mailcap.c:107
 msgid "Ask before opening"
 msgstr "Потврда пре отварања"
 
@@ -7580,20 +7594,20 @@ msgid "DGI mime"
 msgstr "DGI mime"
 
 #. name:
-#: src/mime/backend/mailcap.c:90 src/mime/backend/mailcap.c:806
+#: src/mime/backend/mailcap.c:94 src/mime/backend/mailcap.c:823
 #: src/protocol/file/mailcap.c:43 src/protocol/file/mailcap.c:59
 msgid "Mailcap"
 msgstr "Mailcap"
 
-#: src/mime/backend/mailcap.c:92
+#: src/mime/backend/mailcap.c:96
 msgid "Options for mailcap support."
 msgstr "Опције подршке за mailcap."
 
-#: src/mime/backend/mailcap.c:96
+#: src/mime/backend/mailcap.c:100
 msgid "Enable mailcap support."
 msgstr "Активира подршку за mailcap."
 
-#: src/mime/backend/mailcap.c:100
+#: src/mime/backend/mailcap.c:104
 msgid ""
 "Mailcap search path. Colon-separated list of files. Leave as \"\" to use "
 "MAILCAP environment variable instead."
@@ -7602,15 +7616,15 @@ msgstr ""
 "Оставите као „“ (празно) да би се користила вредност променљиве окружења "
 "MAILCAP."
 
-#: src/mime/backend/mailcap.c:105
+#: src/mime/backend/mailcap.c:109
 msgid "Ask before using the handlers defined by mailcap."
 msgstr "Питати пре употребе руковалаца задатих у mailcap-у."
 
-#: src/mime/backend/mailcap.c:107
+#: src/mime/backend/mailcap.c:111
 msgid "Type query string"
 msgstr "Врста ниске упита"
 
-#: src/mime/backend/mailcap.c:109
+#: src/mime/backend/mailcap.c:113
 msgid ""
 "Type of description to show in \"what to do with this file\" query dialog:\n"
 "0 is show \"mailcap\"\n"
@@ -7624,11 +7638,11 @@ msgstr ""
 "2 приказати описно поље mailcap-а уколико постоји,\n"
 "  а у супротном „mailcap“"
 
-#: src/mime/backend/mailcap.c:116
+#: src/mime/backend/mailcap.c:120
 msgid "Prioritize entries by file"
 msgstr "Постављање приоритета према датотеци"
 
-#: src/mime/backend/mailcap.c:118
+#: src/mime/backend/mailcap.c:122
 msgid ""
 "Prioritize entries by the order of the files in the mailcap path. This means "
 "that wildcard entries (like: image/*) will also be checked before deciding "
@@ -7638,7 +7652,7 @@ msgstr ""
 "да ће и ставке са џокерским знацима (нпр: image/*) бити такође провераване "
 "пре бирања руковаоца."
 
-#: src/mime/backend/mailcap.c:378
+#: src/mime/backend/mailcap.c:385
 #, c-format
 msgid "Badly formatted mailcap entry for type %s in \"%s\" line %d"
 msgstr "Лоше задата ставка mailcap-а за тип %s у „%s“, ред %d"
@@ -8860,18 +8874,18 @@ msgstr "FTPES"
 msgid "SFTP"
 msgstr "SFTP"
 
-#: src/protocol/curl/ftp.c:213 src/protocol/fsp/fsp.c:169
-#: src/protocol/fsp/fsp2.c:966 src/protocol/ftp/ftp.c:1303 src/util/file.h:256
+#: src/protocol/curl/ftp.c:213 src/protocol/fsp/fsp2.c:966
+#: src/protocol/fsp/fsp.c:169 src/protocol/ftp/ftp.c:1303 src/util/file.h:256
 msgid "%b %e  %Y"
 msgstr "%b %e  %Y"
 
-#: src/protocol/curl/ftp.c:215 src/protocol/fsp/fsp.c:171
-#: src/protocol/fsp/fsp2.c:968 src/protocol/ftp/ftp.c:1305 src/util/file.h:258
+#: src/protocol/curl/ftp.c:215 src/protocol/fsp/fsp2.c:968
+#: src/protocol/fsp/fsp.c:171 src/protocol/ftp/ftp.c:1305 src/util/file.h:258
 msgid "%b %e %H:%M"
 msgstr "%b %e %H:%M"
 
-#: src/protocol/curl/ftp.c:222 src/protocol/fsp/fsp.c:177
-#: src/protocol/fsp/fsp2.c:974 src/protocol/ftp/ftp.c:1312 src/util/file.h:265
+#: src/protocol/curl/ftp.c:222 src/protocol/fsp/fsp2.c:974
+#: src/protocol/fsp/fsp.c:177 src/protocol/ftp/ftp.c:1312 src/util/file.h:265
 msgid "             "
 msgstr "             "
 
@@ -8982,7 +8996,7 @@ msgid "Finger"
 msgstr "Finger"
 
 #. name:
-#: src/protocol/fsp/fsp.c:56 src/protocol/fsp/fsp2.c:110
+#: src/protocol/fsp/fsp2.c:110 src/protocol/fsp/fsp.c:56
 msgid "FSP"
 msgstr "FSP"
 
@@ -10047,11 +10061,11 @@ msgstr "Неуспешно читање догађаја: %d (%s)"
 msgid "Too many bytes read from the itrm!"
 msgstr "Прочитано је превише бајтова из itrm-а!"
 
-#: src/terminal/mouse.c:136
+#: src/terminal/mouse.c:146
 msgid "Mouse enabled"
 msgstr "Миш је активиран"
 
-#: src/terminal/mouse.c:138
+#: src/terminal/mouse.c:148
 msgid "Mouse disabled"
 msgstr "Миш је деактивиран"
 

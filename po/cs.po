@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.5pre0.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2025-11-01 14:26+0100\n"
+"POT-Creation-Date: 2025-11-24 10:57+0100\n"
 "PO-Revision-Date: 2005-01-04 00:42+0100\n"
 "Last-Translator: Petr Baudis <pasky@ucw.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.souceforge.net>\n"
@@ -39,7 +39,7 @@ msgstr "Zmáčkni mezeru, jestli chceš tuhle složku rozbalit."
 #: src/dialogs/options.c:345 src/mime/dialogs.c:137
 #: src/protocol/auth/dialogs.c:162 src/protocol/protocol.c:274
 #: src/scripting/lua/core.c:442 src/scripting/lua/core.c:525
-#: src/scripting/python/dialogs.c:92 src/session/session.c:1079
+#: src/scripting/python/dialogs.c:92 src/session/session.c:1080
 #: src/viewer/text/search.c:2024
 #, fuzzy
 msgid "~OK"
@@ -199,9 +199,9 @@ msgid "Digital clock in the status bar."
 msgstr "Digitální hodiny na stavové liště."
 
 #: src/bfu/leds.c:85 src/bfu/leds.c:109 src/bfu/leds.c:122
-#: src/config/options.inc:1496 src/config/options.inc:1503
+#: src/config/options.inc:1501 src/config/options.inc:1508
 #: src/globhist/globhist.c:62 src/js/ecmascript.c:89 src/mime/backend/dgi.c:61
-#: src/mime/backend/mailcap.c:94 src/mime/backend/mimetypes.c:52
+#: src/mime/backend/mailcap.c:98 src/mime/backend/mimetypes.c:52
 #: src/network/ssl/ssl.c:214 src/network/ssl/ssl.c:385
 msgid "Enable"
 msgstr "Zapnout"
@@ -401,7 +401,7 @@ msgid ""
 "This feature requires bookmark support."
 msgstr ""
 
-#: src/bookmarks/dialogs.c:119 src/config/options.inc:1328
+#: src/bookmarks/dialogs.c:119 src/config/options.inc:1333
 #: src/dialogs/document.c:167 src/dialogs/tabs.c:142 src/globhist/dialogs.c:73
 msgid "Title"
 msgstr "Titulek"
@@ -1054,43 +1054,43 @@ msgstr "Otevřít menu Soubor"
 msgid "Open a Lua console"
 msgstr "Lua konzole"
 
-#: src/config/actions-main.inc:55 src/config/options.inc:1005
+#: src/config/actions-main.inc:55 src/config/options.inc:1010
 msgid "Macro 0"
 msgstr ""
 
-#: src/config/actions-main.inc:56 src/config/options.inc:1009
+#: src/config/actions-main.inc:56 src/config/options.inc:1014
 msgid "Macro 1"
 msgstr ""
 
-#: src/config/actions-main.inc:57 src/config/options.inc:1013
+#: src/config/actions-main.inc:57 src/config/options.inc:1018
 msgid "Macro 2"
 msgstr ""
 
-#: src/config/actions-main.inc:58 src/config/options.inc:1017
+#: src/config/actions-main.inc:58 src/config/options.inc:1022
 msgid "Macro 3"
 msgstr ""
 
-#: src/config/actions-main.inc:59 src/config/options.inc:1021
+#: src/config/actions-main.inc:59 src/config/options.inc:1026
 msgid "Macro 4"
 msgstr ""
 
-#: src/config/actions-main.inc:60 src/config/options.inc:1025
+#: src/config/actions-main.inc:60 src/config/options.inc:1030
 msgid "Macro 5"
 msgstr ""
 
-#: src/config/actions-main.inc:61 src/config/options.inc:1029
+#: src/config/actions-main.inc:61 src/config/options.inc:1034
 msgid "Macro 6"
 msgstr ""
 
-#: src/config/actions-main.inc:62 src/config/options.inc:1033
+#: src/config/actions-main.inc:62 src/config/options.inc:1038
 msgid "Macro 7"
 msgstr ""
 
-#: src/config/actions-main.inc:63 src/config/options.inc:1037
+#: src/config/actions-main.inc:63 src/config/options.inc:1042
 msgid "Macro 8"
 msgstr ""
 
-#: src/config/actions-main.inc:64 src/config/options.inc:1041
+#: src/config/actions-main.inc:64 src/config/options.inc:1046
 msgid "Macro 9"
 msgstr ""
 
@@ -2120,7 +2120,7 @@ msgstr "(rozbalíš zmáčknutím mezery)"
 #. * switch charsets.  So, it will work in any terminal that
 #. * understands UTF-8 and has the characters in its font.
 #: src/config/dialogs.c:157 src/config/dialogs.c:344
-#: src/config/options.inc:1078
+#: src/config/options.inc:1083
 msgid "Type"
 msgstr "Typ"
 
@@ -2149,7 +2149,7 @@ msgstr "Popis"
 
 #: src/config/dialogs.c:304 src/protocol/bittorrent/dialogs.c:616
 #: src/protocol/protocol.c:268 src/session/session.c:339
-#: src/session/session.c:352 src/session/session.c:1279
+#: src/session/session.c:352 src/session/session.c:1280
 #: src/viewer/text/textarea.c:642
 msgid "Error"
 msgstr "Chyba"
@@ -2200,7 +2200,7 @@ msgstr "Správce nastavení"
 msgid "Keystroke"
 msgstr "Kombinace kláves"
 
-#: src/config/dialogs.c:705 src/config/options.inc:1516
+#: src/config/dialogs.c:705 src/config/options.inc:1521
 msgid "Action"
 msgstr "Akce"
 
@@ -2794,12 +2794,12 @@ msgid "Active link colors."
 msgstr "Barva aktivního odkazu."
 
 #: src/config/options.inc:289 src/config/options.inc:659
-#: src/config/options.inc:1222
+#: src/config/options.inc:1227
 msgid "Background color"
 msgstr "Barva pozadí"
 
 #: src/config/options.inc:291 src/config/options.inc:661
-#: src/config/options.inc:1223
+#: src/config/options.inc:1228
 msgid "Default background color."
 msgstr "Výchozí barva pozadí."
 
@@ -2812,12 +2812,12 @@ msgstr "Výchozí barva pozadí."
 #. The colors and mono tree should be similar but with different default
 #. * values of course so always use the macros below.
 #: src/config/options.inc:293 src/config/options.inc:655
-#: src/config/options.inc:1220
+#: src/config/options.inc:1225
 msgid "Text color"
 msgstr "Barva textu"
 
 #: src/config/options.inc:295 src/config/options.inc:657
-#: src/config/options.inc:1221
+#: src/config/options.inc:1226
 msgid "Default text color."
 msgstr "Výchozí barva textu."
 
@@ -2872,7 +2872,7 @@ msgstr "Inverzní barvy"
 msgid "Invert the fore- and background color so the link stands out."
 msgstr "Inverzní barva pozadí i popředí, takže odkaz vystupuje z textu."
 
-#: src/config/options.inc:323 src/config/options.inc:1184
+#: src/config/options.inc:323 src/config/options.inc:1189
 #: src/dialogs/options.c:251
 msgid "Underline"
 msgstr "Podtržení"
@@ -3680,7 +3680,7 @@ msgid "Dump output options."
 msgstr "Nastavení dump výstupu."
 
 #. OPT_CODEPAGE
-#: src/config/options.inc:763 src/config/options.inc:1188
+#: src/config/options.inc:763 src/config/options.inc:1193
 #: src/config/opttypes.c:520 src/dialogs/document.c:186
 msgid "Codepage"
 msgstr "Kódová stránka"
@@ -3694,7 +3694,7 @@ msgstr ""
 "Východí kódová stránka pro dump výstup. 'System' znamená kódovou stránku\n"
 "zvolenou dle nastavené systémové lokalizace (locale)."
 
-#: src/config/options.inc:768 src/config/options.inc:1133
+#: src/config/options.inc:768 src/config/options.inc:1138
 msgid "Color mode"
 msgstr "Barevný režim"
 
@@ -3821,81 +3821,91 @@ msgstr "Zobrazování HTML"
 msgid "Options concerning the display of HTML pages."
 msgstr "Nastavení týkající se zobrazování HTML stránek."
 
-#: src/config/options.inc:838 src/config/options.inc:914
+#: src/config/options.inc:838
+msgid "Always ignore <noscript> content"
+msgstr ""
+
+#: src/config/options.inc:840
+msgid ""
+"Whether to ignore content enclosed by the <noscript> tag, even if ECMAScript "
+"is disabled or not compiled-in."
+msgstr ""
+
+#: src/config/options.inc:843 src/config/options.inc:919
 msgid "Compress empty lines"
 msgstr "Sloučit prázdné řádky"
 
-#: src/config/options.inc:840 src/config/options.inc:916
+#: src/config/options.inc:845 src/config/options.inc:921
 msgid "Compress successive empty lines to only one in displayed text."
 msgstr "Sloučit několik prázdných řádků za sebou v jenom jeden."
 
-#: src/config/options.inc:843
+#: src/config/options.inc:848
 msgid "Display frames"
 msgstr "Zobrazovat rámce"
 
-#: src/config/options.inc:845
+#: src/config/options.inc:850
 msgid "Display frames."
 msgstr "Zobrazovat rámce."
 
-#: src/config/options.inc:847
+#: src/config/options.inc:852
 #, fuzzy
 msgid "Display iframes"
 msgstr "Zobrazovat rámce"
 
-#: src/config/options.inc:849
+#: src/config/options.inc:854
 msgid "Display iframes. This code is experimental."
 msgstr ""
 
-#: src/config/options.inc:851
+#: src/config/options.inc:856
 msgid "Display tables"
 msgstr "Zobrazovat tabulky"
 
-#: src/config/options.inc:853
+#: src/config/options.inc:858
 msgid "Display tables."
 msgstr "Zobrazovat tabulky."
 
-#: src/config/options.inc:855
+#: src/config/options.inc:860
 msgid "Display subscripts"
 msgstr "Zobrazovat horní indexy"
 
-#: src/config/options.inc:857
+#: src/config/options.inc:862
 msgid "Display subscripts (as [thing])."
 msgstr "Zobrazovat horní indexy (jako [index])."
 
-#: src/config/options.inc:859
+#: src/config/options.inc:864
 msgid "Display superscripts"
 msgstr "Zobrazovat dolní indexy"
 
-#: src/config/options.inc:861
+#: src/config/options.inc:866
 msgid "Display superscripts (as ^thing)."
 msgstr "Zobrazovat dolní indexy (jako ^index)."
 
-#: src/config/options.inc:863
+#: src/config/options.inc:868
 msgid "Whether to show documents which are not fully loaded"
 msgstr ""
 
-#: src/config/options.inc:865
+#: src/config/options.inc:870
 msgid ""
 "ELinks periodically display documents, even if they are not fully loaded. "
 "You can disable it here."
 msgstr ""
 
-#: src/config/options.inc:869 src/config/options.inc:1171
+#: src/config/options.inc:874 src/config/options.inc:1176
 #: src/dialogs/options.c:255
 msgid "Kitty"
 msgstr ""
 
-#: src/config/options.inc:871
+#: src/config/options.inc:876
 #, fuzzy
 msgid "Whether to display kitty images in html documents."
 msgstr "Zdalipka spouštět v dokumentech tyto skripty."
 
-#: src/config/options.inc:874
+#: src/config/options.inc:879
 #, fuzzy
 msgid "Rendering of HTML link element"
 msgstr "Zobrazování HTML elementu \"link\" (speciálních odkazů)"
 
-#: src/config/options.inc:876
+#: src/config/options.inc:881
 msgid ""
 "How to render <link> tags from the HTML header:\n"
 "0 is nothing\n"
@@ -3913,37 +3923,37 @@ msgstr ""
 "4 znamená ještě zobrazit typ\n"
 "5 znamená zobrazit vše"
 
-#: src/config/options.inc:885 src/config/options.inc:925
-#: src/config/options.inc:1176 src/dialogs/options.c:258
+#: src/config/options.inc:890 src/config/options.inc:930
+#: src/config/options.inc:1181 src/dialogs/options.c:258
 msgid "Sixel"
 msgstr ""
 
-#: src/config/options.inc:887
+#: src/config/options.inc:892
 #, fuzzy
 msgid "Whether to display sixel images in html documents."
 msgstr "Zdalipka spouštět v dokumentech tyto skripty."
 
-#: src/config/options.inc:891
+#: src/config/options.inc:896
 msgid "Substitute frame chars"
 msgstr ""
 
-#: src/config/options.inc:893
+#: src/config/options.inc:898
 msgid "Replace ascii frame chars by border frame chars in html documents."
 msgstr ""
 
-#: src/config/options.inc:895
+#: src/config/options.inc:900
 msgid "Underline links"
 msgstr "Podtrhávat"
 
-#: src/config/options.inc:897
+#: src/config/options.inc:902
 msgid "Underline links."
 msgstr "Podtrhávat odkazy."
 
-#: src/config/options.inc:899
+#: src/config/options.inc:904
 msgid "Wrap non breaking space"
 msgstr "Rozdělovat nedělitelné mezery"
 
-#: src/config/options.inc:901
+#: src/config/options.inc:906
 #, fuzzy
 msgid ""
 "If set do not honour non breaking space (the nbsp entity) but allows one to "
@@ -3955,42 +3965,42 @@ msgstr ""
 "To může pomoci proti dokumentům, které jsou tak široké, že musíte\n"
 "při jejich prohlížení použít horizontální scrollování."
 
-#: src/config/options.inc:906
+#: src/config/options.inc:911
 msgid "Plain rendering"
 msgstr "Zobrazování textových dokumentů"
 
-#: src/config/options.inc:908
+#: src/config/options.inc:913
 msgid "Options concerning the display of plain text pages."
 msgstr "Nastavení týkající se zobrazování stránek s čistým textem."
 
-#: src/config/options.inc:910
+#: src/config/options.inc:915
 msgid "Display URIs"
 msgstr "Zobrazovat odkazy"
 
-#: src/config/options.inc:912
+#: src/config/options.inc:917
 msgid "Display URIs in the document as links."
 msgstr "Zobrazovat URI (internetové adresy) v dokumentu jako odkazy."
 
-#: src/config/options.inc:919
+#: src/config/options.inc:924
 msgid "Fixup frame borders of tables"
 msgstr ""
 
-#: src/config/options.inc:921
+#: src/config/options.inc:926
 msgid ""
 "Change ascii border characters to frame borders. Usage example: mysql --"
 "pager=elinks"
 msgstr ""
 
-#: src/config/options.inc:927
+#: src/config/options.inc:932
 #, fuzzy
 msgid "Whether to display sixel images in plain text documents."
 msgstr "Zdalipka spouštět v dokumentech tyto skripty."
 
-#: src/config/options.inc:930
+#: src/config/options.inc:935
 msgid "URI passing"
 msgstr "Předávání URI"
 
-#: src/config/options.inc:932
+#: src/config/options.inc:937
 msgid ""
 "Rules for passing URIs to external commands. When one rule is defined the "
 "link and tab menu will have a menu item that makes it possible to pass the "
@@ -4006,12 +4016,12 @@ msgid ""
 "behaviour: the command receives standard input and elinks is blocked."
 msgstr ""
 
-#: src/config/options.inc:951
+#: src/config/options.inc:956
 #, fuzzy
 msgid "A rule for passing URI to an external command."
 msgstr "Pravidla pro předávání URI externím příkazům."
 
-#: src/config/options.inc:955
+#: src/config/options.inc:960
 #, fuzzy
 msgid ""
 "The external command. The format is:\n"
@@ -4026,25 +4036,25 @@ msgstr ""
 "\n"
 "Nepište kolem %c žádné uvozovky ani apostrofy."
 
-#: src/config/options.inc:963
+#: src/config/options.inc:968
 msgid "Run command in the foreground."
 msgstr ""
 
 #. Keep options in alphabetical order.
-#: src/config/options.inc:969
+#: src/config/options.inc:974
 msgid "Information files"
 msgstr "Informační soubory"
 
-#: src/config/options.inc:971
+#: src/config/options.inc:976
 #, fuzzy
 msgid "Options for information files in ~/.config/elinks."
 msgstr "Nastavení informačních souborů v ~/.elinks."
 
-#: src/config/options.inc:973
+#: src/config/options.inc:978
 msgid "Save interval"
 msgstr "Interval automatického ukládání"
 
-#: src/config/options.inc:975
+#: src/config/options.inc:980
 #, fuzzy
 msgid ""
 "Interval at which to trigger information files in ~/.config/elinks to be "
@@ -4054,11 +4064,11 @@ msgstr ""
 "v ~/.elinks, pokud se od posledního zapsání na disk nějak změnila\n"
 "(v sekundách; 0 toto chování potlačuje)."
 
-#: src/config/options.inc:979
+#: src/config/options.inc:984
 msgid "Use secure file saving"
 msgstr "Používat bezpečné ukládání souborů"
 
-#: src/config/options.inc:981
+#: src/config/options.inc:986
 #, fuzzy
 msgid ""
 "First write data to unique temporary file, then rename this file upon "
@@ -4079,80 +4089,80 @@ msgstr ""
 "přístupovými právy. Bezpečné ukládání souborů je automaticky vypnuto,\n"
 "pokud je soubor symbolický link."
 
-#: src/config/options.inc:993
+#: src/config/options.inc:998
 #, fuzzy
 msgid "Use fsync(3) with secure file saving"
 msgstr "Používat bezpečné ukládání souborů"
 
-#: src/config/options.inc:995
+#: src/config/options.inc:1000
 msgid ""
 "When using secure file saving, call fsync(3), if the OS supports it, to "
 "force the OS immediately to write the data to permanent storage. This is "
 "optional for those who wish to avoid excessive disk I/O."
 msgstr ""
 
-#: src/config/options.inc:1001
+#: src/config/options.inc:1006
 msgid "Macros"
 msgstr ""
 
-#: src/config/options.inc:1003
+#: src/config/options.inc:1008
 msgid "Macros for exmode."
 msgstr ""
 
-#: src/config/options.inc:1007
+#: src/config/options.inc:1012
 msgid "Macro 0 for exmode."
 msgstr ""
 
-#: src/config/options.inc:1011
+#: src/config/options.inc:1016
 msgid "Macro 1 for exmode."
 msgstr ""
 
-#: src/config/options.inc:1015
+#: src/config/options.inc:1020
 msgid "Macro 2 for exmode."
 msgstr ""
 
-#: src/config/options.inc:1019
+#: src/config/options.inc:1024
 msgid "Macro 3 for exmode."
 msgstr ""
 
-#: src/config/options.inc:1023
+#: src/config/options.inc:1028
 msgid "Macro 4 for exmode."
 msgstr ""
 
-#: src/config/options.inc:1027
+#: src/config/options.inc:1032
 msgid "Macro 5 for exmode."
 msgstr ""
 
-#: src/config/options.inc:1031
+#: src/config/options.inc:1036
 msgid "Macro 6 for exmode."
 msgstr ""
 
-#: src/config/options.inc:1035
+#: src/config/options.inc:1040
 msgid "Macro 7 for exmode."
 msgstr ""
 
-#: src/config/options.inc:1039
+#: src/config/options.inc:1044
 msgid "Macro 8 for exmode."
 msgstr ""
 
-#: src/config/options.inc:1043
+#: src/config/options.inc:1048
 msgid "Macro 9 for exmode."
 msgstr ""
 
 #. Keep options in alphabetical order.
-#: src/config/options.inc:1047
+#: src/config/options.inc:1052
 msgid "Terminals"
 msgstr "Terminály"
 
-#: src/config/options.inc:1049
+#: src/config/options.inc:1054
 msgid "Terminal options."
 msgstr "Nastavení terminálu."
 
-#: src/config/options.inc:1053
+#: src/config/options.inc:1058
 msgid "Options specific to this terminal type (according to $TERM value)."
 msgstr "Volby specifické pro tento typ terminálu (podle hodnoty $TERM)."
 
-#: src/config/options.inc:1080
+#: src/config/options.inc:1085
 #, fuzzy
 msgid ""
 "Terminal type; matters mostly only when drawing frames and dialog box "
@@ -4172,11 +4182,11 @@ msgstr ""
 "3 znamená KOI-8\n"
 "4 znamená FreeBSD terminál"
 
-#: src/config/options.inc:1089
+#: src/config/options.inc:1094
 msgid "Always encode xterm title in ISO-8859-1"
 msgstr ""
 
-#: src/config/options.inc:1091
+#: src/config/options.inc:1096
 msgid ""
 "When updating the window title of xterm or a similar terminal emulator, "
 "encode the title in ISO-8859-1 (Latin-1), rather than in the charset used "
@@ -4188,11 +4198,11 @@ msgid ""
 "different page so that ELinks notices it needs to update the title."
 msgstr ""
 
-#: src/config/options.inc:1102 src/dialogs/options.c:246
+#: src/config/options.inc:1107 src/dialogs/options.c:246
 msgid "Switch fonts for line drawing"
 msgstr "Přepínat fonty při kreslení čar"
 
-#: src/config/options.inc:1104
+#: src/config/options.inc:1109
 #, fuzzy
 msgid ""
 "Switch fonts when drawing lines, enabling both local characters and lines "
@@ -4208,11 +4218,11 @@ msgstr ""
 #. * and if so, behave as if "utf_8_io" were 1.  (When CONFIG_UTF8 is
 #. * not defined, it should not be possible to set UTF-8 as "codepage";
 #. * please report any such possibilities as bugs.)
-#: src/config/options.inc:1114 src/dialogs/options.c:253
+#: src/config/options.inc:1119 src/dialogs/options.c:253
 msgid "UTF-8 I/O"
 msgstr "UTF-8 I/O"
 
-#: src/config/options.inc:1116
+#: src/config/options.inc:1121
 #, fuzzy
 msgid ""
 "Enable I/O in UTF-8 for Unicode terminals. Note that currently, only the "
@@ -4224,11 +4234,11 @@ msgstr ""
 "uvědomit, že v současnosti je podporována pouze podmnožina UTF8 v\n"
 "závislosti na aktuálně zvoleném kódování terminálu."
 
-#: src/config/options.inc:1121 src/dialogs/options.c:247
+#: src/config/options.inc:1126 src/dialogs/options.c:247
 msgid "Restrict frames in cp850/852"
 msgstr "Ohraničené rámečky v cp850/852"
 
-#: src/config/options.inc:1123
+#: src/config/options.inc:1128
 #, fuzzy
 msgid ""
 "Restrict the characters used when drawing lines. Makes sense only with linux "
@@ -4237,11 +4247,11 @@ msgstr ""
 "Omezit znaky používané pro kreslení čar. Tato volba má smysl pouze pro\n"
 "linuxové terminály použivající kódování cp850 či cp852."
 
-#: src/config/options.inc:1127 src/dialogs/options.c:248
+#: src/config/options.inc:1132 src/dialogs/options.c:248
 msgid "Block cursor"
 msgstr "Blokovat kurzor"
 
-#: src/config/options.inc:1129
+#: src/config/options.inc:1134
 #, fuzzy
 msgid ""
 "Move cursor to bottom right corner when done drawing. This is particularly "
@@ -4257,7 +4267,7 @@ msgstr ""
 #. * an outer list entry after an inner list.
 #. * TRANSLATORS: This restriction applies only to the
 #. * "en" (English) translation.  (See doc/Makefile.)
-#: src/config/options.inc:1140
+#: src/config/options.inc:1145
 #, fuzzy
 msgid ""
 "The color mode controls what colors are used and how they are output to the "
@@ -4280,11 +4290,11 @@ msgstr ""
 "1, to jest 16 barev; používá barvy podle specifikace ANSI\n"
 "2, to jest 256 barev; používá RGB kódy XTermu"
 
-#: src/config/options.inc:1155 src/dialogs/options.c:250
+#: src/config/options.inc:1160 src/dialogs/options.c:250
 msgid "Transparency"
 msgstr "Průhlednost"
 
-#: src/config/options.inc:1157
+#: src/config/options.inc:1162
 #, fuzzy
 msgid ""
 "If we should not set the background to black. This is particularly useful "
@@ -4300,38 +4310,38 @@ msgstr ""
 "s obrázkem na pozadí nebo průhledným pozadí - bude vidět i v ELinksu.\n"
 "Ovšemže tato volba má smysl, pouze pokud je zapnuta podpora barev."
 
-#: src/config/options.inc:1167 src/dialogs/options.c:249
+#: src/config/options.inc:1172 src/dialogs/options.c:249
 #, fuzzy
 msgid "Italic"
 msgstr "Italština"
 
-#: src/config/options.inc:1169
+#: src/config/options.inc:1174
 msgid "If we should use italics."
 msgstr ""
 
-#: src/config/options.inc:1173
+#: src/config/options.inc:1178
 msgid "Whether terminal supports kitty graphics protocol."
 msgstr ""
 
-#: src/config/options.inc:1178
+#: src/config/options.inc:1183
 msgid "Whether terminal supports sixel graphics."
 msgstr ""
 
-#: src/config/options.inc:1180 src/dialogs/options.c:252
+#: src/config/options.inc:1185 src/dialogs/options.c:252
 msgid "Strikethrough"
 msgstr ""
 
-#: src/config/options.inc:1182
+#: src/config/options.inc:1187
 msgid "If we should use strikethrough."
 msgstr ""
 
-#: src/config/options.inc:1186
+#: src/config/options.inc:1191
 msgid "If we should use underline or enhance the color instead."
 msgstr ""
 "Zdali bychom měli používat podtrhávání či místo toho zvýraznit použitou "
 "barvu."
 
-#: src/config/options.inc:1190
+#: src/config/options.inc:1195
 #, fuzzy
 msgid ""
 "Codepage of charset used for displaying content on terminal. 'System' stands "
@@ -4342,416 +4352,416 @@ msgstr ""
 "(locale)."
 
 #. Keep options in alphabetical order.
-#: src/config/options.inc:1198
+#: src/config/options.inc:1203
 msgid "User interface"
 msgstr "Uživatelské rozhraní"
 
-#: src/config/options.inc:1200
+#: src/config/options.inc:1205
 msgid "User interface options."
 msgstr "Nastavení uživatelského rozhraní."
 
-#: src/config/options.inc:1204
+#: src/config/options.inc:1209
 msgid "Color settings"
 msgstr "Nastavení barev"
 
-#: src/config/options.inc:1206
+#: src/config/options.inc:1211
 msgid "Default user interface color settings."
 msgstr "Výchozí nastavení barev uživatelského rozhraní."
 
-#: src/config/options.inc:1233
+#: src/config/options.inc:1238
 msgid "Color terminals"
 msgstr "Barevné terminály"
 
-#: src/config/options.inc:1235
+#: src/config/options.inc:1240
 msgid "Color settings for color terminal."
 msgstr "Nastavení barev pro barevné terminály."
 
-#: src/config/options.inc:1237
+#: src/config/options.inc:1242
 msgid "Non-color terminals"
 msgstr "Nebarevné terminály"
 
-#: src/config/options.inc:1239
+#: src/config/options.inc:1244
 msgid "Color settings for non-color terminal."
 msgstr "Nastavení barev pro nebarevné terminály."
 
 #. FIXME: obsolete, how to alias them correctly ? --Zas
-#: src/config/options.inc:1242
+#: src/config/options.inc:1247
 msgid "Main menu bar"
 msgstr "Lišta s hlavním menu."
 
-#: src/config/options.inc:1244
+#: src/config/options.inc:1249
 msgid "Main menu bar colors."
 msgstr "Barvy lišty hlavního menu."
 
-#: src/config/options.inc:1246
+#: src/config/options.inc:1251
 msgid "Unselected main menu bar item"
 msgstr "Nevybraná položka hlavního menu"
 
-#: src/config/options.inc:1248
+#: src/config/options.inc:1253
 msgid "Unselected main menu bar item colors."
 msgstr "Barvy nevybrané položky hlavního menu."
 
-#: src/config/options.inc:1250
+#: src/config/options.inc:1255
 msgid "Selected main menu bar item"
 msgstr "Vybraná položka hlavního menu"
 
-#: src/config/options.inc:1252
+#: src/config/options.inc:1257
 msgid "Selected main menu bar item colors."
 msgstr "Barvy vybrané položky hlavního menu."
 
-#: src/config/options.inc:1254 src/config/options.inc:1283
+#: src/config/options.inc:1259 src/config/options.inc:1288
 msgid "Hotkey"
 msgstr "Horká klávesa"
 
-#: src/config/options.inc:1256
+#: src/config/options.inc:1261
 msgid "Main menu hotkey colors."
 msgstr "Barva horké klávesy v hlavním menu."
 
-#: src/config/options.inc:1258 src/config/options.inc:1287
+#: src/config/options.inc:1263 src/config/options.inc:1292
 msgid "Unselected hotkey"
 msgstr "Nevybraná horká klávesa"
 
-#: src/config/options.inc:1260
+#: src/config/options.inc:1265
 msgid "Main menu unselected hotkey colors."
 msgstr "Barva nevybrané horké klávesy v hlavním menu."
 
-#: src/config/options.inc:1262 src/config/options.inc:1291
+#: src/config/options.inc:1267 src/config/options.inc:1296
 msgid "Selected hotkey"
 msgstr "Vybraná horká klávesa"
 
-#: src/config/options.inc:1264
+#: src/config/options.inc:1269
 msgid "Main menu selected hotkey colors."
 msgstr "Barva vybrané horké klávesy v hlavním menu."
 
-#: src/config/options.inc:1267
+#: src/config/options.inc:1272
 msgid "Menu bar"
 msgstr "Lišta s menu"
 
-#: src/config/options.inc:1269
+#: src/config/options.inc:1274
 msgid "Menu bar colors."
 msgstr "Barvy lišty s menu."
 
-#: src/config/options.inc:1271
+#: src/config/options.inc:1276
 msgid "Unselected menu item"
 msgstr "Nevybraná položka menu"
 
-#: src/config/options.inc:1273
+#: src/config/options.inc:1278
 msgid "Unselected menu item colors."
 msgstr "Barvy nevybrané položky menu."
 
-#: src/config/options.inc:1275
+#: src/config/options.inc:1280
 msgid "Selected menu item"
 msgstr "Vybraná položka menu"
 
-#: src/config/options.inc:1277
+#: src/config/options.inc:1282
 msgid "Selected menu item colors."
 msgstr "Barvy vybrané položky menu."
 
-#: src/config/options.inc:1279
+#: src/config/options.inc:1284
 msgid "Marked menu item"
 msgstr "Označená položka menu"
 
-#: src/config/options.inc:1281
+#: src/config/options.inc:1286
 msgid "Marked menu item colors."
 msgstr "Barvy označené položky menu."
 
-#: src/config/options.inc:1285
+#: src/config/options.inc:1290
 msgid "Menu item hotkey colors."
 msgstr "Barvy horké klávesy položky menu."
 
-#: src/config/options.inc:1289
+#: src/config/options.inc:1294
 msgid "Menu item unselected hotkey colors."
 msgstr "Barvy horké klávesy nevybrané položky menu."
 
-#: src/config/options.inc:1293
+#: src/config/options.inc:1298
 msgid "Menu item selected hotkey colors."
 msgstr "Barvy horké klávesy vybrané položky menu."
 
-#: src/config/options.inc:1295
+#: src/config/options.inc:1300
 msgid "Menu frame"
 msgstr "Rámeček menu"
 
-#: src/config/options.inc:1297
+#: src/config/options.inc:1302
 msgid "Menu frame colors."
 msgstr "Barvy rámečku menu."
 
-#: src/config/options.inc:1300
+#: src/config/options.inc:1305
 msgid "Dialog"
 msgstr "Dialog"
 
-#: src/config/options.inc:1302
+#: src/config/options.inc:1307
 msgid "Dialog colors."
 msgstr "Barvy dialogového okna."
 
-#: src/config/options.inc:1312
+#: src/config/options.inc:1317
 msgid "Generic"
 msgstr "Obecné"
 
-#: src/config/options.inc:1314
+#: src/config/options.inc:1319
 msgid "Generic dialog colors."
 msgstr "Obecná barva dialogu."
 
-#: src/config/options.inc:1316
+#: src/config/options.inc:1321
 msgid "Frame"
 msgstr "Rámeček"
 
-#: src/config/options.inc:1318
+#: src/config/options.inc:1323
 msgid "Dialog frame colors."
 msgstr "Barva rámečku dialogového okna."
 
-#: src/config/options.inc:1320
+#: src/config/options.inc:1325
 msgid "Scrollbar"
 msgstr "Scrollovátko"
 
-#: src/config/options.inc:1322
+#: src/config/options.inc:1327
 msgid "Scrollbar colors."
 msgstr "Barvy scrollovátka."
 
-#: src/config/options.inc:1324
+#: src/config/options.inc:1329
 #, fuzzy
 msgid "Selected scrollbar"
 msgstr "Barvy vybraného tabu."
 
-#: src/config/options.inc:1326
+#: src/config/options.inc:1331
 msgid "Scrollbar selected colors."
 msgstr "Barvy vybraného scrollovátka."
 
-#: src/config/options.inc:1330
+#: src/config/options.inc:1335
 msgid "Dialog title colors."
 msgstr "Barva titulku dialogového okna."
 
-#: src/config/options.inc:1332
+#: src/config/options.inc:1337
 msgid "Text"
 msgstr "Text"
 
-#: src/config/options.inc:1334
+#: src/config/options.inc:1339
 msgid "Dialog text colors."
 msgstr "Barvy textu dialogového okna."
 
-#: src/config/options.inc:1336 src/viewer/text/form.c:1977
+#: src/config/options.inc:1341 src/viewer/text/form.c:1977
 msgid "Checkbox"
 msgstr "Zaškrtávací čtvereček"
 
-#: src/config/options.inc:1338
+#: src/config/options.inc:1343
 msgid "Dialog checkbox colors."
 msgstr "Barvy zaškrtávacího čtverečku."
 
-#: src/config/options.inc:1340
+#: src/config/options.inc:1345
 #, fuzzy
 msgid "Selected checkbox"
 msgstr "Vybraný tab"
 
-#: src/config/options.inc:1342
+#: src/config/options.inc:1347
 #, fuzzy
 msgid "Dialog selected checkbox colors."
 msgstr "Barvy vybraného tlačítka."
 
-#: src/config/options.inc:1344
+#: src/config/options.inc:1349
 msgid "Checkbox label"
 msgstr "Popiska zaškrtávacího čtverečku"
 
-#: src/config/options.inc:1346
+#: src/config/options.inc:1351
 msgid "Dialog checkbox label colors."
 msgstr "Barvy popisky zaškrtávacího čtverečku."
 
-#: src/config/options.inc:1348
+#: src/config/options.inc:1353
 msgid "Button"
 msgstr "Tlačítko"
 
-#: src/config/options.inc:1350 src/config/options.inc:1358
+#: src/config/options.inc:1355 src/config/options.inc:1363
 msgid "Dialog button colors."
 msgstr "Barvy tlačítka."
 
-#: src/config/options.inc:1352
+#: src/config/options.inc:1357
 msgid "Selected button"
 msgstr "Vybrané tlačítko"
 
-#: src/config/options.inc:1354 src/config/options.inc:1362
+#: src/config/options.inc:1359 src/config/options.inc:1367
 msgid "Dialog selected button colors."
 msgstr "Barvy vybraného tlačítka."
 
-#: src/config/options.inc:1356
+#: src/config/options.inc:1361
 msgid "Button shortcut"
 msgstr "Klávesová zkratka tlačítka"
 
-#: src/config/options.inc:1360
+#: src/config/options.inc:1365
 msgid "Selected button shortcut"
 msgstr "Vybraná klávesová zkratka tlačítka"
 
-#: src/config/options.inc:1364 src/viewer/text/form.c:1981
+#: src/config/options.inc:1369 src/viewer/text/form.c:1981
 msgid "Text field"
 msgstr "Textové políčko"
 
-#: src/config/options.inc:1366
+#: src/config/options.inc:1371
 msgid "Dialog text field colors."
 msgstr "Barvy textového políčka."
 
-#: src/config/options.inc:1368
+#: src/config/options.inc:1373
 msgid "Text field text"
 msgstr "Text v textovém políčku"
 
-#: src/config/options.inc:1370
+#: src/config/options.inc:1375
 msgid "Dialog field text colors."
 msgstr "Barvy textu textového políčka."
 
-#: src/config/options.inc:1372
+#: src/config/options.inc:1377
 msgid "Meter"
 msgstr "Teploměr"
 
-#: src/config/options.inc:1374
+#: src/config/options.inc:1379
 msgid "Dialog meter colors."
 msgstr "Barvy teploměru dialogového okna."
 
-#: src/config/options.inc:1376
+#: src/config/options.inc:1381
 msgid "Shadow"
 msgstr "Stín"
 
-#: src/config/options.inc:1378
+#: src/config/options.inc:1383
 msgid "Dialog shadow colors (see ui.shadows option)."
 msgstr "Barvy stínu dialogu (viz volba ui.shadows)."
 
-#: src/config/options.inc:1380
+#: src/config/options.inc:1385
 msgid "Title bar"
 msgstr "Lišta s titulkem"
 
-#: src/config/options.inc:1382
+#: src/config/options.inc:1387
 msgid "Title bar colors."
 msgstr "Barvy lišty s titulkem."
 
-#: src/config/options.inc:1384
+#: src/config/options.inc:1389
 msgid "Generic title bar"
 msgstr "Obecná lišta s titulkem"
 
-#: src/config/options.inc:1386
+#: src/config/options.inc:1391
 msgid "Generic title bar colors."
 msgstr "Barvy obecné lišty s titulkem."
 
-#: src/config/options.inc:1388
+#: src/config/options.inc:1393
 msgid "Title bar text"
 msgstr "Text titulku"
 
-#: src/config/options.inc:1390
+#: src/config/options.inc:1395
 msgid "Title bar text colors."
 msgstr "Barvy textu lišty s titulkem."
 
-#: src/config/options.inc:1393
+#: src/config/options.inc:1398
 msgid "Status bar"
 msgstr "Stavová lišta"
 
-#: src/config/options.inc:1395
+#: src/config/options.inc:1400
 msgid "Status bar colors."
 msgstr "Barvy stavové lišty."
 
-#: src/config/options.inc:1397
+#: src/config/options.inc:1402
 #, fuzzy
 msgid "Status bar show ip"
 msgstr "Stavová lišta"
 
-#: src/config/options.inc:1399
+#: src/config/options.inc:1404
 #, fuzzy
 msgid "Status bar show ip text colors."
 msgstr "Barvy textu stavové lišty."
 
-#: src/config/options.inc:1401
+#: src/config/options.inc:1406
 #, fuzzy
 msgid "Status bar show available memory"
 msgstr "Stavová lišta"
 
-#: src/config/options.inc:1403
+#: src/config/options.inc:1408
 #, fuzzy
 msgid "Status bar show available memory text colors."
 msgstr "Barvy textu stavové lišty."
 
-#: src/config/options.inc:1405
+#: src/config/options.inc:1410
 msgid "Generic status bar"
 msgstr "Obecná stavová lišta"
 
-#: src/config/options.inc:1407
+#: src/config/options.inc:1412
 msgid "Generic status bar colors."
 msgstr "Barvy obecné stavové lišty."
 
-#: src/config/options.inc:1410
+#: src/config/options.inc:1415
 msgid "Status bar text"
 msgstr "Text stavové lišty"
 
-#: src/config/options.inc:1412
+#: src/config/options.inc:1417
 msgid "Status bar text colors."
 msgstr "Barvy textu stavové lišty."
 
-#: src/config/options.inc:1415
+#: src/config/options.inc:1420
 msgid "Tabs bar"
 msgstr "Lišta s taby"
 
-#: src/config/options.inc:1417
+#: src/config/options.inc:1422
 msgid "Tabs bar colors."
 msgstr "Barvy lišty s taby."
 
-#: src/config/options.inc:1419
+#: src/config/options.inc:1424
 msgid "Unvisited tab"
 msgstr "Nenavštívený tab"
 
-#: src/config/options.inc:1421
+#: src/config/options.inc:1426
 #, fuzzy
 msgid ""
 "Tab colors for tabs that have not been selected since they completed loading."
 msgstr "Barvy tabu, který nebyl od ukončení nahrávání navštíven."
 
-#: src/config/options.inc:1424
+#: src/config/options.inc:1429
 msgid "Unselected tab"
 msgstr "Nevybraný tab"
 
-#: src/config/options.inc:1426
+#: src/config/options.inc:1431
 msgid "Unselected tab colors."
 msgstr "Barvy nevybraného tabu."
 
-#: src/config/options.inc:1428
+#: src/config/options.inc:1433
 msgid "Loading tab"
 msgstr "Nahrávající se tab"
 
-#: src/config/options.inc:1430
+#: src/config/options.inc:1435
 msgid "Tab colors for tabs that are loading in the background."
 msgstr "Barvy tabu, který se právě na pozadí nahrává."
 
-#: src/config/options.inc:1432
+#: src/config/options.inc:1437
 msgid "Selected tab"
 msgstr "Vybraný tab"
 
-#: src/config/options.inc:1434
+#: src/config/options.inc:1439
 msgid "Selected tab colors."
 msgstr "Barvy vybraného tabu."
 
-#: src/config/options.inc:1436
+#: src/config/options.inc:1441
 msgid "Tab separator"
 msgstr "Oddělovač v liště s taby"
 
-#: src/config/options.inc:1438
+#: src/config/options.inc:1443
 msgid "Tab separator colors."
 msgstr "Barvy oddělovačů lišty s taby."
 
-#: src/config/options.inc:1440
+#: src/config/options.inc:1445
 #, fuzzy
 msgid "Clipboard"
 msgstr "Lokální soubory"
 
-#: src/config/options.inc:1442
+#: src/config/options.inc:1447
 #, fuzzy
 msgid "Clipboard highlight colors."
 msgstr "Barva zvýraznění vyhledaných řetězců."
 
-#: src/config/options.inc:1444
+#: src/config/options.inc:1449
 msgid "Desktop"
 msgstr ""
 
-#: src/config/options.inc:1446
+#: src/config/options.inc:1451
 #, fuzzy
 msgid "Desktop background."
 msgstr "Výchozí barva pozadí."
 
-#: src/config/options.inc:1448
+#: src/config/options.inc:1453
 msgid "Searched strings"
 msgstr "Výskyty vyhledávání"
 
-#: src/config/options.inc:1450
+#: src/config/options.inc:1455
 msgid "Searched string highlight colors."
 msgstr "Barva zvýraznění vyhledaných řetězců."
 
@@ -4759,19 +4769,19 @@ msgstr "Barva zvýraznění vyhledaných řetězců."
 #. ============= BORING PART (colors) END ===================
 #. ==========================================================
 #. Keep options in alphabetical order.
-#: src/config/options.inc:1459
+#: src/config/options.inc:1464
 msgid "Dialog settings"
 msgstr "Dialogová okna"
 
-#: src/config/options.inc:1461
+#: src/config/options.inc:1466
 msgid "Dialogs-specific appearance and behaviour settings."
 msgstr "Nastavení vzhledu a chování dialogových oken."
 
-#: src/config/options.inc:1464
+#: src/config/options.inc:1469
 msgid "Minimal height of listbox widget"
 msgstr "Minimální výška listboxového udělátka"
 
-#: src/config/options.inc:1466
+#: src/config/options.inc:1471
 #, fuzzy
 msgid ""
 "Minimal height of the listbox widget (used e.g. for bookmarks or global "
@@ -4780,11 +4790,11 @@ msgstr ""
 "Minimální výška listboxového udělátka (to se používá například pro\n"
 "bookmarky nebo globální historii)."
 
-#: src/config/options.inc:1469
+#: src/config/options.inc:1474
 msgid "Drop shadows"
 msgstr "Stíny"
 
-#: src/config/options.inc:1471
+#: src/config/options.inc:1476
 #, fuzzy
 msgid ""
 "Make dialogs drop shadows (the shadows are solid, you can adjust their color "
@@ -4795,11 +4805,11 @@ msgstr ""
 "barvu si však můžete upravit volbami ui.colors.*.dialog.shadow). Možná, že\n"
 "budete také v setup.h chtít zúžit okraje dialogových oken."
 
-#: src/config/options.inc:1476
+#: src/config/options.inc:1481
 msgid "Underline menu hotkeys"
 msgstr "Podtrhávat horké klávesy v menu"
 
-#: src/config/options.inc:1478
+#: src/config/options.inc:1483
 #, fuzzy
 msgid ""
 "Whether to underline hotkeys in menus to make them more visible. Requires "
@@ -4808,11 +4818,11 @@ msgstr ""
 "Určuje, zdalipak podtrhávat v meňátkách horké klávesy, abychom je lépe\n"
 "viděli. To ovšem funguje pouze, pokud terminál podporuje podtrhávání."
 
-#: src/config/options.inc:1482
+#: src/config/options.inc:1487
 msgid "Underline button shortcuts"
 msgstr "Podtrhávat horké klávesy tlačítek"
 
-#: src/config/options.inc:1484
+#: src/config/options.inc:1489
 #, fuzzy
 msgid ""
 "Whether to underline button shortcuts to make them more visible. Requires "
@@ -4821,11 +4831,11 @@ msgstr ""
 "Určuje, zdalipak podtrhávat na tlačítkách horké klávesy, abychom je lépe\n"
 "viděli. To ovšem funguje pouze, pokud terminál podporuje podtrhávání."
 
-#: src/config/options.inc:1489
+#: src/config/options.inc:1494
 msgid "Timer options"
 msgstr "Nastavení časovačů"
 
-#: src/config/options.inc:1491
+#: src/config/options.inc:1496
 #, fuzzy
 msgid ""
 "Timed action after certain interval of user inactivity. Someone can even "
@@ -4834,7 +4844,7 @@ msgstr ""
 "Načasovaná akce, která se spustí po určitém čase nečinnosti uživatele.\n"
 "Někomu se to dokonce může i hodit, i když tomu nemusíte věřit."
 
-#: src/config/options.inc:1498
+#: src/config/options.inc:1503
 msgid ""
 "Whether to enable the timer or not:\n"
 "0 is don't count down anything\n"
@@ -4846,7 +4856,7 @@ msgstr ""
 "1 znamená odpočítávat, ale potichu (nic nikde neukazovat)\n"
 "2 znamená odpočítávat, a ukazovat zbývající čas u LED indikátorů"
 
-#: src/config/options.inc:1505
+#: src/config/options.inc:1510
 msgid ""
 "Whether to enable the timer or not:\n"
 "0 is don't count down anything\n"
@@ -4858,36 +4868,36 @@ msgstr ""
 "1 znamená odpočítávat, ale potichu (nic nikde neukazovat)\n"
 "2 znamená odpočítávat, a ukazovat zbývající čas u LED indikátorů (VYPNUTO)"
 
-#: src/config/options.inc:1511
+#: src/config/options.inc:1516
 msgid "Duration"
 msgstr "Délka trvání"
 
-#: src/config/options.inc:1513
+#: src/config/options.inc:1518
 #, fuzzy
 msgid ""
 "Inactivity timeout in seconds. The maximum of one day should be enough for "
 "just everyone (TM)."
 msgstr "Čas nečinnosti uživatele. Jeden den by měl každému stačit."
 
-#: src/config/options.inc:1518
+#: src/config/options.inc:1523
 msgid "Keybinding action to be triggered when timer reaches zero."
 msgstr ""
 "Akce (stejná jako ve správci kláves), která bude vyvolána po vypršení\n"
 "časovače."
 
-#: src/config/options.inc:1522
+#: src/config/options.inc:1527
 msgid "Window tabs"
 msgstr "Taby"
 
-#: src/config/options.inc:1524
+#: src/config/options.inc:1529
 msgid "Window tabs settings."
 msgstr "Nastavení tabů."
 
-#: src/config/options.inc:1526 src/globhist/globhist.c:71
+#: src/config/options.inc:1531 src/globhist/globhist.c:71
 msgid "Display style"
 msgstr "Způsob zobrazování"
 
-#: src/config/options.inc:1528
+#: src/config/options.inc:1533
 #, fuzzy
 msgid ""
 "What to display in tab manager dialog:\n"
@@ -4898,11 +4908,11 @@ msgstr ""
 "0 znamená URL adresy\n"
 "1 znamená titulky stránek"
 
-#: src/config/options.inc:1532
+#: src/config/options.inc:1537
 msgid "Display tabs bar"
 msgstr "Zobrazit lištu s taby"
 
-#: src/config/options.inc:1534
+#: src/config/options.inc:1539
 msgid ""
 "Show tabs bar on the screen:\n"
 "0 means never\n"
@@ -4914,49 +4924,49 @@ msgstr ""
 "1 znamená pouze, pokud je otevřeno dva a více tabů\n"
 "2 znamená vždy"
 
-#: src/config/options.inc:1539
+#: src/config/options.inc:1544
 #, fuzzy
 msgid "Tab bar at top"
 msgstr "Oddělovač v liště s taby"
 
-#: src/config/options.inc:1541
+#: src/config/options.inc:1546
 msgid "Whether display tab bar at top like other browsers do."
 msgstr ""
 
-#: src/config/options.inc:1543
+#: src/config/options.inc:1548
 msgid "Wrap-around tabs cycling"
 msgstr "Cyklické přecházení mezi taby"
 
-#: src/config/options.inc:1545
+#: src/config/options.inc:1550
 #, fuzzy
 msgid ""
 "When moving right from the last tab, jump to the first one, and vice versa."
 msgstr ""
 "Při přesunu z posledního tabu dále doprava přeskočit na první tab a naopak."
 
-#: src/config/options.inc:1548
+#: src/config/options.inc:1553
 msgid "Confirm tab closing"
 msgstr "Potvrzování uzavírání tabů"
 
-#: src/config/options.inc:1550
+#: src/config/options.inc:1555
 msgid "When closing a tab show confirmation dialog."
 msgstr "Zobrazit při zavírání tabu potvrzovací dialog."
 
-#: src/config/options.inc:1552
+#: src/config/options.inc:1557
 #, fuzzy
 msgid "Disallow writing to terminal"
 msgstr "Chyba při zápisu do souboru"
 
-#: src/config/options.inc:1554
+#: src/config/options.inc:1559
 msgid "Whether to disallow writing to terminal by background processes."
 msgstr ""
 
 #. OPT_LANGUAGE
-#: src/config/options.inc:1556 src/config/opttypes.c:522
+#: src/config/options.inc:1561 src/config/opttypes.c:522
 msgid "Language"
 msgstr "Jazyk"
 
-#: src/config/options.inc:1558
+#: src/config/options.inc:1563
 #, fuzzy
 msgid ""
 "Language of user interface. 'System' means that the language will be "
@@ -4965,47 +4975,47 @@ msgstr ""
 "Jazyk uživatelského rozhraní. \"System\" znamená, že bude jazyk při každém\n"
 "spuštění vytáhnut z relevantních proměnných prostředí."
 
-#: src/config/options.inc:1562
+#: src/config/options.inc:1567
 #, fuzzy
 msgid "Display menu bar always"
 msgstr "Zobrazit řádek s titulkem"
 
-#: src/config/options.inc:1564
+#: src/config/options.inc:1569
 #, fuzzy
 msgid "Always show menu bar on the screen."
 msgstr "Zobrazit na obrazovce řádek s titulkem."
 
-#: src/config/options.inc:1566
+#: src/config/options.inc:1571
 msgid "Display status bar"
 msgstr "Zobrazit stavový řádek"
 
-#: src/config/options.inc:1568
+#: src/config/options.inc:1573
 msgid "Show status bar on the screen."
 msgstr "Zobrazit na obrazovce stavový řádek."
 
-#: src/config/options.inc:1570
+#: src/config/options.inc:1575
 msgid "Display title bar"
 msgstr "Zobrazit řádek s titulkem"
 
-#: src/config/options.inc:1572
+#: src/config/options.inc:1577
 msgid "Show title bar on the screen."
 msgstr "Zobrazit na obrazovce řádek s titulkem."
 
-#: src/config/options.inc:1574
+#: src/config/options.inc:1579
 msgid "Display goto dialog in new tabs"
 msgstr "Zobrazit v nových tabech okno \"Jít na\""
 
-#: src/config/options.inc:1576
+#: src/config/options.inc:1581
 msgid ""
 "Pop up goto dialog in newly created tabs when there's no homepage set. This "
 "means also showing goto dialog on startup."
 msgstr ""
 
-#: src/config/options.inc:1580
+#: src/config/options.inc:1585
 msgid "Show a message box when file is saved successfully"
 msgstr "Dej mi vědět, pokud byl soubor úspěšně uložen"
 
-#: src/config/options.inc:1582
+#: src/config/options.inc:1587
 #, fuzzy
 msgid ""
 "When you pressed a [ Save ] button in some manager, this option will make "
@@ -5014,19 +5024,19 @@ msgstr ""
 "Když v nějakém manažeru zmáčknete tlačítko [ Uložit ], tato volba\n"
 "zajistí, že vám vyskočí okénko, potvrzující úspěšnost této operace."
 
-#: src/config/options.inc:1587
+#: src/config/options.inc:1592
 msgid "Sessions"
 msgstr "Sezení"
 
-#: src/config/options.inc:1589
+#: src/config/options.inc:1594
 msgid "Sessions settings."
 msgstr "Nastavení sezení."
 
-#: src/config/options.inc:1591
+#: src/config/options.inc:1596
 msgid "Auto restore session"
 msgstr "Autmaticky obnovovat sezení"
 
-#: src/config/options.inc:1593
+#: src/config/options.inc:1598
 #, fuzzy
 msgid ""
 "Automatically restore the session at start.\n"
@@ -5036,11 +5046,11 @@ msgstr ""
 "Automaticky obnovovat stav sezení při spouštění ELinksu.\n"
 "K tomu je potřeba podpora bookmarků."
 
-#: src/config/options.inc:1597
+#: src/config/options.inc:1602
 msgid "Auto save session"
 msgstr "Automaticky ukládat sezení"
 
-#: src/config/options.inc:1599
+#: src/config/options.inc:1604
 #, fuzzy
 msgid ""
 "Automatically save the session when quitting.\n"
@@ -5050,11 +5060,11 @@ msgstr ""
 "Automaticky ukládat stav sezení při ukončování ELinksu.\n"
 "K tomu je potřeba podpora bookmarků."
 
-#: src/config/options.inc:1603
+#: src/config/options.inc:1608
 msgid "Auto save and restore session folder name"
 msgstr "Jméno složky pro automatické ukládání a obnovování sezení"
 
-#: src/config/options.inc:1605
+#: src/config/options.inc:1610
 #, fuzzy
 msgid ""
 "Name of the bookmarks folder used for auto saving and restoring session. The "
@@ -5066,12 +5076,12 @@ msgstr ""
 "sezení. Pokud taková složka už existuje, smažu ji. K tomuhle všemu\n"
 "je ovšem potřeba podpora bookmarků."
 
-#: src/config/options.inc:1611
+#: src/config/options.inc:1616
 #, fuzzy
 msgid "Auto save latest positions"
 msgstr "Automaticky ukládat sezení"
 
-#: src/config/options.inc:1613
+#: src/config/options.inc:1618
 #, fuzzy
 msgid ""
 "Whether to save view positions of documents.\n"
@@ -5081,21 +5091,21 @@ msgstr ""
 "Automaticky ukládat stav sezení při ukončování ELinksu.\n"
 "K tomu je potřeba podpora bookmarků."
 
-#: src/config/options.inc:1617
+#: src/config/options.inc:1622
 msgid "Fork on start"
 msgstr ""
 
-#: src/config/options.inc:1619
+#: src/config/options.inc:1624
 msgid ""
 "Fork on start to let other terminals function even if the first terminal "
 "exits."
 msgstr ""
 
-#: src/config/options.inc:1622
+#: src/config/options.inc:1627
 msgid "Homepage URI"
 msgstr "Domovská stránka"
 
-#: src/config/options.inc:1624
+#: src/config/options.inc:1629
 #, fuzzy
 msgid ""
 "The URI to load either at startup time when no URI was given on the command "
@@ -5106,31 +5116,31 @@ msgstr ""
 "ELinksu či při vyvolání akce goto-url-home. Pokud je tato volba\n"
 "prázdná (\"\"), použije se místo toho adresa v proměnné prostředí $WWW_HOME."
 
-#: src/config/options.inc:1629
+#: src/config/options.inc:1634
 #, fuzzy
 msgid "Keep session active"
 msgstr "Rozlišovat velikost písmen"
 
-#: src/config/options.inc:1631
+#: src/config/options.inc:1636
 msgid "Keep the session active even if the last terminal exits."
 msgstr ""
 
-#: src/config/options.inc:1634
+#: src/config/options.inc:1639
 msgid "Postpone unlink temporary files"
 msgstr ""
 
-#: src/config/options.inc:1636
+#: src/config/options.inc:1641
 msgid ""
 "Clean temporary files (created for example while viewing images) at exit of "
 "ELinks not immediately after preview."
 msgstr ""
 
-#: src/config/options.inc:1639
+#: src/config/options.inc:1644
 #, fuzzy
 msgid "Clipboard filename"
 msgstr "Lokální soubory"
 
-#: src/config/options.inc:1641
+#: src/config/options.inc:1646
 msgid ""
 "The filename of the clipboard. The 'copy-clipboard' action will append to "
 "it. This file can be also a named pipe. See contrib/clipboard/clip.sh for "
@@ -5138,55 +5148,55 @@ msgid ""
 "clipboard."
 msgstr ""
 
-#: src/config/options.inc:1646
+#: src/config/options.inc:1651
 msgid "Date format"
 msgstr "Formát datumu"
 
-#: src/config/options.inc:1648
+#: src/config/options.inc:1653
 msgid "Date format to use in dialogs. See strftime(3)."
 msgstr ""
 "Formát datumu, který se má použít v dialozích.\n"
 "Viz dokumentaci k strftime(3)."
 
 #. date added
-#: src/config/options.inc:1653
+#: src/config/options.inc:1658
 msgid "Disable mouse"
 msgstr ""
 
-#: src/config/options.inc:1655
+#: src/config/options.inc:1660
 msgid "Disable mouse. Changes take effect at the next elinks restart."
 msgstr ""
 
-#: src/config/options.inc:1659
+#: src/config/options.inc:1664
 #, fuzzy
 msgid "Background character"
 msgstr "Barva pozadí"
 
-#: src/config/options.inc:1661
+#: src/config/options.inc:1666
 msgid "Integer value of background character."
 msgstr ""
 
-#: src/config/options.inc:1663
+#: src/config/options.inc:1668
 msgid "Back to exit"
 msgstr ""
 
-#: src/config/options.inc:1665
+#: src/config/options.inc:1670
 msgid "Going back from initial page exits tab or elinks."
 msgstr ""
 
-#: src/config/options.inc:1667
+#: src/config/options.inc:1672
 msgid "Double ESC"
 msgstr ""
 
-#: src/config/options.inc:1669
+#: src/config/options.inc:1674
 msgid "Back to 0.12pre5 handling of ESC key."
 msgstr ""
 
-#: src/config/options.inc:1671
+#: src/config/options.inc:1676
 msgid "Set window title"
 msgstr "Nastavovat titulek okna"
 
-#: src/config/options.inc:1673
+#: src/config/options.inc:1678
 #, fuzzy
 msgid ""
 "Set the window title when running in a windowing environment in an xterm-"
@@ -5380,7 +5390,7 @@ msgstr ""
 msgid "Domain"
 msgstr "Doména"
 
-#: src/cookies/dialogs.c:45 src/mime/backend/mailcap.c:98
+#: src/cookies/dialogs.c:45 src/mime/backend/mailcap.c:102
 #: src/mime/backend/mimetypes.c:56 src/protocol/file/cgi.c:48
 msgid "Path"
 msgstr "Cesta"
@@ -7256,7 +7266,7 @@ msgid "System-specific handler description (ie. unix, unix-xwin, ...)."
 msgstr "Popis ovladače pro daný systém (např. unix, unix-xwin, ...)."
 
 #: src/mime/backend/default.c:65 src/mime/backend/dgi.c:69
-#: src/mime/backend/mailcap.c:103
+#: src/mime/backend/mailcap.c:107
 msgid "Ask before opening"
 msgstr "Zeptat se před otevřením"
 
@@ -7538,20 +7548,20 @@ msgid "DGI mime"
 msgstr ""
 
 #. name:
-#: src/mime/backend/mailcap.c:90 src/mime/backend/mailcap.c:806
+#: src/mime/backend/mailcap.c:94 src/mime/backend/mailcap.c:823
 #: src/protocol/file/mailcap.c:43 src/protocol/file/mailcap.c:59
 msgid "Mailcap"
 msgstr "Mailcap"
 
-#: src/mime/backend/mailcap.c:92
+#: src/mime/backend/mailcap.c:96
 msgid "Options for mailcap support."
 msgstr "Volby týkající se podpory mailcap souborů."
 
-#: src/mime/backend/mailcap.c:96
+#: src/mime/backend/mailcap.c:100
 msgid "Enable mailcap support."
 msgstr "Povolí podporu mailcap souborů."
 
-#: src/mime/backend/mailcap.c:100
+#: src/mime/backend/mailcap.c:104
 #, fuzzy
 msgid ""
 "Mailcap search path. Colon-separated list of files. Leave as \"\" to use "
@@ -7561,17 +7571,17 @@ msgstr ""
 "dvojtečkou. Pokud je tato volba prázdná, použije se proměnná prostředí\n"
 "MAILCAP, případně zabudovaná výchozí hodnota."
 
-#: src/mime/backend/mailcap.c:105
+#: src/mime/backend/mailcap.c:109
 msgid "Ask before using the handlers defined by mailcap."
 msgstr ""
 "Požádat o potvrzení uživatelem před použitím ovladačů specifikovaných\n"
 "v mailcapu."
 
-#: src/mime/backend/mailcap.c:107
+#: src/mime/backend/mailcap.c:111
 msgid "Type query string"
 msgstr "Řetězec použitý ve stahovacím dialogu"
 
-#: src/mime/backend/mailcap.c:109
+#: src/mime/backend/mailcap.c:113
 #, fuzzy
 msgid ""
 "Type of description to show in \"what to do with this file\" query dialog:\n"
@@ -7587,11 +7597,11 @@ msgstr ""
 "2 znamená ukázat popisek položky v mailcapu, případně \"mailcap\", pokud\n"
 "  není k dispozici"
 
-#: src/mime/backend/mailcap.c:116
+#: src/mime/backend/mailcap.c:120
 msgid "Prioritize entries by file"
 msgstr "Prioritizovat položky v souboru"
 
-#: src/mime/backend/mailcap.c:118
+#: src/mime/backend/mailcap.c:122
 #, fuzzy
 msgid ""
 "Prioritize entries by the order of the files in the mailcap path. This means "
@@ -7602,7 +7612,7 @@ msgstr ""
 "že hromadné položky (jako image/*) můžou být použity, i když byla v nějakém\n"
 "dalším souboru nalezena konkrétní položka pro daný typ."
 
-#: src/mime/backend/mailcap.c:378
+#: src/mime/backend/mailcap.c:385
 #, fuzzy, c-format
 msgid "Badly formatted mailcap entry for type %s in \"%s\" line %d"
 msgstr "Špatně zformátovaná položka mailcapu pro typ %s v \"%s\" na řádce %d"
@@ -9809,12 +9819,12 @@ msgstr "Skončit bez ptaní"
 #. * and formatting it with "%u" is safe,
 #. * because fc_maxlength is smaller than
 #. * file.length, which is an int.
-#: src/session/session.c:1023 src/session/session.c:1042 src/session/task.c:299
+#: src/session/session.c:1024 src/session/session.c:1043 src/session/task.c:299
 #: src/viewer/text/textarea.c:698
 msgid "Warning"
 msgstr "Upozornění"
 
-#: src/session/session.c:1024
+#: src/session/session.c:1025
 #, fuzzy
 msgid ""
 "You have an empty string in protocol.http.user_agent - this was a default "
@@ -9834,7 +9844,7 @@ msgstr ""
 "prostě udělej tohle), abych mohl použít správné implicitní nastavení. "
 "Omlouvám se za způsobené nepříjemnosti."
 
-#: src/session/session.c:1043
+#: src/session/session.c:1044
 #, fuzzy
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
@@ -9857,12 +9867,12 @@ msgstr ""
 "přešel na \"správný\" způsob chování. Omlouváme se za způsobené "
 "nepříjemnosti."
 
-#: src/session/session.c:1068
+#: src/session/session.c:1069
 msgid "Welcome"
 msgstr "Vítej"
 
 #. accelerator_context(setup_first_session)
-#: src/session/session.c:1070
+#: src/session/session.c:1071
 msgid ""
 "Welcome to ELinks!\n"
 "\n"
@@ -9872,7 +9882,7 @@ msgid ""
 "So if you did not copy it yet from ~/.elinks, do it now and start again."
 msgstr ""
 
-#: src/session/session.c:1075
+#: src/session/session.c:1076
 msgid ""
 "Welcome to ELinks!\n"
 "\n"
@@ -9883,7 +9893,7 @@ msgstr ""
 "Klávesou ESC se dostaneš do menu. Pokud chceš vidět manuál, zvol v menu "
 "Pomoc->Manuál."
 
-#: src/session/session.c:1291
+#: src/session/session.c:1292
 msgid "Incorrect search uri"
 msgstr ""
 
@@ -9950,11 +9960,11 @@ msgstr "Nemůžu přečíst událost: %d (%s)"
 msgid "Too many bytes read from the itrm!"
 msgstr "Načetl jsem z itrm příliš mnoho bytů!"
 
-#: src/terminal/mouse.c:136
+#: src/terminal/mouse.c:146
 msgid "Mouse enabled"
 msgstr ""
 
-#: src/terminal/mouse.c:138
+#: src/terminal/mouse.c:148
 msgid "Mouse disabled"
 msgstr ""
 
