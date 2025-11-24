@@ -1109,10 +1109,6 @@ if compiler.has_function('event_base_get_method', prefix : eh, dependencies: eve
     conf_data.set('HAVE_EVENT_BASE_GET_METHOD', 1)
 endif
 
-if compiler.has_function('event_reinit', prefix : eh, dependencies: eventdeps)
-    conf_data.set('HAVE_EVENT_REINIT', 1)
-endif
-
 if compiler.has_function('event_config_set_flag', prefix : eh, dependencies: eventdeps)
     conf_data.set('HAVE_EVENT_CONFIG_SET_FLAG', 1)
 endif
