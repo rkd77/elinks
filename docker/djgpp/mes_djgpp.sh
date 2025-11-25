@@ -18,7 +18,7 @@ meson setup /tmp/builddir --cross-file cross/linux-djgpp.txt \
 -Dapidoc=false \
 -Dbacktrace=false \
 -Dbittorrent=false \
--Dbrotli=false \
+-Dbrotli=true \
 -Dbzlib=false \
 -Dcgi=false \
 -Dcss=true \
