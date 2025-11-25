@@ -3424,6 +3424,11 @@ const char * aliases_cp852 [] = {
 	NULL
 };
 
+const char * aliases_cp855 [] = {
+	"cp855",
+	"855",
+	NULL,
+};
 
 /*** cp866 ***/
 
@@ -5027,6 +5032,7 @@ const struct codepage_desc codepages [] = {
 	{"CP 737", aliases_cp737, highhalf_cp737, table_cp737, 0},
 	{"CP 850", aliases_cp850, highhalf_cp850, table_cp850, 0},
 	{"CP 852", aliases_cp852, highhalf_cp852, table_cp852, 0},
+	{"CP 855", aliases_cp855, highhalf_NULL, table_NULL, 1},
 	{"CP 866", aliases_cp866, highhalf_cp866, table_cp866, 0},
 	{"CP 1125 (Ukrainian)", aliases_cp1125, highhalf_cp1125, table_cp1125, 0},
 	{"MacRoman 2000", aliases_macroman, highhalf_macroman, table_macroman, 0},
@@ -5051,4 +5057,4 @@ const struct codepage_desc codepages [] = {
 	{NULL, NULL, NULL, 0}
 };
 
-#define N_CODEPAGES 45
+#define N_CODEPAGES 46
