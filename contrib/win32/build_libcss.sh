@@ -5,19 +5,20 @@ tar -xf libcss-0.9.2-src.tar.gz
 cd libcss-0.9.2
 printf '\ngen: $(PRE_TARGETS)\n' >> Makefile
 cd ..
-export LIBRARY_PATH="$HOME/64/lib"
-export PKG_CONFIG_PATH="$HOME/64/lib/pkgconfig"
-export C_INCLUDE_PATH="$HOME/64/include"
-export CFLAGS="-O2 -I$HOME/64/include -Wno-error"
-export CXXFLAGS="-O2 -I$HOME/64/include -Wno-error"
-export LDFLAGS="-L$HOME/64/lib"
+PREFIX=/opt/elinks
+export LIBRARY_PATH="$PREFIX/lib"
+export PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig"
+export C_INCLUDE_PATH="$PREFIX/include"
+export CFLAGS="-O2 -I$PREFIX/include -Wno-error"
+export CXXFLAGS="-O2 -I$PREFIX/include -Wno-error"
+export LDFLAGS="-L$PREFIX/lib"
 export BUILD_CC=cc
-make -C libcss-0.9.2 -j12 Q= PREFIX=$HOME/64 LIBDIR=lib gen
+make -C libcss-0.9.2 -j12 Q= PREFIX=$PREFIX LIBDIR=lib gen
 
-export LIBRARY_PATH="$HOME/64/lib"
-export PKG_CONFIG_PATH="$HOME/64/lib/pkgconfig"
-export C_INCLUDE_PATH="$HOME/64/include"
-export CFLAGS="-O2 -I$HOME/64/include -Wno-error"
-export CXXFLAGS="-O2 -I$HOME/64/include -Wno-error"
-export LDFLAGS="-L$HOME/64/lib"
-make -C libcss-0.9.2 install -j12 Q= PREFIX=$HOME/64 LIBDIR=lib COMPONENT_TYPE=lib-static
+export LIBRARY_PATH="$PREFIX/lib"
+export PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig"
+export C_INCLUDE_PATH="$PREFIX/include"
+export CFLAGS="-O2 -I$PREFIX/include -Wno-error"
+export CXXFLAGS="-O2 -I$PREFIX/include -Wno-error"
+export LDFLAGS="-L$PREFIX/lib"
+make -C libcss-0.9.2 install -j12 Q= PREFIX=$PREFIX LIBDIR=lib COMPONENT_TYPE=lib-static

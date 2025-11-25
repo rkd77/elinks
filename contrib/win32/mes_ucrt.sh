@@ -2,11 +2,14 @@
 
 # script for Windows64 build using msys2
 
+PREFIX=/opt/elinks
+DESTDIR=$HOME/elinks
+
 rm -rf builddir3
 export LDFLAGS="-lws2_32"
 export CFLAGS="-g2 -O2"
-LIBRARY_PATH="$HOME/64U/lib" \
-PKG_CONFIG_PATH="$HOME/64U/lib/pkgconfig" \
+LIBRARY_PATH="$PREFIX/lib" \
+PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig" \
 /ucrt64/bin/meson setup builddir3 \
 -D88-colors=false \
 -D256-colors=false \
@@ -26,7 +29,7 @@ PKG_CONFIG_PATH="$HOME/64U/lib/pkgconfig" \
 -Dfsp=false \
 -Dfsp2=true \
 -Dgemini=true \
--Dgettext=false \
+-Dgettext=true \
 -Dgnutls=false \
 -Dgopher=true \
 -Dgpm=false \
@@ -50,7 +53,7 @@ PKG_CONFIG_PATH="$HOME/64U/lib/pkgconfig" \
 -Dopenssl=true \
 -Dpdfdoc=false \
 -Dperl=false \
--Dprefix=$HOME/64U \
+-Dprefix=$PREFIX \
 -Dpython=false \
 -Dquickjs=false \
 -Dreproducible=false \
@@ -64,6 +67,7 @@ PKG_CONFIG_PATH="$HOME/64U/lib/pkgconfig" \
 -Dtre=false \
 -Dtrue-color=false \
 -Dutf-8=false \
+-Dwin32-vt100-native=true \
 -Dwithdebug=false \
 -Dx=false \
 -Dxbel=false \
@@ -71,17 +75,10 @@ PKG_CONFIG_PATH="$HOME/64U/lib/pkgconfig" \
 -Dzstd=true || exit 1
 
 /ucrt64/bin/meson compile -C builddir3 || exit 2
+mkdir -p $HOME/elinks
+/ucrt64/bin/meson install -C builddir3 --destdir $DESTDIR || exit 3
 
-# prepare zip
-mkdir -p $HOME/ELINKS64/src
-mkdir -p $HOME/ELINKS64/po
-
-install builddir3/src/elinks.exe $HOME/ELINKS64/src/
-
-cd builddir3/po
-for i in *; do cp -v $i/LC_MESSAGES/elinks.mo $HOME/ELINKS64/po/$i.gmo; done
-cd -
-
-cd $HOME/ELINKS64/src
+# find dlls
+cd $DESTDIR/$PREFIX/bin
 for i in $(ldd elinks.exe | grep /ucrt64/bin | cut -d' ' -f3); do cp -v $i . ; done
 cd -
