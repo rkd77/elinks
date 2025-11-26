@@ -36,6 +36,7 @@
 #include "js/quickjs/heartbeat.h"
 #endif
 
+#include "intl/charsets.h"
 #include "main/select.h"
 #include "main/timer.h"
 #include "osdep/win32/win32.h"
@@ -53,6 +54,16 @@ TimerRoutine(PVOID lpParam, BOOLEAN TimerOrWaitFired)
 	check_heartbeats(NULL);
 }
 #endif
+
+int
+os_default_charset(void)
+{
+	ELOG
+	char a[8];
+
+	snprintf((char *) a, sizeof a, "%d", GetACP());
+	return get_cp_index(a);
+}
 
 void
 init_osdep(void)

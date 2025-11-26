@@ -44,6 +44,9 @@
 #ifdef CONFIG_OS_DOS
 #include "osdep/dos/dos.h"
 #endif
+#ifdef CONFIG_OS_WIN32
+#include "osdep/win32/win32.h"
+#endif
 #include "util/conv.h"
 #include "util/error.h"
 #include "util/fastfind.h"
@@ -1541,7 +1544,7 @@ get_cp_index(const char *name)
 		name = nl_langinfo(CODESET);
 		syscp = SYSTEM_CHARSET_FLAG;
 #else
-#ifdef CONFIG_OS_DOS
+#if defined(CONFIG_OS_DOS) || defined(CONFIG_OS_WIN32)
 		int cp = os_default_charset();
 		if (cp != -1) {
 			return cp | SYSTEM_CHARSET_FLAG;
@@ -1634,7 +1637,7 @@ get_cp_index(const char *name)
 		name = nl_langinfo(CODESET);
 		syscp = SYSTEM_CHARSET_FLAG;
 #else
-#ifdef CONFIG_OS_DOS
+#if defined(CONFIG_OS_DOS) || defined(CONFIG_OS_WIN32)
 		int cp = os_default_charset();
 		if (cp != -1) {
 			return cp | SYSTEM_CHARSET_FLAG;

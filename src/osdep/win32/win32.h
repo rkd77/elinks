@@ -27,6 +27,7 @@ void create_timer_queue(void);
 
 int mkstemp(char *template_);
 int gettimeofday(struct timeval *tv, void *tz);
+int os_default_charset(void);
 
 /* fake termios for Win32 (excluding CygWin) */
 
