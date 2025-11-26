@@ -181,6 +181,7 @@ const char * aliases_8859_1 [] = {
 	"csISOLatin1",
 	"ISO_8859-1:1987",
 	"ISO8859_1",
+	"28591",
 	NULL
 };
 
@@ -332,6 +333,7 @@ const char * aliases_8859_2 [] = {
 	"ISO_8859-2",
 	"csISOLatin2",
 	"ISO8859_2",
+	"28592",
 	NULL
 };
 
@@ -482,6 +484,7 @@ const char * aliases_8859_3 [] = {
 	"csISOLatin3",
 	"ISO8859-3",
 	"ISO8859_3",
+	"28593",
 	NULL
 };
 
@@ -633,6 +636,7 @@ const char * aliases_8859_4 [] = {
 	"ISO_8859-4",
 	"csISOLatin4",
 	"ISO8859_4",
+	"28594",
 	NULL
 };
 
@@ -782,6 +786,7 @@ const char * aliases_8859_5 [] = {
 	"cyrillic",
 	"csISOLatinCyrillic",
 	"ISO8859_5",
+	"28595",
 	NULL
 };
 
@@ -933,6 +938,7 @@ const char * aliases_8859_6 [] = {
 	"csISOLatinArabic",
 	"ISO8859-6",
 	"ISO8859_6",
+	"28596",
 	NULL
 };
 
@@ -1085,6 +1091,7 @@ const char * aliases_8859_7 [] = {
 	"GREEK",
 	"csISOLatinGreek",
 	"ISO8859_7",
+	"28597",
 	NULL
 };
 
@@ -1233,6 +1240,7 @@ const char * aliases_8859_8 [] = {
 	"csISOLatinHebrew",
 	"ISO8859-8",
 	"ISO8859_8",
+	"28598",
 	NULL
 };
 
@@ -1382,6 +1390,7 @@ const char * aliases_8859_9 [] = {
 	"L5",
 	"csISOLatin5",
 	"ISO8859_9",
+	"28599",
 	NULL
 };
 
@@ -1678,6 +1687,7 @@ const char * aliases_8859_13 [] = {
 	"l7",
 	"il7",
 	"ISO_8859-13",
+	"28603",
 	NULL
 };
 
@@ -1977,6 +1987,7 @@ const char * aliases_8859_15 [] = {
 	"ISO_8859-15",
 	"ISO_8859-15:1998",
 	"ISO-IR-203",
+	"28605",
 	NULL
 };
 
@@ -4290,6 +4301,7 @@ const uint16_t highhalf_koi8_r [] = {
 const char * aliases_koi8_r [] = {
 	"koi8-r",
 	"csKOI8R",
+	"20866",
 	NULL
 };
 
@@ -4431,6 +4443,7 @@ const uint16_t highhalf_koi8_u [] = {
 
 const char * aliases_koi8_u [] = {
 	"koi8-u",
+	"21866",
 	NULL
 };
 
@@ -4886,6 +4899,7 @@ const char * aliases_viscii [] = {
 const char * aliases_utf8 [] = {
 	"utf-8",
 	"utf8",
+	"65001",
 	NULL
 };
 
@@ -4896,6 +4910,7 @@ Big5-hkscs is superset of Big5. */
 const char * aliases_big5 [] = {
 	"Big5-HKSCS",
 	"Big5",
+	"950",
 	NULL
 };
 
@@ -4905,6 +4920,7 @@ const char * aliases_shift_jis [] = {
 	"shift_jis",
 	"shift-jis",
 	"sjis",
+	"932",
 	NULL
 };
 
@@ -4913,6 +4929,7 @@ const char * aliases_shift_jis [] = {
 const char * aliases_euc_cn [] = {
 	"euc-cn",
 	"euc_cn",
+	"51936",
 	NULL
 };
 
@@ -4921,6 +4938,7 @@ const char * aliases_euc_cn [] = {
 const char * aliases_euc_jp [] = {
 	"euc-jp",
 	"euc_jp",
+	"51932",
 	NULL
 };
 
@@ -4929,6 +4947,7 @@ const char * aliases_euc_jp [] = {
 const char * aliases_euc_kr [] = {
 	"euc-kr",
 	"euc_kr",
+	"51949",
 	NULL
 };
 
@@ -4968,6 +4987,7 @@ const char * aliases_gb18030 [] = {
 	"gb-18030",
 	"gb_18030",
 	"gb 18030",
+	"54936",
 	NULL
 };
 
@@ -4976,6 +4996,7 @@ const char * aliases_gb18030 [] = {
 const char * aliases_iso2022jp [] = {
 	"iso2022jp",
 	"iso-2022-jp",
+	"50220",
 	NULL
 };
 
