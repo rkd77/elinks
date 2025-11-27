@@ -386,4 +386,19 @@ installations:
 
 - set ui.background_char = 9617
 
-The latter is for TV like desktop.
+The latter is for the TurboVision-like desktop.
+
+In case you want to search in google, you can also change User-Agent, disable noscript
+and change the smart prefix to http:// protocol
+
+- set protocol.http.user_agent = "Mozilla Firefox"
+
+- set ecmascript.ignore_noscript = 1
+
+or
+
+- set document.html.always_ignore_noscript = 1
+
+- set protocol.rewrite.smart.g = "http://www.google.com/search?q=%s"
+
+I had no success with https and google.
