@@ -144,7 +144,7 @@ init_directory_listing(struct string *page, struct uri *uri)
 	{
 		const char *slash = dirpath.source;
 		const char *pslash = slash;
-		const char sep = local ? CHAR_DIR_SEP :  '/';
+		const char sep = 0 ? CHAR_DIR_SEP :  '/';
 
 		while ((slash = strchr(slash, sep)) != NULL) {
 			done_string(&decoded);
