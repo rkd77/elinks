@@ -66,7 +66,7 @@ init_directory_listing(struct string *page, struct uri *uri)
 
 	if (dirpath.length > 0
 	    && !dir_sep(dirpath.source[dirpath.length - 1])
-	    && !add_char_to_string(&dirpath, local ? CHAR_DIR_SEP : '/'))
+	    && !add_char_to_string(&dirpath, 0 ? CHAR_DIR_SEP : '/'))
 		goto out_of_memory;
 
 	/* Decode uri for displaying.  */
