@@ -564,11 +564,13 @@ static struct listbox_item **action_box_items[KEYMAP_MAX] = {
 	action_box_items_menu
 };
 
+#ifndef CONFIG_FASTMEM
 static int action_box_sizes[KEYMAP_MAX] = {
 	ACTION_BOX_SIZE_MAIN,
 	ACTION_BOX_SIZE_EDIT,
 	ACTION_BOX_SIZE_MENU
 };
+#endif
 
 struct listbox_item *
 get_keybinding_action_box_item(keymap_id_T keymap_id, action_id_T action_id)
