@@ -550,19 +550,50 @@ static int keybinding_text_toggle = 1;
 static int keybinding_text_toggle;
 #endif
 
-/* XXX: ACTION_BOX_SIZE is just a quick hack, we ought to allocate
- * the sub-arrays separately. --pasky */
-#define ACTION_BOX_SIZE (MAIN_ACTIONS)
-static struct listbox_item *action_box_items[KEYMAP_MAX][ACTION_BOX_SIZE];
+#define ACTION_BOX_SIZE_MAIN (MAIN_ACTIONS)
+#define ACTION_BOX_SIZE_EDIT (EDIT_ACTIONS)
+#define ACTION_BOX_SIZE_MENU (MENU_ACTIONS)
+
+static struct listbox_item *action_box_items_main[ACTION_BOX_SIZE_MAIN];
+static struct listbox_item *action_box_items_edit[ACTION_BOX_SIZE_EDIT];
+static struct listbox_item *action_box_items_menu[ACTION_BOX_SIZE_MENU];
+
+static struct listbox_item **action_box_items[KEYMAP_MAX] = {
+	action_box_items_main,
+	action_box_items_edit,
+	action_box_items_menu
+};
+
+static int action_box_sizes[KEYMAP_MAX] = {
+	ACTION_BOX_SIZE_MAIN,
+	ACTION_BOX_SIZE_EDIT,
+	ACTION_BOX_SIZE_MENU
+};
 
 struct listbox_item *
 get_keybinding_action_box_item(keymap_id_T keymap_id, action_id_T action_id)
 {
 	ELOG
-	assert(action_id < ACTION_BOX_SIZE);
-	if_assert_failed return NULL;
 
-	return action_box_items[keymap_id][action_id];
+	switch (keymap_id) {
+	case KEYMAP_MAIN:
+		assert(action_id < ACTION_BOX_SIZE_MAIN);
+		if_assert_failed return NULL;
+		return action_box_items_main[action_id];
+
+	case KEYMAP_EDIT:
+		assert(action_id < ACTION_BOX_SIZE_EDIT);
+		if_assert_failed return NULL;
+		return action_box_items_edit[action_id];
+
+	case KEYMAP_MENU:
+		assert(action_id < ACTION_BOX_SIZE_MENU);
+		if_assert_failed return NULL;
+		return action_box_items_menu[action_id];
+
+	default:
+		return NULL;
+	}
 }
 
 struct listbox_item *keymap_box_item[KEYMAP_MAX];
@@ -587,7 +618,7 @@ init_keybinding_listboxes(struct keymap keymap_table[KEYMAP_MAX],
 		for (act = actions[keymap_id].actions; act->str; act++) {
 			struct listbox_item *item;
 
-			assert(act->num < ACTION_BOX_SIZE);
+			assert(act->num < action_box_sizes[keymap_id]);
 			if_assert_failed continue;
 
 			if (act->num == ACT_MAIN_SCRIPTING_FUNCTION
