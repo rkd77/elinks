@@ -230,7 +230,74 @@ end:
 	return result;
 }
 
+static PyObject *
+python_get_option(PyObject *self, PyObject *args)
+{
+	const char *name;
+
+	if (!PyArg_ParseTuple(args, "s", &name)) {
+		return NULL;
+	}
+	struct option *opt = get_opt_rec(config_options, (char *)name);
+
+	if (!opt) {
+		return NULL;
+	}
+	/* Convert to an appropriate Python type */
+	switch (opt->type) {
+	case OPT_BOOL:
+		return PyBool_FromLong(opt->value.number);
+	case OPT_INT:
+		return PyLong_FromLong(opt->value.number);
+	case OPT_LONG:
+		return PyLong_FromLongLong(opt->value.big_number);
+	case OPT_STRING:
+		return PyUnicode_FromString(opt->value.string);
+	case OPT_CODEPAGE:
+	{
+		const char *cp_name;
+
+		cp_name = get_cp_config_name(opt->value.number);
+		return PyUnicode_FromString(cp_name);
+	}
+	case OPT_LANGUAGE:
+	{
+		const char *lang;
+
+#ifdef ENABLE_NLS
+		lang = language_to_name(current_language);
+#else
+		lang = "System";
+#endif
+		return PyUnicode_FromString(lang);
+	}
+	case OPT_COLOR:
+	{
+		color_T color;
+		char hexcolor[8];
+		const char *strcolor;
+
+		color = opt->value.color;
+		strcolor = get_color_string(color, hexcolor);
+
+		return PyUnicode_FromString(strcolor);
+	}
+	case OPT_COMMAND:
+	default:
+		Py_RETURN_NONE;
+	}
+}
+
 /* Module-level documentation for the Python interpreter's elinks module. */
+
+char python_get_option_doc[] =
+PYTHON_DOCSTRING("get_option(option)\n\
+\n\
+Return value of given option.\n\
+\n\
+Arguments:\n\
+\n\
+option -- A string containing option name.\n");
 
 static char module_doc[] =
 PYTHON_DOCSTRING("Interface to the ELinks web browser.\n\
@@ -290,6 +357,10 @@ static PyMethodDef python_methods[] = {
 	{"bind_key",		(PyCFunction)python_bind_key,
 				METH_VARARGS | METH_KEYWORDS,
 				python_bind_key_doc},
+
+	{"get_option",		python_get_option,
+				METH_VARARGS,
+				python_get_option_doc},
 
 	{"load",		python_load,
 				METH_VARARGS,
