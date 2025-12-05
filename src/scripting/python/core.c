@@ -329,9 +329,14 @@ python_set_option(PyObject *self, PyObject *args)
 	case OPT_CODEPAGE:
 	case OPT_LANGUAGE:
 	case OPT_COLOR:
+		if (!PyUnicode_Check(v)) {
+			Py_RETURN_NONE;
+		}
 		PyObject *utf8 = PyUnicode_AsEncodedString(v, "utf-8", NULL);
 		const char *text = PyBytes_AsString(utf8);
-		option_types[opt->type].set(opt, (char *)text);
+		if (text) {
+			option_types[opt->type].set(opt, (char *)text);
+		}
 		Py_XDECREF(utf8);
 		break;
 	default:
