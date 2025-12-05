@@ -13,6 +13,8 @@
 #include "elinks.h"
 
 #include "config/home.h"
+#include "config/options.h"
+#include "config/opttypes.h"
 #include "main/main.h"
 #include "main/module.h"
 #include "scripting/python/core.h"
@@ -288,6 +290,58 @@ python_get_option(PyObject *self, PyObject *args)
 	}
 }
 
+static PyObject *
+python_set_option(PyObject *self, PyObject *args)
+{
+	const char *name;
+	PyObject *v;
+
+	if (!PyArg_ParseTuple(args, "sO", &name, &v)) {
+		return NULL;
+	}
+	/* Get option record */
+	struct option *opt = get_opt_rec(config_options, (char *)name);
+	if (opt == NULL) {
+		Py_RETURN_NONE;
+	}
+
+	/* Set option */
+	switch (opt->type) {
+	case OPT_BOOL:
+	{
+		/* option_types[OPT_BOOL].set expects a long even though it
+		 * saves the value to opt->value.number, which is an int.  */
+		long value = PyLong_AsLong(v);
+		option_types[opt->type].set(opt, (char *)(&value));
+		break;
+	}
+	case OPT_INT:
+	case OPT_LONG:
+	{
+		/* option_types[OPT_INT].set expects a long even though it
+		 * saves the value to opt->value.number, which is an int.
+		 * option_types[OPT_LONG].set of course wants a long too.  */
+		long value = PyLong_AsLong(v);
+		option_types[opt->type].set(opt, (char *)(&value));
+		break;
+	}
+	case OPT_STRING:
+	case OPT_CODEPAGE:
+	case OPT_LANGUAGE:
+	case OPT_COLOR:
+		PyObject *utf8 = PyUnicode_AsEncodedString(v, "utf-8", NULL);
+		const char *text = PyBytes_AsString(utf8);
+		option_types[opt->type].set(opt, (char *)text);
+		Py_XDECREF(utf8);
+		break;
+	default:
+		Py_RETURN_NONE;
+	}
+	/* Call hook */
+	option_changed(python_ses, opt);
+	Py_RETURN_NONE;
+}
+
 /* Module-level documentation for the Python interpreter's elinks module. */
 
 char python_get_option_doc[] =
@@ -298,6 +352,16 @@ Return value of given option.\n\
 Arguments:\n\
 \n\
 option -- A string containing option name.\n");
+
+char python_set_option_doc[] =
+PYTHON_DOCSTRING("set_option(option, value) -> None\n\
+\n\
+Set value for given option.\n\
+\n\
+Arguments:\n\
+\n\
+option -- A string containing option name.\n\
+value -- A value\n");
 
 static char module_doc[] =
 PYTHON_DOCSTRING("Interface to the ELinks web browser.\n\
@@ -373,6 +437,10 @@ static PyMethodDef python_methods[] = {
 	{"open",		(PyCFunction)python_open,
 				METH_VARARGS | METH_KEYWORDS,
 				python_open_doc},
+
+	{"set_option",		python_set_option,
+				METH_VARARGS,
+				python_set_option_doc},
 
 	{NULL,			NULL, 0, NULL}
 };
