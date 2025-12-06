@@ -27,7 +27,7 @@ Released on 2025-12-06
 * requestAnimationFrame in js
 * option ui.sessions.auto_save_position #392
 * option document.html.display_unfinished
-* meson options avif and webp
+* meson options libavif and libwebp
 * option protocol.mailcap.allow_empty_referrer
 * option ui.leds.redraw_interval
 * fixes in DOS version related to temporary files creation
