@@ -32,6 +32,7 @@
 #include "main/select.h"
 #include "network/connection.h"
 #include "osdep/dos/dos.h"
+#include "osdep/osdep.h"
 #include "terminal/event.h"
 #include "util/error.h"
 #include "util/memory.h"
