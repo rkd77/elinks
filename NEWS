@@ -5,6 +5,42 @@ You can see the complete list of recent changes, bugfixes and new features
 in the https://github.com/rkd77/felinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
+ELinks 0.19.0rc1
+----------------
+
+Released on 2025-12-06
+
+* option document.browse.margin_auto #360 (hard margins)
+* TERM=dumb for js tests. #361
+* option document.html.compress_empty_lines #362
+* css visiblity: hidden support
+* experimental iframe support
+* spartan protocol
+* window.scroll in js
+* inline images support in html documents (meson option kitty)
+  and options document.html.kitty and document.html.sixel. Note that need
+  also enable kitty or sixel in terminal options
+* include-fragment support (now is easier to download something from github)
+* experimental libuv support
+* allow to set color0 to color255 as color
+* toggle-ecmascript-keys action to toggle between Application or Browser mode
+* requestAnimationFrame in js
+* option ui.sessions.auto_save_position #392
+* option document.html.display_unfinished
+* meson options avif and webp
+* option protocol.mailcap.allow_empty_referrer
+* option ui.leds.redraw_interval
+* fixes in DOS version related to temporary files creation
+* length can be bigger than int in http protocol #396
+* ignore result of verification for gemini protocol #397
+* meson option win32-vt100-native for Windows 10 and newer
+* support for chawan's extensions for mailcap (x-ansioutput and x-htmloutput)
+* Polish translation update
+* Serbian translation update
+* elinks.get_option(name) and elinks.set_option(name, value) in Python scripting #406
+* other small fixes
+
+
 ELinks 0.18.0
 -------------
 
