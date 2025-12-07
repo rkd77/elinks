@@ -975,7 +975,7 @@ js_input_set_property_selectedIndex(JSContext *ctx, JSValueConst this_val, JSVal
 	assert(fc->form && fs);
 
 	if (fc->type == FC_SELECT) {
-		int item;
+		int32_t item;
 
 		JS_ToInt32(ctx, &item, val);
 

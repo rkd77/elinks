@@ -193,8 +193,8 @@ js_attributes_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	if (argc != 1) {
 		return JS_UNDEFINED;
 	}
+	int32_t index;
 
-	int index;
 	JS_ToInt32(ctx, &index, argv[0]);
 
 	return js_attributes_item2(ctx, this_val, index);

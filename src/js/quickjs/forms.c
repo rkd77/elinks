@@ -172,7 +172,7 @@ js_forms_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *arg
 	if (argc != 1) {
 		return JS_UNDEFINED;
 	}
-	int index;
+	int32_t index;
 
 	if (JS_ToInt32(ctx, &index, argv[0])) {
 		return JS_UNDEFINED;

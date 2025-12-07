@@ -191,8 +191,8 @@ js_htmlCollection_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	if (argc != 1) {
 		return JS_UNDEFINED;
 	}
+	int32_t index;
 
-	int index;
 	JS_ToInt32(ctx, &index, argv[0]);
 
 	return js_htmlCollection_item2(ctx, this_val, index);

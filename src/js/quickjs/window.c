@@ -293,8 +293,8 @@ js_window_scrollBy(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	struct terminal *term = ses->tab->term;
 
 	if (argc == 2) {
-		int dx = 0;
-		int dy = 0;
+		int32_t dx = 0;
+		int32_t dy = 0;
 
 		JS_ToInt32(ctx, &dx, argv[0]);
 		JS_ToInt32(ctx, &dy, argv[1]);
@@ -308,8 +308,8 @@ js_window_scrollBy(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	}
 
 	if (argc == 1) {
-		int top = 0;
-		int left = 0;
+		int32_t top = 0;
+		int32_t left = 0;
 		JSValue r = JS_GetPropertyStr(ctx, argv[0], "top");
 		JS_ToInt32(ctx, &top, r);
 		r = JS_GetPropertyStr(ctx, argv[0], "left");
@@ -340,7 +340,7 @@ js_window_scrollByLines(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	struct session *ses = doc_view->session;
 
 	if (argc > 0) {
-		int steps = 0;
+		int32_t steps = 0;
 
 		JS_ToInt32(ctx, &steps, argv[0]);
 		vertical_scroll(ses, doc_view, steps);
@@ -364,7 +364,7 @@ js_window_scrollByPages(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	struct session *ses = doc_view->session;
 
 	if (argc > 0) {
-		int steps = 0;
+		int32_t steps = 0;
 
 		JS_ToInt32(ctx, &steps, argv[0]);
 		vertical_scroll(ses, doc_view, steps * doc_view->box.height);
@@ -389,8 +389,8 @@ js_window_scrollTo(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	struct terminal *term = ses->tab->term;
 
 	if (argc == 2) {
-		int x = 0;
-		int y = 0;
+		int32_t x = 0;
+		int32_t y = 0;
 
 		JS_ToInt32(ctx, &x, argv[0]);
 		JS_ToInt32(ctx, &y, argv[1]);
@@ -405,8 +405,8 @@ js_window_scrollTo(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	}
 
 	if (argc == 1) {
-		int top = 0;
-		int left = 0;
+		int32_t top = 0;
+		int32_t left = 0;
 		JSValue r = JS_GetPropertyStr(ctx, argv[0], "top");
 		JS_ToInt32(ctx, &top, r);
 		r = JS_GetPropertyStr(ctx, argv[0], "left");
@@ -467,7 +467,7 @@ js_window_setInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
-	int timeout = 0;
+	int32_t timeout = 0;
 	JSValueConst func;
 
 	if (argc != 2) {
@@ -527,7 +527,7 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
-	int timeout = 0;
+	int32_t timeout = 0;
 	JSValueConst func;
 
 	if (argc < 1) {
@@ -623,7 +623,7 @@ js_window_clearRequestAnimationFrame(JSContext *ctx, JSValueConst this_val, int 
 	if (argc != 1 || JS_IsNull(argv[0])) {
 		return JS_UNDEFINED;
 	}
-	int id;
+	int32_t id;
 
 	if (JS_ToInt32(ctx, &id, argv[0])) {
 		return JS_UNDEFINED;

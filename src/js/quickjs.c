@@ -682,8 +682,7 @@ quickjs_eval_boolback(struct ecmascript_interpreter *interpreter,
 	if (JS_IsUndefined(r)) {
 		return -1;
 	}
-
-	int ret = -1;
+	int32_t ret = -1;
 
 	JS_ToInt32(ctx, &ret, r);
 

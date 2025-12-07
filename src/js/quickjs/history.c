@@ -110,8 +110,8 @@ js_history_go(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *arg
 	if (argc != 1) {
 		return JS_UNDEFINED;
 	}
+	int32_t index;
 
-	int index;
 	if (JS_ToInt32(ctx, &index, argv[0])) {
 		return JS_UNDEFINED;
 	}

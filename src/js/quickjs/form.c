@@ -328,8 +328,7 @@ js_form_elements_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 	if (argc != 1) {
 		return JS_NULL;
 	}
-
-	int index;
+	int32_t index;
 
 	if (JS_ToInt32(ctx, &index, argv[0])) {
 		return JS_NULL;

@@ -115,7 +115,7 @@ struct el_form_control {
 	int size;
 	int cols, rows;
 	enum form_wrap wrap;
-	int maxlength;
+	int32_t maxlength;
 	int nvalues;
 	char **values;
 	/** Labels in a selection menu.
