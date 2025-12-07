@@ -1751,10 +1751,10 @@ select_loop(void (*init)(void))
 		check_bottom_halves();
 
 	while (!program.terminate) {
-		struct timeval timeout = { 0, 0 };
 #ifdef CONFIG_OS_DOS
 		timeval_T *timeout_ptr = NULL;
 #else
+		struct timeval timeout = { 0, 0 };
 		struct timeval *timeout_ptr = NULL;
 #endif
 		int n, i, has_timer;
@@ -1888,7 +1888,6 @@ can_read_or_write(int fd, int write)
 	if (p.revents & POLLNVAL) elinks_internal("ERROR: poll for %s (%d) failed: %s", !write ? "read" : "write", fd, strerror(errno));
 	return 1;
 #else
-	struct timeval tv = {0, 0};
 	fd_set fds;
 	fd_set *rfds = NULL;
 	fd_set *wfds = NULL;
@@ -1904,6 +1903,7 @@ can_read_or_write(int fd, int write)
 	timeval_T tt = {0,0,0};
 	return select2(fd + 1, rfds, wfds, NULL, &tt);
 #else
+	struct timeval tv = {0, 0};
 	return select2(fd + 1, rfds, wfds, NULL, &tv);
 #endif
 #endif
