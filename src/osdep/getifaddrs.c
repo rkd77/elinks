@@ -102,7 +102,7 @@ getifaddrs2(struct ifaddrs **ifap,
 	size_t sz;
 	int ret;
 	int fd;
-	int num, j = 0;
+	//int num, j = 0;
 
 	memset(&sa_zero, 0, sizeof(sa_zero));
 	fd = socket(pf, SOCK_DGRAM, 0);
@@ -138,8 +138,8 @@ getifaddrs2(struct ifaddrs **ifap,
 		buf_size *= 2;
 	}
 
-	num = ifconf.ifc_len / ifreq_sz;
-	j = 0;
+	//num = ifconf.ifc_len / ifreq_sz;
+	//j = 0;
 	for (p = ifconf.ifc_buf; p < ifconf.ifc_buf + ifconf.ifc_len; p += sz) {
 		struct ifreq ifreq;
 		struct sockaddr *sa;
