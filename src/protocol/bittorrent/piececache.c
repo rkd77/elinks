@@ -1224,14 +1224,7 @@ start_bittorrent_resume(struct bittorrent_connection *bittorrent,
 
 	add_bytes_to_string(&info, (const char *)&meta->length, sizeof(meta->length));
 	add_bytes_to_string(&info, meta->source, meta->length);
-
-#ifndef WIN32
 	cache->resume_fd = start_thread(bittorrent_resume_writer, info.source, info.length);
-
-#else
-
-	bittorrent_resume_writer(info.source, info.length);
-#endif
 	done_string(&info);
 
 	if (cache->resume_fd == -1)

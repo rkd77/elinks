@@ -796,7 +796,7 @@ conf_data.set('HAVE_VARIADIC_MACROS', 1)
 #AC_FUNC_MEMCMP
 #AC_FUNC_MMAP
 
-if compiler.has_function('_beginthread', prefix: '#include <stdlib.h>')
+if compiler.has_function('_beginthread', prefix: '#include <process.h>')
     conf_data.set('HAVE_BEGINTHREAD', 1)
 endif
 

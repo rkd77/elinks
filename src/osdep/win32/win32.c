@@ -15,6 +15,10 @@
 #include <windows.h>
 #endif
 
+#ifdef HAVE_BEGINTHREAD
+#include <process.h>
+#endif
+
 #include <shlobj.h>
 
 #include "osdep/system.h"
