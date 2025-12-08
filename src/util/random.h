@@ -10,7 +10,7 @@ extern "C" {
 
 void seed_rand_once(void);
 
-void random_nonce(unsigned char buf[], size_t size);
+void random_nonce(unsigned char *buf, size_t size);
 
 #ifdef __cplusplus
 }

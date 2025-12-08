@@ -28,7 +28,7 @@ seed_rand_once(void)
 #ifndef CONFIG_SSL
 
 static void
-pseudorandom_nonce(unsigned char buf[], size_t size)
+pseudorandom_nonce(unsigned char *buf, size_t size)
 {
 	ELOG
 	static int initialized = 0;
@@ -91,7 +91,7 @@ pseudorandom_nonce(unsigned char buf[], size_t size)
  * src/network/ssl/ssl.c, and it gets random numbers directly from the
  * selected SSL library.  */
 void
-random_nonce(unsigned char buf[], size_t size)
+random_nonce(unsigned char *buf, size_t size)
 {
 	ELOG
 	size_t i = 0;
