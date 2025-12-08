@@ -188,6 +188,7 @@ dumbprefixes = {
     pyvault = "http://www.vex.net/parnassus/",
     e2 = "http://www.everything2.org/",
     sd = "http://www.slashdot.org/",
+    sp = "https://www.startpage.com/",
     vhtml = "http://validator.w3.org/check?uri=%c",
     vcss = "http://jigsaw.w3.org/css-validator/validator?uri=%c",
 }
@@ -297,6 +298,7 @@ smartprefixes = {
     sdu = "http://www.slashdot.org/search.pl?query=%s&op=users",
     sdp = "http://www.slashdot.org/search.pl?query=%s&op=polls",
     sdj = "http://www.slashdot.org/search.pl?query=%s&op=journals",
+    sp = "https://www.startpage.com/sp/search?query=%s",
     dbug = "http://bugs.debian.org/%s",
     dpkg = "http://packages.debian.org/%s",
     emacs = "http://www.emacswiki.org/cgi-bin/wiki.pl?search=%s",
