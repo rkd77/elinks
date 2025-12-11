@@ -67,11 +67,19 @@
 /* Types and structs */
 
 struct http_curl_connection_info {
+	blacklist_flags_T bl_flags;
+	struct http_version recv_version;
+	struct http_version sent_version;
+	int close;
+	off_t length;
+	int chunk_remaining;
+	int code;
+	struct http_post post;
+
 	CURL *easy;
 	struct curl_slist *list;
 	char *url;
 	char *post_buffer;
-	struct http_post post;
 	struct string post_headers;
 	struct string headers;
 #ifdef CONFIG_LIBUV
@@ -82,7 +90,6 @@ struct http_curl_connection_info {
 	char error[CURL_ERROR_SIZE];
 	int conn_state;
 	int buf_pos;
-	long code;
 	unsigned int is_post:1;
 };
 
@@ -150,7 +157,9 @@ xferinfo_callback(void *clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_
 	struct http_post *post = (struct http_post *)clientp;
 
 	post->uploaded = ulnow;
+	post->total_upload_length = ultotal;
 	/* use the values */
+
 	return 0; /* all is good */
 }
 
@@ -366,7 +375,6 @@ do_http(struct connection *conn)
 		}
 
 		//fprintf(stderr, "Adding easy %p to multi %p (%s)\n", curl, g.multi, u.source);
-		set_connection_state(conn, connection_state(S_TRANS));
 		curl_easy_setopt(curl, CURLOPT_URL, u.source);
 		curl_easy_setopt(curl, CURLOPT_NOBODY, 0L);
 		curl_easy_setopt(curl, CURLOPT_HTTP_VERSION, (long)CURL_HTTP_VERSION_3);
@@ -376,6 +384,9 @@ do_http(struct connection *conn)
 		}
 
 		if (http->is_post) {
+			if (!conn->http_upload_progress) {
+				conn->http_upload_progress = init_progress(0);
+			}
 			curl_easy_setopt(curl, CURLOPT_POST, 1L);
 			curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE_LARGE, http->post.total_upload_length);
 			curl_easy_setopt(curl, CURLOPT_XFERINFODATA, &http->post);
@@ -386,6 +397,7 @@ do_http(struct connection *conn)
 		} else if (http->post_buffer) {
 			curl_easy_setopt(curl, CURLOPT_POSTFIELDS, http->post_buffer);
 		}
+		set_connection_state(conn, connection_state(S_TRANS));
 
 		optstr = get_opt_str("protocol.http.user_agent", NULL);
 
