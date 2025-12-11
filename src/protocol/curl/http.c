@@ -144,6 +144,16 @@ done_http_curl(struct connection *conn)
 	}
 }
 
+static int
+xferinfo_callback(void *clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow)
+{
+	struct http_post *post = (struct http_post *)clientp;
+
+	post->uploaded = ulnow;
+	/* use the values */
+	return 0; /* all is good */
+}
+
 static void
 do_http(struct connection *conn)
 {
@@ -368,6 +378,9 @@ do_http(struct connection *conn)
 		if (http->is_post) {
 			curl_easy_setopt(curl, CURLOPT_POST, 1L);
 			curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE_LARGE, http->post.total_upload_length);
+			curl_easy_setopt(curl, CURLOPT_XFERINFODATA, &http->post);
+			curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
+			curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, xferinfo_callback);
 			curl_easy_setopt(curl, CURLOPT_READDATA, conn);
 			curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_post_data);
 		} else if (http->post_buffer) {
