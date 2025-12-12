@@ -88,6 +88,7 @@ struct http_curl_connection_info {
 	GlobalInfo *global;
 #endif
 	char error[CURL_ERROR_SIZE];
+	long longcode;
 	int conn_state;
 	int buf_pos;
 	unsigned int is_post:1;
@@ -451,13 +452,13 @@ http_curl_got_header(void *stream, void *buf, size_t len)
 	}
 
 	if (len == 2 && buffer[0] == 13 && buffer[1] == 10) {
-		curl_easy_getinfo(http->easy, CURLINFO_RESPONSE_CODE, &http->code);
+		curl_easy_getinfo(http->easy, CURLINFO_RESPONSE_CODE, &http->longcode);
 
-		if (http->code == 0L) {
+		if (http->longcode == 0L) {
 			goto next;
 		}
 
-		if (!conn->cached && http->code != 103L) {
+		if (!conn->cached && http->longcode != 103L) {
 			conn->cached = get_cache_entry(conn->uri);
 
 			if (!conn->cached) {
@@ -471,7 +472,7 @@ http_curl_got_header(void *stream, void *buf, size_t len)
 			conn->est_length += conn->progress->start;
 		}
 
-		if (http->code != 103L) {
+		if (http->longcode != 103L) {
 			mem_free_set(&conn->cached->head, memacpy(http->headers.source, http->headers.length));
 			mem_free_set(&conn->cached->content_type, NULL);
 		}
@@ -529,7 +530,7 @@ http_curl_check_redirect(struct connection *conn)
 		return NULL;
 	}
 
-	if (http->code == 201L || http->code == 301L || http->code == 302L || http->code == 303L || http->code == 307L || http->code == 308L) {
+	if (http->longcode == 201L || http->longcode == 301L || http->longcode == 302L || http->longcode == 303L || http->longcode == 307L || http->longcode == 308L) {
 		char *url = NULL;
 
 		curl_easy_getinfo(http->easy, CURLINFO_REDIRECT_URL, &url);
@@ -548,8 +549,8 @@ http_curl_handle_error(struct connection *conn, CURLcode res)
 		struct http_curl_connection_info *http = (struct http_curl_connection_info *)conn->info;
 
 		if (url) {
-			(void)redirect_cache(conn->cached, url, (http->code == 303L), -1);
-		} else if (http->code == 401L) {
+			(void)redirect_cache(conn->cached, url, (http->longcode == 303L), -1);
+		} else if (http->longcode == 401L) {
 			add_auth_entry(conn->uri, "HTTP Auth", NULL, NULL, 0);
 		}
 		abort_connection(conn, connection_state(S_OK));
