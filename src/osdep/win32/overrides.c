@@ -143,6 +143,7 @@ struct elwin_mouse {
 	void *data;
 } elm;
 
+#ifndef CONFIG_WIN32_VT100_NATIVE
 static int
 console_mouse_read(const MOUSE_EVENT_RECORD *mer, char *buf, int max)
 {
@@ -196,6 +197,7 @@ console_mouse_read(const MOUSE_EVENT_RECORD *mer, char *buf, int max)
 
 	return 0;
 }
+#endif
 
 void *
 handle_mouse(int cons, void (*fn)(void *, char *, int),
@@ -242,7 +244,9 @@ console_read(HANDLE hnd, void *buf, int max, INPUT_RECORD *irp)
 	ELOG
 	INPUT_RECORD ir;
 	const KEY_EVENT_RECORD   *ker = &ir.Event.KeyEvent;
+#ifndef CONFIG_WIN32_VT100_NATIVE
 	const MOUSE_EVENT_RECORD *mer = &ir.Event.MouseEvent;
+#endif
 	DWORD num_events;
 
 	ReadConsoleInput (hnd, &ir, 1, &num_events);
@@ -306,8 +310,9 @@ win32_write(int fd, const void *buf, unsigned len)
 	ELOG
 	DWORD written = 0;
 	int   rc = -1;
+#ifndef CONFIG_FASTMEM
 	int   orig_fd = fd;
-
+#endif
 	switch (what_fd_type(&fd)) {
 	case FDT_FILE:
 		rc = write(fd, buf, len);
@@ -359,7 +364,9 @@ win32_read(int fd, void *buf, unsigned len)
 {
 	ELOG
 	int   rc = -1;
+#ifndef CONFIG_FASTMEM
 	int   orig_fd = fd;
+#endif
 	DWORD Read;
 
 	switch (what_fd_type(&fd)) {
@@ -405,8 +412,9 @@ win32_close(int fd)
 {
 	ELOG
 	int rc = -1;
+#ifndef CONFIG_FASTMEM
 	int orig_fd = fd;
-
+#endif
 	switch (what_fd_type(&fd)) {
 	case FDT_FILE:
 		rc = close(fd);
@@ -439,7 +447,10 @@ win32_ioctl(int fd, long option, int *flag)
 {
 	ELOG
 	char  cmd[20];
-	int  rc = 0, orig_fd = fd, flg = *flag;
+	int  rc = 0, flg = *flag;
+#ifndef CONFIG_FASTMEM
+	int orig_fd = fd;
+#endif
 	DWORD mode;
 
 	switch (what_fd_type(&fd)) {
@@ -633,6 +644,7 @@ win32_pipe(int *fds)
 	return 0;
 }
 
+#ifndef CONFIG_FASTMEM
 static const char *
 timeval_str(const struct timeval *tv)
 {
@@ -683,6 +695,7 @@ select_dump(int num_fds, const fd_set *rd, const fd_set *wr, const fd_set *ex)
 	      wr ? fd_set_str(buf_wr,sizeof(buf_wr),wr,num_fds) : "<none>",
 	      ex ? fd_set_str(buf_ex,sizeof(buf_ex),ex,num_fds) : "<none>");
 }
+#endif
 
 static int
 select_read(int fd, struct fd_set *rd)
@@ -786,8 +799,10 @@ int win32_select (int num_fds, struct fd_set *rd, struct fd_set *wr,
 	      num_fds, rd ? "r" : "-", wr ? "w" : "-",
 	      ex ? "x" : "-", tv ? timeval_str(tv) : "NULL");
 
+#ifndef CONFIG_FASTMEM
 	if (get_cmd_opt_int("verbose") == 2)
 		select_dump(num_fds, rd, wr, ex);
+#endif
 
 	FD_ZERO(&tmp_rd);
 	FD_ZERO(&tmp_ex);
@@ -805,9 +820,9 @@ int win32_select (int num_fds, struct fd_set *rd, struct fd_set *wr,
 			expiry.tv_sec++;
 		}
 	}
-
+#ifndef CONFIG_FASTMEM
 	int errnol = 0;
-
+#endif
 	for (rc = 0; !expired; ) {
 		rc += select_one_loop (num_fds, &tmp_rd, wr, &tmp_ex);
 
@@ -843,6 +858,7 @@ int win32_select (int num_fds, struct fd_set *rd, struct fd_set *wr,
 
 	TRACE("-> rc %d, err %d", rc, rc < 0 ? errnol : 0);
 
+#ifndef CONFIG_FASTMEM
 	if (get_cmd_opt_int("verbose") == 2)
 		select_dump(num_fds, rd, wr, ex);
 
@@ -850,7 +866,7 @@ int win32_select (int num_fds, struct fd_set *rd, struct fd_set *wr,
 		Sleep (400);
 	else
 		Sleep (0);
-
+#endif
 	return rc;
 }
 
