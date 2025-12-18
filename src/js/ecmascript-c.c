@@ -457,9 +457,9 @@ ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter,
 	ELOG
 	int result;
 
-	if (!get_ecmascript_enable(interpreter))
+	if (!get_ecmascript_enable(get_interpreter_document_uri(interpreter))) {
 		return -1;
-	assert(interpreter);
+	}
 	interpreter->backend_nesting++;
 #ifdef CONFIG_MUJS
 	result = mujs_eval_boolback(interpreter, code);

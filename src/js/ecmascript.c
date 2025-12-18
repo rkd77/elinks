@@ -179,16 +179,22 @@ read_url_list(void)
 
 int ecmascript_enabled;
 
+struct uri *
+get_interpreter_document_uri(struct ecmascript_interpreter *interpreter)
+{
+	return (interpreter && interpreter->vs && interpreter->vs->doc_view
+		&& interpreter->vs->doc_view->document) ? interpreter->vs->doc_view->document->uri
+		: NULL;
+}
+
 int
-get_ecmascript_enable(struct ecmascript_interpreter *interpreter)
+get_ecmascript_enable(struct uri *uri)
 {
 	ELOG
 	struct string_list_item *item;
 	char *url;
 
-	if (!ecmascript_enabled || !get_opt_bool("ecmascript.enable", NULL)
-	|| !interpreter || !interpreter->vs || !interpreter->vs->doc_view
-	|| !interpreter->vs->doc_view->document || !interpreter->vs->doc_view->document->uri) {
+	if (!ecmascript_enabled || !get_opt_bool("ecmascript.enable", NULL) || !uri) {
 		return 0;
 	}
 
@@ -196,7 +202,7 @@ get_ecmascript_enable(struct ecmascript_interpreter *interpreter)
 		return 1;
 	}
 
-	url = get_uri_string(interpreter->vs->doc_view->document->uri, URI_PUBLIC);
+	url = get_uri_string(uri, URI_PUBLIC);
 	if (!url) {
 		return 0;
 	}
@@ -407,10 +413,9 @@ ecmascript_eval(struct ecmascript_interpreter *interpreter,
                 struct string *code, struct string *ret, int element_offset)
 {
 	ELOG
-	if (!get_ecmascript_enable(interpreter)) {
+	if (!get_ecmascript_enable(get_interpreter_document_uri(interpreter))) {
 		return;
 	}
-	assert(interpreter);
 	interpreter->backend_nesting++;
 	interpreter->element_offset = element_offset;
 #ifdef CONFIG_MUJS
@@ -438,9 +443,9 @@ ecmascript_call_function(struct ecmascript_interpreter *interpreter,
 #endif
 {
 	ELOG
-	if (!get_ecmascript_enable(interpreter))
+	if (!get_ecmascript_enable(get_interpreter_document_uri(interpreter))) {
 		return;
-	assert(interpreter);
+	}
 	interpreter->backend_nesting++;
 #ifdef CONFIG_MUJS
 	mujs_call_function(interpreter, fun, ret);
@@ -467,9 +472,9 @@ ecmascript_call_function_timestamp(struct ecmascript_interpreter *interpreter,
 #endif
 {
 	ELOG
-	if (!get_ecmascript_enable(interpreter))
+	if (!get_ecmascript_enable(get_interpreter_document_uri(interpreter))) {
 		return;
-	assert(interpreter);
+	}
 	interpreter->backend_nesting++;
 #ifdef CONFIG_MUJS
 	mujs_call_function_timestamp(interpreter, fun, ret);
@@ -488,9 +493,9 @@ ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter,
 	ELOG
 	char *result;
 
-	if (!get_ecmascript_enable(interpreter))
+	if (!get_ecmascript_enable(get_interpreter_document_uri(interpreter))) {
 		return NULL;
-	assert(interpreter);
+	}
 	interpreter->backend_nesting++;
 #ifdef CONFIG_MUJS
 	result = mujs_eval_stringback(interpreter, code);

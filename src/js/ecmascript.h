@@ -196,7 +196,8 @@ struct ecmascript_timeout *ecmascript_set_timeout2m(js_State *J, const char *han
 int ecmascript_set_request2(js_State *J, const char *handle);
 #endif
 
-int get_ecmascript_enable(struct ecmascript_interpreter *interpreter);
+struct uri *get_interpreter_document_uri(struct ecmascript_interpreter *interpreter);
+int get_ecmascript_enable(struct uri *uri);
 
 void check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text);
 
