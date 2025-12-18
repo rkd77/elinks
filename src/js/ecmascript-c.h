@@ -88,6 +88,9 @@ char *get_integrity_from_map(struct uri *uri);
 int document_fire_onkeydown(struct ecmascript_interpreter *interpreter, struct term_event *ev);
 int document_fire_onkeyup(struct ecmascript_interpreter *interpreter, struct term_event *ev);
 
+struct uri *get_interpreter_document_uri(struct ecmascript_interpreter *interpreter);
+int get_ecmascript_enable(struct uri *uri);
+
 extern struct module ecmascript_module;
 
 #ifdef __cplusplus

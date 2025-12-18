@@ -27,6 +27,7 @@
 #include "document/html/tables.h"
 #include "document/options.h"
 #include "intl/charsets.h"
+#include "js/ecmascript-c.h"
 #include "protocol/uri.h"
 #include "terminal/draw.h"
 #include "util/align.h"
@@ -350,7 +351,7 @@ not_processed:
 		struct uri *uri;
 		struct string tmp;
 
-		if (!get_opt_bool("ecmascript.enable", NULL)) {
+		if (!get_ecmascript_enable(html_context->base_href)) {
 			mem_free(src);
 			goto not_processed;
 		}
@@ -1256,7 +1257,7 @@ html_noscript(struct html_context *html_context, char *a,
 	/* We shouldn't throw <noscript> away until our ECMAScript support is
 	 * halfway decent. */
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
-	if (get_opt_bool("ecmascript.enable", NULL)
+	if (get_ecmascript_enable(html_context->base_href)
             && get_opt_bool("ecmascript.ignore_noscript", NULL)) {
 		html_skip(html_context, a);
 		return;

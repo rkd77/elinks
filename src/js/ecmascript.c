@@ -237,7 +237,6 @@ get_ecmascript_enable(struct uri *uri)
 	return list_empty(allowed_urls);
 }
 
-
 struct ecmascript_interpreter *
 ecmascript_get_interpreter(struct view_state *vs)
 {
