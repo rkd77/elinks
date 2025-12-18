@@ -124,8 +124,9 @@ add_snippets(struct ecmascript_interpreter *interpreter,
 #endif
 
 	if (list_empty(*doc_snippets)
-	    || !get_opt_bool("ecmascript.enable", NULL))
+	    || !get_ecmascript_enable(get_interpreter_document_uri(interpreter))) {
 		return;
+	}
 
 	/* We do this all only once per view_state now. */
 	if (!list_empty(*queued_snippets)) {
