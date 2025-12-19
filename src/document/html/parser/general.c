@@ -351,7 +351,7 @@ not_processed:
 		struct uri *uri;
 		struct string tmp;
 
-		if (!get_ecmascript_enable(html_context->base_href)) {
+		if (!is_ecmascript_enabled_for_uri(html_context->base_href)) {
 			mem_free(src);
 			goto not_processed;
 		}
@@ -1257,7 +1257,7 @@ html_noscript(struct html_context *html_context, char *a,
 	/* We shouldn't throw <noscript> away until our ECMAScript support is
 	 * halfway decent. */
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
-	if (get_ecmascript_enable(html_context->base_href)
+	if (is_ecmascript_enabled_for_uri(html_context->base_href)
             && get_opt_bool("ecmascript.ignore_noscript", NULL)) {
 		html_skip(html_context, a);
 		return;

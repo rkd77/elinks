@@ -179,16 +179,18 @@ read_url_list(void)
 
 int ecmascript_enabled;
 
-struct uri *
-get_interpreter_document_uri(struct ecmascript_interpreter *interpreter)
+int
+is_ecmascript_enabled_for_interpreter(struct ecmascript_interpreter *interpreter)
 {
-	return (interpreter && interpreter->vs && interpreter->vs->doc_view
+	struct uri *uri = (interpreter && interpreter->vs && interpreter->vs->doc_view
 		&& interpreter->vs->doc_view->document) ? interpreter->vs->doc_view->document->uri
 		: NULL;
+
+	return is_ecmascript_enabled_for_uri(uri);
 }
 
 int
-get_ecmascript_enable(struct uri *uri)
+is_ecmascript_enabled_for_uri(struct uri *uri)
 {
 	ELOG
 	struct string_list_item *item;
@@ -412,7 +414,7 @@ ecmascript_eval(struct ecmascript_interpreter *interpreter,
                 struct string *code, struct string *ret, int element_offset)
 {
 	ELOG
-	if (!get_ecmascript_enable(get_interpreter_document_uri(interpreter))) {
+	if (!is_ecmascript_enabled_for_interpreter(interpreter)) {
 		return;
 	}
 	interpreter->backend_nesting++;
@@ -442,7 +444,7 @@ ecmascript_call_function(struct ecmascript_interpreter *interpreter,
 #endif
 {
 	ELOG
-	if (!get_ecmascript_enable(get_interpreter_document_uri(interpreter))) {
+	if (!is_ecmascript_enabled_for_interpreter(interpreter)) {
 		return;
 	}
 	interpreter->backend_nesting++;
@@ -471,7 +473,7 @@ ecmascript_call_function_timestamp(struct ecmascript_interpreter *interpreter,
 #endif
 {
 	ELOG
-	if (!get_ecmascript_enable(get_interpreter_document_uri(interpreter))) {
+	if (!is_ecmascript_enabled_for_interpreter(interpreter)) {
 		return;
 	}
 	interpreter->backend_nesting++;
@@ -492,7 +494,7 @@ ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter,
 	ELOG
 	char *result;
 
-	if (!get_ecmascript_enable(get_interpreter_document_uri(interpreter))) {
+	if (!is_ecmascript_enabled_for_interpreter(interpreter)) {
 		return NULL;
 	}
 	interpreter->backend_nesting++;

@@ -124,7 +124,7 @@ add_snippets(struct ecmascript_interpreter *interpreter,
 #endif
 
 	if (list_empty(*doc_snippets)
-	    || !get_ecmascript_enable(get_interpreter_document_uri(interpreter))) {
+	    || !is_ecmascript_enabled_for_interpreter(interpreter)) {
 		return;
 	}
 
@@ -458,7 +458,7 @@ ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter,
 	ELOG
 	int result;
 
-	if (!get_ecmascript_enable(get_interpreter_document_uri(interpreter))) {
+	if (!is_ecmascript_enabled_for_interpreter(interpreter)) {
 		return -1;
 	}
 	interpreter->backend_nesting++;
