@@ -27,7 +27,9 @@
 #include "document/html/tables.h"
 #include "document/options.h"
 #include "intl/charsets.h"
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 #include "js/ecmascript-c.h"
+#endif
 #include "protocol/uri.h"
 #include "terminal/draw.h"
 #include "util/align.h"
