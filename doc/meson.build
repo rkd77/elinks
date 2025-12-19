@@ -19,7 +19,7 @@ endif
 doc_dir = get_option('docdir')
 
 if doc_dir == ''
-    doc_dir = join_paths(get_option('prefix'), get_option('datadir'), 'doc', 'elinks')
+    doc_dir = get_option('prefix') / get_option('datadir') / 'doc' / 'elinks'
 endif
 
 if pod2html.found()
@@ -248,8 +248,8 @@ elinks_conf_5 = []
 elinkskeys_5 = []
 manual_html_chunked = []
 
-man1_dir = join_paths(get_option('prefix'), get_option('mandir'), 'man1')
-man5_dir = join_paths(get_option('prefix'), get_option('mandir'), 'man5')
+man1_dir = get_option('prefix') / get_option('mandir') / 'man1'
+man5_dir = get_option('prefix') / get_option('mandir') / 'man5'
 
 if xmlto.found() and get_option('htmldoc')
     elinks_1 = custom_target('elinks.1',
