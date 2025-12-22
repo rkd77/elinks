@@ -1238,7 +1238,7 @@ conf_data.set('SIZEOF_SHORT', compiler.sizeof('short'))
 conf_data.set('SIZEOF_INT', compiler.sizeof('int'))
 conf_data.set('SIZEOF_LONG', compiler.sizeof('long'))
 conf_data.set('SIZEOF_LONG_LONG', compiler.sizeof('long long'))
-conf_data.set('SIZEOF_OFF_T', compiler.sizeof('off_t'))
+conf_data.set('SIZEOF_OFF_T', compiler.sizeof('off_t', prefix: '#include <sys/types.h>'))
 conf_data.set('SIZEOF_INTPTR_T', compiler.sizeof('intptr_t', prefix: '#include <stdint.h>'))
 
 conf_data.set('CONFIG_GNUTLS_OPENSSL_COMPAT', false)
