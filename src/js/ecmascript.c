@@ -697,7 +697,7 @@ skip:
 }
 #endif
 
-static uint32_t timeout_id;
+static uint32_t timeout_id = 1;
 
 uint32_t
 ecmascript_set_timeout(void *c, char *code, int timeout, int timeout_next)
@@ -731,10 +731,7 @@ ecmascript_set_timeout(void *c, char *code, int timeout, int timeout_next)
 		mem_free(code);
 		return 0;
 	}
-	timeout_id++;
-	if (!timeout_id) {
-		timeout_id++;
-	}
+	timeout_id += 2;
 	t->timeout_id = timeout_id;
 	add_to_string(&t->code, code);
 	mem_free(code);
@@ -791,10 +788,7 @@ ecmascript_set_timeout2(void *c, JS::HandleValue f, int timeout, int timeout_nex
 		mem_free(t);
 		return 0;
 	}
-	timeout_id++;
-	if (!timeout_id) {
-		timeout_id++;
-	}
+	timeout_id += 2;
 	t->timeout_id = timeout_id;
 	t->interpreter = interpreter;
 	t->ctx = ctx;
@@ -842,10 +836,7 @@ ecmascript_set_timeout2q(void *c, JSValueConst fun, int timeout, int timeout_nex
 		mem_free(t);
 		return 0;
 	}
-	timeout_id++;
-	if (!timeout_id) {
-		timeout_id++;
-	}
+	timeout_id += 2;
 	t->timeout_id = timeout_id;
 	t->interpreter = interpreter;
 	t->ctx = ctx;
@@ -889,10 +880,7 @@ ecmascript_set_timeout2m(js_State *J, const char *handle, int timeout, int timeo
 		mem_free(t);
 		return 0;
 	}
-	timeout_id++;
-	if (!timeout_id) {
-		timeout_id++;
-	}
+	timeout_id += 2;
 	t->timeout_id = timeout_id;
 	t->interpreter = interpreter;
 	t->ctx = J;
