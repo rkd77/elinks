@@ -126,9 +126,6 @@ check_timers(timeval_T *last_time)
 			break;
 
 		del_from_list(timer);
-#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
-		del_from_map_timer(timer->data);
-#endif
 		/* At this point, *@timer is to be considered invalid
 		 * outside timers.c; if anything e.g. passes it to
 		 * @kill_timer, that's a bug.  However, @timer->func
@@ -244,7 +241,7 @@ kill_timer(timer_id_T *id)
 	timer = *id;
 	del_from_list(timer);
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
-	del_from_map_timer(timer->data);
+	//del_from_map_timer(timer->data);
 #endif
 
 #ifdef USE_LIBEVENT

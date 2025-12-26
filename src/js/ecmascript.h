@@ -144,6 +144,7 @@ struct ecmascript_timeout {
 	struct ecmascript_interpreter *interpreter;
 	timer_id_T tid;
 	int timeout_next;
+	uint32_t timeout_id;
 };
 
 struct delayed_goto {
@@ -179,20 +180,20 @@ void ecmascript_timeout_dialog(struct terminal *term, int max_exec_time);
 
 void ecmascript_set_action(char **action, char *string);
 
-struct ecmascript_timeout *ecmascript_set_timeout(void *ctx, char *code, int timeout, int timeout_next);
+uint32_t ecmascript_set_timeout(void *ctx, char *code, int timeout, int timeout_next);
 
 #ifdef CONFIG_ECMASCRIPT_SMJS
-struct ecmascript_timeout *ecmascript_set_timeout2(void *ctx, JS::HandleValue f, int timeout, int timeout_next);
+uint32_t ecmascript_set_timeout2(void *ctx, JS::HandleValue f, int timeout, int timeout_next);
 int ecmascript_set_request2(void *ctx, JS::HandleValue f);
 #endif
 
 #ifdef CONFIG_QUICKJS
-struct ecmascript_timeout *ecmascript_set_timeout2q(void *ctx, JSValue f, int timeout, int timeout_next);
+uint32_t ecmascript_set_timeout2q(void *ctx, JSValue f, int timeout, int timeout_next);
 int ecmascript_set_request2(void *ctx, JSValue f);
 #endif
 
 #ifdef CONFIG_MUJS
-struct ecmascript_timeout *ecmascript_set_timeout2m(js_State *J, const char *handle, int timeout, int timeout_next);
+uint32_t ecmascript_set_timeout2m(js_State *J, const char *handle, int timeout, int timeout_next);
 int ecmascript_set_request2(js_State *J, const char *handle);
 #endif
 

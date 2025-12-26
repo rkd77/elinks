@@ -10,11 +10,11 @@ SUBDIRS-$(CONFIG_QUICKJS)	+= quickjs
 
 SUBDIRS-$(CONFIG_ECMASCRIPT_SMJS)	+= spidermonkey
 
-OBJS-$(CONFIG_ECMASCRIPT_SMJS)		+= ecmascript.obj ecmascript-c.obj localstorage-db.o spidermonkey.obj timer.o
+OBJS-$(CONFIG_ECMASCRIPT_SMJS)		+= ecmascript.obj ecmascript-c.obj localstorage-db.o spidermonkey.obj timer.obj
 
-OBJS-$(CONFIG_MUJS)		+= ecmascript.o ecmascript-c.o localstorage-db.o mujs.o timer.o
+OBJS-$(CONFIG_MUJS)		+= ecmascript.o ecmascript-c.o localstorage-db.o mujs.o timer.obj
 
-OBJS-$(CONFIG_QUICKJS)		+= ecmascript.o ecmascript-c.o localstorage-db.o quickjs.o timer.o
+OBJS-$(CONFIG_QUICKJS)		+= ecmascript.o ecmascript-c.o localstorage-db.o quickjs.o timer.obj
 
 ifeq ($(CONFIG_ECMASCRIPT_SMJS), yes)
 CONFIG_ANY_SPIDERMONKEY = yes

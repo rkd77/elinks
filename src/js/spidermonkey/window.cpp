@@ -899,14 +899,12 @@ window_setInterval(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			return true;
 		}
 
-		struct ecmascript_timeout *id = ecmascript_set_timeout(ctx, code, timeout, timeout);
-		JS::BigInt *bi = JS::NumberToBigInt(ctx, reinterpret_cast<int64_t>(id));
-		args.rval().setBigInt(bi);
+		uint32_t id = ecmascript_set_timeout(ctx, code, timeout, timeout);
+		args.rval().setInt32(id);
 		return true;
 	}
-	struct ecmascript_timeout *id = ecmascript_set_timeout2(ctx, args[0], timeout, timeout);
-	JS::BigInt *bi = JS::NumberToBigInt(ctx, reinterpret_cast<int64_t>(id));
-	args.rval().setBigInt(bi);
+	uint32_t id = ecmascript_set_timeout2(ctx, args[0], timeout, timeout);
+	args.rval().setInt32(id);
 
 	return true;
 }
@@ -978,14 +976,12 @@ window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			return true;
 		}
 
-		struct ecmascript_timeout *id = ecmascript_set_timeout(ctx, code, timeout, 0);
-		JS::BigInt *bi = JS::NumberToBigInt(ctx, reinterpret_cast<int64_t>(id));
-		args.rval().setBigInt(bi);
+		uint32_t id = ecmascript_set_timeout(ctx, code, timeout, 0);
+		args.rval().setInt32(id);
 		return true;
 	}
-	struct ecmascript_timeout *id = ecmascript_set_timeout2(ctx, args[0], timeout, 0);
-	JS::BigInt *bi = JS::NumberToBigInt(ctx, reinterpret_cast<int64_t>(id));
-	args.rval().setBigInt(bi);
+	uint32_t id = ecmascript_set_timeout2(ctx, args[0], timeout, 0);
+	args.rval().setInt32(id);
 
 	return true;
 }
@@ -1010,11 +1006,10 @@ window_clearInterval(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	if (argc != 1 || args[0].isNull()) {
 		return true;
 	}
-	JS::BigInt *bi = JS::ToBigInt(ctx, args[0]);
-	int64_t number = JS::ToBigInt64(bi);
-	struct ecmascript_timeout *t = reinterpret_cast<struct ecmascript_timeout *>(number);
+	uint32_t id  = args[0].toInt32();
+	struct ecmascript_timeout *t = find_in_map_timer(id);
 
-	if (found_in_map_timer(t)) {
+	if (t) {
 		t->timeout_next = -1;
 	}
 	return true;
@@ -1077,11 +1072,10 @@ window_clearTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	if (argc != 1 || args[0].isNull()) {
 		return true;
 	}
-	JS::BigInt *bi = JS::ToBigInt(ctx, args[0]);
-	int64_t number = JS::ToBigInt64(bi);
-	struct ecmascript_timeout *t = reinterpret_cast<struct ecmascript_timeout *>(number);
+	uint32_t id = args[0].toInt32();
+	struct ecmascript_timeout *t = find_in_map_timer(id);
 
-	if (found_in_map_timer(t)) {
+	if (t) {
 		t->timeout_next = -1;
 	}
 	return true;

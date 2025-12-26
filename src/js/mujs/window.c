@@ -417,10 +417,10 @@ mjs_window_clearInterval(js_State *J)
 		return;
 	}
 
-	uintptr_t number = (uintptr_t)atoll(text);
-	struct ecmascript_timeout *t = (struct ecmascript_timeout *)(number);
+	uint32_t number = atoi(text);
+	struct ecmascript_timeout *t = find_in_map_timer(number);
 
-	if (found_in_map_timer(t)) {
+	if (t) {
 		t->timeout_next = -1;
 	}
 	js_pushundefined(J);
@@ -462,10 +462,10 @@ mjs_window_clearTimeout(js_State *J)
 		return;
 	}
 
-	uintptr_t number = (uintptr_t)atoll(text);
-	struct ecmascript_timeout *t = (struct ecmascript_timeout *)(number);
+	uint32_t number = atoi(text);
+	struct ecmascript_timeout *t = find_in_map_timer(number);
 
-	if (found_in_map_timer(t)) {
+	if (t) {
 		t->timeout_next = -1;
 	}
 	js_pushundefined(J);
@@ -773,19 +773,15 @@ mjs_window_setInterval(js_State *J)
 		char *code2 = stracpy(code);
 
 		if (code2) {
-			struct ecmascript_timeout *id = ecmascript_set_timeout(J, code2, timeout, timeout);
-			char res[32];
-			snprintf(res, 31, "%" PRIuPTR, (uintptr_t)id);
-			js_pushstring(J, res);
+			uint32_t id = ecmascript_set_timeout(J, code2, timeout, timeout);
+			js_pushnumber(J, id);
 			return;
 		}
 	} else {
 		js_copy(J, 1);
 		const char *handle = js_ref(J);
-		struct ecmascript_timeout *id = ecmascript_set_timeout2m(J, handle, timeout, timeout);
-		char res[32];
-		snprintf(res, 31, "%" PRIuPTR, (uintptr_t)id);
-		js_pushstring(J, res);
+		uint32_t id = ecmascript_set_timeout2m(J, handle, timeout, timeout);
+		js_pushnumber(J, id);
 		return;
 	}
 	js_pushundefined(J);
@@ -817,19 +813,15 @@ mjs_window_setTimeout(js_State *J)
 		char *code2 = stracpy(code);
 
 		if (code2) {
-			struct ecmascript_timeout *id = ecmascript_set_timeout(J, code2, timeout, 0);
-			char res[32];
-			snprintf(res, 31, "%" PRIuPTR, (uintptr_t)id);
-			js_pushstring(J, res);
+			uint32_t id = ecmascript_set_timeout(J, code2, timeout, 0);
+			js_pushnumber(J, id);
 			return;
 		}
 	} else {
 		js_copy(J, 1);
 		const char *handle = js_ref(J);
-		struct ecmascript_timeout *id = ecmascript_set_timeout2m(J, handle, timeout, 0);
-		char res[32];
-		snprintf(res, 31, "%" PRIuPTR, (uintptr_t)id);
-		js_pushstring(J, res);
+		uint32_t id = ecmascript_set_timeout2m(J, handle, timeout, 0);
+		js_pushnumber(J, id);
 		return;
 	}
 	js_pushundefined(J);

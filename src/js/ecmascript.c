@@ -588,10 +588,10 @@ ecmascript_timeout_handler(void *val)
 
 	if (t->timeout_next > 0) {
 		install_timer(&t->tid, t->timeout_next, ecmascript_timeout_handler, t);
-		add_to_map_timer(t);
 	} else {
 skip:
 	/* The expired timer ID has now been erased.  */
+		del_from_map_timer(t);
 		t->tid = TIMER_ID_UNDEF;
 		del_from_list(t);
 		done_string(&t->code);
@@ -674,9 +674,9 @@ ecmascript_timeout_handler2(void *val)
 	}
 	if (t->timeout_next > 0) {
 		install_timer(&t->tid, t->timeout_next, ecmascript_timeout_handler2, t);
-		add_to_map_timer(t);
 	} else {
 skip:
+		del_from_map_timer(t);
 		t->tid = TIMER_ID_UNDEF;
 		/* The expired timer ID has now been erased.  */
 		del_from_list(t);
@@ -697,7 +697,9 @@ skip:
 }
 #endif
 
-struct ecmascript_timeout *
+static uint32_t timeout_id;
+
+uint32_t
 ecmascript_set_timeout(void *c, char *code, int timeout, int timeout_next)
 {
 	ELOG
@@ -715,18 +717,25 @@ ecmascript_set_timeout(void *c, char *code, int timeout, int timeout_next)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(ctx);
 #endif
 	assert(interpreter && interpreter->vs->doc_view->document);
-	if (!code) return NULL;
+	if (!code) {
+		return 0;
+	}
 	struct ecmascript_timeout *t = (struct ecmascript_timeout *)mem_calloc(1, sizeof(*t));
 
 	if (!t) {
 		mem_free(code);
-		return NULL;
+		return 0;
 	}
 	if (!init_string(&t->code)) {
 		mem_free(t);
 		mem_free(code);
-		return NULL;
+		return 0;
 	}
+	timeout_id++;
+	if (!timeout_id) {
+		timeout_id++;
+	}
+	t->timeout_id = timeout_id;
 	add_to_string(&t->code, code);
 	mem_free(code);
 
@@ -740,7 +749,7 @@ ecmascript_set_timeout(void *c, char *code, int timeout, int timeout_next)
 	install_timer(&t->tid, timeout, ecmascript_timeout_handler, t);
 	add_to_map_timer(t);
 
-	return t;
+	return timeout_id;
 }
 
 #ifdef CONFIG_ECMASCRIPT_SMJS
@@ -764,7 +773,7 @@ ecmascript_set_request2(void *c, JS::HandleValue f)
 	return interpreter->request;
 }
 
-struct ecmascript_timeout *
+uint32_t
 ecmascript_set_timeout2(void *c, JS::HandleValue f, int timeout, int timeout_next)
 {
 	ELOG
@@ -776,12 +785,17 @@ ecmascript_set_timeout2(void *c, JS::HandleValue f, int timeout, int timeout_nex
 	struct ecmascript_timeout *t = (struct ecmascript_timeout *)mem_calloc(1, sizeof(*t));
 
 	if (!t) {
-		return NULL;
+		return 0;
 	}
 	if (!init_string(&t->code)) {
 		mem_free(t);
-		return NULL;
+		return 0;
 	}
+	timeout_id++;
+	if (!timeout_id) {
+		timeout_id++;
+	}
+	t->timeout_id = timeout_id;
 	t->interpreter = interpreter;
 	t->ctx = ctx;
 	t->timeout_next = timeout_next;
@@ -791,7 +805,7 @@ ecmascript_set_timeout2(void *c, JS::HandleValue f, int timeout, int timeout_nex
 	install_timer(&t->tid, timeout, ecmascript_timeout_handler2, t);
 	add_to_map_timer(t);
 
-	return t;
+	return timeout_id;
 }
 #endif
 
@@ -812,7 +826,7 @@ ecmascript_set_request2(void *c, JSValueConst fun)
 }
 
 
-struct ecmascript_timeout *
+uint32_t
 ecmascript_set_timeout2q(void *c, JSValueConst fun, int timeout, int timeout_next)
 {
 	ELOG
@@ -822,12 +836,17 @@ ecmascript_set_timeout2q(void *c, JSValueConst fun, int timeout, int timeout_nex
 	struct ecmascript_timeout *t = (struct ecmascript_timeout *)mem_calloc(1, sizeof(*t));
 
 	if (!t) {
-		return NULL;
+		return 0;
 	}
 	if (!init_string(&t->code)) {
 		mem_free(t);
-		return NULL;
+		return 0;
 	}
+	timeout_id++;
+	if (!timeout_id) {
+		timeout_id++;
+	}
+	t->timeout_id = timeout_id;
 	t->interpreter = interpreter;
 	t->ctx = ctx;
 	t->timeout_next = timeout_next;
@@ -836,7 +855,7 @@ ecmascript_set_timeout2q(void *c, JSValueConst fun, int timeout, int timeout_nex
 	install_timer(&t->tid, timeout, ecmascript_timeout_handler2, t);
 	add_to_map_timer(t);
 
-	return t;
+	return timeout_id;
 }
 #endif
 
@@ -854,7 +873,7 @@ ecmascript_set_request2(js_State *J, const char *handle)
 	return interpreter->request;
 }
 
-struct ecmascript_timeout *
+uint32_t
 ecmascript_set_timeout2m(js_State *J, const char *handle, int timeout, int timeout_next)
 {
 	ELOG
@@ -864,12 +883,17 @@ ecmascript_set_timeout2m(js_State *J, const char *handle, int timeout, int timeo
 	struct ecmascript_timeout *t = (struct ecmascript_timeout *)mem_calloc(1, sizeof(*t));
 
 	if (!t) {
-		return NULL;
+		return 0;
 	}
 	if (!init_string(&t->code)) {
 		mem_free(t);
-		return NULL;
+		return 0;
 	}
+	timeout_id++;
+	if (!timeout_id) {
+		timeout_id++;
+	}
+	t->timeout_id = timeout_id;
 	t->interpreter = interpreter;
 	t->ctx = J;
 	t->fun = handle;
@@ -879,7 +903,7 @@ ecmascript_set_timeout2m(js_State *J, const char *handle, int timeout, int timeo
 	install_timer(&t->tid, timeout, ecmascript_timeout_handler2, t);
 	add_to_map_timer(t);
 
-	return t;
+	return timeout_id;
 }
 #endif
 

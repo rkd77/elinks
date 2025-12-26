@@ -485,13 +485,9 @@ js_window_setInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 	func = argv[0];
 
 	if (JS_IsFunction(ctx, func)) {
-		struct ecmascript_timeout *id = ecmascript_set_timeout2q(ctx, func, timeout, timeout);
+		uint32_t id = ecmascript_set_timeout2q(ctx, func, timeout, timeout);
 
-#if SIZEOF_INTPTR_T == 4
-		return JS_NewInt32(ctx, (intptr_t)(id));
-#else
-		return JS_NewInt64(ctx, (intptr_t)(id));
-#endif
+		return JS_NewUint32(ctx, id);
 	}
 
 	if (JS_IsString(func)) {
@@ -504,13 +500,9 @@ js_window_setInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 		JS_FreeCString(ctx, code);
 
 		if (code2) {
-			struct ecmascript_timeout *id = ecmascript_set_timeout(ctx, code2, timeout, timeout);
+			uint32_t id = ecmascript_set_timeout(ctx, code2, timeout, timeout);
 
-#if SIZEOF_INTPTR_T == 4
-			return JS_NewInt32(ctx, (intptr_t)(id));
-#else
-			return JS_NewInt64(ctx, (intptr_t)(id));
-#endif
+			return JS_NewUint32(ctx, id);
 		}
 	}
 
@@ -547,12 +539,8 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 	func = argv[0];
 
 	if (JS_IsFunction(ctx, func)) {
-		struct ecmascript_timeout *id = ecmascript_set_timeout2q(ctx, func, timeout, 0);
-#if SIZEOF_INTPTR_T == 4
-		return JS_NewInt32(ctx, (intptr_t)(id));
-#else
-		return JS_NewInt64(ctx, (intptr_t)(id));
-#endif
+		uint32_t id = ecmascript_set_timeout2q(ctx, func, timeout, 0);
+		return JS_NewUint32(ctx, id);
 	}
 
 	if (JS_IsString(func)) {
@@ -565,12 +553,8 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 		JS_FreeCString(ctx, code);
 
 		if (code2) {
-			struct ecmascript_timeout *id = ecmascript_set_timeout(ctx, code2, timeout, 0);
-#if SIZEOF_INTPTR_T == 4
-			return JS_NewInt32(ctx, (intptr_t)(id));
-#else
-			return JS_NewInt64(ctx, (intptr_t)(id));
-#endif
+			uint32_t id = ecmascript_set_timeout(ctx, code2, timeout, 0);
+			return JS_NewUint32(ctx, id);
 		}
 	}
 
@@ -590,20 +574,14 @@ js_window_clearInterval(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	if (argc != 1 || JS_IsNull(argv[0])) {
 		return JS_UNDEFINED;
 	}
-	intptr_t number;
+	uint32_t number;
 
-#if SIZEOF_INTPTR_T == 4
-	if (JS_ToInt32(ctx, &number, argv[0])) {
+	if (JS_ToUint32(ctx, &number, argv[0])) {
 		return JS_UNDEFINED;
 	}
-#else
-	if (JS_ToInt64(ctx, &number, argv[0])) {
-		return JS_UNDEFINED;
-	}
-#endif
-	struct ecmascript_timeout *t = (struct ecmascript_timeout *)(number);
+	struct ecmascript_timeout *t = find_in_map_timer(number);
 
-	if (found_in_map_timer(t)) {
+	if (t) {
 		t->timeout_next = -1;
 	}
 
@@ -657,20 +635,14 @@ js_window_clearTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	if (argc != 1 || JS_IsNull(argv[0])) {
 		return JS_UNDEFINED;
 	}
-	intptr_t number;
+	uint32_t number;
 
-#if SIZEOF_INTPTR_T == 4
-	if (JS_ToInt32(ctx, &number, argv[0])) {
+	if (JS_ToUint32(ctx, &number, argv[0])) {
 		return JS_UNDEFINED;
 	}
-#else
-	if (JS_ToInt64(ctx, &number, argv[0])) {
-		return JS_UNDEFINED;
-	}
-#endif
-	struct ecmascript_timeout *t = (struct ecmascript_timeout *)(number);
+	struct ecmascript_timeout *t = find_in_map_timer(number);
 
-	if (found_in_map_timer(t)) {
+	if (t) {
 		t->timeout_next = -1;
 	}
 

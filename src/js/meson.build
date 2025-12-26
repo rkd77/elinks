@@ -6,7 +6,7 @@ if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS')
 endif
 
 if conf_data.get('CONFIG_ECMASCRIPT_SMJS')
-	srcs += files('ecmascript.cpp', 'ecmascript-c.cpp', 'localstorage-db.c', 'spidermonkey.cpp', 'timer.c')
+	srcs += files('ecmascript.cpp', 'ecmascript-c.cpp', 'localstorage-db.c', 'spidermonkey.cpp', 'timer.cpp')
 	subdir('spidermonkey')
 endif
 
@@ -23,12 +23,12 @@ if CONFIG_ANY_SPIDERMONKEY
 endif
 
 if conf_data.get('CONFIG_MUJS')
-	srcs += files('ecmascript.c', 'ecmascript-c.c', 'localstorage-db.c', 'mujs.c', 'timer.c')
+	srcs += files('ecmascript.c', 'ecmascript-c.c', 'localstorage-db.c', 'mujs.c', 'timer.cpp')
 	subdir('mujs')
 endif
 
 if conf_data.get('CONFIG_QUICKJS')
-	srcs += files('ecmascript.c', 'ecmascript-c.c', 'localstorage-db.c', 'quickjs.c', 'timer.c')
+	srcs += files('ecmascript.c', 'ecmascript-c.c', 'localstorage-db.c', 'quickjs.c', 'timer.cpp')
 	subdir('quickjs')
 endif
 
