@@ -2,7 +2,7 @@
 #define EL__VIEWER_TEXT_VS_H
 
 #ifdef CONFIG_QUICKJS
-#include <quickjs/quickjs.h>
+#include <quickjs.h>
 #endif
 #include "util/lists.h"
 

@@ -750,7 +750,7 @@ js_url_init(JSContext *ctx)
 	JSValue proto;
 
 	/* url class */
-	JS_NewClassID(&js_url_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_url_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_url_class_id, &js_url_class);
 	proto = JS_NewObject(ctx);
 	REF_JS(proto);

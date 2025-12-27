@@ -160,7 +160,7 @@ js_history_init(JSContext *ctx)
 	JSValue history_proto;
 
 	/* create the history class */
-	JS_NewClassID(&js_history_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_history_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_history_class_id, &js_history_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);

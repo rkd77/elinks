@@ -4721,7 +4721,7 @@ js_element_init(JSContext *ctx)
 	JSValue element_proto;
 
 	/* create the element class */
-	JS_NewClassID(&js_element_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_element_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_element_class_id, &js_element_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);

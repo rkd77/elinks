@@ -140,7 +140,7 @@ js_node_init(JSContext *ctx)
 	JSValue proto, obj;
 
 	/* Node class */
-	JS_NewClassID(&js_node_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_node_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_node_class_id, &node_class);
 	proto = JS_NewObject(ctx);
 	REF_JS(proto);

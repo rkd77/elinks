@@ -1810,7 +1810,7 @@ js_fragment_init(JSContext *ctx)
 	JSValue fragment_proto;
 
 	/* create the fragment class */
-	JS_NewClassID(&js_fragment_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_fragment_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_fragment_class_id, &js_fragment_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);

@@ -560,7 +560,7 @@ getFormElements(JSContext *ctx, struct form_view *fv)
 		JSValue r = JS_DupValue(ctx, second);
 		RETURN_JS(r);
 	}
-	JS_NewClassID(&js_form_elements_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_form_elements_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_form_elements_class_id, &js_form_elements_class);
 
 	JSValue form_elements_obj = JS_NewObjectClass(ctx, js_form_elements_class_id);
@@ -1051,7 +1051,7 @@ getForm(JSContext *ctx, struct form *form)
 
 	if (!initialized) {
 		initialized = 1;
-		JS_NewClassID(&js_form_class_id);
+		JS_NewClassID(JS_GetRuntime(ctx), &js_form_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_form_class_id, &js_form_class);
 	}
 	JSValue form_obj = JS_NewObjectClass(ctx, js_form_class_id);

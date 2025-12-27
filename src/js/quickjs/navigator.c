@@ -166,7 +166,7 @@ js_navigator_init(JSContext *ctx)
 	JSValue navigator_proto;
 
 	/* create the navigator class */
-	JS_NewClassID(&js_navigator_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_navigator_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_navigator_class_id, &js_navigator_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);

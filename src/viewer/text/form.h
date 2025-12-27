@@ -3,7 +3,7 @@
 #define EL__VIEWER_TEXT_FORM_H
 
 #ifdef CONFIG_QUICKJS
-#include <quickjs/quickjs.h>
+#include <quickjs.h>
 #endif
 
 #include "document/forms.h"

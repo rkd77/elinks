@@ -113,7 +113,7 @@ js_domparser_init(JSContext *ctx)
 	JSValue proto;
 
 	/* DOMParser class */
-	JS_NewClassID(&js_domparser_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_domparser_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_domparser_class_id, &js_domparser_class);
 	proto = JS_NewObject(ctx);
 	REF_JS(proto);

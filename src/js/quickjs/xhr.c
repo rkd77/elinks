@@ -1472,7 +1472,7 @@ js_xhr_init(JSContext *ctx)
 	JSValue proto, obj;
 
 	/* XHR class */
-	JS_NewClassID(&xhr_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &xhr_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), xhr_class_id, &xhr_class);
 	proto = JS_NewObject(ctx);
 	REF_JS(proto);

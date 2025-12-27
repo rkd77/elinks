@@ -127,7 +127,7 @@ js_implementation_init(JSContext *ctx, JSValue global_obj)
 	JSValue implementation_proto, implementation_class;
 
 	/* create the implementation class */
-	JS_NewClassID(&js_implementation_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_implementation_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_implementation_class_id, &js_implementation_class);
 
 	implementation_proto = JS_NewObject(ctx);

@@ -1,7 +1,7 @@
 #ifndef EL__DOCUMENT_ECMASCRIPT_LIBDOM_QUICKJS_MAPA_H
 #define EL__DOCUMENT_ECMASCRIPT_LIBDOM_QUICKJS_MAPA_H
 
-#include <quickjs/quickjs.h>
+#include <quickjs.h>
 
 #ifdef __cplusplus
 extern "C" {

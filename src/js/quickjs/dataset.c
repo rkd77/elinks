@@ -227,7 +227,7 @@ getDataset(JSContext *ctx, void *node)
 	static int initialized;
 
 	if (!initialized) {
-		JS_NewClassID(&js_dataset_class_id);
+		JS_NewClassID(JS_GetRuntime(ctx), &js_dataset_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_dataset_class_id, &js_dataset_class);
 		initialized = 1;
 	}

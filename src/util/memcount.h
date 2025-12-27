@@ -8,7 +8,7 @@
 #endif
 
 #ifdef CONFIG_QUICKJS
-#include <quickjs/quickjs.h>
+#include <quickjs.h>
 #endif
 
 #ifdef CONFIG_ZSTD

@@ -290,7 +290,7 @@ get_messageEvent(JSContext *ctx, char *data, char *origin, char *source)
 	static int initialized;
 	/* create the element class */
 	if (!initialized) {
-		JS_NewClassID(&js_messageEvent_class_id);
+		JS_NewClassID(JS_GetRuntime(ctx), &js_messageEvent_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_messageEvent_class_id, &js_messageEvent_class);
 		initialized = 1;
 	}
@@ -436,7 +436,7 @@ js_messageEvent_init(JSContext *ctx)
 	JSValue proto;
 
 	/* Event class */
-	JS_NewClassID(&js_messageEvent_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_messageEvent_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_messageEvent_class_id, &js_messageEvent_class);
 	proto = JS_NewObject(ctx);
 	REF_JS(proto);

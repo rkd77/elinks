@@ -1648,7 +1648,7 @@ js_text_init(JSContext *ctx)
 	JSValue element_proto;
 
 	/* create the element class */
-	JS_NewClassID(&js_text_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_text_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_text_class_id, &js_text_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);
@@ -1682,7 +1682,7 @@ getText(JSContext *ctx, void *node)
 	el_private->node = node;
 	init_list(el_private->listeners);
 
-	JS_NewClassID(&js_text_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_text_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_text_class_id, &js_text_class);
 	JSValue text_obj = JS_NewObjectClass(ctx, js_text_class_id);
 	REF_JS(text_obj);

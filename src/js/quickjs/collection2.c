@@ -359,7 +359,7 @@ getCollection2(JSContext *ctx, void *node)
 
 	if (!initialized) {
 		/* collection class */
-		JS_NewClassID(&js_htmlCollection2_class_id);
+		JS_NewClassID(JS_GetRuntime(ctx), &js_htmlCollection2_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_htmlCollection2_class_id, &js_htmlCollection2_class);
 		initialized = 1;
 	}

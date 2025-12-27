@@ -1290,7 +1290,7 @@ js_window_init(JSContext *ctx)
 	JSValue window_proto;
 
 	/* create the window class */
-	JS_NewClassID(&js_window_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_window_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_window_class_id, &js_window_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);

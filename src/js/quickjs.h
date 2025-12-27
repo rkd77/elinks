@@ -1,7 +1,7 @@
 #ifndef EL__JS_QUICKJS_H
 #define EL__JS_QUICKJS_H
 
-#include <quickjs/quickjs.h>
+#include <quickjs.h>
 
 #if !defined(JS_NAN_BOXING) && defined(__cplusplus)
 inline int operator<(JSValueConst a, JSValueConst b)

@@ -80,7 +80,7 @@ getPerformance(JSContext *ctx)
 
 		if (!initialised) {
 			/* Event class */
-			JS_NewClassID(&js_performance_class_id);
+			JS_NewClassID(JS_GetRuntime(ctx), &js_performance_class_id);
 			JS_NewClass(JS_GetRuntime(ctx), js_performance_class_id, &js_performance_class);
 			initialised = 1;
 		}

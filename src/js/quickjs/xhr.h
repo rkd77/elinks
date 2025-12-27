@@ -1,7 +1,7 @@
 #ifndef EL__JS_QUICKJS_XHR_H
 #define EL__JS_QUICKJS_XHR_H
 
-#include <quickjs/quickjs.h>
+#include <quickjs.h>
 #include "session/download.h"
 #include "util/lists.h"
 

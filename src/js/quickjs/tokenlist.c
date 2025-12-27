@@ -234,7 +234,7 @@ getTokenlist(JSContext *ctx, void *node)
 	static int initialized;
 
 	if (!initialized) {
-		JS_NewClassID(&js_tokenlist_class_id);
+		JS_NewClassID(JS_GetRuntime(ctx), &js_tokenlist_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_tokenlist_class_id, &js_tokenlist_class);
 		initialized = 1;
 	}

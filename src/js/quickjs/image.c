@@ -171,7 +171,7 @@ js_image_init(JSContext *ctx)
 	JSValue proto;
 
 	/* urlSearchParams class */
-	JS_NewClassID(&js_image_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_image_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_image_class_id, &js_image_class);
 	proto = JS_NewObject(ctx);
 	REF_JS(proto);

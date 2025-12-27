@@ -336,7 +336,7 @@ get_keyboardEvent(JSContext *ctx, struct term_event *ev)
 	static int initialized;
 	/* create the element class */
 	if (!initialized) {
-		JS_NewClassID(&js_keyboardEvent_class_id);
+		JS_NewClassID(JS_GetRuntime(ctx), &js_keyboardEvent_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_keyboardEvent_class_id, &js_keyboardEvent_class);
 		initialized = 1;
 	}
@@ -479,7 +479,7 @@ js_keyboardEvent_init(JSContext *ctx)
 	JSValue proto;
 
 	/* Event class */
-	JS_NewClassID(&js_keyboardEvent_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_keyboardEvent_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_keyboardEvent_class_id, &js_keyboardEvent_class);
 	proto = JS_NewObject(ctx);
 	REF_JS(proto);

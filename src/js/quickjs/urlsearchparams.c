@@ -148,7 +148,7 @@ js_urlSearchParams_constructor(JSContext *ctx, JSValueConst new_target, int argc
 	}
 
 	if (argc > 0) {
-		if (JS_IsArray(ctx, argv[0])) {
+		if (JS_IsArray(argv[0])) {
 			u->map = JS_Eval(ctx, "new Map();", strlen("new Map();"), "", JS_EVAL_TYPE_GLOBAL);
 			JSValue l = JS_GetPropertyStr(ctx, argv[0], "length");
 
@@ -552,7 +552,7 @@ js_urlSearchParams_init(JSContext *ctx)
 	JSValue proto;
 
 	/* urlSearchParams class */
-	JS_NewClassID(&js_urlSearchParams_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_urlSearchParams_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_urlSearchParams_class_id, &js_urlSearchParams_class);
 	proto = JS_NewObject(ctx);
 	REF_JS(proto);

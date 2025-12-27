@@ -81,51 +81,14 @@ static JSRuntime *quickjs_runtime;
 void *map_interp;
 /*** Global methods */
 
-static void
-quickjs_get_version(char *quickjs_version)
-{
-	ELOG
-#ifdef HAVE_OPEN_MEMSTREAM
-	char *ptr = NULL;
-	size_t size = 0;
-	FILE *f = open_memstream(&ptr, &size);
-
-	if (f) {
-		JSMemoryUsage stats = {0};
-		JS_DumpMemoryUsage(f, &stats, NULL);
-		fclose(f);
-
-		struct string str;
-
-		if (init_string(&str)) {
-			char text[16] = {0};
-			char *digit = ptr;
-
-			for (int i = 0; i < size; i++, digit++) {
-				if (isdigit(*digit)) {
-					break;
-				}
-			}
-			sscanf(digit, "%15s version", text);
-			add_to_string(&str, "QuickJS ");
-			add_to_string(&str, text);
-			strncpy(quickjs_version, str.source, 31);
-			done_string(&str);
-		}
-		free(ptr);
-	}
-#endif
-}
-
 static const char *
 get_name_quickjs(struct module *xxx)
 {
 	ELOG
-	static char quickjs_version[32];
+	static char ver[32];
 
-	quickjs_get_version(quickjs_version);
-
-	return quickjs_version;
+	snprintf(ver, 31, "QuickJS-NG %s", JS_GetVersion());
+	return ver;
 }
 
 static long quickjs_memory_limit;
@@ -230,7 +193,7 @@ quickjs_done(struct module *xxx)
 }
 
 int
-el_js_module_set_import_meta(JSContext *ctx, JSValueConst func_val, JS_BOOL use_realpath, JS_BOOL is_main)
+el_js_module_set_import_meta(JSContext *ctx, JSValueConst func_val, bool use_realpath, bool is_main)
 {
 	ELOG
 	JSModuleDef *m;
@@ -437,7 +400,7 @@ js_dump_error1(JSContext *ctx, struct string *f, JSValueConst exception_val)
 	JSValue val;
 	bool is_error;
 
-	is_error = JS_IsError(ctx, exception_val);
+	is_error = JS_IsError(exception_val);
 	js_dump_obj(ctx, f, exception_val);
 
 	if (is_error) {

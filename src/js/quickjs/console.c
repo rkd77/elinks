@@ -183,7 +183,7 @@ js_console_init(JSContext *ctx)
 	JSValue console_proto;
 
 	/* create the console class */
-	JS_NewClassID(&js_console_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_console_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_console_class_id, &js_console_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);

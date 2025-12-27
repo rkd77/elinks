@@ -123,7 +123,7 @@ getNodeList2(JSContext *ctx, void *nodes)
 	JSValue proto;
 
 	/* nodelist class */
-	JS_NewClassID(&js_nodelist2_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_nodelist2_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_nodelist2_class_id, &js_nodelist2_class);
 	proto = JS_NewArray(ctx);
 	REF_JS(proto);

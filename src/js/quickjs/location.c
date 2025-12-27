@@ -823,7 +823,7 @@ js_location_init(JSContext *ctx)
 	JSValue location_proto;
 
 	/* create the location class */
-	JS_NewClassID(&js_location_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_location_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_location_class_id, &js_location_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);
@@ -851,7 +851,7 @@ getLocation(JSContext *ctx, struct view_state *vs)
 	static int initialized;
 
 	if (!initialized) {
-		JS_NewClassID(&js_location_class_id);
+		JS_NewClassID(JS_GetRuntime(ctx), &js_location_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_location_class_id, &js_location_class);
 		initialized = 1;
 	}

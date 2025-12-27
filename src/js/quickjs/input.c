@@ -1615,7 +1615,7 @@ js_input_init(JSContext *ctx, JSValue global_obj)
 	JSValue input_proto, input_class;
 
 	/* create the input class */
-	JS_NewClassID(&js_input_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_input_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_input_class_id, &js_input_class);
 
 	input_proto = JS_NewObject(ctx);
@@ -1643,7 +1643,7 @@ getInput(JSContext *ctx, struct form_state *fs)
 #endif
 	static int initialized;
 	if (!initialized) {
-		JS_NewClassID(&js_input_class_id);
+		JS_NewClassID(JS_GetRuntime(ctx), &js_input_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_input_class_id, &js_input_class);
 		initialized = 1;
 	}

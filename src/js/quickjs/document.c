@@ -2251,7 +2251,7 @@ js_doctype_init(JSContext *ctx)
 	JSValue doctype_proto;
 
 	/* create the doctype class */
-	JS_NewClassID(&js_doctype_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_doctype_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_doctype_class_id, &js_doctype_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);
@@ -2280,7 +2280,7 @@ getDoctype(JSContext *ctx, void *node)
 	static int initialized;
 	/* create the element class */
 	if (!initialized) {
-		JS_NewClassID(&js_doctype_class_id);
+		JS_NewClassID(JS_GetRuntime(ctx), &js_doctype_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_doctype_class_id, &js_doctype_class);
 		initialized = 1;
 	}
@@ -2323,7 +2323,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 
 	/* create the element class */
 	if (!initialized) {
-		JS_NewClassID(&js_document_class_id);
+		JS_NewClassID(JS_GetRuntime(ctx), &js_document_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_document_class_id, &js_document_class);
 		initialized = 1;
 	}

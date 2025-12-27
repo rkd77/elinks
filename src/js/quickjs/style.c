@@ -563,7 +563,7 @@ getStyle(JSContext *ctx, void *node)
 	static int initialized;
 	/* create the element class */
 	if (!initialized) {
-		JS_NewClassID(&js_style_class_id);
+		JS_NewClassID(JS_GetRuntime(ctx), &js_style_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_style_class_id, &js_style_class);
 		initialized = 1;
 	}

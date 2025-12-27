@@ -325,7 +325,7 @@ js_event_init(JSContext *ctx)
 	JSValue proto;
 
 	/* Event class */
-	JS_NewClassID(&js_event_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_event_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_event_class_id, &js_event_class);
 	proto = JS_NewObject(ctx);
 	REF_JS(proto);

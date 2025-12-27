@@ -159,7 +159,7 @@ js_screen_init(JSContext *ctx)
 	JSValue screen_proto;
 
 	/* create the screen class */
-	JS_NewClassID(&js_screen_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_screen_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_screen_class_id, &js_screen_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);

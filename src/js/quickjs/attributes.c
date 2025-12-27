@@ -320,7 +320,7 @@ getAttributes(JSContext *ctx, void *node)
 	/* create the element class */
 	if (!initialized) {
 		/* create the element class */
-		JS_NewClassID(&js_attributes_class_id);
+		JS_NewClassID(JS_GetRuntime(ctx), &js_attributes_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_attributes_class_id, &js_attributes_class);
 		initialized = 1;
 	}

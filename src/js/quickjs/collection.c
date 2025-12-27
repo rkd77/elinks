@@ -461,7 +461,7 @@ getCollection_common(JSContext *ctx, void *node, bool was_class_name)
 
 	if (!initialized) {
 		/* collection class */
-		JS_NewClassID(&js_htmlCollection_class_id);
+		JS_NewClassID(JS_GetRuntime(ctx), &js_htmlCollection_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_htmlCollection_class_id, &js_htmlCollection_class);
 		initialized = 1;
 	}

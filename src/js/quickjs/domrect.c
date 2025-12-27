@@ -411,7 +411,7 @@ getDomRect(JSContext *ctx, int x, int y, int width, int height, int top, int rig
 
 		if (!initialised) {
 			/* Event class */
-			JS_NewClassID(&js_domRect_class_id);
+			JS_NewClassID(JS_GetRuntime(ctx), &js_domRect_class_id);
 			JS_NewClass(JS_GetRuntime(ctx), js_domRect_class_id, &js_domRect_class);
 			initialised = 1;
 		}

@@ -689,13 +689,10 @@ if not compiler.links('''#include <stdint.h>
 endif
 
 if conf_data.get('CONFIG_QUICKJS')
-    quickjsdeps = compiler.find_library('quickjs', static: st, required: false)
-    if not quickjsdeps.found()
-        quickjsdeps = compiler.find_library('quickjs/libquickjs', static: true, required: not conf_data.get('CONFIG_OS_DOS'))
-    endif
-    if not quickjsdeps.found() and conf_data.get('CONFIG_OS_DOS')
-        quickjsdeps = compiler.find_library('quickjs/libquickjs', dirs: ['/home/elinks/lib'], static: true)
-    endif
+    quickjsdeps = dependency('quickjs-ng', static: st)
+#    if not quickjsdeps.found() and conf_data.get('CONFIG_OS_DOS')
+#        quickjsdeps = compiler.find_library('quickjs/libquickjs', dirs: ['/home/elinks/lib'], static: true)
+#    endif
     deps += quickjsdeps
     deps += dep_atomic
 endif

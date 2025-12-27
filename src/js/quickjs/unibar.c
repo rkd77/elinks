@@ -142,7 +142,7 @@ js_unibar_init(JSContext *ctx)
 	JSValue statusbar_proto;
 
 	/* create the menubar class */
-	JS_NewClassID(&js_menubar_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_menubar_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_menubar_class_id, &js_menubar_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);
@@ -157,7 +157,7 @@ js_unibar_init(JSContext *ctx)
 	JS_SetPropertyStr(ctx, global_obj, "menubar", JS_DupValue(ctx, menubar_proto));
 
 	/* create the statusbar class */
-	JS_NewClassID(&js_statusbar_class_id);
+	JS_NewClassID(JS_GetRuntime(ctx), &js_statusbar_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_statusbar_class_id, &js_statusbar_class);
 
 	statusbar_proto = JS_NewObject(ctx);

@@ -218,7 +218,7 @@ js_localstorage_init(JSContext *ctx)
 
 	if (!initialized) {
 		/* create the localstorage class */
-		JS_NewClassID(&js_localstorage_class_id);
+		JS_NewClassID(JS_GetRuntime(ctx), &js_localstorage_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_localstorage_class_id, &js_localstorage_class);
 		initialized = 1;
 	}

@@ -1,7 +1,7 @@
 #ifndef EL__JS_QUICKJS_DOMRECT_H
 #define EL__JS_QUICKJS_DOMRECT_H
 
-#include <quickjs/quickjs.h>
+#include <quickjs.h>
 
 #ifdef __cplusplus
 extern "C" {

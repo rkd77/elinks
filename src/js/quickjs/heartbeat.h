@@ -1,7 +1,7 @@
 #ifndef EL__JS_QUICKJS_HEARTBEAT_H
 #define EL__JS_QUICKJS_HEARTBEAT_H
 
-#include <quickjs/quickjs.h>
+#include <quickjs.h>
 #include "util/lists.h"
 
 #ifdef __cplusplus
