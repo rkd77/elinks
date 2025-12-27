@@ -358,13 +358,6 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 	/* If the assertion fails, it is better to leak the
 	 * interpreter than to corrupt memory.  */
 	if_assert_failed return;
-#ifdef CONFIG_MUJS
-	mujs_put_interpreter(interpreter);
-#elif defined(CONFIG_QUICKJS)
-	quickjs_put_interpreter(interpreter);
-#else
-	spidermonkey_put_interpreter(interpreter);
-#endif
 	free_ecmascript_string_list(&interpreter->onload_snippets);
 	done_string(&interpreter->code);
 	free_ecmascript_string_list(&interpreter->writecode);
@@ -387,14 +380,20 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 		free_list(interpreter->timeouts);
 #ifdef CONFIG_QUICKJS
 		if (!JS_IsNull(interpreter->location_obj)) {
-			//JS_FreeValue((JSContext *)interpreter->backend_data, interpreter->location_obj);
-			//interpreter->location_obj = JS_NULL;
+			JS_FreeValue((JSContext *)interpreter->backend_data, interpreter->location_obj);
 		}
 		if (!JS_IsNull(interpreter->document_obj)) {
 			//JS_FreeValue(t->ctx, interpreter->document_obj);
 		}
 #endif
 	}
+#ifdef CONFIG_MUJS
+	mujs_put_interpreter(interpreter);
+#elif defined(CONFIG_QUICKJS)
+	quickjs_put_interpreter(interpreter);
+#else
+	spidermonkey_put_interpreter(interpreter);
+#endif
 #ifdef CONFIG_ECMASCRIPT_SMJS
 	//js::StopDrainingJobQueue((JSContext *)interpreter->backend_data);
 #endif
