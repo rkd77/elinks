@@ -709,15 +709,13 @@ case "$with_quickjs" in
 esac
 
 if test "x$CONFIG_QUICKJS" = x; then
-	AC_MSG_CHECKING([for QuickJS])
-	AC_LINK_IFELSE(
-		[AC_LANG_PROGRAM([[
-			#include <quickjs/quickjs.h>
-		]], [])],
-		[CONFIG_QUICKJS=yes
-		 AC_MSG_RESULT([yes])],
-		[AC_MSG_RESULT([not found])]
-	)
+	AC_MSG_CHECKING([for Quick JS config])
+	if $PKG_CONFIG $pkg_config_static --cflags --libs quickjs > /dev/null 2>&AS_MESSAGE_LOG_FD; then
+		CONFIG_QUICKJS=yes
+		AC_MSG_RESULT([yes])
+	else
+		AC_MSG_ERROR([quickjs.pc not found use john-peterson/quickjs@shared or @rope])
+	fi
 
 	if test "x$CONFIG_QUICKJS" = xyes; then
 		DB_LOCALSTORAGE_LIBS="$($PKG_CONFIG $pkg_config_static --libs sqlite3)"
@@ -726,14 +724,8 @@ if test "x$CONFIG_QUICKJS" = x; then
 		CURL_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libcurl)"
 
 		CFLAGS="$CFLAGS $DB_LOCALSTORAGE_CFLAGS $XMLPLUSPLUS_CFLAGS $CURL_CFLAGS"
-		QUICKJS_LIB="/usr/local/lib/quickjs/libquickjs.a"
+		QUICKJS_LIB="$($PKG_CONFIG $pkg_config_static --libs quickjs)"
 
-		for p in $(echo "$LIBRARY_PATH" | tr ':' '\n'); do
-			if test -f "$p/quickjs/libquickjs.a" ; then
-				QUICKJS_LIB="$p/quickjs/libquickjs.a"
-				break
-			fi
-		done
 		LIBS="$LIBS $DB_LOCALSTORAGE_LIBS $XMLPLUSPLUS_LIBS $QUICKJS_LIB $CURL_LIBS"
 		CONFIG_LIBCURL=yes
 	else
