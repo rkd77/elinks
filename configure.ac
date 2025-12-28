@@ -698,7 +698,7 @@ CONFIG_QUICKJS=
 case "$with_quickjs" in
 	"" | no)
 		# The user specified --without-quickjs.
-		AC_MSG_CHECKING([for QuickJS])
+		AC_MSG_CHECKING([for QuickJS-NG])
 		AC_MSG_RESULT([disabled])
 		CONFIG_QUICKJS="no"
 		;;
@@ -710,11 +710,11 @@ esac
 
 if test "x$CONFIG_QUICKJS" = x; then
 	AC_MSG_CHECKING([for Quick JS config])
-	if $PKG_CONFIG $pkg_config_static --cflags --libs quickjs > /dev/null 2>&AS_MESSAGE_LOG_FD; then
+	if $PKG_CONFIG $pkg_config_static --cflags --libs quickjs-ng > /dev/null 2>&AS_MESSAGE_LOG_FD; then
 		CONFIG_QUICKJS=yes
 		AC_MSG_RESULT([yes])
 	else
-		AC_MSG_ERROR([quickjs.pc not found use john-peterson/quickjs@shared or @rope])
+		AC_MSG_ERROR([quickjs-ng.pc not found])
 	fi
 
 	if test "x$CONFIG_QUICKJS" = xyes; then
@@ -724,7 +724,7 @@ if test "x$CONFIG_QUICKJS" = x; then
 		CURL_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libcurl)"
 
 		CFLAGS="$CFLAGS $DB_LOCALSTORAGE_CFLAGS $XMLPLUSPLUS_CFLAGS $CURL_CFLAGS"
-		QUICKJS_LIB="$($PKG_CONFIG $pkg_config_static --libs quickjs)"
+		QUICKJS_LIB="$($PKG_CONFIG $pkg_config_static --libs quickjs-ng)"
 
 		LIBS="$LIBS $DB_LOCALSTORAGE_LIBS $XMLPLUSPLUS_LIBS $QUICKJS_LIB $CURL_LIBS"
 		CONFIG_LIBCURL=yes
