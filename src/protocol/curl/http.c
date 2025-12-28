@@ -175,6 +175,8 @@ do_http(struct connection *conn)
 	struct string u;
 	CURL *curl;
 
+	conn->curl = 1;
+
 	if (!http) {
 		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;

@@ -479,6 +479,8 @@ do_ftpes(struct connection *conn)
 	struct string u;
 	CURL *curl;
 
+	conn->curl = 1;
+
 	if (!ftp) {
 		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
@@ -938,7 +940,6 @@ sftp_protocol_handler(struct connection *conn)
 {
 	ELOG
 	if (g.multi) {
-		conn->curl = 1;
 		do_ftpes(conn);
 	}
 }

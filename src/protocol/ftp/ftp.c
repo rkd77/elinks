@@ -311,7 +311,6 @@ ftp_protocol_handler(struct connection *conn)
 	ELOG
 #if defined(CONFIG_LIBCURL)
 	if (conn->curl || get_opt_bool("protocol.ftp.use_curl", NULL)) {
-		conn->curl = 1;
 		ftpes_protocol_handler(conn);
 		return;
 	}

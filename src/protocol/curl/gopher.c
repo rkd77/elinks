@@ -120,6 +120,8 @@ do_gophers(struct connection *conn)
 	struct string u;
 	CURL *curl;
 
+	conn->curl = 1;
+
 	if (!gopher || !init_string(&gopher->data)) {
 		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;

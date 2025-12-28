@@ -560,7 +560,6 @@ http_protocol_handler(struct connection *conn)
 	ELOG
 #if defined(CONFIG_LIBCURL)
 	if (conn->curl || get_opt_bool("protocol.http.use_curl", NULL)) {
-		conn->curl = 1;
 		http_curl_protocol_handler(conn);
 		return;
 	}
