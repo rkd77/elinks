@@ -1,5 +1,5 @@
 #!/bin/sh
-
+set -e
 echo aclocal...
 aclocal -I config/m4
 
