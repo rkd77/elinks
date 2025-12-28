@@ -808,6 +808,11 @@ abort_connection(struct connection *conn, struct connection_state state)
 	assertm(is_in_result_state(state),
 		"connection didn't end in result state (%d)", state);
 
+	if (conn->curl && is_in_state(state, S_INTERRUPTED)) {
+		conn->is_aborted = 1;
+		return;
+	}
+
 	if (is_in_state(state, S_OK) && conn->cached)
 		normalize_cache_entry(conn->cached, conn->from);
 

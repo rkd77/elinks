@@ -155,13 +155,14 @@ done_http_curl(struct connection *conn)
 static int
 xferinfo_callback(void *clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow)
 {
-	struct http_post *post = (struct http_post *)clientp;
+	struct connection *conn = (struct connection *)clientp;
+	struct http_curl_connection_info *http = (struct http_curl_connection_info *)conn->info;
 
-	post->uploaded = ulnow;
-	post->total_upload_length = ultotal;
-	/* use the values */
-
-	return 0; /* all is good */
+	if (http->is_post) {
+		http->post.uploaded = ulnow;
+		http->post.total_upload_length = ultotal;
+	}
+	return conn->is_aborted;
 }
 
 static void
@@ -230,7 +231,6 @@ do_http(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_HEADERDATA, conn);
 		curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, http->error);
 		curl_easy_setopt(curl, CURLOPT_PRIVATE, conn);
-		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 0L);
 		if (!no_verify) {
 			curl_easy_setopt(curl, CURLOPT_ACCEPT_ENCODING, "");
@@ -390,14 +390,14 @@ do_http(struct connection *conn)
 			}
 			curl_easy_setopt(curl, CURLOPT_POST, 1L);
 			curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE_LARGE, http->post.total_upload_length);
-			curl_easy_setopt(curl, CURLOPT_XFERINFODATA, &http->post);
-			curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
-			curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, xferinfo_callback);
 			curl_easy_setopt(curl, CURLOPT_READDATA, conn);
 			curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_post_data);
 		} else if (http->post_buffer) {
 			curl_easy_setopt(curl, CURLOPT_POSTFIELDS, http->post_buffer);
 		}
+		curl_easy_setopt(curl, CURLOPT_XFERINFODATA, conn);
+		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
+		curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, xferinfo_callback);
 		set_connection_state(conn, connection_state(S_TRANS));
 
 		optstr = get_opt_str("protocol.http.user_agent", NULL);

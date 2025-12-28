@@ -71,6 +71,8 @@ struct connection {
 	unsigned int unrestartable:1;
 	unsigned int detached:1;
 	unsigned int cgi:1;
+	unsigned int curl:1;
+	unsigned int is_aborted:1;
 
 	/* Each document is downloaded with some priority. When downloading a
 	 * document, the existing connections are checked to see if a

@@ -844,7 +844,8 @@ gopher_protocol_handler(struct connection *conn)
 {
 	ELOG
 #if defined(CONFIG_LIBCURL)
-	if (get_opt_bool("protocol.gopher.use_curl", NULL)) {
+	if (conn->curl || get_opt_bool("protocol.gopher.use_curl", NULL)) {
+		conn->curl = 1;
 		gophers_protocol_handler(conn);
 		return;
 	}

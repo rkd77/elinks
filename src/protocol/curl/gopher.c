@@ -103,6 +103,13 @@ done_gophers(struct connection *conn)
 	}
 }
 
+static int
+xferinfo_callback(void *clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow)
+{
+	struct connection *conn = (struct connection *)clientp;
+	return conn->is_aborted;
+}
+
 static void
 do_gophers(struct connection *conn)
 {
@@ -184,7 +191,6 @@ do_gophers(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, gopher->error);
 		curl_easy_setopt(curl, CURLOPT_PRIVATE, conn);
 		curl_easy_setopt(curl, CURLOPT_RESUME_FROM_LARGE, offset);
-		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
 
 		char *inter_face = get_cmd_opt_str("bind-address");
 		if (inter_face && *inter_face) {
@@ -218,6 +224,9 @@ do_gophers(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 0L);
 
 		//fprintf(stderr, "Adding easy %p to multi %p (%s)\n", curl, g.multi, u.source);
+		curl_easy_setopt(curl, CURLOPT_XFERINFODATA, conn);
+		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
+		curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, xferinfo_callback);
 		set_connection_state(conn, connection_state(S_TRANS));
 		curl_easy_setopt(curl, CURLOPT_URL, u.source);
 		curl_easy_setopt(curl, CURLOPT_NOBODY, 0L);

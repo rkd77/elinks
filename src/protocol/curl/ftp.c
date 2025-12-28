@@ -462,6 +462,13 @@ done_ftpes(struct connection *conn)
 	}
 }
 
+static int
+xferinfo_callback(void *clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow)
+{
+	struct connection *conn = (struct connection *)clientp;
+	return conn->is_aborted;
+}
+
 static void
 do_ftpes(struct connection *conn)
 {
@@ -526,7 +533,6 @@ do_ftpes(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, ftp->error);
 		curl_easy_setopt(curl, CURLOPT_PRIVATE, conn);
 		curl_easy_setopt(curl, CURLOPT_RESUME_FROM_LARGE, offset);
-		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
 		curl_easy_setopt(curl, CURLOPT_MAX_RECV_SPEED_LARGE, (curl_off_t)get_opt_long("protocol.ftp.curl_max_recv_speed", NULL));
 		curl_easy_setopt(curl, CURLOPT_MAX_SEND_SPEED_LARGE, (curl_off_t)get_opt_long("protocol.ftp.curl_max_send_speed", NULL));
 
@@ -562,6 +568,9 @@ do_ftpes(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 0L);
 
 		//fprintf(stderr, "Adding easy %p to multi %p (%s)\n", curl, g.multi, u.source);
+		curl_easy_setopt(curl, CURLOPT_XFERINFODATA, conn);
+		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
+		curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, xferinfo_callback);
 		set_connection_state(conn, connection_state(S_TRANS));
 		curl_easy_setopt(curl, CURLOPT_URL, u.source);
 		curl_easy_setopt(curl, CURLOPT_NOBODY, 0L);
@@ -929,6 +938,7 @@ sftp_protocol_handler(struct connection *conn)
 {
 	ELOG
 	if (g.multi) {
+		conn->curl = 1;
 		do_ftpes(conn);
 	}
 }
