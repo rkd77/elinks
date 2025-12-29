@@ -1162,8 +1162,13 @@ if conf_data.get('CONFIG_OS_DOS') or compiler.has_function('alloca', prefix: '#i
     conf_data.set('HAVE_ALLOCA', 1)
 endif
 
-if compiler.has_function('rb_errinfo', prefix: '#include <ruby.h>', dependencies: rubydeps)
-    conf_data.set('HAVE_RB_ERRINFO', 1)
+if conf_data.get('CONFIG_SCRIPTING_RUBY')
+    code = '''#include <ruby.h>
+    void main() { rb_errinfo(); }
+    '''
+    if compiler.links(code, dependencies: rubydeps, name: 'RB_ERRINFO')
+        conf_data.set('HAVE_RB_ERRINFO', 1)
+    endif
 endif
 
 if compiler.has_function('gnutls_priority_set_direct', prefix: '#include <gnutls/gnutls.h>', dependencies: gnutlsdeps)
