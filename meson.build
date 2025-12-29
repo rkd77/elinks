@@ -655,7 +655,10 @@ conf_data.set('CONFIG_PERL_POPPX_WITHOUT_N_A', 1)
 
 rubydeps = []
 if conf_data.get('CONFIG_SCRIPTING_RUBY')
-    rubydeps = dependency('ruby', static: st)
+    rubydeps = dependency('ruby', static: st, required: false)
+    if not rubydeps.found()
+        rubydeps = dependency('Ruby', static: st)
+    endif
     deps += rubydeps
 endif
 
