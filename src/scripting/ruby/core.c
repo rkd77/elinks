@@ -219,9 +219,9 @@ init_erb_module(void)
 	home = home ?: (char *) CONFDIR;
 	rb_define_const(erb_module, "HOME", rb_str_new2(home));
 
-	rb_define_module_function(erb_module, "message", (VALUE (*)(ANYARGS))erb_module_message, 1);
-	rb_define_module_function(erb_module, "method_missing", (VALUE (*)(ANYARGS))erb_module_method_missing, -1);
-	rb_define_module_function(erb_module, "p", (VALUE (*)(ANYARGS))erb_stdout_p, -1);
+	rb_define_module_function(erb_module, "message", erb_module_message, 1);
+	rb_define_module_function(erb_module, "method_missing", erb_module_method_missing, -1);
+	rb_define_module_function(erb_module, "p", erb_stdout_p, -1);
 }
 
 void
@@ -238,8 +238,8 @@ init_ruby(struct module *module)
 	ruby_init_loadpath();
 
 	/* ``Trap'' debug prints from scripts. */
-	rb_define_singleton_method(rb_stdout, "write", (VALUE (*)(ANYARGS))erb_module_message, 1);
-	rb_define_global_function("p", (VALUE (*)(ANYARGS))erb_stdout_p, -1);
+	rb_define_singleton_method(rb_stdout, "write", erb_module_message, 1);
+	rb_define_global_function("p", erb_stdout_p, -1);
 
 	/* Set up the ELinks module interface. */
 	init_erb_module();
