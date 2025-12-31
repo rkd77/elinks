@@ -28,10 +28,7 @@ void
 done_map_timer(void)
 {
 	ELOG
-
-	for (auto it = map_timer.begin(); it != map_timer.end(); it++) {
-		map_timer.erase(it);
-	}
+	map_timer.clear();
 }
 
 void
