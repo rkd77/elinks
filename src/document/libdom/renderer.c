@@ -12,6 +12,9 @@
 
 #include "cache/cache.h"
 #include "document/document.h"
+#ifdef CONFIG_DOM
+#include "document/dom/renderer.h"
+#endif
 #include "document/renderer.h"
 #include "document/libdom/doc.h"
 #include "document/libdom/mapa.h"
@@ -292,9 +295,17 @@ render_source_document_cxx(struct cache_entry *cached, struct document *document
 			return;
 		}
 		dom_node_unref(root);
+#ifdef CONFIG_DOM
+		render_dom_document(cached, document, &document->text);
+#else
 		render_plain_document(cached, document, &document->text);
+#endif
 		return;
 	}
 	dom_node_unref(root);
+#ifdef CONFIG_DOM
+	render_dom_document(cached, document, buffer);
+#else
 	render_plain_document(cached, document, buffer);
+#endif
 }
