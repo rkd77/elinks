@@ -49,7 +49,8 @@ RUN apk add \
  openssl-dev \
  openssl-libs-static \
  perl \
- quickjs-dev \
+ quickjs-ng-dev \
+ quickjs-ng-libs-static \
  sqlite-dev \
  sqlite-static \
  tre-dev \
