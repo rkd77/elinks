@@ -23,6 +23,14 @@
 #include <inttypes.h> /* OMG */
 #endif
 
+#ifdef __APPLE__
+#include <AvailabilityMacros.h>
+/* poll in 10.5 is available but broken. */
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 1060
+#undef HAVE_POLL
+#endif
+#endif
+
 #if defined(HAVE_POLL_H) && defined(HAVE_POLL) && !defined(INTERIX) && !defined(__HOS_AIX__) && !defined(CONFIG_OS_DOS)
 #define USE_POLL
 #include <poll.h>
