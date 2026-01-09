@@ -232,8 +232,12 @@ write_bookmarks_list(struct secure_save_info *ssi,
 			secure_fputs(ssi, "</folder>\n\n");
 
 		} else if (bm->box_item->type == BI_LEAF) {
-
+			char *pos = strchr(bm->url, POSITION_CHAR);
 			secure_fputs(ssi, "<bookmark href=\"");
+
+			if (pos) {
+				*pos = ' ';
+			}
 			print_xml_entities(ssi, bm->url);
 			secure_fputs(ssi, "\">\n");
 
