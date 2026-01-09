@@ -76,6 +76,7 @@
 
 #include <jsapi.h>
 #include <js/CompilationAndEvaluation.h>
+#include <js/EnvironmentChain.h>
 #include <js/friend/DumpFunctions.h>
 #include <js/Printf.h>
 #include <js/SourceText.h>
@@ -657,14 +658,14 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 			}
 		}
 	}
-	JS::RootedObjectVector envChain(ctx);
+	JS::EnvironmentChain envChain(ctx, JS::SupportUnscopables::No);
 
 	if (th) {
 		JS::RootedObject thisobj(ctx, th);
 
 		if (envChain.append(thisobj)) {
 			JSAutoRealm ar(ctx, cg);
-			JS_WrapObject(ctx, envChain[0]);
+			//JS_WrapObject(ctx, envChain[0]);
 		}
 	}
 	JS::RootedValue r_val(ctx, rval);
@@ -824,7 +825,7 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 	JSAutoRealm ar(ctx, (JSObject *)interpreter->ac->get());
 
 	JS::CompileOptions options(ctx);
-	JS::RootedObjectVector ag(ctx);
+	JS::EnvironmentChain ag(ctx, JS::SupportUnscopables::No);
 
 	JS::SourceText<mozilla::Utf8Unit> srcBuf;
 	if (!srcBuf.init(ctx, code->source, code->length, JS::SourceOwnership::Borrowed)) {
