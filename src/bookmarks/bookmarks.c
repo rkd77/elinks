@@ -785,22 +785,6 @@ open_bookmark_folder(struct session *ses, char *foldername)
 
 		/** @todo Bug 1066: Tell the URI layer that
 		 * bookmark->url is UTF-8.  */
-
-		char *p = NULL;
-		char *next = bookmark->url;
-		for (;;) {
-			char *end = strstr(next, " x=");
-
-			if (!end) {
-				break;
-			}
-			p = end;
-			next = end + 1;
-		}
-
-		if (p) {
-			*p = POSITION_CHAR;
-		}
 		uri = get_translated_uri(bookmark->url, NULL);
 		if (!uri) continue;
 
