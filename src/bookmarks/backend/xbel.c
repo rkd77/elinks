@@ -396,6 +396,24 @@ xbeltree_to_bookmarks_list(const struct read_bookmarks_xbel *preload,
 			title = get_child(node, "title");
 			href = get_attribute_value(node, "href");
 
+			if (href) {
+				char *p = NULL;
+				char *next = href;
+
+				for (;;) {
+					char *end = strstr(next, " x=");
+
+					if (!end) {
+						break;
+					}
+					p = end;
+					next = end + 3;
+				}
+
+				if (p) {
+					*p = POSITION_CHAR;
+				}
+			}
 			intl_set_charset_by_index(preload->utf8_cp);
 			tmp = add_bookmark(current_parent, 0,
 					   /* The <title> element is optional */
