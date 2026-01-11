@@ -1204,6 +1204,17 @@ static union option_info config_options_info[] = {
 		"ui", OPT_SORT,
 		N_("User interface options.")),
 
+	INIT_OPT_TREE("ui", N_("Clipboard"),
+		"clipboard", OPT_SORT,
+		N_("Clipboard settings.")),
+
+	INIT_OPT_BOOL("ui.clipboard", N_("Remove leading spaces"),
+		"remove_leading_spaces", OPT_ZERO, 0,
+		N_("Whether to remove leading spaces when copying to clipboard.")),
+
+	INIT_OPT_BOOL("ui.clipboard", N_("Remove trailing spaces"),
+		"remove_trailing_spaces", OPT_ZERO, 0,
+		N_("Whether to remove trailing spaces when copying to clipboard.")),
 
 
 	INIT_OPT_TREE("ui", N_("Color settings"),

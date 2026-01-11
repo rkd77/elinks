@@ -1090,8 +1090,13 @@ copy_to_clipboard2(struct document_view *doc_view)
 	utf8 = document->options.utf8;
 #endif
 
+	int remove_leading_space = get_opt_bool("ui.clipboard.remove_leading_spaces", NULL);
+	int remove_trailing_space = get_opt_bool("ui.clipboard.remove_trailing_spaces", NULL);
+
 	for (y = starty; y <= endy; y++) {
 		int ex = int_min(endx, document->data[y].length - 1);
+		int rls = remove_leading_space;
+		int space_counter = 0;
 		int x;
 
 		for (x = startx; x <= ex; x++) {
@@ -1119,7 +1124,18 @@ copy_to_clipboard2(struct document_view *doc_view)
 #else
 			if (!isscreensafe(c)) c = ' ';
 #endif
-
+			if (rls && (c == ' ')) {
+				continue;
+			} else {
+				rls = 0;
+			}
+			if (remove_trailing_space && (c == ' ')) {
+				space_counter++;
+				continue;
+			}
+			for (; space_counter; space_counter--) {
+				add_char_to_string(&data, ' ');
+			}
 #ifdef CONFIG_UTF8
 			if (utf8) {
 				add_to_string(&data, encode_utf8(c));
@@ -1129,6 +1145,11 @@ copy_to_clipboard2(struct document_view *doc_view)
 #else
 			add_char_to_string(&data, c);
 #endif
+		}
+		if (!remove_trailing_space) {
+			for (; space_counter; space_counter--) {
+				add_char_to_string(&data, ' ');
+			}
 		}
 		add_char_to_string(&data, '\n');
 	}
