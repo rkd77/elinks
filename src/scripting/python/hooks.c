@@ -13,6 +13,7 @@
 #include "elinks.h"
 
 #include "cache/cache.h"
+#include "document/html/parser/parse.h"
 #include "main/event.h"
 #include "protocol/header.h"
 #include "protocol/uri.h"
@@ -147,8 +148,21 @@ script_hook_pre_format_html(va_list ap, void *data)
 	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
 	struct fragment *fragment = get_cache_fragment(cached);
 	char *url = struri(cached->uri);
-	int codepage = get_codepage(cached->head);
 	int utf8_cp = get_cp_index("utf-8");
+	int codepage = utf8_cp;
+
+	if (!cached->head) {
+		struct string hd;
+
+		if (init_string(&hd)) {
+			scan_http_equiv(fragment->data, fragment->data + fragment->length, &hd, NULL, get_cp_index("iso8859-1"));
+			codepage = get_codepage(hd.source);
+			done_string(&hd);
+		}
+	} else {
+		codepage = get_codepage(cached->head);
+	}
+
 	const char *method = "pre_format_html_hook";
 	struct session *saved_python_ses = python_ses;
 	PyObject *result = NULL;
