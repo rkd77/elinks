@@ -1338,6 +1338,7 @@ xsp:
 	if (he) {
 		add_to_string(head, "Charset: ");
 		add_to_string(head, he);
+		add_crlf_to_string(head);
 		mem_free(he);
 	}
 
