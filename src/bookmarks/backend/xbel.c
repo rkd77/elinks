@@ -390,6 +390,27 @@ on_text(void *data, const XML_Char *text, int len)
 	}
 }
 
+static const char *
+get_saved_position(struct tree_node *bookmarknode)
+{
+	struct tree_node *info = get_child(bookmarknode, "info");
+
+	if (!info) {
+		return NULL;
+	}
+	struct tree_node *metadata = get_child(info, "metadata");
+
+	if (!metadata) {
+		return NULL;
+	}
+	struct tree_node *elinks_saved_pos = get_child(metadata, "elinks:saved-position");
+
+	if (!elinks_saved_pos) {
+		return NULL;
+	}
+	return get_attribute_value(elinks_saved_pos, "value");
+}
+
 /* xbel_tree_to_bookmarks_list: returns 0 on fail,
  *				      1 on success */
 static int
@@ -427,20 +448,7 @@ xbeltree_to_bookmarks_list(const struct read_bookmarks_xbel *preload,
 				if (p) {
 					*p = POSITION_CHAR;
 				} else {
-					struct tree_node *info = get_child(node, "info");
-					char *pos = NULL;
-
-					if (info) {
-						struct tree_node *metadata = get_child(info, "metadata");
-
-						if (metadata) {
-							struct tree_node *elinks_saved_pos = get_child(metadata, "elinks:saved-position");
-
-							if (elinks_saved_pos) {
-								pos = get_attribute_value(elinks_saved_pos, "value");
-							}
-						}
-					}
+					const char *pos = get_saved_position(node);
 
 					if (pos) {
 						href_with_pos = straconcat(href, POSITION_CHAR_S, pos, NULL);
