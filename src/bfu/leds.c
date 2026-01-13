@@ -64,9 +64,6 @@ enum led_option {
 	LEDS_CLOCK_FORMAT,
 	LEDS_CLOCK_ALIAS,
 
-	LEDS_SHOW_IP_ENABLE,
-	LEDS_SHOW_MEM_ENABLE,
-
 	LEDS_TEMPERATURE_TREE,
 	LEDS_TEMPERATURE_ENABLE,
 	LEDS_TEMPERATURE_FILENAME,
@@ -74,6 +71,12 @@ enum led_option {
 	LEDS_PANEL_TREE,
 	LEDS_PANEL_ENABLE,
 	LEDS_PANEL_REDRAW_INTERVAL,
+
+	LEDS_SHOW_IP_ENABLE,
+	LEDS_SHOW_MEM_ENABLE,
+
+	LEDS_SHOW_IP_ALIAS,
+	LEDS_SHOW_MEM_ALIAS,
 
 	LEDS_OPTIONS,
 };
@@ -91,17 +94,8 @@ static union option_info led_options[] = {
 		N_("Format string for the digital clock. See the strftime(3) "
 		"manpage for details.")),
 
-
 	/* Compatibility alias. Added: 2004-04-22, 0.9.CVS. */
 	INIT_OPT_ALIAS("ui.timer", "clock", OPT_ZERO, "ui.clock"),
-
-	INIT_OPT_BOOL("ui", N_("Show IP"),
-		"show_ip", OPT_ZERO, 0,
-		N_("Whether to display IP of the document in the status bar.")),
-
-	INIT_OPT_BOOL("ui", N_("Show available memory"),
-		"show_mem", OPT_ZERO, 0,
-		N_("Whether to display available memory. From /proc/meminfo.")),
 
 	INIT_OPT_TREE("ui", N_("Temperature"),
 		"temperature", OPT_ZERO, N_("Temperature of CPU.")),
@@ -129,6 +123,20 @@ static union option_info led_options[] = {
 		N_("Redraw interval in milliseconds. If you don't have the clock enabled, "
 		"you can set it higher. Default value is 1000. Note that active downloads "
 		"take precedence and enforce interval 100ms.")),
+
+	INIT_OPT_BOOL("ui.leds", N_("Show IP"),
+		"show_ip", OPT_ZERO, 0,
+		N_("Whether to display IP of the document in the status bar.")),
+
+	INIT_OPT_BOOL("ui.leds", N_("Show available memory"),
+		"show_mem", OPT_ZERO, 0,
+		N_("Whether to display available memory. From /proc/meminfo.")),
+
+	/* Compatibility alias. Added: 2026-01-13, 0.20.GIT. */
+	INIT_OPT_ALIAS("ui", "show_ip", OPT_ZERO, "ui.leds.show_ip"),
+
+	/* Compatibility alias. Added: 2026-01-13, 0.20.GIT. */
+	INIT_OPT_ALIAS("ui", "show_mem", OPT_ZERO, "ui.leds.show_mem"),
 
 	NULL_OPTION_INFO,
 };
