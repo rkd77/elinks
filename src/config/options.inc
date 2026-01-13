@@ -1208,6 +1208,12 @@ static union option_info config_options_info[] = {
 		"clipboard", OPT_SORT,
 		N_("Clipboard settings.")),
 
+	INIT_OPT_STRING("ui.clipboard", N_("Clipboard filename"),
+		"filename", OPT_ZERO, "",
+		N_("The filename of the clipboard. The 'copy-clipboard' action will append to it. "
+		"This file can be also a named pipe. See contrib/clipboard/clip.sh for sample "
+		"implementation. Note this file must exists before copying to the clipboard.")),
+
 	INIT_OPT_BOOL("ui.clipboard", N_("Remove leading spaces"),
 		"remove_leading_spaces", OPT_ZERO, 0,
 		N_("Whether to remove leading spaces when copying to clipboard.")),
@@ -1652,11 +1658,6 @@ static union option_info config_options_info[] = {
 		N_("Clean temporary files (created for example while viewing images) at exit "
 		"of ELinks not immediately after preview.")),
 
-	INIT_OPT_STRING("ui", N_("Clipboard filename"),
-		"clipboard_file", OPT_ZERO, "",
-		N_("The filename of the clipboard. The 'copy-clipboard' action will append to it. "
-		"This file can be also a named pipe. See contrib/clipboard/clip.sh for sample "
-		"implementation. Note this file must exists before copying to the clipboard.")),
 
 #ifdef HAVE_STRFTIME
 	INIT_OPT_STRING("ui", N_("Date format"),
@@ -1690,7 +1691,9 @@ static union option_info config_options_info[] = {
 		"environment in an xterm-like terminal. This way the "
 		"document's title is shown on the window titlebar.")),
 
-
+	/* Compatibility alias: added by witekfl at 2026-01-13, 0.20.GIT. */
+	INIT_OPT_ALIAS("ui", "clipboard_file", OPT_ZERO,
+		"ui.clipboard.filename"),
 
 	/* Compatibility alias: added by pasky at 2004-07-22, 0.9.CVS. */
 	INIT_OPT_ALIAS("", "secure_file_saving", OPT_ZERO, "infofiles.secure_save"),

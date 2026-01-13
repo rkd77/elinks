@@ -1859,7 +1859,7 @@ char *
 get_ui_clipboard_file(void)
 {
 	ELOG
-	return get_opt_str("ui.clipboard_file", NULL);
+	return get_opt_str("ui.clipboard.filename", NULL);
 }
 
 struct uri *
