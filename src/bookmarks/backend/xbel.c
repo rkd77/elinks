@@ -236,12 +236,25 @@ write_bookmarks_list(struct secure_save_info *ssi,
 			secure_fputs(ssi, "<bookmark href=\"");
 
 			if (pos) {
-				*pos = ' ';
+				*pos = '\0';
 			}
 			print_xml_entities(ssi, bm->url);
 			secure_fputs(ssi, "\">\n");
-
 			indentation(ssi, n + 2);
+
+			if (pos) {
+				secure_fputs(ssi, "<info>\n");
+				indentation(ssi, n + 3);
+				secure_fputs(ssi, "<metadata owner=\"http://elinks.cz\">\n");
+				indentation(ssi, n + 4);
+				secure_fputs(ssi, "<elinks:saved-position value=\"");
+				print_xml_entities(ssi, pos + 1);
+				secure_fputs(ssi, "\"/>\n");
+				indentation(ssi, n + 3);
+				secure_fputs(ssi, "</metadata>\n");
+				indentation(ssi, n + 2);
+				secure_fputs(ssi, "</info>\n");
+			}
 			secure_fputs(ssi, "<title>");
 			print_xml_entities(ssi, bm->title);
 			secure_fputs(ssi, "</title>\n");
@@ -391,6 +404,7 @@ xbeltree_to_bookmarks_list(const struct read_bookmarks_xbel *preload,
 
 	while (node) {
 		if (!strcmp(node->name, "bookmark")) {
+			char *href_with_pos = NULL;
 			char *href;
 
 			title = get_child(node, "title");
@@ -412,6 +426,26 @@ xbeltree_to_bookmarks_list(const struct read_bookmarks_xbel *preload,
 
 				if (p) {
 					*p = POSITION_CHAR;
+				} else {
+					struct tree_node *info = get_child(node, "info");
+					char *pos = NULL;
+
+					if (info) {
+						struct tree_node *metadata = get_child(info, "metadata");
+
+						if (metadata) {
+							struct tree_node *elinks_saved_pos = get_child(metadata, "elinks:saved-position");
+
+							if (elinks_saved_pos) {
+								pos = get_attribute_value(elinks_saved_pos, "value");
+							}
+						}
+					}
+
+					if (pos) {
+						href_with_pos = straconcat(href, POSITION_CHAR_S, pos, NULL);
+						href = href_with_pos;
+					}
 				}
 			}
 			intl_set_charset_by_index(preload->utf8_cp);
@@ -425,6 +459,8 @@ xbeltree_to_bookmarks_list(const struct read_bookmarks_xbel *preload,
 					    * get_attribute_value() */
 					   href ? href
 						: (char *) gettext("No URL"));
+
+			mem_free_if(href_with_pos);
 
 			/* Out of memory */
 			if (!tmp) return 0;
