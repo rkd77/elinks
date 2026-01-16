@@ -254,6 +254,7 @@ kill_timer(timer_id_T *id)
 	if (event_enabled) {
 		uv_timer_stop(timer->handle);
 	}
+	mem_free_if(timer->handle);
 #endif
 	mem_free(timer);
 #endif
