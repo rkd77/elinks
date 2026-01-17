@@ -432,28 +432,10 @@ xbeltree_to_bookmarks_list(const struct read_bookmarks_xbel *preload,
 			href = get_attribute_value(node, "href");
 
 			if (href) {
-				char *p = NULL;
-				char *next = href;
+				const char *pos = get_saved_position(node);
 
-				for (;;) {
-					char *end = strstr(next, " x=");
-
-					if (!end) {
-						break;
-					}
-					p = end;
-					next = end + 3;
-				}
-
-				if (p) {
-					*p = POSITION_CHAR;
-				} else {
-					const char *pos = get_saved_position(node);
-
-					if (pos) {
-						href_with_pos = straconcat(href, POSITION_CHAR_S, pos, NULL);
-						href = href_with_pos;
-					}
+				if (pos) {
+					href = href_with_pos = straconcat(href, POSITION_CHAR_S, pos, NULL);
 				}
 			}
 			intl_set_charset_by_index(preload->utf8_cp);
