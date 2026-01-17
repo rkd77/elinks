@@ -187,8 +187,8 @@ no_type_attr:
 	if (!fc->default_value)
 		fc->default_value = stracpy("");
 
-	html_context->special_f(html_context, SP_CONTROL, fc);
-	elformat.form = fc->mode != FORM_MODE_DISABLED ? fc : NULL;
+	html_context->special_f(html_context, SP_CONTROL, &fc);
+	elformat.form = fc && (fc->mode != FORM_MODE_DISABLED) ? fc : NULL;
 	elformat.style.attr |= AT_BOLD;
 }
 
@@ -339,7 +339,7 @@ html_input(struct html_context *html_context, char *a,
 		html_input_format(html_context, a, fc);
 	}
 
-	html_context->special_f(html_context, SP_CONTROL, fc);
+	html_context->special_f(html_context, SP_CONTROL, &fc);
 }
 
 struct list_menu lnk_menu;
@@ -528,7 +528,7 @@ end_parse:
 
 	put_chrs(html_context, "&nbsp;]", 7);
 	pop_html_element(html_context);
-	html_context->special_f(html_context, SP_CONTROL, fc);
+	html_context->special_f(html_context, SP_CONTROL, &fc);
 }
 
 
@@ -638,7 +638,7 @@ end_parse:
 	put_chrs(html_context, "[ ]", 3);
 	pop_html_element(html_context);
 	put_chrs(html_context, " ", 1);
-	html_context->special_f(html_context, SP_CONTROL, fc);
+	html_context->special_f(html_context, SP_CONTROL, &fc);
 }
 
 void
@@ -752,5 +752,5 @@ pp:
 		ln_break(html_context, 1);
 	else
 		put_chrs(html_context, " ", 1);
-	html_context->special_f(html_context, SP_CONTROL, fc);
+	html_context->special_f(html_context, SP_CONTROL, &fc);
 }
