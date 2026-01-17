@@ -62,11 +62,7 @@
 struct gophers_connection_info {
 	CURL *easy;
 	char *url;
-#ifdef CONFIG_LIBUV
-	struct datauv *global;
-#else
 	GlobalInfo *global;
-#endif
 	char error[CURL_ERROR_SIZE];
 	int conn_state;
 	int buf_pos;

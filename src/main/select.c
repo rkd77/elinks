@@ -54,12 +54,6 @@
 #define USE_LIBEVENT
 #endif
 
-#ifdef CONFIG_LIBUV
-#ifdef HAVE_UV_H
-#include <uv.h>
-#endif
-#endif
-
 #ifdef HAVE_SYS_SELECT_H
 #include <sys/select.h>
 #endif
@@ -101,157 +95,6 @@
 #define SOCK_SHIFT 0
 #endif
 
-#if defined(CONFIG_LIBUV) && defined(CONFIG_LIBCURL)
-struct datauv g;
-
-#define mycase(code) \
-	case code: s = __STRING(code)
-
-/* Die if we get a bad CURLMcode somewhere */
-void
-mcode_or_die(const char *where, CURLMcode code)
-{
-	ELOG
-	if (CURLM_OK != code) {
-		const char *s;
-
-		switch(code) {
-		mycase(CURLM_BAD_HANDLE); break;
-		mycase(CURLM_BAD_EASY_HANDLE); break;
-		mycase(CURLM_OUT_OF_MEMORY); break;
-		mycase(CURLM_INTERNAL_ERROR); break;
-		mycase(CURLM_UNKNOWN_OPTION); break;
-		mycase(CURLM_LAST); break;
-		default: s = "CURLM_unknown"; break;
-		mycase(CURLM_BAD_SOCKET);
-			fprintf(stderr, "ERROR: %s returns %s\n", where, s);
-			/* ignore this error */
-			return;
-		}
-		fprintf(stderr, "ERROR: %s returns %s\n", where, s);
-		//exit(code);
-	}
-}
-
-static struct curl_context *
-create_curl_context(curl_socket_t sockfd, struct datauv *uv)
-{
-	ELOG
-	struct curl_context *context = (struct curl_context *)mem_alloc(sizeof(*context));
-	context->sockfd = sockfd;
-	context->uv = uv;
-
-	uv_poll_init_socket(uv->loop, &context->poll_handle, sockfd);
-	context->poll_handle.data = context;
-
-	return context;
-}
-
-static void
-curl_close_cb(uv_handle_t *handle)
-{
-	ELOG
-	struct curl_context *context = (struct curl_context *) handle->data;
-	mem_free(context);
-}
-
-static void
-destroy_curl_context(struct curl_context *context)
-{
-	ELOG
-	uv_close((uv_handle_t *) &context->poll_handle, curl_close_cb);
-}
-
-/* callback from libuv on socket activity */
-static void
-on_uv_socket(uv_poll_t *req, int status, int events)
-{
-	ELOG
-	int running_handles;
-	int flags = 0;
-	struct curl_context *context = (struct curl_context *) req->data;
-	(void)status;
-
-	if (events & UV_READABLE) {
-		flags |= CURL_CSELECT_IN;
-	}
-
-	if (events & UV_WRITABLE) {
-		flags |= CURL_CSELECT_OUT;
-	}
-	curl_multi_socket_action(context->uv->multi, context->sockfd, flags, &running_handles);
-	check_multi_info(&g);
-}
-
-/* callback from libuv when timeout expires */
-static void
-on_uv_timeout(uv_timer_t *req)
-{
-	ELOG
-
-	if (1) {
-		int running_handles;
-		curl_multi_socket_action(g.multi, CURL_SOCKET_TIMEOUT, 0, &running_handles);
-	}
-	check_multi_info(&g);
-}
-
-/* callback from libcurl to update the timeout expiry */
-static int
-cb_timeout(CURLM *multi, long timeout_ms, struct datauv *uv)
-{
-	ELOG
-	(void)multi;
-
-	if (timeout_ms < 0) {
-		uv_timer_stop(&uv->timeout);
-	} else {
-		if (timeout_ms == 0) {
-			timeout_ms = 1; /* 0 means call curl_multi_socket_action asap but NOT within the callback itself */
-		}
-		uv_timer_start(&uv->timeout, on_uv_timeout, (uint64_t)timeout_ms, 0); /* do not repeat */
-	}
-	return 0;
-}
-
-/* callback from libcurl to update socket activity to wait for */
-static int
-cb_socket(CURL *easy, curl_socket_t s, int action, struct datauv *uv, void *socketp)
-{
-	ELOG
-	struct curl_context *curl_context;
-	int events = 0;
-	(void)easy;
-
-	switch(action) {
-	case CURL_POLL_IN:
-	case CURL_POLL_OUT:
-	case CURL_POLL_INOUT:
-		curl_context = socketp ? (struct curl_context *) socketp : create_curl_context(s, uv);
-		curl_multi_assign(uv->multi, s, (void *) curl_context);
-
-		if (action != CURL_POLL_IN) {
-			events |= UV_WRITABLE;
-		}
-
-		if (action != CURL_POLL_OUT) {
-			events |= UV_READABLE;
-		}
-		uv_poll_start(&curl_context->poll_handle, events, on_uv_socket);
-		break;
-	case CURL_POLL_REMOVE:
-		if (socketp) {
-			uv_poll_stop(&((struct curl_context*)socketp)->poll_handle);
-			destroy_curl_context((struct curl_context*) socketp);
-			curl_multi_assign(uv->multi, s, NULL);
-		}
-		break;
-	default:
-		fprintf(stderr, "Something went bad");
-	}
-	return 0;
-}
-#endif
 
 #if defined(CONFIG_LIBEVENT) && defined(CONFIG_LIBCURL)
 
@@ -651,7 +494,7 @@ sock_cb(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp)
 }
 #endif
 
-#if !defined(CONFIG_LIBEVENT) && !defined(CONFIG_LIBEV) && !defined(CONFIG_LIBUV) && defined(CONFIG_LIBCURL)
+#if !defined(CONFIG_LIBEVENT) && !defined(CONFIG_LIBEV) && defined(CONFIG_LIBCURL)
 
 /* Information associated with a specific easy handle */
 typedef struct _ConnInfo
@@ -707,7 +550,7 @@ mcode_or_die(const char *where, CURLMcode code)
 
 #endif
 
-#if defined(CONFIG_LIBCURL) && !defined(CONFIG_LIBEV) && !defined(CONFIG_LIBEVENT) && !defined(CONFIG_LIBUV)
+#if defined(CONFIG_LIBCURL) && !defined(CONFIG_LIBEV) && !defined(CONFIG_LIBEVENT)
 
 /* Called by libevent when our timeout expires */
 static void
@@ -782,7 +625,7 @@ remsock_select(SockInfo *f)
 	//fprintf(stderr, "remsock f=%p\n", f);
 	if (f) {
 		if (f->sockfd) {
-			set_handlers(f->sockfd + SOCK_SHIFT, NULL, NULL, NULL, NULL, EL_TYPE_TCP);
+			set_handlers(f->sockfd + SOCK_SHIFT, NULL, NULL, NULL, NULL);
 		}
 		mem_free(f);
 	}
@@ -800,7 +643,7 @@ setsock_select(SockInfo *f, curl_socket_t s, CURL *e, int act, GlobalInfo *g)
 	f->action = act;
 	f->easy = e;
 
-	set_handlers(s + SOCK_SHIFT, in ? event_read_cb_select : NULL, out ? event_write_cb_select : NULL, NULL, f, EL_TYPE_TCP);
+	set_handlers(s + SOCK_SHIFT, in ? event_read_cb_select : NULL, out ? event_write_cb_select : NULL, NULL, f);
 }
 
 /* Initialize a new SockInfo structure */
@@ -854,22 +697,6 @@ get_libevent_version(void)
 #else
 const char *
 get_libevent_version(void)
-{
-	ELOG
-	return "";
-}
-#endif
-
-#ifdef CONFIG_LIBUV
-const char *
-get_libuv_version(void)
-{
-	ELOG
-	return uv_version_string();
-}
-#else
-const char *
-get_libuv_version(void)
 {
 	ELOG
 	return "";
@@ -957,239 +784,7 @@ check_bottom_halves(void)
 	}
 }
 
-#ifdef CONFIG_LIBUV
-int event_enabled = 0;
-
-static void
-one_cb(uv_poll_t *handle, int status, int events)
-{
-	ELOG
-
-	if (!handle) {
-		return;
-	}
-
-	struct libuv_priv *priv = (struct libuv_priv *)uv_handle_get_data((uv_handle_t *)handle);
-
-	if (!priv) {
-		return;
-	}
-	int fd = priv->fd;
-
-	if (events & UV_READABLE) {
-		select_handler_T hr = get_handler(fd, SELECT_HANDLER_READ);
-
-		if (hr) {
-			hr(get_handler_data(fd));
-		}
-	}
-
-	if (events & UV_WRITABLE) {
-		select_handler_T hw = get_handler(fd, SELECT_HANDLER_WRITE);
-
-		if (hw) {
-			hw(get_handler_data(fd));
-		}
-	}
-	check_bottom_halves();
-}
-
-static void
-alloc_one_cb(uv_handle_t* handle, size_t suggested_size, uv_buf_t* buf)
-{
-	ELOG
-	buf->base = mem_alloc(suggested_size);
-	buf->len = suggested_size;
-}
-
-static void
-read_one_cb(uv_stream_t *stream, ssize_t r, const uv_buf_t *buf)
-{
-	ELOG
-	mem_free_if(buf->base);
-
-	if (!stream) {
-		return;
-	}
-	struct libuv_priv *priv = (struct libuv_priv *)uv_handle_get_data((uv_handle_t *)stream);
-
-	if (!priv) {
-		return;
-	}
-	int fd = priv->fd;
-
-	if (r >= 0) {
-		select_handler_T hr = get_handler(fd, SELECT_HANDLER_READ);
-
-		if (hr) {
-			hr(get_handler_data(fd));
-		}
-	}
-	check_bottom_halves();
-}
-
-static void
-set_events_for_handle(int h)
-{
-	ELOG
-	struct libuv_priv *priv = NULL;
-	uv_handle_t *handle = NULL;
-	int res;
-	enum el_type_hint type_hint;
-
-	if (h == 0) {
-		type_hint = EL_TYPE_TTY;
-	} else {
-		type_hint = threads[h].type_hint;
-	}
-
-	if (type_hint == EL_TYPE_NONE) {
-		return;
-	}
-
-	if (!threads[h].read_func && !threads[h].write_func) {
-		if (!threads[h].handle) {
-			return;
-		}
-		handle = threads[h].handle;
-
-		if (type_hint == EL_TYPE_TTY || type_hint == EL_TYPE_PIPE) {
-			uv_read_stop((uv_stream_t *)handle);
-		} else {
-			if (type_hint != EL_TYPE_NONE) {
-				uv_poll_stop((uv_poll_t *)handle);
-			}
-		}
-		mem_free_set(&threads[h].handle, NULL);
-		return;
-	}
-	if (!threads[h].handle) {
-		priv = mem_calloc(1, sizeof(*priv));
-
-		if (!priv) {
-			return;
-		}
-		switch (type_hint) {
-		case EL_TYPE_TCP:
-		case EL_TYPE_UDP:
-			handle = mem_calloc(1, sizeof(uv_poll_t));
-			if (!handle) {
-				mem_free(priv);
-				return;
-			}
-			res = uv_poll_init_socket(uv_default_loop(), (uv_poll_t *)handle, h - SOCK_SHIFT);
-
-			if (res) {
-				fprintf(stderr, "Something went bad: res=%d h=%d %s:%d\n", res, h, __FILE__, __LINE__);
-			}
-
-			break;
-		case EL_TYPE_TTY:
-			handle = mem_calloc(1, sizeof(uv_tty_t));
-			if (!handle) {
-				mem_free(priv);
-				return;
-			}
-			res = uv_tty_init(uv_default_loop(), (uv_tty_t *)handle, h, 0);
-
-			if (res) {
-				fprintf(stderr, "Something went bad: res=%d %s:%d\n", res, __FILE__, __LINE__);
-			} else {
-				uv_tty_set_mode((uv_tty_t *)handle, UV_TTY_MODE_RAW);
-			}
-			break;
-		case EL_TYPE_PIPE:
-			handle = mem_calloc(1, sizeof(uv_pipe_t));
-			if (!handle) {
-				mem_free(priv);
-				return;
-			}
-			res = uv_pipe_init(uv_default_loop(), (uv_pipe_t *)handle, 0);
-
-			if (res) {
-				fprintf(stderr, "Something went bad: res=%d %s:%d\n", res, __FILE__, __LINE__);
-			}
-			res = uv_pipe_open((uv_pipe_t *)handle, h);
-
-			if (res) {
-				fprintf(stderr, "Something went bad: res=%d %s:%d\n", res, __FILE__, __LINE__);
-			}
-			break;
-		default:
-			handle = mem_calloc(1, sizeof(uv_poll_t));
-			if (!handle) {
-				mem_free(priv);
-				return;
-			}
-			res = uv_poll_init(uv_default_loop(), (uv_poll_t *)handle, h);
-
-			if (res) {
-				fprintf(stderr, "Something went bad: res=%d %s:%d\n", res, __FILE__, __LINE__);
-			}
-			break;
-		}
-		threads[h].handle = handle;
-	} else {
-		handle = threads[h].handle;
-		priv = (struct libuv_priv *)uv_handle_get_data((uv_handle_t *)handle);
-	}
-	priv->fd = h;
-	uv_handle_set_data((uv_handle_t *)handle, priv);
-
-	if (threads[h].read_func) {
-		if (type_hint == EL_TYPE_TTY || type_hint == EL_TYPE_PIPE) {
-			if (threads[h].read_func == (select_handler_T)in_kbd) {
-				uv_read_start((uv_stream_t *)handle, alloc_kbd_cb, read_kbd_cb);
-			} else if (threads[h].read_func == (select_handler_T)in_term) {
-				uv_read_start((uv_stream_t *)handle, alloc_interm_cb, read_interm_cb);
-			} else {
-				uv_read_start((uv_stream_t *)handle, alloc_one_cb, read_one_cb);
-			}
-		} else {
-			uv_poll_start((uv_poll_t *)handle, UV_READABLE, one_cb);
-		}
-	}
-
-	if (threads[h].write_func) {
-		uv_poll_start((uv_poll_t *)handle, UV_WRITABLE, one_cb);
-	}
-}
-
-static void
-enable_libevent(void)
-{
-	ELOG
-	int i;
-
-	if (get_cmd_opt_bool("no-libevent"))
-		return;
-
-#ifdef CONFIG_MEMCOUNT
-	uv_replace_allocator(el_libuv_malloc, el_libuv_realloc, el_libuv_calloc, el_libuv_free);
-#endif
-
-	event_enabled = 1;
-
-	for (i = 0; i < w_max; i++) {
-		set_events_for_handle(i);
-	}
-	set_events_for_timer();
-}
-
-#undef EVLOOP_ONCE
-#undef EVLOOP_NONBLOCK
-#define EVLOOP_ONCE UV_RUN_ONCE
-#define EVLOOP_NONBLOCK UV_RUN_NOWAIT
-
-static void
-do_event_loop(int flags)
-{
-	ELOG
-	uv_run(uv_default_loop(), flags);
-}
-#endif
-
-#if defined(USE_LIBEVENT) || defined(CONFIG_LIBUV)
+#if defined(USE_LIBEVENT)
 #if defined(USE_POLL)
 static void
 restrict_fds(void)
@@ -1212,7 +807,7 @@ skip_limit:;
 #endif
 }
 #endif /* USE_POLL */
-#endif /* USE_LIBEVENT || CONFIG_LIBUV */
+#endif /* USE_LIBEVENT */
 
 #ifdef USE_LIBEVENT
 
@@ -1417,7 +1012,7 @@ get_handler_data(int fd)
 
 void
 set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
-	     select_handler_T error_func, void *data, enum el_type_hint type_hint)
+	     select_handler_T error_func, void *data)
 {
 	ELOG
 	if (fd < 0) {
@@ -1445,7 +1040,7 @@ set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
 	}
 #endif /* __GNU__ */
 
-#if defined(USE_POLL) && (defined(USE_LIBEVENT) || defined(CONFIG_LIBUV))
+#if defined(USE_POLL) && defined(USE_LIBEVENT)
 	if (!event_enabled)
 #endif
 		if (fd >= (int)FD_SETSIZE) {
@@ -1486,12 +1081,7 @@ set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
 		w_max = i + 1;
 	}
 
-#if defined(USE_LIBEVENT) || defined(CONFIG_LIBUV)
-#ifdef CONFIG_LIBUV
-	if (read_func || write_func) {
-		threads[fd].type_hint = type_hint;
-	}
-#endif
+#if defined(USE_LIBEVENT)
 	if (event_enabled) {
 		set_events_for_handle(fd);
 		return;
@@ -1607,19 +1197,19 @@ select_loop(void (*init)(void))
 	if ((signal_efd = eventfd(0, EFD_NONBLOCK)) < 0) {
 		elinks_internal("ERROR: can't create eventfd for signal handling");
 	}
-	set_handlers(signal_efd, clear_events_ptr, NULL, NULL, (void *)(intptr_t)signal_efd, EL_TYPE_FD);
+	set_handlers(signal_efd, clear_events_ptr, NULL, NULL, (void *)(intptr_t)signal_efd);
 #else
 	if (c_pipe(signal_pipe)) {
 		elinks_internal("ERROR: can't create pipe for signal handling");
 	}
 	set_nonblocking_fd(signal_pipe[0]);
 	set_nonblocking_fd(signal_pipe[1]);
-	set_handlers(signal_pipe[0], clear_events_ptr, NULL, NULL, (void *)(intptr_t)signal_pipe[0], EL_TYPE_FD);
+	set_handlers(signal_pipe[0], clear_events_ptr, NULL, NULL, (void *)(intptr_t)signal_pipe[0]);
 #endif
 #endif
 	init();
 
-#if defined(USE_LIBEVENT) || defined(CONFIG_LIBUV)
+#if defined(USE_LIBEVENT)
 	enable_libevent();
 #if defined(USE_POLL)
 	if (!event_enabled) {
@@ -1627,7 +1217,7 @@ select_loop(void (*init)(void))
 	}
 #endif
 #endif
-#if defined(USE_LIBEVENT) || defined(CONFIG_LIBUV)
+#if defined(USE_LIBEVENT)
 	if (event_enabled) {
 #if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBEVENT)
 		memset(&g, 0, sizeof(GlobalInfo));
@@ -1675,25 +1265,6 @@ select_loop(void (*init)(void))
 		/* we do not call any curl_multi_socket*() function yet as we have no handles added! */
 #endif
 
-#if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBUV)
-		memset(&g, 0, sizeof(struct datauv));
-		g.loop = uv_default_loop();
-		uv_timer_init(g.loop, &g.timeout);
-#ifdef CONFIG_MEMCOUNT
-		curl_global_init_mem(CURL_GLOBAL_DEFAULT, el_curl_malloc, el_curl_free, el_curl_realloc, el_curl_strdup, el_curl_calloc);
-#else
-		curl_global_init(CURL_GLOBAL_DEFAULT);
-#endif
-		g.multi = curl_multi_init();
-
-		/* setup the generic multi interface options we want */
-		curl_multi_setopt(g.multi, CURLMOPT_SOCKETFUNCTION, cb_socket);
-		curl_multi_setopt(g.multi, CURLMOPT_SOCKETDATA, &g);
-		curl_multi_setopt(g.multi, CURLMOPT_TIMERFUNCTION, cb_timeout);
-		curl_multi_setopt(g.multi, CURLMOPT_TIMERDATA, &g);
-
-		/* we do not call any curl_multi_socket*() function yet as we have no handles added! */
-#endif
 		check_bottom_halves();
 		while (!program.terminate) {
 			check_signals();
@@ -1726,21 +1297,11 @@ select_loop(void (*init)(void))
 		curl_global_cleanup();
 #endif
 
-#if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBUV)
-		uv_timer_stop(&g.timeout);
-		curl_multi_cleanup(g.multi);
-		curl_global_cleanup();
-#endif
-#ifdef CONFIG_LIBUV
-#ifdef CONFIG_OS_WIN32
-		uv_tty_reset_mode();
-#endif
-#endif
 		return;
 	} else
 #endif
 	{
-#if defined(CONFIG_LIBCURL) && !defined(CONFIG_LIBUV) && !defined(CONFIG_LIBEV) && !defined(CONFIG_LIBEVENT)
+#if defined(CONFIG_LIBCURL) && !defined(CONFIG_LIBEV) && !defined(CONFIG_LIBEVENT)
 		memset(&g, 0, sizeof(GlobalInfo));
 #ifdef CONFIG_MEMCOUNT
 		curl_global_init_mem(CURL_GLOBAL_DEFAULT, el_curl_malloc, el_curl_free, el_curl_realloc, el_curl_strdup, el_curl_calloc);

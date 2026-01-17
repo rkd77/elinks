@@ -105,7 +105,6 @@ conf_data.set('CONFIG_GNUTLS', get_option('gnutls'))
 conf_data.set('CONFIG_OPENSSL', get_option('openssl'))
 conf_data.set('CONFIG_LIBEV', get_option('libev'))
 conf_data.set('CONFIG_LIBEVENT', get_option('libevent'))
-conf_data.set('CONFIG_LIBUV', get_option('libuv'))
 conf_data.set('CONFIG_X', get_option('x'))
 conf_data.set('CONFIG_QUICKJS', get_option('quickjs'))
 conf_data.set('CONFIG_MUJS', get_option('mujs'))
@@ -147,14 +146,6 @@ endif
 
 if conf_data.get('CONFIG_LIBEV') and conf_data.get('CONFIG_LIBEVENT')
     error('libev and libevent cannot be both enabled')
-endif
-
-if conf_data.get('CONFIG_LIBEV') and conf_data.get('CONFIG_LIBUV')
-    error('libev and libuv cannot be both enabled')
-endif
-
-if conf_data.get('CONFIG_LIBEVENT') and conf_data.get('CONFIG_LIBUV')
-    error('libevent and libuv cannot be both enabled')
 endif
 
 if conf_data.get('CONFIG_FSP') and conf_data.get('CONFIG_FSP2')
@@ -364,10 +355,6 @@ if compiler.has_header('ev-event.h')
     conf_data.set('HAVE_EV_EVENT_H', 1)
 endif
 
-if compiler.has_header('uv.h')
-    conf_data.set('HAVE_UV_H', 1)
-endif
-
 if compiler.has_header('alloca.h')
     conf_data.set('HAVE_ALLOCA_H', 1)
 endif
@@ -467,9 +454,6 @@ elif conf_data.get('CONFIG_LIBEVENT')
     eventdeps = dependency('libevent', static: st, version: '>=2.0.0')
     deps += eventdeps
     conf_data.set('HAVE_LIBEVENT', true)
-elif conf_data.get('CONFIG_LIBUV')
-    eventdeps = dependency('libuv', static: st)
-    deps += eventdeps
 else
     eventdeps = []
 endif

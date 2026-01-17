@@ -42,7 +42,6 @@ option('libcurl', type: 'boolean', value: true, description: 'whether to compile
 option('libev', type: 'boolean', value: false, description: 'compile with libev (libevent compatibility mode)')
 option('libevent', type: 'boolean', value: false, description: 'compile with libevent.')
 option('libsixel', type: 'boolean', value: false, description: 'whether to compile libsixel support to show images directly on sixel compatible terminals')
-option('libuv', type: 'boolean', value: false, description: 'compile with libuv.')
 option('libwebp', type: 'boolean', value: false, description: 'support for WEBP images')
 option('luapkg', type: 'string', value:'', description: 'Lua version')
 option('lzma', type: 'boolean', value: false, description: 'lzma encoding support')

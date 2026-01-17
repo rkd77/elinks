@@ -436,7 +436,7 @@ bind_to_af_unix(void)
 	}
 
 	set_handlers(s_info_listen.fd, (void (*)(void *)) af_unix_connection,
-		     NULL, NULL, &s_info_accept, EL_TYPE_TCP);
+		     NULL, NULL, &s_info_accept);
 
 	umask(saved_mask);
 	return s_info_listen.fd;

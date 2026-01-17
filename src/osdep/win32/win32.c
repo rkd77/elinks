@@ -308,9 +308,6 @@ int
 get_input_handle(void)
 {
 	ELOG
-#ifdef CONFIG_LIBUV
-	return _fileno(stdin);
-#else
 	static HANDLE hStdIn = INVALID_HANDLE_VALUE;
 
 	if (hStdIn == INVALID_HANDLE_VALUE) {
@@ -327,16 +324,12 @@ get_input_handle(void)
 		SetConsoleMode(hStdIn, dwInMode);
 	}
 	return (int)(intptr_t)hStdIn;
-#endif
 }
 
 int
 get_output_handle(void)
 {
 	ELOG
-#ifdef CONFIG_LIBUV
-	return _fileno(stdout);
-#else
 	static HANDLE hStdOut = INVALID_HANDLE_VALUE;
 
 	if (hStdOut == INVALID_HANDLE_VALUE) {
@@ -350,7 +343,6 @@ get_output_handle(void)
 		SetConsoleMode(hStdOut, dwMode);
 	}
 	return (int)(intptr_t)hStdOut;
-#endif
 }
 
 int

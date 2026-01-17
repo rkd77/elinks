@@ -107,7 +107,7 @@ handle_terminal_resize(int fd, void (*fn)())
 		winch_thread_running = 1;
 		_beginthread((void (*)(void *)) winch_thread, NULL, 0x32000, NULL);
 	}
-	set_handlers(winch_pipe[0], winch, NULL, NULL, fn, EL_TYPE_FD);
+	set_handlers(winch_pipe[0], winch, NULL, NULL, fn);
 }
 
 void
@@ -597,7 +597,7 @@ handle_mouse(int cons, void (*fn)(void *, char *, int),
 		return NULL;
 	}
 	_beginthread(mouse_thread, NULL, 0x10000, (void *) oms);
-	set_handlers(oms->p[0], (select_handler_T) mouse_handle, NULL, NULL, oms, EL_TYPE_FD);
+	set_handlers(oms->p[0], (select_handler_T) mouse_handle, NULL, NULL, oms);
 
 	return oms;
 }

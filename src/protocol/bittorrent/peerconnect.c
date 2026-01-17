@@ -447,7 +447,7 @@ init_bittorrent_listening_socket(struct connection *conn)
 
 	set_ip_tos_throughput(bittorrent_socket);
 	set_handlers(bittorrent_socket, accept_bittorrent_peer_connection,
-		     NULL, NULL, NULL, EL_TYPE_TCP);
+		     NULL, NULL, NULL);
 
 	return connection_state(S_OK);
 }

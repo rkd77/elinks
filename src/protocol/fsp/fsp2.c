@@ -356,7 +356,7 @@ fsp_transaction_send_loop(void *data)
 		fsp->w_delay = 1000;
 	}
 	fsp->t_delay += fsp->w_delay;
-	set_handlers(s->fd, fsp_transaction_continue, NULL, NULL, conn, EL_TYPE_UDP);
+	set_handlers(s->fd, fsp_transaction_continue, NULL, NULL, conn);
 }
 
 static void
@@ -397,7 +397,7 @@ fsp_transaction_continue(void *data)
 
 	/* process received packet */
 	if (fsp_pkt_read(&fsp->in, fsp->buf, r) < 0) {
-		set_handlers(s->fd, fsp_transaction_continue, NULL, NULL, conn, EL_TYPE_UDP);
+		set_handlers(s->fd, fsp_transaction_continue, NULL, NULL, conn);
 		/* unpack failed */
 		return;
 	}
@@ -406,14 +406,14 @@ fsp_transaction_continue(void *data)
 	if ((fsp->in.seq & 0xfff8) != s->seq) {
 		/* duplicate */
 		fsp->dupes++;
-		set_handlers(s->fd, fsp_transaction_continue, NULL, NULL, conn, EL_TYPE_UDP);
+		set_handlers(s->fd, fsp_transaction_continue, NULL, NULL, conn);
 		return;
 	}
 
 	/* check command code */
 	if ((fsp->in.cmd != fsp->out.cmd) && (fsp->in.cmd != FSP_CC_ERR)) {
 		fsp->dupes++;
-		set_handlers(s->fd, fsp_transaction_continue, NULL, NULL, conn, EL_TYPE_UDP);
+		set_handlers(s->fd, fsp_transaction_continue, NULL, NULL, conn);
 		return;
 	}
 
@@ -422,7 +422,7 @@ fsp_transaction_continue(void *data)
 		fsp->out.cmd == FSP_CC_GET_FILE || fsp->out.cmd == FSP_CC_UP_LOAD ||
 		fsp->out.cmd == FSP_CC_GRAB_FILE || fsp->out.cmd == FSP_CC_INFO) ) {
 		fsp->dupes++;
-		set_handlers(s->fd, fsp_transaction_continue, NULL, NULL, conn, EL_TYPE_UDP);
+		set_handlers(s->fd, fsp_transaction_continue, NULL, NULL, conn);
 		return;
 	}
 

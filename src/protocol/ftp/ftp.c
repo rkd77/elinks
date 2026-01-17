@@ -1149,7 +1149,7 @@ ftp_retr_file(struct socket *socket, struct read_buffer *rb)
 		return;
 	}
 	set_handlers(conn->data_socket->fd, (select_handler_T) ftp_data_accept,
-		     NULL, NULL, conn, EL_TYPE_TCP);
+		     NULL, NULL, conn);
 
 	/* read_from_socket(conn->socket, rb, ftp_got_final_response); */
 	ftp_got_final_response(socket, rb);
@@ -1514,7 +1514,7 @@ ftp_data_accept(struct connection *conn)
 
 	set_handlers(newsock,
 		     (select_handler_T) got_something_from_data_connection,
-		     NULL, NULL, conn, EL_TYPE_TCP);
+		     NULL, NULL, conn);
 }
 
 /* A read handler for conn->data_socket->fd.  This function reads

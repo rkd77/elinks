@@ -24,9 +24,7 @@
 #include "intl/libintl.h"
 #include "osdep/osdep.h"
 #include "osdep/win32/overrides.h"
-#ifndef CONFIG_LIBUV
 #include "osdep/win32/vt100.h"
-#endif
 #include "osdep/win32/win32.h"
 #include "terminal/mouse.h"
 #include "terminal/terminal.h"
@@ -326,9 +324,6 @@ win32_write(int fd, const void *buf, unsigned len)
 		break;
 
 	case FDT_TERMINAL:
-#ifdef CONFIG_LIBUV
-		if (0) {}
-#else
 		if (isatty(STDOUT_FILENO) > 0) {
 			if (is_xterm()) {
 				rc = write(STDOUT_FILENO, buf, len);
@@ -338,7 +333,6 @@ win32_write(int fd, const void *buf, unsigned len)
 #endif
 			}
 		}
-#endif
 		else {
 			/* stdout redirected */
 			rc = write(STDOUT_FILENO, buf, len);
@@ -352,10 +346,8 @@ win32_write(int fd, const void *buf, unsigned len)
 		break;
 	}
 
-#ifndef CONFIG_LIBUV
 	TRACE("fd %d, buf 0x%p, len %u -> rc %d; %s",
 	      orig_fd, buf, len, rc, rc < 0 ? win32_strerror(errno) : "okay");
-#endif
 	return rc;
 }
 

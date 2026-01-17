@@ -751,7 +751,7 @@ connect_socket(struct socket *csocket, struct connection_state state)
 		    || errno == EINPROGRESS) {
 			/* It will take some more time... */
 			set_handlers(sock, NULL, (select_handler_T) connected,
-				     (select_handler_T) dns_exception, csocket, EL_TYPE_TCP);
+				     (select_handler_T) dns_exception, csocket);
 			csocket->ops->set_state(csocket, connection_state(S_CONN));
 			return;
 		}
@@ -886,7 +886,7 @@ write_select(struct socket *socket)
 					      : NULL;
 
 				set_handlers(socket->fd, read_handler, NULL,
-					     error_handler, socket, EL_TYPE_TCP);
+					     error_handler, socket);
 			}
 
 			mem_free_set(&socket->write_buffer, NULL);
@@ -929,7 +929,7 @@ write_to_socket(struct socket *socket, char *data, int len,
 	}
 
 	set_handlers(socket->fd, read_handler, (select_handler_T) write_select,
-		     (select_handler_T) exception, socket, EL_TYPE_TCP);
+		     (select_handler_T) exception, socket);
 	socket->ops->set_state(socket, state);
 }
 
@@ -1091,7 +1091,7 @@ read_from_socket(struct socket *socket, struct read_buffer *buffer,
 	}
 
 	set_handlers(socket->fd, (select_handler_T) read_select, write_handler,
-		     (select_handler_T) exception, socket, EL_TYPE_TCP);
+		     (select_handler_T) exception, socket);
 }
 
 static void

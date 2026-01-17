@@ -155,9 +155,6 @@
 /* Define if you want: libsixel support */
 #mesondefine CONFIG_LIBSIXEL
 
-/* Define if you want: libuv support */
-#mesondefine CONFIG_LIBUV
-
 /* Define if you want: libwebp support */
 #mesondefine CONFIG_LIBWEBP
 
@@ -739,9 +736,6 @@
 
 /* Define to 1 if you have the `unsetenv' function. */
 #mesondefine HAVE_UNSETENV
-
-/* Define to 1 if you have the <uv.h> header file. */
-#mesondefine HAVE_UV_H
 
 /* Define if you have variadic macros */
 #mesondefine HAVE_VARIADIC_MACROS

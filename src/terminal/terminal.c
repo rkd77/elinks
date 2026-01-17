@@ -217,7 +217,7 @@ init_term(int fdin, int fdout)
 	add_to_list(terminals, term);
 
 	set_handlers(fdin, (select_handler_T) in_term, NULL,
-		     (select_handler_T) destroy_terminal, term, term->fdin ? EL_TYPE_PIPE : EL_TYPE_TTY);
+		     (select_handler_T) destroy_terminal, term);
 	return term;
 }
 
@@ -368,7 +368,7 @@ unblock_terminal(struct terminal *term)
 	close_handle((void *) (intptr_t) term->blocked);
 	term->blocked = -1;
 	set_handlers(term->fdin, (select_handler_T) in_term, NULL,
-		     (select_handler_T) destroy_terminal, term, term->fdin ? EL_TYPE_PIPE : EL_TYPE_TTY);
+		     (select_handler_T) destroy_terminal, term);
 	unblock_itrm();
 	redraw_terminal_cls(term);
 	if (term->textarea_data)	/* XXX */
@@ -431,15 +431,15 @@ exec_on_master_terminal(struct terminal *term,
 			     (select_handler_T) unblock_terminal,
 			     NULL,
 			     (select_handler_T) unblock_terminal,
-			     term, EL_TYPE_PIPE);
+			     term);
 
 		set_handlers(term->fdin, NULL, NULL,
 			     (select_handler_T) destroy_terminal,
-			     term, term->fdin ? EL_TYPE_PIPE : EL_TYPE_TTY);
+			     term);
 
 	} else {
 		set_handlers(blockh, close_handle, NULL,
-			     close_handle, (void *) (intptr_t) blockh, EL_TYPE_PIPE);
+			     close_handle, (void *) (intptr_t) blockh);
 	}
 }
 
@@ -596,11 +596,7 @@ int
 check_terminal_pipes(void)
 {
 	ELOG
-#ifdef CONFIG_LIBUV
-	return uv_pipe(terminal_pipe, UV_NONBLOCK_PIPE, UV_NONBLOCK_PIPE);
-#else
 	return c_pipe(terminal_pipe);
-#endif
 }
 
 void
@@ -617,10 +613,9 @@ attach_terminal(int in, int out, int ctl, void *info, int len)
 	ELOG
 	struct terminal *term;
 
-#ifndef CONFIG_LIBUV
 	if (set_nonblocking_fd(terminal_pipe[0]) < 0) return NULL;
 	if (set_nonblocking_fd(terminal_pipe[1]) < 0) return NULL;
-#endif
+
 	handle_trm(in, out, out, terminal_pipe[1], ctl, info, len, 0);
 
 	term = init_term(terminal_pipe[0], out);

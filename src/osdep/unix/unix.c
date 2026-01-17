@@ -119,7 +119,7 @@ handle_mouse(int cons, void (*fn)(void *, char *, int),
 	gms->cons = cons;
 	gms->fn = fn;
 	gms->data = data;
-	set_handlers(h, (select_handler_T) gpm_mouse_in, NULL, NULL, gms, EL_TYPE_FD);
+	set_handlers(h, (select_handler_T) gpm_mouse_in, NULL, NULL, gms);
 
 	return gms;
 }
@@ -162,7 +162,7 @@ resume_mouse(void *h)
 	gms->h = init_mouse(gms->cons, 0);
 	if (gms->h < 0) return;
 
-	set_handlers(gms->h, (select_handler_T) gpm_mouse_in, NULL, NULL, gms, EL_TYPE_FD);
+	set_handlers(gms->h, (select_handler_T) gpm_mouse_in, NULL, NULL, gms);
 }
 #endif
 

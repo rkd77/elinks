@@ -103,11 +103,7 @@ struct module sftp_protocol_module = struct_module(
 struct ftpes_connection_info {
 	CURL *easy;
 	char *url;
-#ifdef CONFIG_LIBUV
-	struct datauv *global;
-#else
 	GlobalInfo *global;
-#endif
 	char error[CURL_ERROR_SIZE];
 	int conn_state;
 	int buf_pos;

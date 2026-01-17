@@ -44,7 +44,7 @@ extern "C" {
 /* Attempt to workaround the EINTR mess. */
 #if defined(EINTR) && !defined(CONFIG_OS_DOS)
 
-#if defined(TEMP_FAILURE_RETRY) && !defined(CONFIG_LIBUV)	/* GNU libc */
+#if defined(TEMP_FAILURE_RETRY) 	/* GNU libc */
 #define safe_read(fd, buf, count) TEMP_FAILURE_RETRY(read(fd, buf, count))
 #define safe_write(fd, buf, count) TEMP_FAILURE_RETRY(write(fd, buf, count))
 #else /* TEMP_FAILURE_RETRY */

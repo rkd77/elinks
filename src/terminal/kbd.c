@@ -26,10 +26,6 @@
 #define HPUX_PIPE	1
 #endif
 
-#ifdef CONFIG_LIBUV
-#include <uv.h>
-#endif
-
 #include "elinks.h"
 
 #include "config/options.h"
@@ -111,7 +107,7 @@ itrm_queue_write(struct itrm *itrm)
 			     get_handler(itrm->out.sock, SELECT_HANDLER_READ),
 			     NULL,
 			     get_handler(itrm->out.sock, SELECT_HANDLER_ERROR),
-			     get_handler_data(itrm->out.sock), EL_TYPE_PIPE);
+			     get_handler_data(itrm->out.sock));
 	} else {
 		assert(itrm->out.queue.len > 0);
 		memmove(itrm->out.queue.data, itrm->out.queue.data + written, itrm->out.queue.len);
@@ -151,7 +147,7 @@ itrm_queue_event(struct itrm *itrm, char *data, int len)
 		set_handlers(itrm->out.sock,
 			     get_handler(itrm->out.sock, SELECT_HANDLER_READ),
 			     (select_handler_T) itrm_queue_write,
-			     (select_handler_T) free_itrm, itrm, EL_TYPE_PIPE);
+			     (select_handler_T) free_itrm, itrm);
 	}
 }
 
@@ -403,7 +399,7 @@ handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
 
 	if (sock_in != std_out) {
 		set_handlers(sock_in, (select_handler_T) in_sock,
-			     NULL, (select_handler_T) free_itrm, itrm, EL_TYPE_TCP);
+			     NULL, (select_handler_T) free_itrm, itrm);
 	}
 
 	get_terminal_name(info.name);
@@ -736,11 +732,11 @@ has_nul_byte:
 		if (fg == TERM_EXEC_FG) {
 			set_handlers(blockh, (select_handler_T) unblock_itrm_x,
 				     NULL, (select_handler_T) unblock_itrm_x,
-				     (void *) (intptr_t) blockh, EL_TYPE_PIPE);
+				     (void *) (intptr_t) blockh);
 
 		} else {
 			set_handlers(blockh, close_handle, NULL, close_handle,
-				     (void *) (intptr_t) blockh, EL_TYPE_PIPE);
+				     (void *) (intptr_t) blockh);
 		}
 	}
 
@@ -1363,68 +1359,6 @@ in_kbd(struct itrm *itrm)
 	while (process_queue(itrm));
 }
 
-#ifdef CONFIG_LIBUV
-void
-read_kbd_cb(uv_stream_t *stream, ssize_t nread, const uv_buf_t *buf)
-{
-	ELOG
-	struct libuv_priv *priv = (struct libuv_priv *)uv_handle_get_data((uv_handle_t *)stream);
-
-	if (!priv) {
-		return;
-	}
-	int fd = priv->fd;
-	struct itrm *itrm = (struct itrm *)get_handler_data(fd);
-
-	if (!itrm) {
-		return;
-	}
-	kill_timer(&itrm->timer);
-
-	if (nread < 0) {
-		uv_read_stop(stream);
-		unhandle_itrm_stdin(itrm);
-		while (process_queue(itrm));
-
-		if (nread == UV_EOF) {
-			mem_free_set(&threads[fd].handle, NULL);
-			mem_free(priv);
-			mem_free_if(buf->base);
-		}
-		check_bottom_halves();
-		return;
-	}
-
-	if (itrm->in.queue.len + nread > itrm->in.queue.size) {
-		unsigned char *tmp = mem_realloc(itrm->in.queue.data, itrm->in.queue.len + nread);
-
-		if (!tmp) {
-			mem_free_if(buf->base);
-			uv_read_stop(stream);
-			unhandle_itrm_stdin(itrm);
-			while (process_queue(itrm));
-			check_bottom_halves();
-			return;
-		}
-		itrm->in.queue.data = tmp;
-		itrm->in.queue.size = itrm->in.queue.len + nread;
-	}
-	memcpy(itrm->in.queue.data + itrm->in.queue.len, buf->base, nread);
-	itrm->in.queue.len += nread;
-	mem_free_if(buf->base);
-
-	while (process_queue(itrm));
-	check_bottom_halves();
-}
-
-void
-alloc_kbd_cb(uv_handle_t* handle, size_t suggested_size, uv_buf_t* buf)
-{
-	ELOG
-	buf->base = mem_alloc(ITRM_IN_QUEUE_SIZE);
-	buf->len = ITRM_IN_QUEUE_SIZE;
-}
-#endif
 
 /** Enable reading from itrm_in.std.  ELinks will read any available
  * bytes from the tty into itrm->in.queue and then parse them.
@@ -1438,7 +1372,7 @@ handle_itrm_stdin(struct itrm *itrm)
 	if_assert_failed return;
 
 	set_handlers(itrm->in.std, (select_handler_T) in_kbd, NULL,
-		     (select_handler_T) free_itrm, itrm, EL_TYPE_TTY);
+		     (select_handler_T) free_itrm, itrm);
 }
 
 /** Disable reading from itrm_in.std.  Reading should be disabled
@@ -1452,5 +1386,5 @@ unhandle_itrm_stdin(struct itrm *itrm)
 	if_assert_failed return;
 
 	set_handlers(itrm->in.std, (select_handler_T) NULL, NULL,
-		     (select_handler_T) free_itrm, itrm, EL_TYPE_TTY);
+		     (select_handler_T) free_itrm, itrm);
 }

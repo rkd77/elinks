@@ -90,29 +90,8 @@ void check_multi_info(GlobalInfo *g);
 void mcode_or_die(const char *where, CURLMcode code);
 #endif
 
-#if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBUV)
-struct datauv {
-	uv_timer_t timeout;
-	uv_loop_t *loop;
-	CURLM *multi;
-};
 
-struct curl_context {
-	uv_poll_t poll_handle;
-	curl_socket_t sockfd;
-	struct datauv *uv;
-};
-
-extern struct datauv g;
-
-void check_multi_info(struct datauv *g);
-
-void mcode_or_die(const char *where, CURLMcode code);
-#endif
-
-
-
-#if defined(CONFIG_LIBCURL) && !defined(CONFIG_LIBEV) && !defined(CONFIG_LIBEVENT) && !defined(CONFIG_LIBUV)
+#if defined(CONFIG_LIBCURL) && !defined(CONFIG_LIBEV) && !defined(CONFIG_LIBEVENT)
 /* Global information, common to all connections */
 typedef struct _GlobalInfo
 {
@@ -154,15 +133,6 @@ enum select_handler_type {
 	SELECT_HANDLER_ERROR,
 };
 
-enum el_type_hint {
-	EL_TYPE_NONE = 0,
-	EL_TYPE_TCP,
-	EL_TYPE_UDP,
-	EL_TYPE_TTY,
-	EL_TYPE_FD,
-	EL_TYPE_PIPE,
-};
-
 /* Get a registered select handler. */
 select_handler_T get_handler(int fd, enum select_handler_type type);
 
@@ -173,12 +143,11 @@ void set_handlers(int fd,
 		  select_handler_T read_handler,
 		  select_handler_T write_handler,
 		  select_handler_T error_handler,
-		  void *data,
-		  enum el_type_hint type_hint);
+		  void *data);
 
 /* Clear handlers associated with @fd. */
 #define clear_handlers(fd) \
-	set_handlers(fd, NULL, NULL, NULL, NULL, EL_TYPE_TCP)
+	set_handlers(fd, NULL, NULL, NULL, NULL)
 
 struct thread {
 	select_handler_T read_func;
@@ -188,10 +157,6 @@ struct thread {
 #ifdef USE_LIBEVENT
 	struct event *read_event;
 	struct event *write_event;
-#endif
-#ifdef CONFIG_LIBUV
-	uv_handle_t *handle;
-	enum el_type_hint type_hint;
 #endif
 };
 
@@ -205,13 +170,6 @@ int can_write(int fd);
 void terminate_select(void);
 
 const char *get_libevent_version(void);
-const char *get_libuv_version(void);
-
-#ifdef CONFIG_LIBUV
-struct libuv_priv {
-	int fd;
-};
-#endif
 
 #ifdef __cplusplus
 }
