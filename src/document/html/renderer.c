@@ -2002,19 +2002,20 @@ html_special_form(struct part *part, struct form *form)
 }
 
 static void
-html_special_form_control(struct part *part, struct el_form_control *fc)
+html_special_form_control(struct part *part, struct el_form_control **fcp)
 {
 	ELOG
 	struct form *form;
 
-	assert(part && fc);
+	assert(part && fcp && *fcp);
 	if_assert_failed return;
 
 	if (!part->document) {
-		done_form_control(fc);
-		mem_free(fc);
+		done_form_control(*fcp);
+		mem_free_set(fcp, NULL);
 		return;
 	}
+	struct el_form_control *fc = *fcp;
 
 	fc->g_ctrl_num = renderer_context.g_ctrl_num++;
 
@@ -2193,9 +2194,9 @@ html_special(struct html_context *html_context, html_special_type_T c, ...)
 		}
 		case SP_CONTROL:
 		{
-			struct el_form_control *fc = va_arg(l, struct el_form_control *);
+			struct el_form_control **fcp = va_arg(l, struct el_form_control **);
 
-			html_special_form_control(part, fc);
+			html_special_form_control(part, fcp);
 			break;
 		}
 		case SP_TABLE:
