@@ -201,8 +201,8 @@ render:
 			int yy;
 
 			for (yy = j + 1; yy < document->iframeset_desc->n; yy++) {
-				document->iframeset_desc->iframe_desc[yy].box.y += doc_view->document->height;
-				document->iframeset_desc->iframe_desc[yy].nlink += doc_view->document->nlinks;
+				document->iframeset_desc->iframe_desc[yy].box.y += (doc_view->document ? doc_view->document->height : 0);
+				document->iframeset_desc->iframe_desc[yy].nlink += (doc_view->document ? doc_view->document->nlinks : 0);
 			}
 		} else if (iframe_desc->cache_id != cached->cache_id) {
 			if (!iframe_desc->hidden) {
@@ -212,8 +212,8 @@ render:
 			int yy;
 
 			for (yy = j + 1; yy < document->iframeset_desc->n; yy++) {
-				document->iframeset_desc->iframe_desc[yy].box.y -= doc_view->document->height;
-				document->iframeset_desc->iframe_desc[yy].nlink -= doc_view->document->nlinks;
+				document->iframeset_desc->iframe_desc[yy].box.y -= (doc_view->document ? doc_view->document->height : 0);
+				document->iframeset_desc->iframe_desc[yy].nlink -= (doc_view->document ? doc_view->document->nlinks : 0);
 			}
 			goto render;
 		}
