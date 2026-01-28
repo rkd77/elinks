@@ -38,6 +38,7 @@ init_vs(struct view_state *vs, struct uri *uri, int plain)
 	vs->old_current_link = -1;
 	vs->current_search_number = -1;
 	vs->plain = plain;
+	vs->wrap = get_opt_bool("document.browse.wrap", NULL);
 	vs->uri = uri ? get_uri_reference(uri) : NULL;
 	vs->did_fragment = !uri->fragmentlen;
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
