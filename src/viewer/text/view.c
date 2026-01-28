@@ -1029,6 +1029,29 @@ move_cursor_line_start(struct session *ses, struct document_view *doc_view)
 	return move_cursor_rel(ses, doc_view, -x, 0);
 }
 
+enum frame_event_status
+move_cursor_line_end(struct session *ses, struct document_view *doc_view)
+{
+	ELOG
+	struct view_state *vs;
+	struct el_box *box;
+	int x, y, xend;
+
+	assert(ses && doc_view && doc_view->vs && doc_view->document);
+	if_assert_failed return FRAME_EVENT_OK;
+
+	vs = doc_view->vs;
+	box = &doc_view->box;
+	x = vs->x + ses->tab->x - box->x;
+	y = vs->y + ses->tab->y - box->y;
+
+	if (y >= doc_view->document->height) {
+		return FRAME_EVENT_OK;
+	}
+	xend = int_max(doc_view->document->data[y].length - 1, 0);
+	return move_cursor_rel(ses, doc_view, xend - x, 0);
+}
+
 static enum frame_event_status
 move_clipboard_pos(struct session *ses, struct document_view *view, enum frame_event_status status)
 {

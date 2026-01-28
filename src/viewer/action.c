@@ -441,6 +441,10 @@ do_action(struct session *ses, main_action_T action_id, int verbose)
 			status = move_cursor_line_start(ses, doc_view);
 			break;
 
+		case ACT_MAIN_MOVE_CURSOR_LINE_END:
+			status = move_cursor_line_end(ses, doc_view);
+			break;
+
 		case ACT_MAIN_MOVE_HALF_PAGE_DOWN:
 			status = move_half_page_down(ses, doc_view);
 			if (status != FRAME_EVENT_REFRESH) {
