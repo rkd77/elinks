@@ -552,6 +552,10 @@ static union option_info config_options_info[] = {
 		"table_move_order", OPT_ZERO, 0,
 		N_("Move by columns in table, instead of rows.")),
 
+	INIT_OPT_BOOL("document.browse", N_("Wrap"),
+		"wrap", OPT_ZERO, 0,
+		N_("Whether to wrap lines by default.")),
+
 	/* Keep options in alphabetical order. */
 
 
