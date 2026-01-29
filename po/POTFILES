@@ -531,7 +531,7 @@ src/js/spidermonkey/window.cpp
 src/js/spidermonkey/window.h
 src/js/spidermonkey/xhr.cpp
 src/js/spidermonkey/xhr.h
-src/js/timer.c
+src/js/timer.cpp
 src/js/timer.h
 src/main/event.c
 src/main/event.h
