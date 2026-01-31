@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.10.6.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2026-01-29 12:45+0100\n"
-"PO-Revision-Date: 2025-11-03 19:57+0100\n"
+"POT-Creation-Date: 2026-01-31 22:40+0100\n"
+"PO-Revision-Date: 2026-01-31 22:37+0100\n"
 "Last-Translator: Strahinya Radich (Страхиња Радић) <sr@strahinja.org>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "Language: sr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: poe 1.8.6-g8e8ab2c\n"
+"X-Generator: poe 1.8.7-g37f924f\n"
 
 #: src/bfu/hierbox.c:343
 msgid "Close"
@@ -1123,9 +1123,8 @@ msgid "Move cursor left"
 msgstr "Померање курсора налево"
 
 #: src/config/actions-main.inc:72
-#, fuzzy
 msgid "Move cursor to the end of the line"
-msgstr "Померање курсора на почетак реда"
+msgstr "Померање курсора на крај реда"
 
 #: src/config/actions-main.inc:73
 msgid "Move cursor to the start of the line"
@@ -3389,12 +3388,11 @@ msgstr "Кретање по колонама у табелама уместо п
 
 #: src/config/options.inc:555
 msgid "Wrap"
-msgstr ""
+msgstr "Прелом"
 
 #: src/config/options.inc:557
-#, fuzzy
 msgid "Whether to wrap lines by default."
-msgstr "Да ли ће се додељивати бројеви везама у истоварном излазу."
+msgstr "Да ли ће се подразумевано преламати редови."
 
 #. Keep options in alphabetical order.
 #: src/config/options.inc:563
@@ -3909,18 +3907,16 @@ msgid "Options concerning the display of HTML pages."
 msgstr "Опције које се тичу приказивања HTML страница."
 
 #: src/config/options.inc:842
-#, fuzzy
 msgid "Always ignore <noscript> content"
-msgstr "Игнорисање <noscript> садржаја"
+msgstr "Стално игнорисање <noscript> садржаја"
 
 #: src/config/options.inc:844
-#, fuzzy
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag, even if ECMAScript "
 "is disabled or not compiled-in."
 msgstr ""
-"Да ли ће се игнорисати садржај окружен <noscript> ознакама када је омогућен "
-"ECMAScript."
+"Да ли ће се игнорисати садржај окружен <noscript> ознакама, чак и када је "
+"ECMAScript искључен или није укомпајлиран."
 
 #: src/config/options.inc:847 src/config/options.inc:923
 msgid "Compress empty lines"
@@ -4473,9 +4469,8 @@ msgid "Clipboard"
 msgstr "Клипборд"
 
 #: src/config/options.inc:1213
-#, fuzzy
 msgid "Clipboard settings."
-msgstr "Подешавања боја"
+msgstr "Подешавања клипборда."
 
 #: src/config/options.inc:1215
 msgid "Clipboard filename"
@@ -4495,20 +4490,19 @@ msgstr ""
 
 #: src/config/options.inc:1221
 msgid "Remove leading spaces"
-msgstr ""
+msgstr "Уклањање почетних размака"
 
 #: src/config/options.inc:1223
 msgid "Whether to remove leading spaces when copying to clipboard."
-msgstr ""
+msgstr "Да ли ће се уклањати почетни размаци када се копира на клипборд."
 
 #: src/config/options.inc:1225
-#, fuzzy
 msgid "Remove trailing spaces"
-msgstr "Уклањање привремених датотека"
+msgstr "Уклањање крајњих размака"
 
 #: src/config/options.inc:1227
 msgid "Whether to remove trailing spaces when copying to clipboard."
-msgstr ""
+msgstr "Да ли ће се уклањати крајњи размаци када се копира на клипборд."
 
 #: src/config/options.inc:1230
 msgid "Color settings"
@@ -7053,6 +7047,14 @@ msgstr "Турски"
 msgid "Ukrainian"
 msgstr "Украјински"
 
+#: src/js/ecmascript-c.c:61
+msgid "Ecmascript enabled"
+msgstr "Ecmascript активиран"
+
+#: src/js/ecmascript-c.c:63
+msgid "Ecmascript disabled"
+msgstr "Ecmascript деактивиран"
+
 #: src/js/ecmascript.c:75
 msgid "ECMAScript options."
 msgstr "Опције ECMAScript-а."
@@ -7140,14 +7142,6 @@ msgstr ""
 "%d секунди. То вероватно значи да у скрипту постоји\n"
 "грешка и да би могао да заустави цео ELinks, па је зато\n"
 "извршавање скрипта прекинуто."
-
-#: src/js/ecmascript-c.c:61
-msgid "Ecmascript enabled"
-msgstr "Ecmascript активиран"
-
-#: src/js/ecmascript-c.c:63
-msgid "Ecmascript disabled"
-msgstr "Ecmascript деактивиран"
 
 #: src/js/mujs.c:280 src/js/quickjs.c:458 src/js/spidermonkey.cpp:138
 msgid "A script embedded in the current document raised the following:\n"
@@ -8902,18 +8896,18 @@ msgstr "FTPES"
 msgid "SFTP"
 msgstr "SFTP"
 
-#: src/protocol/curl/ftp.c:209 src/protocol/fsp/fsp2.c:966
-#: src/protocol/fsp/fsp.c:169 src/protocol/ftp/ftp.c:1303 src/util/file.h:256
+#: src/protocol/curl/ftp.c:209 src/protocol/fsp/fsp.c:169
+#: src/protocol/fsp/fsp2.c:966 src/protocol/ftp/ftp.c:1303 src/util/file.h:256
 msgid "%b %e  %Y"
 msgstr "%b %e  %Y"
 
-#: src/protocol/curl/ftp.c:211 src/protocol/fsp/fsp2.c:968
-#: src/protocol/fsp/fsp.c:171 src/protocol/ftp/ftp.c:1305 src/util/file.h:258
+#: src/protocol/curl/ftp.c:211 src/protocol/fsp/fsp.c:171
+#: src/protocol/fsp/fsp2.c:968 src/protocol/ftp/ftp.c:1305 src/util/file.h:258
 msgid "%b %e %H:%M"
 msgstr "%b %e %H:%M"
 
-#: src/protocol/curl/ftp.c:218 src/protocol/fsp/fsp2.c:974
-#: src/protocol/fsp/fsp.c:177 src/protocol/ftp/ftp.c:1312 src/util/file.h:265
+#: src/protocol/curl/ftp.c:218 src/protocol/fsp/fsp.c:177
+#: src/protocol/fsp/fsp2.c:974 src/protocol/ftp/ftp.c:1312 src/util/file.h:265
 msgid "             "
 msgstr "             "
 
@@ -9024,7 +9018,7 @@ msgid "Finger"
 msgstr "Finger"
 
 #. name:
-#: src/protocol/fsp/fsp2.c:110 src/protocol/fsp/fsp.c:56
+#: src/protocol/fsp/fsp.c:56 src/protocol/fsp/fsp2.c:110
 msgid "FSP"
 msgstr "FSP"
 
