@@ -340,6 +340,18 @@ init_gopher_connection_info(struct connection *conn)
 		selectorlen--;
 	}
 
+	if (entity_info->type == '1') {
+		if ('1' == (*selector)) {
+			selector++;
+			selectorlen--;
+		}
+		else {
+			if (strncmp(selector, "/1", 2) == 0) {
+				selectorlen--;
+			}
+		}
+	}
+
 	state = add_gopher_command(conn, &command, entity, selector, selectorlen);
 	if (!is_in_state(state, S_CONN))
 		return state;
