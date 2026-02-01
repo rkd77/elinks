@@ -329,6 +329,7 @@ init_gopher_connection_info(struct connection *conn)
 	 * _after_ the Gopher entity. If the <entity-char> '/' combo is not
 	 * found assume that the whole URI data part is the selector. */
 	entity_info = get_gopher_entity_info(entity);
+
 	if (entity_info->type == GOPHER_UNKNOWN && entity != GOPHER_UNKNOWN) {
 		selector--;
 		selectorlen++;
@@ -340,7 +341,7 @@ init_gopher_connection_info(struct connection *conn)
 		selectorlen--;
 	}
 
-	if (entity_info->type == '1') {
+	if (entity_info->type == GOPHER_DIRECTORY) {
 		if ('1' == (*selector)) {
 			selector++;
 			selectorlen--;
@@ -573,7 +574,6 @@ add_gopher_menu_line(struct string *buffer, char *line)
 			add_html_to_string(buffer, name, strlen(name));
 			break;
 		}
-
 		assert(selector && host);
 
 		if (entity == GOPHER_TELNET) {
@@ -591,11 +591,20 @@ add_gopher_menu_line(struct string *buffer, char *line)
 					     "tn3270", selector, (*selector ? "@" : ""), host);
 
 		} else {
-			add_format_to_string(&address, "gopher://%s/%c",
-				host, entity);
+			char *url = NULL;
+			if (entity == GOPHER_HTML) {
+				url = strstr(selector, "URL:");
+			}
 
-			/* Encode selector string */
-			encode_selector_string(&address, selector);
+			if (url) {
+				add_to_string(&address, url + 4);
+			} else {
+				add_format_to_string(&address, "gopher://%s/%c",
+					host, entity);
+
+				/* Encode selector string */
+				encode_selector_string(&address, selector);
+			}
 		}
 
 		/* Error response from Gopher doesn't deserve to
