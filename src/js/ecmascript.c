@@ -296,7 +296,7 @@ delayed_reload(void *data)
 	struct session *ses = rel->ses;
 	struct document *document = rel->document;
 
-	//object_unlock(document); // better leak than sefgfault
+	//object_unlock(document); // better a memleak than a segfault
 
 	reset_document(document);
 	document->links_sorted = 0;
