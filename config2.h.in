@@ -152,6 +152,9 @@
 /* Define if you want: libevent support */
 #mesondefine CONFIG_LIBEVENT
 
+/* Define if you want: librsvg support */
+#mesondefine CONFIG_LIBRSVG
+
 /* Define if you want: libsixel support */
 #mesondefine CONFIG_LIBSIXEL
 

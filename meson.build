@@ -85,6 +85,7 @@ conf_data.set('CONFIG_ECMASCRIPT_SMJS', get_option('spidermonkey'))
 conf_data.set('CONFIG_SCRIPTING_GUILE', get_option('guile'))
 conf_data.set('CONFIG_SCRIPTING_PERL', get_option('perl'))
 conf_data.set('CONFIG_SCRIPTING_PYTHON', get_option('python'))
+conf_data.set('CONFIG_LIBRSVG', get_option('librsvg'))
 conf_data.set('CONFIG_LIBSIXEL', get_option('libsixel'))
 conf_data.set('CONFIG_LIBWEBP', get_option('libwebp'))
 conf_data.set('CONFIG_LIBAVIF', get_option('libavif'))
@@ -735,12 +736,21 @@ if conf_data.get('CONFIG_LIBAVIF')
     deps += avifdeps
 endif
 
+if conf_data.get('CONFIG_LIBRSVG')
+    rsvgdeps = dependency('librsvg-2.0', static: st)
+    deps += rsvgdeps
+endif
+
 if conf_data.get('CONFIG_LIBWEBP') and not conf_data.get('CONFIG_KITTY') and not conf_data.get('CONFIG_LIBSIXEL')
     error('kitty or libsixel must be enabled for libwebp support')
 endif
 
 if conf_data.get('CONFIG_LIBAVIF') and not conf_data.get('CONFIG_KITTY') and not conf_data.get('CONFIG_LIBSIXEL')
     error('kitty or libsixel must be enabled for libavif support')
+endif
+
+if conf_data.get('CONFIG_LIBRSVG') and not conf_data.get('CONFIG_KITTY') and not conf_data.get('CONFIG_LIBSIXEL')
+    error('kitty or libsixel must be enabled for librsvg support')
 endif
 
 if conf_data.get('CONFIG_OS_DOS')

@@ -41,6 +41,7 @@ option('libcss', type: 'boolean', value: true, description: 'whether to compile 
 option('libcurl', type: 'boolean', value: true, description: 'whether to compile libcurl support. This option is recommended for js support')
 option('libev', type: 'boolean', value: false, description: 'compile with libev (libevent compatibility mode)')
 option('libevent', type: 'boolean', value: false, description: 'compile with libevent.')
+option('librsvg', type: 'boolean', value: false, description: 'support for SVG images')
 option('libsixel', type: 'boolean', value: false, description: 'whether to compile libsixel support to show images directly on sixel compatible terminals')
 option('libwebp', type: 'boolean', value: false, description: 'support for WEBP images')
 option('luapkg', type: 'string', value:'', description: 'Lua version')

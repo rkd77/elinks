@@ -1994,6 +1994,9 @@ struct {
 #ifdef CONFIG_LIBAVIF
 	{ "image/avif",			0 },
 #endif
+#ifdef CONFIG_LIBRSVG
+	{ "image/svg+xml",			0 },
+#endif
 #endif
 	{ NULL,				1 },
 };
