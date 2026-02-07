@@ -179,15 +179,25 @@ eldecode_rsvg(const unsigned char *data, int length, int *width, int *height, in
 	int ret = 0;
 	cairo_surface_t *surface = NULL;
 	cairo_t *cr = NULL;
-	gdouble out_width, out_height;
-	gboolean ok = rsvg_handle_get_intrinsic_size_in_pixels(handle, &out_width, &out_height);
+	RsvgLength out_width, out_height;
 
-	if (!ok) {
-		return NULL;
+	gboolean out_has_width = 0;
+	gboolean out_has_height = 0;
+	gboolean out_has_viewbox = 0;
+	RsvgRectangle out_viewbox;
+
+	rsvg_handle_get_intrinsic_dimensions(handle, &out_has_width, &out_width, &out_has_height, &out_height, &out_has_viewbox, &out_viewbox);
+
+	if (!out_has_width || !out_has_height) {
+		if (!out_has_viewbox) {
+			return NULL;
+		}
+		out_width.length  = out_viewbox.width;
+		out_height.length = out_viewbox.height;
 	}
-	*width = (int)out_width;
-	*height = (int)out_height;
-	surface = cairo_image_surface_create((typ == 4 ? CAIRO_FORMAT_ARGB32 : CAIRO_FORMAT_RGB24), out_width, out_height);
+	*width = (int)out_width.length;
+	*height = (int)out_height.length;
+	surface = cairo_image_surface_create((typ == 4 ? CAIRO_FORMAT_ARGB32 : CAIRO_FORMAT_RGB24), *width, *height);
 
 	if (!surface) {
 		goto cleanup;
@@ -204,8 +214,8 @@ eldecode_rsvg(const unsigned char *data, int length, int *width, int *height, in
 	RsvgRectangle viewport = {
 		.x = 0.0,
 		.y = 0.0,
-		.width = out_width,
-		.height = out_height,
+		.width = out_width.length,
+		.height = out_height.length,
 	};
 
 	if (!rsvg_handle_render_document(handle, cr, &viewport, &error)) {

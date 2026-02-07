@@ -737,7 +737,7 @@ if conf_data.get('CONFIG_LIBAVIF')
 endif
 
 if conf_data.get('CONFIG_LIBRSVG')
-    rsvgdeps = dependency('librsvg-2.0', static: st)
+    rsvgdeps = dependency('librsvg-2.0', static: st, version: '>=2.46')
     deps += rsvgdeps
 endif
 
