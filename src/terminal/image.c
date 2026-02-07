@@ -231,20 +231,15 @@ cleanup:
 	if (ret) {
 		const uint8_t *src = cairo_image_surface_get_data(surface);
 		int size = *width * *height;
+		dst = mem_alloc(size * typ);
 		int i;
 
-		if (typ == 4) {
-			dst = mem_alloc(size * 4);
-
-			if (dst) {
+		if (dst) {
+			if (typ == 4) {
 				for (i = 0; i < size; i++) {
 					el_cairo_argb32_pixel_to_rgba(src + i * 4, dst + i * 4);
 				}
-			}
-		} else {
-			dst = malloc(size * 3);
-
-			if (dst) {
+			} else {
 				for (i = 0; i < size; i++) {
 					el_cairo_rgb24_pixel_to_rgb(src + i * 4, dst + i * 3);
 				}
