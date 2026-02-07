@@ -5,6 +5,23 @@ You can see the complete list of recent changes, bugfixes and new features
 in the https://github.com/rkd77/felinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
+ELinks 0.19.1
+-------------
+
+Released on 2026-02-07
+
+* compilation fixes for Ruby scripting #410
+* Disable poll on macOS < 10.6
+* bookmarks xbel did not restore positions. #415
+* use after free in forms code
+* NULL dereference in iframes code (crash at github) #418
+* Add action move-cursor-line-end. #416
+* bool option document.browse.wrap. #420
+* bool options ui.clipboard.remove_leading_spaces and ui.clipboard.remove_trailing_spaces #416
+* Serbian translation update
+* fix in gopher #421
+
+
 ELinks 0.19.0
 -------------
 
