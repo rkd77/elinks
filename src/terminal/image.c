@@ -188,7 +188,7 @@ eldecode_rsvg(const unsigned char *data, int length, int *width, int *height, in
 
 	rsvg_handle_get_intrinsic_dimensions(handle, &out_has_width, &out_width, &out_has_height, &out_height, &out_has_viewbox, &out_viewbox);
 
-	if (!out_has_width || !out_has_height) {
+	if (!out_has_width || !out_has_height || out_has_viewbox) {
 		if (!out_has_viewbox) {
 			return NULL;
 		}
