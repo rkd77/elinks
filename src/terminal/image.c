@@ -176,6 +176,7 @@ eldecode_rsvg(const unsigned char *data, int length, int *width, int *height, in
 	if (!handle) {
 		return NULL;
 	}
+	uint8_t *dst = NULL;
 	int ret = 0;
 	cairo_surface_t *surface = NULL;
 	cairo_t *cr = NULL;
@@ -224,49 +225,34 @@ eldecode_rsvg(const unsigned char *data, int length, int *width, int *height, in
 	ret = 1;
 	cairo_surface_flush(surface);
 cleanup:
-	/* Free our memory and we are done! */
-	if (cr) {
-		cairo_destroy(cr);
-	}
-	if (!ret && surface) {
-		cairo_surface_destroy(surface);
-		surface = NULL;
-	}
+	cairo_destroy(cr);
 	g_object_unref(handle);
 
-	if (surface) {
+	if (ret) {
+		const uint8_t *src = cairo_image_surface_get_data(surface);
 		int size = *width * *height;
+		int i;
 
 		if (typ == 4) {
-			uint8_t *dst = mem_alloc(size * 4);
+			dst = mem_alloc(size * 4);
 
-			if (!dst) {
-				cairo_surface_destroy(surface);
-				return NULL;
+			if (dst) {
+				for (i = 0; i < size; i++) {
+					el_cairo_argb32_pixel_to_rgba(src + i * 4, dst + i * 4);
+				}
 			}
-			const uint8_t *src = cairo_image_surface_get_data(surface);
-			int i;
-			for (i = 0; i < size; i++) {
-				el_cairo_argb32_pixel_to_rgba(src + i * 4, dst + i * 4);
-			}
-			cairo_surface_destroy(surface);
-			return dst;
-		}
-		uint8_t *src = cairo_image_surface_get_data(surface);
-		uint8_t *dst = malloc(size * 3);
+		} else {
+			dst = malloc(size * 3);
 
-		if (!dst) {
-			cairo_surface_destroy(surface);
-			return NULL;
+			if (dst) {
+				for (i = 0; i < size; i++) {
+					el_cairo_rgb24_pixel_to_rgb(src + i * 4, dst + i * 3);
+				}
+			}
 		}
-		int i;
-		for (i = 0; i < size; i++) {
-			el_cairo_rgb24_pixel_to_rgb(src + i * 4, dst + i * 3);
-		}
-		cairo_surface_destroy(surface);
-		return dst;
 	}
-	return NULL;
+	cairo_surface_destroy(surface);
+	return dst;
 }
 #endif
 
