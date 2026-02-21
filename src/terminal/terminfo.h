@@ -14,6 +14,7 @@ const char *terminfo_set_foreground(int arg);
 const char *terminfo_set_background(int arg);
 const char *terminfo_set_standout(int arg);
 const char *terminfo_set_strike(int arg);
+const char *terminfo_orig_pair(void);
 
 int terminfo_max_colors(void);
 const char *terminfo_cursor_address(int y, int x);

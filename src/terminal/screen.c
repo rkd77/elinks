@@ -1026,8 +1026,17 @@ add_char16(struct string *screen, struct screen_driver *driver,
 			add_to_string(screen, terminfo_set_bold(bold));
 
 			if (driver->opt.color_mode != COLOR_MODE_MONO) {
-				add_to_string(screen, terminfo_set_foreground(TERM_COLOR_FOREGROUND_16(ch->c.color)));
-				add_to_string(screen, terminfo_set_background(TERM_COLOR_BACKGROUND_16(ch->c.color)));
+				if (ch->is_default_fg_color || ch->is_default_bg_color) {
+					add_to_string(screen, terminfo_orig_pair());
+				}
+
+				if (!ch->is_default_fg_color) {
+					add_to_string(screen, terminfo_set_foreground(TERM_COLOR_FOREGROUND_16(ch->c.color)));
+				}
+
+				if (!ch->is_default_bg_color) {
+					add_to_string(screen, terminfo_set_background(TERM_COLOR_BACKGROUND_16(ch->c.color)));
+				}
 			} else if (ch->attr & SCREEN_ATTR_STANDOUT) {
 				add_to_string(screen, terminfo_set_standout(ch->attr & SCREEN_ATTR_STANDOUT));
 			}
@@ -1246,8 +1255,18 @@ add_char256(struct string *screen, struct screen_driver *driver,
 #ifdef CONFIG_TERMINFO
 		if (driver->opt.terminfo) {
 			add_to_string(screen, terminfo_set_bold(ch->attr & SCREEN_ATTR_BOLD));
-			add_to_string(screen, terminfo_set_foreground(ch->c.color[0]));
-			add_to_string(screen, terminfo_set_background(ch->c.color[1]));
+
+			if (ch->is_default_fg_color || ch->is_default_bg_color) {
+				add_to_string(screen, terminfo_orig_pair());
+			}
+
+			if (!ch->is_default_fg_color) {
+				add_to_string(screen, terminfo_set_foreground(ch->c.color[0]));
+			}
+
+			if (!ch->is_default_bg_color) {
+				add_to_string(screen, terminfo_set_background(ch->c.color[1]));
+			}
 
 			if (ch->attr & SCREEN_ATTR_ITALIC && driver->opt.italic) {
 				state->italic = !!(ch->attr & SCREEN_ATTR_ITALIC);
@@ -1271,6 +1290,7 @@ add_char256(struct string *screen, struct screen_driver *driver,
 			} else {
 				add_foreground_color(screen, driver->opt.color256_seqs, ch);
 			}
+
 			if (!driver->opt.transparent || ch->c.color[1] != 0
 				|| ch->is_default_bg_color) {
 				if (ch->is_default_bg_color) {
@@ -1448,8 +1468,18 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 #ifdef CONFIG_TERMINFO
 		if (driver->opt.terminfo) {
 			add_to_string(screen, terminfo_set_bold(ch->attr & SCREEN_ATTR_BOLD));
-			add_to_string(screen, terminfo_set_foreground(ch->c.color[0] << 16 | ch->c.color[1] << 8 | ch->c.color[2]));
-			add_to_string(screen, terminfo_set_background(ch->c.color[3] << 16 | ch->c.color[4] << 8 | ch->c.color[5]));
+
+			if (ch->is_default_fg_color || ch->is_default_bg_color) {
+				add_to_string(screen, terminfo_orig_pair());
+			}
+
+			if (!ch->is_default_fg_color) {
+				add_to_string(screen, terminfo_set_foreground(ch->c.color[0] << 16 | ch->c.color[1] << 8 | ch->c.color[2]));
+			}
+
+			if (!ch->is_default_bg_color) {
+				add_to_string(screen, terminfo_set_background(ch->c.color[3] << 16 | ch->c.color[4] << 8 | ch->c.color[5]));
+			}
 
 			if (ch->attr & SCREEN_ATTR_ITALIC && driver->opt.italic) {
 				state->italic = !!(ch->attr & SCREEN_ATTR_ITALIC);
@@ -1473,6 +1503,7 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 			} else {
 				add_true_foreground_color(screen, color_true_seqs, ch);
 			}
+
 			if (!driver->opt.transparent || ch->is_default_bg_color || !background_is_black(ch->c.color)) {
 				if (ch->is_default_bg_color) {
 					add_bytes_to_string(screen, "\033[49m", 5);

@@ -114,3 +114,12 @@ terminfo_cursor_address(int y, int x)
 
 	return res ?: "";
 }
+
+const char *
+terminfo_orig_pair(void)
+{
+	ELOG
+	char *res = tigetstr("op");
+
+	return res ?: "";
+}
