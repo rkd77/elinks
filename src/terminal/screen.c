@@ -745,16 +745,18 @@ struct screen_state {
 	unsigned char bold;
 	unsigned char attr;
 	unsigned char strike;
+	unsigned char is_default_fg_color;
+	unsigned char is_default_bg_color;
 	/** Following should match the screen_char.color field. */
 	unsigned char color[SCREEN_COLOR_SIZE];
 };
 
 #if defined(CONFIG_TRUE_COLOR)
-#define INIT_SCREEN_STATE 	{ 0xFF, 0xFF, 0xFF, 0xFF, 0, 0xFF, { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF} }
+#define INIT_SCREEN_STATE 	{ 0xFF, 0xFF, 0xFF, 0xFF, 0, 0xFF, 0, 0, { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF} }
 #elif defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
-#define INIT_SCREEN_STATE 	{ 0xFF, 0xFF, 0xFF, 0xFF, 0, 0xFF, { 0xFF, 0xFF } }
+#define INIT_SCREEN_STATE 	{ 0xFF, 0xFF, 0xFF, 0xFF, 0, 0xFF, 0, 0, { 0xFF, 0xFF } }
 #else
-#define INIT_SCREEN_STATE 	{ 0xFF, 0xFF, 0xFF, 0xFF, 0, 0xFF, { 0xFF } }
+#define INIT_SCREEN_STATE 	{ 0xFF, 0xFF, 0xFF, 0xFF, 0, 0xFF, 0, 0, { 0xFF } }
 #endif
 
 #ifdef CONFIG_TRUE_COLOR
@@ -1011,9 +1013,13 @@ add_char16(struct string *screen, struct screen_driver *driver,
 #ifdef CONFIG_UTF8
 	    !(driver->opt.utf8_cp && ch->data == UCS_NO_CHAR) &&
 #endif /* CONFIG_UTF8 */
-	    !compare_color_16(ch->c.color, state->color)
+	    (!compare_color_16(ch->c.color, state->color)
+	     || ch->is_default_fg_color != state->is_default_fg_color
+	     || ch->is_default_bg_color != state->is_default_bg_color)
 	   ) {
 		copy_color_16(state->color, ch->c.color);
+		state->is_default_fg_color = ch->is_default_fg_color;
+		state->is_default_bg_color = ch->is_default_bg_color;
 
 #ifdef CONFIG_TERMINFO
 		if (driver->opt.terminfo) {
@@ -1039,7 +1045,6 @@ add_char16(struct string *screen, struct screen_driver *driver,
 #endif
 		{
 			add_bytes_to_string(screen, "\033[0", 3);
-
 			/* @set_screen_driver_opt has set @driver->opt.color_mode
 			 * according to terminal-type-specific options.
 			 * The caller of @add_char16 has already partially
@@ -1052,10 +1057,18 @@ add_char16(struct string *screen, struct screen_driver *driver,
 				char code[] = ";30;40";
 				unsigned char bgcolor = TERM_COLOR_BACKGROUND_16(ch->c.color);
 
-				code[2] += TERM_COLOR_FOREGROUND_16(ch->c.color);
+				if (ch->is_default_fg_color) {
+					code[2] += 9;
+				} else {
+					code[2] += TERM_COLOR_FOREGROUND_16(ch->c.color);
+				}
 
-				if (!driver->opt.transparent || bgcolor != 0) {
-					code[5] += bgcolor;
+				if (!driver->opt.transparent || bgcolor != 0 || ch->is_default_bg_color) {
+					if (ch->is_default_bg_color) {
+						code[5] += 9;
+					} else {
+						code[5] += bgcolor;
+					}
 					add_bytes_to_string(screen, code, 6);
 				} else {
 					add_bytes_to_string(screen, code, 3);
@@ -1222,9 +1235,14 @@ add_char256(struct string *screen, struct screen_driver *driver,
 #ifdef CONFIG_UTF8
 	    !(driver->opt.utf8_cp && ch->data == UCS_NO_CHAR) &&
 #endif /* CONFIG_UTF8 */
-	    !compare_color_256(ch->c.color, state->color)
+	    (!compare_color_256(ch->c.color, state->color)
+	     || ch->is_default_fg_color != state->is_default_fg_color
+	     || ch->is_default_bg_color != state->is_default_bg_color)
 	   ) {
 		copy_color_256(state->color, ch->c.color);
+		state->is_default_fg_color = ch->is_default_fg_color;
+		state->is_default_bg_color = ch->is_default_bg_color;
+
 #ifdef CONFIG_TERMINFO
 		if (driver->opt.terminfo) {
 			add_to_string(screen, terminfo_set_bold(ch->attr & SCREEN_ATTR_BOLD));
@@ -1248,9 +1266,18 @@ add_char256(struct string *screen, struct screen_driver *driver,
 		} else
 #endif
 		{
-			add_foreground_color(screen, driver->opt.color256_seqs, ch);
-			if (!driver->opt.transparent || ch->c.color[1] != 0) {
-				add_background_color(screen, driver->opt.color256_seqs, ch);
+			if (ch->is_default_fg_color) {
+				add_bytes_to_string(screen, "\033[39m", 5);
+			} else {
+				add_foreground_color(screen, driver->opt.color256_seqs, ch);
+			}
+			if (!driver->opt.transparent || ch->c.color[1] != 0
+				|| ch->is_default_bg_color) {
+				if (ch->is_default_bg_color) {
+					add_bytes_to_string(screen, "\033[49m", 5);
+				} else {
+					add_background_color(screen, driver->opt.color256_seqs, ch);
+				}
 			}
 
 			if (ch->attr & SCREEN_ATTR_BOLD)
@@ -1411,10 +1438,13 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 #ifdef CONFIG_UTF8
 	    !(driver->opt.utf8_cp && ch->data == UCS_NO_CHAR) &&
 #endif /* CONFIG_UTF8 */
-	    !compare_color_true(ch->c.color, state->color)
+	    (!compare_color_true(ch->c.color, state->color)
+	     || ch->is_default_fg_color != state->is_default_fg_color
+	     || ch->is_default_bg_color != state->is_default_bg_color)
 	   ) {
 		copy_color_true(state->color, ch->c.color);
-
+		state->is_default_fg_color = ch->is_default_fg_color;
+		state->is_default_bg_color = ch->is_default_bg_color;
 #ifdef CONFIG_TERMINFO
 		if (driver->opt.terminfo) {
 			add_to_string(screen, terminfo_set_bold(ch->attr & SCREEN_ATTR_BOLD));
@@ -1438,9 +1468,17 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 		} else
 #endif
 		{
-			add_true_foreground_color(screen, color_true_seqs, ch);
-			if (!driver->opt.transparent || !background_is_black(ch->c.color)) {
-				add_true_background_color(screen, color_true_seqs, ch);
+			if (ch->is_default_fg_color) {
+				add_bytes_to_string(screen, "\033[39m", 5);
+			} else {
+				add_true_foreground_color(screen, color_true_seqs, ch);
+			}
+			if (!driver->opt.transparent || ch->is_default_bg_color || !background_is_black(ch->c.color)) {
+				if (ch->is_default_bg_color) {
+					add_bytes_to_string(screen, "\033[49m", 5);
+				} else {
+					add_true_background_color(screen, color_true_seqs, ch);
+				}
 			}
 
 			if (ch->attr & SCREEN_ATTR_BOLD)

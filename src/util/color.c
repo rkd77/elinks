@@ -116,6 +116,11 @@ decode_hex_color:
 	} else {
 		const struct color_spec *cs;
 
+	if (!strcmp(str, "default")) {
+		*color = 0xFF000000;
+		return 0;
+	}
+
 	if (!strncmp(str, "color", 5)) {
 		int number = atoi(str+5);
 #ifdef CONFIG_256_COLORS
@@ -161,6 +166,10 @@ get_color_string(color_T color, char hexcolor[8])
 {
 	ELOG
 	const struct color_spec *cs;
+
+	if (color >= 0xFF000000) {
+		return "default";
+	}
 
 	for (cs = color_specs; cs->name; cs++)
 		if (cs->rgb == color)

@@ -36,6 +36,8 @@ color_distance(const struct rgb *c1, const struct rgb *c2)
 	return (3 * r * r) + (4 * g * g) + (2 * b * b);
 }
 
+#define DEFAULT_COLOR		0xFF000000
+
 #define RED_COLOR_MASK		0x00FF0000
 #define GREEN_COLOR_MASK	0x0000FF00
 #define BLUE_COLOR_MASK		0x000000FF
@@ -391,6 +393,9 @@ set_term_color(struct screen_char *schar, struct color_pair *pair,
 	unsigned char fg, bg;
 
 	assert(color_mode >= COLOR_MODE_DUMP && color_mode < COLOR_MODES);
+
+	schar->is_default_fg_color = (pair->foreground >= DEFAULT_COLOR);
+	schar->is_default_bg_color = (pair->background >= DEFAULT_COLOR);
 
 	/* Options for the various color modes. */
 	switch (color_mode) {
