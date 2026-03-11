@@ -72,7 +72,7 @@ struct mailcap_entry {
 	unsigned int needsterminal:1;
 
 	/* normal, copiousoutput, x_ansioutput or x_htmloutput */
-	unsigned char kind;
+	char kind;
 
 	/* The 'raw' unformatted (view)command from the mailcap files. */
 	char command[1];
@@ -597,7 +597,7 @@ check_entries(struct mailcap_hash_item *item)
 	ELOG
 	struct mailcap_entry *entry;
 
-	unsigned char kind;
+	char kind;
 
 	for (kind = MAILCAP_KIND_X_HTMLOUTPUT; kind >= MAILCAP_KIND_NORMAL; kind--) {
 		foreach (entry, item->entries) {
