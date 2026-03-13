@@ -92,4 +92,25 @@ test_expect_success \
 	'Parse two simple mailcap files; first one with tests.' \
 	'cmp output expected' \
 
+
+rm -f DISPLAY
+
+cat > mailcap-not-found-with-test <<EOF
+application/pdf;	gv %s ; test=test -e "DISPLAY" ;
+EOF
+
+mailcap-cache \
+	--path "mailcap-not-found-with-test" \
+	--format "block,program" \
+	--get "application/pdf" \
+	> output
+
+cat > expected <<EOF
+type: application/pdf
+EOF
+
+test_expect_success \
+	'File without match.' \
+	'cmp output expected' \
+
 test_done
