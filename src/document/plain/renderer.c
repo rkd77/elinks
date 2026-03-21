@@ -801,10 +801,21 @@ add_document_lines(struct plain_renderer *renderer)
 		int tab_spaces = 0;
 		int step = 0;
 		int cells = 0;
+		int max_width = renderer->max_width;
+
+#ifdef CONFIG_LIBSIXEL
+		if (renderer->sixel && max_width != INT_MAX) {
+			char *escp = elinks_strlcasestr(source, int_min(length, max_width+1), "\033P", 2);
+
+			if (escp) {
+				max_width = INT_MAX;
+			}
+		}
+#endif
 
 		/* End of line detection: We handle \r, \r\n and \n types. */
 		for (width = 0; (width < length) &&
-				(cells < renderer->max_width);) {
+				(cells < max_width);) {
 			if (source[width] == ASCII_CR)
 				step++;
 			if (source[width + step] == ASCII_LF)
