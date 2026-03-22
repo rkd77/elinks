@@ -456,7 +456,7 @@ http_curl_got_header(void *stream, void *buf, size_t len)
 			goto next;
 		}
 
-		if (!conn->cached && http->longcode != 103L) {
+		if (!conn->cached && http->longcode >= 200L) {
 			conn->cached = get_cache_entry(conn->uri);
 
 			if (!conn->cached) {
@@ -470,7 +470,7 @@ http_curl_got_header(void *stream, void *buf, size_t len)
 			conn->est_length += conn->progress->start;
 		}
 
-		if (http->longcode != 103L) {
+		if (http->longcode >= 200L) {
 			mem_free_set(&conn->cached->head, memacpy(http->headers.source, http->headers.length));
 			mem_free_set(&conn->cached->content_type, NULL);
 		}
