@@ -1,4 +1,4 @@
-#!/bin/awk -f
+#!/usr/bin/env awk -f
 BEGIN {
 	iflevel = 0;
 }
