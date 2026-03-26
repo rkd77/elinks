@@ -199,6 +199,7 @@ get_terminal_size(int fd, int *x, int *y, int *cw, int *ch)
 {
 	ELOG
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	CONSOLE_FONT_INFOEX cfi;
 
 	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
 
@@ -216,13 +217,15 @@ get_terminal_size(int fd, int *x, int *y, int *cw, int *ch)
 			*y = get_e("LINES");
 		}
 	}
+	cfi.cbSize = sizeof(cfi);
+	GetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
 
 	if (cw) {
-		*cw = 8;
+		*cw = cfi.dwFontSize.X;
 	}
 
 	if (ch) {
-		*ch = 16;
+		*ch = cfi.dwFontSize.Y;
 	}
 }
 
