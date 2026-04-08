@@ -10,7 +10,6 @@
 #include "elinks.h"
 
 #include "document/libdom/mapa.h"
-#include "util/hash.h"
 #include "util/string.h"
 
 void
@@ -39,40 +38,10 @@ save_in_map(void *m, void *node, int length)
 }
 
 void
-save_in_map2(void *m, void *node, int length)
-{
-	ELOG
-	struct hash *mapa = (struct hash *)m;
-
-	if (mapa) {
-		char *key = memacpy((const char *)&length, sizeof(length));
-
-		if (key) {
-			add_hash_item(mapa, key, sizeof(length), node);
-		}
-	}
-}
-
-void
 save_offset_in_map(void *m, void *node, int offset)
 {
 	ELOG
 	save_in_map(m, node, offset);
-}
-
-void
-save_offset_in_map2(void *m, void *node, int offset)
-{
-	ELOG
-	struct hash *mapa = (struct hash *)m;
-
-	if (mapa) {
-		char *key = memacpy((const char *)&node, sizeof(node));
-
-		if (key) {
-			add_hash_item(mapa, key, sizeof(node), (void *)(intptr_t)offset);
-		}
-	}
 }
 
 void *
@@ -98,13 +67,6 @@ create_new_element_map(void)
 }
 
 void *
-create_new_element_map2(void)
-{
-	ELOG
-	return (void *)init_hash8();
-}
-
-void *
 create_new_element_map_rev(void)
 {
 	ELOG
@@ -121,27 +83,6 @@ delete_map(void *m)
 		mem_free(mapa->table);
 		mem_free(mapa);
 	}
-}
-
-void
-delete_map2(void *m)
-{
-	ELOG
-	struct hash *hash = (struct hash *)(*(struct hash **)m);
-	struct hash_item *item;
-	int i;
-
-	foreach_hash_item(item, *hash, i) {
-		mem_free_set(&item->key, NULL);
-	}
-	free_hash(m);
-}
-
-void
-delete_map_rev(void *m)
-{
-	ELOG
-	delete_map2(m);
 }
 
 static int
@@ -170,32 +111,6 @@ find_in_map(void *m, int offset)
 		return NULL;
 	}
 	return item->node;
-}
-
-void *
-find_in_map2(void *m, int offset)
-{
-	ELOG
-	struct hash *mapa = (struct hash *)m;
-	struct hash_item *item;
-	char *key;
-
-	if (!mapa) {
-		return NULL;
-	}
-	key = memacpy((const char *)&offset, sizeof(offset));
-
-	if (!key) {
-		return NULL;
-	}
-	item = get_hash_item(mapa, key, sizeof(offset));
-	mem_free(key);
-
-	if (!item) {
-		return NULL;
-	}
-
-	return item->value;
 }
 
 static int
@@ -244,30 +159,4 @@ sort_nodes(void *m)
 		return;
 	}
 	qsort(mapa->table, mapa->size, sizeof(struct el_node_elem), compare_nodes);
-}
-
-int
-find_offset2(void *m, void *node)
-{
-	ELOG
-	struct hash *mapa = (struct hash *)m;
-	struct hash_item *item;
-	char *key;
-
-	if (!mapa) {
-		return -1;
-	}
-	key = memacpy((const char *)&node, sizeof(node));
-
-	if (!key) {
-		return -1;
-	}
-	item = get_hash_item(mapa, key, sizeof(node));
-	mem_free(key);
-
-	if (!item) {
-		return -1;
-	}
-
-	return (int)(intptr_t)(item->value);
 }
