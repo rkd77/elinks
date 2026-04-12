@@ -191,7 +191,8 @@ get_ip(struct document *document)
 	char *host = get_uri_string(uri, URI_DNS_HOST);
 
 	if (host) {
-		find_host(host, &document->querydns, found_dns, &document->ip, 0);
+		if (host[0])
+			find_host(host, &document->querydns, found_dns, &document->ip, 0);
 		mem_free(host);
 	}
 #endif
