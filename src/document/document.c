@@ -209,7 +209,9 @@ init_document(struct cache_entry *cached, struct document_options *options)
 
 	document->uri = get_uri_reference(cached->uri);
 
-	get_ip(document);
+	if (!options->dump) {
+		get_ip(document);
+	}
 
 	object_lock(cached);
 	document->cache_id = cached->cache_id;
