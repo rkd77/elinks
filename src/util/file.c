@@ -282,6 +282,8 @@ safe_mkstemp(char *template_)
 	return fd;
 }
 
+int (*el_compare_names)(const char *s1, const char *s2) = strcmp;
+
 /* comparison function for qsort() */
 int
 compare_dir_entries(const void *v1, const void *v2)
@@ -293,7 +295,8 @@ compare_dir_entries(const void *v1, const void *v2)
 	if (d2->name[0] == '.' && d2->name[1] == '.' && !d2->name[2]) return 1;
 	if (d1->attrib[0] == 'd' && d2->attrib[0] != 'd') return -1;
 	if (d1->attrib[0] != 'd' && d2->attrib[0] == 'd') return 1;
-	return strcmp(d1->name, d2->name);
+
+	return el_compare_names(d1->name, d2->name);
 }
 
 

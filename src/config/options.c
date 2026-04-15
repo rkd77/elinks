@@ -918,6 +918,14 @@ change_hook_ui_double_esc(struct session *ses, struct option *current, struct op
 	return 0;
 }
 
+static int
+change_hook_sorting_type(struct session *ses, struct option *current, struct option *changed)
+{
+	ELOG
+	el_compare_names = (changed->value.number ? compare_alpha : strcmp);
+	return 0;
+}
+
 #ifdef CONFIG_MOUSE
 static int
 change_hook_ui_mouse_disable(struct session *ses, struct option *current, struct option *changed)
@@ -1007,6 +1015,8 @@ static const struct change_hook_info change_hooks[] = {
 					change_hook_insert_mode },
 	{ "document.browse.links.active_link",
 					change_hook_active_link },
+	{ "document.browse.sorting_type",
+					change_hook_sorting_type },
 	{ "document.cache",		change_hook_cache },
 	{ "document.codepage",		change_hook_html },
 	{ "document.colors",		change_hook_html },

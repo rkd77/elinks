@@ -737,3 +737,34 @@ elinks_isspace(int c)
 	ELOG
 	return c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r' || c == ' ';
 }
+
+int
+compare_alpha(const char *s1, const char *s2)
+{
+	while (*s1 != '\0' && *s2 != '\0') {
+		if ((*s1 >= '0' && *s1 <= '9') &&
+				(*s2 >= '0' && *s2 <= '9')) {
+			int n1 = 0,  n2 = 0;
+			while (*s1 >= '0' && *s1 <= '9') {
+				n1 = n1 * 10 + (*s1) - '0';
+				s1++;
+			}
+			while (*s2 >= '0' && *s2 <= '9') {
+				n2 = n2 * 10 + (*s2) - '0';
+				s2++;
+			}
+			if (n1 != n2) {
+				return n1 - n2;
+			}
+			if (*s1 == '\0' || *s2 == '\0')
+				break;
+		}
+		if ((*s1) != (*s2))
+			break;
+
+		s1++;
+		s2++;
+	}
+
+	return (*s1) - (*s2);
+}

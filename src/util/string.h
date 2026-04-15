@@ -324,6 +324,9 @@ void free_ecmascript_string_list(LIST_OF(struct ecmascript_string_list_item) *li
 
 void el_string_replace(struct string *res, struct string *inp, struct string *what, struct string *repl);
 
+int compare_alpha(const char *s1, const char *s2);
+
+extern int (*el_compare_names)(const char *s1, const char *s2);
 
 /** Returns an empty C string or @a str if different from NULL. */
 #define empty_string_or_(str) ((str) ? (char *) (str) : (char *) "")

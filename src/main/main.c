@@ -216,6 +216,7 @@ init(void)
 	if (get_cmd_opt_bool("always-load-config")) {
 		parse_options_again();
 	}
+	el_compare_names = get_opt_int("document.browse.sorting_type", NULL) ? compare_alpha : strcmp;
 
 	if (get_cmd_opt_bool("dump")
 	    || get_cmd_opt_bool("source")) {

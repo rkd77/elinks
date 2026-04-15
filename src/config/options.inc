@@ -548,6 +548,12 @@ static union option_info config_options_info[] = {
 		"show_refresh_link", OPT_ZERO, 1,
 		N_("Whether to show meta refresh link.")),
 
+	INIT_OPT_INT("document.browse", N_("Type of directory entries sorting"),
+		"sorting_type", OPT_ZERO, 0, 1, 0,
+		N_("Type of directory sorting method:\n"
+		"0 means old way\n"
+		"1 numeric, eg. file2 before file10")),
+
 	INIT_OPT_BOOL("document.browse", N_("Tables navigation order"),
 		"table_move_order", OPT_ZERO, 0,
 		N_("Move by columns in table, instead of rows.")),

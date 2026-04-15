@@ -727,9 +727,8 @@ compare_file_ftp_info(const void *a, const void *b)
 	if (res) {
 		return res;
 	}
-	size_t min = b1->name.length < a1->name.length ? b1->name.length : a1->name.length;
 
-	return memcmp(a1->name.source, b1->name.source, min + 1);
+	return el_compare_names(a1->name.source, b1->name.source);
 }
 
 static void

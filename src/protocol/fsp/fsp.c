@@ -129,7 +129,7 @@ compare(const void *av, const void *bv)
 
 	if (res)
 		return res;
-	return strcmp(a->name, b->name);
+	return el_compare_names(a->name, b->name);
 }
 
 static void
