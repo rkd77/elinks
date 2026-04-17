@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.10.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2026-01-29 12:45+0100\n"
+"POT-Creation-Date: 2026-04-17 12:08+0200\n"
 "PO-Revision-Date: 2005-06-12 02:00+0200\n"
 "Last-Translator: Jonas Fonseca <fonseca@diku.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -196,7 +196,7 @@ msgid "Digital clock in the status bar."
 msgstr "Digitalt ur i statuslinjen."
 
 #: src/bfu/leds.c:88 src/bfu/leds.c:103 src/bfu/leds.c:116
-#: src/config/options.inc:1522 src/config/options.inc:1529
+#: src/config/options.inc:1528 src/config/options.inc:1535
 #: src/globhist/globhist.c:62 src/js/ecmascript.c:89 src/mime/backend/dgi.c:61
 #: src/mime/backend/mailcap.c:98 src/mime/backend/mimetypes.c:52
 #: src/network/ssl/ssl.c:214 src/network/ssl/ssl.c:385
@@ -426,7 +426,7 @@ msgstr ""
 "af nedbrud.\n"
 "Denne egenskab kræver bogmærkeunderstøttelse."
 
-#: src/bookmarks/dialogs.c:119 src/config/options.inc:1354
+#: src/bookmarks/dialogs.c:119 src/config/options.inc:1360
 #: src/dialogs/document.c:167 src/dialogs/tabs.c:142 src/globhist/dialogs.c:73
 msgid "Title"
 msgstr "Titel"
@@ -632,7 +632,7 @@ msgstr "Proxyadresse"
 msgid "Redirect"
 msgstr "Omdirigering"
 
-#: src/cache/dialogs.c:90 src/config/options.inc:635 src/dialogs/document.c:178
+#: src/cache/dialogs.c:90 src/config/options.inc:641 src/dialogs/document.c:178
 #: src/protocol/bittorrent/dialogs.c:135
 msgid "Size"
 msgstr "Størrelse"
@@ -693,7 +693,7 @@ msgstr "Slet cache-element"
 msgid "ID"
 msgstr "ID"
 
-#: src/cache/dialogs.c:157 src/config/options.inc:798
+#: src/cache/dialogs.c:157 src/config/options.inc:804
 msgid "Header"
 msgstr "Teksthoved"
 
@@ -1065,43 +1065,43 @@ msgstr "Åbn Formularfelts-menuen"
 msgid "Open a Lua console"
 msgstr "Åbn en Lua-konsol"
 
-#: src/config/actions-main.inc:55 src/config/options.inc:1014
+#: src/config/actions-main.inc:55 src/config/options.inc:1020
 msgid "Macro 0"
 msgstr ""
 
-#: src/config/actions-main.inc:56 src/config/options.inc:1018
+#: src/config/actions-main.inc:56 src/config/options.inc:1024
 msgid "Macro 1"
 msgstr ""
 
-#: src/config/actions-main.inc:57 src/config/options.inc:1022
+#: src/config/actions-main.inc:57 src/config/options.inc:1028
 msgid "Macro 2"
 msgstr ""
 
-#: src/config/actions-main.inc:58 src/config/options.inc:1026
+#: src/config/actions-main.inc:58 src/config/options.inc:1032
 msgid "Macro 3"
 msgstr ""
 
-#: src/config/actions-main.inc:59 src/config/options.inc:1030
+#: src/config/actions-main.inc:59 src/config/options.inc:1036
 msgid "Macro 4"
 msgstr ""
 
-#: src/config/actions-main.inc:60 src/config/options.inc:1034
+#: src/config/actions-main.inc:60 src/config/options.inc:1040
 msgid "Macro 5"
 msgstr ""
 
-#: src/config/actions-main.inc:61 src/config/options.inc:1038
+#: src/config/actions-main.inc:61 src/config/options.inc:1044
 msgid "Macro 6"
 msgstr ""
 
-#: src/config/actions-main.inc:62 src/config/options.inc:1042
+#: src/config/actions-main.inc:62 src/config/options.inc:1048
 msgid "Macro 7"
 msgstr ""
 
-#: src/config/actions-main.inc:63 src/config/options.inc:1046
+#: src/config/actions-main.inc:63 src/config/options.inc:1052
 msgid "Macro 8"
 msgstr ""
 
-#: src/config/actions-main.inc:64 src/config/options.inc:1050
+#: src/config/actions-main.inc:64 src/config/options.inc:1056
 msgid "Macro 9"
 msgstr ""
 
@@ -2168,7 +2168,7 @@ msgstr "(udfold ved at taste mellemrum)"
 #. * switch charsets.  So, it will work in any terminal that
 #. * understands UTF-8 and has the characters in its font.
 #: src/config/dialogs.c:157 src/config/dialogs.c:344
-#: src/config/options.inc:1087
+#: src/config/options.inc:1093
 msgid "Type"
 msgstr "Type"
 
@@ -2251,7 +2251,7 @@ msgstr "Opsætningshåndtering"
 msgid "Keystroke"
 msgstr "Tastetildeling"
 
-#: src/config/dialogs.c:738 src/config/options.inc:1542
+#: src/config/dialogs.c:738 src/config/options.inc:1548
 msgid "Action"
 msgstr "Handling"
 
@@ -2881,13 +2881,13 @@ msgstr "Farver"
 msgid "Active link colors."
 msgstr "Farver for det aktuelle link."
 
-#: src/config/options.inc:289 src/config/options.inc:663
-#: src/config/options.inc:1248
+#: src/config/options.inc:289 src/config/options.inc:669
+#: src/config/options.inc:1254
 msgid "Background color"
 msgstr "Baggrundsfarve"
 
-#: src/config/options.inc:291 src/config/options.inc:665
-#: src/config/options.inc:1249
+#: src/config/options.inc:291 src/config/options.inc:671
+#: src/config/options.inc:1255
 msgid "Default background color."
 msgstr "Forvalgt baggrundsfarve."
 
@@ -2899,13 +2899,13 @@ msgstr "Forvalgt baggrundsfarve."
 #. *	on it.
 #. The colors and mono tree should be similar but with different default
 #. * values of course so always use the macros below.
-#: src/config/options.inc:293 src/config/options.inc:659
-#: src/config/options.inc:1246
+#: src/config/options.inc:293 src/config/options.inc:665
+#: src/config/options.inc:1252
 msgid "Text color"
 msgstr "Tekstfarve"
 
-#: src/config/options.inc:295 src/config/options.inc:661
-#: src/config/options.inc:1247
+#: src/config/options.inc:295 src/config/options.inc:667
+#: src/config/options.inc:1253
 msgid "Default text color."
 msgstr "Forvalgt tekstfarve."
 
@@ -2960,7 +2960,7 @@ msgstr "Byt om på forgrunds- og baggrundsfarve"
 msgid "Invert the fore- and background color so the link stands out."
 msgstr "Byt om på for- og baggrundsfarve så linket fremhæves."
 
-#: src/config/options.inc:323 src/config/options.inc:1193
+#: src/config/options.inc:323 src/config/options.inc:1199
 #: src/dialogs/options.c:251
 msgid "Underline"
 msgstr "Understreg"
@@ -3435,36 +3435,47 @@ msgid "Whether to show meta refresh link."
 msgstr "Om filer skal sorteres i katalogoversigter."
 
 #: src/config/options.inc:551
-msgid "Tables navigation order"
-msgstr "Navigeringsorden i tabeller"
+msgid "Type of directory entries sorting"
+msgstr ""
 
 #: src/config/options.inc:553
-msgid "Move by columns in table, instead of rows."
-msgstr "Naviger tabeller kolonnevis i stedet for rækkevis."
-
-#: src/config/options.inc:555
-msgid "Wrap"
+msgid ""
+"Type of directory sorting method:\n"
+"0 means old way\n"
+"1 numeric, eg. file2 before file10"
 msgstr ""
 
 #: src/config/options.inc:557
+msgid "Tables navigation order"
+msgstr "Navigeringsorden i tabeller"
+
+#: src/config/options.inc:559
+msgid "Move by columns in table, instead of rows."
+msgstr "Naviger tabeller kolonnevis i stedet for rækkevis."
+
+#: src/config/options.inc:561
+msgid "Wrap"
+msgstr ""
+
+#: src/config/options.inc:563
 #, fuzzy
 msgid "Whether to wrap lines by default."
 msgstr "Vælg om linknumre skal udskrives i uddata fra -dump"
 
 #. Keep options in alphabetical order.
-#: src/config/options.inc:563
+#: src/config/options.inc:569
 msgid "Cache"
 msgstr "Cache"
 
-#: src/config/options.inc:565
+#: src/config/options.inc:571
 msgid "Cache options."
 msgstr "Cacheindstillinger."
 
-#: src/config/options.inc:567
+#: src/config/options.inc:573
 msgid "Cache information about redirects"
 msgstr "Gem informationer om omdirigeringer i cachen"
 
-#: src/config/options.inc:569
+#: src/config/options.inc:575
 #, fuzzy
 msgid ""
 "Cache even redirects sent by server (usually thru HTTP by a 302 HTTP code "
@@ -3504,11 +3515,11 @@ msgstr ""
 "omdirigeringer derfor blive hentet i cachen og ikke ved at\n"
 "sende en forespørgsel til serveren."
 
-#: src/config/options.inc:590
+#: src/config/options.inc:596
 msgid "Ignore cache-control info from server"
 msgstr "Ignorér cachestyringsinfo fra server"
 
-#: src/config/options.inc:592
+#: src/config/options.inc:598
 #, fuzzy
 msgid ""
 "Ignore Cache-Control and Pragma server headers. When set, the document is "
@@ -3518,19 +3529,19 @@ msgstr ""
 "Når denne er aktiv, vil dokumentet blive gemt i cachen,\n"
 "selv med \"Cache-Control: no-cache\"."
 
-#: src/config/options.inc:596
+#: src/config/options.inc:602
 msgid "Formatted documents"
 msgstr "Formaterede dokumenter"
 
-#: src/config/options.inc:598
+#: src/config/options.inc:604
 msgid "Format cache options."
 msgstr "Indstillinger for tekstformaterede dokumenter."
 
-#: src/config/options.inc:600
+#: src/config/options.inc:606
 msgid "Number"
 msgstr "Antal"
 
-#: src/config/options.inc:602
+#: src/config/options.inc:608
 #, fuzzy
 msgid ""
 "Number of cached formatted pages. Do not get too generous here, 'formatted' "
@@ -3564,11 +3575,11 @@ msgstr ""
 "Efterfølgende kan yderligere dokumenter ikke tilføjes i cachen."
 
 #. FIXME: Write more.
-#: src/config/options.inc:620
+#: src/config/options.inc:626
 msgid "Revalidation interval"
 msgstr "Genvalideringsinterval"
 
-#: src/config/options.inc:622
+#: src/config/options.inc:628
 msgid ""
 "Period in seconds that a cache entry is considered to be up-to-date. When a "
 "document is loaded and this interval has elapsed since the document was "
@@ -3578,31 +3589,31 @@ msgid ""
 "A value of -1 disables automatic revalidation."
 msgstr ""
 
-#: src/config/options.inc:631 src/dialogs/info.c:212
+#: src/config/options.inc:637 src/dialogs/info.c:212
 msgid "Memory cache"
 msgstr "Hukommelsescache"
 
-#: src/config/options.inc:633
+#: src/config/options.inc:639
 msgid "Memory cache options."
 msgstr "Indstillinger for hukommelsescache."
 
-#: src/config/options.inc:637
+#: src/config/options.inc:643
 msgid "Memory cache size (in bytes)."
 msgstr "Størrelse på hukommelsescache (i bytes)."
 
-#: src/config/options.inc:639
+#: src/config/options.inc:645
 msgid "Charset"
 msgstr "Tegnsæt"
 
-#: src/config/options.inc:641
+#: src/config/options.inc:647
 msgid "Charset options."
 msgstr "Tegnsætindstillinger."
 
-#: src/config/options.inc:643
+#: src/config/options.inc:649
 msgid "Default codepage"
 msgstr "Forvalgt tegnkodningstabel"
 
-#: src/config/options.inc:645
+#: src/config/options.inc:651
 #, fuzzy
 msgid ""
 "Default document codepage. 'System' stands for a codepage determined by a "
@@ -3612,59 +3623,59 @@ msgstr ""
 "at tegnkodningstabellen vælges på baggrund af den valgte\n"
 "sprogindstilling."
 
-#: src/config/options.inc:648
+#: src/config/options.inc:654
 msgid "Ignore charset info from server"
 msgstr "Ignorér information om tegnsæt fra server"
 
-#: src/config/options.inc:650
+#: src/config/options.inc:656
 msgid "Ignore charset info sent by server."
 msgstr "Ignorér information om tegnsæt sendt fra server."
 
-#: src/config/options.inc:654
+#: src/config/options.inc:660
 msgid "Default color settings"
 msgstr "Forvalgte farveindstillinger"
 
-#: src/config/options.inc:656
+#: src/config/options.inc:662
 msgid "Default document color settings."
 msgstr "Forvalgte farveindstillinger for dokumenter."
 
-#: src/config/options.inc:667
+#: src/config/options.inc:673
 msgid "Link color"
 msgstr "Linkfarve"
 
-#: src/config/options.inc:669
+#: src/config/options.inc:675
 msgid "Default link color."
 msgstr "Forvalgt linkfarve."
 
-#: src/config/options.inc:671
+#: src/config/options.inc:677
 msgid "Visited-link color"
 msgstr "Farve for besøgte links"
 
-#: src/config/options.inc:673
+#: src/config/options.inc:679
 msgid "Default visited link color."
 msgstr "Forvalgt farve for besøgte links."
 
-#: src/config/options.inc:675
+#: src/config/options.inc:681
 msgid "Image-link color"
 msgstr "Farve for billedlinks"
 
-#: src/config/options.inc:677
+#: src/config/options.inc:683
 msgid "Default image link color."
 msgstr "Forvalgt billedlinkfarve."
 
-#: src/config/options.inc:679
+#: src/config/options.inc:685
 msgid "Bookmarked-link color"
 msgstr "Linkfarve for tilføjede bogmærker"
 
-#: src/config/options.inc:681
+#: src/config/options.inc:687
 msgid "Default bookmarked link color."
 msgstr "Forvalgt farve for links til gemte bogmærker."
 
-#: src/config/options.inc:683
+#: src/config/options.inc:689
 msgid "Directory color"
 msgstr "Farve for kataloger"
 
-#: src/config/options.inc:685
+#: src/config/options.inc:691
 #, fuzzy
 msgid ""
 "Default directory color.\n"
@@ -3674,32 +3685,32 @@ msgstr ""
 "Forvalgt farve for kataloger.\n"
 "Se indstillingen document.browse.links.color_dirs."
 
-#: src/config/options.inc:689
+#: src/config/options.inc:695
 #, fuzzy
 msgid "Use link number color"
 msgstr "Skriv nummer på link"
 
-#: src/config/options.inc:691
+#: src/config/options.inc:697
 msgid ""
 "Whether to use link number color even when colors specified by the document "
 "are used."
 msgstr ""
 
-#: src/config/options.inc:694
+#: src/config/options.inc:700
 #, fuzzy
 msgid "Link number color"
 msgstr "Linkfarve"
 
-#: src/config/options.inc:696
+#: src/config/options.inc:702
 #, fuzzy
 msgid "Default link number color."
 msgstr "Forvalgt linkfarve."
 
-#: src/config/options.inc:702
+#: src/config/options.inc:708
 msgid "Increase contrast"
 msgstr "Øgning af kontrast"
 
-#: src/config/options.inc:704
+#: src/config/options.inc:710
 #, fuzzy
 msgid ""
 "Increase the contrast between the foreground and background colors to ensure "
@@ -3712,21 +3723,21 @@ msgstr ""
 "Bemærk, at dette er forskelligt fra at sikre kontrasten med\n"
 "indstillingen ensure_contrast."
 
-#: src/config/options.inc:710
+#: src/config/options.inc:716
 msgid "Ensure contrast"
 msgstr "Sørg for kontrast"
 
-#: src/config/options.inc:712
+#: src/config/options.inc:718
 msgid "Makes sure that the back- and foreground colors are never equal."
 msgstr "Sikrer at bag- og forgrundsfarver aldrig er ens."
 
 #. If you change this please also change ACT_MAIN_DOCUMENT_COLORS action
 #. * handling.
-#: src/config/options.inc:717
+#: src/config/options.inc:723
 msgid "Use document-specified colors"
 msgstr "Brug farver fra dokument"
 
-#: src/config/options.inc:719
+#: src/config/options.inc:725
 msgid ""
 "Use colors specified in document:\n"
 "0 is use always the default settings\n"
@@ -3746,27 +3757,27 @@ msgstr ""
 "  (transparency) på din skærm hvis du bruger en sådan."
 
 #. Keep options in alphabetical order.
-#: src/config/options.inc:730
+#: src/config/options.inc:736
 msgid "Downloading"
 msgstr "Downloadning"
 
-#: src/config/options.inc:732
+#: src/config/options.inc:738
 msgid "Options regarding files downloading and handling."
 msgstr "Indstillinger for downloadning og filhåndtering."
 
-#: src/config/options.inc:734
+#: src/config/options.inc:740
 msgid "Default download directory"
 msgstr "Forvalgt downloadkatalog"
 
-#: src/config/options.inc:736
+#: src/config/options.inc:742
 msgid "Default download directory."
 msgstr "Forvalgt downloadkatalog."
 
-#: src/config/options.inc:738
+#: src/config/options.inc:744
 msgid "Set original time"
 msgstr "Sæt oprindeligt tidsstempel"
 
-#: src/config/options.inc:740
+#: src/config/options.inc:746
 #, fuzzy
 msgid ""
 "Set the timestamp of each downloaded file to the timestamp stored on the "
@@ -3775,20 +3786,20 @@ msgstr ""
 "Sæt tidstemplet for hver downloadet fil til tidsstemplet gemt\n"
 "på serveren."
 
-#: src/config/options.inc:743
+#: src/config/options.inc:749
 msgid "Show compressed files as plain text"
 msgstr ""
 
-#: src/config/options.inc:745
+#: src/config/options.inc:751
 msgid "Whether to view compressed files (.gz, .zst or .xz) as plain text."
 msgstr ""
 
 #. Does automatic resuming make sense as an option?
-#: src/config/options.inc:748
+#: src/config/options.inc:754
 msgid "Prevent overwriting"
 msgstr "Undgå overskrivning"
 
-#: src/config/options.inc:750
+#: src/config/options.inc:756
 msgid ""
 "Prevent overwriting the local files:\n"
 "0 is files will silently be overwritten\n"
@@ -3800,11 +3811,11 @@ msgstr ""
 "1 betyder tilføj en cifferendelse (f.eks. \".1\") til filnavnet\n"
 "2 betyder spørg brugeren"
 
-#: src/config/options.inc:755
+#: src/config/options.inc:761
 msgid "Notify download completion by bell"
 msgstr "Lydpåmindelse om fuldendt filoverførsel (\"bell\")"
 
-#: src/config/options.inc:757
+#: src/config/options.inc:763
 msgid ""
 "Audio notification when download is completed:\n"
 "0 is never\n"
@@ -3816,21 +3827,21 @@ msgstr ""
 "1 betyder kun når baggrundspåmindelse er aktiveret\n"
 "2 betyder altid"
 
-#: src/config/options.inc:763
+#: src/config/options.inc:769
 msgid "Dump output"
 msgstr "Dump-uddata"
 
-#: src/config/options.inc:765
+#: src/config/options.inc:771
 msgid "Dump output options."
 msgstr "Indstillinger for dump-uddata."
 
 #. OPT_CODEPAGE
-#: src/config/options.inc:767 src/config/options.inc:1197
+#: src/config/options.inc:773 src/config/options.inc:1203
 #: src/config/opttypes.c:520 src/dialogs/document.c:186
 msgid "Codepage"
 msgstr "Tegnkodningstabel"
 
-#: src/config/options.inc:769
+#: src/config/options.inc:775
 #, fuzzy
 msgid ""
 "Codepage used in dump output. 'System' stands for a codepage determined by a "
@@ -3840,7 +3851,7 @@ msgstr ""
 "tegnkodningstabellen vælges på baggrund af den valgte\n"
 "sprogindstilling."
 
-#: src/config/options.inc:772 src/config/options.inc:1142
+#: src/config/options.inc:778 src/config/options.inc:1148
 msgid "Color mode"
 msgstr "Farvetilstand"
 
@@ -3849,7 +3860,7 @@ msgstr "Farvetilstand"
 #. * an outer list entry after an inner list.
 #. * TRANSLATORS: This restriction applies only to the
 #. * "en" (English) translation.  (See doc/Makefile.)
-#: src/config/options.inc:779
+#: src/config/options.inc:785
 #, fuzzy
 msgid ""
 "Color mode for dumps.\n"
@@ -3879,107 +3890,107 @@ msgstr ""
 "3 betyder tilstanden 256-farve, som bruger XTerm RGB-farvekoder\n"
 "4 betyder tilstanden rigtige farver, some bruger konsole RGB-farvekoder"
 
-#: src/config/options.inc:794
+#: src/config/options.inc:800
 msgid "Footer"
 msgstr "Tekstfod"
 
-#: src/config/options.inc:796
+#: src/config/options.inc:802
 #, c-format
 msgid "Footer string used in dumps. %u is substituted by URL."
 msgstr ""
 "Tekstfod brugt ved dumpet udskrift.\n"
 "%u udskiftes med adressen for det dumpede dokument."
 
-#: src/config/options.inc:800
+#: src/config/options.inc:806
 #, c-format
 msgid "Header string used in dumps. %u is substituted by URL."
 msgstr ""
 "Teksthoved brugt ved dumpet udskrift.\n"
 "%u udskiftes med adressen for det dumpede dokument."
 
-#: src/config/options.inc:802
+#: src/config/options.inc:808
 msgid "Numbering"
 msgstr "Nummerering"
 
-#: src/config/options.inc:804
+#: src/config/options.inc:810
 msgid "Whether to print link numbers in dump output."
 msgstr "Vælg om linknumre skal udskrives i uddata fra -dump"
 
-#: src/config/options.inc:806
+#: src/config/options.inc:812
 msgid "References"
 msgstr "Referencer"
 
-#: src/config/options.inc:808
+#: src/config/options.inc:814
 #, fuzzy
 msgid "Whether to print references (URIs) of document links in dump output."
 msgstr ""
 "Vælg om linkadresser (URI) i dokumentet skal udskrives\n"
 "i uddata fra -dump."
 
-#: src/config/options.inc:811
+#: src/config/options.inc:817
 #, fuzzy
 msgid "Scripting enabled"
 msgstr "Scriptning"
 
-#: src/config/options.inc:813
+#: src/config/options.inc:819
 msgid "Whether to call scripting pre_format_hooks by taking a dump."
 msgstr ""
 
-#: src/config/options.inc:815
+#: src/config/options.inc:821
 #, fuzzy
 msgid "Terminal hyperlinks"
 msgstr "Skærmstyring"
 
-#: src/config/options.inc:817
+#: src/config/options.inc:823
 msgid "Whether to add terminal hyperlinks to dump output. See #198 in github."
 msgstr ""
 
-#: src/config/options.inc:819
+#: src/config/options.inc:825
 msgid "Separator"
 msgstr "Separator"
 
-#: src/config/options.inc:821
+#: src/config/options.inc:827
 msgid "String which separates two dumps."
 msgstr "Streng som adskiller udskrift af to dumpede dokumenter."
 
-#: src/config/options.inc:823
+#: src/config/options.inc:829
 msgid "Width"
 msgstr "Bredde"
 
-#: src/config/options.inc:825
+#: src/config/options.inc:831
 msgid "Width of screen in characters when dumping documents."
 msgstr "Skærmbredde i tegn ved dumpning af dokumenter."
 
-#: src/config/options.inc:829
+#: src/config/options.inc:835
 msgid "History"
 msgstr "Historik"
 
-#: src/config/options.inc:831
+#: src/config/options.inc:837
 msgid "History options."
 msgstr "Historikindstillinger."
 
-#: src/config/options.inc:833
+#: src/config/options.inc:839
 msgid "Keep unhistory"
 msgstr "Behold forlæns historik"
 
-#: src/config/options.inc:835
+#: src/config/options.inc:841
 msgid "Keep unhistory (\"forward history\")."
 msgstr "Behold forlæns historik."
 
-#: src/config/options.inc:838
+#: src/config/options.inc:844
 msgid "HTML rendering"
 msgstr "HTML-gengivelse"
 
-#: src/config/options.inc:840
+#: src/config/options.inc:846
 msgid "Options concerning the display of HTML pages."
 msgstr "Indstillinger der styrer hvorledes HTML-sider vises."
 
-#: src/config/options.inc:842
+#: src/config/options.inc:848
 #, fuzzy
 msgid "Always ignore <noscript> content"
 msgstr "Ignorer <noscript> indhold"
 
-#: src/config/options.inc:844
+#: src/config/options.inc:850
 #, fuzzy
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag, even if ECMAScript "
@@ -3988,80 +3999,80 @@ msgstr ""
 "Om indhold fra <noscript>-elementer skal ignoreres når\n"
 "ECMAScript er aktiveret."
 
-#: src/config/options.inc:847 src/config/options.inc:923
+#: src/config/options.inc:853 src/config/options.inc:929
 msgid "Compress empty lines"
 msgstr "Komprimer tomme linjer"
 
-#: src/config/options.inc:849 src/config/options.inc:925
+#: src/config/options.inc:855 src/config/options.inc:931
 msgid "Compress successive empty lines to only one in displayed text."
 msgstr "Komprimer mere end to på hinanden følgende linjer til en."
 
-#: src/config/options.inc:852
+#: src/config/options.inc:858
 msgid "Display frames"
 msgstr "Vis rammer"
 
-#: src/config/options.inc:854
+#: src/config/options.inc:860
 msgid "Display frames."
 msgstr "Vis rammer."
 
-#: src/config/options.inc:856
+#: src/config/options.inc:862
 #, fuzzy
 msgid "Display iframes"
 msgstr "Vis rammer"
 
-#: src/config/options.inc:858
+#: src/config/options.inc:864
 msgid "Display iframes. This code is experimental."
 msgstr ""
 
-#: src/config/options.inc:860
+#: src/config/options.inc:866
 msgid "Display tables"
 msgstr "Vis tabeller"
 
-#: src/config/options.inc:862
+#: src/config/options.inc:868
 msgid "Display tables."
 msgstr "Vis tabeller."
 
-#: src/config/options.inc:864
+#: src/config/options.inc:870
 msgid "Display subscripts"
 msgstr "Vis matematisk indeks (<sub> tag)"
 
-#: src/config/options.inc:866
+#: src/config/options.inc:872
 msgid "Display subscripts (as [thing])."
 msgstr "Vis matematisk indeks (<sub> tag) som [indeks]."
 
-#: src/config/options.inc:868
+#: src/config/options.inc:874
 msgid "Display superscripts"
 msgstr "Vis matematisk overskrift (<sup> tag)"
 
-#: src/config/options.inc:870
+#: src/config/options.inc:876
 msgid "Display superscripts (as ^thing)."
 msgstr "Vis matematisk overskrift (<sup> tag) som ^overskrift."
 
-#: src/config/options.inc:872
+#: src/config/options.inc:878
 msgid "Whether to show documents which are not fully loaded"
 msgstr ""
 
-#: src/config/options.inc:874
+#: src/config/options.inc:880
 msgid ""
 "ELinks periodically display documents, even if they are not fully loaded. "
 "You can disable it here."
 msgstr ""
 
-#: src/config/options.inc:878 src/config/options.inc:1180
+#: src/config/options.inc:884 src/config/options.inc:1186
 #: src/dialogs/options.c:255
 msgid "Kitty"
 msgstr ""
 
-#: src/config/options.inc:880
+#: src/config/options.inc:886
 #, fuzzy
 msgid "Whether to display kitty images in html documents."
 msgstr "Om scripts i dokumentet skal anvendes og køres."
 
-#: src/config/options.inc:883
+#: src/config/options.inc:889
 msgid "Rendering of HTML link element"
 msgstr "Gengivelse af link HTML-elementer"
 
-#: src/config/options.inc:885
+#: src/config/options.inc:891
 msgid ""
 "How to render <link> tags from the HTML header:\n"
 "0 is nothing\n"
@@ -4079,29 +4090,29 @@ msgstr ""
 "4 betyder vis titel, navn, hreflang og type\n"
 "5 betyder vis det hele"
 
-#: src/config/options.inc:894 src/config/options.inc:934
-#: src/config/options.inc:1185 src/dialogs/options.c:258
+#: src/config/options.inc:900 src/config/options.inc:940
+#: src/config/options.inc:1191 src/dialogs/options.c:258
 msgid "Sixel"
 msgstr ""
 
-#: src/config/options.inc:896
+#: src/config/options.inc:902
 #, fuzzy
 msgid "Whether to display sixel images in html documents."
 msgstr "Om scripts i dokumentet skal anvendes og køres."
 
-#: src/config/options.inc:900
+#: src/config/options.inc:906
 msgid "Substitute frame chars"
 msgstr ""
 
-#: src/config/options.inc:902
+#: src/config/options.inc:908
 msgid "Replace ascii frame chars by border frame chars in html documents."
 msgstr ""
 
-#: src/config/options.inc:904
+#: src/config/options.inc:910
 msgid "Underline links"
 msgstr "Understreg links"
 
-#: src/config/options.inc:906
+#: src/config/options.inc:912
 msgid "Underline links."
 msgstr "Understreg links."
 
@@ -4109,11 +4120,11 @@ msgstr "Understreg links."
 # "hard/soft wrapping" - hard wrapping er en bogstavelig linjeombrydning
 # hvor linjen afsluttes med et nylinjetegn, og soft wrapping er en visuel
 # ombrydning uden noget nylinjetegn.
-#: src/config/options.inc:908
+#: src/config/options.inc:914
 msgid "Wrap non breaking space"
 msgstr "Ombryd hårde blanktegn"
 
-#: src/config/options.inc:910
+#: src/config/options.inc:916
 #, fuzzy
 msgid ""
 "If set do not honour non breaking space (the nbsp entity) but allows one to "
@@ -4125,42 +4136,42 @@ msgstr ""
 "bredden på dokumenter, så man ikke behøver at\n"
 "bladre vandret i dokumentet."
 
-#: src/config/options.inc:915
+#: src/config/options.inc:921
 msgid "Plain rendering"
 msgstr "Gengivelse af klartekst"
 
-#: src/config/options.inc:917
+#: src/config/options.inc:923
 msgid "Options concerning the display of plain text pages."
 msgstr "Indstillinger der styrer hvorledes klartekstsider vises."
 
-#: src/config/options.inc:919
+#: src/config/options.inc:925
 msgid "Display URIs"
 msgstr "Vis adresser"
 
-#: src/config/options.inc:921
+#: src/config/options.inc:927
 msgid "Display URIs in the document as links."
 msgstr "Vis adresser i dokumentet som links."
 
-#: src/config/options.inc:928
+#: src/config/options.inc:934
 msgid "Fixup frame borders of tables"
 msgstr ""
 
-#: src/config/options.inc:930
+#: src/config/options.inc:936
 msgid ""
 "Change ascii border characters to frame borders. Usage example: mysql --"
 "pager=elinks"
 msgstr ""
 
-#: src/config/options.inc:936
+#: src/config/options.inc:942
 #, fuzzy
 msgid "Whether to display sixel images in plain text documents."
 msgstr "Om scripts i dokumentet skal anvendes og køres."
 
-#: src/config/options.inc:939
+#: src/config/options.inc:945
 msgid "URI passing"
 msgstr "Ekstern URI håndtering"
 
-#: src/config/options.inc:941
+#: src/config/options.inc:947
 msgid ""
 "Rules for passing URIs to external commands. When one rule is defined the "
 "link and tab menu will have a menu item that makes it possible to pass the "
@@ -4176,12 +4187,12 @@ msgid ""
 "behaviour: the command receives standard input and elinks is blocked."
 msgstr ""
 
-#: src/config/options.inc:960
+#: src/config/options.inc:966
 #, fuzzy
 msgid "A rule for passing URI to an external command."
 msgstr "Videregiv linkadresse til ekstern ~kommando"
 
-#: src/config/options.inc:964
+#: src/config/options.inc:970
 #, fuzzy
 msgid ""
 "The external command. The format is:\n"
@@ -4196,25 +4207,25 @@ msgstr ""
 "\n"
 "Omring _ikke_ %c med enkelt- eller dobbelt-citationstegn."
 
-#: src/config/options.inc:972
+#: src/config/options.inc:978
 msgid "Run command in the foreground."
 msgstr ""
 
 #. Keep options in alphabetical order.
-#: src/config/options.inc:978
+#: src/config/options.inc:984
 msgid "Information files"
 msgstr "Informationsfiler"
 
-#: src/config/options.inc:980
+#: src/config/options.inc:986
 #, fuzzy
 msgid "Options for information files in ~/.config/elinks."
 msgstr "Indstillinger for informationsfiler i ~/.elinks."
 
-#: src/config/options.inc:982
+#: src/config/options.inc:988
 msgid "Save interval"
 msgstr "Gemningsinterval"
 
-#: src/config/options.inc:984
+#: src/config/options.inc:990
 #, fuzzy
 msgid ""
 "Interval at which to trigger information files in ~/.config/elinks to be "
@@ -4223,11 +4234,11 @@ msgstr ""
 "Interval i sekunder for skrivning af informationsfiler i ~/.elinks\n"
 "(hvis ændret) til disk. En værdi af 0 deaktiverer."
 
-#: src/config/options.inc:988
+#: src/config/options.inc:994
 msgid "Use secure file saving"
 msgstr "Gem filer på en sikker måde"
 
-#: src/config/options.inc:990
+#: src/config/options.inc:996
 #, fuzzy
 msgid ""
 "First write data to unique temporary file, then rename this file upon "
@@ -4252,11 +4263,11 @@ msgstr ""
 "atomiseringen og reducerer troværdigheden af denne\n"
 "funktion."
 
-#: src/config/options.inc:1002
+#: src/config/options.inc:1008
 msgid "Use fsync(3) with secure file saving"
 msgstr "Brug fsync(3) ved sikker filgemning"
 
-#: src/config/options.inc:1004
+#: src/config/options.inc:1010
 #, fuzzy
 msgid ""
 "When using secure file saving, call fsync(3), if the OS supports it, to "
@@ -4268,68 +4279,68 @@ msgstr ""
 "lager med det samme. Dette er valgfrit for dem som ønsker at\n"
 "undgå unødig disk I/O."
 
-#: src/config/options.inc:1010
+#: src/config/options.inc:1016
 msgid "Macros"
 msgstr ""
 
-#: src/config/options.inc:1012
+#: src/config/options.inc:1018
 msgid "Macros for exmode."
 msgstr ""
 
-#: src/config/options.inc:1016
+#: src/config/options.inc:1022
 msgid "Macro 0 for exmode."
 msgstr ""
 
-#: src/config/options.inc:1020
+#: src/config/options.inc:1026
 msgid "Macro 1 for exmode."
 msgstr ""
 
-#: src/config/options.inc:1024
+#: src/config/options.inc:1030
 msgid "Macro 2 for exmode."
 msgstr ""
 
-#: src/config/options.inc:1028
+#: src/config/options.inc:1034
 msgid "Macro 3 for exmode."
 msgstr ""
 
-#: src/config/options.inc:1032
+#: src/config/options.inc:1038
 msgid "Macro 4 for exmode."
 msgstr ""
 
-#: src/config/options.inc:1036
+#: src/config/options.inc:1042
 msgid "Macro 5 for exmode."
 msgstr ""
 
-#: src/config/options.inc:1040
+#: src/config/options.inc:1046
 msgid "Macro 6 for exmode."
 msgstr ""
 
-#: src/config/options.inc:1044
+#: src/config/options.inc:1050
 msgid "Macro 7 for exmode."
 msgstr ""
 
-#: src/config/options.inc:1048
+#: src/config/options.inc:1054
 msgid "Macro 8 for exmode."
 msgstr ""
 
-#: src/config/options.inc:1052
+#: src/config/options.inc:1058
 msgid "Macro 9 for exmode."
 msgstr ""
 
 #. Keep options in alphabetical order.
-#: src/config/options.inc:1056
+#: src/config/options.inc:1062
 msgid "Terminals"
 msgstr "Terminaler"
 
-#: src/config/options.inc:1058
+#: src/config/options.inc:1064
 msgid "Terminal options."
 msgstr "Indstillinger for skærmstyring af terminaler."
 
-#: src/config/options.inc:1062
+#: src/config/options.inc:1068
 msgid "Options specific to this terminal type (according to $TERM value)."
 msgstr "Indstillinger for denne terminaltype (ifølge $TERM-variablen)."
 
-#: src/config/options.inc:1089
+#: src/config/options.inc:1095
 #, fuzzy
 msgid ""
 "Terminal type; matters mostly only when drawing frames and dialog box "
@@ -4349,11 +4360,11 @@ msgstr ""
 "3 er KOI-8\n"
 "4 er FreeBSD"
 
-#: src/config/options.inc:1098
+#: src/config/options.inc:1104
 msgid "Always encode xterm title in ISO-8859-1"
 msgstr ""
 
-#: src/config/options.inc:1100
+#: src/config/options.inc:1106
 msgid ""
 "When updating the window title of xterm or a similar terminal emulator, "
 "encode the title in ISO-8859-1 (Latin-1), rather than in the charset used "
@@ -4365,11 +4376,11 @@ msgid ""
 "different page so that ELinks notices it needs to update the title."
 msgstr ""
 
-#: src/config/options.inc:1111 src/dialogs/options.c:246
+#: src/config/options.inc:1117 src/dialogs/options.c:246
 msgid "Switch fonts for line drawing"
 msgstr "Skift skrifttype ved linjetegning"
 
-#: src/config/options.inc:1113
+#: src/config/options.inc:1119
 #, fuzzy
 msgid ""
 "Switch fonts when drawing lines, enabling both local characters and lines "
@@ -4386,11 +4397,11 @@ msgstr ""
 #. * and if so, behave as if "utf_8_io" were 1.  (When CONFIG_UTF8 is
 #. * not defined, it should not be possible to set UTF-8 as "codepage";
 #. * please report any such possibilities as bugs.)
-#: src/config/options.inc:1123 src/dialogs/options.c:253
+#: src/config/options.inc:1129 src/dialogs/options.c:253
 msgid "UTF-8 I/O"
 msgstr "UTF-8 I/O"
 
-#: src/config/options.inc:1125
+#: src/config/options.inc:1131
 #, fuzzy
 msgid ""
 "Enable I/O in UTF-8 for Unicode terminals. Note that currently, only the "
@@ -4403,11 +4414,11 @@ msgstr ""
 "tegnkodningstabel. ELinks benytter ikke denne indstilling\n"
 "when terminalens tegntabel er UTF-8."
 
-#: src/config/options.inc:1130 src/dialogs/options.c:247
+#: src/config/options.inc:1136 src/dialogs/options.c:247
 msgid "Restrict frames in cp850/852"
 msgstr "Begræns rammer i cp850/852"
 
-#: src/config/options.inc:1132
+#: src/config/options.inc:1138
 #, fuzzy
 msgid ""
 "Restrict the characters used when drawing lines. Makes sense only with linux "
@@ -4416,11 +4427,11 @@ msgstr ""
 "Begræns linjetegningstegn. Giver kun mening med terminaler\n"
 "af typen \"linux\" sammen med tegnsættene cp850/852."
 
-#: src/config/options.inc:1136 src/dialogs/options.c:248
+#: src/config/options.inc:1142 src/dialogs/options.c:248
 msgid "Block cursor"
 msgstr "Udfyldt markør"
 
-#: src/config/options.inc:1138
+#: src/config/options.inc:1144
 #, fuzzy
 msgid ""
 "Move cursor to bottom right corner when done drawing. This is particularly "
@@ -4437,7 +4448,7 @@ msgstr ""
 #. * an outer list entry after an inner list.
 #. * TRANSLATORS: This restriction applies only to the
 #. * "en" (English) translation.  (See doc/Makefile.)
-#: src/config/options.inc:1149
+#: src/config/options.inc:1155
 #, fuzzy
 msgid ""
 "The color mode controls what colors are used and how they are output to the "
@@ -4467,11 +4478,11 @@ msgstr ""
 "3 betyder tilstanden 256-farve, som bruger XTerm RGB-farvekoder\n"
 "4 betyder tilstanden rigtige farver, some bruger konsole RGB-farvekoder"
 
-#: src/config/options.inc:1164 src/dialogs/options.c:250
+#: src/config/options.inc:1170 src/dialogs/options.c:250
 msgid "Transparency"
 msgstr "Gennemsigtighed"
 
-#: src/config/options.inc:1166
+#: src/config/options.inc:1172
 #, fuzzy
 msgid ""
 "If we should not set the background to black. This is particularly useful "
@@ -4487,36 +4498,36 @@ msgstr ""
 "- en sådan baggrund vil også blive synlig i ELinks. Dette\n"
 "giver kun mening hvis farver er aktiveret."
 
-#: src/config/options.inc:1176 src/dialogs/options.c:249
+#: src/config/options.inc:1182 src/dialogs/options.c:249
 #, fuzzy
 msgid "Italic"
 msgstr "Italiensk"
 
-#: src/config/options.inc:1178
+#: src/config/options.inc:1184
 msgid "If we should use italics."
 msgstr ""
 
-#: src/config/options.inc:1182
+#: src/config/options.inc:1188
 msgid "Whether terminal supports kitty graphics protocol."
 msgstr ""
 
-#: src/config/options.inc:1187
+#: src/config/options.inc:1193
 msgid "Whether terminal supports sixel graphics."
 msgstr ""
 
-#: src/config/options.inc:1189 src/dialogs/options.c:252
+#: src/config/options.inc:1195 src/dialogs/options.c:252
 msgid "Strikethrough"
 msgstr ""
 
-#: src/config/options.inc:1191
+#: src/config/options.inc:1197
 msgid "If we should use strikethrough."
 msgstr ""
 
-#: src/config/options.inc:1195
+#: src/config/options.inc:1201
 msgid "If we should use underline or enhance the color instead."
 msgstr "Om understregning eller farvemarkering skal bruges."
 
-#: src/config/options.inc:1199
+#: src/config/options.inc:1205
 #, fuzzy
 msgid ""
 "Codepage of charset used for displaying content on terminal. 'System' stands "
@@ -4527,30 +4538,30 @@ msgstr ""
 "sprogindstilling."
 
 #. Keep options in alphabetical order.
-#: src/config/options.inc:1207
+#: src/config/options.inc:1213
 msgid "User interface"
 msgstr "Brugergrænseflade"
 
-#: src/config/options.inc:1209
+#: src/config/options.inc:1215
 msgid "User interface options."
 msgstr "Indstillinger for brugergrænseflade."
 
-#: src/config/options.inc:1211 src/config/options.inc:1466
+#: src/config/options.inc:1217 src/config/options.inc:1472
 #, fuzzy
 msgid "Clipboard"
 msgstr "%ld fil"
 
-#: src/config/options.inc:1213
+#: src/config/options.inc:1219
 #, fuzzy
 msgid "Clipboard settings."
 msgstr "Farveindstillinger"
 
-#: src/config/options.inc:1215
+#: src/config/options.inc:1221
 #, fuzzy
 msgid "Clipboard filename"
 msgstr "%ld fil"
 
-#: src/config/options.inc:1217
+#: src/config/options.inc:1223
 msgid ""
 "The filename of the clipboard. The 'copy-clipboard' action will append to "
 "it. This file can be also a named pipe. See contrib/clipboard/clip.sh for "
@@ -4558,360 +4569,360 @@ msgid ""
 "clipboard."
 msgstr ""
 
-#: src/config/options.inc:1221
+#: src/config/options.inc:1227
 msgid "Remove leading spaces"
 msgstr ""
 
-#: src/config/options.inc:1223
+#: src/config/options.inc:1229
 msgid "Whether to remove leading spaces when copying to clipboard."
 msgstr ""
 
-#: src/config/options.inc:1225
+#: src/config/options.inc:1231
 msgid "Remove trailing spaces"
 msgstr ""
 
-#: src/config/options.inc:1227
+#: src/config/options.inc:1233
 msgid "Whether to remove trailing spaces when copying to clipboard."
 msgstr ""
 
-#: src/config/options.inc:1230
+#: src/config/options.inc:1236
 msgid "Color settings"
 msgstr "Farveindstillinger"
 
-#: src/config/options.inc:1232
+#: src/config/options.inc:1238
 msgid "Default user interface color settings."
 msgstr "Forvalgte farveindstillinger for brugergrænseflade."
 
-#: src/config/options.inc:1259
+#: src/config/options.inc:1265
 msgid "Color terminals"
 msgstr "Farveterminaler"
 
-#: src/config/options.inc:1261
+#: src/config/options.inc:1267
 msgid "Color settings for color terminal."
 msgstr "Farveindstillinger for farveterminaler."
 
-#: src/config/options.inc:1263
+#: src/config/options.inc:1269
 msgid "Non-color terminals"
 msgstr "Monokrome terminaler"
 
-#: src/config/options.inc:1265
+#: src/config/options.inc:1271
 msgid "Color settings for non-color terminal."
 msgstr "Farveindstillinger for monokrome terminaler."
 
 #. FIXME: obsolete, how to alias them correctly ? --Zas
-#: src/config/options.inc:1268
+#: src/config/options.inc:1274
 msgid "Main menu bar"
 msgstr "Hovedmenubjælke"
 
-#: src/config/options.inc:1270
+#: src/config/options.inc:1276
 msgid "Main menu bar colors."
 msgstr "Farver for hovedmenubjælke."
 
-#: src/config/options.inc:1272
+#: src/config/options.inc:1278
 msgid "Unselected main menu bar item"
 msgstr "Inaktive menupunkter i hovedmenu"
 
-#: src/config/options.inc:1274
+#: src/config/options.inc:1280
 msgid "Unselected main menu bar item colors."
 msgstr "Farver for inaktive menupunkter i hovedmenu."
 
-#: src/config/options.inc:1276
+#: src/config/options.inc:1282
 msgid "Selected main menu bar item"
 msgstr "Aktive menupunkter i hovedmenu"
 
-#: src/config/options.inc:1278
+#: src/config/options.inc:1284
 msgid "Selected main menu bar item colors."
 msgstr "Farver for aktive menupunkter i hovedmenu."
 
-#: src/config/options.inc:1280 src/config/options.inc:1309
+#: src/config/options.inc:1286 src/config/options.inc:1315
 msgid "Hotkey"
 msgstr "Hurtigtast"
 
-#: src/config/options.inc:1282
+#: src/config/options.inc:1288
 msgid "Main menu hotkey colors."
 msgstr "Farver for hurtigtaster i hovedmenu."
 
-#: src/config/options.inc:1284 src/config/options.inc:1313
+#: src/config/options.inc:1290 src/config/options.inc:1319
 msgid "Unselected hotkey"
 msgstr "Inaktiv hurtigtast"
 
-#: src/config/options.inc:1286
+#: src/config/options.inc:1292
 msgid "Main menu unselected hotkey colors."
 msgstr "Farver for inaktiv hurtigtast."
 
-#: src/config/options.inc:1288 src/config/options.inc:1317
+#: src/config/options.inc:1294 src/config/options.inc:1323
 msgid "Selected hotkey"
 msgstr "Aktiv hurtigtast"
 
-#: src/config/options.inc:1290
+#: src/config/options.inc:1296
 msgid "Main menu selected hotkey colors."
 msgstr "Farver for aktiv hurtigtast i hovedmenu."
 
-#: src/config/options.inc:1293
+#: src/config/options.inc:1299
 msgid "Menu bar"
 msgstr "Menulinje"
 
-#: src/config/options.inc:1295
+#: src/config/options.inc:1301
 msgid "Menu bar colors."
 msgstr "Farver for menulinje."
 
-#: src/config/options.inc:1297
+#: src/config/options.inc:1303
 msgid "Unselected menu item"
 msgstr "Inaktivt menupunkt"
 
-#: src/config/options.inc:1299
+#: src/config/options.inc:1305
 msgid "Unselected menu item colors."
 msgstr "Farver for inaktivt menupunkt i menu."
 
-#: src/config/options.inc:1301
+#: src/config/options.inc:1307
 msgid "Selected menu item"
 msgstr "Aktivt menupunkt"
 
-#: src/config/options.inc:1303
+#: src/config/options.inc:1309
 msgid "Selected menu item colors."
 msgstr "Farver for aktivt menupunkt."
 
-#: src/config/options.inc:1305
+#: src/config/options.inc:1311
 msgid "Marked menu item"
 msgstr "Markeret menupunkt"
 
-#: src/config/options.inc:1307
+#: src/config/options.inc:1313
 msgid "Marked menu item colors."
 msgstr "Farver for markeret menupunkt."
 
-#: src/config/options.inc:1311
+#: src/config/options.inc:1317
 msgid "Menu item hotkey colors."
 msgstr "Farver for hurtigtast i menupunkt."
 
-#: src/config/options.inc:1315
+#: src/config/options.inc:1321
 msgid "Menu item unselected hotkey colors."
 msgstr "Farver for inaktive hurtigtaster i menupunkter."
 
-#: src/config/options.inc:1319
+#: src/config/options.inc:1325
 msgid "Menu item selected hotkey colors."
 msgstr "Farver for aktive hurtigtaster i menupunkter."
 
-#: src/config/options.inc:1321
+#: src/config/options.inc:1327
 msgid "Menu frame"
 msgstr "Menuramme"
 
-#: src/config/options.inc:1323
+#: src/config/options.inc:1329
 msgid "Menu frame colors."
 msgstr "Farver for menuramme."
 
-#: src/config/options.inc:1326
+#: src/config/options.inc:1332
 msgid "Dialog"
 msgstr "Dialogboks"
 
-#: src/config/options.inc:1328
+#: src/config/options.inc:1334
 msgid "Dialog colors."
 msgstr "Farver for dialogboks."
 
-#: src/config/options.inc:1338
+#: src/config/options.inc:1344
 msgid "Generic"
 msgstr "Fælles"
 
-#: src/config/options.inc:1340
+#: src/config/options.inc:1346
 msgid "Generic dialog colors."
 msgstr "Fælles farver for dialogbokse."
 
-#: src/config/options.inc:1342
+#: src/config/options.inc:1348
 msgid "Frame"
 msgstr "Ramme"
 
-#: src/config/options.inc:1344
+#: src/config/options.inc:1350
 msgid "Dialog frame colors."
 msgstr "Farve på ramme om dialogboks."
 
-#: src/config/options.inc:1346
+#: src/config/options.inc:1352
 msgid "Scrollbar"
 msgstr "Rullebjælke"
 
-#: src/config/options.inc:1348
+#: src/config/options.inc:1354
 msgid "Scrollbar colors."
 msgstr "Farver for rullebjælke."
 
-#: src/config/options.inc:1350
+#: src/config/options.inc:1356
 msgid "Selected scrollbar"
 msgstr "Farver for aktivt faneblad"
 
-#: src/config/options.inc:1352
+#: src/config/options.inc:1358
 msgid "Scrollbar selected colors."
 msgstr "Farver for aktiv rullebjælke."
 
-#: src/config/options.inc:1356
+#: src/config/options.inc:1362
 msgid "Dialog title colors."
 msgstr "Farve på titel i dialogboks."
 
-#: src/config/options.inc:1358
+#: src/config/options.inc:1364
 msgid "Text"
 msgstr "Tekst"
 
-#: src/config/options.inc:1360
+#: src/config/options.inc:1366
 msgid "Dialog text colors."
 msgstr "Farver på tekst i dialogboks."
 
-#: src/config/options.inc:1362 src/viewer/text/form.c:1977
+#: src/config/options.inc:1368 src/viewer/text/form.c:1977
 msgid "Checkbox"
 msgstr "Afkrydsningsboks"
 
-#: src/config/options.inc:1364
+#: src/config/options.inc:1370
 msgid "Dialog checkbox colors."
 msgstr "Farver for afkrydsningsboks."
 
-#: src/config/options.inc:1366
+#: src/config/options.inc:1372
 msgid "Selected checkbox"
 msgstr "Aktiv afkrydsningsboks"
 
-#: src/config/options.inc:1368
+#: src/config/options.inc:1374
 msgid "Dialog selected checkbox colors."
 msgstr "Farver for aktiv afkrydsningsboks."
 
-#: src/config/options.inc:1370
+#: src/config/options.inc:1376
 msgid "Checkbox label"
 msgstr "Mærkat på afkrydsningsboks"
 
-#: src/config/options.inc:1372
+#: src/config/options.inc:1378
 msgid "Dialog checkbox label colors."
 msgstr "Farver på afkrydsningsboksens mærkat."
 
-#: src/config/options.inc:1374
+#: src/config/options.inc:1380
 msgid "Button"
 msgstr "Knap"
 
-#: src/config/options.inc:1376 src/config/options.inc:1384
+#: src/config/options.inc:1382 src/config/options.inc:1390
 msgid "Dialog button colors."
 msgstr "Farver på knapper i dialogbokse."
 
-#: src/config/options.inc:1378
+#: src/config/options.inc:1384
 msgid "Selected button"
 msgstr "Valgt knap"
 
-#: src/config/options.inc:1380 src/config/options.inc:1388
+#: src/config/options.inc:1386 src/config/options.inc:1394
 msgid "Dialog selected button colors."
 msgstr "Farver på den aktive knap i dialogbokse."
 
-#: src/config/options.inc:1382
+#: src/config/options.inc:1388
 msgid "Button shortcut"
 msgstr "Knapgenveje"
 
-#: src/config/options.inc:1386
+#: src/config/options.inc:1392
 msgid "Selected button shortcut"
 msgstr "Genvejstast for aktiv knap"
 
-#: src/config/options.inc:1390 src/viewer/text/form.c:1981
+#: src/config/options.inc:1396 src/viewer/text/form.c:1981
 msgid "Text field"
 msgstr "Tekstfelt"
 
-#: src/config/options.inc:1392
+#: src/config/options.inc:1398
 msgid "Dialog text field colors."
 msgstr "Farver på tekstfelter i dialogbokse."
 
-#: src/config/options.inc:1394
+#: src/config/options.inc:1400
 msgid "Text field text"
 msgstr "Tekstfelt tekst"
 
-#: src/config/options.inc:1396
+#: src/config/options.inc:1402
 msgid "Dialog field text colors."
 msgstr "Farver på tekst i dialogbokses tekstfelter."
 
-#: src/config/options.inc:1398
+#: src/config/options.inc:1404
 msgid "Meter"
 msgstr "Måler"
 
-#: src/config/options.inc:1400
+#: src/config/options.inc:1406
 msgid "Dialog meter colors."
 msgstr "Farve på måler i dialogboks."
 
-#: src/config/options.inc:1402
+#: src/config/options.inc:1408
 msgid "Shadow"
 msgstr "Skygge"
 
-#: src/config/options.inc:1404
+#: src/config/options.inc:1410
 msgid "Dialog shadow colors (see ui.shadows option)."
 msgstr "Farver på dialogbokses skygger (se ui.shadows option)."
 
-#: src/config/options.inc:1406
+#: src/config/options.inc:1412
 msgid "Title bar"
 msgstr "Titelbjælke"
 
-#: src/config/options.inc:1408
+#: src/config/options.inc:1414
 msgid "Title bar colors."
 msgstr "Farver for titelbjælke."
 
-#: src/config/options.inc:1410
+#: src/config/options.inc:1416
 msgid "Generic title bar"
 msgstr "Fælles titelbjælke"
 
-#: src/config/options.inc:1412
+#: src/config/options.inc:1418
 msgid "Generic title bar colors."
 msgstr "Farver for fælles titelbjælke."
 
-#: src/config/options.inc:1414
+#: src/config/options.inc:1420
 msgid "Title bar text"
 msgstr "Titelbjælketekst"
 
-#: src/config/options.inc:1416
+#: src/config/options.inc:1422
 msgid "Title bar text colors."
 msgstr "Tekstfarve for titelbjælke."
 
-#: src/config/options.inc:1419
+#: src/config/options.inc:1425
 msgid "Status bar"
 msgstr "Statusbjælke"
 
-#: src/config/options.inc:1421
+#: src/config/options.inc:1427
 msgid "Status bar colors."
 msgstr "Farver på statusbjælke."
 
-#: src/config/options.inc:1423
+#: src/config/options.inc:1429
 #, fuzzy
 msgid "Status bar show ip"
 msgstr "Statusbjælke"
 
-#: src/config/options.inc:1425
+#: src/config/options.inc:1431
 #, fuzzy
 msgid "Status bar show ip text colors."
 msgstr "Tekstfarver i statusbjælke."
 
-#: src/config/options.inc:1427
+#: src/config/options.inc:1433
 #, fuzzy
 msgid "Status bar show available memory"
 msgstr "Statusbjælke"
 
-#: src/config/options.inc:1429
+#: src/config/options.inc:1435
 #, fuzzy
 msgid "Status bar show available memory text colors."
 msgstr "Tekstfarver i statusbjælke."
 
-#: src/config/options.inc:1431
+#: src/config/options.inc:1437
 msgid "Generic status bar"
 msgstr "Fælles statusbjælke"
 
-#: src/config/options.inc:1433
+#: src/config/options.inc:1439
 msgid "Generic status bar colors."
 msgstr "Fælles farver for statusbjælke."
 
-#: src/config/options.inc:1436
+#: src/config/options.inc:1442
 msgid "Status bar text"
 msgstr "Tekst for statusbjælke"
 
-#: src/config/options.inc:1438
+#: src/config/options.inc:1444
 msgid "Status bar text colors."
 msgstr "Tekstfarver i statusbjælke."
 
-#: src/config/options.inc:1441
+#: src/config/options.inc:1447
 msgid "Tabs bar"
 msgstr "Fanebladsbjælke"
 
-#: src/config/options.inc:1443
+#: src/config/options.inc:1449
 msgid "Tabs bar colors."
 msgstr "Farver for fanebladsbjælke."
 
-#: src/config/options.inc:1445
+#: src/config/options.inc:1451
 msgid "Unvisited tab"
 msgstr "Ubesøgt faneblad"
 
-#: src/config/options.inc:1447
+#: src/config/options.inc:1453
 #, fuzzy
 msgid ""
 "Tab colors for tabs that have not been selected since they completed loading."
@@ -4919,57 +4930,57 @@ msgstr ""
 "Farver på faneblade der ikke har været besøgt\n"
 "efter at indlæsningen af dem fuldførtes."
 
-#: src/config/options.inc:1450
+#: src/config/options.inc:1456
 msgid "Unselected tab"
 msgstr "Inaktivt faneblad"
 
-#: src/config/options.inc:1452
+#: src/config/options.inc:1458
 msgid "Unselected tab colors."
 msgstr "Farver for inaktivt faneblad."
 
-#: src/config/options.inc:1454
+#: src/config/options.inc:1460
 msgid "Loading tab"
 msgstr "Indlæsende faneblade"
 
-#: src/config/options.inc:1456
+#: src/config/options.inc:1462
 msgid "Tab colors for tabs that are loading in the background."
 msgstr "Farve på faneblade som indlæses i baggrunden."
 
-#: src/config/options.inc:1458
+#: src/config/options.inc:1464
 msgid "Selected tab"
 msgstr "Aktivt faneblad"
 
-#: src/config/options.inc:1460
+#: src/config/options.inc:1466
 msgid "Selected tab colors."
 msgstr "Farver for aktivt faneblad."
 
-#: src/config/options.inc:1462
+#: src/config/options.inc:1468
 msgid "Tab separator"
 msgstr "Fanebladsskilletegn"
 
-#: src/config/options.inc:1464
+#: src/config/options.inc:1470
 msgid "Tab separator colors."
 msgstr "Farver for skilletegn mellem faneblade."
 
-#: src/config/options.inc:1468
+#: src/config/options.inc:1474
 #, fuzzy
 msgid "Clipboard highlight colors."
 msgstr "Farver for fremhævning af søgeord."
 
-#: src/config/options.inc:1470
+#: src/config/options.inc:1476
 msgid "Desktop"
 msgstr ""
 
-#: src/config/options.inc:1472
+#: src/config/options.inc:1478
 #, fuzzy
 msgid "Desktop background."
 msgstr "Forvalgt baggrundsfarve."
 
-#: src/config/options.inc:1474
+#: src/config/options.inc:1480
 msgid "Searched strings"
 msgstr "Søgeudtryk"
 
-#: src/config/options.inc:1476
+#: src/config/options.inc:1482
 msgid "Searched string highlight colors."
 msgstr "Farver for fremhævning af søgeord."
 
@@ -4977,19 +4988,19 @@ msgstr "Farver for fremhævning af søgeord."
 #. ============= BORING PART (colors) END ===================
 #. ==========================================================
 #. Keep options in alphabetical order.
-#: src/config/options.inc:1485
+#: src/config/options.inc:1491
 msgid "Dialog settings"
 msgstr "Indstillinger for dialogbokse"
 
-#: src/config/options.inc:1487
+#: src/config/options.inc:1493
 msgid "Dialogs-specific appearance and behaviour settings."
 msgstr "Indstillinger der vedrører dialogbokses udseende og adfærd."
 
-#: src/config/options.inc:1490
+#: src/config/options.inc:1496
 msgid "Minimal height of listbox widget"
 msgstr "Minimumhøjde på listeboks-element"
 
-#: src/config/options.inc:1492
+#: src/config/options.inc:1498
 #, fuzzy
 msgid ""
 "Minimal height of the listbox widget (used e.g. for bookmarks or global "
@@ -4998,11 +5009,11 @@ msgstr ""
 "Minimumhøjde på listeboks-element. Bruges f.eks. af\n"
 "bogmærke- og historikhåndtering."
 
-#: src/config/options.inc:1495
+#: src/config/options.inc:1501
 msgid "Drop shadows"
 msgstr "Slagskygger"
 
-#: src/config/options.inc:1497
+#: src/config/options.inc:1503
 #, fuzzy
 msgid ""
 "Make dialogs drop shadows (the shadows are solid, you can adjust their color "
@@ -5013,11 +5024,11 @@ msgstr ""
 "og farven kan ændres med ui.colors.*.dialog.shadow.\n"
 "Du kan fjerne de brede kanter ved at rette i setup.h."
 
-#: src/config/options.inc:1502
+#: src/config/options.inc:1508
 msgid "Underline menu hotkeys"
 msgstr "Understreg hurtigtaster i menu"
 
-#: src/config/options.inc:1504
+#: src/config/options.inc:1510
 #, fuzzy
 msgid ""
 "Whether to underline hotkeys in menus to make them more visible. Requires "
@@ -5027,11 +5038,11 @@ msgstr ""
 "gøre dem mere synlige. Kræver at understregning er understøttet\n"
 "og aktiveret for terminalen."
 
-#: src/config/options.inc:1508
+#: src/config/options.inc:1514
 msgid "Underline button shortcuts"
 msgstr "Understreg knap-genvejstaster"
 
-#: src/config/options.inc:1510
+#: src/config/options.inc:1516
 #, fuzzy
 msgid ""
 "Whether to underline button shortcuts to make them more visible. Requires "
@@ -5041,11 +5052,11 @@ msgstr ""
 "gøre dem mere synlige. Kræver at understregning er understøttet\n"
 "og aktiveret for terminalen."
 
-#: src/config/options.inc:1515
+#: src/config/options.inc:1521
 msgid "Timer options"
 msgstr "Timerindstillinger"
 
-#: src/config/options.inc:1517
+#: src/config/options.inc:1523
 #, fuzzy
 msgid ""
 "Timed action after certain interval of user inactivity. Someone can even "
@@ -5055,7 +5066,7 @@ msgstr ""
 "inaktivitet. Der er faktisk nogen der finder dette\n"
 "nyttigt selvom det lyder utroligt."
 
-#: src/config/options.inc:1524
+#: src/config/options.inc:1530
 msgid ""
 "Whether to enable the timer or not:\n"
 "0 is don't count down anything\n"
@@ -5067,7 +5078,7 @@ msgstr ""
 "1 betyder tæl ned, men vis ikke timeren\n"
 "2 betyder tæl ned og vis timeren ved LED-indikatorer"
 
-#: src/config/options.inc:1531
+#: src/config/options.inc:1537
 msgid ""
 "Whether to enable the timer or not:\n"
 "0 is don't count down anything\n"
@@ -5079,11 +5090,11 @@ msgstr ""
 "1 betyder tæl ned, men vis ikke timeren\n"
 "2 betyder tæl ned og vis timeren ved LED-indikatorer (DEAKTIVERET)"
 
-#: src/config/options.inc:1537
+#: src/config/options.inc:1543
 msgid "Duration"
 msgstr "Varighed"
 
-#: src/config/options.inc:1539
+#: src/config/options.inc:1545
 #, fuzzy
 msgid ""
 "Inactivity timeout in seconds. The maximum of one day should be enough for "
@@ -5092,23 +5103,23 @@ msgstr ""
 "Nedtælling for inaktivitet i sekunder. En dag bør række\n"
 "for de fleste (TM)."
 
-#: src/config/options.inc:1544
+#: src/config/options.inc:1550
 msgid "Keybinding action to be triggered when timer reaches zero."
 msgstr "Handling der udløses når nedtælling er fuldført."
 
-#: src/config/options.inc:1548
+#: src/config/options.inc:1554
 msgid "Window tabs"
 msgstr "Vinduesfaneblade"
 
-#: src/config/options.inc:1550
+#: src/config/options.inc:1556
 msgid "Window tabs settings."
 msgstr "Indstillinger for vinduesfaneblade."
 
-#: src/config/options.inc:1552 src/globhist/globhist.c:71
+#: src/config/options.inc:1558 src/globhist/globhist.c:71
 msgid "Display style"
 msgstr "Visningsstil"
 
-#: src/config/options.inc:1554
+#: src/config/options.inc:1560
 #, fuzzy
 msgid ""
 "What to display in tab manager dialog:\n"
@@ -5119,11 +5130,11 @@ msgstr ""
 "0 betyder vis adresser\n"
 "1 betyder vis sidetitler"
 
-#: src/config/options.inc:1558
+#: src/config/options.inc:1564
 msgid "Display tabs bar"
 msgstr "Vis fanebladsbjælke"
 
-#: src/config/options.inc:1560
+#: src/config/options.inc:1566
 msgid ""
 "Show tabs bar on the screen:\n"
 "0 means never\n"
@@ -5135,19 +5146,19 @@ msgstr ""
 "1 betyder kun ved to eller flere åbne faneblade\n"
 "2 betyder altid"
 
-#: src/config/options.inc:1565
+#: src/config/options.inc:1571
 msgid "Tab bar at top"
 msgstr "Placer faneblade i toppen af skærmen"
 
-#: src/config/options.inc:1567
+#: src/config/options.inc:1573
 msgid "Whether display tab bar at top like other browsers do."
 msgstr "Om faneblade skal vises i toppen af skærmen, som andre browsere."
 
-#: src/config/options.inc:1569
+#: src/config/options.inc:1575
 msgid "Wrap-around tabs cycling"
 msgstr "Side til side navigeringscyklus for faneblade"
 
-#: src/config/options.inc:1571
+#: src/config/options.inc:1577
 #, fuzzy
 msgid ""
 "When moving right from the last tab, jump to the first one, and vice versa."
@@ -5155,30 +5166,30 @@ msgstr ""
 "Når der flyttes til højre fra det sidste faneblad, hop da til\n"
 "det første og omvendt."
 
-#: src/config/options.inc:1574
+#: src/config/options.inc:1580
 msgid "Confirm tab closing"
 msgstr "Bekræft lukning af faneblad"
 
-#: src/config/options.inc:1576
+#: src/config/options.inc:1582
 msgid "When closing a tab show confirmation dialog."
 msgstr "Vis bekræftelsesdialog ved lukning af faneblad."
 
-#: src/config/options.inc:1578
+#: src/config/options.inc:1584
 #, fuzzy
 msgid "Disallow writing to terminal"
 msgstr "Fejl ved skrivning til fil"
 
-#: src/config/options.inc:1580
+#: src/config/options.inc:1586
 #, fuzzy
 msgid "Whether to disallow writing to terminal by background processes."
 msgstr "Om scripts skal forbydes at åbne nye vinduer eller faneblade."
 
 #. OPT_LANGUAGE
-#: src/config/options.inc:1582 src/config/opttypes.c:522
+#: src/config/options.inc:1588 src/config/opttypes.c:522
 msgid "Language"
 msgstr "Sprog"
 
-#: src/config/options.inc:1584
+#: src/config/options.inc:1590
 #, fuzzy
 msgid ""
 "Language of user interface. 'System' means that the language will be "
@@ -5187,35 +5198,35 @@ msgstr ""
 "Sprog i brugerfladen. \"System\" betyder at systemets\n"
 "sprogindstillinger vil blive anvendt."
 
-#: src/config/options.inc:1588
+#: src/config/options.inc:1594
 msgid "Display menu bar always"
 msgstr "Vis altid hovedmenubjælke"
 
-#: src/config/options.inc:1590
+#: src/config/options.inc:1596
 msgid "Always show menu bar on the screen."
 msgstr "Vis altid hovedmenubjælken på skærmen."
 
-#: src/config/options.inc:1592
+#: src/config/options.inc:1598
 msgid "Display status bar"
 msgstr "Vis statusbjælke"
 
-#: src/config/options.inc:1594
+#: src/config/options.inc:1600
 msgid "Show status bar on the screen."
 msgstr "Vis statusbjælke på skærmen."
 
-#: src/config/options.inc:1596
+#: src/config/options.inc:1602
 msgid "Display title bar"
 msgstr "Vis titelbjælke"
 
-#: src/config/options.inc:1598
+#: src/config/options.inc:1604
 msgid "Show title bar on the screen."
 msgstr "Vis titelbjælke på skærmen."
 
-#: src/config/options.inc:1600
+#: src/config/options.inc:1606
 msgid "Display goto dialog in new tabs"
 msgstr "Vis \"Gå til\"-dialogboks i nye faneblade"
 
-#: src/config/options.inc:1602
+#: src/config/options.inc:1608
 #, fuzzy
 msgid ""
 "Pop up goto dialog in newly created tabs when there's no homepage set. This "
@@ -5225,11 +5236,11 @@ msgstr ""
 "når ingen hjemmeside er angivet. Dette indebærer også visning\n"
 "af \"gå til adresse\"-dialog ved opstart."
 
-#: src/config/options.inc:1606
+#: src/config/options.inc:1612
 msgid "Show a message box when file is saved successfully"
 msgstr "Vis en meddelelse når en fil er gemt"
 
-#: src/config/options.inc:1608
+#: src/config/options.inc:1614
 #, fuzzy
 msgid ""
 "When you pressed a [ Save ] button in some manager, this option will make "
@@ -5239,19 +5250,19 @@ msgstr ""
 "gemt ved at vise en dialogboks herom når der trykkes på\n"
 "knappen [ Gem ] i en opsætningsmenu."
 
-#: src/config/options.inc:1613
+#: src/config/options.inc:1619
 msgid "Sessions"
 msgstr "Sessioner"
 
-#: src/config/options.inc:1615
+#: src/config/options.inc:1621
 msgid "Sessions settings."
 msgstr "Indstillinger for sessioner."
 
-#: src/config/options.inc:1617
+#: src/config/options.inc:1623
 msgid "Auto restore session"
 msgstr "Autogenskab session"
 
-#: src/config/options.inc:1619
+#: src/config/options.inc:1625
 #, fuzzy
 msgid ""
 "Automatically restore the session at start.\n"
@@ -5261,11 +5272,11 @@ msgstr ""
 "Genskab session automatisk ved opstart. Dette kræver\n"
 "understøttelse af bogmærker."
 
-#: src/config/options.inc:1623
+#: src/config/options.inc:1629
 msgid "Auto save session"
 msgstr "Autogem session"
 
-#: src/config/options.inc:1625
+#: src/config/options.inc:1631
 #, fuzzy
 msgid ""
 "Automatically save the session when quitting.\n"
@@ -5275,11 +5286,11 @@ msgstr ""
 "Gem session automatisk ved afslutning. Dette kræver\n"
 "understøttelse af bogmærker."
 
-#: src/config/options.inc:1629
+#: src/config/options.inc:1635
 msgid "Auto save and restore session folder name"
 msgstr "Katalognavn for autogem og autogenskab session"
 
-#: src/config/options.inc:1631
+#: src/config/options.inc:1637
 #, fuzzy
 msgid ""
 "Name of the bookmarks folder used for auto saving and restoring session. The "
@@ -5291,12 +5302,12 @@ msgstr ""
 "autogenskabelse af en session. Giver kun mening med\n"
 "understøttelse af bogmærker."
 
-#: src/config/options.inc:1637
+#: src/config/options.inc:1643
 #, fuzzy
 msgid "Auto save latest positions"
 msgstr "Autogem session"
 
-#: src/config/options.inc:1639
+#: src/config/options.inc:1645
 #, fuzzy
 msgid ""
 "Whether to save view positions of documents.\n"
@@ -5306,22 +5317,22 @@ msgstr ""
 "Gem session automatisk ved afslutning. Dette kræver\n"
 "understøttelse af bogmærker."
 
-#: src/config/options.inc:1643
+#: src/config/options.inc:1649
 msgid "Fork on start"
 msgstr ""
 
-#: src/config/options.inc:1645
+#: src/config/options.inc:1651
 #, fuzzy
 msgid ""
 "Fork on start to let other terminals function even if the first terminal "
 "exits."
 msgstr "Hold sessionen aktiv selv hvis den sidste terminal afslutter."
 
-#: src/config/options.inc:1648
+#: src/config/options.inc:1654
 msgid "Homepage URI"
 msgstr "Hjemmesideadresse"
 
-#: src/config/options.inc:1650
+#: src/config/options.inc:1656
 #, fuzzy
 msgid ""
 "The URI to load either at startup time when no URI was given on the command "
@@ -5333,71 +5344,71 @@ msgstr ""
 "\"goto-url-home\". Sæt værdien til \"\" hvis miljøvariablen\n"
 "WWW_HOME skal bruges som adresse på hjemmeside i stedet."
 
-#: src/config/options.inc:1655
+#: src/config/options.inc:1661
 msgid "Keep session active"
 msgstr "Hold sessionen aktiv"
 
-#: src/config/options.inc:1657
+#: src/config/options.inc:1663
 msgid "Keep the session active even if the last terminal exits."
 msgstr "Hold sessionen aktiv selv hvis den sidste terminal afslutter."
 
-#: src/config/options.inc:1660
+#: src/config/options.inc:1666
 msgid "Postpone unlink temporary files"
 msgstr ""
 
-#: src/config/options.inc:1662
+#: src/config/options.inc:1668
 msgid ""
 "Clean temporary files (created for example while viewing images) at exit of "
 "ELinks not immediately after preview."
 msgstr ""
 
-#: src/config/options.inc:1667
+#: src/config/options.inc:1673
 msgid "Date format"
 msgstr "Datoformat"
 
-#: src/config/options.inc:1669
+#: src/config/options.inc:1675
 msgid "Date format to use in dialogs. See strftime(3)."
 msgstr "Datoformat i dialoger. Se strftime(3)."
 
 #. date added
-#: src/config/options.inc:1674
+#: src/config/options.inc:1680
 msgid "Disable mouse"
 msgstr ""
 
-#: src/config/options.inc:1676
+#: src/config/options.inc:1682
 msgid "Disable mouse. Changes take effect at the next elinks restart."
 msgstr ""
 
-#: src/config/options.inc:1680
+#: src/config/options.inc:1686
 #, fuzzy
 msgid "Background character"
 msgstr "Baggrundsfarve"
 
-#: src/config/options.inc:1682
+#: src/config/options.inc:1688
 msgid "Integer value of background character."
 msgstr ""
 
-#: src/config/options.inc:1684
+#: src/config/options.inc:1690
 msgid "Back to exit"
 msgstr ""
 
-#: src/config/options.inc:1686
+#: src/config/options.inc:1692
 msgid "Going back from initial page exits tab or elinks."
 msgstr ""
 
-#: src/config/options.inc:1688
+#: src/config/options.inc:1694
 msgid "Double ESC"
 msgstr ""
 
-#: src/config/options.inc:1690
+#: src/config/options.inc:1696
 msgid "Back to 0.12pre5 handling of ESC key."
 msgstr ""
 
-#: src/config/options.inc:1692
+#: src/config/options.inc:1698
 msgid "Set window title"
 msgstr "Sæt vinduestitel"
 
-#: src/config/options.inc:1694
+#: src/config/options.inc:1700
 #, fuzzy
 msgid ""
 "Set the window title when running in a windowing environment in an xterm-"
@@ -7299,7 +7310,7 @@ msgstr ""
 msgid "SpiderMonkey"
 msgstr ""
 
-#: src/main/interlink.c:340 src/main/select.c:1384
+#: src/main/interlink.c:340 src/main/select.c:1382
 #, c-format
 msgid "The call to %s failed: %d (%s)"
 msgstr "Kaldet til %s fejlede: %d (%s)"
@@ -7308,32 +7319,32 @@ msgstr "Kaldet til %s fejlede: %d (%s)"
 msgid "Cannot create a pipe for internal communication."
 msgstr "Kan ikke oprette datakanal til intern kommunikation."
 
-#: src/main/main.c:235
+#: src/main/main.c:236
 #, c-format
 msgid "URL expected after -%s"
 msgstr "Adresse forventes efter -%s."
 
-#: src/main/main.c:243
+#: src/main/main.c:244
 #, c-format
 msgid "No running ELinks found."
 msgstr "Ingen eksisterende ELinks blev fundet."
 
 #. The remote session(s) can not be created
-#: src/main/main.c:249
+#: src/main/main.c:250
 #, c-format
 msgid "No remote session to connect to."
 msgstr "Ingen fjernsession at forbinde til."
 
-#: src/main/main.c:257
+#: src/main/main.c:258
 msgid "Unable to encode session info."
 msgstr "Kunne ikke indkode sessionsinformation."
 
-#: src/main/main.c:275
+#: src/main/main.c:276
 msgid "Unable to attach_terminal()."
 msgstr "Kunne ikke forbinde til terminal med attach_terminal()."
 
 #. Infinite loop prevention.
-#: src/main/select.c:1387
+#: src/main/select.c:1385
 #, c-format
 msgid "%d select() failures."
 msgstr "%d select() fejl."
