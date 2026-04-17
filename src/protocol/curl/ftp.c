@@ -407,22 +407,13 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 	}
 }
 
-static void ftpes_got_data(void *stream, void *buffer, size_t len);
-static void sftp_got_data(void *stream, void *buffer, size_t len);
+static void ftp_got_data(void *stream, void *buffer, size_t len);
 
 static size_t
 my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream)
 {
 	ELOG
-	ftpes_got_data(stream, buffer, size * nmemb);
-	return nmemb;
-}
-
-static size_t
-my_fwrite_sftp(void *buffer, size_t size, size_t nmemb, void *stream)
-{
-	ELOG
-	sftp_got_data(stream, buffer, size * nmemb);
+	ftp_got_data(stream, buffer, size * nmemb);
 	return nmemb;
 }
 
@@ -525,7 +516,7 @@ do_ftpes(struct connection *conn)
 		conn->progress->seek = conn->from = offset;
 		ftp->easy = curl;
 		/* Define our callback to get called when there's data to be written */
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, conn->uri->protocol == PROTOCOL_SFTP ? my_fwrite_sftp : my_fwrite);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, my_fwrite);
 		/* Set a pointer to our struct to pass to the callback */
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, conn);
 		curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, ftp->error);
@@ -579,142 +570,6 @@ do_ftpes(struct connection *conn)
 	done_string(&u);
 }
 
-/* A read handler for conn->data_socket->fd.  This function reads
- * data from the FTP server, reformats it to HTML if it's a directory
- * listing, and adds the result to the cache entry.  */
-static void
-ftpes_got_data(void *stream, void *buf, size_t len)
-{
-	ELOG
-	struct connection *conn = (struct connection *)stream;
-	char *buffer = (char *)buf;
-	struct ftpes_connection_info *ftp = (struct ftpes_connection_info *)conn->info;
-	struct ftp_dir_html_format format;
-	size_t len2 = len;
-	size_t copied = 0;
-
-	/* XXX: This probably belongs rather to connect.c ? */
-	set_connection_timeout(conn);
-
-	if (!conn->cached) {
-		conn->cached = get_cache_entry(conn->uri);
-
-		if (!conn->cached) {
-out_of_mem:
-			abort_connection(conn, connection_state(S_OUT_OF_MEM));
-			return;
-		}
-	}
-
-	if (len < 0) {
-		abort_connection(conn, connection_state_for_errno(errno));
-		return;
-	}
-
-	if (ftp->dir) {
-		format.libc_codepage = get_cp_index("System");
-
-		format.colorize_dir = get_opt_bool("document.browse.links.color_dirs", NULL);
-
-		if (format.colorize_dir) {
-			color_to_string(get_opt_color("document.colors.dirs", NULL),
-					format.dircolor);
-		}
-	}
-
-	if (ftp->dir && !conn->from) {
-		struct string string;
-		struct connection_state state;
-
-		if (!conn->uri->data) {
-			abort_connection(conn, connection_state(S_FTP_ERROR));
-			return;
-		}
-
-		state = init_directory_listing(&string, conn->uri);
-		if (!is_in_state(state, S_OK)) {
-			abort_connection(conn, state);
-			return;
-		}
-		add_fragment(conn->cached, conn->from, string.source, string.length);
-		conn->from += string.length;
-
-		done_string(&string);
-
-		if (conn->uri->datalen) {
-			struct ftp_file_info ftp_info = INIT_FTP_FILE_INFO_ROOT;
-
-			display_dir_entry(conn->cached, &conn->from, &conn->tries,
-					  &format, &ftp_info);
-		}
-
-		mem_free_set(&conn->cached->content_type, stracpy("text/html"));
-	}
-
-	if (!ftp->dir && (len > 0)) {
-		if (add_fragment(conn->cached, conn->from, buffer, len) == 1) {
-			conn->tries = 0;
-		}
-
-		if ((conn->from == 0 || conn->progress->start > 0) && conn->est_length == -1) {
-			curl_easy_getinfo(ftp->easy, CURLINFO_CONTENT_LENGTH_DOWNLOAD_T, &conn->est_length);
-
-			if (conn->est_length != -1) {
-				conn->est_length += conn->from;
-			}
-		}
-		conn->from += len;
-		conn->received += len;
-		return;
-	}
-
-again:
-	len = len2;
-
-	if (FTP_BUF_SIZE - ftp->buf_pos < len) {
-		len = FTP_BUF_SIZE - ftp->buf_pos;
-	}
-
-	if (len2 > 0) {
-		int proceeded;
-
-		memcpy(ftp->ftp_buffer + ftp->buf_pos, buffer + copied, len);
-		conn->received += len;
-		copied += len;
-		proceeded = ftp_process_dirlist(conn->cached,
-						&conn->from,
-						ftp->ftp_buffer,
-						len + ftp->buf_pos,
-						0, &conn->tries,
-						&format, NULL);
-
-		if (proceeded == -1) goto out_of_mem;
-
-		ftp->buf_pos += len - proceeded;
-		memmove(ftp->ftp_buffer, ftp->ftp_buffer + proceeded, ftp->buf_pos);
-
-		len2 -= len;
-
-		if (len2 <= 0) {
-			return;
-		}
-		goto again;
-	}
-
-	if (ftp_process_dirlist(conn->cached, &conn->from,
-				ftp->ftp_buffer, ftp->buf_pos, 1,
-				&conn->tries, &format, NULL) == -1) {
-		goto out_of_mem;
-	}
-
-#define ADD_CONST(str) { \
-	add_fragment(conn->cached, conn->from, str, sizeof(str) - 1); \
-	conn->from += (sizeof(str) - 1); }
-
-	if (ftp->dir) ADD_CONST("</pre>\n<hr/>\n</body>\n</html>");
-	abort_connection(conn, connection_state(S_OK));
-}
-
 static int
 compare_file_ftp_info(const void *a, const void *b)
 {
@@ -743,7 +598,7 @@ sort_ftp_infos(struct ftpes_connection_info *ftp)
  * data from the FTP server, reformats it to HTML if it's a directory
  * listing, and adds the result to the cache entry.  */
 static void
-sftp_got_data(void *stream, void *buf, size_t len)
+ftp_got_data(void *stream, void *buf, size_t len)
 {
 	ELOG
 	struct connection *conn = (struct connection *)stream;
@@ -896,11 +751,7 @@ ftp_curl_handle_error(struct connection *conn, CURLcode res)
 		struct ftpes_connection_info *ftp = (struct ftpes_connection_info *)conn->info;
 
 		if (ftp->dir) {
-			if (conn->uri->protocol == PROTOCOL_SFTP) {
-				sftp_got_data(conn, NULL, 0);
-			} else {
-				ftpes_got_data(conn, NULL, 0);
-			}
+			ftp_got_data(conn, NULL, 0);
 		} else {
 			abort_connection(conn, connection_state(S_OK));
 		}
