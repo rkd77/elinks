@@ -139,7 +139,7 @@ void done_state_message(void);
 static inline struct connection_state
 connection_state(connection_basic_state_T basic)
 {
-	struct connection_state state = {};
+	struct connection_state state = {0};
 
 	assert(basic != S_ERRNO);
 	if_assert_failed basic = S_INTERNAL;
@@ -151,7 +151,7 @@ connection_state(connection_basic_state_T basic)
 static inline struct connection_state
 connection_state_for_errno(int syserr)
 {
-	struct connection_state state = {};
+	struct connection_state state = {0};
 
 	/* read_encoded_file() can pass syserr==0 here, so don't
 	 * assert otherwise.  */

@@ -158,9 +158,6 @@ static JSClassDef js_image_class = {
 	"Image",
 };
 
-static const JSCFunctionListEntry js_image_proto_funcs[] = {
-};
-
 int
 js_image_init(JSContext *ctx)
 {
@@ -176,7 +173,7 @@ js_image_init(JSContext *ctx)
 	proto = JS_NewObject(ctx);
 	REF_JS(proto);
 
-	JS_SetPropertyFunctionList(ctx, proto, js_image_proto_funcs, countof(js_image_proto_funcs));
+	JS_SetPropertyFunctionList(ctx, proto, NULL, 0);
 	JS_SetClassProto(ctx, js_image_class_id, proto);
 
 	/* Image object */
