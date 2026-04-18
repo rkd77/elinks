@@ -27,7 +27,7 @@ typedef struct timer * timer_id_T;
  * and kill_timer(). --Zas */
 #define TIMER_ID_UNDEF ((timer_id_T) NULL)
 
-int get_timers_count();
+int get_timers_count(void);
 void check_timers(timeval_T *last_time);
 void install_timer(timer_id_T *id, milliseconds_T delay, void (*)(void *), void *);
 void kill_timer(timer_id_T *id);

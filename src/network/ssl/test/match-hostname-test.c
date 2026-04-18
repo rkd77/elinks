@@ -14,7 +14,7 @@
 
 /* fake tty get function, needed for charsets.c */
 int
-get_ctl_handle()
+get_ctl_handle(void)
 {
 	return -1;
 }

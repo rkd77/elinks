@@ -217,7 +217,7 @@ done_host_connection(struct connection *conn)
 }
 
 
-static void sort_queue();
+static void sort_queue(void);
 
 #ifdef CONFIG_DEBUG
 static void

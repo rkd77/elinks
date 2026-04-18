@@ -42,7 +42,7 @@ int current_charset;
 
 /* fake tty get function, needed for charsets.c */
 int
-get_ctl_handle()
+get_ctl_handle(void)
 {
 	ELOG
 	return -1;

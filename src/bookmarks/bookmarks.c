@@ -107,7 +107,7 @@ bookmark_change_hook(va_list ap, void *data)
 	return EVENT_HOOK_STATUS_NEXT;
 }
 
-static void bookmark_snapshot();
+static void bookmark_snapshot(void);
 
 static enum evhook_status
 bookmark_write_hook(va_list ap, void *data)

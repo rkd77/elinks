@@ -11,7 +11,7 @@
 #include "cookies/parser.h"
 
 /* fake tty get function, needed for charsets.c */
-int get_ctl_handle()
+int get_ctl_handle(void)
 {
 	return -1;
 }
