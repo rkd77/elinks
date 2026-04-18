@@ -1613,7 +1613,7 @@ add_to_uri_list(struct uri_list *list, struct uri *uri)
 	list->uris[list->size++] = get_uri_reference(uri);
 
 	return uri;
-};
+}
 
 void
 free_uri_list(struct uri_list *list)

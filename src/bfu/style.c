@@ -113,4 +113,4 @@ done_bfu_colors(void)
 	}
 
 	free_hash(&bfu_colors);
-};
+}
