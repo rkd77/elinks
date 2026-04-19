@@ -14,6 +14,7 @@
 #include "document/document.h"
 #include "document/view.h"
 #include "js/ecmascript.h"
+#include "js/quickjs/cutils.h"
 #include "js/quickjs/mapa.h"
 #include "js/quickjs.h"
 #include "js/quickjs/document.h"
@@ -44,27 +45,6 @@ JSValue getInput(JSContext *ctx, struct form_state *fs);
 
 static struct form_state *js_input_get_form_state(JSContext *ctx, JSValueConst jsinput);
 
-struct JSString {
-    uint32_t header; /* must come first, 32-bit */
-    uint32_t len : 31;
-    uint8_t is_wide_char : 1; /* 0 = 8 bits, 1 = 16 bits characters */
-    /* for JS_ATOM_TYPE_SYMBOL: hash = 0, atom_type = 3,
-       for JS_ATOM_TYPE_PRIVATE: hash = 1, atom_type = 3
-       XXX: could change encoding to have one more bit in hash */
-    uint32_t hash : 30;
-    uint8_t atom_type : 2; /* != 0 if atom, JS_ATOM_TYPE_x */
-    uint32_t hash_next; /* atom_index for JS_ATOM_TYPE_SYMBOL */
-#ifdef DUMP_LEAKS
-    struct list_head link; /* string list */
-#endif
-    union {
-        uint8_t str8[0]; /* 8 bit strings will get an extra null terminator */
-        uint16_t str16[0];
-    } u;
-};
-
-typedef struct JSString JSString;
-
 static JSValue
 unicode_to_value(JSContext *ctx, unicode_val_T u)
 {
@@ -72,33 +52,10 @@ unicode_to_value(JSContext *ctx, unicode_val_T u)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSValue str = JS_NewStringLen(ctx, "        ", 8);
-	REF_JS(str);
+	uint8_t buf[UTF8_CHAR_LEN_MAX];
+	size_t length = utf8_encode(buf, u);
 
-	JSString *p = JS_VALUE_GET_STRING(str);
-	p->is_wide_char = 1;
-
-	if (u <= 0xFFFF && !is_utf16_surrogate(u)) {
-		p->u.str16[0] = u;
-		p->len = 1;
-		return str;
-	} else if (needs_utf16_surrogates(u)) {
-		p->u.str16[0] = get_utf16_high_surrogate(u);
-		p->u.str16[1] = get_utf16_low_surrogate(u);
-		p->len = 2;
-		return str;
-	} else {
-		p->len = 1;
-		p->u.str16[0] = 0;
-		return str;
-	}
-}
-
-static int
-string_get(const JSString *p, int idx)
-{
-	ELOG
-	return p->is_wide_char ? p->u.str16[idx] : p->u.str8[idx];
+	return JS_NewStringLen(ctx, (const char *)buf, length);
 }
 
 /* Convert the string *@vp to an access key.  Return 0 for no access
@@ -112,38 +69,12 @@ js_value_to_accesskey(JSContext *ctx, JSValueConst val)
 #endif
 	REF_JS(val);
 	unicode_val_T ret = UCS_NO_CHAR; /* which the caller will reject */
-
+	const uint8_t *pp = NULL;
 	const char *str = JS_ToCString(ctx, val);
-	JSValue new_val = JS_NewString(ctx, str);
+
+	ret = utf8_decode((const uint8_t *)str, &pp);
 	JS_FreeCString(ctx, str);
 
-	JSString *p = JS_VALUE_GET_STRING(new_val);
-
-	size_t len;
-	uint16_t chr[2];
-
-	len = p->len;
-
-	/* This implementation ignores extra characters in the string.  */
-	if (len < 1) {
-		ret = 0; /* which means no access key */
-		goto end;
-	}
-	chr[0] = string_get(p, 0);
-
-	if (!is_utf16_surrogate(chr[0])) {
-		ret = chr[0];
-		goto end;
-	}
-	if (len >= 2) {
-		chr[1] = string_get(p, 1);
-		if (is_utf16_high_surrogate(chr[0])
-			&& is_utf16_low_surrogate(chr[1])) {
-			ret = join_utf16_surrogates(chr[0], chr[1]);
-		}
-	}
-end:
-	JS_FreeValue(ctx, new_val);
 	return ret;
 }
 
