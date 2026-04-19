@@ -37,7 +37,7 @@ get_peer_id(bittorrent_id_T peer_id)
 	int i, j;
 
 	if (bittorrent_id_is_empty(peer_id)) {
-		snprintf(hex, sizeof(hex), "unknown id %p", peer_id);
+		snprintf(hex, sizeof(hex), "unknown id %p", (void *)peer_id);
 		return hex;
 	}
 
