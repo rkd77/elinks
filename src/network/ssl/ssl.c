@@ -363,13 +363,10 @@ static union option_info gnutls_options[] = {
 	 * of binary packages should of course change the default to
 	 * suit their systems.
 	 * TODO: If the file name is relative, look in xdg_config_home?  */
+#ifdef HAVE_GNUTLS_CERTIFICATE_SET_X509_SYSTEM_TRUST
 	INIT_OPT_STRING("connection.ssl", N_("Trusted CA file"),
 		"trusted_ca_file", OPT_ZERO,
-#ifdef HAVE_GNUTLS_CERTIFICATE_SET_X509_SYSTEM_TRUST
 		"",
-#else
-		"/etc/ssl/certs/ca-certificates.crt",
-#endif
 		N_("The location of a file containing certificates of "
 		"trusted certification authorities in PEM format. "
 		"ELinks then trusts certificates issued by these CAs.\n"
@@ -377,7 +374,18 @@ static union option_info gnutls_options[] = {
 		"If you change this option or the file, you must "
 		"restart ELinks for the changes to take effect. "
 		"This option affects GnuTLS but not OpenSSL.")),
-
+#else
+	INIT_OPT_STRING("connection.ssl", N_("Trusted CA file"),
+		"trusted_ca_file", OPT_ZERO,
+		"/etc/ssl/certs/ca-certificates.crt",
+		N_("The location of a file containing certificates of "
+		"trusted certification authorities in PEM format. "
+		"ELinks then trusts certificates issued by these CAs.\n"
+		"\n"
+		"If you change this option or the file, you must "
+		"restart ELinks for the changes to take effect. "
+		"This option affects GnuTLS but not OpenSSL.")),
+#endif
 	INIT_OPT_TREE("connection.ssl", N_("Client Certificates"),
 		"client_cert", OPT_SORT,
 		N_("X509 client certificate options.")),
