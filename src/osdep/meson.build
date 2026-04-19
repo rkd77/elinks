@@ -19,4 +19,8 @@ if conf_data.get('CONFIG_OS_WIN32')
 	subdir('win32')
 endif
 
-srcs += files('getifaddrs.c', 'newwin.c', 'osdep.c', 'signals.c', 'stub.c', 'sysname.c')
+srcs += files('newwin.c', 'osdep.c', 'signals.c', 'stub.c', 'sysname.c')
+
+if conf_data.get('HAVE_GETIFADDRS') != 1
+	srcs += files('getifaddrs.c')
+endif
