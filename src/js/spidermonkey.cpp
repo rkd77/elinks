@@ -828,12 +828,23 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 	JS::EnvironmentChain ag(ctx, JS::SupportUnscopables::No);
 
 	JS::SourceText<mozilla::Utf8Unit> srcBuf;
-	if (!srcBuf.init(ctx, code->source, code->length, JS::SourceOwnership::Borrowed)) {
+	struct string retcode;
+
+	if (!init_string(&retcode)) {
+		return -1;
+	}
+	add_to_string(&retcode, "return (");
+	add_string_to_string(&retcode, code);
+	add_to_string(&retcode, ");");
+
+	if (!srcBuf.init(ctx, retcode.source, retcode.length, JS::SourceOwnership::Borrowed)) {
+		done_string(&retcode);
 		return -1;
 	}
 
 	JSFunction *funs = JS::CompileFunction(ctx, ag, options, "aaa", 0, nullptr, srcBuf);
 	if (!funs) {
+		done_string(&retcode);
 		return -1;
 	};
 
@@ -856,7 +867,7 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 	} else {
 		result = r_val.toBoolean();
 	}
-
+	done_string(&retcode);
 	return result;
 }
 
