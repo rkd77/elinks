@@ -258,6 +258,7 @@ input_set_property_accessKey(JSContext *ctx, unsigned int argc, JS::Value *vp)
 			accesskey = chr[0];
 		}
 	} else {
+		JS_GetStringCharAt(ctx, str, 0, &chr[0]);
 		JS_GetStringCharAt(ctx, str, 1, &chr[1]);
 		if (is_utf16_high_surrogate(chr[0])
 			&& is_utf16_low_surrogate(chr[1])) {
