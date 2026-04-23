@@ -11,43 +11,28 @@
 #include <map>
 #include <string>
 
-static std::map<std::string, std::list<std::string> *> uri_pos_map;
+static std::map<std::string, std::list<std::string>> uri_pos_map;
 
 void
 save_in_uri_map(char *url, char *pos)
 {
-	auto search = uri_pos_map.find(url);
-
-	if (search != uri_pos_map.end()) {
-		(search->second)->push_back(pos);
-		return;
-	}
-
-	std::list<std::string> *first = new std::list<std::string>;
-
-	if (!first) {
-		return;
-	}
-	first->push_back(pos);
-	uri_pos_map[url] = first;
+	uri_pos_map[url].push_back(pos);
 }
 
 char *
 get_url_pos(char *url)
 {
-	auto search = uri_pos_map.find(url);
+	auto it = uri_pos_map.find(url);
 
-	if (search == uri_pos_map.end()) {
+	if (it == uri_pos_map.end() || it->second.empty()) {
 		return NULL;
 	}
+	std::string value = it->second.front();
+	it->second.pop_front();
 
-	if ((search->second)->empty()) {
-		uri_pos_map.erase(url);
-		return NULL;
+	if (it->second.empty()) {
+		uri_pos_map.erase(it);
 	}
-	auto first = (search->second)->front();
-	char *value = stracpy(first.c_str());
-	(search->second)->pop_front();
 
-	return value;
+	return stracpy(value.c_str());
 }
