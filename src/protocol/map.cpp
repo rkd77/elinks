@@ -24,6 +24,10 @@ save_in_uri_map(char *url, char *pos)
 	}
 
 	std::list<std::string> *first = new std::list<std::string>;
+
+	if (!first) {
+		return;
+	}
 	first->push_back(pos);
 	uri_pos_map[url] = first;
 }
