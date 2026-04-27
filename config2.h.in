@@ -360,6 +360,9 @@
 /* Define to 1 if you have the `cygwin_conv_to_full_win32_path' function. */
 #mesondefine HAVE_CYGWIN_CONV_TO_FULL_WIN32_PATH
 
+/* Define to 1 if you have the `fgets_unlocked' function. */
+#mesondefine HAVE_DECL_FGETS_UNLOCKED
+
 /* Define to 1 if you have the <dirent.h> header file, and it defines `DIR'.
    */
 #mesondefine HAVE_DIRENT_H
@@ -402,9 +405,6 @@
 
 /* Define to 1 if you have the `fflush' function. */
 #mesondefine HAVE_FFLUSH
-
-/* Define to 1 if you have the `fgets_unlocked' function. */
-#mesondefine HAVE_FGETS_UNLOCKED
 
 /* Define to 1 if you have the `fork' function. */
 #mesondefine HAVE_FORK

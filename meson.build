@@ -802,8 +802,8 @@ if compiler.has_function('feof_unlocked', prefix: '#include <stdio.h>')
     conf_data.set('HAVE_FEOF_UNLOCKED', 1)
 endif
 
-if compiler.has_function('fgets_unlocked', prefix: '#include <stdio.h>', args: '-D_GNU_SOURCE')
-    conf_data.set('HAVE_FGETS_UNLOCKED', 1)
+if compiler.has_header_symbol('stdio.h', 'fgets_unlocked', args: '-D_GNU_SOURCE')
+    conf_data.set('HAVE_DECL_FGETS_UNLOCKED', 1)
 endif
 
 if compiler.has_function('mmap', prefix: '#include <sys/mman.h>')
