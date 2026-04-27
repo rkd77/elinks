@@ -957,6 +957,8 @@ endif
 
 if compiler.has_function('getifaddrs', prefix : '#include <ifaddrs.h>')
     conf_data.set('HAVE_GETIFADDRS', 1)
+else
+    conf_data.set('HAVE_GETIFADDRS', 0)
 endif
 
 if compiler.has_function('getpwnam', prefix : '#include <pwd.h>')

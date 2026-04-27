@@ -4,7 +4,7 @@
 #include "config.h"
 #endif
 
-#ifndef HAVE_GETIFADDRS
+#if !HAVE_GETIFADDRS
 /* Downloaded from http://ftp.uninett.no/pub/OpenBSD/src/kerberosV/src/lib/roken/getifaddrs.c */
 
 /*

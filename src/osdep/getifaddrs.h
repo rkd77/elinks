@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-#ifndef HAVE_GETIFADDRS
+#if !HAVE_GETIFADDRS
 /* ELinksification by Zas.
  * This file was borrowed from dkftpbench-0.45 sources (http://www.kegel.com/dkftpbench). */
 

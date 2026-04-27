@@ -23,7 +23,7 @@
 #include <ws2tcpip.h> /* socklen_t for MinGW */
 #endif
 
-#ifdef HAVE_GETIFADDRS
+#if HAVE_GETIFADDRS
 #ifdef HAVE_NETDB_H
 #include <netdb.h>
 #endif
