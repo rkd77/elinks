@@ -38,7 +38,7 @@
 #include "util/memory.h"
 #include "util/string.h"
 
-#ifdef HAVE_FGETS_UNLOCKED
+#ifdef HAVE_DECL_FGETS_UNLOCKED
 #undef fgets
 #define fgets(buf, len, s) fgets_unlocked (buf, len, s)
 #endif
