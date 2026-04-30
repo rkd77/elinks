@@ -456,11 +456,11 @@ elif conf_data.get('CONFIG_LIBEVENT')
     deps += eventdeps
     conf_data.set('HAVE_LIBEVENT', true)
 else
-    eventdeps = []
+    eventdeps = dependency('', required: false)
 endif
 
-gnutlsdeps = []
-ssldeps = []
+gnutlsdeps = dependency('', required: false)
+ssldeps = dependency('', required: false)
 
 if conf_data.get('CONFIG_OPENSSL')
     ssldeps = dependency('openssl', static: st, required: false)
@@ -506,7 +506,7 @@ if conf_data.get('CONFIG_IDN2')
     deps += idndeps
 endif
 
-x11deps = []
+x11deps = dependency('', required: false)
 conf_data.set('HAVE_X11', false)
 if conf_data.get('CONFIG_X')
     x11deps = dependency('x11', static: st)
@@ -522,7 +522,7 @@ if conf_data.get('CONFIG_BZIP2')
     deps += bz2deps
 endif
 
-mozjsdeps = []
+mozjsdeps = dependency('', required: false)
 if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_SCRIPTING_SPIDERMONKEY')
     mozjsdeps = dependency('mozjs-140', static: st)
     deps += mozjsdeps
@@ -534,7 +534,7 @@ if conf_data.get('CONFIG_ECMASCRIPT')
 endif
 
 conf_data.set('CONFIG_LIBCURL', false)
-curldeps = []
+curldeps = dependency('', required: false)
 
 if not conf_data.get('CONFIG_LIBCURL') and get_option('libcurl')
     curldeps = dependency('libcurl', static: st, version: '>=7.66.0', required: false)
@@ -646,7 +646,7 @@ endif
 
 conf_data.set('CONFIG_PERL_POPPX_WITHOUT_N_A', 1)
 
-rubydeps = []
+rubydeps = dependency('', required: false)
 if conf_data.get('CONFIG_SCRIPTING_RUBY')
     rubydeps = dependency('ruby', static: st, required: false)
     if not rubydeps.found()
@@ -655,7 +655,7 @@ if conf_data.get('CONFIG_SCRIPTING_RUBY')
     deps += rubydeps
 endif
 
-guiledeps = []
+guiledeps = dependency('', required: false)
 if conf_data.get('CONFIG_SCRIPTING_GUILE')
     guiledeps = dependency('guile-3.0', static: st)
     deps += guiledeps
@@ -765,7 +765,7 @@ if conf_data.get('CONFIG_OS_DOS')
     wattdeps = compiler.find_library('watt', dirs: ['/home/elinks/lib'], static: st)
     deps += wattdeps
 else
-    wattdeps = []
+    wattdeps = dependency('', required: false)
 endif
 
 #AC_STRUCT_TM
