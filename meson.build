@@ -548,7 +548,7 @@ if not conf_data.get('CONFIG_LIBCURL') and get_option('libcurl')
 endif
 
 conf_data.set('CONFIG_LIBCSS', false)
-cssdeps = false
+cssdeps = dependency('', required: false)
 
 if conf_data.get('CONFIG_ECMASCRIPT')
     cssdeps = dependency('libcss', static: st, version: '>=0.9.2', required: false)
@@ -560,7 +560,7 @@ if conf_data.get('CONFIG_ECMASCRIPT')
 endif
 
 conf_data.set('CONFIG_LIBDOM', false)
-libdomdeps = []
+libdomdeps = dependency('', required: false)
 
 if conf_data.get('CONFIG_ECMASCRIPT')
     libdomdeps = dependency('libdom', static: st, version: '>=0.4.2', required: false)
@@ -586,6 +586,14 @@ if not conf_data.get('CONFIG_LIBCSS') and get_option('libcss')
         deps += libdomdeps
         conf_data.set('CONFIG_LIBDOM', true)
     endif
+endif
+
+if cssdeps.found()
+    conf_data.set('LIBCSS_VERSION', cssdeps.version())
+endif
+
+if libdomdeps.found()
+    conf_data.set('LIBDOM_VERSION', libdomdeps.version())
 endif
 
 if conf_data.get('CONFIG_SCRIPTING_LUA')

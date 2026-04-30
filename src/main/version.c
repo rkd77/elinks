@@ -198,6 +198,13 @@ get_dyn_full_version(struct terminal *term, int more)
 #ifdef CONFIG_TERMINFO
 		comma, (get_cmd_opt_bool("terminfo") ? _("terminfo", term) : _("terminfo (disabled)", term)),
 #endif
+
+#if defined(CONFIG_LIBCSS) && defined(LIBCSS_VERSION)
+		comma, "libcss(" LIBCSS_VERSION ")",
+#endif
+#if defined(CONFIG_LIBDOM) && defined(LIBDOM_VERSION)
+		comma, "libdom(" LIBDOM_VERSION ")",
+#endif
 		comma,
 		(char *) NULL
 	);

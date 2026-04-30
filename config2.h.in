@@ -785,6 +785,12 @@
 /* Define as const if the declaration of iconv() needs const. */
 #mesondefine ICONV_CONST
 
+/* libcss version */
+#define LIBCSS_VERSION "@LIBCSS_VERSION@"
+
+/* libdom version */
+#define LIBDOM_VERSION "@LIBDOM_VERSION@"
+
 /* How to invoke XTerm */
 #define CONFIG_XTERM "@CONFIG_XTERM@"
 
