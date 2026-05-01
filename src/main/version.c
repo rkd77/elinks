@@ -233,6 +233,9 @@ get_dyn_full_version(struct terminal *term, int more)
 #if defined(CONFIG_LIBDOM) && defined(LIBDOM_VERSION)
 		comma, "libdom(" LIBDOM_VERSION ")",
 #endif
+#ifdef CONFIG_KITTY
+		comma, "kitty",
+#endif
 #if defined(CONFIG_LIBSIXEL) && defined(LIBSIXEL_VERSION)
 		comma, "libsixel(", LIBSIXEL_VERSION, ")",
 #endif
