@@ -33,6 +33,10 @@
 #include <gpm.h>
 #endif
 
+#ifdef CONFIG_LIBWEBP
+#include <webp/decode.h>
+#endif
+
 #include "intl/libintl.h"
 #include "main/module.h"
 #include "main/select.h"
@@ -46,6 +50,18 @@
 #if defined(CONFIG_LIBEV) || defined(CONFIG_LIBEVENT)
 extern int event_enabled;
 #endif 
+
+#ifdef CONFIG_LIBWEBP
+static const char *
+get_libwebp_version(void)
+{
+	static char ret[16];
+	int version = WebPGetDecoderVersion();
+
+	snprintf(ret, 15, "%d.%d.%d", (version >> 16) & 255, (version >> 8) & 255, (version & 255));
+	return ret;
+}
+#endif
 
 static void
 add_module_to_string(struct string *string, struct module *module,
@@ -204,6 +220,9 @@ get_dyn_full_version(struct terminal *term, int more)
 #endif
 #if defined(CONFIG_LIBDOM) && defined(LIBDOM_VERSION)
 		comma, "libdom(" LIBDOM_VERSION ")",
+#endif
+#ifdef CONFIG_LIBWEBP
+		comma, "libwebp(", get_libwebp_version(), ")",
 #endif
 		comma,
 		(char *) NULL
