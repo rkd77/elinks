@@ -256,6 +256,6 @@ void dump_backtrace(FILE *f, int trouble);
 #endif
 
 /** This is needed for providing info about features when dumping core */
-extern char full_static_version[1024];
+extern char full_static_version[2048];
 
 #endif

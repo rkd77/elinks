@@ -33,7 +33,7 @@
 #include "util/string.h"
 
 
-char full_static_version[1024] = "ELinks " VERSION_STRING;
+char full_static_version[2048] = "ELinks " VERSION_STRING;
 
 static void
 er(int bell, int shall_sleep, const char *fmt, va_list params)
