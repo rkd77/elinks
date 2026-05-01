@@ -33,6 +33,10 @@
 #include <gpm.h>
 #endif
 
+#ifdef CONFIG_LIBSIXEL
+#include <sixel.h>
+#endif
+
 #ifdef CONFIG_LIBWEBP
 #include <webp/decode.h>
 #endif
@@ -228,6 +232,9 @@ get_dyn_full_version(struct terminal *term, int more)
 #endif
 #if defined(CONFIG_LIBDOM) && defined(LIBDOM_VERSION)
 		comma, "libdom(" LIBDOM_VERSION ")",
+#endif
+#if defined(CONFIG_LIBSIXEL) && defined(LIBSIXEL_VERSION)
+		comma, "libsixel(", LIBSIXEL_VERSION, ")",
 #endif
 #ifdef CONFIG_LIBWEBP
 		comma, "libwebp(", get_libwebp_version(), ")",
