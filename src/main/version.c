@@ -37,6 +37,10 @@
 #include <webp/decode.h>
 #endif
 
+#ifdef CONFIG_LIBAVIF
+#include <avif/avif.h>
+#endif
+
 #include "intl/libintl.h"
 #include "main/module.h"
 #include "main/select.h"
@@ -223,6 +227,9 @@ get_dyn_full_version(struct terminal *term, int more)
 #endif
 #ifdef CONFIG_LIBWEBP
 		comma, "libwebp(", get_libwebp_version(), ")",
+#endif
+#ifdef CONFIG_LIBAVIF
+		comma, "libavif(", avifVersion(), ")",
 #endif
 		comma,
 		(char *) NULL
