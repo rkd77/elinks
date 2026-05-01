@@ -41,6 +41,10 @@
 #include <avif/avif.h>
 #endif
 
+#ifdef CONFIG_LIBRSVG
+#include <librsvg/rsvg.h>
+#endif
+
 #include "intl/libintl.h"
 #include "main/module.h"
 #include "main/select.h"
@@ -230,6 +234,9 @@ get_dyn_full_version(struct terminal *term, int more)
 #endif
 #ifdef CONFIG_LIBAVIF
 		comma, "libavif(", avifVersion(), ")",
+#endif
+#if defined(CONFIG_LIBRSVG) && defined(LIBRSVG_VERSION)
+		comma, "librsvg(", LIBRSVG_VERSION, ")",
 #endif
 		comma,
 		(char *) NULL
