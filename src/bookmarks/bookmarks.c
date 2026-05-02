@@ -10,6 +10,10 @@
 
 #include "elinks.h"
 
+#ifdef CONFIG_XBEL_BOOKMARKS
+#include <expat.h>
+#endif
+
 #include "bfu/dialog.h"
 #include "bfu/hierbox.h"
 #include "bfu/listbox.h"
@@ -185,6 +189,31 @@ done_bookmarks(struct module *module)
 	free_last_searched_bookmark();
 }
 
+static const char *
+get_name_bookmarks(struct module *xxx)
+{
+	ELOG
+	static char n[64];
+
+	struct string text;
+
+	if (!init_string(&text)) {
+		return n;
+	}
+	add_to_string(&text, N_("Bookmarks"));
+#ifdef CONFIG_XBEL_BOOKMARKS
+	add_to_string(&text, "(XBEL");
+#if defined(XML_MAJOR_VERSION) && defined(XML_MINOR_VERSION) && defined(XML_MICRO_VERSION)
+	add_format_to_string(&text, " expat %d.%d.%d", XML_MAJOR_VERSION, XML_MINOR_VERSION, XML_MICRO_VERSION);
+#endif
+	add_char_to_string(&text, ')');
+#endif
+	strncpy(n, text.source, 63);
+	done_string(&text);
+	return n;
+}
+
+
 struct module bookmarks_module = struct_module(
 	/* name: */		N_("Bookmarks"),
 	/* options: */		bookmark_options_info,
@@ -193,7 +222,7 @@ struct module bookmarks_module = struct_module(
 	/* data: */		NULL,
 	/* init: */		init_bookmarks,
 	/* done: */		done_bookmarks,
-	/* getname: */	NULL
+	/* getname: */	get_name_bookmarks
 );
 
 
