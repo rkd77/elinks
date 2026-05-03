@@ -131,7 +131,7 @@ ssl_set_private_paths(SSL_CTX *ctx)
 #endif
 
 static void
-init_openssl(struct module *module)
+init_openssl(void)
 {
 	ELOG
 	char f_randfile[PATH_MAX];
@@ -248,7 +248,7 @@ static struct module openssl_module = struct_module(
 	/* events: */		NULL,
 	/* submodules: */	NULL,
 	/* data: */		NULL,
-	/* init: */		init_openssl,
+	/* init: */		NULL,
 	/* done: */		done_openssl,
 	/* getname: */	get_name_openssl
 );
@@ -272,7 +272,7 @@ const static int cert_type_priority[16] = { GNUTLS_CRT_X509, GNUTLS_CRT_OPENPGP,
 #endif
 
 static void
-init_gnutls(struct module *module)
+init_gnutls(void)
 {
 	ELOG
 	int ret = gnutls_global_init();
@@ -411,7 +411,7 @@ static struct module gnutls_module = struct_module(
 	/* events: */		NULL,
 	/* submodules: */	NULL,
 	/* data: */		NULL,
-	/* init: */		init_gnutls,
+	/* init: */		NULL,
 	/* done: */		done_gnutls,
 	/* getname: */	get_name_gnutls
 );
@@ -451,7 +451,12 @@ init_ssl_connection(struct socket *socket,
 		    const char *server_name)
 {
 	ELOG
+	static int initialized;
 #ifdef USE_OPENSSL
+	if (!initialized) {
+		init_openssl();
+		initialized = 1;
+	}
 	socket->ssl = SSL_new(context);
 	if (!socket->ssl) return S_SSL_ERROR;
 
@@ -474,6 +479,10 @@ init_ssl_connection(struct socket *socket,
 	}
 
 #elif defined(CONFIG_GNUTLS)
+	if (!initialized) {
+		init_gnutls();
+		initialized = 1;
+	}
 	ssl_t *state = (ssl_t *)mem_alloc(sizeof(ssl_t));
 
 	if (!state) return S_SSL_ERROR;
