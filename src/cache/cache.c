@@ -686,7 +686,6 @@ done_cache_entry(struct cache_entry *cached)
 {
 	ELOG
 	assertm(!is_object_used(cached), "deleting locked cache entry");
-	assertm(!is_entry_used(cached), "deleting loading cache entry");
 
 	delete_entry_content(cached);
 
