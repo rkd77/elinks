@@ -590,10 +590,14 @@ endif
 
 if cssdeps.found()
     conf_data.set('LIBCSS_VERSION', cssdeps.version())
+else
+    conf_data.set('LIBCSS_VERSION', '')
 endif
 
 if libdomdeps.found()
     conf_data.set('LIBDOM_VERSION', libdomdeps.version())
+else
+    conf_data.set('LIBDOM_VERSION', '')
 endif
 
 if conf_data.get('CONFIG_SCRIPTING_LUA')
