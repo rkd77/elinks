@@ -695,6 +695,8 @@ if conf_data.get('CONFIG_QUICKJS')
 #    endif
     deps += quickjsdeps
     deps += dep_atomic
+else
+    quickjsdeps = dependency('', required: false)
 endif
 
 if conf_data.get('CONFIG_MUJS')

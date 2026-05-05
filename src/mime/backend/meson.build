@@ -43,7 +43,7 @@ if conf_data.get('CONFIG_MAILCAP') and (get_option('test-mailcap') or get_option
 
 	exe = executable('mailcap-cache', mailcap_cache_files, testdeps,
 	c_args:['-DHAVE_CONFIG_H', '-DTEST_MAILCAP'], include_directories:['.','..','../..','../../..'],
-	build_by_default:false, dependencies:[x11deps])
+	build_by_default:false, dependencies:[mozjsdeps,quickjsdeps,x11deps])
 	test_lib = environment({'TEST_LIB': meson.project_source_root() / 'test/libtest.sh'})
 	t = find_program('test-mailcap-cache')
 	test('mailcap-cache', t, depends:[exe], env:test_lib, workdir:meson.current_build_dir())

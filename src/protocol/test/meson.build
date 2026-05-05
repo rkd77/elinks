@@ -3,7 +3,7 @@ idna_dep = dependency('libidn2')
 uri_test_files = files('uri-test.c', 'stub.c', meson.current_source_dir() / '../protocol.c', meson.current_source_dir() / '../uri.c')
 
 exe = executable('uri-test', uri_test_files,
-testdeps, dependencies: [iconvdeps, idna_dep, libdomdeps, mozjsdeps, wattdeps],
+testdeps, dependencies: [iconvdeps, idna_dep, libdomdeps, mozjsdeps, quickjsdeps, wattdeps],
 c_args:['-DHAVE_CONFIG_H'], cpp_args:['-DHAVE_CONFIG_H'],  include_directories:['.', '..', '../..', '../../..', '../../../..'])
 t = find_program('test-normalize-uri')
 test_lib = environment({'TEST_LIB':meson.project_source_root() / 'test/libtest.sh'})
