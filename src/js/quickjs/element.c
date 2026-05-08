@@ -2629,6 +2629,46 @@ js_element_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSVal
 }
 
 static JSValue
+js_element_set_property_src(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	REF_JS(val);
+	dom_string *srcstr = NULL;
+	dom_exception exc;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	assert(interpreter);
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	NODEINFO(el);
+
+	if (!el) {
+		return JS_UNDEFINED;
+	}
+	//dom_node_ref(el);
+	size_t len;
+	const char *str = JS_ToCStringLen(ctx, &len, val);
+
+	if (!str) {
+		//dom_node_unref(el);
+		return JS_EXCEPTION;
+	}
+	exc = dom_string_create((const uint8_t *)str, len, &srcstr);
+
+	if (exc == DOM_NO_ERR && srcstr) {
+		exc = dom_element_set_attribute(el, corestring_dom_src, srcstr);
+		interpreter->changed = 1;
+		dom_string_unref(srcstr);
+	}
+	JS_FreeCString(ctx, str);
+	//dom_node_unref(el);
+
+	return JS_UNDEFINED;
+}
+
+static JSValue
 js_element_set_property_title(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
 	ELOG
@@ -4533,7 +4573,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("parentNode",	js_element_get_property_parentNode, NULL), // Node
 	JS_CGETSET_DEF("previousElementSibling",	js_element_get_property_previousElementSibling, NULL),
 	JS_CGETSET_DEF("previousSibling",	js_element_get_property_previousSibling, NULL), // Node
-	JS_CGETSET_DEF("src",		js_element_get_property_src, NULL),
+	JS_CGETSET_DEF("src",		js_element_get_property_src, js_element_set_property_src),
 	JS_CGETSET_DEF("style",		js_element_get_property_style, NULL),
 	JS_CGETSET_DEF("tagName",	js_element_get_property_tagName, NULL),
 	JS_CGETSET_DEF("textContent",	js_element_get_property_textContent, js_element_set_property_textContent), // Node

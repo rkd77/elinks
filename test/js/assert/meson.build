@@ -78,6 +78,7 @@ took = [
 'element.remove.html',
 'element.replaceWith.html',
 'element.setAttribute.html',
+'element.src.html',
 'element.textContent.html',
 #'event.html',
 'eventListener.html',

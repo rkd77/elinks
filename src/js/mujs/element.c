@@ -2428,6 +2428,40 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 }
 
 static void
+mjs_element_set_property_src(js_State *J)
+{
+	ELOG
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_exception exc;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	assert(interpreter);
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+	NODEINFO(el);
+
+	if (!el) {
+		js_pushundefined(J);
+		return;
+	}
+	const char *str = js_tostring(J, 1);
+
+	if (!str) {
+		js_error(J, "out of memory");
+		return;
+	}
+	dom_string *src = NULL;
+	exc = dom_string_create((const uint8_t *)str, strlen(str), &src);
+
+	if (exc == DOM_NO_ERR && src) {
+		exc = dom_element_set_attribute(el, corestring_dom_src, src);
+		interpreter->changed = 1;
+		dom_string_unref(src);
+	}
+	js_pushundefined(J);
+}
+
+static void
 mjs_element_set_property_textContent(js_State *J)
 {
 	ELOG
@@ -4155,7 +4189,7 @@ fprintf(stderr, "Before: %s:%d\n", __FUNCTION__, __LINE__);
 		addproperty(J, "parentNode",	mjs_element_get_property_parentNode, NULL);
 		addproperty(J, "previousElementSibling",	mjs_element_get_property_previousElementSibling, NULL);
 		addproperty(J, "previousSibling",	mjs_element_get_property_previousSibling, NULL);
-		addproperty(J, "src",	mjs_element_get_property_src, NULL);
+		addproperty(J, "src",	mjs_element_get_property_src, mjs_element_set_property_src);
 		addproperty(J, "style",		mjs_element_get_property_style, NULL);
 		addproperty(J, "tagName",	mjs_element_get_property_tagName, NULL);
 		addproperty(J, "textContent",	mjs_element_get_property_textContent, mjs_element_set_property_textContent);
