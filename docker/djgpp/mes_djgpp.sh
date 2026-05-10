@@ -34,6 +34,7 @@ meson setup /tmp/builddir --cross-file cross/linux-djgpp.txt \
 -Dgopher=true \
 -Dgpm=false \
 -Dguile=false \
+-Dhtml-highlight=true \
 -Dhtmldoc=false \
 -Didn=false \
 -Dipv6=true \
