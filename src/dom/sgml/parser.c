@@ -506,8 +506,21 @@ sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 				}
 
 				string = &parent->incomplete;
-			}
+			} else {
+				parsing = parent;
+				set_dom_string(&incomplete, NULL, 0);
 
+				if (!init_dom_string(&incomplete, string->string, string->length)) {
+					parser->code = DOM_CODE_ALLOC_ERR;
+					return DOM_CODE_OK;
+				}
+
+				done_dom_string(&parsing->incomplete);
+				set_dom_string(&parsing->incomplete, incomplete.string, incomplete.length);
+				parsing->resume = 1;
+				pop_dom_node(stack);
+				return DOM_CODE_OK;
+			}
 			scanner_state = parent->scanner.state;
 
 			/* Pop down to the parent. */

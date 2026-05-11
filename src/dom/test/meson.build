@@ -45,6 +45,6 @@ test('sgml-dump-basic', t2, depends:[exe2], env:test_lib, workdir:meson.current_
 test('sgml-parser-basic', t3, depends:[exe2], env:test_lib, workdir:meson.current_build_dir(), is_parallel:false)
 test('sgml-parser-error', t4, depends:[exe2], env:test_lib, workdir:meson.current_build_dir(), is_parallel:false)
 test('sgml-parser-incomplete', t5, depends:[exe2], env:test_lib, workdir:meson.current_build_dir(), is_parallel:false)
-test('sgml-parser-incremental', t6, depends:[exe2], env:test_lib, workdir:meson.current_build_dir(), is_parallel:false, should_fail:true)
+test('sgml-parser-incremental', t6, depends:[exe2], env:test_lib, workdir:meson.current_build_dir(), is_parallel:false)
 test('sgml-parser-lines', t7, depends:[exe2], env:test_lib, workdir:meson.current_build_dir(), is_parallel:false)
-test('sgml-parser-random', t8, depends:[exe1], env:test_lib, workdir:meson.current_build_dir(), is_parallel:false, should_fail:true)
+test('sgml-parser-random', t8, depends:[exe1], env:test_lib, workdir:meson.current_build_dir(), is_parallel:false)
