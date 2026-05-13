@@ -14,6 +14,7 @@
 #include "config/kbdbind.h"
 #include "config/options.h"
 #include "dialogs/exmode.h"
+#include "document/view.h"
 #include "intl/libintl.h"
 #include "main/module.h"
 #include "session/session.h"
@@ -23,7 +24,8 @@
 #include "util/memory.h"
 #include "util/string.h"
 #include "viewer/action.h"
-
+#include "viewer/text/marks.h"
+#include "viewer/text/view.h"
 
 /* The Ex-mode commandline is that blue-yellow thing which appears at the
  * bottom of the screen when you press ':' and lets you enter various commands
@@ -54,6 +56,29 @@ exmode_action_handler(struct session *ses, char *command,
 		case ACT_MAIN_GOTO_URL:
 			goto_url_with_hook(ses, args);
 			return 1;
+		case ACT_MAIN_GOTO_MARK:
+#ifdef CONFIG_MARKS
+			{
+				struct document_view *doc_view = current_frame(ses);
+
+				if (doc_view && doc_view->vs) {
+					goto_mark(*args, doc_view->vs);
+				}
+			}
+#endif
+			break;
+		case ACT_MAIN_SET_MARK:
+#ifdef CONFIG_MARKS
+			{
+				struct document_view *doc_view = current_frame(ses);
+
+				if (doc_view && doc_view->vs) {
+					set_mark(*args, doc_view->vs);
+				}
+			}
+#endif
+			break;
+
 		default:
 			break;
 	}
