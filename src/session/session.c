@@ -20,6 +20,7 @@
 #include "cache/cache.h"
 #include "config/home.h"
 #include "config/options.h"
+#include "dialogs/exmode.h"
 #include "dialogs/menu.h"
 #include "dialogs/status.h"
 #include "document/document.h"
@@ -66,6 +67,7 @@
 #include "viewer/text/view.h"
 #include "viewer/text/search.h"
 
+char *onload_oneshot;
 
 struct file_to_load {
 	LIST_HEAD_EL(struct file_to_load);
@@ -842,6 +844,15 @@ doc_loading_callback(struct download *download, struct session *ses)
 			}
 			mem_free(position);
 		}
+
+#ifdef CONFIG_EXMODE
+		if (onload_oneshot) {
+			if (*onload_oneshot) {
+				try_exmode_exec(ses, onload_oneshot);
+			}
+			mem_free_set(&onload_oneshot, NULL);
+		}
+#endif
 
 		if (!is_in_state(download->state, S_OK)) {
 			print_error_dialog(ses, download->state,

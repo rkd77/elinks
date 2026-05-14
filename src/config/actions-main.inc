@@ -90,6 +90,7 @@ ACTION_(MAIN, "move-link-up", MOVE_LINK_UP, N__("Move one link up"), ACTION_REQU
 ACTION_(MAIN, "move-link-up-line", MOVE_LINK_UP_LINE, N__("Move to the previous line with a link"), ACTION_REQUIRE_VIEW_STATE),
 ACTION_(MAIN, "move-page-down", MOVE_PAGE_DOWN, N__("Move downwards by a page"), ACTION_REQUIRE_VIEW_STATE),
 ACTION_(MAIN, "move-page-up", MOVE_PAGE_UP, N__("Move upwards by a page"), ACTION_REQUIRE_VIEW_STATE),
+ACTION_(MAIN, "onload-oneshot", ONLOAD_ONESHOT, N__("Text for exmode to execute once when document loading finished"), 0),
 ACTION_(MAIN, "open-link-in-new-tab", OPEN_LINK_IN_NEW_TAB, N__("Open the current link in a new tab"), ACTION_REQUIRE_VIEW_STATE | ACTION_JUMP_TO_LINK | ACTION_REQUIRE_LINK),
 ACTION_(MAIN, "open-link-in-new-tab-in-background", OPEN_LINK_IN_NEW_TAB_IN_BACKGROUND, N__("Open the current link in a new tab in the background"), ACTION_REQUIRE_VIEW_STATE | ACTION_JUMP_TO_LINK | ACTION_REQUIRE_LINK),
 ACTION_(MAIN, "open-link-in-new-window", OPEN_LINK_IN_NEW_WINDOW, N__("Open the current link in a new window"), ACTION_RESTRICT_ANONYMOUS | ACTION_REQUIRE_VIEW_STATE | ACTION_JUMP_TO_LINK | ACTION_REQUIRE_LINK),

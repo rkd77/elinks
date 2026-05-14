@@ -32,6 +32,7 @@
  * (just like in vi), especially actions, events (where they make sense) and
  * config-file commands. */
 
+extern char *onload_oneshot;
 
 #define EXMODE_HISTORY_FILENAME		"exmodehist"
 
@@ -77,6 +78,10 @@ exmode_action_handler(struct session *ses, char *command,
 				}
 			}
 #endif
+			break;
+
+		case ACT_MAIN_ONLOAD_ONESHOT:
+			mem_free_set(&onload_oneshot, stracpy(args));
 			break;
 
 		default:
