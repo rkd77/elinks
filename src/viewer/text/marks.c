@@ -23,6 +23,8 @@
 #include "viewer/text/vs.h"
 
 
+#include <stdio.h>
+
 /* TODO list:
  *
  * * Make it possible to go at marks which are set in a different document than
@@ -114,6 +116,9 @@ goto_mark(unsigned char mark, struct view_state *vs)
 	vs->ecmascript_fragile = ecmascript_fragile;
 #endif
 	vs->old_current_link = old_current_link;
+
+	fprintf(stderr, "goto_mark:'%c'\n", mark);
+
 }
 
 static void
@@ -156,6 +161,8 @@ set_mark(unsigned char mark, struct view_state *mark_vs)
 		}
 	}
 	marks[i] = vs;
+
+	fprintf(stderr, "set_mark:'%c'\n", mark);
 }
 
 static void

@@ -33,7 +33,7 @@
  * config-file commands. */
 
 extern char *onload_oneshot;
-
+#include <stdio.h>
 #define EXMODE_HISTORY_FILENAME		"exmodehist"
 
 static INIT_INPUT_HISTORY(exmode_history);
@@ -82,6 +82,9 @@ exmode_action_handler(struct session *ses, char *command,
 
 		case ACT_MAIN_ONLOAD_ONESHOT:
 			mem_free_set(&onload_oneshot, stracpy(args));
+
+			fprintf(stderr, "Before onload_oneshot='%s'\n", onload_oneshot);
+
 			break;
 
 		default:

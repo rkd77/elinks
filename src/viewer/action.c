@@ -610,7 +610,9 @@ do_action(struct session *ses, main_action_T action_id, int verbose)
 			break;
 
 		case ACT_MAIN_RELOAD:
+fprintf(stderr, "Before reload\n");
 			reload(ses, CACHE_MODE_INCREMENT);
+fprintf(stderr, "After reload\n");
 			break;
 
 		case ACT_MAIN_RERENDER:
