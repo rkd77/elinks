@@ -830,7 +830,7 @@ doc_loading_callback(struct download *download, struct session *ses)
 		char *s = struri(ses->doc_view->document->uri);
 		char *position = get_url_pos(s);
 
-fprintf(stderr, "position='%s'\n", position);
+fprintf(stderr, "position='%s' '\n", position);
 		if (position) {
 			char *xs = strstr(position, "x=");
 			char *ys = strstr(position, ",y=");
@@ -849,11 +849,20 @@ fprintf(stderr, "position='%s'\n", position);
 #ifdef CONFIG_EXMODE
 		fprintf(stderr, "onload_oneshot='%s'\n", onload_oneshot);
 
-		if (onload_oneshot) {
-			if (*onload_oneshot) {
-				try_exmode_exec(ses, onload_oneshot);
+		if (onload_oneshot && download->cached) {
+			char *ctype = get_content_type(download->cached);
+
+			if (ctype) {
+				if (!strncmp(ctype, "text/html", sizeof("text/html") - 1)
+				|| !strncmp(ctype, "application/xhtml+xml", sizeof("application/xhtml+xml") - 1)
+				|| !strncmp(ctype, "text/plain", sizeof("text/plain") - 1)) {
+
+					if (*onload_oneshot) {
+						try_exmode_exec(ses, onload_oneshot);
+					}
+					mem_free_set(&onload_oneshot, NULL);
+				}
 			}
-			mem_free_set(&onload_oneshot, NULL);
 		}
 #endif
 

@@ -609,6 +609,11 @@ do_action(struct session *ses, main_action_T action_id, int verbose)
 			redraw_terminal_cls(term);
 			break;
 
+		case ACT_MAIN_REFRESH_VIEW:
+fprintf(stderr, "Before refresh-view\n");
+			status = FRAME_EVENT_REFRESH;
+			break;
+
 		case ACT_MAIN_RELOAD:
 fprintf(stderr, "Before reload\n");
 			reload(ses, CACHE_MODE_INCREMENT);
@@ -842,8 +847,10 @@ ignore_action:
 	    && link != get_current_link(doc_view))
 		ses->insert_mode = INSERT_MODE_OFF;
 
-	if (status == FRAME_EVENT_REFRESH && doc_view)
+	if (status == FRAME_EVENT_REFRESH && doc_view) {
 		refresh_view(ses, doc_view, 0);
+fprintf(stderr, "After refresh_view\n");
+	}
 
 	return status;
 }
