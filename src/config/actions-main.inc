@@ -103,6 +103,7 @@ ACTION_(MAIN, "options-manager", OPTIONS_MANAGER, N__("Open options manager"), A
 ACTION_(MAIN, "quit", QUIT, N__("Open a quit confirmation dialog box"), 0),
 ACTION_(MAIN, "really-quit", REALLY_QUIT, N__("Quit without confirmation"), 0),
 ACTION_(MAIN, "redraw", REDRAW, N__("Redraw the terminal"), 0),
+ACTION_(MAIN, "refresh-view", REFRESH_VIEW, N__("Refresh view for exmode"), ACTION_REQUIRE_VIEW_STATE),
 ACTION_(MAIN, "reload", RELOAD, N__("Reload the current page"), 0),
 ACTION_(MAIN, "reopen-last-closed-tab", REOPEN_LAST_CLOSED_TAB, N__("Reopen last closed tab"), 0),
 ACTION_(MAIN, "rerender", RERENDER, N__("Re-render the current page"), 0),
