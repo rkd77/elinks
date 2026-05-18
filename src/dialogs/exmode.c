@@ -24,6 +24,7 @@
 #include "util/memory.h"
 #include "util/string.h"
 #include "viewer/action.h"
+#include "viewer/text/draw.h"
 #include "viewer/text/marks.h"
 #include "viewer/text/view.h"
 
@@ -64,6 +65,7 @@ exmode_action_handler(struct session *ses, char *command,
 
 				if (doc_view && doc_view->vs) {
 					goto_mark(*args, doc_view->vs);
+					refresh_view(ses, doc_view, 0);
 				}
 			}
 #endif
