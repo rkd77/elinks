@@ -573,6 +573,8 @@ smb_protocol_handler(struct connection *conn)
 	}
 
 	if (!share || !dir) {
+		mem_free_if(share);
+		mem_free_if(dir);
 		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
