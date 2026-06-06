@@ -1,1 +1,1 @@
-srcs += files('smb2.c')
+srcs += files('smb.c')
