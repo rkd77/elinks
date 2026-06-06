@@ -37,6 +37,7 @@
 #include "protocol/protocol.h"
 #include "protocol/smb/smb.h"
 #include "protocol/uri.h"
+#include "util/conv.h"
 #include "util/memory.h"
 #include "util/snprintf.h"
 #include "util/string.h"
@@ -446,14 +447,25 @@ print_next:
 				if (p == url && *url == '.') goto ignored;
 				p++;
 
-				add_to_string(page, "  <a href=\"");
-				add_bytes_to_string(page, url, p - url);
-				if (dir) add_char_to_string(page, '/');
-				add_to_string(page, "\">");
-				add_bytes_to_string(page, url, p - url);
-				add_to_string(page, "</a>");
-				add_bytes_to_string(page, p, line_end - p);
+				struct string encoded_name;
 
+				if (init_string(&encoded_name)) {
+					add_to_string(page, "  <a href=\"");
+					encode_uri_string(&encoded_name, url, p - url, 1);
+					add_string_to_string(page, &encoded_name);
+					done_string(&encoded_name);
+
+					if (dir) add_char_to_string(page, '/');
+					add_to_string(page, "\">");
+
+					if (init_string(&encoded_name)) {
+						add_html_to_string(&encoded_name, url, p - url);
+						add_string_to_string(page, &encoded_name);
+						done_string(&encoded_name);
+					}
+					add_to_string(page, "</a>");
+					add_bytes_to_string(page, p, line_end - p);
+				}
 			} else {
 				goto print_as_is;
 			}
@@ -545,7 +557,7 @@ smb_protocol_handler(struct connection *conn)
 	p = strchr(uri->data, '/');
 	if (p && p - uri->data < uri->datalen) {
 		share = memacpy(uri->data, p - uri->data);
-		dir = p + 1;
+		dir = stracpy(p + 1);
 		/* FIXME: ensure @dir do not contain dangerous chars. --Zas */
 
 	} else if (uri->datalen) {
@@ -557,13 +569,18 @@ smb_protocol_handler(struct connection *conn)
 
 	} else {
 		share = stracpy("");
-		dir = "";
+		dir = stracpy("");
 	}
 
-	if (!share) {
+	if (!share || !dir) {
 		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
+	decode_uri(dir);
+	char *bad = "%<>*?|\\+=;:\"";
+
+	size_t lenok = strcspn(dir, bad);
+	dir[lenok] = '\0';
 
 	dirlen = strlen(dir);
 	if (!*share) {
@@ -579,6 +596,7 @@ smb_protocol_handler(struct connection *conn)
 		if (out_pipe[0] >= 0) close(out_pipe[0]);
 		if (out_pipe[1] >= 0) close(out_pipe[1]);
 		mem_free(share);
+		mem_free(dir);
 		abort_connection(conn, connection_state_for_errno(-s_errno));
 		return;
 	}
@@ -594,6 +612,7 @@ smb_protocol_handler(struct connection *conn)
 		close(err_pipe[0]);
 		close(err_pipe[1]);
 		mem_free(share);
+		mem_free(dir);
 		retry_connection(conn, connection_state_for_errno(-s_errno));
 		return;
 	}
@@ -710,6 +729,7 @@ smb_protocol_handler(struct connection *conn)
 	}
 
 	mem_free(share);
+	mem_free(dir);
 
 	conn->data_socket->fd = out_pipe[0];
 	conn->socket->fd = err_pipe[0];
