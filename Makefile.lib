@@ -122,7 +122,7 @@ LIB_O_DEPS = \
  $(sort $(filter-out $(LIB_O_NAME),$(OBJS))) \
  $(foreach subdir,$(sort $(SUBDIRS)),$(wildcard $(subdir)/$(LIB_O_NAME)))
 
-$(LIB_O_NAME): $(LIB_O_DEPS)
+$(LIB_O_NAME): $(LIB_O_DEPS) | all-recursive
 	$(call cmd,ld_objs)
 
 DEP_FILES_1 = $(foreach src,$(OBJS),.deps/$(src))
