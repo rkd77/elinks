@@ -48,8 +48,9 @@ void add_iframeset_entry(struct document *parent, char *url, char *name, int num
 	iframe_desc = &iframeset_desc->iframe_desc[offset];
 
 	if (!*name) {
+		static unsigned int nb;
 		char text[32] = {0};
-		snprintf(text, 31, "-%d", number);
+		snprintf(text, 31, "-%d", ++nb);
 		iframe_desc->name = stracpy(text);
 	} else {
 		iframe_desc->name = stracpy(name);
