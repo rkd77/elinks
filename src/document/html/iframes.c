@@ -175,18 +175,16 @@ format_iframe(struct session *ses, struct document *document, struct iframe_desc
 	plain = o->plain;
 	if (vs->plain != -1) o->plain = vs->plain;
 
-	if (!cached->redirect || iframe->redirect_cnt >= MAX_REDIRECTS) {
-		goto redir;
+	if (cached->redirect && iframe->redirect_cnt < MAX_REDIRECTS) {
+		iframe->redirect_cnt++;
+		done_uri(vs->uri);
+		vs->uri = get_uri_reference(cached->redirect);
+#ifdef CONFIG_ECMASCRIPT
+		vs->ecmascript_fragile = 1;
+#endif
+		o->plain = plain;
 	}
 
-	iframe->redirect_cnt++;
-	done_uri(vs->uri);
-	vs->uri = get_uri_reference(cached->redirect);
-#ifdef CONFIG_ECMASCRIPT
-	vs->ecmascript_fragile = 1;
-#endif
-	o->plain = plain;
-redir:
 	doc_view = find_ifd(ses, iframe_desc->name, j, o->box.x, o->box.y);
 	if (doc_view) {
 		doc_view->iframe_number = iframe_desc->number;
