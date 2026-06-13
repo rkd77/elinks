@@ -31,6 +31,9 @@
 #include "main/main.h"
 #include "main/select.h"
 #include "network/connection.h"
+#ifdef CONFIG_OPENSSL
+#include "network/ssl/ssl.h"
+#endif
 #include "osdep/dos/dos.h"
 #include "osdep/osdep.h"
 #include "terminal/event.h"
@@ -1067,6 +1070,10 @@ void init_osdep(void)
 //timer ISR
 //will be called, then the new timer ISR
 	_go32_dpmi_chain_protected_mode_interrupt_vector(TIMER, &NewISR);
+#endif
+
+#ifdef CONFIG_OPENSSL
+	init_openssl();
 #endif
 }
 

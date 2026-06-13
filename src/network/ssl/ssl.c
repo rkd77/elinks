@@ -130,10 +130,17 @@ ssl_set_private_paths(SSL_CTX *ctx)
 }
 #endif
 
-static void
+void
 init_openssl(void)
 {
 	ELOG
+	static int initialized;
+
+	if (initialized) {
+		return;
+	}
+	initialized = 1;
+
 	char f_randfile[PATH_MAX];
 
 	/* In a nutshell, on OS's without a /dev/urandom, the OpenSSL library

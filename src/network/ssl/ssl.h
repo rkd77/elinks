@@ -34,6 +34,7 @@ void done_ssl_connection(struct socket *socket);
 char *get_ssl_connection_cipher(struct socket *socket);
 
 #if defined(CONFIG_OPENSSL) || defined(CONFIG_NSS_COMPAT_OSSL)
+void init_openssl(void);
 extern int socket_SSL_ex_data_idx;
 #endif
 
