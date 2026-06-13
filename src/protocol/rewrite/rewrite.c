@@ -132,6 +132,7 @@ static union option_info uri_rewrite_options[] = {
 	INIT_OPT_DUMB_PREFIX("pydev", "https://docs.python.org/dev/"),
 	INIT_OPT_DUMB_PREFIX("e2", "https://www.everything2.org"),
 	INIT_OPT_DUMB_PREFIX("sd", "https://slashdot.org/"),
+	INIT_OPT_DUMB_PREFIX("sp", "https://www.startpage.com/"),
 	INIT_OPT_DUMB_PREFIX("vhtml", "https://validator.w3.org/nu/?doc=%c"),
 	INIT_OPT_DUMB_PREFIX("vcss", "https://jigsaw.w3.org/css-validator/validator?uri=%c"),
 
@@ -178,6 +179,7 @@ static union option_info uri_rewrite_options[] = {
 	INIT_OPT_SMART_PREFIX("mwt", "https://www.merriam-webster.com/thesaurus/%s"),
 	INIT_OPT_SMART_PREFIX("wiki", "https://en.wikipedia.org/w/index.php?search=%s"),
 	INIT_OPT_SMART_PREFIX("wn", "http://wordnetweb.princeton.edu/perl/webwn?s=%s"),
+	INIT_OPT_SMART_PREFIX("sp", "https://www.startpage.com/sp/search?query=%s"),
 	/* Search the Free Software Directory */
 	INIT_OPT_SMART_PREFIX("fsd", "https://directory.fsf.org/wiki?title=Special%3ASearch&search=%s"),
 	/* rfc by number */
