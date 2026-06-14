@@ -1715,11 +1715,7 @@ void
 beep_terminal(struct terminal *term)
 {
 	//ELOG
-#ifdef CONFIG_OS_WIN32
-	MessageBeep(MB_ICONEXCLAMATION);
-#else
 	hard_write(term->fdout, "\a", 1);
-#endif
 }
 
 struct terminal_screen *
