@@ -97,6 +97,7 @@ static union option_info default_mime_options[] = {
 	INIT_OPT_MIME_EXTENSION("jpg",		"image/jpg"),
 	INIT_OPT_MIME_EXTENSION("jpeg",		"image/jpeg"),
 	INIT_OPT_MIME_EXTENSION("png",		"image/png"),
+	INIT_OPT_MIME_EXTENSION("tga",		"image/x-tga"),
 	INIT_OPT_MIME_EXTENSION("txt",		"text/plain"),
 	INIT_OPT_MIME_EXTENSION("htm",		"text/html"),
 	INIT_OPT_MIME_EXTENSION("html",		"text/html"),

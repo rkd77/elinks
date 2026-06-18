@@ -1990,6 +1990,7 @@ struct {
 	{ "image/gif",			0 },
 	{ "image/jpg",			0 },
 	{ "image/jpeg",			0 },
+	{ "image/x-tga",		0 },
 #ifdef CONFIG_LIBWEBP
 	{ "image/webp",			0 },
 #endif
