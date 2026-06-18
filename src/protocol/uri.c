@@ -1408,6 +1408,7 @@ get_extension_from_uri(struct uri *uri)
 	assert(pos);
 
 	if (uri->protocol == PROTOCOL_DATA) {
+		ADD_EXTENSION_FROM_TYPE(uri->data, "image/bmp",  "bmp")
 		ADD_EXTENSION_FROM_TYPE(uri->data, "image/pnm",  "pnm")
 		ADD_EXTENSION_FROM_TYPE(uri->data, "image/gif",  "gif")
 		ADD_EXTENSION_FROM_TYPE(uri->data, "image/jpeg", "jpg")

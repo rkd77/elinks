@@ -1984,6 +1984,7 @@ struct {
 	{ "application/x-xbel",		1 },
 #endif
 #if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
+	{ "image/bmp",			0 },
 	{ "image/pnm",			0 },
 	{ "image/png",			0 },
 	{ "image/gif",			0 },

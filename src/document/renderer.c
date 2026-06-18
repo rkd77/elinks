@@ -137,6 +137,7 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 #ifdef CONFIG_LIBRSVG
 			|| !c_strcasecmp("image/svg+xml", cached->content_type)
 #endif
+			|| !c_strcasecmp("image/bmp", cached->content_type)
 			|| !c_strcasecmp("image/pnm", cached->content_type)
 			|| !c_strcasecmp("image/gif", cached->content_type)
 			|| !c_strcasecmp("image/jpg", cached->content_type)
