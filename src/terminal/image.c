@@ -50,6 +50,7 @@
 
 #endif
 #define STB_IMAGE_IMPLEMENTATION
+#define STBI_NO_STDIO
 #include "terminal/stb_image.h"
 #endif
 
