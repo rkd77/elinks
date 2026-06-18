@@ -91,6 +91,7 @@ static union option_info default_mime_options[] = {
 #define INIT_OPT_MIME_EXTENSION(extension, type) \
 	INIT_OPT_STRING("mime.extension", NULL, extension, OPT_ZERO, type, NULL)
 
+	INIT_OPT_MIME_EXTENSION("pnm",		"image/pnm"),
 	INIT_OPT_MIME_EXTENSION("gif",		"image/gif"),
 	INIT_OPT_MIME_EXTENSION("jpg",		"image/jpg"),
 	INIT_OPT_MIME_EXTENSION("jpeg",		"image/jpeg"),
