@@ -11,6 +11,13 @@ See Arachne documentation for details of configuration file mime.cfg.
 
 Note, that not all options were implemented in ELinks, and not all were tested.
 
+Default value for mime.dgi.mime_cfg is "mime.cfg". That's mean ELinks is looking for
+configuration in the current directory, but it can be set as:
+
+set mime.dgi.mime_cfg = "~/.config/elinks/mime.cfg"
+
+to have mime.cfg in the config directory of ELinks.
+
 
 Sample mime.cfg
 ~~~~~~~~~~~~~~~
@@ -18,4 +25,6 @@ Sample mime.cfg
 -------------------------------------------------------------------------------
 file/cdplayer.dgi   |$ecdplayer.exe $s
 application/pdf pdf>txt|$epdftotext $1 $2
+; if sixel or kitty are enabled, one can convert jxl to png and display them:
+image/jxl jxl>png|djxl --quiet $1 $2
 -------------------------------------------------------------------------------
