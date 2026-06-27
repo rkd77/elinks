@@ -180,6 +180,18 @@ Cons::
 	considered experimental and you shouldn't rely on it. It *could* trash
 	your XBEL bookmarks file so make regular backups.
 
+In 0.19 extension to the XBEL format was added containing saved positions of documents.
+Here is an example:
+
+	<bookmark ...>
+	<info>
+	<metadata owner="http://elinks.cz">
+	  <elinks:saved-position value="x=0,y=53"/>
+	</metadata>
+	</info>
+	<title>...</title>
+	</bookmark>
+
 To use the XBEL format, set 'bookmarks.file_format' to 1.
 
 Usage hints
