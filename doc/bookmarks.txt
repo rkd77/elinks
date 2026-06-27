@@ -136,6 +136,9 @@ E	This folder is currently expanded. (No effect for non-folders.)
 F	This entry is a folder. The <url> part is usually empty.
 ------------------------------------------------------------------------------
 
+Since 0.19 url can have appended character with binary code 3 followed by x=$number1,y=$number2.
+For example x=0,y=1. These are for save positions in the document.
+
 Separators: these are special bookmarks with "-" as title and no url.
 
 Pros::
