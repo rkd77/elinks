@@ -247,8 +247,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 		info->name[MAX_TERM_LEN - 1] = 0;
 		check_terminal_name(term, info);
 
-		memcpy(term->cwd, info->cwd, MAX_CWD_LEN);
-		term->cwd[MAX_CWD_LEN - 1] = 0;
+		safe_strncpy(term->cwd, info->cwd, MAX_CWD_LEN);
 
 		term->environment = info->system_env;
 
