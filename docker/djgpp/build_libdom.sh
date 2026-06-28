@@ -11,4 +11,6 @@ cd
 wget http://download.netsurf-browser.org/libs/releases/libdom-0.4.2-src.tar.gz
 rm -rf libdom-0.4.2
 tar -xf libdom-0.4.2-src.tar.gz
+
+ls -l /opt/elinks/include
 make -C libdom-0.4.2 install -j$(nproc) Q= PREFIX=$PREFIX LIBDIR=lib COMPONENT_TYPE=lib-static

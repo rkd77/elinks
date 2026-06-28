@@ -5,18 +5,18 @@
 # [*] base system
 
 # get latest fedora
-FROM fedora:42
+FROM fedora:44
 
 # prepare system
 RUN dnf -y update && dnf -y install bash wget \
   rsync vim screen git make automake meson unzip cmake patch upx gcc p7zip
 
-RUN cd /root; wget http://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-12.2.0/djcross-gcc-12.2.0-1ap.x86_64.rpm ; \
-wget http://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-12.2.0/djcross-gcc-c++-12.2.0-1ap.x86_64.rpm ; \
-wget http://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-12.2.0/djcross-gcc-tools-12.2.0-1ap.x86_64.rpm ; \
+RUN cd /root; wget http://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-14.2.0/djcross-gcc-14.2.0-1ap.x86_64.rpm ; \
+wget http://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-14.2.0/djcross-gcc-c++-14.2.0-1ap.x86_64.rpm ; \
+wget http://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-14.2.0/djcross-gcc-tools-14.2.0-1ap.x86_64.rpm ; \
 wget http://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/rpms/djcross-binutils-2.34-1ap.x86_64.rpm ; \
 wget http://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/rpms/djcrx-2.05-5.x86_64.rpm ; \
-rpm -Uhv *.rpm
+rpm -Uhv --nodigest *.rpm
 
 # create user
 ## RUN useradd -m elinks -s /bin/bash
@@ -37,15 +37,20 @@ RUN bash /root/build_libidn2.sh
 
 # brotli
 ADD cc.py /root/cc.py
-ADD brotli.diff /root/brotli.diff
 ADD build_brotli.sh /root/
 RUN bash /root/build_brotli.sh
 
-# quickjs
+# quickjs-ng
 RUN dnf -y install xz
-ADD quickjs-dos.diff /root/
-ADD build_quickjs.sh /root/
-RUN bash /root/build_quickjs.sh
+
+##ADD quickjs-dos.diff /root/
+##ADD build_quickjs.sh /root/
+##RUN bash /root/build_quickjs.sh
+
+ADD 1348.diff /root/
+ADD linux-djgpp.txt /root/
+ADD build_quickjs_ng.sh /root/
+RUN bash /root/build_quickjs_ng.sh
 
 # netsurf_buildsystem
 ADD build_netsurf.sh /root/

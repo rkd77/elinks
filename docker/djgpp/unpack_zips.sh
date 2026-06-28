@@ -1,5 +1,6 @@
 PREFIX=/opt/elinks
 cd
+mkdir -p /opt/elinks
 mkdir -p lib/pkgconfig
 mkdir zip
 cd zip

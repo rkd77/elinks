@@ -2,9 +2,11 @@
 
 rm -rf /tmp/builddir
 
-VER=0.19.0
+cd $HOME/elinks
+
+VER=0.19.1
 PREFIX=/opt/elinks
-DESTDIR=$HOME/elinks
+DESTDIR=$HOME/elinks-inst
 
 LIBPATH="$PREFIX/lib" \
 LIBRARY_PATH="$PREFIX/lib" \
