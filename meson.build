@@ -606,7 +606,7 @@ if conf_data.get('CONFIG_SCRIPTING_LUA')
         luadeps = compiler.find_library(luapkg, static: st, required: not conf_data.get('CONFIG_OS_DOS'))
     endif
     if not luadeps.found() and conf_data.get('CONFIG_OS_DOS')
-        luadeps = compiler.find_library(luapkg, dirs: ['/home/elinks/lib'], static: st)
+        luadeps = compiler.find_library(luapkg, dirs: ['/opt/elinks/lib'], static: st)
     endif
     deps += luadeps
 endif
@@ -617,7 +617,7 @@ if conf_data.get('CONFIG_XBEL_BOOKMARKS')
         expatdeps = compiler.find_library('expat', static: st, required: not conf_data.get('CONFIG_OS_DOS'))
     endif
     if not expatdeps.found() and conf_data.get('CONFIG_OS_DOS')
-        expatdeps = compiler.find_library('expat', dirs: ['/home/elinks/lib'], static: st)
+        expatdeps = compiler.find_library('expat', dirs: ['/opt/elinks/lib'], static: st)
     endif
     deps += expatdeps
 endif
@@ -685,9 +685,6 @@ endif
 
 if conf_data.get('CONFIG_QUICKJS')
     quickjsdeps = dependency('quickjs-ng', static: st)
-#    if not quickjsdeps.found() and conf_data.get('CONFIG_OS_DOS')
-#        quickjsdeps = compiler.find_library('quickjs/libquickjs', dirs: ['/home/elinks/lib'], static: true)
-#    endif
     deps += quickjsdeps
     deps += dep_atomic
 else
@@ -763,7 +760,7 @@ if conf_data.get('CONFIG_LIBRSVG') and not conf_data.get('CONFIG_KITTY') and not
 endif
 
 if conf_data.get('CONFIG_OS_DOS')
-    wattdeps = compiler.find_library('watt', dirs: ['/home/elinks/lib'], static: st)
+    wattdeps = compiler.find_library('watt', dirs: ['/opt/elinks/lib'], static: st)
     deps += wattdeps
 else
     wattdeps = dependency('', required: false)
@@ -1138,7 +1135,7 @@ iconvdeps = compiler.find_library('iconv', static: st, required: false)
 if iconvdeps.found()
     deps += iconvdeps
 elif conf_data.get('CONFIG_OS_DOS')
-    iconvdeps = compiler.find_library('iconv', dirs: ['/home/elinks/lib'], static: st)
+    iconvdeps = compiler.find_library('iconv', dirs: ['/opt/elinks/lib'], static: st)
     deps += iconvdeps
 endif
 
@@ -1147,7 +1144,7 @@ if conf_data.get('CONFIG_GETTEXT')
     if intldeps.found()
         deps += intldeps
     elif conf_data.get('CONFIG_OS_DOS')
-        intldeps = compiler.find_library('intl', dirs: ['/home/elinks/lib'], static: st)
+        intldeps = compiler.find_library('intl', dirs: ['/opt/elinks/lib'], static: st)
         deps += intldeps
     elif conf_data.get('CONFIG_OS_WIN32')
         intldeps = compiler.find_library('intl', static: st)
