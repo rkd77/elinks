@@ -1386,7 +1386,7 @@ U+2017:=2
 0x22	U+201c-U+201f	# various double quotation marks <">
 U+2020:/-
 U+2021:/=
-U+2022: o
+U+2022:*
 0x2e	U+2024
 U+2025:..
 U+2026:...
@@ -1859,7 +1859,7 @@ U+25a6:RH
 U+25a7:RZ
 U+25a8:RK
 U+25a9:RX
-U+25aa:sB
+U+25aa:+
 U+25ac:SR
 U+25ad:Or
 U+25b2:^

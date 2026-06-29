@@ -1002,9 +1002,9 @@ html_li(struct html_context *html_context, char *a,
 		if (t == P_O) {/* Print U+25E6 WHITE BULLET. */
 			put_chrs(html_context, "&#9702;", 7);
 		} else if (t == P_SQUARE) {/* Print U+25AA BLACK SMALL SQUARE. */
-			put_chrs(html_context, "&squf;", 6);
+			put_chrs(html_context, "&#9642;", 7);
 		} else {/* Print U+2022 BULLET. */
-			put_chrs(html_context, "&bull;", 6);
+			put_chrs(html_context, "&#8226;", 7);
 		}
 		put_chrs(html_context, "&nbsp;", 6);
 		par_elformat.leftmargin += 2;
