@@ -999,13 +999,13 @@ html_li(struct html_context *html_context, char *a,
 	if (t == P_NO_BULLET) {
 		/* Print nothing. */
 	} else if (!par_elformat.list_number) {
-		if (t == P_O) /* Print U+25E6 WHITE BULLET. */
-			//put_chrs(html_context, "&#9702;", 7);
-			put_chrs(html_context, "o", 1);
-		else if (t == P_SQUARE) /* Print U+25AA BLACK SMALL SQUARE. */
+		if (t == P_O) {/* Print U+25E6 WHITE BULLET. */
+			put_chrs(html_context, "&#9702;", 7);
+		} else if (t == P_SQUARE) {/* Print U+25AA BLACK SMALL SQUARE. */
 			put_chrs(html_context, "&squf;", 6);
-		else /* Print U+2022 BULLET. */
+		} else {/* Print U+2022 BULLET. */
 			put_chrs(html_context, "&bull;", 6);
+		}
 		put_chrs(html_context, "&nbsp;", 6);
 		par_elformat.leftmargin += 2;
 		par_elformat.align = ALIGN_LEFT;
