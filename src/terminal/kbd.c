@@ -1113,7 +1113,7 @@ set_kbd_event(const struct itrm *itrm, struct interlink_event *ev,
 		key = KBD_TAB;
 		break;
 	case ASCII_DEL:	/* often overridden by itrm->verase above */
-		key = KBD_DEL;
+		key = KBD_BS;
 		break;
 	case ASCII_LF:
 	case ASCII_CR:
