@@ -2166,7 +2166,7 @@ const uint16_t highhalf_cp1250 [] = {
 	/* 0x92 */ 0x2019, /* RIGHT SINGLE QUOTATION MARK */
 	/* 0x93 */ 0x201C, /* LEFT DOUBLE QUOTATION MARK */
 	/* 0x94 */ 0x201D, /* RIGHT DOUBLE QUOTATION MARK */
-	/* 0x95 */ 0xFFFF,
+	/* 0x95 */ 0x2022, /* BULLET */
 	/* 0x96 */ 0x2013, /* EN DASH */
 	/* 0x97 */ 0x2014, /* EM DASH */
 	/* 0x98 */ 0xFFFF,
