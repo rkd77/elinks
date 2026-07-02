@@ -324,19 +324,21 @@ win32_write(int fd, const void *buf, unsigned len)
 		break;
 
 	case FDT_TERMINAL:
+#ifdef CONFIG_WIN32_VT100_NATIVE
+		WriteConsole((HANDLE)(intptr_t)fd, buf, len, &written, NULL);
+		rc = written;
+#else
 		if (isatty(STDOUT_FILENO) > 0) {
 			if (is_xterm()) {
 				rc = write(STDOUT_FILENO, buf, len);
 			} else {
-#ifndef CONFIG_WIN32_VT100_NATIVE
 				rc = VT100_decode((HANDLE)(intptr_t)fd, buf, len);
-#endif
 			}
-		}
-		else {
+		} else {
 			/* stdout redirected */
 			rc = write(STDOUT_FILENO, buf, len);
 		}
+#endif
 		break;
 
 	case FDT_SOCKET:
@@ -855,9 +857,11 @@ int win32_select (int num_fds, struct fd_set *rd, struct fd_set *wr,
 		select_dump(num_fds, rd, wr, ex);
 
 	if (get_cmd_opt_int("verbose") == 2)
-		Sleep (400);
+		Sleep(400);
 	else
-		Sleep (0);
+		Sleep(0);
+#else
+	Sleep(0);
 #endif
 	return rc;
 }
