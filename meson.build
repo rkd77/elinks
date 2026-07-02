@@ -684,7 +684,7 @@ if not compiler.links('''#include <stdint.h>
 endif
 
 if conf_data.get('CONFIG_QUICKJS')
-    quickjsdeps = dependency('quickjs-ng', static: st)
+    quickjsdeps = dependency('quickjs-ng', 'qjs', static: st)
     deps += quickjsdeps
     deps += dep_atomic
 else
