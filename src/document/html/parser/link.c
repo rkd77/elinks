@@ -513,10 +513,12 @@ html_img_do(char *a, char *object_src,
 	if (!label || !*label) {
 		mem_free_set(&label, NULL);
 		add_brackets = 1;
-		if (display_style == 1)
+		if (display_style == 1) {
 			label = get_image_filename_from_src(options->image_link.filename_maxlen, src);
-		if (!label || !*label)
+		}
+		if (display_style >=0 && (!label || !*label)) {
 			mem_free_set(&label, stracpy("IMG"));
+		}
 	}
 
 	mem_free_set(&elformat.image, NULL);

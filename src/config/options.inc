@@ -216,8 +216,9 @@ static union option_info config_options_info[] = {
 		N_("Options for handling of images.")),
 
 	INIT_OPT_INT("document.browse.images", N_("Display style for image tags"),
-		"display_style", OPT_ZERO, 0, 3, 2,
+		"display_style", OPT_ZERO, -1, 3, 2,
 		N_("Display style for image tags when displayed:\n"
+		"-1    means do not display any text\n"
 		"0     means always display IMG\n"
 		"1     means always display filename\n"
 		"2     means display alt/title attribute if possible,\n"
