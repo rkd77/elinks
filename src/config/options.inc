@@ -81,11 +81,11 @@ static union option_info config_options_info[] = {
 		N_("Whether to use asynchronous DNS resolving.")),
 
 	INIT_OPT_INT("connection", N_("Maximum connections"),
-		"max_connections", OPT_ZERO, 1, 16, 10,
+		"max_connections", OPT_ZERO, 1, 256, 10,
 		N_("Maximum number of concurrent connections.")),
 
 	INIT_OPT_INT("connection", N_("Maximum connections per host"),
-		"max_connections_to_host", OPT_ZERO, 1, 8, 2,
+		"max_connections_to_host", OPT_ZERO, 1, 256, 2,
 		N_("Maximum number of concurrent connections to a given "
 		"host.")),
 
