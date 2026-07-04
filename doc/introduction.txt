@@ -402,3 +402,10 @@ or
 - set protocol.rewrite.smart.g = "http://www.google.com/search?q=%s"
 
 I had no success with https and google.
+
+Increasing connection.max_connections and connection.max_connections_to_host can also
+be a good idea. Especially with curl and images enabled. For example:
+
+- set connection.max_connections = 256
+
+- set connection.max_connections_to_host = 128
