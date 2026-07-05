@@ -211,7 +211,7 @@ verify_certificates(struct socket *socket)
  * match_uri_host_ip() must be used instead of this function.  */
 static int
 match_uri_host_name(const char *uri_host,
-		    ASN1_STRING *cert_host_asn1)
+		    const ASN1_STRING *cert_host_asn1)
 {
 	ELOG
 	const size_t uri_host_len = strlen(uri_host);
@@ -384,9 +384,9 @@ verify_callback(int preverify_ok, X509_STORE_CTX *ctx)
 		sk_GENERAL_NAME_pop_free(alts, GENERAL_NAME_free);
 	}
 	if (!matched && !saw_dns_name) {
-		X509_NAME *name;
+		const X509_NAME *name;
 		int cn_index;
-		X509_NAME_ENTRY *entry = NULL;
+		const X509_NAME_ENTRY *entry = NULL;
 
 		name = X509_get_subject_name(cert);
 		cn_index = X509_NAME_get_index_by_NID(name, NID_commonName, -1);
