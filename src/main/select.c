@@ -7,6 +7,8 @@
 #include <errno.h>
 #include <signal.h>
 #include <string.h> /* FreeBSD FD_ZERO() macro calls bzero() */
+#include <stdlib.h>
+
 #ifdef __GNU__ /* For GNU Hurd bug workaround in set_handlers() */
 #include <sys/stat.h> /* OS/2 needs this after sys/types.h */
 #endif
