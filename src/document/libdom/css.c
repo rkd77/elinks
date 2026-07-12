@@ -1917,9 +1917,8 @@ static void
 apply_color(struct html_context *html_context, struct html_element *html_element, css_color color_shade)
 {
 	ELOG
-
 	if (use_document_fg_colors(html_context->options)) {
-		html_element->attr.style.color.foreground = (color_shade == 0xff000000) ? color_shade : color_shade & 0x00ffffff;
+		html_element->attr.style.color.foreground = color_shade & 0x00ffffff;
 	}
 }
 
@@ -1927,9 +1926,8 @@ static void
 apply_background_color(struct html_context *html_context, struct html_element *html_element, css_color color_shade)
 {
 	ELOG
-
 	if (use_document_bg_colors(html_context->options)) {
-		html_element->attr.style.color.background = (color_shade == 0xff000000) ? color_shade : color_shade & 0x00ffffff;
+		html_element->attr.style.color.background = color_shade & 0x00ffffff;
 	}
 }
 
