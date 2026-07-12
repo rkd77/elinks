@@ -1913,12 +1913,16 @@ get_libcss_node_data(void *pw, void *node, void **libcss_node_data)
 	return CSS_OK;
 }
 
+#define ELINKS_LIBCSS_DEFAULT_COLOR_NUMBER 0xfe000000
+
 static void
 apply_color(struct html_context *html_context, struct html_element *html_element, css_color color_shade)
 {
 	ELOG
+
 	if (use_document_fg_colors(html_context->options)) {
-		html_element->attr.style.color.foreground = color_shade & 0x00ffffff;
+		html_element->attr.style.color.foreground = (color_shade == ELINKS_LIBCSS_DEFAULT_COLOR_NUMBER)
+		? ELINKS_DEFAULT_COLOR_NUMBER : color_shade & 0x00ffffff;
 	}
 }
 
@@ -1926,8 +1930,10 @@ static void
 apply_background_color(struct html_context *html_context, struct html_element *html_element, css_color color_shade)
 {
 	ELOG
+
 	if (use_document_bg_colors(html_context->options)) {
-		html_element->attr.style.color.background = color_shade & 0x00ffffff;
+		html_element->attr.style.color.background = (color_shade == ELINKS_LIBCSS_DEFAULT_COLOR_NUMBER)
+		? ELINKS_DEFAULT_COLOR_NUMBER : color_shade & 0x00ffffff;
 	}
 }
 

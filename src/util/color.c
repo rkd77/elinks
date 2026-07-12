@@ -117,7 +117,7 @@ decode_hex_color:
 		const struct color_spec *cs;
 
 	if (!strcmp(str, "default")) {
-		*color = 0xFF000000;
+		*color = ELINKS_DEFAULT_COLOR_NUMBER;
 		return 0;
 	}
 
@@ -167,7 +167,7 @@ get_color_string(color_T color, char hexcolor[8])
 	ELOG
 	const struct color_spec *cs;
 
-	if (color >= 0xFF000000) {
+	if (color == ELINKS_DEFAULT_COLOR_NUMBER) {
 		return "default";
 	}
 

@@ -12,6 +12,8 @@ struct color_pair {
 	color_T foreground;
 };
 
+#define ELINKS_DEFAULT_COLOR_NUMBER 0xFF000000
+
 #define INIT_COLOR_PAIR(bg, fg) { bg, fg }
 
 /** Decode the color string.
