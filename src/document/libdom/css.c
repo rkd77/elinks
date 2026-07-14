@@ -2219,7 +2219,8 @@ select_css(struct html_context *html_context, struct html_element *html_element)
 	color_type = css_computed_background_color(
 		style->styles[CSS_PSEUDO_ELEMENT_NONE],
 		&color_shade);
-	if (color_shade) {
+
+	if (color_type) {
 		apply_background_color(html_context, html_element, color_shade);
 	}
 
