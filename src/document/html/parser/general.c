@@ -1099,7 +1099,9 @@ html_dt(struct html_context *html_context, char *a,
         char *xxx3, char *xxx4, char **xxx5)
 {
 	ELOG
-	kill_html_stack_until(html_context, 0, "", "DL", NULL);
+#if 0
+	//kill_html_stack_until(html_context, 0, "", "DL", NULL);
+#endif
 	par_elformat.align = ALIGN_LEFT;
 	par_elformat.leftmargin = par_elformat.dd_margin;
 	if (!(par_elformat.flags & P_COMPACT)
@@ -1112,8 +1114,9 @@ html_dd(struct html_context *html_context, char *a,
         char *xxx3, char *xxx4, char **xxx5)
 {
 	ELOG
-	kill_html_stack_until(html_context, 0, "", "DL", NULL);
-
+#if 0
+	//kill_html_stack_until(html_context, 0, "", "DL", NULL);
+#endif
 	par_elformat.leftmargin = par_elformat.dd_margin + 3;
 
 	if (!html_context->table_level) {
