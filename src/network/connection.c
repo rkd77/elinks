@@ -22,6 +22,7 @@
 #include "document/document.h"
 #include "encoding/encoding.h"
 #include "intl/libintl.h"
+#include "main/main.h"
 #include "main/object.h"
 #include "main/select.h"
 #include "main/timer.h"
@@ -808,7 +809,7 @@ abort_connection(struct connection *conn, struct connection_state state)
 	assertm(is_in_result_state(state),
 		"connection didn't end in result state (%d)", state);
 
-	if (conn->curl && is_in_state(state, S_INTERRUPTED)) {
+	if (conn->curl && is_in_state(state, S_INTERRUPTED) && !program.terminate) {
 		conn->is_aborted = 1;
 		return;
 	}
