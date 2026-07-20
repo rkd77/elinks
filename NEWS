@@ -5,6 +5,27 @@ You can see the complete list of recent changes, bugfixes and new features
 in the https://github.com/rkd77/felinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
+ELinks 0.20.0
+-------------
+
+To be released
+
+* bump mozjs to 140
+* switch from quickjs to quickjs-ng
+* Added color "default" in colors settings (\e[39m and \e[49m sequences)
+* support for SVG #423
+* infinite loop in mailcap code #425
+* Use /usr/bin/env to determine awk interpreter path for awk example scripts #426
+* skip DNS lookup for local files which have empty hostname #428
+* check declaration of fgets_unlocked for bionic libc #429
+* fix parallel build race #431
+* added document.browse.sorting_type (and let sort "numerically", for example kernel versions)
+* increase max number of concurrent connections
+* extend document.browse.images.display_style, adding value -1 (no text)
+* apply libcss twice (similar to elinks css implementation)
+* refresh-view, set-mark, goto-mark and onload-oneshot actions for exmode #220
+
+
 ELinks 0.19.1
 -------------
 
