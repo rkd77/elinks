@@ -384,6 +384,7 @@ src/js/quickjs/css.c
 src/js/quickjs/css.h
 src/js/quickjs/customevent.c
 src/js/quickjs/customevent.h
+src/js/quickjs/cutils.h
 src/js/quickjs/dataset.c
 src/js/quickjs/dataset.h
 src/js/quickjs/document.c
@@ -717,6 +718,7 @@ src/protocol/proxy.c
 src/protocol/proxy.h
 src/protocol/rewrite/rewrite.c
 src/protocol/rewrite/rewrite.h
+src/protocol/smb/smb.c
 src/protocol/smb/smb.h
 src/protocol/smb/smb2.c
 src/protocol/spartan/codes.c
@@ -928,3 +930,4 @@ src/viewer/timer.c
 src/viewer/timer.h
 src/viewer/viewer.c
 src/viewer/viewer.h
+test/test_invariant_event.c
