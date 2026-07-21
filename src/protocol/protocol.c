@@ -347,8 +347,10 @@ static struct module *protocol_submodules[] = {
 	&gopher_protocol_module,
 #endif
 	&http_protocol_module,
+#ifdef CONFIG_MAILCAP
 	&mailcap_protocol_module,
 	&mailcap_html_protocol_module,
+#endif
 #ifdef CONFIG_NNTP
 	&nntp_protocol_module,
 #endif

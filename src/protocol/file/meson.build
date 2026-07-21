@@ -4,4 +4,8 @@ endif
 if conf_data.get('CONFIG_DGI')
 	srcs += files('dgi.c')
 endif
-srcs += files('file.c', 'mailcap.c')
+srcs += files('file.c')
+
+if conf_data.get('CONFIG_MAILCAP')
+	srcs += files('mailcap.c')
+endif

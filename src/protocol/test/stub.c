@@ -11,7 +11,6 @@
 
 #include "bfu/msgbox.h"
 #include "main/module.h"
-#include "protocol/file/mailcap.h"
 #include "protocol/user.h"
 #include "session/session.h"
 #include "util/test.h"
