@@ -24,7 +24,7 @@ To be released
 * extend document.browse.images.display_style, adding value -1 (no text)
 * apply libcss twice (similar to elinks css implementation)
 * refresh-view, set-mark, goto-mark and onload-oneshot actions for exmode #220
-
+* back to smb based on smbclient binary
 
 ELinks 0.19.1
 -------------
