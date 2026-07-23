@@ -44,6 +44,7 @@ PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig" \
 -Dlibsixel=false \
 -Dluapkg= \
 -Dlzma=false \
+-Dmailcap=false \
 -Dmouse=true \
 -Dmujs=false \
 -Dnls=true \
