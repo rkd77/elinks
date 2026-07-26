@@ -8,7 +8,7 @@ file for details.
 ELinks 0.20.0
 -------------
 
-To be released
+Released on 2026-07-26
 
 * bump mozjs to 140
 * switch from quickjs to quickjs-ng
