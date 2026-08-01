@@ -1116,8 +1116,8 @@ if test "$enable_python" = "yes"; then
 	if test "$PYTHON3" != no; then
 		cf_result="yes";
 
-		PYTHON_CFLAGS="`$PYTHON3 -c 'from distutils import sysconfig; print("-I%s -I%s" % (sysconfig.get_python_inc(), sysconfig.get_python_inc(plat_specific=True)))'`"
-		PYTHON_LIBS="`$PYTHON3 -c 'from distutils import sysconfig; var = sysconfig.get_config_var; print("%s %s %s -L%s -lpython%s" % (var("LINKFORSHARED"), var("LIBS"), var("SYSLIBS"), var("LIBPL"), var("VERSION")))'`"
+		PYTHON_CFLAGS="`$PYTHON3 -c 'import sysconfig; var = sysconfig.get_config_var; print("-I%s -I%s" % (var("INCLUDEPY"), var("CONFINCLUDEPY")))'`"
+		PYTHON_LIBS="`$PYTHON3 -c 'import sysconfig; var = sysconfig.get_config_var; print("%s %s %s -L%s -lpython%s" % (var("LINKFORSHARED"), var("LIBS"), var("SYSLIBS"), var("LIBPL"), var("VERSION")))'`"
 		LIBS="$PYTHON_LIBS $LIBS"
 		CPPFLAGS="$CPPFLAGS $PYTHON_CFLAGS"
 		AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <Python.h>]], [[Py_Initialize();]])],[cf_result=yes],[cf_result=no])
