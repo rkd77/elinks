@@ -198,9 +198,7 @@ js_urlSearchParams_constructor(JSContext *ctx, JSValueConst new_target, int argc
 				JS_FreeValue(ctx, vv[1]);
 				JS_FreeValue(ctx, u->map);
 			}
-			if (ptab) {
-				free(ptab);
-			}
+			JS_FreePropertyEnum(ctx, ptab, plen);
 		} else {
 			size_t len;
 			const char *str = JS_ToCStringLen(ctx, &len, argv[0]);
