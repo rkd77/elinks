@@ -9,19 +9,28 @@
     <script src="tetris.js"></script>
 </head>
 <body>
-    <div id="divMain">
-        <center>
-        <div id="header">
-            <button id="btnStart" onclick="myApp.btnClick()">New Game</button>
-            <button id="btnStart2" onclick="myApp.btnPause()"
-            rv-text="data.getPauseButtonText | call data.game_mode">Pause</button>
-        </div>
-        <div id="gameArea">
+    <center><table id="divMain">
+        <tr>
+        <th id="gameArea">
             </div>
             <div id="gamediv">
             </div>
-        </div>
-        </center>
-    </div>
+        </th>
+        <th id="header">
+            <h3><a href="https://github.com/nbarkhina/TetrisJS" target="_blank">Tetris JS</a></h3>
+            <br><button id="btnStart" onclick="myApp.btnClick()">New Game</button>
+            <br><button id="btnStart2" onclick="myApp.btnPause()"
+            rv-text="data.getPauseButtonText | call data.game_mode">Pause</button>
+            <a href="about:blank" title="bind some key to 'toggle-ecmascript-keys', and press it to interract with game"><h4>Cheat sheet:</h4></a>
+            <table>
+                <tr><th>Key</th>     <th>Action</th></tr>
+                <tr><td>&larr;&uarr;&darr;&rarr;</td>  <td>Move figure</td></tr>
+                <tr><td>a</td>       <td>Drop figure</td></tr>
+                <tr><td>p</td>       <td>Pause</td></tr>
+                <tr><td>n</td>       <td>New game</td></tr>
+            </table>
+        </th>
+        </tr>
+    </table></center>
 </body>
 </html>
