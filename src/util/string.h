@@ -167,6 +167,15 @@ struct string {
 	int length;
 };
 
+struct el_string {
+	char *data;
+	unsigned int length;
+	int refcnt;
+};
+
+struct el_string *el_string_init(char *data, unsigned int length);
+struct el_string *el_string_ref(struct el_string *el_string);
+void el_string_unref(struct el_string *el_string);
 
 /** The granularity used for the struct string based utilities. */
 #define STRING_GRANULARITY 0xFF

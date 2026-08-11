@@ -768,3 +768,38 @@ compare_alpha(const char *s1, const char *s2)
 
 	return (*s1) - (*s2);
 }
+
+struct el_string *
+el_string_init(char *data, unsigned int length)
+{
+	struct el_string *el_string = mem_calloc(1, sizeof(*el_string));
+
+	if (el_string) {
+		el_string->data = data;
+		el_string->length = length;
+		el_string->refcnt = 1;
+	}
+
+	return el_string;
+}
+
+struct el_string *
+el_string_ref(struct el_string *el_string)
+{
+	if (el_string) {
+		el_string->refcnt++;
+	}
+
+	return el_string;
+}
+
+void
+el_string_unref(struct el_string *el_string)
+{
+	if (el_string) {
+		if (--(el_string->refcnt) <= 0) {
+			mem_free(el_string->data);
+			mem_free(el_string);
+		}
+	}
+}
