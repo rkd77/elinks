@@ -1053,7 +1053,7 @@ copy_sixel2_frame(struct image *src, struct el_box *box, int cell_width, int cel
 		clipwidth = (box->width * cell_width - cx * cell_width);
 	}
 	if (cy * cell_height + clipheight >= box->height * cell_height) {
-		clipheight = (box->height * cell_height - cy * cell_height);
+		clipheight = ((box->height * cell_height - cy * cell_height) / 6) * 6;
 	}
 	dest->x = clipx;
 	dest->y = clipy;
