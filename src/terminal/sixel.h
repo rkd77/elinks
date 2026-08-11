@@ -14,15 +14,20 @@ struct document;
 struct el_box;
 struct terminal;
 
-
 struct image {
 	LIST_HEAD_EL(struct image);
 	struct string pixels;
+	struct el_string *data;
+	int x;
+	int y;
+	int w;
+	int h;
 	int cx;
 	int cy;
 	int width;
 	int height;
 	int image_number;
+	unsigned int sixel2:1;
 };
 
 void delete_image(struct image *im);
@@ -33,6 +38,7 @@ void try_to_draw_images(struct terminal *term, struct string *text);
 int add_image_to_document(struct document *doc, char *data, int datalen, int lineno, struct image **imagine);
 
 struct image *copy_frame(struct image *src, struct el_box *box, int cell_width, int cell_height, int dx, int dy);
+struct image *copy_sixel2_frame(struct image *src, struct el_box *box, int cell_width, int cell_height, int dx, int dy);
 
 #endif
 

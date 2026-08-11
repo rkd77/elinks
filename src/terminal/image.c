@@ -36,6 +36,9 @@
 #ifdef CONFIG_KITTY
 #include "terminal/kitty.h"
 #endif
+#ifdef CONFIG_LIBSIXEL
+#include "terminal/sixel2.h"
+#endif
 #include "util/base64.h"
 #include "util/memcount.h"
 #include "util/memory.h"
@@ -359,14 +362,12 @@ sixel_write_callback(char *data, int size, void *priv)
 	return size;
 }
 
-char *
-el_sixel_get_image(char *data, int length, int *outlen)
+struct el_string *
+el_sixel_get_image(char *data, int length, int *outlen, int *width, int *height)
 {
 	ELOG
 	int comp;
-	int width;
-	int height;
-	unsigned char *pixels = stbi_load_from_memory((unsigned char *)data, length, &width, &height, &comp, 3);
+	unsigned char *pixels = stbi_load_from_memory((unsigned char *)data, length, width, height, &comp, 4);
 	char *outdata = NULL;
 	int webp = 0;
 	int avif = 0;
@@ -374,18 +375,18 @@ el_sixel_get_image(char *data, int length, int *outlen)
 
 	if (!pixels) {
 #ifdef CONFIG_LIBWEBP
-		pixels = WebPDecodeRGB((const uint8_t*)data, length, &width, &height);
+		pixels = WebPDecodeRGBA((const uint8_t*)data, length, width, height);
 		webp = 1;
 #endif
 #ifdef CONFIG_LIBAVIF
 		if (!pixels) {
-			pixels = eldecode_avif((const uint8_t*)data, length, &width, &height, 3);
+			pixels = eldecode_avif((const uint8_t*)data, length, width, height, 4);
 			avif = 1;
 		}
 #endif
 #ifdef CONFIG_LIBRSVG
 		if (!pixels) {
-			pixels = eldecode_rsvg((const uint8_t*)data, length, &width, &height, 3);
+			pixels = eldecode_rsvg((const uint8_t*)data, length, width, height, 4);
 			rsvg = 1;
 		}
 #endif
@@ -393,31 +394,9 @@ el_sixel_get_image(char *data, int length, int *outlen)
 			return NULL;
 		}
 	}
-	sixel_output_t *output = NULL;
-	sixel_dither_t *dither = NULL;
-	sixel_allocator_t *el_sixel_allocator = NULL;
-	struct string ret;
+	outdata = memacpy(pixels, *width * *height * 4);
+	*outlen = *width * *height * 4;
 
-	if (!init_string(&ret)) {
-		goto end;
-	}
-#ifdef CONFIG_MEMCOUNT
-	el_sixel_allocator = init_sixel_allocator();
-#endif
-	SIXELSTATUS status = sixel_output_new(&output, sixel_write_callback, &ret, el_sixel_allocator);
-
-	if (SIXEL_FAILED(status)) {
-		goto end;
-	}
-	dither = sixel_dither_get(SIXEL_BUILTIN_XTERM256);
-	sixel_dither_set_pixelformat(dither, SIXEL_PIXELFORMAT_RGB888);
-	status = sixel_encode(pixels, width, height, 3, dither, output);
-	outdata = memacpy(ret.source, ret.length);
-
-	if (outdata) {
-		*outlen = ret.length;
-	}
-	done_string(&ret);
 end:
 	if (webp) {
 #ifdef CONFIG_LIBWEBP
@@ -428,10 +407,7 @@ end:
 	} else {
 		stbi_image_free(pixels);
 	}
-	sixel_output_unref(output);
-	sixel_dither_unref(dither);
-	sixel_allocator_unref(el_sixel_allocator);
 
-	return outdata;
+	return el_string_init(outdata, (unsigned int)*outlen);
 }
 #endif

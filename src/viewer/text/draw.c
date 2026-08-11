@@ -37,6 +37,7 @@
 #include "terminal/screen.h"
 #ifdef CONFIG_LIBSIXEL
 #include "terminal/sixel.h"
+#include "terminal/sixel2.h"
 #endif
 #include "terminal/tab.h"
 #include "terminal/terminal.h"
@@ -584,12 +585,25 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 			if (im.cx + ((im.width + term->cell_width - 1) / term->cell_width) <= vs->x) {
 				continue;
 			}
-			struct image *im_copy = copy_frame(&im, box, term->cell_width, term->cell_height, vs->x, vs->y);
 
-			if (im_copy) {
-				im_copy->cx += box->x;
-				im_copy->cy += box->y;
-				add_to_list(term->images, im_copy);
+			if (im.sixel2) {
+				struct image *im_copy2 = copy_sixel2_frame(&im, box, term->cell_width, term->cell_height, vs->x, vs->y);
+
+				if (im_copy2) {
+					im_copy2->cx += box->x;
+					im_copy2->cy += box->y;
+					init_string(&im_copy2->pixels);
+					encode(&im_copy2->pixels, im_copy2->data->data, im.width, im_copy2->h, im_copy2->x, im_copy2->y, im_copy2->w, 1024);
+					add_to_list(term->images, im_copy2);
+				}
+			} else {
+				struct image *im_copy = copy_frame(&im, box, term->cell_width, term->cell_height, vs->x, vs->y);
+
+				if (im_copy) {
+					im_copy->cx += box->x;
+					im_copy->cy += box->y;
+					add_to_list(term->images, im_copy);
+				}
 			}
 		}
 	}

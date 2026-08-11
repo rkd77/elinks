@@ -708,6 +708,11 @@ done_cache_entry(struct cache_entry *cached)
 #ifdef CONFIG_KITTY
 	el_string_unref(cached->pixels);
 #endif
+
+#ifdef CONFIG_LIBSIXEL
+	el_string_unref(cached->data);
+#endif
+
 	mem_free(cached);
 }
 

@@ -63,9 +63,14 @@ struct cache_entry {
 
 #ifdef CONFIG_KITTY
 	struct el_string *pixels;
+	int number;
+#endif
+#if defined(CONFIG_LIBSIXEL) || defined(CONFIG_KITTY)
 	int width;
 	int height;
-	int number;
+#endif
+#ifdef CONFIG_LIBSIXEL
+	struct el_string *data;
 #endif
 	timeval_T max_age;		/* Expiration time */
 
@@ -82,6 +87,7 @@ struct cache_entry {
 	unsigned int cgi:1;		/* Is a CGI output? */
 	unsigned int integrity_valid:1; /* Was integrity checked and valid */
 	unsigned int compressed:1; /* Is kitty zlib? */
+	unsigned int sixel:1; /* sixel */
 
 	cache_mode_T cache_mode;	/* Reload condition */
 };

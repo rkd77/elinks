@@ -351,7 +351,10 @@ html_img_sixel(struct html_context *html_context, char *a,
 	if (!html_context->options->html_sixel || !html_context->document) {
 		return;
 	}
-	char *data = NULL;
+	int width = 0;
+	int height = 0;
+
+	struct el_string *data = NULL;
 	int datalen = 0;
 	char *url = get_attr_val(a, "src", html_context->doc_cp);
 
@@ -367,10 +370,21 @@ html_img_sixel(struct html_context *html_context, char *a,
 			struct cache_entry *cached = get_redirected_cache_entry(uri);
 again:
 			if (cached && !cached->incomplete) {
-				struct fragment *fragment = get_cache_fragment(cached);
+				if (cached->data) {
+					data = cached->data;
+					width = cached->width;
+					height = cached->height;
+				} else {
+					struct fragment *fragment = get_cache_fragment(cached);
 
-				if (fragment) {
-					data = el_sixel_get_image(fragment->data, fragment->length, &datalen);
+					if (fragment) {
+						data = el_sixel_get_image(fragment->data, fragment->length, &datalen, &width, &height);
+
+						cached->data = data;
+						cached->width = width;
+						cached->height = height;
+						cached->sixel = 1;
+					}
 				}
 			}
 			if (!data) {
@@ -401,14 +415,21 @@ again:
 
 	int lineno = html_context->part->cy + html_context->part->box.y;
 
-	struct image *im = NULL;
-
-	int how_many = add_image_to_document(document, data, datalen, lineno, &im);
-	mem_free(data);
+	struct image *im = mem_calloc(1, sizeof(*im));
 
 	if (!im) {
 		return;
 	}
+	im->data = el_string_ref(data);
+	im->width = width;
+	im->height = height;
+	im->cx = 0;
+	im->cy = lineno;
+	im->sixel2 = 1;
+
+	add_to_list(document->images, im);
+
+	int how_many = (height + document->options.cell_height - 1) / document->options.cell_height;
 	int xw = (im->width + document->options.cell_width - 1) / document->options.cell_width;
 	int y;
 	im->image_number = html_top->name - document->text.source;

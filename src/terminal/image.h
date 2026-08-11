@@ -16,7 +16,7 @@ struct el_string *el_kitty_get_image(char *data, int len, int *width, int *heigh
 #endif
 
 #ifdef CONFIG_LIBSIXEL
-char *el_sixel_get_image(char *data, int len, int *outlen);
+struct el_string *el_sixel_get_image(char *data, int len, int *outlen, int *width, int *height);
 
 #ifdef CONFIG_MEMCOUNT
 sixel_allocator_t *init_sixel_allocator(void);

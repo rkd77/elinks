@@ -807,6 +807,7 @@ delete_image(struct image *im)
 	ELOG
 	del_from_list(im);
 	done_string(&im->pixels);
+	el_string_unref(im->data);
 	mem_free(im);
 }
 
@@ -1017,6 +1018,57 @@ end:
 		mem_free(dest);
 		return NULL;
 	}
+
+	return dest;
+}
+
+struct image *
+copy_sixel2_frame(struct image *src, struct el_box *box, int cell_width, int cell_height, int dx, int dy)
+{
+	ELOG
+	struct image *dest = mem_calloc(1, sizeof(*dest));
+
+	if (!dest) {
+		return NULL;
+	}
+	dest->data = el_string_ref(src->data);
+
+	int cx = src->cx - dx;
+	int cy = src->cy - dy;
+
+	int clipx = cx >= 0 ? 0 : (-cx * cell_width);
+	int clipy = cy >= 0 ? 0 : (-cy * cell_height);
+
+	int clipwidth = box->width * cell_width;
+	int clipheight = box->height * cell_height;
+
+	if (src->width < clipwidth) {
+		clipwidth = src->width;
+	}
+	if (src->height < clipheight) {
+		clipheight = src->height;
+	}
+
+	if (cx * cell_width + clipwidth >= box->width * cell_width) {
+		clipwidth = (box->width * cell_width - cx * cell_width);
+	}
+	if (cy * cell_height + clipheight >= box->height * cell_height) {
+		clipheight = (box->height * cell_height - cy * cell_height);
+	}
+	dest->x = clipx;
+	dest->y = clipy;
+	dest->w = clipwidth;
+	dest->h = clipheight;
+
+	dest->cx = cx < 0 ? 0 : cx;
+	dest->cy = cy < 0 ? 0 : cy;
+	dest->width = src->width;
+	dest->height = src->height;
+
+//	dest->ID = src->ID;
+	dest->image_number = src->image_number;
+//	dest->sent = src->sent;
+//	dest->compressed = src->compressed;
 
 	return dest;
 }
