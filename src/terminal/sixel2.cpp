@@ -1112,7 +1112,7 @@ encode(struct string *outs, unsigned char *img, int width, int height, int offx,
 
 				//std::cerr << "j=" <<  j << " ";
 
-				auto m = n + offx + j;
+				int m = n + offx + j;
 
 				//std::cerr << "m=" <<  m << " ";
 
@@ -1160,7 +1160,7 @@ encode(struct string *outs, unsigned char *img, int width, int height, int offx,
 						activeChunks.push_back(chunk);
 					} else if (chunk->x > j) {
 						//std::cerr << "chunk->x > j\n";
-						auto diff = chunk->x - j;
+						int diff = chunk->x - j;
 						chunk->x = j;
 						int olen = chunk->len;
 						chunk->data = (unsigned int *)mem_realloc(chunk->data, (olen + diff) * sizeof(*chunk->data));
