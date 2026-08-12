@@ -1052,9 +1052,7 @@ proc createBands(bands: var seq[SixelBand]; activeChunks: seq[ptr SixelChunk]) =
 void
 encode(struct string *outs, unsigned char *img, int width, int height, int offx, int offy, int realw, unsigned int palette)
 {
-	//std::cerr << "width=" << width << " height=" << height << " realw=" << realw << "\n";
-
-	//fprintf(stderr, "encode: width=%d height=%d offx=%d offy=%d realw=%d\n", width, height, offx, offy, realw);
+	//std::cerr << "width=" << width << " height=" << height << " offx=" << offx << " offy=" << offy << " realw=" << realw << "\n";
 
 	bool transparent = false;
 	Node *root = (Node *)quantize((RGBAColorBE *)img, width * height, palette, transparent);
@@ -1074,7 +1072,7 @@ encode(struct string *outs, unsigned char *img, int width, int height, int offx,
 		add_to_string(outs, "0;1");
 	}
 	add_char_to_string(outs, 'q');
-	add_format_to_string(outs, "\"1;1;%d;%d", width, height);
+	add_format_to_string(outs, "\"1;1;%d;%d", realw, height - offy);
 	std::pmr::vector<Node> nodes = flatten(root, outs, palette);
 
 	auto L = width * height;
@@ -1214,7 +1212,7 @@ encode(struct string *outs, unsigned char *img, int width, int height, int offx,
 		}
 		std::pmr::vector<SixelBand *> bands{&resource};
 		createBands(bands, activeChunks);
-		int olen = outs->length;
+		//int olen = outs->length;
 
 		for (int i = 0; i < bands.size(); i++) {
 			if (i > 0) {
@@ -1222,20 +1220,20 @@ encode(struct string *outs, unsigned char *img, int width, int height, int offx,
 			}
 			compressSixel(outs, bands.at(i));
 		}
+		activeChunks.clear();
 
 		if (n >= L) {
 			add_to_string(outs, ST);
-			totalLen += (uint32_t)(outs->length - olen);
+			//totalLen += (uint32_t)(outs->length - olen);
 			break;
 		} else {
 			add_char_to_string(outs, '-');
-			totalLen += (uint32_t)(outs->length - olen);
+			//totalLen += (uint32_t)(outs->length - olen);
 		}
 		//if outs.len >= MaxBuffer:
 		//os.puts(outs)
 		//outs.setLen(0)
 		nrow++;
-		activeChunks.clear();
 	}
 	dither.d1.clear();
 	dither.d2.clear();
