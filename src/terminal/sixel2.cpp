@@ -1050,9 +1050,10 @@ proc createBands(bands: var seq[SixelBand]; activeChunks: seq[ptr SixelChunk]) =
 #endif
 
 void
-encode(struct string *outs, unsigned char *img, int width, int height, int offx, int offy, int realw, unsigned int palette)
+encode(struct string *outs, unsigned char *img, int width, int height, int offx, int offy, int cropw, unsigned int palette)
 {
 	//std::cerr << "width=" << width << " height=" << height << " offx=" << offx << " offy=" << offy << " realw=" << realw << "\n";
+	//fprintf(stderr, "\nencode width=%d height=%d offx=%d offy=%d cropw=%d\n", width, height, offx, offy, cropw);
 
 	bool transparent = false;
 	Node *root = (Node *)quantize((RGBAColorBE *)img, width * height, palette, transparent);
@@ -1071,14 +1072,13 @@ encode(struct string *outs, unsigned char *img, int width, int height, int offx,
 	if (transparent) {
 		add_to_string(outs, "0;1");
 	}
+	auto L = width * height;
+	auto realw = cropw - offx;
+	auto n = offy * width;
+
 	add_char_to_string(outs, 'q');
 	add_format_to_string(outs, "\"1;1;%d;%d", realw, height - offy);
 	std::pmr::vector<Node> nodes = flatten(root, outs, palette);
-
-	auto L = width * height;
-//	auto realw = cropw - offx;
-	auto n = offy * width;
-
 
 	uint32_t totalLen = 0;
 	Dither dither;
