@@ -1076,8 +1076,7 @@ encode(struct string *outs, unsigned char *img, int width, int height, int offx,
 	auto realw = cropw - offx;
 	auto n = offy * width;
 
-	add_char_to_string(outs, 'q');
-	add_format_to_string(outs, "\"1;1;%d;%d", realw, height - offy);
+	add_format_to_string(outs, "q\"1;1;%d;%d", realw, height - offy);
 	std::pmr::vector<Node> nodes = flatten(root, outs, palette);
 
 	uint32_t totalLen = 0;
