@@ -376,9 +376,9 @@ x:
 		}
 
 	} else {
-		assert(loc);
-		if_assert_failed return NULL;
-
+		if (!loc) {
+			return NULL;
+		}
 		init_list(loc->frames);
 		init_list(loc->iframes);
 		vs = &loc->vs;

@@ -1101,7 +1101,7 @@ try_to_load_image(struct uri *uri)
 	if (!proxy_uri || !proxied_uri) {
 		return;
 	}
-	struct connection *conn = init_connection(proxy_uri, proxied_uri, NULL, 0, CACHE_MODE_NORMAL, PRI_CSS);
+	struct connection *conn = init_connection(proxy_uri, proxied_uri, NULL, 0, CACHE_MODE_NORMAL, PRI_IMG);
 
 	if (!conn) {
 		return;

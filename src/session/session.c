@@ -555,7 +555,7 @@ load_images(struct session *ses, struct document_view *doc_view)
 	if (!document) return;
 
 	foreach_uri (uri, index, &document->image_uris) {
-		request_additional_file(ses, "", uri, PRI_CSS);
+		request_additional_file(ses, "", uri, PRI_IMG);
 	}
 }
 #else
