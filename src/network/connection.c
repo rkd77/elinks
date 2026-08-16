@@ -1092,7 +1092,7 @@ load_uri(struct uri *uri, struct uri *referrer, struct download *download,
 }
 
 void
-try_to_load_image(struct uri *uri)
+try_to_load_image(struct uri *uri, struct uri *referrer)
 {
 	struct connection_state error_state = connection_state(S_OK);
 	struct uri *proxy_uri   = get_proxy_uri(uri, &error_state);
@@ -1101,7 +1101,7 @@ try_to_load_image(struct uri *uri)
 	if (!proxy_uri || !proxied_uri) {
 		return;
 	}
-	struct connection *conn = init_connection(proxy_uri, proxied_uri, NULL, 0, CACHE_MODE_NORMAL, PRI_IMG);
+	struct connection *conn = init_connection(proxy_uri, proxied_uri, referrer, 0, CACHE_MODE_NORMAL, PRI_IMG);
 
 	if (!conn) {
 		return;

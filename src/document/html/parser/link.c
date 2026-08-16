@@ -39,6 +39,9 @@
 #include "document/html/renderer.h"
 #include "globhist/globhist.h"
 #include "mime/mime.h"
+#ifdef CONFIG_DGI
+#include "mime/backend/dgi.h"
+#endif
 #include "network/connection.h"
 #include "protocol/uri.h"
 #include "terminal/image.h"
@@ -252,6 +255,7 @@ html_img_kitty(struct html_context *html_context, char *a,
 		return;
 	}
 	struct el_string *pixels = NULL;
+	struct uri *redirect = NULL;
 	int width = 0;
 	int height = 0;
 	int im_number = 0;
@@ -292,15 +296,55 @@ again:
 					}
 				}
 			}
+
 			if (!pixels) {
 				if (!cached && (uri->protocol == PROTOCOL_DATA || uri->protocol == PROTOCOL_FILE)) {
-					try_to_load_image(uri);
+					try_to_load_image(uri, NULL);
 					cached = find_in_cache(uri);
 
 					if (cached) {
 						goto again;
 					}
 				} else {
+#ifdef CONFIG_DGI
+					if (cached && !redirect) {
+						struct mime_handler *handler = get_mime_handler_dgi(get_content_type(cached), 1);
+
+						if (handler && handler->dgi) {
+							struct string string;
+
+							if (init_string(&string)) {
+								static char dgi_dgi[] = "dgi://";
+								struct uri *ref = get_uri(dgi_dgi, URI_NONE);
+								char *filename = get_uri_string(uri, URI_PATH);
+
+								add_to_string(&string, "dgi:dgi?command=");
+								add_to_string(&string, handler->program);
+								add_to_string(&string, "&filename=");
+								add_to_string(&string, filename);
+								mem_free_if(filename);
+								add_to_string(&string, "&inpext=");
+								add_to_string(&string, handler->inpext);
+								add_to_string(&string, "&outext=");
+								add_to_string(&string, handler->outext);
+								if (uri->protocol != PROTOCOL_FILE) {
+									add_to_string(&string, "&delete=1");
+								}
+								redirect = redirect_cache(cached, string.source, 0, 0);
+								done_string(&string);
+
+								if (redirect) {
+									try_to_load_image(redirect, ref);
+									done_uri(ref);
+									cached = find_in_cache(redirect);
+									goto again;
+								} else {
+									done_uri(ref);
+								}
+							}
+						}
+					}
+#endif
 					html_context->special_f(html_context, SP_IMAGE, uri);
 				}
 			}
@@ -389,7 +433,7 @@ again:
 			}
 			if (!data) {
 				if (!cached && (uri->protocol == PROTOCOL_DATA || uri->protocol == PROTOCOL_FILE)) {
-					try_to_load_image(uri);
+					try_to_load_image(uri, NULL);
 					cached = find_in_cache(uri);
 
 					if (cached) {
