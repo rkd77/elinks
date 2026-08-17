@@ -1180,7 +1180,7 @@ create_download_file(struct terminal *term, char *fi,
 }
 
 
-static char *
+char *
 get_temp_name(struct uri *uri, char *ext)
 {
 	ELOG

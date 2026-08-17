@@ -260,6 +260,9 @@ struct file_download *init_file_download(struct uri *uri, struct session *ses, c
 
 void clear_uri_tempfiles(void);
 
+char *get_temp_name(struct uri *uri, char *ext);
+
+
 #ifdef __cplusplus
 }
 #endif

@@ -16,6 +16,7 @@
 #include <libgen.h> /* basename() */
 #endif
 
+#include <fcntl.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,6 +45,7 @@
 #endif
 #include "network/connection.h"
 #include "protocol/uri.h"
+#include "session/download.h"
 #include "terminal/image.h"
 #ifdef CONFIG_KITTY
 #include "terminal/kitty.h"
@@ -256,6 +258,7 @@ html_img_kitty(struct html_context *html_context, char *a,
 	}
 	struct el_string *pixels = NULL;
 	struct uri *redirect = NULL;
+	struct fragment *fragment = NULL;
 	int width = 0;
 	int height = 0;
 	int im_number = 0;
@@ -281,7 +284,7 @@ again:
 					im_number = cached->number;
 					compressed = cached->compressed;
 				} else {
-					struct fragment *fragment = get_cache_fragment(cached);
+					fragment = get_cache_fragment(cached);
 
 					if (fragment) {
 						pixels = el_kitty_get_image(fragment->data, fragment->length, &width, &height, &compressed);
@@ -316,8 +319,23 @@ again:
 							if (init_string(&string)) {
 								static char dgi_dgi[] = "dgi://";
 								struct uri *ref = get_uri(dgi_dgi, URI_NONE);
-								char *filename = get_uri_string(uri, URI_PATH);
+								char *filename = NULL;
 
+								if (uri->protocol != PROTOCOL_FILE) {
+									if (fragment) {
+										filename = get_temp_name(uri, handler->inpext);
+										if (filename) {
+											int fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0600);
+
+											if (fd >= 0) {
+												safe_write(fd, fragment->data, fragment->length);
+												close(fd);
+											}
+										}
+									}
+								} else {
+									filename = get_uri_string(uri, URI_PATH);
+								}
 								add_to_string(&string, "dgi:dgi?command=");
 								add_to_string(&string, handler->program);
 								add_to_string(&string, "&filename=");
