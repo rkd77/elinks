@@ -623,3 +623,39 @@ check_multi_info(GlobalInfo *g)
 	}
 #endif
 }
+
+static size_t
+write_data_sync(void *ptr, size_t size, size_t nmemb, void *stream)
+{
+	struct string *string = (struct string *)stream;
+
+	add_bytes_to_string(string, (char *)ptr, (int)(size * nmemb));
+	return nmemb;
+}
+
+void
+try_to_load_image_curl(struct uri *uri, struct uri *ref)
+{
+	struct string page;
+
+	if (!init_string(&page)) {
+		return;
+	}
+
+	CURL *curl_handle = curl_easy_init();
+	curl_easy_setopt(curl_handle, CURLOPT_URL, struri(uri));
+	curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 0L);
+	curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 1L);
+	curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_data_sync);
+	curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, &page);
+	curl_easy_perform(curl_handle);
+	curl_easy_cleanup(curl_handle);
+
+	struct cache_entry *cached = get_cache_entry(uri);
+
+	if (cached) {
+		add_fragment(cached, 0, page.source, page.length);
+		normalize_cache_entry(cached, page.length);
+	}
+	done_string(&page);
+}

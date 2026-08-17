@@ -18,6 +18,7 @@ struct connection;
 extern protocol_handler_T http_curl_protocol_handler;
 
 void http_curl_handle_error(struct connection *conn, CURLcode res);
+void try_to_load_image_curl(struct uri *uri, struct uri *ref);
 
 #endif
 

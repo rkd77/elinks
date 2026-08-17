@@ -44,6 +44,9 @@
 #include "mime/backend/dgi.h"
 #endif
 #include "network/connection.h"
+#ifdef CONFIG_LIBCURL
+#include "protocol/curl/http.h"
+#endif
 #include "protocol/uri.h"
 #include "session/download.h"
 #include "terminal/image.h"
@@ -244,6 +247,18 @@ put_image_label(char *a, char *label,
 	elformat.style.attr = saved_attr;
 }
 
+static int
+is_jxl(char *filename)
+{
+	ELOG
+	int fname_len = strlen(filename);
+	char *fname_end = filename + fname_len;
+	const char *ext = ".jxl";
+	int len = strlen(ext);
+
+	return (fname_len >= len && !strcasecmp(fname_end - len, ext));
+}
+
 #ifdef CONFIG_KITTY
 
 static unsigned int kitty_image_number;
@@ -308,7 +323,18 @@ again:
 					if (cached) {
 						goto again;
 					}
-				} else {
+				}
+#ifdef CONFIG_LIBCURL
+				else if (!cached && (uri->protocol == PROTOCOL_HTTP || uri->protocol == PROTOCOL_HTTPS) && is_jxl(struri(uri))) {
+					try_to_load_image_curl(uri, NULL);
+					cached = find_in_cache(uri);
+
+					if (cached) {
+						goto again;
+					}
+				}
+#endif
+				else {
 #ifdef CONFIG_DGI
 					if (cached && !redirect) {
 						struct mime_handler *handler = get_mime_handler_dgi(get_content_type(cached), 1);
@@ -459,7 +485,18 @@ again:
 					if (cached) {
 						goto again;
 					}
-				} else {
+				}
+#ifdef CONFIG_LIBCURL
+				else if (!cached && (uri->protocol == PROTOCOL_HTTP || uri->protocol == PROTOCOL_HTTPS) && is_jxl(struri(uri))) {
+					try_to_load_image_curl(uri, NULL);
+					cached = find_in_cache(uri);
+
+					if (cached) {
+						goto again;
+					}
+				}
+#endif
+				else {
 #ifdef CONFIG_DGI
 					if (cached && !redirect) {
 						struct mime_handler *handler = get_mime_handler_dgi(get_content_type(cached), 1);
