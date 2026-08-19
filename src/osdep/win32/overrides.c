@@ -324,9 +324,10 @@ win32_write(int fd, const void *buf, unsigned len)
 		break;
 
 	case FDT_TERMINAL:
-		if (isatty(STDOUT_FILENO) > 0) {
+		if (isatty(STDOUT_FILENO)) {
 			if (is_xterm()) {
-				rc = write(STDOUT_FILENO, buf, len);
+				WriteConsole((HANDLE)(intptr_t)fd, buf, len, &written, NULL);
+				rc = written;
 			} else {
 #ifndef CONFIG_WIN32_VT100_NATIVE
 				rc = VT100_decode((HANDLE)(intptr_t)fd, buf, len);
