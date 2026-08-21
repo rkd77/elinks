@@ -543,7 +543,7 @@ flatten(Node *root, struct string *outs, unsigned int palette)
 	//order = Descending)
 
 	for (int n = 0; n < cols.size(); n++) {
-		auto it = cols.at(n);
+		auto it = cols[n];
 		auto c = it->u.leaf.c;
 		// 2 is RGB
 		add_format_to_string(outs, "#%d;2;%d;%d;%d", n, c.r, c.g, c.b);
@@ -829,7 +829,7 @@ clamp(int32_t n, int32_t lo, int32_t hi)
 static ARGBColor
 correctDither(ARGBColor c, int x, Dither *dither)
 {
-	DitherDiff tmp = dither->d1.at(x + 1);
+	DitherDiff tmp = dither->d1[x + 1];
 
 	auto pa = (uint32_t(c) >> 20) & 0xFF0;
 	auto pr = (uint32_t(c) >> 12) & 0xFF0;
@@ -875,10 +875,10 @@ fs(Dither *dither, int x, DitherDiff d)
 {
 	DitherDiff tmp;
 	x++;
-	at2(dither->d1.at(x + 1), 7)
-	at2(dither->d2.at(x - 1), 3)
-	at2(dither->d2.at(x), 5)
-	at2(dither->d2.at(x + 1), 1)
+	at2(dither->d1[x + 1], 7)
+	at2(dither->d2[x - 1], 3)
+	at2(dither->d2[x], 5)
+	at2(dither->d2[x + 1], 1)
 
 	//std::cerr << "fs:" << *dither << "\n";
 
@@ -1217,7 +1217,7 @@ encode(struct string *outs, unsigned char *img, int width, int height, int offx,
 			if (i > 0) {
 				add_char_to_string(outs, '$');
 			}
-			compressSixel(outs, bands.at(i));
+			compressSixel(outs, bands[i]);
 		}
 		activeChunks.clear();
 
