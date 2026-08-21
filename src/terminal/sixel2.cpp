@@ -153,7 +153,7 @@ type
     b: uint32
 #endif
 
-static uint8_t
+static inline uint8_t
 getIdx(RGBColor c1, int level)
 {
 	//std::cerr << "getIdx c=" << c1 << " level=" << level << "\n";
