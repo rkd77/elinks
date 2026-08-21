@@ -352,16 +352,6 @@ init_sixel_allocator(void)
 }
 #endif
 
-static int
-sixel_write_callback(char *data, int size, void *priv)
-{
-	ELOG
-	struct string *text = priv;
-
-	add_bytes_to_string(text, data, size);
-	return size;
-}
-
 struct el_string *
 el_sixel_get_image(char *data, int length, int *outlen, int *width, int *height)
 {
@@ -394,10 +384,9 @@ el_sixel_get_image(char *data, int length, int *outlen, int *width, int *height)
 			return NULL;
 		}
 	}
-	outdata = memacpy(pixels, *width * *height * 4);
+	outdata = memacpy((const char *)pixels, *width * *height * 4);
 	*outlen = *width * *height * 4;
 
-end:
 	if (webp) {
 #ifdef CONFIG_LIBWEBP
 		WebPFree(pixels);

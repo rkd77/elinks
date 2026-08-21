@@ -214,7 +214,7 @@ insert(Node *root, RGBColor c, std::pmr::vector<Node> *trimMap)
 			return 1;
 		} else if (old->idx != -1) {
 			// split just once with identical colors
-			if (level == 7 || split && old->u.leaf.c == c) {
+			if (level == 7 || (split && old->u.leaf.c == c)) {
 				old->u.leaf.n++;
 				old->u.leaf.r += (uint32_t)(c.r);
 				old->u.leaf.g += (uint32_t)(c.g);
@@ -1079,7 +1079,6 @@ encode(struct string *outs, unsigned char *img, int width, int height, int offx,
 	add_format_to_string(outs, "q\"1;1;%d;%d", realw, height - offy);
 	std::pmr::vector<Node> nodes = flatten(root, outs, palette);
 
-	uint32_t totalLen = 0;
 	Dither dither;
 	dither.d1 = std::pmr::vector<DitherDiff>(realw + 2);
 	dither.d2 = std::pmr::vector<DitherDiff>(realw + 2);
@@ -1115,7 +1114,7 @@ encode(struct string *outs, unsigned char *img, int width, int height, int offx,
 
 				//std::cerr << "m=" <<  m << " ";
 
-				RGBAColorBE c0r = img2[m];
+				//RGBAColorBE c0r = img2[m];
 
 				//std::cerr << "c0im=" << c0r << "\n";
 

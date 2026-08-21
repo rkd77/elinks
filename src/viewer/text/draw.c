@@ -593,7 +593,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 					im_copy2->cx += box->x;
 					im_copy2->cy += box->y;
 					init_string(&im_copy2->pixels);
-					encode(&im_copy2->pixels, im_copy2->data->data, im.width, im_copy2->h, im_copy2->x, im_copy2->y, im_copy2->w, 1024);
+					encode(&im_copy2->pixels, (unsigned char *)im_copy2->data->data, im.width, im_copy2->h, im_copy2->x, im_copy2->y, im_copy2->w, 1024);
 					///fputs(im_copy2->pixels.source, stderr);
 					add_to_list(term->images, im_copy2);
 				}
