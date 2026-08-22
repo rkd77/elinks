@@ -50,6 +50,7 @@
 #include "js/mujs/screen.h"
 #include "js/mujs/unibar.h"
 #include "js/mujs/url.h"
+#include "js/mujs/urlsearchparams.h"
 #include "js/mujs/window.h"
 #include "js/mujs/xhr.h"
 #include "intl/libintl.h"
@@ -171,6 +172,7 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	mjs_messageEvent_init(J);
 	mjs_customEvent_init(J);
 	mjs_url_init(J);
+	mjs_urlsearchparams_init(J);
 	mjs_domparser_init(J);
 	mjs_node_init(J);
 	mjs_image_init(J);

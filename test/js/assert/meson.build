@@ -97,6 +97,7 @@ took = [
 'window.requestAnimationFrame.html',
 'window.setTimeout.html',
 'URL.html',
+'URLSearchParams.html'
 ]
 
 mujs_fail = [
@@ -105,8 +106,7 @@ mujs_fail = [
 
 mujs_timeout = [
 'document.getElementsByClassName_2.html',
-'fetch.html',
-'URLSearchParams.html'
+'fetch.html'
 ]
 
 if conf_data.get('CONFIG_MUJS')
