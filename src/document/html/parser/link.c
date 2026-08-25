@@ -324,7 +324,7 @@ again:
 						goto again;
 					}
 				}
-#ifdef CONFIG_LIBCURL
+#if defined(CONFIG_LIBCURL) && !defined(CONFIG_LIBJXL)
 				else if (!cached && (uri->protocol == PROTOCOL_HTTP || uri->protocol == PROTOCOL_HTTPS) && is_jxl(struri(uri))) {
 					try_to_load_image_curl(uri, NULL);
 					cached = find_in_cache(uri);
@@ -486,7 +486,7 @@ again:
 						goto again;
 					}
 				}
-#ifdef CONFIG_LIBCURL
+#if defined(CONFIG_LIBCURL) && !defined(CONFIG_LIBJXL)
 				else if (!cached && (uri->protocol == PROTOCOL_HTTP || uri->protocol == PROTOCOL_HTTPS) && is_jxl(struri(uri))) {
 					try_to_load_image_curl(uri, NULL);
 					cached = find_in_cache(uri);

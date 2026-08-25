@@ -2000,6 +2000,9 @@ struct {
 #ifdef CONFIG_LIBRSVG
 	{ "image/svg+xml",			0 },
 #endif
+#ifdef CONFIG_LIBJXL
+	{ "image/jxl",			0 },
+#endif
 #endif
 	{ NULL,				1 },
 };

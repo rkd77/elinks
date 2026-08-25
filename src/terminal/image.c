@@ -30,6 +30,10 @@
 #include <librsvg/rsvg.h>
 #endif
 
+#ifdef CONFIG_LIBJXL
+#include <jxl/decode.h>
+#endif
+
 #include "elinks.h"
 
 #include "terminal/image.h"
@@ -55,6 +59,106 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_NO_STDIO
 #include "terminal/stb_image.h"
+#endif
+
+#ifdef CONFIG_LIBJXL
+static uint8_t *
+el_jxl_decode_rgba(const uint8_t *data, int size, int *width, int *height)
+{
+	JxlDecoder *dec = NULL;
+	//JxlResizableParallelRunner *runner = NULL;
+	uint8_t *pixels = NULL;
+
+	*width = 0;
+	*height = 0;
+
+	dec = JxlDecoderCreate(NULL);
+
+	if (!dec) {
+		return NULL;
+	}
+	//runner = JxlResizableParallelRunnerCreate(NULL);
+
+	//if (!runner) {
+	//	goto fail;
+	//}
+	//JxlDecoderSetParallelRunner(dec, JxlResizableParallelRunner, runner);
+
+	if (JxlDecoderSubscribeEvents(dec, JXL_DEC_BASIC_INFO | JXL_DEC_FULL_IMAGE) != JXL_DEC_SUCCESS) {
+		goto fail;
+	}
+	JxlDecoderSetInput(dec, data, size);
+	JxlDecoderCloseInput(dec);
+
+	JxlBasicInfo info;
+	JxlPixelFormat format = {
+		.num_channels = 4,
+		.data_type = JXL_TYPE_UINT8,
+		.endianness = JXL_NATIVE_ENDIAN,
+		.align = 0
+	};
+
+	while (1) {
+		JxlDecoderStatus status = JxlDecoderProcessInput(dec);
+
+		switch (status) {
+		case JXL_DEC_ERROR:
+		case JXL_DEC_NEED_MORE_INPUT:
+			goto fail;
+
+		case JXL_DEC_BASIC_INFO: {
+			if (JxlDecoderGetBasicInfo(dec, &info) != JXL_DEC_SUCCESS) {
+				goto fail;
+			}
+			*width = info.xsize;
+			*height = info.ysize;
+			//JxlResizableParallelRunnerSetThreads(runner, JxlResizableParallelRunnerSuggestThreads(info.xsize, info.ysize));
+			break;
+		}
+		case JXL_DEC_NEED_IMAGE_OUT_BUFFER: {
+			size_t buffer_size;
+			if (JxlDecoderImageOutBufferSize(dec, &format, &buffer_size) != JXL_DEC_SUCCESS) {
+				goto fail;
+			}
+			pixels = (uint8_t *)mem_alloc(buffer_size);
+
+			if (!pixels) {
+				goto fail;
+			}
+
+			if (JxlDecoderSetImageOutBuffer(dec, &format, pixels, buffer_size) != JXL_DEC_SUCCESS) {
+				goto fail;
+				break;
+			}
+		}
+
+		case JXL_DEC_FULL_IMAGE:
+			/* image decoded */
+			break;
+
+		case JXL_DEC_SUCCESS:
+			//JxlResizableParallelRunnerDestroy(runner);
+			JxlDecoderDestroy(dec);
+			return pixels;
+
+		default:
+			break;
+		}
+	}
+
+fail:
+	mem_free_if(pixels);
+
+	//if (runner) {
+	//	JxlResizableParallelRunnerDestroy(runner);
+	//}
+
+	if (dec) {
+		JxlDecoderDestroy(dec);
+	}
+
+	return NULL;
+}
 #endif
 
 #ifdef CONFIG_LIBAVIF
@@ -266,6 +370,7 @@ el_kitty_get_image(char *data, int length, int *width, int *height, int *compres
 	int webp = 0;
 	int avif = 0;
 	int rsvg = 0;
+	int jxl = 0;
 	unsigned char *pixels = stbi_load_from_memory((unsigned char *)data, length, width, height, &comp, KITTY_BYTES_PER_PIXEL);
 	unsigned char *b64;
 
@@ -288,6 +393,14 @@ el_kitty_get_image(char *data, int length, int *width, int *height, int *compres
 			rsvg = 1;
 		}
 #endif
+
+#ifdef CONFIG_LIBJXL
+		if (!pixels) {
+			pixels = el_jxl_decode_rgba((const uint8_t*)data, length, width, height);
+			jxl = 1;
+		}
+#endif
+
 		if (!pixels) {
 			return NULL;
 		}
@@ -328,7 +441,7 @@ el_kitty_get_image(char *data, int length, int *width, int *height, int *compres
 #ifdef CONFIG_LIBWEBP
 		WebPFree(pixels);
 #endif
-	} else if (avif || rsvg) {
+	} else if (avif || rsvg || jxl) {
 		mem_free(pixels);
 	} else {
 		stbi_image_free(pixels);
@@ -362,6 +475,7 @@ el_sixel_get_image(char *data, int length, int *outlen, int *width, int *height)
 	int webp = 0;
 	int avif = 0;
 	int rsvg = 0;
+	int jxl = 0;
 
 	if (!pixels) {
 #ifdef CONFIG_LIBWEBP
@@ -380,6 +494,12 @@ el_sixel_get_image(char *data, int length, int *outlen, int *width, int *height)
 			rsvg = 1;
 		}
 #endif
+#ifdef CONFIG_LIBJXL
+		if (!pixels) {
+			pixels = el_jxl_decode_rgba((const uint8_t*)data, length, width, height);
+			jxl = 1;
+		}
+#endif
 		if (!pixels) {
 			return NULL;
 		}
@@ -391,7 +511,7 @@ el_sixel_get_image(char *data, int length, int *outlen, int *width, int *height)
 #ifdef CONFIG_LIBWEBP
 		WebPFree(pixels);
 #endif
-	} else if (avif || rsvg) {
+	} else if (avif || rsvg || jxl) {
 		mem_free(pixels);
 	} else {
 		stbi_image_free(pixels);

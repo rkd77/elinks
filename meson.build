@@ -89,6 +89,7 @@ conf_data.set('CONFIG_LIBRSVG', get_option('librsvg'))
 conf_data.set('CONFIG_LIBSIXEL', get_option('libsixel'))
 conf_data.set('CONFIG_LIBWEBP', get_option('libwebp'))
 conf_data.set('CONFIG_LIBAVIF', get_option('libavif'))
+conf_data.set('CONFIG_LIBJXL', get_option('libjxl'))
 
 conf_data.set('CONFIG_REPRODUCIBLE', get_option('reproducible'))
 conf_data.set('SOURCE_DATE_EPOCH', get_option('source-date-epoch'))
@@ -747,6 +748,11 @@ if conf_data.get('CONFIG_LIBRSVG')
     deps += rsvgdeps
 endif
 
+if conf_data.get('CONFIG_LIBJXL')
+    jxldeps = dependency('libjxl', static: st)
+    deps += jxldeps
+endif
+
 if conf_data.get('CONFIG_LIBWEBP') and not conf_data.get('CONFIG_KITTY') and not conf_data.get('CONFIG_LIBSIXEL')
     error('kitty or libsixel must be enabled for libwebp support')
 endif
@@ -757,6 +763,10 @@ endif
 
 if conf_data.get('CONFIG_LIBRSVG') and not conf_data.get('CONFIG_KITTY') and not conf_data.get('CONFIG_LIBSIXEL')
     error('kitty or libsixel must be enabled for librsvg support')
+endif
+
+if conf_data.get('CONFIG_LIBJXL') and not conf_data.get('CONFIG_KITTY') and not conf_data.get('CONFIG_LIBSIXEL')
+    error('kitty or libsixel must be enabled for libjxl support')
 endif
 
 if conf_data.get('CONFIG_OS_DOS')

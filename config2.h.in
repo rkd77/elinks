@@ -152,6 +152,9 @@
 /* Define if you want: libevent support */
 #mesondefine CONFIG_LIBEVENT
 
+/* Define as 1 to use the libjxl library */
+#mesondefine CONFIG_LIBJXL
+
 /* Define if you want: librsvg support */
 #mesondefine CONFIG_LIBRSVG
 
