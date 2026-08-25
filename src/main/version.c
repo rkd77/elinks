@@ -267,7 +267,7 @@ get_dyn_full_version(struct terminal *term, int more)
 #if defined(CONFIG_LIBRSVG) && defined(LIBRSVG_VERSION)
 		comma, "librsvg(", LIBRSVG_VERSION, ")",
 #endif
-#ifdef CONFIG_LIBAVIF
+#ifdef CONFIG_LIBJXL
 		comma, "libjxl(", get_libjxl_version(), ")",
 #endif
 		comma,
