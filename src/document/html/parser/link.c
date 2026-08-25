@@ -247,6 +247,7 @@ put_image_label(char *a, char *label,
 	elformat.style.attr = saved_attr;
 }
 
+#if !defined(CONFIG_LIBJXL) && defined(CONFIG_LIBCURL) && (defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL))
 static int
 is_jxl(char *filename)
 {
@@ -258,6 +259,7 @@ is_jxl(char *filename)
 
 	return (fname_len >= len && !strcasecmp(fname_end - len, ext));
 }
+#endif
 
 #ifdef CONFIG_KITTY
 
