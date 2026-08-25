@@ -49,6 +49,10 @@
 #include <librsvg/rsvg.h>
 #endif
 
+#ifdef CONFIG_LIBJXL
+#include <jxl/decode.h>
+#endif
+
 #include "intl/libintl.h"
 #include "main/module.h"
 #include "main/select.h"
@@ -71,6 +75,21 @@ get_libwebp_version(void)
 	int version = WebPGetDecoderVersion();
 
 	snprintf(ret, 15, "%d.%d.%d", (version >> 16) & 255, (version >> 8) & 255, (version & 255));
+	return ret;
+}
+#endif
+
+#ifdef CONFIG_LIBJXL
+static const char *
+get_libjxl_version(void)
+{
+	static char ret[32];
+	int version = JxlDecoderVersion();
+	int major = version / 1000000;
+	int minor = (version % 1000000) / 1000;
+	int patch = version % 1000;
+
+	snprintf(ret, 31, "%d.%d.%d", major, minor, patch);
 	return ret;
 }
 #endif
@@ -247,6 +266,9 @@ get_dyn_full_version(struct terminal *term, int more)
 #endif
 #if defined(CONFIG_LIBRSVG) && defined(LIBRSVG_VERSION)
 		comma, "librsvg(", LIBRSVG_VERSION, ")",
+#endif
+#ifdef CONFIG_LIBAVIF
+		comma, "libjxl(", get_libjxl_version(), ")",
 #endif
 		comma,
 		(char *) NULL
