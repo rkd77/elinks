@@ -40,9 +40,6 @@
 #include "document/html/renderer.h"
 #include "globhist/globhist.h"
 #include "mime/mime.h"
-#ifdef CONFIG_DGI
-#include "mime/backend/dgi.h"
-#endif
 #include "network/connection.h"
 #ifdef CONFIG_LIBCURL
 #include "protocol/curl/http.h"
@@ -247,20 +244,6 @@ put_image_label(char *a, char *label,
 	elformat.style.attr = saved_attr;
 }
 
-#if !defined(CONFIG_LIBJXL) && defined(CONFIG_LIBCURL) && (defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL))
-static int
-is_jxl(char *filename)
-{
-	ELOG
-	int fname_len = strlen(filename);
-	char *fname_end = filename + fname_len;
-	const char *ext = ".jxl";
-	int len = strlen(ext);
-
-	return (fname_len >= len && !strcasecmp(fname_end - len, ext));
-}
-#endif
-
 #ifdef CONFIG_KITTY
 
 static unsigned int kitty_image_number;
@@ -274,7 +257,6 @@ html_img_kitty(struct html_context *html_context, char *a,
 		return;
 	}
 	struct el_string *pixels = NULL;
-	struct uri *redirect = NULL;
 	struct fragment *fragment = NULL;
 	int width = 0;
 	int height = 0;
@@ -325,72 +307,7 @@ again:
 					if (cached) {
 						goto again;
 					}
-				}
-#if defined(CONFIG_LIBCURL) && !defined(CONFIG_LIBJXL)
-				else if (!cached && (uri->protocol == PROTOCOL_HTTP || uri->protocol == PROTOCOL_HTTPS) && is_jxl(struri(uri))) {
-					try_to_load_image_curl(uri, NULL);
-					cached = find_in_cache(uri);
-
-					if (cached) {
-						goto again;
-					}
-				}
-#endif
-				else {
-#ifdef CONFIG_DGI
-					if (cached && !redirect) {
-						struct mime_handler *handler = get_mime_handler_dgi(get_content_type(cached), 1);
-
-						if (handler && handler->dgi) {
-							struct string string;
-
-							if (init_string(&string)) {
-								static char dgi_dgi[] = "dgi://";
-								struct uri *ref = get_uri(dgi_dgi, URI_NONE);
-								char *filename = NULL;
-
-								if (uri->protocol != PROTOCOL_FILE) {
-									if (fragment) {
-										filename = get_temp_name(uri, handler->inpext);
-										if (filename) {
-											int fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0600);
-
-											if (fd >= 0) {
-												safe_write(fd, fragment->data, fragment->length);
-												close(fd);
-											}
-										}
-									}
-								} else {
-									filename = get_uri_string(uri, URI_PATH);
-								}
-								add_to_string(&string, "dgi:dgi?command=");
-								add_to_string(&string, handler->program);
-								add_to_string(&string, "&filename=");
-								add_to_string(&string, filename);
-								mem_free_if(filename);
-								add_to_string(&string, "&inpext=");
-								add_to_string(&string, handler->inpext);
-								add_to_string(&string, "&outext=");
-								add_to_string(&string, handler->outext);
-								if (uri->protocol != PROTOCOL_FILE) {
-									add_to_string(&string, "&delete=1");
-								}
-								redirect = redirect_cache(cached, string.source, 0, 0);
-								done_string(&string);
-
-								if (redirect) {
-									try_to_load_image(redirect, ref);
-									done_uri(ref);
-									cached = find_in_cache(redirect);
-									goto again;
-								} else {
-									done_uri(ref);
-								}
-							}
-						}
-					}
-#endif
+				} else {
 					html_context->special_f(html_context, SP_IMAGE, uri);
 				}
 			}
@@ -445,7 +362,6 @@ html_img_sixel(struct html_context *html_context, char *a,
 	int height = 0;
 
 	struct el_string *data = NULL;
-	struct uri *redirect = NULL;
 	struct fragment *fragment = NULL;
 	int datalen = 0;
 	char *url = get_attr_val(a, "src", html_context->doc_cp);
@@ -487,72 +403,7 @@ again:
 					if (cached) {
 						goto again;
 					}
-				}
-#if defined(CONFIG_LIBCURL) && !defined(CONFIG_LIBJXL)
-				else if (!cached && (uri->protocol == PROTOCOL_HTTP || uri->protocol == PROTOCOL_HTTPS) && is_jxl(struri(uri))) {
-					try_to_load_image_curl(uri, NULL);
-					cached = find_in_cache(uri);
-
-					if (cached) {
-						goto again;
-					}
-				}
-#endif
-				else {
-#ifdef CONFIG_DGI
-					if (cached && !redirect) {
-						struct mime_handler *handler = get_mime_handler_dgi(get_content_type(cached), 1);
-
-						if (handler && handler->dgi) {
-							struct string string;
-
-							if (init_string(&string)) {
-								static char dgi_dgi[] = "dgi://";
-								struct uri *ref = get_uri(dgi_dgi, URI_NONE);
-								char *filename = NULL;
-
-								if (uri->protocol != PROTOCOL_FILE) {
-									if (fragment) {
-										filename = get_temp_name(uri, handler->inpext);
-										if (filename) {
-											int fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0600);
-
-											if (fd >= 0) {
-												safe_write(fd, fragment->data, fragment->length);
-												close(fd);
-											}
-										}
-									}
-								} else {
-									filename = get_uri_string(uri, URI_PATH);
-								}
-								add_to_string(&string, "dgi:dgi?command=");
-								add_to_string(&string, handler->program);
-								add_to_string(&string, "&filename=");
-								add_to_string(&string, filename);
-								mem_free_if(filename);
-								add_to_string(&string, "&inpext=");
-								add_to_string(&string, handler->inpext);
-								add_to_string(&string, "&outext=");
-								add_to_string(&string, handler->outext);
-								if (uri->protocol != PROTOCOL_FILE) {
-									add_to_string(&string, "&delete=1");
-								}
-								redirect = redirect_cache(cached, string.source, 0, 0);
-								done_string(&string);
-
-								if (redirect) {
-									try_to_load_image(redirect, ref);
-									done_uri(ref);
-									cached = find_in_cache(redirect);
-									goto again;
-								} else {
-									done_uri(ref);
-								}
-							}
-						}
-					}
-#endif
+				} else {
 					html_context->special_f(html_context, SP_IMAGE, uri);
 				}
 			}
