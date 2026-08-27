@@ -193,12 +193,8 @@ init_term(int fdin, int fdout)
 #endif
 	init_list(term->windows);
 
-#ifdef CONFIG_KITTY
-	term->kitty = 1;
-#endif
 #ifdef CONFIG_LIBSIXEL
 	init_list(term->images);
-	term->sixel = 1;
 #endif
 	term->fdin = fdin;
 	term->fdout = fdout;

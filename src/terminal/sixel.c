@@ -792,7 +792,7 @@ try_to_draw_images(struct terminal *term, struct string *text)
 	ELOG
 	struct image *im;
 
-	if (!term->sixel) {
+	if (term->dialog_displayed) {
 		return;
 	}
 	foreach (im, term->images) {

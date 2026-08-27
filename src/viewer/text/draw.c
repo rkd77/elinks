@@ -459,7 +459,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	mem_free_set(&term->k_images, NULL);
 	term->number_of_images = 0;
 
-	if (term->kitty) {
+	if (!term->dialog_displayed) {
 		struct k_image *im2;
 		struct line *data = doc_view->document->data;
 
@@ -540,7 +540,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 		delete_image(im);
 	}
 
-	if (term->sixel) {
+	if (!term->dialog_displayed) {
 		struct image *im2;
 		struct line *data = doc_view->document->data;
 

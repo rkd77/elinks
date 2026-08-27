@@ -155,10 +155,7 @@ struct terminal {
 	unsigned int utf8_io:1;
 #endif /* CONFIG_UTF8 */
 
-#ifdef CONFIG_LIBSIXEL
-	unsigned int sixel:1;
-#endif
-	unsigned int kitty:1;
+	unsigned int dialog_displayed:1;
 	/** The current tab number. */
 	int current_tab;
 
