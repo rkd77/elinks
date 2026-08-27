@@ -544,6 +544,34 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 		struct image *im2;
 		struct line *data = doc_view->document->data;
 
+		int palette = 16;
+		color_mode_T mode = get_color_mode(term->spec);
+
+		switch (mode) {
+		case COLOR_MODE_MONO:
+			palette = 2;
+			break;
+		case COLOR_MODE_16:
+		default:
+			palette = 16;
+			break;
+#ifdef CONFIG_88_COLORS
+		case COLOR_MODE_88:
+			palette = 88;
+			break;
+#endif
+#ifdef CONFIG_256_COLORS
+		case COLOR_MODE_256:
+			palette = 256;
+			break;
+#endif
+#ifdef CONFIG_TRUE_COLOR
+		case COLOR_MODE_TRUE_COLOR:
+			palette = 1024;
+			break;
+#endif
+		}
+
 		foreach (im2, doc_view->document->images) {
 			struct image im;
 
@@ -593,7 +621,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 					im_copy2->cx += box->x;
 					im_copy2->cy += box->y;
 					init_string(&im_copy2->pixels);
-					encode(&im_copy2->pixels, (unsigned char *)im_copy2->data->data, im.width, im_copy2->h, im_copy2->x, im_copy2->y, im_copy2->w, 1024);
+					encode(&im_copy2->pixels, (unsigned char *)im_copy2->data->data, im.width, im_copy2->h, im_copy2->x, im_copy2->y, im_copy2->w, palette);
 					///fputs(im_copy2->pixels.source, stderr);
 					add_to_list(term->images, im_copy2);
 				}
