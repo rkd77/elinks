@@ -215,6 +215,10 @@ static union option_info config_options_info[] = {
 		"images", OPT_ZERO,
 		N_("Options for handling of images.")),
 
+	INIT_OPT_BOOL("document.browse.images", N_("Treat application/octet-stream as image"),
+		"application_as_image", OPT_ZERO, 0,
+		N_("Try to display application/octet-stream as image.")),
+
 	INIT_OPT_INT("document.browse.images", N_("Display style for image tags"),
 		"display_style", OPT_ZERO, -1, 3, 2,
 		N_("Display style for image tags when displayed:\n"

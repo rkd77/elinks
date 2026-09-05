@@ -146,6 +146,7 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 			|| !c_strcasecmp("image/bmp", cached->content_type)
 			|| !c_strcasecmp("image/pnm", cached->content_type)
 			|| !c_strcasecmp("image/x-tga", cached->content_type)
+			|| (!c_strcasecmp("application/octet-stream", cached->content_type) && document->options.application_as_image)
 			)) {
 
 			struct string img;

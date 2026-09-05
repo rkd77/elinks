@@ -2003,6 +2003,7 @@ struct {
 #ifdef CONFIG_LIBJXL
 	{ "image/jxl",			0 },
 #endif
+	{ "application/octet-stream", 0 },
 #endif
 	{ NULL,				1 },
 };
@@ -2051,6 +2052,9 @@ setup_download_handler(struct session *ses, struct download *loading,
 
 #if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
 		int image = !c_strncasecmp(ctype, "image", 5);
+		int octet = !c_strcasecmp(ctype, "application/octet-stream");
+
+		image = image || (octet && get_opt_bool("document.browse.images.application_as_image", ses));
 
 #ifdef CONFIG_KITTY
 		if (image && get_opt_bool("document.html.kitty", ses)) {
@@ -2067,9 +2071,13 @@ setup_download_handler(struct session *ses, struct download *loading,
 			plaintext = 1;
 			continue;
 		}
+		if (octet) {
+			goto normal_handler;
+		}
 #endif
 		goto plaintext_follow;
 	}
+normal_handler:
 	xwin = ses->tab->term->environment & ENV_XWIN;
 	handler = get_mime_type_handler(ctype, xwin);
 

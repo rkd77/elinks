@@ -108,6 +108,7 @@ init_document_options(struct session *ses, struct document_options *doo)
 	doo->use_tabindex = get_opt_bool("document.browse.links.use_tabindex", ses);
 	doo->links_numbering = get_opt_bool("document.browse.links.numbering", ses);
 	doo->links_show_goto = get_opt_bool("document.browse.links.show_goto", ses);
+	doo->application_as_image = get_opt_bool("document.browse.images.application_as_image", ses);
 
 	doo->active_link.enable_color = get_opt_bool("document.browse.links.active_link.enable_color", ses);
 	doo->active_link.invert = get_opt_bool("document.browse.links.active_link.invert", ses);
