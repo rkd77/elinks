@@ -440,7 +440,7 @@ set_elstyle(const char *text)
 	next = str;
 
 	while (next) {
-		char *semicolon = strchr(str, ';');
+		char *semicolon = strchr(next, ';');
 		char *colon;
 		char *params;
 
@@ -481,6 +481,7 @@ set_elstyle(const char *text)
 next_iter:
 		next = next2;
 	}
+	mem_free_if(str);
 
 	return (void *)css;
 }
