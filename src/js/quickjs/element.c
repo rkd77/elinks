@@ -2812,6 +2812,34 @@ el_add_child_element_common(xmlNode* child, xmlNode* node)
 }
 #endif
 
+struct dom_event {
+        dom_string *type;       /**< The type of the event */
+        dom_event_target *target;       /**< The event target */
+        dom_event_target *current;      /**< The current event target */
+        dom_event_flow_phase phase;             /**< The event phase */
+        bool bubble;    /**< Whether this event is a bubbling event */
+        bool cancelable;        /**< Whether this event is cancelable */
+        unsigned int timestamp;
+                        /**< The timestamp this event is created */
+
+        dom_string *namespace;  /**< The namespace of this event */
+
+        bool stop;              /**< Whether stopPropagation is called */
+        bool stop_now;  /**< Whether stopImmediatePropagation is called */
+        bool prevent_default;
+                        /**< Whether the default action is prevented */
+
+        bool custom;    /**< Whether this is a custom event */
+
+        uint32_t refcnt;        /**< The reference count of this object */
+
+        const struct dom_event_private_vtable *vtable;
+                        /**< The private virtual function table of Event */
+        bool in_dispatch;       /**< Whether this event is in dispatch */
+        bool is_initialised;    /**< Whether this event is initialised */
+        bool is_trusted;        /**< Whether this event is trusted */
+};
+
 static JSValue
 js_element_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
@@ -2832,10 +2860,10 @@ js_element_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 	if (!el) {
 		return JS_FALSE;
 	}
-	//dom_node_ref(el);
+	dom_node_ref(el);
 
 	if (argc < 1) {
-		//dom_node_unref(el);
+		dom_node_unref(el);
 		return JS_FALSE;
 	}
 	JSValue eve = argv[0];
@@ -2849,9 +2877,12 @@ js_element_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 	(void)dom_event_target_dispatch_event(el, event, &result);
 
 	if (event) {
+		struct dom_event *ev2 = (struct dom_event *)event;
+
+		ev2->in_dispatch = !result;
 		dom_event_unref(event);
 	}
-	//dom_node_unref(el);
+	dom_node_unref(el);
 
 	return JS_NewBool(ctx, result);
 }
@@ -2876,10 +2907,10 @@ js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	if (!el) {
 		return JS_NULL;
 	}
-	//dom_node_ref(el);
+	dom_node_ref(el);
 
 	if (argc < 2) {
-		//dom_node_unref(el);
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	const char *str;
@@ -2887,14 +2918,14 @@ js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	str = JS_ToCStringLen(ctx, &len, argv[0]);
 
 	if (!str) {
-		//dom_node_unref(el);
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	char *method = stracpy(str);
 	JS_FreeCString(ctx, str);
 
 	if (!method) {
-		//dom_node_unref(el);
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	JSValue fun = argv[1];
@@ -2913,7 +2944,7 @@ js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	struct element_listener *n = (struct element_listener *)mem_calloc(1, sizeof(*n));
 
 	if (!n) {
-		//dom_node_unref(el);
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	n->fun = JS_DupValue(ctx, fun);
@@ -2927,7 +2958,7 @@ js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSV
 		exc = dom_event_listener_create(element_event_handler, el_private, &el_private->listener);
 
 		if (exc != DOM_NO_ERR || !el_private->listener) {
-			//dom_node_unref(el);
+			dom_node_unref(el);
 			return JS_UNDEFINED;
 		}
 	}
@@ -2946,7 +2977,7 @@ js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSV
 ex:
 	dom_string_unref(typ);
 	dom_event_listener_unref(el_private->listener);
-	//dom_node_unref(el);
+	dom_node_unref(el);
 
 	return JS_UNDEFINED;
 }
@@ -2971,10 +3002,10 @@ js_element_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, 
 	if (!el) {
 		return JS_NULL;
 	}
-	//dom_node_ref(el);
+	dom_node_ref(el);
 
 	if (argc < 2) {
-		//dom_node_unref(el);
+		dom_node_unref(el);
 		return JS_UNDEFINED;
 	}
 	const char *str;
@@ -2982,14 +3013,14 @@ js_element_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, 
 	str = JS_ToCStringLen(ctx, &len, argv[0]);
 
 	if (!str) {
-		//dom_node_unref(el);
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	char *method = stracpy(str);
 	JS_FreeCString(ctx, str);
 
 	if (!method) {
-		//dom_node_unref(el);
+		dom_node_unref(el);
 		return JS_EXCEPTION;
 	}
 	JSValue fun = argv[1];
@@ -3008,7 +3039,7 @@ js_element_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, 
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
 			}
-			//dom_event_target_remove_event_listener(el, typ, el_private->listener, false);
+			dom_event_target_remove_event_listener(el, typ, el_private->listener, false);
 			dom_string_unref(typ);
 
 			del_from_list(l);
@@ -3016,13 +3047,13 @@ js_element_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, 
 			mem_free_set(&l->typ, NULL);
 			mem_free(l);
 			mem_free(method);
-			//dom_node_unref(el);
+			dom_node_unref(el);
 
 			return JS_UNDEFINED;
 		}
 	}
 	mem_free(method);
-	//dom_node_unref(el);
+	dom_node_unref(el);
 
 	return JS_UNDEFINED;
 }
