@@ -1186,6 +1186,34 @@ ex:
 	js_pushundefined(J);
 }
 
+struct dom_event {
+        dom_string *type;       /**< The type of the event */
+        dom_event_target *target;       /**< The event target */
+        dom_event_target *current;      /**< The current event target */
+        dom_event_flow_phase phase;             /**< The event phase */
+        bool bubble;    /**< Whether this event is a bubbling event */
+        bool cancelable;        /**< Whether this event is cancelable */
+        unsigned int timestamp;
+                        /**< The timestamp this event is created */
+
+        dom_string *namespace;  /**< The namespace of this event */
+
+        bool stop;              /**< Whether stopPropagation is called */
+        bool stop_now;  /**< Whether stopImmediatePropagation is called */
+        bool prevent_default;
+                        /**< Whether the default action is prevented */
+
+        bool custom;    /**< Whether this is a custom event */
+
+        uint32_t refcnt;        /**< The reference count of this object */
+
+        const struct dom_event_private_vtable *vtable;
+                        /**< The private virtual function table of Event */
+        bool in_dispatch;       /**< Whether this event is in dispatch */
+        bool is_initialised;    /**< Whether this event is initialised */
+        bool is_trusted;        /**< Whether this event is trusted */
+};
+
 static void
 mjs_document_removeEventListener(js_State *J)
 {
@@ -1206,15 +1234,18 @@ mjs_document_removeEventListener(js_State *J)
 		js_pushnull(J);
 		return;
 	}
+	dom_node_ref(doc);
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
+		dom_node_unref(doc);
 		js_error(J, "!str");
 		return;
 	}
 	char *method = stracpy(str);
 
 	if (!method) {
+		dom_node_unref(doc);
 		js_error(J, "out of memory");
 		return;
 	}
@@ -1233,7 +1264,7 @@ mjs_document_removeEventListener(js_State *J)
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
 			}
-			//dom_event_target_remove_event_listener(doc, typ, doc_private->listener, false);
+			dom_event_target_remove_event_listener(doc, typ, doc_private->listener, false);
 			dom_string_unref(typ);
 
 			js_unref(J, l->fun);
@@ -1243,10 +1274,12 @@ mjs_document_removeEventListener(js_State *J)
 			mem_free(method);
 
 			js_pushundefined(J);
+			dom_node_unref(doc);
 			return;
 		}
 	}
 	mem_free(method);
+	dom_node_unref(doc);
 	js_pushundefined(J);
 }
 
@@ -2104,14 +2137,22 @@ mjs_document_dispatchEvent(js_State *J)
 		js_pushboolean(J, 0);
 		return;
 	}
+	dom_node_ref(doc);
 	dom_event *event = (dom_event *)js_touserdata(J, 1, "event");
 
 	if (!event) {
+		dom_node_unref(doc);
 		js_pushboolean(J, 0);
 		return;
 	}
+	dom_event_ref(event);
 	bool result = false;
 	(void)dom_event_target_dispatch_event(doc, event, &result);
+
+	struct dom_event *ev2 = (struct dom_event *)event;
+	ev2->in_dispatch = !result;
+	dom_event_unref(event);
+	dom_node_unref(doc);
 	js_pushboolean(J, result);
 }
 
