@@ -151,6 +151,8 @@ quickjs_init(struct module *module)
 #else
 	quickjs_runtime = JS_NewRuntime();
 #endif
+	JS_SetDumpFlags(quickjs_runtime, JS_DUMP_LEAKS);
+
 	map_interp = interp_new_map();
 #ifdef CONFIG_OS_WIN32
 	if (!get_cmd_opt_bool("delete-timer-queue")) {

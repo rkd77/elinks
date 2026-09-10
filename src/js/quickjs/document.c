@@ -1334,8 +1334,10 @@ js_document_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JS
 	}
 	dom_html_document *doc = doc_private->node;
 	NODEINFO(doc);
+	dom_node_ref(doc);
 
 	if (argc < 2) {
+		dom_node_unref(doc);
 		return JS_UNDEFINED;
 	}
 	const char *str;
@@ -1343,12 +1345,16 @@ js_document_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JS
 	str = JS_ToCStringLen(ctx, &len, argv[0]);
 
 	if (!str) {
+		dom_node_unref(doc);
+
 		return JS_EXCEPTION;
 	}
 	char *method = stracpy(str);
 	JS_FreeCString(ctx, str);
 
 	if (!method) {
+		dom_node_unref(doc);
+
 		return JS_EXCEPTION;
 	}
 	JSValue fun = argv[1];
@@ -1361,12 +1367,16 @@ js_document_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JS
 
 		if (JS_VALUE_GET_PTR(l->fun) == JS_VALUE_GET_PTR(fun)) {
 			mem_free(method);
+			dom_node_unref(doc);
+
 			return JS_UNDEFINED;
 		}
 	}
 	struct document_listener *n = (struct document_listener *)mem_calloc(1, sizeof(*n));
 
 	if (!n) {
+		dom_node_unref(doc);
+		mem_free(method);
 		return JS_UNDEFINED;
 	}
 	n->fun = JS_DupValue(ctx, fun);
@@ -1380,6 +1390,7 @@ js_document_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JS
 		exc = dom_event_listener_create(document_event_handler, doc_private, &doc_private->listener);
 
 		if (exc != DOM_NO_ERR || !doc_private->listener) {
+			dom_node_unref(doc);
 			return JS_UNDEFINED;
 		}
 	}
@@ -1396,11 +1407,40 @@ js_document_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JS
 	}
 
 ex:
+	dom_node_unref(doc);
 	dom_string_unref(typ);
 	dom_event_listener_unref(doc_private->listener);
 
 	return JS_UNDEFINED;
 }
+
+struct dom_event {
+        dom_string *type;       /**< The type of the event */
+        dom_event_target *target;       /**< The event target */
+        dom_event_target *current;      /**< The current event target */
+        dom_event_flow_phase phase;             /**< The event phase */
+        bool bubble;    /**< Whether this event is a bubbling event */
+        bool cancelable;        /**< Whether this event is cancelable */
+        unsigned int timestamp;
+                        /**< The timestamp this event is created */
+
+        dom_string *namespace;  /**< The namespace of this event */
+
+        bool stop;              /**< Whether stopPropagation is called */
+        bool stop_now;  /**< Whether stopImmediatePropagation is called */
+        bool prevent_default;
+                        /**< Whether the default action is prevented */
+
+        bool custom;    /**< Whether this is a custom event */
+
+        uint32_t refcnt;        /**< The reference count of this object */
+
+        const struct dom_event_private_vtable *vtable;
+                        /**< The private virtual function table of Event */
+        bool in_dispatch;       /**< Whether this event is in dispatch */
+        bool is_initialised;    /**< Whether this event is initialised */
+        bool is_trusted;        /**< Whether this event is trusted */
+};
 
 static JSValue
 js_document_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
@@ -1422,10 +1462,10 @@ js_document_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	if (!doc) {
 		return JS_FALSE;
 	}
-	//dom_node_ref(doc);
+	dom_node_ref(doc);
 
 	if (argc < 1) {
-		//dom_node_unref(doc);
+		dom_node_unref(doc);
 		return JS_FALSE;
 	}
 	JSValue eve = argv[0];
@@ -1438,9 +1478,12 @@ js_document_dispatchEvent(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	(void)dom_event_target_dispatch_event(doc, event, &result);
 
 	if (event) {
+		struct dom_event *ev2 = (struct dom_event *)event;
+
+		ev2->in_dispatch = !result;
 		dom_event_unref(event);
 	}
-	//dom_node_unref(doc);
+	dom_node_unref(doc);
 
 	return JS_NewBool(ctx, result);
 }
@@ -1459,10 +1502,12 @@ js_document_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc,
 	if (!doc_private) {
 		return JS_NULL;
 	}
-	//dom_node_ref(doc);
+	dom_html_document *doc = doc_private->node;
+	NODEINFO(doc);
+	dom_node_ref(doc);
 
 	if (argc < 2) {
-		//dom_node_unref(doc);
+		dom_node_unref(doc);
 		return JS_UNDEFINED;
 	}
 	const char *str;
@@ -1470,14 +1515,14 @@ js_document_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc,
 	str = JS_ToCStringLen(ctx, &len, argv[0]);
 
 	if (!str) {
-		//dom_node_unref(doc);
+		dom_node_unref(doc);
 		return JS_EXCEPTION;
 	}
 	char *method = stracpy(str);
 	JS_FreeCString(ctx, str);
 
 	if (!method) {
-		//dom_node_unref(doc);
+		dom_node_unref(doc);
 		return JS_EXCEPTION;
 	}
 	JSValue fun = argv[1];
@@ -1495,20 +1540,21 @@ js_document_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc,
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
 			}
-			//dom_event_target_remove_event_listener(doc, typ, doc_private->listener, false);
+			dom_event_target_remove_event_listener(doc, typ, doc_private->listener, false);
 			dom_string_unref(typ);
 
 			del_from_list(l);
 			mem_free_set(&l->typ, NULL);
+			JS_FreeValue(ctx, l->fun);
 			mem_free(l);
 			mem_free(method);
-			//dom_node_unref(doc);
+			dom_node_unref(doc);
 
 			return JS_UNDEFINED;
 		}
 	}
 	mem_free(method);
-	//dom_node_unref(doc);
+	dom_node_unref(doc);
 
 	return JS_UNDEFINED;
 }

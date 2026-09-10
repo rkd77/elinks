@@ -1,0 +1,39 @@
+<script>
+
+var counter = 0;
+
+function ff(ev)
+{
+    console.assert(ev.type === 'message', ev.type);
+    console.error('ff');
+    counter = 1;
+}
+
+function gg(ev)
+{
+    console.assert(ev.type === 'message', ev.type);
+    console.error('gg');
+    counter = 2;
+}
+
+function proc()
+{
+    console.assert(counter === 2, counter);
+    console.error('proc');
+    console.exit();
+}
+
+var e = new Event('message', { cancelable: true });
+
+console.error('eventListener.html');
+document.addEventListener("message", ff);
+console.assert(document.dispatchEvent(e), 'dis1');
+console.error('before removeEventListener');
+document.removeEventListener("message", ff);
+console.error('Before addEventLister 2');
+document.addEventListener("message", gg);
+console.assert(document.dispatchEvent(e), 'dis2');
+
+proc();
+
+</script>

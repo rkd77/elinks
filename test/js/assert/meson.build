@@ -92,6 +92,7 @@ took = [
 'navigator.appCodeName.html',
 'node.nodeType.html',
 'nodelist.forEach.html',
+'removeEventListener.html',
 'style.backgroundClip.html',
 'window.performance.now.html',
 'window.requestAnimationFrame.html',
