@@ -1814,14 +1814,17 @@ document_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		args.rval().setNull();
 		return true;
 	}
+	dom_node_ref(doc);
 
 	if (argc < 2) {
+		dom_node_unref(doc);
 		args.rval().setUndefined();
 		return true;
 	}
 	char *method = jsval_to_string(ctx, args[0]);
 
 	if (!method) {
+		dom_node_unref(doc);
 		return false;
 	}
 	JS::RootedValue fun(ctx, args[1]);
@@ -1838,7 +1841,7 @@ document_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
 			}
-			//dom_event_target_remove_event_listener(doc, typ, doc_private->listener, false);
+			dom_event_target_remove_event_listener(doc, typ, doc_private->listener, false);
 			dom_string_unref(typ);
 
 			del_from_list(l);
@@ -1847,9 +1850,11 @@ document_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			mem_free(l);
 			mem_free(method);
 			args.rval().setUndefined();
+			dom_node_unref(doc);
 			return true;
 		}
 	}
+	dom_node_unref(doc);
 	mem_free(method);
 	args.rval().setUndefined();
 	return true;
@@ -2010,6 +2015,34 @@ document_createElement(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return true;
 }
 
+struct dom_event {
+        dom_string *type;       /**< The type of the event */
+        dom_event_target *target;       /**< The event target */
+        dom_event_target *current;      /**< The current event target */
+        dom_event_flow_phase phase;             /**< The event phase */
+        bool bubble;    /**< Whether this event is a bubbling event */
+        bool cancelable;        /**< Whether this event is cancelable */
+        unsigned int timestamp;
+                        /**< The timestamp this event is created */
+
+        dom_string *_namespace;  /**< The namespace of this event */
+
+        bool stop;              /**< Whether stopPropagation is called */
+        bool stop_now;  /**< Whether stopImmediatePropagation is called */
+        bool prevent_default;
+                        /**< Whether the default action is prevented */
+
+        bool custom;    /**< Whether this is a custom event */
+
+        uint32_t refcnt;        /**< The reference count of this object */
+
+        const struct dom_event_private_vtable *vtable;
+                        /**< The private virtual function table of Event */
+        bool in_dispatch;       /**< Whether this event is in dispatch */
+        bool is_initialised;    /**< Whether this event is initialised */
+        bool is_trusted;        /**< Whether this event is trusted */
+};
+
 static bool
 document_dispatchEvent(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
@@ -2043,15 +2076,28 @@ document_dispatchEvent(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		args.rval().setBoolean(false);
 		return true;
 	}
+	dom_node_ref(doc);
 
 	if (argc < 1) {
+		dom_node_unref(doc);
 		args.rval().setBoolean(false);
 		return true;
 	}
 	JS::RootedObject eve(ctx, &args[0].toObject());
 	dom_event *event = (dom_event *)JS::GetMaybePtrFromReservedSlot<dom_event>(eve, 0);
+	if (event) {
+		dom_event_ref(event);
+	}
 	bool result = false;
 	(void)dom_event_target_dispatch_event(doc, event, &result);
+
+	if (event) {
+		struct dom_event *ev2 = (struct dom_event *)event;
+		ev2->in_dispatch = !result;
+
+		dom_event_unref(event);
+	}
+	dom_node_unref(doc);
 	args.rval().setBoolean(result);
 
 	return true;
