@@ -1,0 +1,34 @@
+<html>
+<body>
+<div id="test"></div>
+<script>
+
+var checked = 0;
+
+function ff(ev)
+{
+    console.assert(ev.type === 'message', ev.type);
+    checked = 1;
+}
+
+function gg(ev)
+{
+    console.assert(ev.type === 'message', ev.type);
+    checked = 2;
+}
+var e = new Event('message', { cancelable: true });
+
+console.error('element.eventListener.html');
+var elem = document.getElementById('test');
+elem.addEventListener("message", ff);
+elem.dispatchEvent(e);
+console.assert(checked == 1, '1');
+elem.removeEventListener("message", ff);
+elem.addEventListener("message", gg);
+elem.dispatchEvent(e);
+console.assert(checked == 2, '2');
+console.exit();
+
+</script>
+</body>
+</html>
