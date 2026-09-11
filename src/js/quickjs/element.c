@@ -66,6 +66,7 @@ struct js_element_private {
 	LIST_OF(struct element_listener) listeners;
 	struct ecmascript_interpreter *interpreter;
 	JSValue thisval;
+	unsigned int refcnt;
 	dom_event_listener *listener;
 	void *node;
 };
@@ -2954,6 +2955,7 @@ js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSV
 
 	if (el_private->listener) {
 		dom_event_listener_ref(el_private->listener);
+		el_private->refcnt++;
 	} else {
 		exc = dom_event_listener_create(element_event_handler, el_private, &el_private->listener);
 
@@ -2961,6 +2963,7 @@ js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSV
 			dom_node_unref(el);
 			return JS_UNDEFINED;
 		}
+		el_private->refcnt = 1;
 	}
 	dom_string *typ = NULL;
 	exc = dom_string_create((const uint8_t *)method, strlen(method), &typ);
@@ -2970,13 +2973,14 @@ js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	}
 	exc = dom_event_target_add_event_listener(el, typ, el_private->listener, false);
 
-	if (exc == DOM_NO_ERR) {
-		dom_event_listener_ref(el_private->listener);
-	}
-
 ex:
 	dom_string_unref(typ);
 	dom_event_listener_unref(el_private->listener);
+	el_private->refcnt--;
+
+	if (el_private->refcnt == 0) {
+		el_private->listener = NULL;
+	}
 	dom_node_unref(el);
 
 	return JS_UNDEFINED;
@@ -3039,9 +3043,13 @@ js_element_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, 
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
 			}
+			el_private->refcnt--;
 			dom_event_target_remove_event_listener(el, typ, el_private->listener, false);
-			dom_string_unref(typ);
 
+			if (el_private->refcnt == 0) {
+				el_private->listener = NULL;
+			}
+			dom_string_unref(typ);
 			del_from_list(l);
 			JS_FreeValue(ctx, l->fun);
 			mem_free_set(&l->typ, NULL);
