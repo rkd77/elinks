@@ -69,6 +69,7 @@ struct js_document_private {
 	JSValue images;
 	JSValue onkeydown;
 	JSValue onkeyup;
+	unsigned int refcnt;
 	dom_event_listener *listener;
 	void *node;
 	enum readyState state;
@@ -1386,6 +1387,7 @@ js_document_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JS
 
 	if (doc_private->listener) {
 		dom_event_listener_ref(doc_private->listener);
+		doc_private->refcnt++;
 	} else {
 		exc = dom_event_listener_create(document_event_handler, doc_private, &doc_private->listener);
 
@@ -1393,6 +1395,7 @@ js_document_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JS
 			dom_node_unref(doc);
 			return JS_UNDEFINED;
 		}
+		doc_private->refcnt = 1;
 	}
 	dom_string *typ = NULL;
 	exc = dom_string_create((const uint8_t *)method, strlen(method), &typ);
@@ -1402,14 +1405,15 @@ js_document_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JS
 	}
 	exc = dom_event_target_add_event_listener(doc, typ, doc_private->listener, false);
 
-	if (exc == DOM_NO_ERR) {
-		dom_event_listener_ref(doc_private->listener);
-	}
-
 ex:
 	dom_node_unref(doc);
 	dom_string_unref(typ);
 	dom_event_listener_unref(doc_private->listener);
+	doc_private->refcnt--;
+
+	if (doc_private->refcnt == 0) {
+		doc_private->listener = NULL;
+	}
 
 	return JS_UNDEFINED;
 }
@@ -1540,7 +1544,12 @@ js_document_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc,
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
 			}
+			doc_private->refcnt--;
 			dom_event_target_remove_event_listener(doc, typ, doc_private->listener, false);
+
+			if (doc_private->refcnt == 0) {
+				doc_private->listener = NULL;
+			}
 			dom_string_unref(typ);
 
 			del_from_list(l);
