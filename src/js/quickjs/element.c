@@ -3042,10 +3042,9 @@ js_element_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, 
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
 			}
-			el_private->listener_ref_count--;
 			dom_event_target_remove_event_listener(el, typ, el_private->listener, false);
 
-			if (el_private->listener_ref_count <= 0) {
+			if (--el_private->listener_ref_count <= 0) {
 				el_private->listener = NULL;
 			}
 			dom_string_unref(typ);

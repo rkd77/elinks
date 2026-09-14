@@ -81,6 +81,7 @@ struct mjs_element_private {
 	LIST_OF(struct ele_listener) listeners;
 	dom_event_listener *listener;
 	void *node;
+	int listener_ref_count;
 	int ref_count;
 };
 
@@ -2687,6 +2688,7 @@ mjs_element_addEventListener(js_State *J)
 
 	if (el_private->listener) {
 		dom_event_listener_ref(el_private->listener);
+		el_private->listener_ref_count++;
 	} else {
 		exc = dom_event_listener_create(element_event_handler, el_private, &el_private->listener);
 
@@ -2694,6 +2696,7 @@ mjs_element_addEventListener(js_State *J)
 			js_pushundefined(J);
 			return;
 		}
+		el_private->listener_ref_count = 1;
 	}
 	dom_string *typ = NULL;
 	exc = dom_string_create((const uint8_t *)method, strlen(method), &typ);
@@ -2702,14 +2705,13 @@ mjs_element_addEventListener(js_State *J)
 		goto ex;
 	}
 	exc = dom_event_target_add_event_listener(el, typ, el_private->listener, false);
-
-	if (exc == DOM_NO_ERR) {
-		dom_event_listener_ref(el_private->listener);
-	}
-
 ex:
 	dom_string_unref(typ);
 	dom_event_listener_unref(el_private->listener);
+
+	if (--el_private->listener_ref_count <= 0) {
+		el_private->listener = NULL;
+	}
 	js_pushundefined(J);
 }
 
@@ -2765,8 +2767,11 @@ mjs_element_removeEventListener(js_State *J)
 				continue;
 			}
 			dom_event_target_remove_event_listener(el, typ, el_private->listener, false);
-			dom_string_unref(typ);
 
+			if (--el_private->listener_ref_count <= 0) {
+				el_private->listener = NULL;
+			}
+			dom_string_unref(typ);
 			js_unref(J, l->fun);
 			del_from_list(l);
 			mem_free_set(&l->typ, NULL);

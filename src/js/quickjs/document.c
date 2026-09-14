@@ -1543,10 +1543,9 @@ js_document_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc,
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
 			}
-			doc_private->listener_ref_count--;
 			dom_event_target_remove_event_listener(doc, typ, doc_private->listener, false);
 
-			if (doc_private->listener_ref_count <= 0) {
+			if (--doc_private->listener_ref_count <= 0) {
 				doc_private->listener = NULL;
 			}
 			dom_string_unref(typ);

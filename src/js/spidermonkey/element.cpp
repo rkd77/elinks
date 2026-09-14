@@ -4482,9 +4482,8 @@ element_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 ex:
 	dom_string_unref(typ);
 	dom_event_listener_unref(el_private->listener);
-	el_private->listener_ref_count--;
 
-	if (el_private->listener_ref_count <= 0) {
+	if (--el_private->listener_ref_count <= 0) {
 		el_private->listener = nullptr;
 	}
 	args.rval().setUndefined();
@@ -4555,10 +4554,9 @@ element_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
 			}
-			el_private->listener_ref_count--;
 			dom_event_target_remove_event_listener(el, typ, el_private->listener, false);
 
-			if (el_private->listener_ref_count <= 0) {
+			if (--el_private->listener_ref_count <= 0) {
 				el_private->listener = nullptr;
 			}
 			dom_string_unref(typ);

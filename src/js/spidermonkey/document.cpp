@@ -1845,15 +1845,12 @@ document_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
 			}
-
-			doc_private->listener_ref_count--;
 			dom_event_target_remove_event_listener(doc, typ, doc_private->listener, false);
 
-			if (doc_private->listener_ref_count <= 0) {
+			if (--doc_private->listener_ref_count <= 0) {
 				doc_private->listener = nullptr;
 			}
 			dom_string_unref(typ);
-
 			del_from_list(l);
 			mem_free_set(&l->typ, NULL);
 			delete (l->fun);

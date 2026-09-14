@@ -1264,14 +1264,12 @@ mjs_document_removeEventListener(js_State *J)
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
 			}
-			doc_private->listener_ref_count--;
 			dom_event_target_remove_event_listener(doc, typ, doc_private->listener, false);
 
-			if (doc_private->listener_ref_count <= 0) {
+			if (--doc_private->listener_ref_count <= 0) {
 				doc_private->listener = NULL;
 			}
 			dom_string_unref(typ);
-
 			js_unref(J, l->fun);
 			del_from_list(l);
 			mem_free_set(&l->typ, NULL);
