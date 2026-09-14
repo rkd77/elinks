@@ -34,6 +34,7 @@ struct mjs_document_private {
 	void *node;
 	const char *onkeydown;
 	const char *onkeyup;
+	int listener_ref_count;
 	int ref_count;
 	enum readyState state;
 };

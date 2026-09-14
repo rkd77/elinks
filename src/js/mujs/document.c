@@ -1159,6 +1159,7 @@ mjs_document_addEventListener(js_State *J)
 
 	if (doc_private->listener) {
 		dom_event_listener_ref(doc_private->listener);
+		doc_private->listener_ref_count++;
 	} else {
 		exc = dom_event_listener_create(document_event_handler, doc_private, &doc_private->listener);
 
@@ -1166,6 +1167,7 @@ mjs_document_addEventListener(js_State *J)
 			js_pushundefined(J);
 			return;
 		}
+		doc_private->listener_ref_count = 1;
 	}
 	dom_string *typ = NULL;
 	exc = dom_string_create((const uint8_t *)method, strlen(method), &typ);
@@ -1174,15 +1176,13 @@ mjs_document_addEventListener(js_State *J)
 		goto ex;
 	}
 	exc = dom_event_target_add_event_listener(doc, typ, doc_private->listener, false);
-
-	if (exc == DOM_NO_ERR) {
-		dom_event_listener_ref(doc_private->listener);
-	}
-
 ex:
 	dom_string_unref(typ);
 	dom_event_listener_unref(doc_private->listener);
 
+	if (--doc_private->listener_ref_count <= 0) {
+		doc_private->listener = NULL;
+	}
 	js_pushundefined(J);
 }
 
@@ -1264,7 +1264,12 @@ mjs_document_removeEventListener(js_State *J)
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
 			}
+			doc_private->listener_ref_count--;
 			dom_event_target_remove_event_listener(doc, typ, doc_private->listener, false);
+
+			if (doc_private->listener_ref_count <= 0) {
+				doc_private->listener = NULL;
+			}
 			dom_string_unref(typ);
 
 			js_unref(J, l->fun);
