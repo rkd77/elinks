@@ -147,6 +147,7 @@ struct element_private {
 	JS::Heap<JSObject *> thisval;
 	dom_event_listener *listener;
 	dom_node *node;
+	int listener_ref_count;
 	int ref_count;
 };
 
@@ -4461,6 +4462,7 @@ element_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	if (el_private->listener) {
 		dom_event_listener_ref(el_private->listener);
+		el_private->listener_ref_count++;
 	} else {
 		exc = dom_event_listener_create(element_event_handler, el_private, &el_private->listener);
 
@@ -4468,6 +4470,7 @@ element_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			args.rval().setUndefined();
 			return true;
 		}
+		el_private->listener_ref_count = 1;
 	}
 	dom_string *typ = NULL;
 	exc = dom_string_create((const uint8_t *)method, strlen(method), &typ);
@@ -4476,14 +4479,14 @@ element_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		goto ex;
 	}
 	exc = dom_event_target_add_event_listener(el, typ, el_private->listener, false);
-
-	if (exc == DOM_NO_ERR) {
-		dom_event_listener_ref(el_private->listener);
-	}
-
 ex:
 	dom_string_unref(typ);
 	dom_event_listener_unref(el_private->listener);
+	el_private->listener_ref_count--;
+
+	if (el_private->listener_ref_count <= 0) {
+		el_private->listener = nullptr;
+	}
 	args.rval().setUndefined();
 
 	return true;
@@ -4552,9 +4555,13 @@ element_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
 			}
+			el_private->listener_ref_count--;
 			dom_event_target_remove_event_listener(el, typ, el_private->listener, false);
-			dom_string_unref(typ);
 
+			if (el_private->listener_ref_count <= 0) {
+				el_private->listener = nullptr;
+			}
+			dom_string_unref(typ);
 			del_from_list(l);
 			mem_free_set(&l->typ, NULL);
 			delete (l->fun);
