@@ -98,6 +98,7 @@ struct document_private {
 	JS::Heap<JS::Value> *onkeydown;
 	JS::Heap<JS::Value> *onkeyup;
 	int ref_count;
+	int listener_ref_count;
 	enum readyState state;
 };
 
@@ -1751,6 +1752,7 @@ document_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	if (doc_private->listener) {
 		dom_event_listener_ref(doc_private->listener);
+		doc_private->listener_ref_count++;
 	} else {
 		exc = dom_event_listener_create(document_event_handler, doc_private, &doc_private->listener);
 
@@ -1758,6 +1760,7 @@ document_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			args.rval().setUndefined();
 			return true;
 		}
+		doc_private->listener_ref_count = 1;
 		handler_privates[doc_private] = true;
 	}
 	dom_string *typ = NULL;
@@ -1768,13 +1771,14 @@ document_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 	exc = dom_event_target_add_event_listener(doc, typ, doc_private->listener, false);
 
-	if (exc == DOM_NO_ERR) {
-		dom_event_listener_ref(doc_private->listener);
-	}
-
 ex:
 	dom_string_unref(typ);
 	dom_event_listener_unref(doc_private->listener);
+	doc_private->listener_ref_count--;
+
+	if (doc_private->listener_ref_count <= 0) {
+		doc_private->listener = nullptr;
+	}
 	args.rval().setUndefined();
 
 	return true;
@@ -1841,7 +1845,13 @@ document_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			if (exc != DOM_NO_ERR || !typ) {
 				continue;
 			}
+
+			doc_private->listener_ref_count--;
 			dom_event_target_remove_event_listener(doc, typ, doc_private->listener, false);
+
+			if (doc_private->listener_ref_count <= 0) {
+				doc_private->listener = nullptr;
+			}
 			dom_string_unref(typ);
 
 			del_from_list(l);
