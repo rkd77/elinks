@@ -55,9 +55,9 @@ extra_cpp_args = extra_args
 extra_cpp_args += extracppflags
 
 if get_option('static')
-    static_link_args = ['-static']
+    static_link_args = ['-static'] + tcc_lib
 else
-    static_link_args = []
+    static_link_args = tcc_lib
 endif
 
 elinks = executable(

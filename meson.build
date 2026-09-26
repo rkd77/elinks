@@ -202,6 +202,24 @@ conf_data.set('HAVE_SYS_TIME_H', 1)
 
 compiler = meson.get_compiler('c')
 
+tcc_lib = []
+if compiler.cmd_array()[0] == 'tcc' or compiler.cmd_array()[0].endswith('/tcc')
+    tcc_dirs = run_command(compiler.cmd_array()[0],
+    '-print-search-dirs'
+    ).stdout().split('\n')
+    n = false
+    foreach line : tcc_dirs
+        if line.startswith('libtcc1:')
+            n = true
+            continue
+        endif
+        if n
+            tcc_lib = [line.strip(), '-Wl,--no-eh-frame-hdr']
+            break
+        endif
+    endforeach
+endif
+
 extracflags = []
 extracppflags = []
 
