@@ -440,7 +440,8 @@ again:
 	int how_many = (height + document->options.cell_height - 1) / document->options.cell_height;
 	int xw = (im->width + document->options.cell_width - 1) / document->options.cell_width;
 	int y;
-	im->image_number = html_top->name - document->text.source;
+	/* Match the marker used for image placeholder cells, also without libdom. */
+	im->image_number = html_context->current_number;
 
 	for (y = 0; y < how_many; y++) {
 		int x;
