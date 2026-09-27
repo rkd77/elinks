@@ -647,7 +647,8 @@ if conf_data.get('CONFIG_GPM')
 endif
 
 if conf_data.get('CONFIG_SCRIPTING_PYTHON')
-    python3deps = dependency('python3-embed', static: st)
+    python3 = import('python').find_installation('python3')
+    python3deps = python3.dependency(embed: true, static: st)
     deps += python3deps
 endif
 
