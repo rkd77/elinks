@@ -796,7 +796,7 @@ scan_document(struct document *document)
 
 	for (y = 0; y < document->height; y++) {
 		for (x = 0; x < document->data[y].length; x++) {
-			int offset = document->data[y].ch.chars[x].number;
+			int offset = document->data[y].ch.chars[x].number - (void *)document->text.source;
 
 			if (!offset) {
 				continue;
