@@ -137,7 +137,7 @@ struct html_context {
 
 	int image_number;
 
-	unsigned int current_number;
+	void *current_number;
 
 
 	/* For:

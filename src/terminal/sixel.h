@@ -18,6 +18,7 @@ struct image {
 	LIST_HEAD_EL(struct image);
 	struct string pixels;
 	struct el_string *data;
+	void *image_number;
 	int x;
 	int y;
 	int w;
@@ -26,7 +27,6 @@ struct image {
 	int cy;
 	int width;
 	int height;
-	int image_number;
 	unsigned int sixel2:1;
 };
 

@@ -66,7 +66,7 @@ struct screen_char {
 	} c;
 	unsigned int is_default_fg_color:1;
 	unsigned int is_default_bg_color:1;
-	unsigned int number;
+	void *number;
 #if 0
 	unsigned int element_offset;
 #endif

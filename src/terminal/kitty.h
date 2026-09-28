@@ -16,13 +16,13 @@ struct terminal;
 struct k_image {
 	LIST_HEAD_EL(struct k_image);
 	struct el_string *pixels;
+	void *number;
 	int cx;
 	int cy;
 	int width;
 	int height;
 	int id;
 	int ID;
-	int number;
 	int x;
 	int y;
 	int w;

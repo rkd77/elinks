@@ -334,7 +334,7 @@ again:
 	}
 	int xw = (im->width + document->options.cell_width - 1) / document->options.cell_width;
 	int y;
-	im->number = html_top->name - document->text.source;
+	im->number = html_top->name;
 	im->ID = im_number;
 	im->compressed = compressed;
 
@@ -440,7 +440,7 @@ again:
 	int how_many = (height + document->options.cell_height - 1) / document->options.cell_height;
 	int xw = (im->width + document->options.cell_width - 1) / document->options.cell_width;
 	int y;
-	im->image_number = html_top->name - document->text.source;
+	im->image_number = html_top->name;
 
 	for (y = 0; y < how_many; y++) {
 		int x;
