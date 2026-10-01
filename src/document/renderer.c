@@ -166,9 +166,11 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 
 #ifdef CONFIG_DOM
 		if (cached->content_type
-		    && (!c_strlcasecmp("application/rss+xml", 19, cached->content_type, -1)))
+		    && (!c_strlcasecmp("application/rss+xml", 19, cached->content_type, -1)
+		        || !c_strlcasecmp("text/xml", 8, cached->content_type, -1))) {
+
 			render_dom_document(cached, document, &buffer);
-		else
+		} else
 #endif
 		if (cached->content_type
 		    && (!c_strlcasecmp("text/gemini", 11, cached->content_type, -1)))

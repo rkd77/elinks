@@ -59,7 +59,8 @@ get_doctype(struct dom_renderer *renderer, struct cache_entry *cached)
 	ELOG
 	if (!cached->content_type) {
 		renderer->doctype = SGML_DOCTYPE_HTML;
-	} else if (!c_strcasecmp("application/rss+xml", cached->content_type)) {
+	} else if (!c_strcasecmp("application/rss+xml", cached->content_type)
+			|| !c_strlcasecmp("text/xml", 8, cached->content_type, -1)) {
 		renderer->doctype = SGML_DOCTYPE_RSS;
 
 	} else if (!c_strcasecmp("application/docbook+xml",

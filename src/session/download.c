@@ -1982,6 +1982,7 @@ struct {
 	{ "application/xbel+xml",	1 },
 	{ "application/xbel",		1 },
 	{ "application/x-xbel",		1 },
+	{ "text/xml",			0 },
 #endif
 #if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
 	{ "image/bmp",			0 },
