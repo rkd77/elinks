@@ -135,9 +135,11 @@ init_document_options(struct session *ses, struct document_options *doo)
 #ifdef CONFIG_LIBSIXEL
 	doo->sixel = get_opt_bool("document.plain.sixel", ses);
 	doo->html_sixel = get_opt_bool("document.html.sixel", ses);
+	doo->image_sixel = get_opt_bool("document.browse.images.sixel", ses);
 #endif
 #ifdef CONFIG_KITTY
 	doo->html_kitty = get_opt_bool("document.html.kitty", ses);
+	doo->image_kitty = get_opt_bool("document.browse.images.kitty", ses);
 #endif
 #if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
 	if (ses && ses->tab->term) {

@@ -355,7 +355,7 @@ html_img_sixel(struct html_context *html_context, char *a,
         char *html, char *eof, char **end)
 {
 	ELOG
-	if (!html_context->options->html_sixel || !html_context->document) {
+	if ((!html_context->options->html_sixel && (!html_context->rendered_as_image || !html_context->options->image_sixel)) || !html_context->document) {
 		return;
 	}
 	int width = 0;
@@ -603,7 +603,7 @@ html_img(struct html_context *html_context, char *a,
 {
 	ELOG
 #ifdef CONFIG_KITTY
-	if (html_context->options->html_kitty) {
+	if (html_context->options->html_kitty || (html_context->rendered_as_image && html_context->options->image_kitty)) {
 		html_img_kitty(html_context, a, html, eof, end);
 	}
 #endif

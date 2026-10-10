@@ -167,8 +167,10 @@ struct document_options {
 #ifdef CONFIG_LIBSIXEL
 	unsigned int sixel:1;
 	unsigned int html_sixel:1;
+	unsigned int image_sixel:1;
 #endif
 	unsigned int html_kitty:1;
+	unsigned int image_kitty:1;
 	/** Active link coloring.
 	 * This is mostly here to make use of this option cache so
 	 * link drawing is faster. --jonas */

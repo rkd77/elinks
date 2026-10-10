@@ -152,6 +152,7 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 			struct string img;
 
 			if (init_string(&img)) {
+				cached->rendered_as_image = 1;
 				add_format_to_string(&img, "<img src=\"%s\">", struri(cached->uri));
 
 				if (encoding != ENCODING_NONE) {

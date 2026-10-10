@@ -258,6 +258,13 @@ static union option_info config_options_info[] = {
 		"image_link_suffix", OPT_ZERO, "]",
 		N_("Suffix string to use to mark image links.")),
 
+#ifdef CONFIG_KITTY
+	INIT_OPT_BOOL("document.browse.images", N_("Kitty"),
+		"kitty", OPT_ZERO, 0,
+		N_("Whether to display images internally eg. by the view-image action. "
+		"If document.html.kitty is enabled they are displayed without reading this option.")),
+#endif
+
 	INIT_OPT_INT("document.browse.images", N_("Maximum length for image label"),
 		"label_maxlen", OPT_ZERO, 0, 500, 0,
 		N_("Maximum length of image label (alt/title):\n"
@@ -278,6 +285,12 @@ static union option_info config_options_info[] = {
 		"off, the alt attribute contents is shown, but as normal "
 		"text, not selectable as a link.")),
 
+#ifdef CONFIG_LIBSIXEL
+	INIT_OPT_BOOL("document.browse.images", N_("Sixel"),
+		"sixel", OPT_ZERO, 0,
+		N_("Whether to display images internally eg. by the view-image action. "
+		"If document.html.sixel is enabled they are displayed without reading this option.")),
+#endif
 
 	INIT_OPT_TREE("document.browse", N_("Links"),
 		"links", OPT_ZERO,

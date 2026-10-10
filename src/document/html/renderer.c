@@ -2633,6 +2633,7 @@ render_html_document(struct cache_entry *cached, struct document *document,
 	                                html_special);
 	if (!html_context) return;
 
+	html_context->rendered_as_image = cached->rendered_as_image;
 #ifdef CONFIG_LIBDOM
 	libdom = !!document->dom;
 #else

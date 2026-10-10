@@ -120,6 +120,7 @@ struct html_context {
 	unsigned int was_read_user_stylesheet:1;
 	unsigned int hidden:1;
 
+	unsigned int rendered_as_image:1;
 	/* For html/parser.c, html/renderer.c */
 	int margin;
 

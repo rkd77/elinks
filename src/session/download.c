@@ -2058,13 +2058,13 @@ setup_download_handler(struct session *ses, struct download *loading,
 		image = image || (octet && get_opt_bool("document.browse.images.application_as_image", ses));
 
 #ifdef CONFIG_KITTY
-		if (image && get_opt_bool("document.html.kitty", ses)) {
+		if (image && (get_opt_bool("document.html.kitty", ses) || get_opt_bool("document.browse.images.kitty", ses))) {
 			goto plaintext_follow;
 		}
 #endif
 
 #ifdef CONFIG_LIBSIXEL
-		if (image && get_opt_bool("document.html.sixel", ses)) {
+		if (image && (get_opt_bool("document.html.sixel", ses) || get_opt_bool("document.browse.images.sixel", ses))) {
 			goto plaintext_follow;
 		}
 #endif
