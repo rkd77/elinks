@@ -152,3 +152,4 @@ ACTION_(MAIN, "toggle-numbered-links", TOGGLE_NUMBERED_LINKS, N__("Toggle displa
 ACTION_(MAIN, "toggle-plain-compress-empty-lines", TOGGLE_PLAIN_COMPRESS_EMPTY_LINES, N__("Toggle plain renderer compression of empty lines"), 0),
 ACTION_(MAIN, "toggle-wrap-text", TOGGLE_WRAP_TEXT, N__("Toggle wrapping of text"), 0),
 ACTION_(MAIN, "view-image", VIEW_IMAGE, N__("View the current image"), ACTION_REQUIRE_VIEW_STATE | ACTION_REQUIRE_LOCATION | ACTION_JUMP_TO_LINK | ACTION_REQUIRE_LINK),
+ACTION_(MAIN, "view-image-in-document", VIEW_IMAGE_IN_DOCUMENT, N__("View the current image in document"), ACTION_REQUIRE_VIEW_STATE | ACTION_REQUIRE_LOCATION | ACTION_JUMP_TO_LINK | ACTION_REQUIRE_LINK),

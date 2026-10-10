@@ -2018,6 +2018,24 @@ view_image(struct session *ses, struct document_view *doc_view, int xxxx)
 }
 
 enum frame_event_status
+view_image_in_document(struct session *ses, struct document_view *doc_view, int xxxx)
+{
+	ELOG
+#if defined(CONFIG_KITTY) || defined(CONFIG_LIBSIXEL)
+	struct link *link = get_current_link(doc_view);
+
+	if (link && link->where_img) {
+		struct uri *uri = get_uri(link->where_img, URI_NONE);
+
+		add_to_uri_list(&doc_view->document->image_uris, uri);
+		done_uri(uri);
+		reload(ses, CACHE_MODE_INCREMENT);
+	}
+#endif
+	return FRAME_EVENT_OK;
+}
+
+enum frame_event_status
 save_as(struct session *ses, struct document_view *doc_view, int magic)
 {
 	ELOG

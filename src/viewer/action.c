@@ -823,6 +823,10 @@ do_action(struct session *ses, main_action_T action_id, int verbose)
 			status = view_image(ses, doc_view, 0);
 			break;
 
+		case ACT_MAIN_VIEW_IMAGE_IN_DOCUMENT:
+			status = view_image_in_document(ses, doc_view, 0);
+			break;
+
 		case ACT_MAIN_SCRIPTING_FUNCTION:
 		case ACT_MAIN_NONE:
 		case MAIN_ACTIONS:
