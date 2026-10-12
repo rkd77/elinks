@@ -948,7 +948,7 @@ fi
 
 AC_ARG_WITH([libsixel],
 	[AS_HELP_STRING([--with-libsixel],
-		[enable sixel graphics])])
+		[enable sixel graphics (requires libdom, e.g. --with-libcss)])])
 
 CONFIG_LIBSIXEL=
 
@@ -966,6 +966,10 @@ case "$with_libsixel" in
 esac
 
 if test "x$CONFIG_LIBSIXEL" = x; then
+	if test "x$CONFIG_LIBDOM" != xyes; then
+		AC_MSG_ERROR([Sixel graphics require libdom; enable it with --with-libcss or a JavaScript engine.])
+	fi
+
 	LIBSIXEL_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libsixel)"
 	LIBSIXEL_LIBS="$($PKG_CONFIG $pkg_config_static --libs libsixel)"
 	LIBS="$LIBSIXEL_LIBS $LIBS"
