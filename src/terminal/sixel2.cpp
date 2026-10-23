@@ -542,7 +542,7 @@ flatten(Node *root, struct string *outs, unsigned int palette)
 	//cols.sort(proc(a, b: Node): int = cmp(a.u.leaf.n, b.u.leaf.n),
 	//order = Descending)
 
-	for (int n = 0; n < cols.size(); n++) {
+	for (unsigned int n = 0; n < cols.size(); n++) {
 		auto it = cols[n];
 		auto c = it->u.leaf.c;
 		// 2 is RGB
@@ -1212,7 +1212,7 @@ encode(struct string *outs, unsigned char *img, int width, int height, int offx,
 		createBands(bands, activeChunks);
 		//int olen = outs->length;
 
-		for (int i = 0; i < bands.size(); i++) {
+		for (unsigned int i = 0; i < bands.size(); i++) {
 			if (i > 0) {
 				add_char_to_string(outs, '$');
 			}
@@ -1235,7 +1235,7 @@ encode(struct string *outs, unsigned char *img, int width, int height, int offx,
 	}
 	dither.d1.clear();
 	dither.d2.clear();
-	for (int iii = 0; iii < palette; iii++) {
+	for (unsigned int iii = 0; iii < palette; iii++) {
 		SixelChunk *chunk = &chunkMap[iii];
 		mem_free_if(chunk->data);
 	}
