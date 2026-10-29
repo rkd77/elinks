@@ -1,10 +1,10 @@
 PREFIX=/opt/elinks
 cp cc.py ~/
 cd
-wget https://github.com/google/brotli/archive/refs/tags/v1.2.0.tar.gz
-rm -rf brotli-1.2.0
-tar -xf v1.2.0.tar.gz
-cd brotli-1.2.0
+wget https://github.com/google/brotli/archive/refs/tags/v1.2.1.tar.gz
+rm -rf brotli-1.2.1
+tar -xf v1.2.1.tar.gz
+cd brotli-1.2.1
 mkdir build
 cd build
 CC=$HOME/cc.py cmake \
