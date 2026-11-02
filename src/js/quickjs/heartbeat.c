@@ -33,7 +33,7 @@ static struct itimerval heartbeat_timer = { { 1, 0 }, { 1, 0 } };
  * Returning 1 terminates script execution immediately. */
 
 int
-js_heartbeat_callback(JSRuntime *rt, void *opaque)
+js_heartbeat_callback(JSContext *ctx, void *opaque)
 {
 	ELOG
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)opaque;
