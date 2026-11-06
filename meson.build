@@ -630,6 +630,8 @@ if conf_data.get('CONFIG_SCRIPTING_LUA')
     deps += luadeps
 endif
 
+expatdeps = dependency('', required: false)
+
 if conf_data.get('CONFIG_XBEL_BOOKMARKS')
     expatdeps = dependency('expat', static: st, required: false)
     if not expatdeps.found()
@@ -1139,6 +1141,10 @@ endif
 
 if compiler.has_function('ASN1_STRING_get0_data', prefix: '#include <openssl/asn1.h>', dependencies: ssldeps)
     conf_data.set('HAVE_ASN1_STRING_GET0_DATA', 1)
+endif
+
+if compiler.has_function('XML_GetCurrentLineNumber64', prefix: '#include <expat.h>', dependencies: expatdeps)
+    conf_data.set('HAVE_XML_GETCURRENTLINENUMBER64', 1)
 endif
 
 iconvdeps = compiler.find_library('iconv', static: st, required: false)

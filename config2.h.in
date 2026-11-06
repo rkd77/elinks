@@ -785,6 +785,9 @@
 /* Define to 1 if you have `typeof` */
 #mesondefine HAVE_TYPEOF
 
+/* Define to 1 if you have `XML_GetCurrentLineNumber64' function. */
+#mesondefine HAVE_XML_GETCURRENTLINENUMBER64
+
 /* Define as const if the declaration of iconv() needs const. */
 #mesondefine ICONV_CONST
 

@@ -121,6 +121,18 @@ read_bookmarks_xbel(FILE *f)
 
 			done = feof(f);
 
+#ifdef HAVE_XML_GETCURRENTLINENUMBER64
+			if (!err && !XML_Parse(p, in_buffer, len, done)) {
+				usrerror(gettext("Parse error while processing "
+				         "XBEL bookmarks in %s at line %ld "
+					 "column %ld:\n%s"),
+				      filename_bookmarks_xbel(0),
+				      XML_GetCurrentLineNumber64(p),
+				      XML_GetCurrentColumnNumber64(p),
+				      XML_ErrorString(XML_GetErrorCode(p)));
+				err = 1;
+			}
+#else
 			if (!err && !XML_Parse(p, in_buffer, len, done)) {
 				usrerror(gettext("Parse error while processing "
 				         "XBEL bookmarks in %s at line %d "
@@ -131,6 +143,7 @@ read_bookmarks_xbel(FILE *f)
 				      XML_ErrorString(XML_GetErrorCode(p)));
 				err = 1;
 			}
+#endif
 		}
 	}
 
