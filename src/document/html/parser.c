@@ -510,7 +510,7 @@ look_for_map(char **pos, char *eof, struct uri *uri,
 		al = get_attr_val(attr, "name", options->cp);
 		if (!al) return 1;
 
-		if (c_strlcasecmp(al, -1, uri->fragment, uri->fragmentlen)) {
+		if (strlcmp(al, -1, uri->fragment, uri->fragmentlen)) {
 			mem_free(al);
 			return 1;
 		}

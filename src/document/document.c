@@ -579,7 +579,7 @@ find_tag(struct document *document, char *name, int namelen)
 	struct tag *tag;
 
 	foreach (tag, document->tags)
-		if (!c_strlcasecmp(tag->name, -1, name, namelen))
+		if (!strlcmp(tag->name, -1, name, namelen))
 			return tag->y;
 
 	return -1;
